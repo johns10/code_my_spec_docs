@@ -34,6 +34,28 @@
 - Summary provides context for LLM during user story generation process
 - Executive summary must be approved before proceeding to user story gathering phase
 
+### 1.4 GitHub Authentication Setup
+**User Story**: As a user, I want to authenticate with GitHub so that the system can manage repositories and perform Git operations on my behalf.
+
+**Acceptance Criteria**:
+- System prompts for GitHub authentication during project setup
+- Supports GitHub personal access tokens or OAuth authentication
+- Validates authentication credentials before proceeding
+- Stores authentication securely for subsequent Git operations
+- System can create repositories, branches, and pull requests using authenticated credentials
+- Authentication scope includes repository creation, branch management, and pull request operations
+
+### 1.5 GitHub Repository Setup
+**User Story**: As a developer, I want a GitHub repository created for the project so that all code and documentation can be version controlled.
+
+**Acceptance Criteria**:
+- System creates new GitHub repository for the project using authenticated credentials
+- Repository initialized with Phoenix application structure
+- Initial commit includes generated Phoenix scaffolding and PHX.Gen.Auth setup
+- Main branch established as default branch
+- Repository configured with appropriate .gitignore for Phoenix/Elixir projects
+- Repository permissions set appropriately for project team access
+
 ## 2. Requirements Gathering
 
 ### 2.1 LLM-Driven Interview Process
@@ -201,7 +223,29 @@
 - Shall be one todo per context component
 - Each todo gets its own Git branch
 
-### 6.2 Dependency-Ordered Task Management
+### 6.2 Branch Management
+**User Story**: As a system, I want to manage Git branches for each todo so that work is isolated and can be safely integrated.
+
+**Acceptance Criteria**:
+- System creates new branch from main for each todo task
+- Branch names follow consistent naming convention (e.g., `feat-{component-name}-{id}`)
+- Agent or human work is committed and pushed to assigned branch
+- Failed branches are deleted and recreated for retry attempts
+- Successful branches are preserved for integration
+- System handles branch cleanup after successful integration
+
+### 6.2 Branch Management
+**User Story**: As a system, I want to manage Git branches for each todo so that work is isolated and can be safely integrated.
+
+**Acceptance Criteria**:
+- System creates new branch from main for each todo task
+- Branch names follow consistent naming convention (e.g., `feat-{component-name}-{id}`)
+- Agent or human work is committed and pushed to assigned branch
+- Failed branches are deleted and recreated for retry attempts
+- Successful branches are preserved for integration
+- System handles branch cleanup after successful integration
+
+### 6.3 Dependency-Ordered Task Management
 **User Story**: As a system, I want to ensure agents only receive tasks with satisfied dependencies so that implementation proceeds smoothly.
 
 **Acceptance Criteria**:
@@ -210,7 +254,7 @@
 - Unsatisfied dependencies indicate planning problems requiring review
 - Task ordering prevents dependency deadlocks
 
-### 6.3 External Coding Agent Integration
+### 6.4 External Coding Agent Integration
 **User Story**: As an engineer, I want to delegate implementation work to external coding agents so that I can focus on architecture and integration.
 
 **Acceptance Criteria**:
@@ -222,7 +266,7 @@
 - Agents can explicitly fail task if insufficient information provided
 - One agent works on one task at a time (synchronous)
 
-### 6.4 Test Failure Handling
+### 6.5 Test Failure Handling
 **User Story**: As a system, I want coding agents to fix their own test failures so that implementation quality is maintained.
 
 **Acceptance Criteria**:
@@ -232,7 +276,7 @@
 - System does not automatically fix failing tests - agent must handle all fixes
 - Agent retries until tests pass or retry limit reached
 
-### 6.5 Task Failure Recovery
+### 6.6 Task Failure Recovery
 **User Story**: As a system, I want to handle agent failures gracefully so that project progress continues.
 
 **Acceptance Criteria**:
@@ -241,7 +285,7 @@
 - Failed tasks restart with same todo specification
 - After retry limit reached, task marked for human intervention
 
-### 6.6 Todo Administration and Human Assignment
+### 6.7 Todo Administration and Human Assignment
 **User Story**: As an engineer, I want to administer todos and assign them to myself so that I can take over any task in the project.
 
 **Acceptance Criteria**:
@@ -252,7 +296,7 @@
 - UI provides "View Agent Prompt" button that opens modal with full prompt text containing all context (docs, specs, rules, files)
 - Task can be reassigned back to `:agent` if human chooses
 
-### 6.7 Human Task Completion
+### 6.8 Human Task Completion
 **User Story**: As an engineer, I want to mark my human-assigned task as complete so that it goes through the same validation as agent work.
 
 **Acceptance Criteria**:
@@ -274,7 +318,15 @@
 - Successfully integrated branches remain while failed branches get additional development cycles
 - No merge conflicts due to isolated component development
 
-### 7.2 Component Integration Testing
+### 7.2 Pull Request Management
+**User Story**: As a developer, I want pull requests created automatically so that code changes are tracked and can be reviewed.
+
+**Acceptance Criteria**:
+- System creates pull request from feature branch to integration branch when todo is completed
+- PR includes description with todo details, BDD specs implemented, and test results
+- PR history provides audit trail of all changes
+
+### 7.3 Component Integration Testing
 **User Story**: As a component integration tester, I want to validate that components within complex contexts work together properly.
 
 **Acceptance Criteria**:
@@ -283,7 +335,7 @@
 - Ensures components handle state management correctly
 - Focuses on intra-context integration
 
-### 7.3 Context Integration Testing
+### 7.4 Context Integration Testing
 **User Story**: As a context integration tester, I want to validate that coordination contexts work together correctly.
 
 **Acceptance Criteria**:
@@ -292,7 +344,7 @@
 - Ensures context boundaries are respected
 - Focuses on inter-context integration
 
-### 7.4 BDD Validation Testing
+### 7.5 BDD Validation Testing
 **User Story**: As a BDD validation tester, I want to generate and maintain tests that validate BDD specifications are met.
 
 **Acceptance Criteria**:
@@ -302,7 +354,7 @@
 - Makes existing integration tests pass when components are updated
 - BDD specifications marked as passing only when validation tests pass
 
-### 7.5 Integration Failure Handling
+### 7.6 Integration Failure Handling
 **User Story**: As an integration system, I want to handle integration failures without immediately triggering redesigns.
 
 **Acceptance Criteria**:
