@@ -1,48 +1,150 @@
-# Phoenix Demo Application Generation Commands
+# Projects Context - Foundation
+mix phx.gen.live Projects Project projects \
+  name:string \
+  description:text \
+  status:string
 
-# Domain Contexts (Entity Owners)
+# Agents Context
+mix phx.gen.embedded Agents Agent agents \
+  name:string \
+  type:enum:claude_code:custom \
+  capabilities:array:string \
+  status:enum:available:offline:error \
+  config:map
 
-# Projects - Project workspace and configuration management
-mix phx.gen.live Projects Project projects name:string description:text status:string workspace_path:string created_at:datetime updated_at:datetime
+# LLMs Context  
+mix phx.gen.live LLMs LLM llms \
+  name:string \
+  provider:enum:anthropic:openai:google:local \
+  model:string \
+  capabilities:array:string \
+  status:enum:available:offline:error \
+  config:map
 
-# Conversations - LLM conversation state and metadata
-mix phx.gen.context Conversations Conversation conversations project_id:references:projects title:string status:string metadata:map started_at:datetime completed_at:datetime
+# Conversations Context - References Projects
+mix phx.gen.live Conversations Conversation conversations \
+  title:string \
+  status:enum:active:paused:completed:archived \
+  context:map \
+  metadata:map \
+  external_id:string \
+  project_id:references:projects
 
-# Messages - Individual conversation messages
-mix phx.gen.context Messages Message messages conversation_id:references:conversations role:string content:text timestamp:datetime message_type:string
+# Stories Context - References Projects
+mix phx.gen.live Stories Story stories \
+  title:string \
+  description:text \
+  acceptance_criteria:array:string \
+  status:enum:draft:approved:in_progress:completed:archived \
+  priority:integer \
+  project_id:references:projects
 
-# Stories - User story management with change tracking
-mix phx.gen.live Stories Story stories project_id:references:projects title:string description:text acceptance_criteria:text priority:integer status:string is_dirty:boolean created_at:datetime updated_at:datetime
+# Environments Context
+mix phx.gen.live Environments Environment environments \
+  name:string \
+  branch_name:string \
+  status:enum:creating:active:merging:archived:failed \
+  project_id:references:projects
 
-# Documents - Design document storage and versioning
-mix phx.gen.live Documents Document documents project_id:references:projects title:string content:text doc_type:string file_path:string status:string is_dirty:boolean version:integer created_at:datetime updated_at:datetime
+# Demos Context
+mix phx.gen.live Demos Demo demos \
+  name:string \
+  description:text \
+  seed_data:map \
+  status:enum:generating:ready:validating:approved:deprecated \
+  project_id:references:projects
 
-# Environments - Git branch and workspace management
-mix phx.gen.context Environments Environment environments project_id:references:projects name:string branch_name:string workspace_path:string status:string created_at:datetime
+# Metrics Context
+mix phx.gen.live Metrics Metric metrics \
+  name:string \
+  value:decimal \
+  type:enum:story_completion:spec_completion:task_completion:test_coverage \
+  project_id:references:projects
 
-# Demos - Phoenix application scaffolding and seed data
-mix phx.gen.live Demos Demo demos project_id:references:projects name:string description:text phx_commands:array:string seed_data:text status:string generated_at:datetime
+# Contexts Context (Meta)
+mix phx.gen.live Contexts Context contexts \
+  name:string \
+  type:enum:domain:coordination \
+  description:text \
+  entity_name:string \
+  dependencies:array:string \
+  project_id:references:projects
 
-# Specs - BDD specifications with traceability
-mix phx.gen.live Specs Spec specs story_id:references:stories title:string given_text:text when_text:text then_text:text status:string is_passing:boolean created_at:datetime
+# Messages Context - References Conversations
+mix phx.gen.live Messages Message messages \
+  provider:string \
+  raw_json:map \
+  metadata:map \
+  conversation_id:references:conversations
 
-# Tasks - Implementation todos with dependency management
-mix phx.gen.live Tasks Task tasks spec_id:references:specs environment_id:references:environments title:string description:text assignee:string status:string branch_name:string priority:integer dependencies:array:string created_at:datetime completed_at:datetime
+# Documents Context - References Contexts
+mix phx.gen.live Documents Document documents \
+  title:string \
+  content:text \
+  type:enum:executive_summary:user_story:bdd_spec:context_design:api_contract \
+  status:enum:draft:approved:modified:dirty:archived \
+  context_id:references:contexts \
+  approved_at:datetime
 
-# Agents - External coding agent management
-mix phx.gen.context Agents Agent agents name:string agent_type:string capabilities:array:string status:string configuration:map
+# Specs Context - References Stories
+mix phx.gen.live Specs Spec specs \
+  title:string \
+  given_clause:text \
+  when_clause:text \
+  then_clause:text \
+  status:enum:draft:approved:in_progress:passing:failing:archived \
+  story_id:references:stories
 
-# LLMs - Internal LLM model management
-mix phx.gen.context LLMs LLM llms name:string model_type:string capabilities:array:string status:string configuration:map
+# Tasks Context - References Specs + Environments
+mix phx.gen.live Tasks Task tasks \
+  title:string \
+  description:text \
+  assignee:enum:agent:human \
+  status:enum:pending:in_progress:completed:failed:blocked \
+  branch_name:string \
+  retry_count:integer \
+  spec_id:references:specs \
+  environment_id:references:environments
 
-# Tests - Test execution results and coverage
-mix phx.gen.context Tests TestResult test_results task_id:references:tasks test_type:string test_name:string status:string output:text coverage_percentage:decimal executed_at:datetime
+# Task Dependencies (Many-to-Many)
+mix phx.gen.schema Tasks.TaskDependency task_dependencies \
+  source_task_id:references:tasks \
+  dependent_task_id:references:tasks \
+  dependency_type:enum:blocks:enables:triggers
 
-# Metrics - Project dashboard and progress tracking
-mix phx.gen.live Metrics Metric metrics project_id:references:projects metric_type:string metric_name:string metric_value:decimal calculated_at:datetime metadata:map
+# Coordination Contexts
+mix phx.gen.context CodeSessions WorkflowState workflow_states \
+  session_id:string \
+  current_step:string \
+  metadata:map \
+  status:string
 
-# Contexts - Phoenix context definitions and metadata
-mix phx.gen.live Contexts Context contexts project_id:references:projects name:string context_type:string description:text entity_name:string file_count:integer status:string
+mix phx.gen.context DesignSessions DesignState design_states \
+  session_id:string \
+  phase:string \
+  artifacts:array:string \
+  status:string
 
-# Dependencies - Inter-context dependency tracking
-mix phx.gen.context Dependencies Dependency dependencies source_context_id:references:contexts target_context_id:references:contexts dependency_type:string description:text status:string
+mix phx.gen.context DemoReview ReviewState review_states \
+  demo_id:references:demos \
+  feedback:text \
+  status:string \
+  reviewer:string
+
+mix phx.gen.context UserConversation ConversationFlow conversation_flows \
+  conversation_id:references:conversations \
+  current_turn:integer \
+  flow_state:map
+
+mix phx.gen.context Tools ToolRegistry tool_registries \
+  name:string \
+  type:string \
+  endpoint:string \
+  capabilities:map
+
+# Tests Context - Embedded Schema (No Persistence)
+mix phx.gen.context Tests TestResult test_results \
+  name:string \
+  status:enum:passing:failing:skipped:error \
+  output:text \
+  duration:integer
