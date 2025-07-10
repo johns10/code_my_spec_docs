@@ -125,49 +125,53 @@ This document defines the Phoenix context mapping for the Requirements Generator
 **Responsibilities**: Internet access coordination, current information retrieval, MCP tool management, and cross-context tool capabilities  
 **Dependencies**: None  
 
+## Design Change Manager
+**Type**: Coordination Context
+**Responsibilities**: Manages dirtying downstream artifacts when designs change
+
 ---
 
 ## Requirements to Context Mapping
 
-| Requirement                                  | Context        |
-| -------------------------------------------- | -------------- |
-| 1.1 New Project Creation                     | Projects       |
-| 1.2 Project Configuration                    | Projects       |
-| 1.3 Executive Summary Generation             | DesignSessions |
-| 2.1 LLM-Driven Interview Process             | DesignSessions |
-| 2.2 User Story Management                    | Stories        |
-| 2.3 User Story Completeness Review           | DesignSessions |
-| 3.1 Initial Context Mapping                  | DesignSessions |
-| 3.2 Phoenix Application Scaffolding          | Demos          |
-| 3.3 Guided Demo Validation                   | DemoReview     |
-| 4.1 BDD Specification Decomposition          | DesignSessions |
-| 4.2 Requirements Traceability                | Specs          |
-| 5.1 BDD Specification to Context Refinement  | DesignSessions |
-| 5.2 Context Design Documentation             | DesignSessions |
-| 5.3 Context Type Management                  | Contexts       |
-| 5.4 Documentation Review Process             | DesignSessions |
-| 5.5 Manual Documentation Modification        | Documents      |
-| 5.6 Current Information Access               | Tools          |
-| 6.1 Todo Generation                          | Tasks          |
-| 6.2 Dependency-Ordered Task Management       | Tasks          |
-| 6.3 External Coding Agent Integration        | CodeSessions   |
-| 6.4 Test Failure Handling                    | CodeSessions   |
-| 6.5 Task Failure Recovery                    | CodeSessions   |
-| 6.6 Todo Administration and Human Assignment | Tasks          |
-| 6.7 Human Task Completion                    | Tasks          |
-| 7.1 Multi-Branch Integration                 | CodeSessions   |
-| 7.2 Component Integration Testing            | CodeSessions   |
-| 7.3 Context Integration Testing              | CodeSessions   |
-| 7.4 BDD Validation Testing                   | CodeSessions   |
-| 7.5 Integration Failure Handling             | CodeSessions   |
-| 8.1 Postmortem Analysis                      | DesignSessions |
-| 8.2 Retry Management                         | CodeSessions   |
-| 9.1 User Story Change Impact                 | Stories        |
-| 9.2 Design Evolution                         | DesignSessions |
-| 10.1 Multi-User Coordination                 | DesignSessions |
-| 10.2 Approval Workflows                      | DesignSessions |
-| 11.1 BDD Specification Status Tracking       | Metrics        |
-| 11.2 Project Dashboard                       | Metrics        |
+| Requirement                                  | Context               |
+| -------------------------------------------- | --------------------- |
+| 1.1 New Project Creation                     | Projects              |
+| 1.2 Project Configuration                    | Projects              |
+| 1.3 Executive Summary Generation             | DesignSessions        |
+| 2.1 LLM-Driven Interview Process             | DesignSessions        |
+| 2.2 User Story Management                    | Stories               |
+| 2.3 User Story Completeness Review           | DesignSessions        |
+| 3.1 Initial Context Mapping                  | DesignSessions        |
+| 3.2 Phoenix Application Scaffolding          | Demos                 |
+| 3.3 Guided Demo Validation                   | DemoReview            |
+| 4.1 BDD Specification Decomposition          | DesignSessions        |
+| 4.2 Requirements Traceability                | Specs                 |
+| 5.1 BDD Specification to Context Refinement  | DesignSessions        |
+| 5.2 Context Design Documentation             | DesignSessions        |
+| 5.3 Context Type Management                  | Contexts              |
+| 5.4 Documentation Review Process             | DesignSessions        |
+| 5.5 Manual Documentation Modification        | Documents             |
+| 5.6 Current Information Access               | Tools                 |
+| 6.1 Todo Generation                          | Tasks                 |
+| 6.2 Dependency-Ordered Task Management       | Tasks                 |
+| 6.3 External Coding Agent Integration        | CodeSessions          |
+| 6.4 Test Failure Handling                    | CodeSessions          |
+| 6.5 Task Failure Recovery                    | CodeSessions          |
+| 6.6 Todo Administration and Human Assignment | Tasks                 |
+| 6.7 Human Task Completion                    | Tasks                 |
+| 7.1 Multi-Branch Integration                 | CodeSessions          |
+| 7.2 Component Integration Testing            | CodeSessions          |
+| 7.3 Context Integration Testing              | CodeSessions          |
+| 7.4 BDD Validation Testing                   | CodeSessions          |
+| 7.5 Integration Failure Handling             | CodeSessions          |
+| 8.1 Postmortem Analysis                      | DesignSessions        |
+| 8.2 Retry Management                         | CodeSessions          |
+| 9.1 User Story Change Impact                 | Design Change Manager |
+| 9.2 Design Evolution                         | DesignSessions        |
+| 10.1 Multi-User Coordination                 | DesignSessions        |
+| 10.2 Approval Workflows                      | DesignSessions        |
+| 11.1 BDD Specification Status Tracking       | Metrics               |
+| 11.2 Project Dashboard                       | Metrics               |
 
 ---
 

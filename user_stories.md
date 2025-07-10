@@ -76,7 +76,7 @@
 - User stories are fully editable (title, description, acceptance criteria)
 - Users can manually add, modify, or remove user stories
 - System tracks changes and marks downstream artifacts as "dirty"
-- Changes to user stories trigger regeneration approval workflow
+- Changes to user stories trigger regeneration approval workflow via events
 - Simple locking prevents concurrent editing of same user story
 
 ### 2.3 User Story Completeness Review
