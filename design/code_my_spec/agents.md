@@ -1,7 +1,7 @@
 # Agents Context
 
 ## Purpose
-Manages agent creation and execution for coding tasks. Agents have types (like `:coder`) that define their configuration and capabilities, and implementations (like `ClaudeCodeAgent`) that handle actual execution. Agents are ephemeral and not persisted.
+Manages agent creation and execution for coding tasks. Agents have types (like `:unit_coder`) that define their configuration and capabilities, and implementations (like `ClaudeCodeAgent`) that handle actual execution. Agents are ephemeral and not persisted.
 
 ## Entity Ownership
 - Agent entities and execution orchestration
@@ -16,7 +16,7 @@ Manages agent creation and execution for coding tasks. Agents have types (like `
   {:ok, execution_result()} | {:error, execution_error()}
 
 # Type definitions
-@type agent_type() :: :coder
+@type agent_type() :: :unit_coder
 @type agent_params() :: %{name: String.t(), type: agent_type(), config: map()}
 @type prompt() :: String.t()
 @type stream_handler() :: (any() -> :ok)
@@ -49,11 +49,11 @@ Agents Context
 │   ├── name, type, config
 │   └── created_at timestamp
 ├── Registry (main component)
-│   └── manages all agent types (:coder, etc.)
+│   └── manages all agent types (:unit_coder, etc.)
 ├── AgentType
 │   └── defines struct and required keys for agents
-├── Types/
-│   └── Coder (type definition)
+├── AgentTypes/
+│   └── Defines agent types and logic for getting them
 └── Implementations/
     └── ClaudeCodeAgent (execution implementation)
         ├── implements AgentBehaviour
@@ -67,7 +67,7 @@ Agents Context
 
 ## Execution Flow
 
-1. **Agent Creation**: Create agent with type `:coder` and optional config overrides
+1. **Agent Creation**: Create agent with type `:unit_coder` and optional config overrides
 2. **Type Resolution**: Get agent type module from Types.Registry 
 3. **Implementation Lookup**: Get execution implementation from application config
 4. **Execute**: Call `ImplementationModule.execute(agent, prompt, stream_handler)` 

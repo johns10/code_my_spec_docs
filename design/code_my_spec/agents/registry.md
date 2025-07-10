@@ -6,22 +6,22 @@ Agent factory that creates Agent structs with embedded AgentType information. Ha
 ## Module Interface
 
 ```elixir
-@spec get_agent_type(agent_type()) :: {:ok, Agent.t()} | {:error, :unknown_type}
+@spec get_agent(agent_type(), map()) :: {:ok, Agent.t()} | {:error, :unknown_type}
 @spec list_agent_types() :: [agent_type()]
 
-@type agent_type() :: :coder
+@type agent_type() :: :unit_coder
 ```
 
 ## Function Specifications
 
-### `get_agent_type/1`
-Creates an Agent struct by:
+### `get_agent/2`
+Creates an Agent struct with provided config by:
 1. Getting AgentType data from AgentTypes module
 2. Resolving implementation if AgentType.implementation is nil
 3. Embedding complete AgentType with resolved implementation in Agent struct
-4. Returning self-contained Agent ready for execution
+4. Setting config in Agent.config for final configuration
 
-### `list_agent_types/0`
+### `list_agents/0`
 Returns list of all available agent types from AgentTypes module.
 
 ## Sequence Diagram
@@ -33,9 +33,9 @@ sequenceDiagram
     participant AT as AgentTypes
     participant AC as Application Config
     
-    C->>R: get_agent_type(:coder)
+    C->>R: get_agent_type(:unit_coder)
     
-    R->>AT: get(:coder)
+    R->>AT: get(:unit_coder)
     AT-->>R: %AgentType{}
     
     alt AgentType.implementation is nil

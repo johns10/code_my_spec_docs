@@ -6,11 +6,11 @@ Simple data store for agent type definitions. Provides agent type configurations
 ## Module Interface
 
 ```elixir
-@spec get(agent_type()) :: AgentType.t() | nil
+@spec get(agent_type()) :: {:ok, AgentType.t()} | {:error, :unknown_types}
 @spec list() :: [agent_type()]
 @spec exists?(agent_type()) :: boolean()
 
-@type agent_type() :: :coder
+@type agent_type() :: :unit_coder
 ```
 
 ## Function Specifications
