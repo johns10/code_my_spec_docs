@@ -13,27 +13,27 @@ Manages multi-tenant account structures and user membership relationships with r
 
 ```elixir
 # Account Management
-@spec create_personal_account(user_id :: integer()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
-@spec create_team_account(attrs :: map(), creator_id :: integer()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
-@spec get_account(id :: integer()) :: Account.t() | nil
-@spec get_account!(id :: integer()) :: Account.t()
-@spec update_account(Account.t(), attrs :: map()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
-@spec delete_account(Account.t()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
+@spec create_personal_account(scope :: Scope.t(), attrs :: map()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
+@spec create_team_account(scope :: Scope.t(), attrs :: map()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
+@spec get_account(scope :: Scope.t(), id :: integer()) :: Account.t() | nil
+@spec get_account!(scope :: Scope.t(), id :: integer()) :: Account.t()
+@spec update_account(scope :: Scope.t(), Account.t(), attrs :: map()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
+@spec delete_account(scope :: Scope.t(), Account.t()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
 
 # Membership Management
-@spec add_user_to_account(user_id :: integer(), account_id :: integer(), role :: account_role()) :: {:ok, Member.t()} | {:error, Ecto.Changeset.t() | :user_limit_exceeded}
-@spec remove_user_from_account(user_id :: integer(), account_id :: integer()) :: {:ok, Member.t()} | {:error, :not_found}
-@spec list_user_accounts(user_id :: integer()) :: [Account.t()]
-@spec list_account_users(account_id :: integer()) :: [User.t()]
-@spec get_user_role(user_id :: integer(), account_id :: integer()) :: account_role() | nil
-@spec update_user_role(user_id :: integer(), account_id :: integer(), role :: account_role()) :: {:ok, Member.t()} | {:error, Ecto.Changeset.t()}
-@spec user_has_account_access?(user_id :: integer(), account_id :: integer()) :: boolean()
-@spec can_add_user_to_account?(account_id :: integer()) :: boolean()
-@spec count_account_users(account_id :: integer()) :: non_neg_integer()
+@spec add_user_to_account(scope :: Scope.t(), user_id :: integer(), account_id :: integer(), role :: account_role()) :: {:ok, Member.t()} | {:error, Ecto.Changeset.t() | :user_limit_exceeded}
+@spec remove_user_from_account(scope :: Scope.t(), user_id :: integer(), account_id :: integer()) :: {:ok, Member.t()} | {:error, :not_found}
+@spec list_user_accounts(scope :: Scope.t()) :: [Account.t()]
+@spec list_account_users(scope :: Scope.t(), account_id :: integer()) :: [User.t()]
+@spec get_user_role(scope :: Scope.t(), user_id :: integer(), account_id :: integer()) :: account_role() | nil
+@spec update_user_role(scope :: Scope.t(), user_id :: integer(), account_id :: integer(), role :: account_role()) :: {:ok, Member.t()} | {:error, Ecto.Changeset.t()}
+@spec user_has_account_access?(scope :: Scope.t(), user_id :: integer(), account_id :: integer()) :: boolean()
+@spec can_add_user_to_account?(scope :: Scope.t(), account_id :: integer()) :: boolean()
+@spec count_account_users(scope :: Scope.t(), account_id :: integer()) :: non_neg_integer()
 
 # Account Context Management
-@spec get_personal_account(user_id :: integer()) :: Account.t() | nil
-@spec ensure_personal_account(user_id :: integer()) :: {:ok, Account.t()}
+@spec get_personal_account(scope :: Scope.t()) :: Account.t() | nil
+@spec ensure_personal_account(scope :: Scope.t()) :: {:ok, Account.t()}
 
 # Custom Types
 @type account_role :: :owner | :admin | :member
@@ -81,24 +81,28 @@ Accounts
 
 ### Personal Account Creation Flow
 1. **Trigger**: Called during user registration via Users context callback
-2. **Account Creation**: Generate personal account with user's name
-3. **Owner Assignment**: Add user as owner of their personal account
-4. **Context Setup**: Personal account becomes default context for user
+2. **Scope Validation**: Extract user from scope for account creation
+3. **Account Creation**: Generate personal account with user's name
+4. **Owner Assignment**: Add user as owner of their personal account
+5. **Context Setup**: Personal account becomes default context for user
 
 ### Team Account Creation Flow
-1. **Account Creation**: User creates team account with specified attributes
-2. **Owner Assignment**: Creator automatically assigned as account owner
-3. **Slug Generation**: Unique slug created for account routing
-4. **Permission Setup**: Owner permissions established for creator
+1. **Scope Validation**: Extract user from scope for account creation
+2. **Account Creation**: User creates team account with specified attributes
+3. **Owner Assignment**: Creator automatically assigned as account owner
+4. **Slug Generation**: Unique slug created for account routing
+5. **Permission Setup**: Owner permissions established for creator
 
 ### Members Management Flow
-1. **User Limit Check**: Verify account hasn't exceeded user limit (via Billing context when implemented)
-2. **Access Validation**: Verify requesting user has permission to modify members
-3. **Role Assignment**: Add user to account with specified role
-4. **Constraint Checking**: Validate role hierarchy and account limits
-5. **Relationship Creation**: Persist members in members join table
+1. **Scope Validation**: Extract user from scope for permission checks
+2. **User Limit Check**: Verify account hasn't exceeded user limit (via Billing context when implemented)
+3. **Access Validation**: Verify requesting user has permission to modify members
+4. **Role Assignment**: Add user to account with specified role
+5. **Constraint Checking**: Validate role hierarchy and account limits
+6. **Relationship Creation**: Persist members in members join table
 
 ### Account Context Switching Flow
-1. **Permission Validation**: Verify user has access to requested account
-2. **Context Update**: Switch user's current account context
-3. **Role Refresh**: Update session with user's role in new account context
+1. **Scope Validation**: Extract user from scope for permission checks
+2. **Permission Validation**: Verify user has access to requested account
+3. **Context Update**: Switch user's current account context
+4. **Role Refresh**: Update session with user's role in new account context
