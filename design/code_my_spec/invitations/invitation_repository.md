@@ -39,6 +39,12 @@ Provides data access layer for invitation entities, handling invitation creation
 @spec expired(query :: Ecto.Query.t()) :: Ecto.Query.t()
 ```
 
+### List Operations
+```elixir
+@spec list_user_invitations(email :: String.t()) :: [Invitation.t()]
+@spec list_pending_invitations(scope :: Scope.t()) :: [Invitation.t()]
+```
+
 ### Bulk Operations
 ```elixir
 @spec cleanup_expired_invitations(days_old :: integer()) :: {integer(), nil}
@@ -61,6 +67,10 @@ Provides data access layer for invitation entities, handling invitation creation
 - `accepted/1` - Filters query for accepted invitations (accepted_at is not nil)
 - `cancelled/1` - Filters query for cancelled invitations (cancelled_at is not nil)
 - `expired/1` - Filters query for expired invitations (expires_at <= now)
+
+### List Functions
+- `list_user_invitations/1` - Lists all pending, non-expired invitations for a specific email address across all accounts
+- `list_pending_invitations/1` - Lists all pending, non-expired invitations for the account in scope
 
 ### Status Management Functions
 - `accept/2` - Sets accepted_at timestamp, validates scope ownership
@@ -116,6 +126,13 @@ Repository integrates with Invitations context as primary data access layer for 
 
 ### Common Query Patterns
 ```elixir
+# Get pending invitations for account (now via list_pending_invitations/1)
+list_pending_invitations(scope)
+
+# Find user's pending invitations across accounts (now via list_user_invitations/1)
+list_user_invitations("user@example.com")
+
+# Manual query patterns for custom filtering
 # Get pending invitations for account
 (from i in Invitation)
 |> by_account(account_id)
