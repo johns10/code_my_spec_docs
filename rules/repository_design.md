@@ -1,6 +1,7 @@
 ---
-type: "repository_design"
+glob: "**/*_repository.md"
 ---
+
 # Repository Design Documentation Rules
 
 ## Document Structure

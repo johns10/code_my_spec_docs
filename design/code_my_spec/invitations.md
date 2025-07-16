@@ -76,20 +76,16 @@ Manages the complete invitation workflow for adding users to accounts, including
 ## Component Diagram
 
 ```
-Invitations
+Invitations (orchestrates invitation flow at a high level)
 ├── Invitation (token, email, role, status, expires_at, account_id, invited_by_id)
 ├── Invitations Repository
 |   ├── Token Generation & Validation
 |   ├── Expiration Management
 |   └── Status Tracking
-├── Email Service Integration
-|   ├── Invitation Email Templates
-|   ├── Reminder Notifications
-|   └── Acceptance Confirmations
-└── User Orchestration
-    ├── Existing User Addition
-    ├── New User Registration
-    └── Account Membership Creation
+└── Mailer
+    ├── Invitation Email Templates
+    ├── Reminder Notifications
+    └── Acceptance Confirmations
 ```
 
 ## Dependencies

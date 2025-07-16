@@ -1,7 +1,3 @@
----
-type: "repository_design"
----
-
 # Accounts Repository Design
 
 ## Purpose

@@ -20,13 +20,16 @@ Manages user preference data including active account selection, active project 
 ## Public API
 ```elixir
 # Preference retrieval
-@spec get_user_preferences(Scope.t()) :: {:ok, UserPreference.t()} | {:error, :not_found}
-@spec get_user_preferences!(Scope.t()) :: UserPreference.t()
+@spec get_user_preference(Scope.t()) :: {:ok, UserPreference.t()} | {:error, :not_found}
+@spec get_user_preference!(Scope.t()) :: UserPreference.t()
 
 # Preference modification
 @spec update_user_preferences(Scope.t(), attrs :: map()) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
 @spec create_user_preferences(Scope.t(), attrs :: map()) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
 @spec delete_user_preferences(Scope.t()) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
+@spec select_active_account(Scope.t(), account_id) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
+@spec select_active_project(Scope.t(), project_id) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
+@spec generate_token(Scope.t()) :: {:ok, UserPreference.t()} | {:error, Changeset.t()}
 
 # Changeset generation
 @spec change_user_preferences(Scope.t(), attrs :: map()) :: Changeset.t()
@@ -48,11 +51,10 @@ Manages user preference data including active account selection, active project 
 
 ## Component Diagram
 ```
-UserPreferences
-├── UserPreference (schema)
-|   ├── Changeset validation
-|   └── Database constraints
-└── Repository
+UserPreferences (contains repository functions)
+└── UserPreference (schema)
+    ├── Changeset validation
+    └── Database constraints
 ```
 
 ## Dependencies
