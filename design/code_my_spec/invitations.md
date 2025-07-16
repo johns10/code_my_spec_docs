@@ -25,7 +25,7 @@ Manages the complete invitation workflow for adding users to accounts, including
 
 ## Key Entities
 - **Invitation**: Token, email, role, expiration, account association
-- **Invitation States**: Pending � Accepted/Expired/Cancelled
+- **Invitation States**: Derived from timestamps (pending → accepted/expired/cancelled)
 
 ## Business Logic Handled
 - **Duplicate Prevention**: Don't invite users who already have account access
@@ -52,7 +52,6 @@ Manages the complete invitation workflow for adding users to accounts, including
 @spec cleanup_expired_invitations() :: :ok
 
 # Custom Types
-@type invitation_status :: :pending | :accepted | :expired | :cancelled
 @type account_role :: :owner | :admin | :member
 ```
 

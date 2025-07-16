@@ -1,7 +1,3 @@
----
-type: "repository_design"
----
-
 # Invitations Repository Design
 
 ## Purpose
@@ -28,23 +24,23 @@ Provides data access layer for invitation entities, handling invitation creation
 
 ### Status Management
 ```elixir
-@spec mark_invitation_accepted(scope :: Scope.t(), Invitation.t()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t()}
-@spec mark_invitation_expired(scope :: Scope.t(), Invitation.t()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t()}
-@spec mark_invitation_cancelled(scope :: Scope.t(), Invitation.t()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t()}
+@spec accept(scope :: Scope.t(), Invitation.t()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t()}
+@spec cancel(scope :: Scope.t(), Invitation.t()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t()}
 ```
 
 ### Query Builders
 ```elixir
-@spec by_email(email :: String.t()) :: Ecto.Query.t()
-@spec by_status(status :: invitation_status()) :: Ecto.Query.t()
-@spec by_account(account_id :: integer()) :: Ecto.Query.t()
-@spec pending_and_not_expired() :: Ecto.Query.t()
-@spec expired() :: Ecto.Query.t()
+@spec by_email(query :: Ecto.Query.t(), email :: String.t()) :: Ecto.Query.t()
+@spec by_account(query :: Ecto.Query.t(), account_id :: integer()) :: Ecto.Query.t()
+@spec pending(query :: Ecto.Query.t()) :: Ecto.Query.t()
+@spec not_expired(query :: Ecto.Query.t()) :: Ecto.Query.t()
+@spec accepted(query :: Ecto.Query.t()) :: Ecto.Query.t()
+@spec cancelled(query :: Ecto.Query.t()) :: Ecto.Query.t()
+@spec expired(query :: Ecto.Query.t()) :: Ecto.Query.t()
 ```
 
 ### Bulk Operations
 ```elixir
-@spec mark_expired_invitations() :: {integer(), nil}
 @spec cleanup_expired_invitations(days_old :: integer()) :: {integer(), nil}
 @spec count_pending_invitations(scope :: Scope.t()) :: integer()
 ```
@@ -58,15 +54,17 @@ Provides data access layer for invitation entities, handling invitation creation
 
 ### Query Functions
 - `get_invitation_by_token/1` - Token-based lookup for public invitation acceptance, no scoping required
-- `by_email/1` - Finds invitations by email address within account scope
-- `by_status/1` - Returns query filtered by invitation status (pending, accepted, expired, cancelled)
-- `pending_and_not_expired/0` - Query for active invitations that can still be accepted
-- `expired/0` - Query for invitations past expiration date for cleanup operations
+- `by_email/2` - Filters query by email address 
+- `by_account/2` - Filters query by account_id
+- `pending/1` - Filters query for pending invitations (accepted_at and cancelled_at are nil)
+- `not_expired/1` - Filters query for non-expired invitations (expires_at > now)
+- `accepted/1` - Filters query for accepted invitations (accepted_at is not nil)
+- `cancelled/1` - Filters query for cancelled invitations (cancelled_at is not nil)
+- `expired/1` - Filters query for expired invitations (expires_at <= now)
 
 ### Status Management Functions
-- `mark_invitation_accepted/2` - Updates status to accepted with timestamp, validates scope ownership
-- `mark_invitation_expired/2` - Updates status to expired, used for manual expiration
-- `mark_invitation_cancelled/2` - Updates status to cancelled, validates user permissions
+- `accept/2` - Sets accepted_at timestamp, validates scope ownership
+- `cancel/2` - Sets cancelled_at timestamp, validates user permissions
 
 ## Error Handling
 
@@ -103,7 +101,7 @@ Repo.transaction(fn ->
   with {:ok, invitation} <- get_invitation_by_token(token),
        {:ok, user} <- Users.register_user(user_attrs),
        {:ok, _member} <- Accounts.add_user_to_account(user.id, invitation.account_id, invitation.role),
-       {:ok, invitation} <- mark_invitation_accepted(scope, invitation) do
+       {:ok, invitation} <- accept(scope, invitation) do
     {:ok, {user, invitation}}
   else
     {:error, reason} -> Repo.rollback(reason)
@@ -119,16 +117,23 @@ Repository integrates with Invitations context as primary data access layer for 
 ### Common Query Patterns
 ```elixir
 # Get pending invitations for account
-Invitation
+(from i in Invitation)
 |> by_account(account_id)
-|> by_status(:pending)
-|> pending_and_not_expired()
+|> pending()
+|> not_expired()
 |> Repo.all()
 
-# Find user's invitations across accounts
-Invitation
+# Find user's pending invitations across accounts
+(from i in Invitation)
 |> by_email("user@example.com")
-|> by_status(:pending)
+|> pending()
+|> not_expired()
+|> Repo.all()
+
+# Find expired invitations for cleanup
+(from i in Invitation)
+|> pending()
+|> expired()
 |> Repo.all()
 ```
 
@@ -154,6 +159,12 @@ Invitation
   account_id: integer(),
   invited_by_id: integer()
 }
-@type invitation_status :: :pending | :accepted | :expired | :cancelled
 @type account_role :: :owner | :admin | :member
 ```
+
+## Status Derivation
+Status is derived from timestamp fields rather than stored explicitly:
+- **:pending** - `accepted_at` is `nil` AND `cancelled_at` is `nil` AND `expires_at` > `now`
+- **:accepted** - `accepted_at` is not `nil`
+- **:cancelled** - `cancelled_at` is not `nil`
+- **:expired** - `expires_at` <= `now` AND `accepted_at` is `nil` AND `cancelled_at` is `nil`

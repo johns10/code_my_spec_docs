@@ -9,9 +9,9 @@ The Invitation schema represents the data structure for managing invitation toke
 - **token**: Cryptographically secure 32-character string for invitation access
 - **email**: Email address of the person being invited
 - **role**: The account role they'll receive upon acceptance (owner, admin, member)
-- **status**: Current invitation state (pending, accepted, expired, cancelled)
 - **expires_at**: Timestamp when the invitation becomes invalid
 - **accepted_at**: Timestamp when invitation was accepted (nil if pending)
+- **cancelled_at**: Timestamp when invitation was cancelled (nil if not cancelled)
 
 ### Relationships
 - **account_id**: References the account they're being invited to join
@@ -36,25 +36,24 @@ defmodule CodeMySpec.Invitations.Invitation do
     token: String.t(),
     email: String.t(),
     role: account_role(),
-    status: invitation_status(),
     expires_at: DateTime.t(),
     accepted_at: DateTime.t() | nil,
+    cancelled_at: DateTime.t() | nil,
     account_id: integer(),
     invited_by_id: integer(),
     inserted_at: DateTime.t(),
     updated_at: DateTime.t()
   }
   
-  @type invitation_status :: :pending | :accepted | :expired | :cancelled
   @type account_role :: :owner | :admin | :member
   
   schema "invitations" do
     field :token, :string
     field :email, :string
     field :role, Ecto.Enum, values: [:owner, :admin, :member]
-    field :status, Ecto.Enum, values: [:pending, :accepted, :expired, :cancelled], default: :pending
     field :expires_at, :utc_datetime
     field :accepted_at, :utc_datetime
+    field :cancelled_at, :utc_datetime
     
     belongs_to :account, Account
     belongs_to :invited_by, User
@@ -70,7 +69,7 @@ end
 Validates and prepares new invitations with automatic token generation and expiration setting. Ensures required fields are present and validates email format and role values.
 
 ### Status Update Changeset
-Handles state transitions between pending, accepted, expired, and cancelled states. Automatically sets accepted_at timestamp when marking as accepted.
+Handles state transitions by setting appropriate timestamps. Sets accepted_at when accepting invitations and cancelled_at when cancelling.
 
 ### Key Validations
 - **Email Format**: Ensures valid email format using regex validation
@@ -85,7 +84,8 @@ Handles state transitions between pending, accepted, expired, and cancelled stat
 - **Email + Account Unique Index**: Prevents duplicate invitations
 - **Account Index**: Efficient queries for account-specific invitations
 - **Email Index**: Quick lookups for user invitation history
-- **Status Index**: Filtering by invitation status
+- **Accepted At Index**: Efficient queries for accepted invitations
+- **Cancelled At Index**: Efficient queries for cancelled invitations
 - **Expiration Index**: Efficient cleanup of expired invitations
 
 ## Token Generation
