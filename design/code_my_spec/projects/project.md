@@ -14,6 +14,7 @@ defmodule CodeMySpec.Projects.Project do
 
   schema "projects" do
     field :name, :string
+    field :description, :string
     field :code_repo, :string
     field :docs_repo, :string
     field :status, Ecto.Enum, values: [:created, :setup_queued, :initializing, :deps_installing, :setting_up_auth, :compiling, :testing, :committing, :ready, :failed]
@@ -25,7 +26,7 @@ defmodule CodeMySpec.Projects.Project do
   @doc false
   def changeset(project, attrs) do
     project
-    |> cast(attrs, [:name, :code_repo, :docs_repo, :status, :setup_error])
+    |> cast(attrs, [:name, :description, :code_repo, :docs_repo, :status, :setup_error])
     |> validate_required([:name])
     |> validate_project_name()
     |> validate_repo(:code_repo)
@@ -55,6 +56,12 @@ end
   - Constraints: 1-100 characters
   - Unique across all projects
   - Converted to snake_case when generating Phoenix app name
+
+### Optional Fields
+- **description**: Project description
+  - Type: `string`
+  - Optional field for project documentation
+  - Used for display purposes in UI
 
 - **code_repo**: GitHub repository URL
   - Type: `string`
