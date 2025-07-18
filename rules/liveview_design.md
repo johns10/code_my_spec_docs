@@ -3,6 +3,11 @@
 ## Purpose
 These rules ensure consistent, complete design documentation for Phoenix LiveViews and components before implementation.
 
+## Guidelines
+
+Keep liveviews small and focused.
+Each liveview should correspond to a path. No modifying the UI implicitly without a path change.
+
 ## LiveView Design Template
 
 ### File Structure

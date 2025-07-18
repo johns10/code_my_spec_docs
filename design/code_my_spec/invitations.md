@@ -43,7 +43,7 @@ Manages the complete invitation workflow for adding users to accounts, including
 
 ```elixir
 # Invitation Management
-@spec invite_user(scope :: Scope.t(), email :: String.t(), role :: account_role()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t() | :user_already_member | :user_limit_exceeded}
+@spec invite_user(scope :: Scope.t(), email :: String.t(), account_id :: integer(), role :: account_role()) :: {:ok, Invitation.t()} | {:error, Ecto.Changeset.t() | :user_already_member | :user_limit_exceeded}
 @spec accept_invitation(token :: String.t(), user_attrs :: map()) :: {:ok, {User.t(), Member.t()}} | {:error, :invalid_token | :expired_token | :email_mismatch | Ecto.Changeset.t()}
 @spec list_pending_invitations(scope :: Scope.t()) :: [Invitation.t()]
 @spec list_user_invitations(email :: String.t()) :: [Invitation.t()]
