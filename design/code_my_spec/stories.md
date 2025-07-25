@@ -1,14 +1,13 @@
 # Stories
 
 ## Purpose
-Manages user stories lifecycle including creation, editing, versioning, and change tracking with MCP server integration for LLM access.
+Manages user stories lifecycle including creation, editing, versioning, and change tracking.
 
 ## Entity Ownership
 - User Story entities with title, description, acceptance criteria, and metadata
 - Story versioning and change tracking via PaperTrail
 - Story locking mechanism for concurrent editing prevention
 - Downstream artifact dependency tracking and "dirty" state management
-- MCP server component for LLM story modification capabilities
 
 ## Public API
 ```elixir
@@ -27,12 +26,6 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
 # Change Tracking & Versioning
 @spec get_story_versions(story_id()) :: [PaperTrail.Version.t()]
 @spec get_story_at_version(story_id(), version()) :: {:ok, Story.t()} | {:error, :not_found}
-@spec track_change(story_id(), change_type(), user_id()) :: {:ok, ChangeEvent.t()}
-@spec mark_downstream_dirty(story_id()) :: {:ok, [artifact_id()]}
-
-# MCP Server Integration
-@spec register_mcp_tools() :: :ok
-@spec handle_mcp_story_action(action(), params()) :: mcp_response()
 
 # Custom Types
 @type story_id() :: binary()
@@ -42,7 +35,6 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
 @type version() :: integer()
 @type change_type() :: :title | :description | :acceptance_criteria | :created | :deleted
 @type action() :: :create | :update | :delete | :list | :get
-@type mcp_response() :: %{success: boolean(), data: term(), error: binary() | nil}
 @type story_attrs() :: %{
   title: binary(),
   description: binary(),
@@ -75,12 +67,6 @@ Stories
 |   ├── title, description, acceptance_criteria
 |   ├── project_id, inserted_at, updated_at, lock fields
 |   └── PaperTrail versioning
-├── MCPServer
-|   ├── Tool registration for story operations
-|   ├── Request handling and validation
-|   └── Response formatting
-├── ChangeTracker
-|   └── Event broadcasting via PubSub
 └── Repository
     ├── Basic CRUD operations
     └── Lock management queries
@@ -90,12 +76,10 @@ Stories
 - **PaperTrail**: For automatic versioning and change tracking
 - **Phoenix.PubSub**: For broadcasting change events
 - **Ecto**: For database persistence and transactions
-- **MCP SSE**: For exposing story operations to LLMs
 
 ## Execution Flow
 1. **Story Creation**: Validate input, create story with PaperTrail version, broadcast change event
 2. **Story Locking**: UI checks lock expiration, clears expired locks, sets new lock on edit attempt
 3. **Story Update**: Validate lock ownership, update story in transaction, PaperTrail creates version, broadcast via PubSub
 4. **Change Tracking**: Identify downstream dependencies, mark artifacts as dirty, trigger regeneration approval workflow
-5. **MCP Integration**: Register tools with MCP server, handle LLM requests, validate and execute story operations
-6. **Event Broadcasting**: Notify interested contexts about story changes for workflow coordination
+5. **Event Broadcasting**: Notify interested contexts about story changes for workflow coordination

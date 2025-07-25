@@ -17,7 +17,6 @@ Provides data access layer for Story entities with standardized CRUD operations,
 - **by_project/2**: Filter stories by project_id
 - **by_status/2**: Filter stories by status enum
 - **by_priority/2**: Filter stories with minimum priority
-- **with_tags/2**: Filter stories containing specific tags
 - **search_text/2**: Full-text search across title and description
 - **locked_by/2**: Filter stories locked by specific user
 - **lock_expired/1**: Find stories with expired locks
@@ -28,17 +27,10 @@ Provides data access layer for Story entities with standardized CRUD operations,
 - **paginate/3**: Apply limit/offset pagination to queries
 - **with_preloads/2**: Eager load associated data
 
-## Transaction Patterns
-- **create_with_lock/3**: Create story and immediately acquire lock
-- **update_with_version/3**: Update story ensuring version consistency
-- **delete_with_cleanup/2**: Delete story and clean up associated data
-- **batch_update_status/3**: Update multiple stories atomically
-
 ## Lock Management
 - **acquire_lock/3**: Set lock fields on story (locked_by, locked_at, lock_expires_at)
 - **release_lock/2**: Clear lock fields on story
 - **extend_lock/3**: Update lock expiration timestamp
-- **cleanup_expired_locks/1**: Remove expired locks across all stories
 - **is_locked?/1**: Check if story has active lock
 - **lock_owner/1**: Get user_id of lock owner
 
@@ -75,3 +67,4 @@ Story
 - **Ecto**: For database operations and query building
 - **Story Schema**: For changeset validation and struct definition
 - **Repo**: Application repository for database execution
+- **Papertrail**: Uses papertrail to version all changes
