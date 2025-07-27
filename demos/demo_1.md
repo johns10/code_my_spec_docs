@@ -61,14 +61,17 @@ mix phx.gen.live Metrics Metric metrics \
   type:enum:story_completion:spec_completion:task_completion:test_coverage \
   project_id:references:projects
 
-# Contexts Context (Meta)
-mix phx.gen.live Contexts Context contexts \
+# Components Context (Meta)
+mix phx.gen.live Components Component components \
   name:string \
-  type:enum:domain:coordination \
+  type:enum:context:schema:live_view:controller:genserver:task:test:repository \
   description:text \
-  entity_name:string \
-  dependencies:array:string \
-  project_id:references:projects
+  project_id:references:projects 
+
+# Dependencies Context
+mix phx.gen.live Dependencies Dependency dependencies \
+  component_id:references:components \
+  depends_on_id:references:components 
 
 # Messages Context - References Conversations
 mix phx.gen.live Messages Message messages \

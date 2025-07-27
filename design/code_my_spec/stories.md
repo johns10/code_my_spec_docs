@@ -18,6 +18,10 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
 @spec get_story(story_id()) :: {:ok, Story.t()} | {:error, :not_found}
 @spec list_stories(project_id()) :: [Story.t()]
 
+# Markdown Import/Export
+@spec import_markdown(project_id(), binary()) :: {:ok, [Story.t()]} | {:error, term()}
+@spec export_markdown(project_id()) :: {:ok, binary()} | {:error, term()}
+
 # Story Locking
 @spec lock_story(story_id(), user_id()) :: {:ok, :locked} | {:error, :already_locked}
 @spec unlock_story(story_id(), user_id()) :: {:ok, :unlocked} | {:error, :not_locked}
@@ -67,9 +71,49 @@ Stories
 |   ├── title, description, acceptance_criteria
 |   ├── project_id, inserted_at, updated_at, lock fields
 |   └── PaperTrail versioning
-└── Repository
-    ├── Basic CRUD operations
-    └── Lock management queries
+├── Repository
+|   ├── Basic CRUD operations
+|   └── Lock management queries
+└── Markdown (Component)
+    ├── Format validation
+    └── Parse/format operations
+```
+
+## Import/Export Sequence Diagrams
+
+### Import Flow
+```mermaid
+sequenceDiagram
+    participant SC as Stories Context
+    participant MC as Markdown Component
+    participant SS as Story Schema
+    participant R as Repository
+
+    SC->>MC: validate_format(markdown_binary)
+    MC-->>SC: {:ok, :valid} | {:error, reason}
+    
+    SC->>MC: parse_markdown(markdown_binary)
+    MC-->>SC: {:ok, [story_attrs]} | {:error, reason}
+    
+    SC->>SS: changeset(attrs + project_id) [for each]
+    SS-->>SC: [changesets]
+    
+    SC->>R: insert_all(changesets)
+    R-->>SC: {:ok, [stories]} | {:error, reason}
+```
+
+### Export Flow
+```mermaid
+sequenceDiagram
+    participant SC as Stories Context
+    participant R as Repository
+    participant MC as Markdown Component
+
+    SC->>R: list_stories(project_id, ordered_by_priority: true)
+    R-->>SC: [stories]
+    
+    SC->>MC: format_stories(stories)
+    MC-->>SC: markdown_binary
 ```
 
 ## Dependencies

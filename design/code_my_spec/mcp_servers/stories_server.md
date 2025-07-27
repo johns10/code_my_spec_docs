@@ -14,6 +14,7 @@ defmodule CodeMySpec.MCPServers.StoriesServer do
 
   # Tool components
   component CodeMySpec.MCPServers.Stories.Tools.CreateStory
+  component CodeMySpec.MCPServers.Stories.Tools.CreateStories
   component CodeMySpec.MCPServers.Stories.Tools.UpdateStory
   component CodeMySpec.MCPServers.Stories.Tools.DeleteStory
   
@@ -37,6 +38,7 @@ end
 ### Tool Components
 Each tool is a dedicated module with schema and execute function:
 - **CreateStory**: Handles story creation with validation
+- **CreateStories**: Handles multiple story creation with validation
 - **UpdateStory**: Manages story updates with authorization
 - **DeleteStory**: Handles story deletion with ownership checks
 
@@ -57,10 +59,13 @@ Common helpers used across components:
 ## Tool Implementation Pattern
 ```elixir
 defmodule CodeMySpec.MCPServers.Stories.Tools.CreateStory do
+  @moduledoc "Creates a user story"
+
   use Hermes.Server.Component, type: :tool
 
   alias CodeMySpec.Stories
   alias CodeMySpec.MCPServers.Stories.StoriesMapper
+  alias CodeMySpec.MCPServers.Validators
 
   schema do
     field :title, :string, required: true
@@ -68,13 +73,17 @@ defmodule CodeMySpec.MCPServers.Stories.Tools.CreateStory do
     field :acceptance_criteria, {:list, :string}, default: []
   end
 
+  @impl true
   def execute(params, frame) do
-    %{current_scope: scope} = frame.assigns
-    params = Map.put(params, "project_id", scope.active_project.id)
+    with {:ok, scope} <- Validators.validate_scope(frame),
+         {:ok, story} <- Stories.create_story(scope, params) do
+      {:reply, StoriesMapper.story_response(story), frame}
+    else
+      {:error, changeset = %Ecto.Changeset{}} ->
+        {:reply, StoriesMapper.validation_error(changeset), frame}
 
-    case Stories.create_story(scope, params) do
-      {:ok, story} -> {:reply, StoriesMapper.story_response(story), frame}
-      {:error, changeset} -> StoriesMapper.validation_error(changeset)
+      {:error, atom} ->
+        {:reply, StoriesMapper.error(atom), frame}
     end
   end
 end
@@ -84,18 +93,24 @@ end
 ```elixir
 defmodule CodeMySpec.MCPServers.Stories.Resources.Story do
   use Hermes.Server.Component, type: :resource
-  
+
   alias CodeMySpec.Stories
   alias CodeMySpec.MCPServers.Stories.StoriesMapper
-  
+  alias CodeMySpec.MCPServers.Validators
+
   def uri_template, do: "story://{story_id}"
-  
-  def execute(%{"story_id" => story_id}, frame) do
-    %{current_scope: scope} = frame.assigns
-    
-    case Stories.get_story!(scope, story_id) do
-      story -> StoriesMapper.story_resource(story)
-      _ -> StoriesMapper.not_found_error()
+  def uri, do: "story://template"
+  def mime_type, do: "application/json"
+
+  def read(%{"story_id" => story_id}, frame) do
+    with {:ok, scope} <- Validators.validate_scope(frame),
+         {:ok, story} <- Stories.get_story(scope, story_id) do
+      response = StoriesMapper.story_resource(story)
+      {:reply, response, frame}
+    else
+      {:error, reason} ->
+        error = %Hermes.MCP.Error{code: -1, message: "Failed to read story", reason: reason}
+        {:error, error, frame}
     end
   end
 end
@@ -105,116 +120,86 @@ end
 ```elixir
 defmodule CodeMySpec.MCPServers.Stories.Prompts.StoryInterview do
   use Hermes.Server.Component, type: :prompt
-  
+
   alias CodeMySpec.Stories
-  
+  alias CodeMySpec.MCPServers.Validators
+
   schema do
     field :project_id, :string, required: true
   end
-  
-  def execute(%{"project_id" => project_id}, frame) do
-    %{current_scope: scope} = frame.assigns
-    
-    stories = Stories.list_stories(scope)
-    |> Enum.filter(&(&1.project_id == project_id))
-    
-    prompt = """
-    You are an expert Product Manager. Your job is to help refine and flesh out user stories through thoughtful questioning.
 
-    **Current Stories in Project:**
-    #{format_stories_context(stories)}
+  def get_messages(%{"project_id" => project_id}, frame) do
+    with {:ok, scope} <- Validators.validate_scope(frame) do
+      stories =
+        Stories.list_stories(scope)
+        |> Enum.filter(&(&1.project_id == project_id))
 
-    **Your Role:**
-    - Ask leading questions to understand requirements better
-    - Help identify missing acceptance criteria
-    - Suggest edge cases and error scenarios
-    - Guide toward well-formed user stories following "As a... I want... So that..." format
-    - Identify dependencies between stories
+      prompt = """
+      You are an expert Product Manager.
+      Your job is to help refine and flesh out user stories through thoughtful questioning.
 
-    **Instructions:**
-    Start by reviewing the existing stories above, then engage in a conversation to help improve and expand them. Ask specific questions about user needs, business value, and implementation details.
-    """
-    
-    {:ok, %{content: prompt}}
+
+      **Current Stories in Project:**
+      #{format_stories_context(stories)}
+
+      **Your Role:**
+      - Ask leading questions to understand requirements better
+      - Help identify missing acceptance criteria
+      - Suggest edge cases and error scenarios
+      - Guide toward well-formed user stories following "As a... I want... So that..." format
+      - Identify dependencies between stories
+      - Make sure you understand tenancy requirements (user vs account)
+      - Make sure you understand security requirements so you can design for security
+      - Be pragmatic and contain complexity as much as possible
+      - Make sure you cover the entire use case in your stories
+
+      **Instructions:**
+      Start by reviewing the existing stories above, then engage in a conversation to help improve and expand them.
+      Ask specific questions about user needs, business value, and implementation details.
+      """
+
+      messages = [%{"role" => "system", "content" => prompt}]
+      {:ok, messages, frame}
+    else
+      {:error, reason} ->
+        error = %Hermes.MCP.Error{code: -1, message: "Failed to generate prompt", reason: reason}
+        {:error, error, frame}
+    end
   end
-  
+
+  defp format_stories_context([]), do: "No stories currently exist for this project."
+
   defp format_stories_context(stories) do
     stories
     |> Enum.map(&format_story_summary/1)
     |> Enum.join("\n\n")
   end
-end
-```
 
-```elixir  
-defmodule CodeMySpec.MCPServers.Stories.Prompts.StoryReview do
-  use Hermes.Server.Component, type: :prompt
-  
-  alias CodeMySpec.Stories
-  
-  schema do
-    field :project_id, :string, required: true
-  end
-  
-  def execute(%{"project_id" => project_id}, frame) do
-    %{current_scope: scope} = frame.assigns
-    
-    stories = Stories.list_stories(scope)
-    |> Enum.filter(&(&1.project_id == project_id))
-    
-    prompt = """
-    You are a Senior Product Manager conducting a story review session.
+  defp format_story_summary(story) do
+    criteria =
+      case story.acceptance_criteria do
+        [] ->
+          "No acceptance criteria defined"
 
-    **Stories to Review:**
-    #{format_stories_context(stories)}
+        criteria ->
+          criteria
+          |> Enum.map(&"- #{&1}")
+          |> Enum.join("\n")
+      end
 
-    **Review Criteria:**
-    - ✅ Story follows proper "As a... I want... So that..." format
-    - ✅ Acceptance criteria are specific and testable
-    - ✅ Business value is clearly articulated
-    - ✅ Story is appropriately sized (not too large/small)
-    - ✅ Dependencies and assumptions are identified
-    - ✅ Edge cases and error scenarios considered
-
-    **Your Task:**
-    Review each story against the criteria above. For each story, provide:
-    1. Overall assessment (Ready/Needs Work)
-    2. Specific feedback on what's missing or unclear
-    3. Suggestions for improvement
-    4. Questions to clarify requirements
-
-    Focus on making each story development-ready and valuable to users.
     """
-    
-    {:ok, %{content: prompt}}
+    **#{story.title}**
+    #{story.description}
+
+    Acceptance Criteria:
+    #{criteria}
+    """
   end
 end
 ```
 
 ## Response Mapping
-Dedicated mapper module for consistent formatting:
-```elixir
-defmodule CodeMySpec.MCPServers.Stories.StoriesMapper do
-  alias Hermes.Server.Response
-  
-  def story_response(story) do
-    Response.json(%{
-      id: story.id,
-      title: story.title,
-      description: story.description,
-      acceptance_criteria: story.acceptance_criteria,
-      project_id: story.project_id,
-      # ... other fields
-    })
-  end
-  
-  def validation_error(changeset) do
-    Response.error(-32602, "Validation failed", %{
-      errors: format_changeset_errors(changeset)
-    })
-  end
-end
-```
+Dedicated mapper module for consistent formatting.
 
 ## Integration Points
 
@@ -245,6 +230,7 @@ lib/code_my_spec/mcp_servers/stories/
 ├── stories_server.ex           # Main server with component registration
 ├── stories_mapper.ex           # Response formatting utilities
 ├── tools/
+│   ├── create_stories.ex        # Story creation tool
 │   ├── create_story.ex        # Story creation tool
 │   ├── update_story.ex        # Story update tool
 │   └── delete_story.ex        # Story deletion tool

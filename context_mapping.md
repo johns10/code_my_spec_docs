@@ -84,7 +84,7 @@ This document defines the Phoenix context mapping for the Requirements Generator
 **Responsibilities**: Project dashboard data, progress tracking, and reporting metrics  
 **Dependencies**: Stories, Specs, Tasks  
 
-### Contexts Context
+### Components Context
 **Type**: Domain Context  
 **Entity**: `Context`  
 **Responsibilities**: Context definition, metadata, and type management (domain vs coordination)  
@@ -94,7 +94,7 @@ This document defines the Phoenix context mapping for the Requirements Generator
 **Type**: Domain Context  
 **Entity**: `Dependency`  
 **Responsibilities**: Inter-context dependency tracking, resolution ordering, and validation  
-**Dependencies**: Contexts  
+**Dependencies**: Components  
 
 ---
 
@@ -148,7 +148,7 @@ This document defines the Phoenix context mapping for the Requirements Generator
 | 4.2 Requirements Traceability                | Specs                 |
 | 5.1 BDD Specification to Context Refinement  | DesignSessions        |
 | 5.2 Context Design Documentation             | DesignSessions        |
-| 5.3 Context Type Management                  | Contexts              |
+| 5.3 Context Type Management                  | Components            |
 | 5.4 Documentation Review Process             | DesignSessions        |
 | 5.5 Manual Documentation Modification        | Documents             |
 | 5.6 Current Information Access               | Tools                 |
