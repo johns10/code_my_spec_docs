@@ -27,6 +27,10 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
 @spec unlock_story(story_id(), user_id()) :: {:ok, :unlocked} | {:error, :not_locked}
 @spec get_story_lock(story_id()) :: {:ok, Lock.t()} | {:error, :not_found}
 
+# Component Assignment
+@spec set_story_component(story_id(), component_id()) :: {:ok, Story.t()} | {:error, Changeset.t()}
+@spec clear_story_component(story_id()) :: {:ok, Story.t()} | {:error, Changeset.t()}
+
 # Change Tracking & Versioning
 @spec get_story_versions(story_id()) :: [PaperTrail.Version.t()]
 @spec get_story_at_version(story_id(), version()) :: {:ok, Story.t()} | {:error, :not_found}
@@ -35,6 +39,7 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
 @type story_id() :: binary()
 @type user_id() :: binary()
 @type project_id() :: binary()
+@type component_id() :: binary()
 @type artifact_id() :: binary()
 @type version() :: integer()
 @type change_type() :: :title | :description | :acceptance_criteria | :created | :deleted
@@ -43,7 +48,8 @@ Manages user stories lifecycle including creation, editing, versioning, and chan
   title: binary(),
   description: binary(),
   acceptance_criteria: [binary()],
-  project_id: project_id()
+  project_id: project_id(),
+  component_id: component_id() | nil
 }
 ```
 

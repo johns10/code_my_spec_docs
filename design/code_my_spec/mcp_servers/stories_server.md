@@ -17,6 +17,8 @@ defmodule CodeMySpec.MCPServers.StoriesServer do
   component CodeMySpec.MCPServers.Stories.Tools.CreateStories
   component CodeMySpec.MCPServers.Stories.Tools.UpdateStory
   component CodeMySpec.MCPServers.Stories.Tools.DeleteStory
+  component CodeMySpec.MCPServers.Stories.Tools.SetStoryComponent
+  component CodeMySpec.MCPServers.Stories.Tools.ClearStoryComponent
   
   # Resource components  
   component CodeMySpec.MCPServers.Stories.Resources.Story
@@ -41,6 +43,8 @@ Each tool is a dedicated module with schema and execute function:
 - **CreateStories**: Handles multiple story creation with validation
 - **UpdateStory**: Manages story updates with authorization
 - **DeleteStory**: Handles story deletion with ownership checks
+- **SetStoryComponent**: Assigns component to story for satisfaction tracking
+- **ClearStoryComponent**: Removes component assignment from story
 
 ### Resource Components
 Dedicated modules for read-only data access:
@@ -233,7 +237,9 @@ lib/code_my_spec/mcp_servers/stories/
 │   ├── create_stories.ex        # Story creation tool
 │   ├── create_story.ex        # Story creation tool
 │   ├── update_story.ex        # Story update tool
-│   └── delete_story.ex        # Story deletion tool
+│   ├── delete_story.ex        # Story deletion tool
+│   ├── set_story_component.ex   # Component assignment tool
+│   └── clear_story_component.ex # Component assignment removal tool
 ├── resources/  
 │   ├── story.ex               # Individual story resource
 │   └── stories_list.ex        # Project stories collection

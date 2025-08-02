@@ -11,6 +11,7 @@ Defines the Story entity structure representing user stories with title, descrip
 - **priority**: Integer priority level (default: 1)
 - **status**: Enum values - in_progress, completed, dirty (default: in_progress)
 - **project_id**: Required foreign key to parent project
+- **component_id**: Optional foreign key to component that satisfies this story
 - **locked_by**: Optional user ID who currently has the story locked
 - **locked_at**: Timestamp when story was locked
 - **lock_expires_at**: Automatic lock expiration timestamp (prevents permanent locks)
@@ -30,6 +31,7 @@ schema "stories" do
   field :lock_expires_at, :utc_datetime
   
   belongs_to :project, CodeMySpec.Projects.Project
+  belongs_to :component, CodeMySpec.Components.Component
   
   timestamps()
 end
@@ -50,11 +52,13 @@ end
 ## Database Indexes
 - Primary key on id (integer)
 - Foreign key index on project_id for query performance
+- Foreign key index on component_id for query performance
 - Status index for filtering stories by current state
 - Priority index for ordering by importance
 
 ## Associations
 - **Project**: Required parent project relationship (belongs_to)
+- **Component**: Optional component that satisfies this story (belongs_to)
 
 ## Lock Prevention Strategy
 - Lock expiration timestamp prevents permanent locks

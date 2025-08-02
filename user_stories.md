@@ -412,7 +412,7 @@ As a PM, I want to understand the impact of user story changes so that I can mak
 - Queues regeneration work for human approval
 - Shows impact analysis (affected BDD specs, contexts, todos, etc.)
 - Prevents automatic regeneration without human approval
-- Once downstream artificats are regenerated to reflect changed requirements and approved `:dirty` is to false
+- Once downstream artifacts are regenerated to reflect changed requirements and approved `:dirty` is to false
 
 ## Design Evolution
 
