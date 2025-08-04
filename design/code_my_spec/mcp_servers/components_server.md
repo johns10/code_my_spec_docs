@@ -41,6 +41,22 @@ The ComponentsServer MCP server enables LLMs to manage Phoenix context architect
 - `StartContextDesign` - Initiates context design session with user stories
 - `ReviewContextDesign` - Reviews existing context architecture
 
+#### Architectural Statistics
+
+##### `ArchitectureHealthSummary`
+
+- Story coverage: assigned/unassigned counts
+- Context distribution: counts by story size (1, 2-6, 7+)
+- Dependency issues: missing refs, high fan-out contexts
+- Data quality: duplicate stories
+- One comprehensive health overview
+
+##### `ContextStatistics`
+
+- Each context: story count, dependency in/out counts
+- Sorted by story count or dependency count
+- Raw numbers for LLM analysis
+
 ## Component Type Restrictions
 
 Components created through this server should be restricted to architectural contexts only:

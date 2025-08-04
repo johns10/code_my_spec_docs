@@ -21,10 +21,9 @@ This document defines the standard structure and requirements for designing Phoe
 - Keep it concise - bullet points acceptable here
 
 ### 3. Scope Integration
-- Define the scope struct(s) this context accepts
+- Check the existing scope file so you're on the right page
 - Specify scope access patterns (user-scoped, organization-scoped, etc.)
 - Document scope filtering behavior for all public functions
-- Include scope configuration details for generators
 
 ### 4. Public API
 - Complete function specifications using `@spec` notation with scope as first parameter
@@ -37,7 +36,6 @@ This document defines the standard structure and requirements for designing Phoe
 ### 5. State Management Strategy
 - Describe how data flows through the context with scope constraints
 - Persistence patterns (Ecto schemas with scope foreign keys)
-- Caching strategies that respect scope boundaries
 - Transaction boundaries and consistency requirements within scope
 
 ### 6. Component Diagram
@@ -45,6 +43,7 @@ This document defines the standard structure and requirements for designing Phoe
 - Show relationships between schemas, modules, behaviors, and scope filtering
 - Keep at architectural level - no implementation details
 - Use consistent indentation and clear nesting
+- Use markdown syntax (`- `) for nested lists
 
 ### 7. Dependencies
 - External contexts this context depends on
