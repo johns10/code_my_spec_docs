@@ -44,6 +44,7 @@ This document defines the standard structure and requirements for designing Phoe
 - Keep at architectural level - no implementation details
 - Use consistent indentation and clear nesting
 - Use markdown syntax (`- `) for nested lists
+- Do not use tree-style syntax
 
 ### 7. Dependencies
 - External contexts this context depends on

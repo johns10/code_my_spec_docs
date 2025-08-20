@@ -63,7 +63,7 @@ Manages dynamic rule composition and storage for generating context-aware design
 - Multiple matching patterns: global (*,*), session-specific (coding,*), component-specific (*,context), specific (coding,context)
 - String concatenation with separator handling
 
-## Component Diagram
+## Components
 ```
 Rules Context
 - Rule Schema (account_id, component_type, session_type, content)
