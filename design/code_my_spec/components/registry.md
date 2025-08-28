@@ -42,26 +42,6 @@ coordination_context_requirements = [
 
 ## Implementation Strategy
 
-### Test Status Checker
-```elixir
-defmodule CodeMySpec.Components.Requirements.TestStatusChecker do
-  @behaviour CheckerBehaviour
-
-  def check(%{name: :tests_passing}, %{test_exists: test_exists, test_status: test_status}) do
-    cond do
-      not test_exists -> 
-        {:not_satisfied, %{reason: "No test file exists"}}
-      test_status == :passing -> 
-        {:satisfied, %{status: "Tests are passing"}}
-      test_status == :failing -> 
-        {:not_satisfied, %{reason: "Tests are failing"}}
-      test_status == :not_run -> 
-        {:not_satisfied, %{reason: "Tests have not been run"}}
-    end
-  end
-end
-```
-
 ### Design Review Checker (Future)
 ```elixir
 defmodule CodeMySpec.Components.Requirements.DesignReviewChecker do

@@ -1,134 +1,134 @@
 # Project Coordinator
 
 ## Purpose
-Analyzes project implementation status by comparing database component definitions against file system data, providing real-time next-action recommendations for development workflows.
-
-## Entity Ownership
-- **On-Demand Analysis**: Compares components to file system without persistent caching
-- **File System Analysis**: Processes file tree data and test results
-- **Next Action Logic**: Determines what user should work on next based on dependencies and file existence
-- **Project Status Reporting**: Provides overview of project completion status
-
-## Scope Integration
-
-### Accepted Scopes
-- **Secondary Scope**: Project-scoped for team coordination
-
-### Scope Configuration
-All operations are scoped to the user's active project. File system paths and component updates are isolated within project boundaries.
-
-### Access Patterns
-- Components belong to a specific project
-- Analysis is performed on-demand with file tree data
-- No persistent state - all analysis is stateless
+Synchronizes project component requirements with file system reality. Takes file tree and test results, analyzes what files exist for each component, checks requirements against that reality, and returns components with updated requirements.
 
 ## Public API
 
 ```elixir
-# On-Demand Project Analysis
-@spec analyze_project(Scope.t(), file_tree :: map(), test_results :: map()) :: 
-  {:ok, analysis_result()} | {:error, String.t()}
+@spec sync_project_requirements(Scope.t(), file_tree :: map(), test_results :: map()) :: 
+  [Component.t()]
 
-# Types
-@type analysis_result :: %{
-  next_actions: [action_item()],
-  project_status: project_status(),
-  component_statuses: [component_status()]
-}
-
-@type action_item :: %{
-  component_id: integer(),
-  component_name: String.t(),
-  action: :create_design_session | :create_implementation_session | :create_test_session | :fix_tests,
-  reason: String.t(),
-  priority: integer()
-}
-
-@type project_status :: %{
-  total_components: integer(),
-  design_complete: integer(),
-  code_complete: integer(),
-  test_complete: integer()
-}
+# Returns list of components with:
+# - :dependencies preloaded 
+# - :requirements preloaded with current satisfaction status
 ```
 
-## Analysis Strategy
+## What We Need from Components Context
 
-### Stateless Design
-No persistent status fields in components. All analysis computed on-demand by comparing:
-- Database component definitions (source of truth for what should exist)
-- File tree (source of truth for what actually exists)
-- Test results (source of truth for test status)
+The ProjectCoordinator depends on the Components context, not its internals. We need these functions:
 
-### Data Source Flexibility
-The context accepts standard Elixir data structures, making it testable with:
-- **Real file systems**: Use `File.ls!/1` or directory walker libraries
-- **Mock data**: Create file tree maps manually in tests
-- **Test results**: Parse ExUnit JSON formatter output or mock test status
-
-### File Mapping Logic
-Components map to files via naming conventions:
-- **Design File**: `docs/design/{snake_case_name}_context.md`
-- **Code File**: Derived from `module_name` field → `lib/my_app/users.ex`
-- **Test File**: Code file path + `_test.exs` → `test/my_app/users_test.exs`
-
-### Data Format
-File tree is a simple map of file paths to file metadata:
 ```elixir
-file_tree = %{
-  "docs/design/users_context.md" => %{size: 1234},
-  "lib/my_app/users.ex" => %{size: 2345},
-  "test/my_app/users_test.exs" => %{size: 456}
-}
+# Get all components with dependencies loaded
+Components.list_components_with_dependencies(scope)
+
+# Sync requirements for a component (Components calls RequirementsRepository)
+Components.create_component_requirements(scope, component, requirement_attrs_list)
 ```
 
-Test results are module names mapped to status atoms:
+The Components context handles all the Repository details. ProjectCoordinator just orchestrates the analysis and calls Components functions.
+
+## Analysis Flow
+
+1. **Get Components**: Call `Components.list_components_with_dependencies(scope)`
+2. **Analyze Files**: Use ComponentAnalyzer to build component status (includes file path mapping, existence checks, test status)
+3. **Check Requirements**: Get Registry specs, run checkers against component status
+4. **Sync Requirements**: Call `Components.sync_component_requirements/3` with requirement data
+5. **Return Enhanced Components**: Components now have updated requirements
+
+## File System Analysis
+
+### ComponentAnalyzer
+Takes components, file tree, test results. Returns component status for each:
 ```elixir
-test_results = %{
-  "MyApp.UsersTest" => :passing,
-  "MyApp.AccountsTest" => :failing
-}
+ComponentAnalyzer.analyze_components(components, file_tree, test_results)
+# => %{component_id => %{design_exists: true, code_exists: false, test_exists: false, test_status: :not_run}}
 ```
 
-### Next Action Logic
-For each component, determine action based on file existence:
+### Analysis State
+ComponentAnalyzer uses an internal state struct to build up the analysis:
 
-1. **Design Phase**: No design file → `:create_design_session`
-2. **Implementation Phase**: Design exists, no code file → `:create_implementation_session`
-3. **Testing Phase**: Code exists, no test file → `:create_test_session`
-4. **Validation Phase**: Tests exist but failing → `:fix_tests`
-5. **Complete**: All files exist and tests pass → No action needed
+```elixir
+defmodule ComponentAnalyzer.State do
+  @type t :: %__MODULE__{
+    component: Component.t(),
+    expected_files: %{atom() => String.t()},  # %{design_file: "path", code_file: "path", test_file: "path"}
+    actual_files: [String.t()],               # files that actually exist from expected
+    failing_tests: [String.t()],              # failing test modules for this component
+    component_status: Components.component_status() # final result
+  }
+  
+  defstruct [:component, expected_files: %{}, actual_files: [], failing_tests: [], component_status: %{}]
+end
+```
 
-Priority ordering by dependency satisfaction - dependencies must be complete before dependents.
+The ComponentAnalyzer builds up this state for each component:
+1. **Map Expected Files**: Use internal file path mapping logic to populate expected_files
+2. **Check Actual Files**: Compare expected_files against file_tree to find actual_files
+3. **Find Failing Tests**: Look up component's test modules in test_results
+4. **Build Component Status**: Create final `Components.component_status()` from the state
 
-## Component Diagram
+## Implementation Strategy
 
-- ProjectCoordinator
-  - FilePathMapper (component → file path logic)
-  - ComponentAnalyzer (individual component status analysis)
-  - NextActionEngine (dependency-aware action prioritization)
-  - ProjectStatusCalculator (aggregate statistics)
+```elixir
+def sync_project_requirements(scope, file_tree, test_results) do
+  # Get components with dependencies
+  components = Components.list_components_with_dependencies(scope)
+  
+  # Analyze file system state
+  component_statuses = ComponentAnalyzer.analyze_components(components, file_tree, test_results)
+  
+  # For each component, sync its requirements
+  Enum.map(components, fn component ->
+    component_status = Map.get(component_statuses, component.id)
+    requirement_attrs = build_requirement_attrs(component, component_status)
+    
+    # Components context handles the persistence/creation details
+    Components.sync_component_requirements(scope, component, requirement_attrs)
+  end)
+end
+
+defp build_requirement_attrs(component, component_status) do
+  # Get requirement specs from Registry
+  requirement_specs = Registry.get_requirements_for_type(component.type)
+  
+  # Check each requirement against component status
+  Enum.map(requirement_specs, fn spec ->
+    checker = spec.checker
+    check_result = checker.check(spec, component_status)
+    
+    # Return attrs map for Requirements creation
+    %{
+      name: Atom.to_string(spec.name),
+      type: spec.type,
+      description: spec.description,
+      checker_module: Atom.to_string(spec.checker),
+      satisfied_by: if(spec.satisfied_by, do: Atom.to_string(spec.satisfied_by)),
+      satisfied: match?({:satisfied, _}, check_result),
+      checked_at: DateTime.utc_now(),
+      details: extract_details(check_result)
+    }
+  end)
+end
+```
+
+## Components
+
+- **ComponentAnalyzer**: File system analysis and state building (includes file path mapping)
 
 ## Dependencies
 
-- **CodeMySpec.Components**: Component queries and dependency resolution
-- **CodeMySpec.Users.Scope**: Access control and project scoping
+- **Components**: Main dependency - handles all component and requirement operations
+- **Registry**: Requirement specs and checkers
 
-## Execution Flow
+## What This Doesn't Do
 
-### Project Analysis (Single API Call)
-1. **Load Components**: Get all project components with dependencies
-2. **Map File Paths**: Calculate expected file paths for each component
-3. **Check File Existence**: Compare expected paths to file tree
-4. **Parse Test Results**: Extract test status for components with tests
-5. **Determine Actions**: Apply next-action rules per component
-6. **Resolve Dependencies**: Filter actions based on dependency satisfaction
-7. **Calculate Statistics**: Aggregate project completion status
-8. **Return Results**: Provide actionable items with context
+- No persistence logic (Components handles that)
+- No complex types or result structures  
+- No NextActions complexity
+- No changeset manipulation
+- No Repository calls (Components does that)
 
-## Error Handling
-- **Data Validation**: Invalid file tree or test results
-- **Component Mapping**: Files that don't map to expected component patterns
-- **Dependency Resolution**: Circular dependencies or invalid dependency graphs
+Just: analyze files → check requirements → sync via Components → return enhanced components.
 
-All errors are logged and return structured error responses. Analysis continues for valid components even if some have errors.
+Simple orchestration with clear dependencies.
