@@ -1,6 +1,6 @@
 ---
-glob: "*.*"
-priority: 0
+component_type: "*"
+session_type: "*"
 ---
 
 # Collaboration Guidelines

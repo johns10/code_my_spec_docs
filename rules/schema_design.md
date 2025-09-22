@@ -1,5 +1,6 @@
 ---
-type: "schema_design"
+component_type: "schema"
+session_type: "design"
 ---
 
 # Ecto Schema Design Rules

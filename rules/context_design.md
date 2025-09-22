@@ -1,6 +1,6 @@
 ---
-glob: "**/code_my_spec/*.md"
-priority: 0
+component_type: "context"
+session_type: "design"
 ---
 
 # Phoenix Context Design Rules

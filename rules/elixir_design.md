@@ -1,6 +1,6 @@
 ---
-glob: "**/*.md"
-priority: 0
+component_type: "*"
+session_type: "design"
 ---
 
 Structure your application as hierarchical supervision trees where supervisors monitor child processes and restart them when necessary. Design the hierarchy to reflect fault tolerance requirements - critical, stable processes at the top and volatile, expendable processes at the bottom.

@@ -1,3 +1,8 @@
+---
+component_type: "liveview_component"
+session_type: "design"
+---
+
 ## Component Design Template
 
 ### File Structure

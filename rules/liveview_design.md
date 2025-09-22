@@ -1,3 +1,8 @@
+---
+component_type: "liveview"
+session_type: "code"
+---
+
 # LiveView Design Documentation Rules
 
 ## Purpose

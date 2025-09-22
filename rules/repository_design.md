@@ -1,5 +1,6 @@
 ---
-glob: "**/*_repository.md"
+component_type: "repository"
+session_type: "design"
 ---
 
 # Repository Design Documentation Rules

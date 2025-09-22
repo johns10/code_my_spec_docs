@@ -1,6 +1,8 @@
 ---
-glob: "**/*_repository_test.exs"
+component_type: "repository"
+session_type: "test"
 ---
+
 
 # Repository Test Design Rules
 

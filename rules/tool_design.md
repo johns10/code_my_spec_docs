@@ -1,3 +1,8 @@
+---
+component_type: "mcp_tool"
+session_type: "design"
+---
+
 # MCP Tool Design Rules
 
 Follow these principles when designing MCP tools:

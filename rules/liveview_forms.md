@@ -1,5 +1,7 @@
-Here's a concise rule for writing Phoenix 1.8-style form components:
-
+---
+component_type: "liveview_form"
+session_type: "code"
+---
 ## Phoenix 1.8 Form Component Pattern
 
 **Structure**: Create a single LiveView module handling both `:new` and `:edit` actions with these required elements:

@@ -1,6 +1,8 @@
 ---
-glob: "**/*_repository.ex"
+component_type: "repository"
+session_type: "code"
 ---
+
 
 Keep clean Ecto code.
 Use query composition where possible.
