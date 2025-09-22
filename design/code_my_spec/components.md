@@ -1,4 +1,4 @@
-# Components
+# Components Context
 
 ## Purpose
 Manages component definitions, metadata, type classification, and inter-component dependencies for architectural design.
@@ -58,30 +58,54 @@ Manages component definitions, metadata, type classification, and inter-componen
 - Dependency graph validation ensuring no circular references
 - Atomic operations for component graph modifications with consistency guarantees
 
-## Component Diagram
-```
-Components Context
-├── Component Schema (with user_id, project_id)
-│   ├── Type Validation
-│   └── Scope Filtering
-├── Dependency Schema
-│   ├── Source/Target Component References
-│   ├── Relationship Type Classification
-│   └── Scope Validation
-├── Component Repository
-│   └── Component Data Access
-├── Dependency Repository  
-│   ├── Dependency Data Access
-│   ├── Circular Dependency Detection
-│   ├── Topological Sort Algorithm
-│   └── Resolution Order Calculation
-```
+## Components
+
+### CodeMySpec.Components.Component
+
+| field | value  |
+| ----- | ------ |
+| type  | schema |
+
+- Schema Module
+- Type Validation
+- Scope Filtering
+
+### CodeMySpec.Components.Dependency
+
+| field | value  |
+| ----- | ------ |
+| type  | schema |
+
+- Schema Module
+- Source/Target Component References
+- Relationship Type Classification
+- Scope Validation
+
+### CodeMySpec.Components.ComponentRepository
+
+| field | value      |
+| ----- | ---------- |
+| type  | repository |
+
+- Component Data Access
+ 
+### CodeMySpec.Components.DependencyRepository
+
+| field | value      |
+| ----- | ---------- |
+| type  | repository |
+
+- Dependency Data Access
+- Circular Dependency Detection
+- Topological Sort Algorithm
+- Resolution Order Calculation
 
 ## Dependencies
-- **CodeMySpec.Users.Scope**: User-based access control and validation  
-- **CodeMySpec.Projects**: Project isolation and component organization
-- **Phoenix.PubSub**: Real-time component change notifications
-- **Ecto**: Database persistence with scope-aware queries
+
+- CodeMySpec.Users.Scope
+- CodeMySpec.Projects
+- Phoenix.PubSub
+- Ecto
 
 ## Execution Flow
 1. **Scope Validation**: Verify user has access to project and component operations
