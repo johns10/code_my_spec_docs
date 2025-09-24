@@ -8,10 +8,6 @@ Manages component definitions, metadata, type classification, and inter-componen
 - Dependency entity tracking inter-component relationships and resolution ordering
 - Component and Dependency repositories for data access
 
-## Scope Integration
-### Accepted Scopes
-- Project-scoped for component isolation per project
-
 ### Access Patterns
 - Components are filtered by user ownership through project association
 - Project-scoped components ensure isolation between user projects

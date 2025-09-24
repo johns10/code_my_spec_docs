@@ -11,53 +11,54 @@ This document defines the standard structure and requirements for designing Phoe
 ## Required Sections
 
 ### 1. Purpose
-- **Single sentence** describing what the context manages
+- **Single paragraph** describing what the context manages
 - Focus on the business domain, not technical implementation
 - Should clearly indicate the bounded context boundaries
 
 ### 2. Entity Ownership
 - List the primary entities this context owns and manages
-- Include any orchestration responsibilities
 - Keep it concise - bullet points acceptable here
 
-### 3. Scope Integration
-- Check the existing scope file so you're on the right page
-- Specify scope access patterns (user-scoped, organization-scoped, etc.)
-- Document scope filtering behavior for all public functions
+### 3. Access Patterns
+- Document how data access is controlled via scope
+- Review scope/scopes files to understand access control patterns
 
 ### 4. Public API
-- Complete function specifications using `@spec` notation with scope as first parameter
-- All data access functions must accept a scope struct as the first argument
+- Complete function specifications using `@spec` notation
+- All data access functions must accept a `Scope` struct as the first argument
 - Include all public functions the context exposes
-- Define custom types using `@type` definitions
 - Group related functions logically with comments
 - Error tuples should be specific and meaningful
 
 ### 5. State Management Strategy
-- Describe how data flows through the context with scope constraints
+- Describe how data flows through the context
 - Persistence patterns (Ecto schemas with scope foreign keys)
-- Transaction boundaries and consistency requirements within scope
 
-### 6. Component Diagram
-- Text-based hierarchical structure showing internal organization
-- Show relationships between schemas, modules, behaviors, and scope filtering
-- Keep at architectural level - no implementation details
-- Use consistent indentation and clear nesting
-- Use markdown syntax (`- `) for nested lists
-- Do not use tree-style syntax
+### 6. Components
+
+**Structure**: Use H3 headers for each component module, followed by description text and optional tables.
+
+**Requirements**:
+- Each component must start with H3 header (`###`)
+- Module names must be valid Elixir modules (PascalCase)
+- Include brief description after each table
+- Tables are required to provide the type of the module
+- Focus on architectural relationships, not implementation details
 
 ### 7. Dependencies
-- External contexts this context depends on
-- Scope modules and their configuration
-- Third-party libraries or services
-- Infrastructure requirements
-- Keep descriptions brief but specific
+
+**Format**: Simple bullet list of module names only.
+
+**Requirements**:
+- Use markdown bullet points (`-` or `*`)
+- Each item must be a valid Elixir module name (PascalCase)
+- No descriptions or explanations - just the module names
+- Only include contexts found inside this application
+- Keep the list focused and concise
 
 ### 8. Execution Flow
-- Step-by-step walkthrough of primary operations with scope validation
+- Step-by-step walkthrough of primary operation
 - Show how public API functions orchestrate internal components
-- Include scope-based access control and filtering
-- Include error handling and edge cases
 - Number steps clearly for readability
 
 ## Design Principles
@@ -65,42 +66,23 @@ This document defines the standard structure and requirements for designing Phoe
 ### Scope-First Security
 - All public functions must accept a scope struct as the first parameter
 - Database queries must filter by scope foreign keys (user_id, org_id, etc.)
-- Use Phoenix generators with configured scopes for automatic security
-- Implement proper scope validation and access control
 
 ### API Design
 - Functions should be self-documenting through clear naming
 - Return consistent error tuples across the context
-- Use specific error atoms rather than generic `:error`
 - Group related operations logically
 - Maintain scope parameter consistency across all functions
 
 ### State Management
-- Be explicit about persistence strategies with scope constraints
-- Clearly define transaction boundaries within scope
-- Explain any caching or performance considerations that respect scope
-- Document data flow patterns with scope filtering
+- Be explicit about persistence strategies
+- Explain any caching or performance considerations
+- Document data flow patterns
 
 ### Component Organization
-- Show clear separation of concerns with scope integration
+- Show clear separation of concerns
 - Indicate behavior contracts where applicable
 - Keep internal structure visible but not overwhelming
 - Use consistent naming conventions
-- Document scope configuration for generators
-
-## Scope Configuration Requirements
-
-### Generator Integration
-- Define scope configuration in `config/config.exs`
-- Specify default scope for automatic generator usage
-- Include all required scope options: module, assign_key, access_path, schema_key, etc.
-- Document test fixtures and helpers for scoped testing
-
-### Security Implementation
-- All Ecto queries must include scope filtering
-- Use proper foreign key relationships for scope entities
-- Implement scope validation in all public functions
-- Ensure PubSub subscriptions are scoped appropriately
 
 ## What NOT to Include
 
@@ -134,21 +116,6 @@ This document defines the standard structure and requirements for designing Phoe
 - [Primary entities managed]
 - [Orchestration responsibilities]
 
-## Scope Integration
-### Accepted Scopes
-- **Primary Scope**: [Scope module and configuration]
-- **Secondary Scopes**: [Additional scopes if applicable]
-
-### Scope Configuration
-```elixir
-config :my_app, :scopes,
-  user: [
-    default: true,
-    module: MyApp.Accounts.Scope,
-    # ... other configuration
-  ]
-```
-
 ### Access Patterns
 - [Description of how scope filtering works]
 - [Foreign key relationships]
@@ -170,17 +137,17 @@ config :my_app, :scopes,
 - [Description of approach with scope constraints]
 
 ## Component Diagram
-```
-Context Name
-├── [Primary components with scope integration]
-│   └── [Sub-components]
-└── [Supporting modules]
-    └── Scope filtering logic
-```
+### ModuleName
+
+| field | value                                                                        |
+| ----- | ---------------------------------------------------------------------------- |
+| type  | genserver/context/coordination_context/schema/repository/task/registry/other |
+
+Brief description of the component's responsibility.
 
 ## Dependencies
-- **[Scope Module]**: [Configuration and usage]
-- **[Dependency Name]**: [Brief description]
+- ExternalContext.ModuleName
+- OtherExternalContext.ModuleName
 
 ## Execution Flow
 1. **[Scope Validation]**: [Verify scope and access permissions]
