@@ -43,6 +43,14 @@ Stateless orchestrator managing the sequence of component documentation steps, d
 
 Prepares the development environment and workspace for component documentation generation, setting up necessary directories and repository state.
 
+### ComponentDesignSessions.Steps.ReadContextDesign
+
+| field | value |
+| ----- | ----- |
+| type  | other |
+
+Reads the design documentation of the parent context and stores it in the session state. This context design information will be included in subsequent prompts to ensure component documentation aligns with the overall context architecture and design patterns.
+
 ### ComponentDesignSessions.Steps.GenerateComponentDesign
 
 | field | value |
@@ -83,11 +91,12 @@ Completes the component documentation session by persisting the final documentat
 
 ## Execution Flow
 1. **Initialize Environment**: Set up workspace and repository state for component documentation generation
-2. **Generate Documentation**: Create comprehensive component documentation using AI agents with design rule application
-3. **Validate Design**: Ensure documentation meets project standards and architectural requirements
+2. **Read Context Design**: Load parent context design documentation and store in session state for prompt inclusion
+3. **Generate Documentation**: Create comprehensive component documentation using AI agents with design rule application
+4. **Validate Design**: Ensure documentation meets project standards and architectural requirements
    - If validation passes → proceed to Finalize
    - If validation fails → proceed to Revise Design with feedback
-4. **Revise Design**: Address validation feedback through iterative AI conversation
+5. **Revise Design**: Address validation feedback through iterative AI conversation
    - Apply validation feedback to improve documentation
    - Return to Validate Design for re-evaluation
-5. **Finalize Session**: Persist documentation and complete session without component scaffolding
+6. **Finalize Session**: Persist documentation and complete session without component scaffolding
