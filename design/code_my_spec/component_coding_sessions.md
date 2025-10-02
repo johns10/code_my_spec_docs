@@ -1,4 +1,4 @@
-# ComponentCodingSession
+# ComponentCodingSessions
 
 ## Purpose
 Manages the multi-step workflow for implementing Phoenix context components through AI-assisted test-driven development, including fixture generation, test writing, implementation, and iterative test failure resolution.
@@ -77,7 +77,7 @@ Generates comprehensive test files for the component using AI agents, applying t
 
 Generates the component implementation code using AI agents, applying the component design document and relevant coding rules. Creates all necessary module files, schemas, and supporting code to satisfy the tests written in the previous step.
 
-### ComponentCodingSessions.Steps.RunTestsAndAnalyze
+### ComponentCodingSessions.Steps.RunTests
 
 | field | value |
 | ----- | ----- |

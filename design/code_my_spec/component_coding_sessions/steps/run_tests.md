@@ -1,7 +1,7 @@
-# RunTestsAndAnalyze Step
+# RunTests Step
 
 ## Purpose
-Executes the project's ExUnit test suite for the implemented component and analyzes the results. Captures test failures, errors, and stack traces, then determines if failures are component-related (triggering fix loops) or unrelated (proceeding to finalize with warnings).
+Executes the project's ExUnit test suite for the implemented component. Captures test failures, errors, and stack traces. Stores on state with status
 
 ## Public API
 
@@ -21,9 +21,8 @@ Executes the project's ExUnit test suite for the implemented component and analy
 - **Returns**:
   - `{:ok, %{state: updated_state}, %Result{status: :ok}}` if all tests pass
   - `{:ok, %{state: updated_state}, %Result{status: :error, data: test_failures}}` if component tests fail
-  - `{:ok, %{state: updated_state}, %Result{status: :warning, error_message: warning}}` if unrelated tests fail
-- **Purpose**: Receives TestRun data from client, analyzes failures, and determines next workflow step
-- **Side Effects**: Updates session state with test results and failure analysis
+- **Purpose**: Receives TestRun data from client, and determines next workflow step
+- **Side Effects**: Updates session state with test results
 
 ## Execution Flow
 
@@ -39,7 +38,7 @@ Executes the project's ExUnit test suite for the implemented component and analy
 3. **Analyze Test Results**:
    - Check `execution_status` field (`:success`, `:failure`, `:timeout`, `:error`)
    - If `:success` → all tests passed, return success result
-   - If `:failure` or `:error` → analyze failures to determine component-relevance
+   - If `:failure` or `:error` → store details on state
 5. **Store Results and Return**:
    - Store TestRun in session state for FixTestFailures step reference
    - Return appropriate Result status (`:ok`, `:error`, or `:warning`)

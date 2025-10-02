@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Stateless orchestrator for component coding session workflows. Determines the next step in the test-driven development workflow based on the current interaction's result and module. Handles test failure loops by cycling between RunTestsAndAnalyze and FixTestFailures while tracking iteration counts to prevent infinite loops.
+Stateless orchestrator for component coding session workflows. Determines the next step in the test-driven development workflow based on the current interaction's result and module. Handles test failure loops by cycling between RunTests and FixTestFailures while tracking iteration counts to prevent infinite loops.
 
 ## Public API
 
@@ -32,23 +32,23 @@ Stateless orchestrator for component coding session workflows. Determines the ne
    - **AnalyzeAndGenerateFixtures** (other) → AnalyzeAndGenerateFixtures (retry)
    - **GenerateTests** (success) → GenerateImplementation
    - **GenerateTests** (other) → GenerateTests (retry)
-   - **GenerateImplementation** (success) → RunTestsAndAnalyze
+   - **GenerateImplementation** (success) → RunTests
    - **GenerateImplementation** (other) → GenerateImplementation (retry)
-   - **RunTestsAndAnalyze** (success) → Finalize
-   - **RunTestsAndAnalyze** (error) → FixTestFailures
-   - **RunTestsAndAnalyze** (other) → RunTestsAndAnalyze (retry)
-   - **FixTestFailures** (success) → RunTestsAndAnalyze (re-test)
+   - **RunTests** (success) → Finalize
+   - **RunTests** (error) → FixTestFailures
+   - **RunTests** (other) → RunTests (retry)
+   - **FixTestFailures** (success) → RunTests (re-test)
    - **FixTestFailures** (other) → FixTestFailures (retry)
    - **Finalize** (success) → {:error, :session_complete}
 4. **Return Next Step**: Return the determined next step module or completion/error signal
 
 ### Test Failure Loop Handling
 
-The orchestrator creates a cycle between RunTestsAndAnalyze and FixTestFailures:
-- When tests fail, RunTestsAndAnalyze returns error status
+The orchestrator creates a cycle between RunTests and FixTestFailures:
+- When tests fail, RunTests returns error status
 - Error status routes to FixTestFailures
 - FixTestFailures attempts to fix issues and returns success
-- Success routes back to RunTestsAndAnalyze for re-testing
+- Success routes back to RunTests for re-testing
 - Loop protection is handled by tracking iteration count in session state (managed by calling context, not orchestrator)
 
 ### Status Extraction
