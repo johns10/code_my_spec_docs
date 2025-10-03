@@ -77,7 +77,7 @@ The Content Context manages all content entities (blog posts, pages, landing pag
 
 ## Components
 
-### Content
+### Content.Content
 
 | field | value  |
 | ----- | ------ |
@@ -85,7 +85,7 @@ The Content Context manages all content entities (blog posts, pages, landing pag
 
 Ecto schema representing content entities with fields: slug, type, content_type, content, processed_content, protected (boolean), project_id, account_id, publish_at, expires_at, sync_status, sync_errors, SEO fields (meta_title, meta_description, og_image, og_title, og_description), and metadata (JSONB).
 
-### Tag
+### Content.Tag
 
 | field | value  |
 | ----- | ------ |
@@ -93,7 +93,7 @@ Ecto schema representing content entities with fields: slug, type, content_type,
 
 Ecto schema representing tags with fields: name, slug, project_id, account_id. Normalized to lowercase slugified format for consistency.
 
-### ContentTag
+### Content.ContentTag
 
 | field | value  |
 | ----- | ------ |
@@ -101,7 +101,7 @@ Ecto schema representing tags with fields: name, slug, project_id, account_id. N
 
 Join table schema associating content_id with tag_id for many-to-many relationships.
 
-### ContentRepository
+### Content.ContentRepository
 
 | field | value      |
 | ----- | ---------- |
@@ -109,7 +109,7 @@ Join table schema associating content_id with tag_id for many-to-many relationsh
 
 Query builder module providing scoped query functions for content filtering by publish_at, expires_at, sync_status, content_type, and protected flag. All queries enforce account_id and project_id scoping.
 
-### TagRepository
+### Content.TagRepository
 
 | field | value      |
 | ----- | ---------- |
@@ -117,7 +117,7 @@ Query builder module providing scoped query functions for content filtering by p
 
 Query builder module for tag upsert and lookup with account_id and project_id scoping. Handles tag normalization and conflict resolution on unique constraints.
 
-### ContentBroadcaster
+### Content.ContentBroadcaster
 
 | field | value |
 | ----- | ----- |
@@ -125,7 +125,7 @@ Query builder module for tag upsert and lookup with account_id and project_id sc
 
 PubSub wrapper for broadcasting content change events to LiveView subscribers. Encapsulates topic naming and message formatting.
 
-## Dependencies
+## Content.Dependencies
 
 - Projects
 - Scopes
