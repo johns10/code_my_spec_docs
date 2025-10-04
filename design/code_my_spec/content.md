@@ -50,7 +50,7 @@ The Content Context manages all content entities (blog posts, pages, landing pag
 
 # Status Queries
 @spec list_content_with_status(Scope.t(), filters :: map()) :: [Content.t()]
-@spec count_by_sync_status(Scope.t()) :: %{success: integer(), error: integer()}
+@spec count_by_parse_status(Scope.t()) :: %{success: integer(), error: integer()}
 ```
 
 ## State Management Strategy
@@ -83,7 +83,7 @@ The Content Context manages all content entities (blog posts, pages, landing pag
 | ----- | ------ |
 | type  | schema |
 
-Ecto schema representing content entities with fields: slug, type, content_type, content, processed_content, protected (boolean), project_id, account_id, publish_at, expires_at, sync_status, sync_errors, SEO fields (meta_title, meta_description, og_image, og_title, og_description), and metadata (JSONB).
+Ecto schema representing content entities with fields: slug, type, content_type, content, processed_content, protected (boolean), project_id, account_id, publish_at, expires_at, parse_status, parse_errors, SEO fields (meta_title, meta_description, og_image, og_title, og_description), and metadata (JSONB).
 
 ### Content.Tag
 
@@ -107,7 +107,7 @@ Join table schema associating content_id with tag_id for many-to-many relationsh
 | ----- | ---------- |
 | type  | repository |
 
-Query builder module providing scoped query functions for content filtering by publish_at, expires_at, sync_status, content_type, and protected flag. All queries enforce account_id and project_id scoping.
+Query builder module providing scoped query functions for content filtering by publish_at, expires_at, parse_status, content_type, and protected flag. All queries enforce account_id and project_id scoping.
 
 ### Content.TagRepository
 
@@ -145,7 +145,7 @@ PubSub wrapper for broadcasting content change events to LiveView subscribers. E
 2. **Query Building**: Build query via ContentRepository filtering by:
    - account_id = scope.account_id
    - project_id = scope.project_id
-   - sync_status = "success"
+   - parse_status = "success"
    - publish_at <= current_timestamp OR publish_at IS NULL
    - expires_at > current_timestamp OR expires_at IS NULL
    - type = requested content_type (blog/page/landing)

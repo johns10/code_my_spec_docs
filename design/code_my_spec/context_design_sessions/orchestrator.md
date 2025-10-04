@@ -113,7 +113,7 @@ end
 
 ### 3. Validate Design
 - Takes the generated markdown from step 2 results
-- Uses `CodeMySpec.Documents.create_document/3` with `:context_design` type
+- Uses `CodeMySpec.Documents.create_component_document/3` with `:context_design` type
 - Leverages `ContextDesignParser.from_markdown/1` to parse and validate structure
 - Uses `ContextDesign.changeset/3` with scope for validation rules
 - Returns validation errors if markdown doesn't conform to expected structure

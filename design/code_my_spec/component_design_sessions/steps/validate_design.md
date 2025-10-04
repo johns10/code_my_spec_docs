@@ -31,7 +31,7 @@ Validates the generated component design documentation by parsing it through the
 4. Returns success if validation passes, error with details if validation fails
 
 ## Validation Logic
-- Uses `Documents.create_document/3` to parse and validate the component design
+- Uses `Documents.create_component_document/3` to parse and validate the component design
 - Document type is determined by the component type
 - If document creation succeeds, the design is considered valid
 - If document creation fails, the changeset errors are captured for revision feedback
