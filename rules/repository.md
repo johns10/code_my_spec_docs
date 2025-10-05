@@ -5,5 +5,6 @@ session_type: "code"
 
 
 Keep clean Ecto code.
-Use query composition where possible.
 Write simple typespecs.
+Use standard ecto get/list/create/update api's.
+Do not be fancy.
