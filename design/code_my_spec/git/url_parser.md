@@ -8,7 +8,7 @@ Parses HTTPS git repository URLs to extract provider information (github.com, gi
 
 ```elixir
 # Provider Detection
-@spec provider(url :: String.t()) :: {:ok, atom()} | {:error, :invalid_url | :unknown_provider}
+@spec provider(url :: String.t()) :: {:ok, atom()} | {:error, :invalid_url | :unsupported_provider}
 
 # URL Construction
 @spec inject_token(url :: String.t(), token :: String.t()) :: {:ok, String.t()} | {:error, :invalid_url}
@@ -22,7 +22,7 @@ Parses HTTPS git repository URLs to extract provider information (github.com, gi
 3. **Provider Mapping**: Map host to provider atom:
    - `github.com` → `:github`
    - `gitlab.com` → `:gitlab`
-   - Unknown hosts → return `{:error, :unknown_provider}`
+   - Unknown hosts → return `{:error, :unsupported_provider}`
 4. **Result Return**: Return provider atom or error
 
 ### Inject Token
