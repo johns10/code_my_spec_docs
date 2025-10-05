@@ -54,7 +54,7 @@ Data access layer for Integration CRUD operations filtered by user_id with speci
 | ----- | ----- |
 | type  | other |
 
-GitHub provider implementation handling OAuth flow using Assent, token exchange, and GitHub-specific API operations with error handling.
+GitHub provider implementation providing Assent strategy configuration, GitHub-specific OAuth scopes, and user data normalization to application domain model.
 
 ### Integrations.Providers.Behaviour
 
@@ -62,7 +62,7 @@ GitHub provider implementation handling OAuth flow using Assent, token exchange,
 | ----- | ----- |
 | type  | other |
 
-Behaviour defining provider contract including OAuth endpoints, scope configuration, token exchange, and API client operations.
+Behaviour defining provider contract: configuration for Assent strategies, strategy module selection, and normalization of provider user data to application schema.
 
 ### Integrations.ProviderRegistry
 
@@ -86,20 +86,21 @@ Registry mapping provider atoms to implementation modules and validating provide
 ### OAuth Authorization Flow
 1. **Validate Provider**: Check provider exists in ProviderRegistry
 2. **Get Provider Module**: Lookup implementation module (e.g., `Integrations.Providers.GitHub`)
-3. **Generate State**: Create cryptographically secure state token for CSRF protection
-4. **Store State**: Save state in user session with 5-minute expiration
-5. **Build URL**: Provider module constructs authorization URL with client_id, scopes, redirect_uri, state
-6. **Return URL**: Context returns authorization URL for redirect
-7. **User Authorization**: User grants/denies permissions on provider's authorization page
+3. **Get Configuration**: Call `provider.config()` to retrieve Assent strategy configuration
+4. **Get Strategy**: Call `provider.strategy()` to get Assent strategy module
+5. **Generate Authorization URL**: Call `strategy.authorize_url(config)` to generate URL and session_params
+6. **Store Session Params**: Save session_params in user session for CSRF protection (5-minute expiration)
+7. **Return URL**: Context returns authorization URL for redirect
+8. **User Authorization**: User grants/denies permissions on provider's authorization page
 
 ### OAuth Callback Flow
-1. **Validate State**: Verify state matches session value and hasn't expired
-2. **Get Provider Module**: Lookup implementation for requested provider
-3. **Exchange Code**: Provider module uses Assent to exchange authorization code for tokens
-4. **Extract Metadata**: Provider parses response for tokens, expiration, and provider-specific user data
-5. **Encrypt Tokens**: Encrypt access_token and refresh_token using Cloak before storage
-6. **Create/Update Integration**: Upsert Integration record with user_id, provider, encrypted tokens, metadata
-7. **Verify Token**: Provider makes test API call to confirm token validity
+1. **Get Provider Module**: Lookup implementation for requested provider
+2. **Get Configuration**: Call `provider.config()` and merge session_params from session
+3. **Get Strategy**: Call `provider.strategy()` to get Assent strategy module
+4. **Exchange Code**: Call `strategy.callback(config, params)` to exchange authorization code for tokens
+5. **Normalize User Data**: Call `provider.normalize_user(assent_user)` to transform to application schema
+6. **Encrypt Tokens**: Encrypt access_token and refresh_token using Cloak before storage
+7. **Create/Update Integration**: Upsert Integration record with user_id, provider, encrypted tokens, normalized metadata
 8. **Broadcast Event**: Publish integration connected event via PubSub for UI updates
 
 ### Token Retrieval with Auto-Refresh
@@ -113,19 +114,22 @@ Registry mapping provider atoms to implementation modules and validating provide
 
 ### Token Refresh Flow
 1. **Load Integration**: Fetch Integration record by user_id and provider
-2. **Get Provider Module**: Lookup implementation for provider
-3. **Extract Refresh Token**: Decrypt refresh_token from database
-4. **Request New Token**: Provider module uses Assent to exchange refresh_token for new access_token
-5. **Handle Response**: Provider parses new access_token and expiration
-6. **Update Record**: Encrypt and store new access_token with updated expires_at timestamp
-7. **Handle Failure**: Return error if refresh fails, requiring user re-authorization
-8. **Return Token**: Provide fresh decrypted token to caller
+2. **Validate Refresh Token**: Verify refresh_token exists (some providers don't provide them)
+3. **Get Provider Module**: Lookup implementation for provider
+4. **Get Configuration**: Call `provider.config()` to retrieve Assent strategy configuration
+5. **Get Strategy**: Call `provider.strategy()` to get Assent strategy module
+6. **Decrypt Refresh Token**: Decrypt refresh_token from database using Cloak
+7. **Request New Token**: Call `strategy.refresh_token(config, refresh_token)` via Assent
+8. **Update Record**: Encrypt and store new access_token with updated expires_at timestamp
+9. **Handle Failure**: Return error if refresh fails, requiring user re-authorization
+10. **Return Token**: Provide fresh decrypted token to caller
 
 ### Disconnection Flow
-1. **Get Provider Module**: Lookup implementation for provider
-2. **Revoke on Provider**: Provider module calls API to revoke token (best effort)
-3. **Delete Integration**: Remove Integration record from database
-4. **Broadcast Event**: Publish disconnection event for UI updates
+1. **Load Integration**: Fetch Integration record by user_id and provider
+2. **Delete Integration**: Remove Integration record from database
+3. **Broadcast Event**: Publish disconnection event for UI updates
+
+Note: Token revocation on the provider side is not implemented in the initial version. Deleted tokens will expire naturally per provider's token lifetime policy.
 
 ## State Management Strategy
 
@@ -133,14 +137,14 @@ Registry mapping provider atoms to implementation modules and validating provide
 - Single `integrations` table with user_id and provider columns (unique constraint)
 - Cloak library encrypts access_token and refresh_token fields at rest
 - expires_at timestamp enables expiration detection without decryption
-- provider_metadata JSONB field stores provider-specific data (github_user_id, username, etc.)
-- OAuth state stored in Phoenix session with 5-minute TTL
+- provider_metadata JSONB field stores normalized user data (provider_user_id, username, email, avatar_url, etc.)
+- OAuth session_params stored in Phoenix session with 5-minute TTL for CSRF protection
 
 ### Token Security
 - Access and refresh tokens encrypted using Cloak.Ecto.Binary with application vault
 - Tokens never logged or exposed in error messages
 - API calls use HTTPS with Authorization header
-- State parameter prevents CSRF attacks during OAuth flow
+- Assent's session_params mechanism prevents CSRF attacks during OAuth flow
 - Unique constraint on (user_id, provider) prevents duplicate integrations
 
 ### Token Refresh Strategy
@@ -151,7 +155,10 @@ Registry mapping provider atoms to implementation modules and validating provide
 
 ### Provider Extensibility
 - Provider implementations namespaced under `Integrations.Providers.*`
-- Each provider implements `Integrations.Providers.Behaviour` contract
+- Each provider implements `Integrations.Providers.Behaviour` with three callbacks:
+  - `config/0` - Returns Assent strategy configuration (client_id, client_secret, redirect_uri, scopes)
+  - `strategy/0` - Returns Assent strategy module (e.g., `Assent.Strategy.Github`)
+  - `normalize_user/1` - Transforms provider user data to application domain model
 - ProviderRegistry maps atoms to modules: `%{github: Integrations.Providers.GitHub}`
-- Adding new provider requires: behaviour implementation, registry entry, configuration
-- Shared OAuth patterns with provider-specific API clients
+- Adding new provider requires: behaviour implementation, registry entry, environment configuration
+- Leverages Assent's built-in strategies for OAuth mechanics (authorize_url, callback, refresh_token)
