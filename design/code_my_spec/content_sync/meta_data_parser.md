@@ -4,6 +4,8 @@
 
 Parses sidecar `.yaml` files to extract structured metadata for content files. Returns success tuples with parsed metadata maps or error tuples with details when files are missing, contain invalid YAML syntax, or have malformed structure.
 
+**Note:** MetaDataParser returns error tuples `{:error, reason}` unlike processors which always return `{:ok, result}`. The Sync component handles these errors by wrapping them in ProcessorResult format.
+
 ## Public API
 
 ```elixir
@@ -65,7 +67,8 @@ Parses sidecar `.yaml` files to extract structured metadata for content files. R
 
 Metadata files follow strict naming convention:
 - Content file: `content/posts/my-post.md` → Metadata: `content/posts/my-post.yaml`
-- Content file: `content/components/button.eex` → Metadata: `content/components/button.yaml`
+- Content file: `content/components/button.heex` → Metadata: `content/components/button.yaml`
+- Content file: `content/pages/about.html` → Metadata: `content/pages/about.yaml`
 
 Pattern: Replace content extension with `.yaml`.
 

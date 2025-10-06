@@ -8,14 +8,10 @@ Validates HTML content structure and checks for disallowed elements (script tags
 
 ```elixir
 # HTML Processing
-@spec process(raw_html :: String.t()) :: {:ok, result()} | {:error, term()}
+@spec process(raw_html :: String.t()) :: {:ok, ProcessorResult.t()}
 
-@type result :: %{
-  raw_content: String.t(),
-  processed_content: String.t() | nil,
-  parse_status: :success | :error,
-  parse_errors: map() | nil
-}
+# Uses shared result type
+@type result :: ProcessorResult.t()
 ```
 
 ## Execution Flow

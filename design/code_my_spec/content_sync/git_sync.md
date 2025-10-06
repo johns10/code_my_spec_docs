@@ -2,23 +2,19 @@
 
 ## Purpose
 
-Handles Git repository operations for content synchronization. Clones a project's content repository to a temporary directory or pulls latest changes if already cloned. Manages repository lifecycle including directory path resolution, authentication delegation, and cleanup operations. Returns local directory paths for downstream sync operations.
+Clones a project's content repository to a temporary directory using Briefly for automatic cleanup. Returns the local directory path for downstream sync operations. Handles repository validation and delegates authentication to the Git context. Each sync creates a fresh clone - no persistent caching or pull operations.
 
 ## Public API
 
 ```elixir
 # Repository Operations
-@spec sync_repository(Scope.t()) :: {:ok, path()} | {:error, error_reason()}
-@spec cleanup_repository(Scope.t()) :: :ok | {:error, error_reason()}
-@spec repository_path(Scope.t()) :: {:ok, path()} | {:error, :not_cloned}
+@spec clone_to_temp(Scope.t()) :: {:ok, path()} | {:error, error_reason()}
 
 # Type Definitions
 @type path :: String.t()
 @type error_reason ::
   :project_not_found |
   :no_content_repo |
-  :git_operation_failed |
-  :directory_error |
   :not_connected |
   :unsupported_provider |
   term()
@@ -26,157 +22,101 @@ Handles Git repository operations for content synchronization. Clones a project'
 
 ## Execution Flow
 
-### Initial Clone Operation
+### Clone to Temporary Directory
 
 1. **Scope Validation**: Verify scope has `active_project_id` set
 2. **Project Loading**: Load project via `Projects.get_project/2` to retrieve `content_repo` URL
 3. **Content Repo Check**: Verify project has non-nil `content_repo` field
-4. **Path Resolution**: Determine target path using `repository_base_path/0` and project ID
-5. **Directory Check**: Verify target directory does not already exist
-6. **Parent Directory**: Ensure parent directory exists, create if needed
-7. **Git Clone**: Delegate to `Git.clone/3` with scope, repo URL, and target path
-8. **Path Return**: Return `{:ok, path}` with absolute path to cloned repository
-
-### Pull Operation (Repository Exists)
-
-1. **Scope Validation**: Verify scope has `active_project_id` set
-2. **Project Loading**: Load project to get `content_repo` URL
-3. **Path Resolution**: Determine repository path from base path and project ID
-4. **Directory Verification**: Confirm directory exists and is a git repository
-5. **Git Pull**: Delegate to `Git.pull/2` with scope and repository path
-6. **Path Return**: Return `{:ok, path}` with absolute path to updated repository
-
-### Repository Cleanup
-
-1. **Scope Validation**: Verify scope has `active_project_id` set
-2. **Path Resolution**: Determine repository path from base path and project ID
-3. **Directory Check**: Verify directory exists before attempting removal
-4. **Recursive Delete**: Remove repository directory and all contents via `File.rm_rf/1`
-5. **Confirmation**: Return `:ok` on successful deletion
-
-### Path Query
-
-1. **Scope Validation**: Verify scope has `active_project_id` set
-2. **Path Resolution**: Calculate expected repository path
-3. **Existence Check**: Verify directory exists using `File.dir?/1`
-4. **Path Return**: Return `{:ok, path}` if exists, `{:error, :not_cloned}` otherwise
+4. **Temp Directory Creation**: Create temporary directory via `Briefly.create(directory: true)`
+5. **Git Clone**: Delegate to `Git.clone/3` with scope, repo URL, and temp path
+6. **Path Return**: Return `{:ok, path}` with absolute path to cloned repository
 
 ## Implementation Notes
 
-### Repository Storage Location
+### Briefly Integration
 
-Repositories are stored in a consistent location based on environment configuration:
+GitSync uses the Briefly library for automatic temporary directory management:
 
+- Briefly creates unique temporary directories
+- Directories are automatically cleaned up when the calling process exits
+- No manual cleanup logic required
+- No persistent storage or caching
+
+**Example:**
 ```elixir
-# Default base path (can be overridden in config)
-def repository_base_path do
-  Application.get_env(:code_my_spec, :content_repo_base_path,
-    Path.join(System.tmp_dir!(), "code_my_spec_content"))
-end
-
-# Per-project path structure
-def repository_path(project_id) do
-  Path.join(repository_base_path(), "project_#{project_id}")
+def clone_to_temp(%Scope{} = scope) do
+  with {:ok, project} <- Projects.get_project(scope, scope.active_project_id),
+       {:ok, content_repo} <- validate_content_repo(project),
+       {:ok, temp_dir} <- Briefly.create(directory: true),
+       {:ok, _path} <- Git.clone(scope, content_repo, temp_dir) do
+    {:ok, temp_dir}
+  end
 end
 ```
-
-**Path Structure:**
-- Development: `/tmp/code_my_spec_content/project_123`
-- Production: Configurable via `:content_repo_base_path` application env
 
 ### Authentication Delegation
 
 GitSync does NOT handle authentication directly. It delegates all credential management to the `Git` context:
 
-- `Git.clone/3` handles retrieving integration credentials via scope
-- `Git.pull/2` manages temporary credential injection for pull operations
-- GitSync remains authentication-agnostic, focusing solely on repository lifecycle
+- `Git.clone/3` retrieves integration credentials via scope
+- `Git.clone/3` injects credentials into repository URL
+- GitSync remains authentication-agnostic
 
 See `lib/code_my_spec/git.ex` and `lib/code_my_spec/git/cli.ex` for authentication implementation.
 
-### Clone vs Pull Decision Logic
-
-The `sync_repository/1` function determines whether to clone or pull:
-
-```elixir
-def sync_repository(%Scope{} = scope) do
-  with {:ok, project} <- Projects.get_project(scope, scope.active_project_id),
-       :ok <- validate_content_repo(project),
-       {:ok, path} <- resolve_repository_path(scope) do
-    if File.dir?(path) do
-      pull_repository(scope, path)
-    else
-      clone_repository(scope, project.content_repo, path)
-    end
-  end
-end
-```
-
 ### Error Handling Strategy
 
-GitSync uses error tuples exclusively for all operations:
+GitSync uses error tuples exclusively:
 
 - **Project errors**: `{:error, :project_not_found}` - when project lookup fails
 - **Configuration errors**: `{:error, :no_content_repo}` - when project lacks content_repo URL
 - **Git errors**: Propagated from Git context (`:not_connected`, `:unsupported_provider`, etc.)
-- **Filesystem errors**: Wrapped as `{:error, :directory_error}` with details
+- **Temp directory errors**: Propagated from Briefly
 
 All errors preserve context for upstream error logging and user feedback.
 
-### Idempotent Operations
+### Lifecycle Management
 
-- **sync_repository/1**: Can be called repeatedly - pulls if exists, clones if not
-- **cleanup_repository/1**: Returns `:ok` even if directory doesn't exist
-- **repository_path/1**: Pure function, always safe to call
+**Creation:**
+- Briefly creates temp directory when `clone_to_temp/1` is called
+- Directory exists for duration of calling process
 
-### Repository Lifecycle Management
-
-**When to Clone:**
-- First content sync for a project
-- After cleanup operation
-- When repository directory is missing
-
-**When to Pull:**
-- Subsequent sync operations
-- Scheduled content updates
-- Manual sync triggers from UI
-
-**When to Cleanup:**
-- Project deletion
-- Content repo URL change (cleanup + re-clone)
-- Scheduled cache cleanup jobs
-- Manual admin operations
-
-### Concurrent Access Considerations
-
-GitSync is stateless but filesystem operations are not atomic:
-
-- **Multiple processes syncing same project**: Git operations will queue at filesystem level
-- **Concurrent clone attempts**: First succeeds, subsequent calls error with `:path_exists`
-- **Pull during active sync**: Git will handle locking via `.git/index.lock`
-
-For production with high concurrency, consider adding distributed locks around sync operations at the ContentSync orchestration level.
-
-### Directory Permissions
-
-Ensure the application has appropriate permissions:
-
-- **Read/Write**: Repository base path must be writable by application user
-- **Execute**: Required for git operations and directory traversal
-- **Cleanup**: Sufficient permissions to remove repository directories
+**Cleanup:**
+- Automatic when calling process exits (normal or crash)
+- No manual cleanup required
+- No orphaned directories
 
 ### Integration with ContentSync
 
-GitSync is called by the ContentSync context:
+GitSync is called by the ContentSync context for user-triggered syncs:
 
 ```elixir
 # In ContentSync
 def sync_from_git(scope) do
-  with {:ok, local_path} <- ContentSync.GitSync.sync_repository(scope),
-       {:ok, sync_result} <- sync_project_content(scope, directory: local_path) do
+  with {:ok, temp_dir} <- ContentSync.GitSync.clone_to_temp(scope),
+       {:ok, sync_result} <- ContentSync.Sync.sync_directory(scope, temp_dir) do
     {:ok, sync_result}
   end
+  # Briefly automatically cleans up temp_dir when this process exits
 end
 ```
 
-GitSync provides the local directory path, then ContentSync.FileScanner takes over to process files.
+### Performance Considerations
+
+Every sync performs a full clone:
+- No caching or pull optimization
+- Suitable for infrequent user-triggered syncs
+- Fresh state on every sync (no git state corruption)
+- Higher bandwidth and time cost than pull-based approach
+
+This tradeoff favors simplicity and correctness over performance for production syncs.
+
+### Separation of Concerns
+
+GitSync handles only git operations for production/user-triggered syncs. It does NOT:
+- Handle file watching (FileWatcher does this)
+- Process content files (Sync does this)
+- Manage persistent repositories
+- Cache or optimize repeated syncs
+
+It's a simple helper that clones to temp and returns a path.
