@@ -1,27 +1,33 @@
-# AI-Driven SDLC Automation Platform - Technical Context
+# CodeMySpec - AI-Assisted Phoenix Development Platform
 
 ## Core Mission
-Automate the entire Software Development Life Cycle (SDLC) through structured, prescriptive processes that guide AI agents to build and maintain complex applications reliably. The platform addresses the fundamental gap in current AI coding tools: they lack the disciplined processes necessary to handle real-world application complexity.
+CodeMySpec is a Phoenix/LiveView application that helps teams manage software development workflows through structured requirement gathering, component design, and test-driven development. The platform integrates with AI agents (Claude Code) via MCP servers to assist with design generation and test creation while maintaining human oversight of architectural decisions.
 
 ## Foundational Principle
-The bottleneck in AI-assisted development isn't better models or smarter agents—it's the absence of structured processes that can reliably guide AI through complex software development. We solve this with systematic requirements management, architectural discipline, and prescriptive workflows.
+Effective AI-assisted development requires systematic processes, clear component boundaries, and traceability from requirements through implementation. CodeMySpec provides the scaffolding to manage user stories, component architecture, dependencies, and testing workflows while AI agents handle generation tasks.
 
-## Development Process Flow
-1. **Requirements Engineering**: LLM-driven interviews → User stories → Executive summary approval
-2. **Demo Validation**: Phoenix context mapping → PHX.Gen scaffolding → Working demo with seed data
-3. **BDD Decomposition**: User stories → Testable Given/When/Then specifications → Human approval
-4. **Design Documentation**: Context-by-context technical specs → 1:1 file mapping → Architecture approval
-5. **Implementation**: Discrete todos → External AI agents (Claude Code) → Branch-based development
-6. **Integration**: Multi-branch testing → BDD validation → Production deployment
-7. **Change Management**: Requirement changes → Impact analysis → Systematic regeneration
+## Current Implementation
+1. **User Story Management**: Web UI for creating, editing, and organizing user stories with project scoping
+2. **Component Architecture**: Define Phoenix contexts/modules with type classification (context, repository, schema, liveview, etc.) and dependency tracking
+3. **MCP Integration**: Expose Stories and Components APIs to AI agents via Hermes MCP servers for Claude Code/Desktop integration
+4. **Session Orchestration**: Structured workflows for component design and test generation with AI agents
+5. **Content Sync**: Git-based content management for syncing markdown/HTML/HEEx files with frontmatter metadata
+6. **Multi-Tenancy**: Account-based scoping with OAuth2 provider for secure agent access
 
-## Key Constraints & Principles
-- **Process-First**: Never skip requirements, design, or approval phases
-- **Human-in-the-Loop**: Strategic approval gates prevent AI architectural mistakes
-- **Traceability**: User story → BDD spec → test → implementation linkage must be maintained
-- **Fail-Fast Recovery**: Failed tasks restart clean (no partial work preservation)
-- **Context Boundaries**: Respect Phoenix context ownership and prevent architectural leakage
-- **Documentation Parity**: 1:1 mapping between design docs and code files
+## Key Architecture
+- **Phoenix Contexts**: Stories, Components, Sessions, Projects, Content, Agents, Accounts, Users
+- **MCP Servers**: `StoriesServer` and `ComponentsServer` expose tools for AI agent consumption
+- **Session Orchestration**: `ComponentDesignSessions` and `ComponentTestSessions` manage AI-driven workflows through discrete steps
+- **Project Coordinator**: Analyzes component requirements against filesystem and test results to determine next actions
+- **Repository Pattern**: Consistent data access layer with user/project scoping
+- **Multi-Tenant Security**: All operations scoped by `Scope` struct containing active account and project
 
-## Change Philosophy
-Code is a projection of design. When requirements change, we evolve the design first, then regenerate code to match. This enables systematic handling of complexity and maintains architectural integrity throughout the application lifecycle.
+## Key Principles
+- **Process-Guided AI**: Structured session workflows guide AI agents through design and test generation
+- **Human-in-the-Loop**: Approval gates and review steps maintain architectural integrity
+- **Traceability**: Stories link to components; components track dependencies; sessions maintain audit trail
+- **Context Boundaries**: Component types enforce Phoenix architectural patterns
+- **Fail-Fast**: Test-driven workflows detect issues early with clear failure paths
+
+## Technology Stack
+Phoenix 1.8-rc, LiveView 1.1-rc, Ecto SQL, PostgreSQL, Oban (background jobs), Hermes MCP, OAuth2 Provider, Git CLI integration, FileSystem watchers
