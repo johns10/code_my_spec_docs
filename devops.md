@@ -21,37 +21,56 @@ Region: `yyz` (Toronto)
 
 ## Initial Setup
 
-Super simple - `fly launch` does most of the work:
-
 ### 1. Launch UAT
 
+**Important:** If you change the app name during launch, you must create the database manually.
+
 ```bash
+# Launch the app (accept defaults, but change name when prompted)
 fly launch
 
 # When prompted:
 # - Name: code-my-spec-uat
 # - Region: yyz (Toronto)
-# - Postgres: Yes → name it code-my-spec-uat-db → pick smallest config
+# - Postgres: No (we'll create manually)
 # - Machine: shared-cpu-1x, 256MB (minimal to start)
-# - Deploy now: Yes
+# - Deploy now: No (we need to attach DB first)
+
+# Create database manually
+fly postgres create --name code-my-spec-uat-db --region yyz
+
+# Pick smallest config when prompted
+
+# Attach database to app (sets DATABASE_URL automatically)
+fly postgres attach code-my-spec-uat-db -a code-my-spec-uat
+
+# Now deploy
+fly deploy -a code-my-spec-uat
 ```
 
-This creates the app, database, sets secrets, and deploys in one go.
+Save the generated `fly.toml` as `fly.uat.toml`.
 
 ### 2. Launch Prod
 
 ```bash
-# Save fly.toml as fly.uat.toml first
-mv fly.toml fly.uat.toml
-
+# Launch the app
 fly launch
 
 # When prompted:
 # - Name: code-my-spec-prod
 # - Region: yyz (Toronto)
-# - Postgres: Yes → name it code-my-spec-prod-db → pick smallest config
+# - Postgres: No (we'll create manually)
 # - Machine: shared-cpu-1x, 256MB (minimal to start)
-# - Deploy now: Yes
+# - Deploy now: No
+
+# Create database manually
+fly postgres create --name code-my-spec-prod-db --region yyz
+
+# Attach database
+fly postgres attach code-my-spec-prod-db -a code-my-spec-prod
+
+# Deploy
+fly deploy -a code-my-spec-prod
 ```
 
 Save as `fly.prod.toml`.
@@ -146,29 +165,58 @@ fly releases rollback -a code-my-spec-prod
 fly postgres connect -a code-my-spec-prod-db
 ```
 
-## Custom Domain (codemyspec.com)
+## Custom Domains (codemyspec.com)
 
-Once deployed, add your domain:
+### 1. Get IP addresses
 
 ```bash
-# Add domain to prod
+# Prod IPs
+fly ips list -a code-my-spec-prod
+
+# UAT IPs
+fly ips list -a code-my-spec-uat
+```
+
+You'll get IPv4 and IPv6 addresses - write them down.
+
+### 2. Update DNS
+
+In your DNS provider (Cloudflare, etc.):
+
+**Prod (codemyspec.com):**
+- `A` record: `codemyspec.com` → prod IPv4 address
+- `AAAA` record: `codemyspec.com` → prod IPv6 address
+- `CNAME` record: `www.codemyspec.com` → `codemyspec.com`
+
+**UAT (uat.codemyspec.com):**
+- `A` record: `uat.codemyspec.com` → UAT IPv4 address
+- `AAAA` record: `uat.codemyspec.com` → UAT IPv6 address
+
+**If using Cloudflare:** Set SSL mode to "Full" or "Full (Strict)"
+
+### 3. Add certificates
+
+After DNS is set up (wait a few minutes for propagation):
+
+```bash
+# Prod
 fly certs add codemyspec.com -a code-my-spec-prod
 fly certs add www.codemyspec.com -a code-my-spec-prod
 
-# Get the DNS records to add
+# UAT
+fly certs add uat.codemyspec.com -a code-my-spec-uat
+
+# Check certificate status
 fly certs show codemyspec.com -a code-my-spec-prod
+fly certs show uat.codemyspec.com -a code-my-spec-uat
 ```
 
-Then update your DNS:
-- Add `A` and `AAAA` records pointing to Fly's IPs (shown in cert output)
-- Add `CNAME` for www → codemyspec.com
+### 4. Update PHX_HOST secrets
 
-Update prod secret:
 ```bash
 fly secrets set PHX_HOST=codemyspec.com -a code-my-spec-prod
+fly secrets set PHX_HOST=uat.codemyspec.com -a code-my-spec-uat
 ```
-
-UAT can stay on `code-my-spec-uat.fly.dev`.
 
 ## Important Notes
 

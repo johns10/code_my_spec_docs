@@ -1,85 +1,76 @@
-# Result Handler Design
+# Sessions.ResultHandler Component
 
 ## Purpose
 
-The ResultHandler module coordinates the processing of command execution results from external environments (VS Code, CLI, etc.). It acts as the bridge between raw result data and the domain model, ensuring results are properly validated and integrated into the session state. The handler follows a "process first, then persist" approach - allowing command modules to process results and return session updates, then handling all persistence operations atomically. This ensures clean separation of concerns while maintaining system reliability.
+Processes command execution results by delegating to step-specific result handlers, allowing step modules to interpret results and update session state before marking interactions as complete.
 
 ## Public API
 
 ```elixir
-# Main entry point - processes a result from command execution
-# Returns {:ok, final_session} or {:error, reason}
-def handle_result(scope, session_id, interaction_id, result_attrs)
+# Result Processing
+@spec handle_result(Scope.t(), integer(), binary(), map(), keyword()) ::
+  {:ok, Session.t()} | {:error, term()}
+
+# Helper Functions
+@spec get_session(Scope.t(), integer()) :: {:ok, Session.t()} | {:error, :session_not_found}
+@spec find_interaction(Session.t(), binary()) :: {:ok, Interaction.t()} | {:error, :interaction_not_found}
 ```
 
 ## Execution Flow
 
-Client/Environment → ResultHandler → CommandModule → SessionsRepository → Database
+### handle_result/5
+1. **Session Lookup**: Call get_session/2 to retrieve session with scope validation
+   - Returns {:error, :session_not_found} if session doesn't exist
+2. **Result Creation**: Call Sessions.create_result/2 to build Result struct from result_attrs
+   - Validates result attributes through Result.changeset/2
+   - Returns {:ok, result} or {:error, changeset}
+3. **Interaction Lookup**: Call find_interaction/2 to locate target interaction by ID
+   - Searches session.interactions array for matching interaction_id
+   - Returns {:error, :interaction_not_found} if not present
+4. **Delegate Result Processing**: Call interaction.command.module.handle_result/4
+   - Step module interprets result and determines session updates
+   - Step module can modify result (e.g., extract data, change status)
+   - Returns {:ok, session_attrs, final_result}
+5. **Complete Interaction**: Call Sessions.complete_session_interaction/5
+   - Updates session fields per session_attrs (status, state, etc.)
+   - Marks interaction as complete with final_result
+   - Sets completed_at timestamp
+   - Persists to database
+6. **Return Updated Session**: Return {:ok, final_session}
 
-1. Client executes command, returns result_attrs
-2. ResultHandler.handle_result/4 called
-3. Convert result_attrs to Result domain struct
-4. Create in-memory interaction with result attached
-5. Call command module's handle_result/3 with domain objects
-6. Command module processes result, returns session updates (and optionally result override)
-7. Apply session updates and final result to session
-8. Persist completed interaction with all changes in single atomic operation
-9. Return final persisted session
+### get_session/2
+1. **Repository Call**: Delegate to SessionsRepository.get_session/2
+2. **Result Mapping**: Convert nil to {:error, :session_not_found}, session to {:ok, session}
 
-```mermaid
-sequenceDiagram
-    participant Client as Client/Environment
-    participant RH as ResultHandler
-    participant CM as CommandModule
-    participant SR as SessionsRepository
-    participant DB as Database
+### find_interaction/2
+1. **Search Interactions**: Use Enum.find/2 to locate interaction by ID in session.interactions
+2. **Result Mapping**: Convert nil to {:error, :interaction_not_found}, interaction to {:ok, interaction}
 
-    Client->>RH: handle_result(result_attrs)
+## Design Notes
 
-    RH->>SR: get_session(scope, session_id)
-    SR-->>RH: session
+### Step Module Responsibility
+- Each step module (implementing StepBehaviour) defines handle_result/4
+- Step module interprets result in domain-specific context
+- Step module can update session.state with step-specific data
+- Step module can change session.status (e.g., mark :complete or :failed)
+- Step module returns modified result if needed (e.g., extract parsed data)
 
-    RH->>RH: find_interaction(session, interaction_id)
-    RH->>RH: build_result_struct(result_attrs)
-    RH->>RH: put_result_on_interaction()
+### Separation of Concerns
+- ResultHandler orchestrates the result processing flow
+- Step modules contain domain logic for interpreting results
+- Session context handles persistence and broadcasting
 
-    RH->>CM: handle_result(scope, session, interaction_with_result)
-    CM-->>RH: {:ok, session_updates, updated_interaction}
+### Error Pipeline
+- With-clause chains ensure early return on any error
+- Errors propagate up with descriptive atoms or tuples
+- No exceptions for expected error cases (not found, validation failures)
 
-    RH-->>RH: apply_session_updates(session, updates)
+### Transaction Safety
+- complete_session_interaction wraps updates in Repo.update/1
+- Embedded interactions updated atomically with session
+- No partial updates possible
 
-    RH->>SR: complete_interaction(scope, updated_session, updated_interaction)
-    SR->>DB: persist completed interaction with all changes
-    DB-->>SR: success
-    SR-->>RH: final_session
-
-    RH-->>Client: final_session
-```
-
-## Command Module Responsibilities
-
-Command modules should return session updates instead of handling persistence:
-
-```elixir
-@callback handle_result(scope :: Scope.t(), session :: Session.t(), interaction :: Interaction.t()) ::
-  {:ok, session_updates :: map()} |
-  {:ok, session_updates :: map(), result_override :: map()} |
-  {:error, reason :: String.t()}
-```
-
-**Examples:**
-```elixir
-# Simple case - just update session state
-{:ok, %{state: new_state}}
-
-# Complex case - update session state AND override result (for validation errors)
-{:ok, %{state: current_state}, %{status: :error, stderr: "Validation failed"}}
-```
-
-**Key Principles:**
-- Command modules never directly persist anything
-- Command modules work with pure domain objects
-- Command modules return declarative updates
-- Result handler handles all persistence atomically
-- Single database write per interaction
-- Clean separation: command modules = domain logic, result handler = persistence orchestration
+### Integration with Orchestrator
+- Orchestrator creates interactions with commands (nil results)
+- ResultHandler completes interactions by adding results
+- This creates clear separation between command generation and result processing
