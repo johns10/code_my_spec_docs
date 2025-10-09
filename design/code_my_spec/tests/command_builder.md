@@ -61,15 +61,15 @@ mix test --formatter ExUnitJsonFormatter
 
 ```elixir
 # Basic test run
-CommandBuilder.build_command([])
+CommandBuilder.build_command_string([])
 # => "mix test --formatter ExUnitJsonFormatter"
 
 # Integration tests only
-CommandBuilder.build_command(include: [:integration])
+CommandBuilder.build_command_string(include: [:integration])
 # => "mix test --formatter ExUnitJsonFormatter --include integration"
 
 # Complex filtering
-CommandBuilder.build_command([
+CommandBuilder.build_command_string([
   include: [:integration, :api],
   exclude: [:slow, :external],
   seed: 42,
@@ -78,7 +78,7 @@ CommandBuilder.build_command([
 # => "mix test --formatter ExUnitJsonFormatter --include integration,api --exclude slow,external --seed 42 --max-failures 3"
 
 # Specific test files
-CommandBuilder.build_command([
+CommandBuilder.build_command_string([
   only: ["test/user_test.exs:15", "test/account_test.exs"]
 ])
 # => "mix test --formatter ExUnitJsonFormatter --only test/user_test.exs:15 --only test/account_test.exs"

@@ -12,10 +12,13 @@ Represents a tracked AI-assisted development session with workflow state, tracki
 | type | SessionType | Yes | Session workflow type  | Must be valid session type module |
 | agent | enum | No | AI agent used for session | Values: :claude_code |
 | environment | enum | No | Execution environment | Values: :local, :vscode |
-| status | enum | No | Session lifecycle status | Values: :active, :complete, :failed (default: :active) |
+| execution_mode | enum | No | How commands are executed | Values: :manual, :agentic (default: :manual) |
+| status | enum | No | Session lifecycle status | Values: :active, :complete, :failed, :cancelled (default: :active) |
 | state | map | No | Session-type-specific state storage | JSONB field for flexible state |
+| external_conversation_id | string | No | Claude SDK conversation ID | For resuming agentic sessions |
 | project_id | integer | No | Associated project | References projects.id |
 | account_id | integer | Yes | Owning account for scoping | References accounts.id |
+| user_id | integer | Yes | Owning user | References users.id |
 | component_id | integer | No | Associated component (if applicable) | References components.id |
 | interactions | array | No | Embedded interaction history | Array of Interaction embedded schemas |
 | inserted_at | utc_datetime | Yes (auto) | Creation timestamp | Auto-generated |
@@ -62,6 +65,22 @@ Represents a tracked AI-assisted development session with workflow state, tracki
 - component_id references components.id, on_delete: nilify
 
 ### Check Constraints
-- status must be one of: active, complete, failed
+- status must be one of: active, complete, failed, cancelled
 - agent must be one of: claude_code
 - environment must be one of: local, vscode
+- execution_mode must be one of: manual, agentic
+
+## Execution Modes
+
+### Manual Mode (default)
+- Commands are executed interactively in the user's terminal
+- User sees output in real-time and controls flow
+- Both shell commands and Claude commands run in terminal
+- User manually calls `next_command` to progress
+
+### Agentic Mode
+- Commands are executed autonomously in the background
+- Shell commands (git, mix test, etc.) run in subprocesses
+- Claude commands execute via Anthropic JavaScript SDK
+- Client automatically loops through `next_command` until session complete
+- `external_conversation_id` tracks Claude SDK conversation for resumption

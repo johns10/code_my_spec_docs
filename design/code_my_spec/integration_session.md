@@ -93,15 +93,7 @@ Prompts agent to fix failing integration tests. Agent should make small fixes in
 | ----- | ----- |
 | type  | other |
 
-Executes the test suite for the entire project and categorizes all test failures in session state. Separates failures into: (1) failures within this context's tests, (2) failures in other context tests.
-
-If outside-context tests fail, this indicates architectural problems - the new context is breaking existing functionality it shouldn't touch. In this case:
-- Identify what shared component/dependency is being modified incorrectly
-- Flag as architectural issue requiring human intervention
-- Mark integration session as failed
-- Terminate workflow immediately - no commits, merges, or PRs
-
-Since this context is new, nothing should depend on it yet. Outside tests breaking means we're violating context boundaries or modifying shared dependencies incorrectly. 
+Executes the test suite for the entire project and categorizes all test failures in session state. Separates failures into: (1) failures within this context's tests, (2) failures in other context tests. Stores the categorized failures but does not terminate the session - allows FixTestFailures step to attempt repairs before giving up. 
 
 ### IntegrationSessions.Steps.FixTestFailures
 
@@ -109,9 +101,9 @@ Since this context is new, nothing should depend on it yet. Outside tests breaki
 | ----- | ----- |
 | type  | other |
 
-Handles within-context test failures only (outside-context failures already terminated the session in RunTestSuite). Agent makes small inline fixes or triggers session reactivation via MCP tools for components with design flaws. This step exists to give user/agent a chance to clean up any mess made during integration.
+Last-ditch effort to fix ANY test failures (within-context AND out-of-context) before marking the session as failed. Agent attempts small inline fixes or triggers session reactivation via MCP tools for components with design flaws. If outside-context tests are breaking, this indicates architectural problems where the new context violates boundaries or modifies shared dependencies incorrectly.
 
-Loops back to Run Test Suite until all tests pass - workflow cannot proceed to validation until the entire project test suite is green.  
+Loops back to Run Test Suite until all tests pass OR orchestrator determines the session should be abandoned. This is the final chance to salvage the integration before throwing away the session.  
 
 ### IntegrationSessions.Steps.ValidateAcceptanceCriteria
 
@@ -151,7 +143,10 @@ Completes successful integration session by updating context integration status 
 6. **Run Test Suite**: Execute entire project test suite and categorize all test failures in session state
    - If all tests pass → proceed to Validate Acceptance Criteria
    - If tests fail → proceed to Fix Test Failures
-7. **Fix Test Failures**: Last chance for user and LLM to fix out-of-context failures.
+7. **Fix Test Failures**: Last-ditch effort to fix ANY test failures (within-context or out-of-context)
+   - Agent attempts inline fixes or session reactivation via MCP tools
+   - Return to Run Test Suite (loop until tests pass or orchestrator abandons session)
+   - If orchestrator determines session cannot be salvaged → mark session as failed and terminate
 8. **Validate Acceptance Criteria**: Review integration test results against user story acceptance criteria (only reached when ALL tests pass)
    - All criteria satisfied → proceed to Finalize
    - Gaps identified → return to Generate Integration Tests with gap analysis

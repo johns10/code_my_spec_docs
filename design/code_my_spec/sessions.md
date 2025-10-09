@@ -14,11 +14,11 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
 
 ## Access Patterns
 
-- All sessions are scoped by `account_id` via `Scope` struct
+- All sessions are scoped by `account_id` and `user_id` via `Scope` struct
 - Sessions optionally belong to a `project_id` and `component_id` for further scoping
 - Data access functions accept `Scope.t()` as first parameter for automatic filtering
 - PubSub broadcasts are scoped to account level: `account:#{account_id}:sessions`
-- Repository functions enforce scope validation with pattern matching
+- Repository functions enforce scope validation with pattern matching on both account_id and user_id
 
 ## Public API
 
@@ -53,7 +53,7 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
 ## State Management Strategy
 
 ### Database Persistence
-- Sessions persist to `sessions` table with foreign keys to `accounts`, `projects`, and `components`
+- Sessions persist to `sessions` table with foreign keys to `accounts`, `users`, `projects`, and `components`
 - Interactions are embedded documents within the session (PostgreSQL JSONB)
 - Commands and Results are embedded within Interactions
 - All updates broadcast PubSub notifications after successful persistence
@@ -71,7 +71,7 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
 ## Execution Flow
 
 ### Creating a Session
-1. **Scope Validation**: Extract account_id and project_id from Scope struct
+1. **Scope Validation**: Extract account_id, user_id, and project_id from Scope struct
 2. **Changeset Construction**: Build session changeset with type, agent, environment
 3. **Database Insert**: Persist session with scope foreign keys
 4. **Broadcast Notification**: Publish `{:created, session}` to account PubSub channel
@@ -97,13 +97,14 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
 8. **Broadcast Notification**: Publish `{:updated, session}` event
 
 ### Deleting a Session
-1. **Scope Validation**: Verify session belongs to active account
+1. **Scope Validation**: Verify session belongs to active account and user
 2. **Database Delete**: Remove session record (cascades to embedded interactions)
 3. **Broadcast Notification**: Publish `{:deleted, session}` event
 
 ## Dependencies
 
 - CodeMySpec.Users.Scope
+- CodeMySpec.Users
 - CodeMySpec.Projects
 - CodeMySpec.Accounts
 - CodeMySpec.Components

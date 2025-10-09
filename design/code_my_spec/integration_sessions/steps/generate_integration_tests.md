@@ -33,7 +33,7 @@ Delegates to an AI agent to generate comprehensive integration test files for a 
    - Focus on context-level behavior and component interactions
    - Include path where integration test file should be written
 7. **Create Agent**: Use Agents.create_agent/3 with appropriate agent type for integration test generation
-8. **Build Command**: Use Agents.build_command/2 to create command from agent and prompt
+8. **Build Command**: Use Agents.build_command_string/2 to create command from agent and prompt
 9. **Return Command**: Create and return Command struct with agent invocation
 
 ### handle_result/3
