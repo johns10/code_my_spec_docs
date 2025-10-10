@@ -34,7 +34,7 @@ This context owns no entities. All session state is managed through the Sessions
 
 | field | value |
 | ----- | ----- |
-| type  | orchestrator |
+| type  | other |
 
 Stateless orchestrator managing the sequence of project setup steps, determining workflow progression based on validation state and completed interactions. Routes failures to Claude Code recovery step.
 
@@ -42,7 +42,7 @@ Stateless orchestrator managing the sequence of project setup steps, determining
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Validates current project setup state by receiving validation report from VS Code client. Stores validation results in session state to drive subsequent command generation. No commands are executed in this step.
 
@@ -50,7 +50,7 @@ Validates current project setup state by receiving validation report from VS Cod
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Generates command to add required dependencies to mix.exs: file_system, ngrok (from GitHub), exunit_json_formatter (from GitHub), and dialyxir. Uses latest available versions. Only executes if dependencies_added requirement is false.
 
@@ -58,7 +58,7 @@ Generates command to add required dependencies to mix.exs: file_system, ngrok (f
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Generates command to run `mix deps.get` to install newly added dependencies. Only executes if deps_installed requirement is false and dependencies_added is true.
 
@@ -66,7 +66,7 @@ Generates command to run `mix deps.get` to install newly added dependencies. Onl
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Generates commands to create GitHub repositories for doc and content submodules via GitHub API. Repository names follow {project_name}-doc and {project_name}-content format. Inherits visibility from parent project repository, defaults to private if parent visibility cannot be determined. Initializes with basic README files. Only executes if doc_repo_created or content_repo_created requirements are false.
 
@@ -74,7 +74,7 @@ Generates commands to create GitHub repositories for doc and content submodules 
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Generates commands to add git submodules for doc and content repositories at standard Phoenix locations (docs/ and content/). Only executes if corresponding GitHub repositories exist and submodules are not yet added.
 
@@ -82,7 +82,7 @@ Generates commands to add git submodules for doc and content repositories at sta
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Generates command to run `git submodule update --init --recursive` to initialize all submodules. Only executes if submodules_initialized requirement is false and submodules have been added.
 
@@ -90,7 +90,7 @@ Generates command to run `git submodule update --init --recursive` to initialize
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Invokes Claude Code with context about what failed and what was expected to happen. Provides failure details, command that failed, expected outcome, and current project state. User works with Claude to resolve issues, then can re-run validation to continue setup.
 
@@ -98,7 +98,7 @@ Invokes Claude Code with context about what failed and what was expected to happ
 
 | field | value |
 | ----- | ----- |
-| type  | step |
+| type  | other |
 
 Validates all requirements are met and marks session as complete. Broadcasts completion status to project dashboard. Updates project setup status to indicate CodeMySpec integration is ready.
 
