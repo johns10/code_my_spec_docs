@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Provides scoped query builder functions for tag management within the Content context. Handles tag normalization (lowercasing and slugification), upsert operations with conflict resolution on unique constraints (account_id, project_id, slug), and tag lookup queries. All operations enforce multi-tenant isolation through account_id and project_id scoping passed via Scope struct.
+Provides scoped query builder functions for tag management within the ContentAdmin context. Handles tag normalization (lowercasing and slugification), upsert operations with conflict resolution on unique constraints (account_id, project_id, slug), and tag lookup queries. All operations enforce multi-tenant isolation through account_id and project_id scoping passed via Scope struct.
 
 ## Public API
 
@@ -41,7 +41,7 @@ Composable query functions for filtering tags by scope and slug. These can be ch
 ## Usage Patterns
 
 ### Context Integration
-TagRepository is called exclusively by the Content context module, never directly by controllers or LiveViews. The context module passes validated Scope structs and handles transaction coordination when tags are created during content operations.
+TagRepository is called exclusively by the ContentAdmin context module, never directly by controllers or LiveViews. The context module passes validated Scope structs and handles transaction coordination when tags are created during content_admin operations.
 
 ### Tag Normalization
 All tag names are normalized before database operations:
@@ -55,11 +55,11 @@ Every query automatically filters by `account_id` and `project_id` from the Scop
 ## Transaction Patterns
 
 ### Bulk Tag Sync
-When syncing multiple tags to content (via Content context), wrap operations in a transaction:
+When syncing multiple tags to content_admin (via ContentAdmin context), wrap operations in a transaction:
 1. Upsert each tag (returns existing or creates new)
 2. Collect tag IDs
-3. Delete existing content_tag associations
-4. Insert new content_tag associations
+3. Delete existing content_admin_tag associations
+4. Insert new content_admin_tag associations
 5. Commit atomically
 
 ## Performance Considerations

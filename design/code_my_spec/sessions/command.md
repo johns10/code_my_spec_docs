@@ -13,7 +13,6 @@ Defines an executable command within a session workflow, specifying the step mod
 | command | string | Yes | Command string or identifier | Shell command, "claude", "spawn_sessions", etc. |
 | pipe | string | No | (Deprecated) Pipe operation | Legacy field for prompts, use metadata instead |
 | metadata | map | No | Flexible command metadata | JSONB map for prompts, options, session IDs, etc. |
-| use_subprocess | boolean | No | Execute in subprocess | Default: true. Shell commands always true, varies for others |
 | timestamp | utc_datetime_usec | No | Command creation timestamp | Auto-set to current time with microsecond precision |
 
 ## Validation Rules
@@ -24,7 +23,6 @@ Defines an executable command within a session workflow, specifying the step mod
 
 ### Optional Fields with Defaults
 - `metadata` - Defaults to empty map `%{}`
-- `use_subprocess` - Defaults to `false`
 
 ### Automatic Timestamping
 - `timestamp` - Set to DateTime.utc_now() with microsecond precision if not provided
@@ -45,12 +43,11 @@ Creates new Command with:
 - `command` - Command string (shell command, "claude", "spawn_sessions", etc.)
 - `opts` - Keyword list with optional:
   - `:metadata` - Map of command metadata
-  - `:use_subprocess` - Boolean (default: true)
 - `timestamp` - Auto-set to current UTC time
 
 ## Usage Patterns
 
-### Shell Command (subprocess execution)
+### Shell Command
 ```elixir
 Command.new(
   MyApp.Steps.RunTests,
@@ -58,7 +55,7 @@ Command.new(
 )
 ```
 
-### Claude SDK Command (agentic execution)
+### Claude SDK Command
 ```elixir
 Command.new(
   MyApp.Steps.GenerateDesign,
@@ -66,8 +63,7 @@ Command.new(
   metadata: %{
     prompt: "Generate component design for...",
     options: %{model: "claude-3-opus", max_turns: 10}
-  },
-  use_subprocess: false
+  }
 )
 ```
 
@@ -79,24 +75,24 @@ Command.new(
   metadata: %{
     child_session_ids: [1, 2, 3],
     session_type: :component_design
-  },
-  use_subprocess: false
+  }
 )
 ```
 
 ## Execution Based on Session Mode
 
-The session's `execution_mode` determines how commands are executed by the client:
+The session's `execution_mode` field determines how the client executes commands:
 
-### Manual Mode
+### Manual Mode (default)
 - Shell commands → Executed in user's terminal (interactive)
 - Claude commands → Executed via `claude` CLI in terminal (interactive)
-- `use_subprocess` flag generally ignored (all in terminal)
+- All execution is synchronous and user-controlled
 
 ### Agentic Mode
-- Shell commands → Executed in subprocess (background, `use_subprocess: true`)
-- Claude commands → Executed via Anthropic JavaScript SDK (background, `use_subprocess: false`)
-- Spawn commands → Client autonomously executes child sessions (`use_subprocess: false`)
+- Shell commands → Executed in subprocess (background)
+- Claude commands → Executed via Anthropic JavaScript SDK (background)
+- Spawn commands → Client autonomously executes child sessions
+- Client loops through `next_command` automatically until session complete
 
 ### Module Responsibility
 - The `module` field references a StepBehaviour implementation

@@ -2,78 +2,87 @@
 
 ## Purpose
 
-The Content Context manages all content entities (blog posts, pages, landing pages), their lifecycle (scheduling, expiration), SEO metadata, and tag associations. It encapsulates content CRUD operations, tag management, and content-tag relationships while enforcing account and project-based multi-tenancy through scope filtering. Content protection is handled at the entity level via boolean flag, enabling flexible marketing gates and authentication requirements at the LiveView layer.
+The Content Context manages published content for public and authenticated viewing. This is the production-ready content system that serves blog posts, pages, landing pages, and documentation to end users. Content is single-tenant (no account_id/project_id), and access control is based on authentication (scope vs nil) rather than multi-tenancy.
+
+**Architectural Note**: Content is distinct from ContentAdmin:
+- **ContentAdmin**: Multi-tenant validation/preview layer where developers test content synced from Git
+- **Content**: Single-tenant published content layer where end users view finalized content
+
+Content is NOT copied from ContentAdmin. Instead, publishing triggers a fresh Git pull, processes content, and POSTs to the Content endpoint.
 
 ## Entity Ownership
 
-- Content entities (blog posts, pages, landing pages) with full lifecycle management
-- Tags and content-tag associations for content organization
-- Content sync status and error tracking
+- Content entities (blog posts, pages, landing pages, documentation) with publishing lifecycle
+- Tags and content-tag associations for organization
 - SEO metadata and flexible JSONB metadata storage
-- Content protection and access control flags
+- Content protection flags for authentication gates
 
 ## Scope Integration
 
-- All queries filtered by `account_id` and `project_id` foreign keys for multi-tenant isolation
-- Scope struct passed to all public functions to enforce account and project boundaries
-- Content visibility controlled by scope + publish_at/expires_at timestamps
-- Protected content accessible via same routes as public content - protection enforced at LiveView layer
-- Tag creation and lookup scoped to account_id and project_id
-- Content-tag associations respect boundaries through content relationship
+**Scope is for authentication, NOT multi-tenancy**:
+
+- **With %Scope{}**: User is authenticated → can access both public and protected content
+- **With nil**: Anonymous visitor → can only access public content (protected = false)
+
+NO account_id or project_id filtering. All queries are unscoped from a multi-tenant perspective.
 
 ## Public API
 
 ```elixir
-# Content Queries
-@spec list_published_content(Scope.t(), content_type :: String.t()) :: [Content.t()]
-@spec list_scheduled_content(Scope.t()) :: [Content.t()]
-@spec list_expired_content(Scope.t()) :: [Content.t()]
-@spec list_all_content(Scope.t()) :: [Content.t()]
-@spec get_content_by_slug!(Scope.t(), slug :: String.t(), content_type :: String.t()) :: Content.t()
-@spec get_content!(Scope.t(), id :: integer()) :: Content.t()
+# Content Retrieval (scope OR nil)
+@spec list_published_content(Scope.t() | nil, content_type :: String.t()) :: [Content.t()]
+@spec get_content_by_slug(Scope.t() | nil, slug :: String.t(), content_type :: String.t()) :: Content.t() | nil
+@spec get_content_by_slug!(Scope.t() | nil, slug :: String.t(), content_type :: String.t()) :: Content.t()
 
-# Content CRUD
-@spec create_content(Scope.t(), attrs :: map()) :: {:ok, Content.t()} | {:error, Changeset.t()}
-@spec create_many(Scope.t(), content_list :: [map()]) :: {:ok, [Content.t()]} | {:error, term()}
-@spec update_content(Scope.t(), Content.t(), attrs :: map()) :: {:ok, Content.t()} | {:error, Changeset.t()}
-@spec delete_content(Scope.t(), Content.t()) :: {:ok, Content.t()} | {:error, Changeset.t()}
-@spec delete_all_content(Scope.t()) :: {:ok, count :: integer()}
-
-# Bulk Operations
-@spec purge_expired_content(Scope.t()) :: {:ok, count :: integer()}
+# Content Sync (from publishing flow)
+@spec sync_content(content_list :: [map()]) :: {:ok, [Content.t()]} | {:error, term()}
+@spec delete_all_content() :: {:ok, count :: integer()}
 
 # Tag Management
-@spec list_tags(Scope.t()) :: [Tag.t()]
-@spec upsert_tag(Scope.t(), name :: String.t()) :: {:ok, Tag.t()} | {:error, Changeset.t()}
-@spec get_content_tags(Scope.t(), Content.t()) :: [Tag.t()]
-@spec sync_content_tags(Scope.t(), Content.t(), tag_names :: [String.t()]) :: {:ok, Content.t()} | {:error, term()}
-
-# Status Queries
-@spec list_content_with_status(Scope.t(), filters :: map()) :: [Content.t()]
-@spec count_by_parse_status(Scope.t()) :: %{success: integer(), error: integer()}
+@spec list_all_tags() :: [Tag.t()]
+@spec get_content_tags(Content.t()) :: [Tag.t()]
 ```
 
 ## State Management Strategy
 
 ### Database Persistence
-- Content stored in `content` table with account_id and project_id foreign keys
-- Tags stored in `tags` table with account_id and project_id foreign keys
+
+- Content stored in `content` table WITHOUT account_id/project_id
+- Schema fields: slug, title, content_type, content (rendered HTML/HEEx), protected, publish_at, expires_at, SEO fields, metadata (JSONB)
+- Tags stored in `tags` table (no multi-tenancy)
 - Content-tag associations in `content_tags` join table
 - All bulk writes wrapped in transactions for consistency
-- Static content cached in `processed_content` column
-- Flexible metadata stored in JSONB `metadata` column
 
 ### Protected Content Access
-- `protected` boolean field stored on content entity
-- Context returns all published content regardless of protected flag
-- LiveView layer enforces authentication checks based on `content.protected`
-- Enables flexible marketing flows: content preview, soft gates, login redirects
-- Same URL works for both anonymous (redirect/teaser) and authenticated (full access) users
 
-### Real-time Updates
-- Broadcasts via PubSub when content is created/updated/deleted
-- LiveView subscribers update content listings automatically
-- Expiration handled by query-time filtering, background job for cleanup
+Content protection is based on authentication status:
+
+- **protected = false**: Accessible to all visitors (scope can be nil)
+- **protected = true**: Requires authentication (scope must be %Scope{})
+
+LiveView layer checks content.protected:
+- If protected = false: render content immediately
+- If protected = true && scope present: render content
+- If protected = true && scope nil: redirect to login or show paywall
+
+### Publishing Flow
+
+**Content is NOT copied from ContentAdmin.** Publishing works as follows:
+
+1. **Developer validates in ContentAdmin**: Sync from Git to ContentAdmin for preview/validation
+2. **Developer clicks "Publish"**: Triggers server-side action:
+   - Fresh pull from GitHub repository
+   - Process content files (markdown → HTML, parse frontmatter, etc.)
+   - Generate tags from content
+   - POST processed content to `/api/content/sync` endpoint
+3. **Content Sync Endpoint**: Receives payload and:
+   - Deletes all existing content (clean slate)
+   - Creates new content records
+   - Upserts tags
+   - Creates content-tag associations
+   - Returns success/failure
+
+This ensures Content always reflects the GitHub source of truth, not ContentAdmin preview data.
 
 ## Components
 
@@ -83,7 +92,7 @@ The Content Context manages all content entities (blog posts, pages, landing pag
 | ----- | ------ |
 | type  | schema |
 
-Ecto schema representing content entities with fields: slug, type, content_type, content, processed_content, protected (boolean), project_id, account_id, publish_at, expires_at, parse_status, parse_errors, SEO fields (meta_title, meta_description, og_image, og_title, og_description), and metadata (JSONB).
+Ecto schema with fields: slug, title, content_type, content (rendered), protected, publish_at, expires_at, SEO fields, metadata (JSONB). NO parse_status, parse_errors, account_id, or project_id.
 
 ### Content.Tag
 
@@ -91,7 +100,7 @@ Ecto schema representing content entities with fields: slug, type, content_type,
 | ----- | ------ |
 | type  | schema |
 
-Ecto schema representing tags with fields: name, slug, project_id, account_id. Normalized to lowercase slugified format for consistency.
+Ecto schema with fields: name, slug. NO account_id or project_id.
 
 ### Content.ContentTag
 
@@ -99,7 +108,7 @@ Ecto schema representing tags with fields: name, slug, project_id, account_id. N
 | ----- | ------ |
 | type  | schema |
 
-Join table schema associating content_id with tag_id for many-to-many relationships.
+Join table associating content_id with tag_id.
 
 ### Content.ContentRepository
 
@@ -107,7 +116,7 @@ Join table schema associating content_id with tag_id for many-to-many relationsh
 | ----- | ---------- |
 | type  | repository |
 
-Query builder module providing scoped query functions for content filtering by publish_at, expires_at, parse_status, content_type, and protected flag. All queries enforce account_id and project_id scoping.
+Query builder providing unscoped queries. Accepts Scope OR nil - Scope grants access to protected content, nil only returns public content. NO multi-tenant filtering.
 
 ### Content.TagRepository
 
@@ -115,58 +124,50 @@ Query builder module providing scoped query functions for content filtering by p
 | ----- | ---------- |
 | type  | repository |
 
-Query builder module for tag upsert and lookup with account_id and project_id scoping. Handles tag normalization and conflict resolution on unique constraints.
+Query builder for tag operations without scoping.
 
-### Content.ContentBroadcaster
+## Dependencies
 
-| field | value |
-| ----- | ----- |
-| type  | other |
-
-PubSub wrapper for broadcasting content change events to LiveView subscribers. Encapsulates topic naming and message formatting.
-
-## Content.Dependencies
-
-- Projects
-- Scopes
+None - standalone context for public content serving.
 
 ## Execution Flow
 
-### Bulk Content Creation
-1. **Scope Validation**: Verify scope has access to target account and project
-2. **Transaction Start**: Begin database transaction for atomic operation
-3. **Content Insertion**: Insert content records with account_id and project_id from scope
-4. **Transaction Commit**: Commit all changes atomically
-5. **Broadcast**: Notify LiveView subscribers of content changes via ContentBroadcaster
-6. **Result Return**: Return list of created content structs or error
+### Content Retrieval for Viewing
 
-### Content Retrieval for Display
-1. **Scope Validation**: Verify scope has access to requested project
-2. **Query Building**: Build query via ContentRepository filtering by:
-   - account_id = scope.account_id
-   - project_id = scope.project_id
-   - parse_status = "success"
-   - publish_at <= current_timestamp OR publish_at IS NULL
-   - expires_at > current_timestamp OR expires_at IS NULL
-   - type = requested content_type (blog/page/landing)
-3. **Database Query**: Execute scoped query with Repo
-4. **Result Return**: Return content struct with protected flag (or raise if not found)
-5. **LiveView Protection Check**: LiveView examines content.protected:
-   - If protected = false: render content immediately
-   - If protected = true && user authenticated: render content
-   - If protected = true && no user: redirect to login or show teaser/paywall
+1. **Check Scope**: Determine if user is authenticated (scope present) or anonymous (scope nil)
+2. **Query Building**: Build query filtering by:
+   - publish_at <= now OR publish_at IS NULL
+   - expires_at > now OR expires_at IS NULL
+   - content_type = requested type
+   - slug = requested slug (for individual content)
+   - protected = false (if scope is nil)
+3. **Database Query**: Execute query with Repo
+4. **Result Return**: Return content struct(s)
+5. **LiveView Check**: Examine content.protected and redirect/render accordingly
 
-### Tag Synchronization
-1. **Scope Validation**: Verify scope has access to content's project
-2. **Tag Normalization**: Lowercase and slugify tag names
-3. **Tag Upsert**: For each tag, upsert with account_id and project_id (on conflict do nothing)
-4. **Association Sync**: Delete existing content_tags, insert new content_tags records
-5. **Preload Update**: Reload content with preloaded tags
-6. **Result Return**: Return updated content struct with tags
+### Publishing Content from Git
 
-### Expired Content Cleanup
-1. **Scope Validation**: Verify scope has access to project
-2. **Query Building**: Find content where expires_at <= current_timestamp AND account_id = scope.account_id AND project_id = scope.project_id
-3. **Deletion**: Delete content records and cascade to content_tags
-4. **Broadcast**: Notify subscribers of content removal
-5. **Result Return**: Return count of deleted records
+1. **Developer Action**: Click "Publish" in ContentAdmin UI
+2. **Server Processing**:
+   - Pull latest from GitHub repository
+   - Parse content files (markdown, frontmatter)
+   - Process markdown to HTML
+   - Extract/generate tags
+   - Build sync payload (list of content maps with all fields)
+3. **POST to Sync Endpoint**: Send payload to `/api/content/sync`
+4. **Sync Handler**:
+   - Authenticate request
+   - Begin transaction
+   - Delete all existing content
+   - Create content records
+   - Upsert tags
+   - Create content-tag associations
+   - Commit transaction
+5. **Return Result**: Success or error
+
+### Tag-based Content Queries
+
+1. **Find Tag**: Query tags table by slug
+2. **Query Content**: Join through content_tags to find published content
+3. **Apply Scope Filter**: If scope nil, filter to protected = false
+4. **Return Results**: Return list of content structs

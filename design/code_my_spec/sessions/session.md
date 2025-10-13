@@ -72,15 +72,22 @@ Represents a tracked AI-assisted development session with workflow state, tracki
 
 ## Execution Modes
 
+The `execution_mode` field controls how the client executes commands. This is a session-level setting that affects all commands within the session.
+
 ### Manual Mode (default)
 - Commands are executed interactively in the user's terminal
 - User sees output in real-time and controls flow
-- Both shell commands and Claude commands run in terminal
-- User manually calls `next_command` to progress
+- Shell commands → Run in terminal (e.g., `mix test`)
+- Claude commands → Run via `claude` CLI in terminal
+- User manually calls `next_command` to progress through workflow
+- Suitable for exploratory work and learning
 
 ### Agentic Mode
-- Commands are executed autonomously in the background
-- Shell commands (git, mix test, etc.) run in subprocesses
-- Claude commands execute via Anthropic JavaScript SDK
+- Commands are executed autonomously in the background by the client
+- Shell commands (git, mix test, etc.) → Run in subprocesses
+- Claude commands → Execute via Anthropic JavaScript SDK
 - Client automatically loops through `next_command` until session complete
 - `external_conversation_id` tracks Claude SDK conversation for resumption
+- Suitable for automated workflows and CI/CD pipelines
+
+**Note:** The Command schema does not contain an execution mode field. Execution behavior is determined entirely by the session's `execution_mode` field, interpreted by the client.

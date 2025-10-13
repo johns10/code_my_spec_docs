@@ -52,14 +52,6 @@ Prepares the development environment by creating a git branch and loading the li
 
 Creates child ComponentDesignSession records for each component in the context with execution_mode set to :agentic. Returns a command with metadata containing child_session_ids array for the client to start all sessions in parallel.
 
-### ContextComponentsDesignSessions.Steps.ValidateComponentDesigns
-
-| field | value |
-| ----- | ----- |
-| type  | other |
-
-Validates that all child component design sessions have completed successfully. Checks session status and verifies design files exist. Loops back to itself if validation fails.
-
 ### ContextComponentsDesignSessions.Steps.SpawnReviewSession
 
 | field | value |
@@ -67,14 +59,6 @@ Validates that all child component design sessions have completed successfully. 
 | type  | other |
 
 Creates a review session (agentic mode) that analyzes all generated component designs for consistency, missing dependencies, and integration issues. Returns command with review_session_id in metadata for client to start.
-
-### ContextComponentsDesignSessions.Steps.ValidateReview
-
-| field | value |
-| ----- | ----- |
-| type  | other |
-
-Validates that the review session has completed successfully. Loops back to itself if validation fails.
 
 ### ContextComponentsDesignSessions.Steps.Finalize
 
@@ -91,17 +75,19 @@ Completes the context components design session by creating a pull request with 
 - Agents
 
 ## Execution Flow
-1. **Initialize**: Create git branch, load context component list into session state
-2. **Spawn Component Design Sessions**: Create child ComponentDesignSession records (agentic mode) for each component, return command with child_session_ids
-   - Client starts all child sessions in parallel
-   - Client calls handle_result when all complete
-3. **Validate Component Designs**: Check all child sessions completed successfully
-   - If validation fails → loop back to Validate Component Designs
-   - If validation passes → proceed to Spawn Review Session
-4. **Spawn Review Session**: Create agentic review session to analyze all designs, return command with review_session_id
-   - Client starts review session
-   - Client calls handle_result when complete
-5. **Validate Review**: Check review session completed successfully
-   - If validation fails → loop back to Validate Review
-   - If validation passes → proceed to Finalize
-6. **Finalize**: Create pull request and mark session complete
+1. **Initialize**: Create git branch for design documentation
+2. **Spawn Component Design Sessions**: Query child components, create child ComponentDesignSession records (agentic mode), return command with child_session_ids
+   - Client starts all child sessions in parallel (autonomous execution)
+   - Client monitors child sessions until all reach terminal state (:complete, :failed, :cancelled)
+   - Client calls handle_result on parent session when all children are done
+   - **handle_result validates**: Load parent with children, check all complete, verify design files exist
+   - If validation fails → return :error, orchestrator loops back to this step for retry
+   - If validation passes → return :ok, orchestrator proceeds to review
+3. **Spawn Review Session**: Load parent with children, create ComponentDesignReviewSession (agentic mode) with paths to all designs, return command with review_session_id
+   - Client starts review session (autonomous execution)
+   - Client monitors review session until terminal state
+   - Client calls handle_result on parent session when review is done
+   - **handle_result validates**: Load review session, check complete, verify review document exists
+   - If validation fails → return :error, orchestrator loops back to this step for retry
+   - If validation passes → return :ok, orchestrator proceeds to finalize
+4. **Finalize**: Create pull request with all design documentation and mark session complete

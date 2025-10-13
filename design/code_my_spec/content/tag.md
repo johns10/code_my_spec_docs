@@ -2,16 +2,18 @@
 
 ## Purpose
 
-Ecto schema representing content tags for categorizing and organizing content entities. Tags are normalized to lowercase slugified format for consistency and scoped to account and project for multi-tenant isolation. Tags enable flexible content organization through many-to-many relationships.
+Ecto schema representing content_admin tags for categorizing and organizing content_admin entities within the CodeMySpec SaaS platform. Tags are normalized to lowercase slugified format for consistency and scoped to account and project for multi-tenant isolation. Tags enable flexible content_admin organization through many-to-many relationships.
+
+**Note**: This schema design is for CodeMySpec SaaS (multi-tenant management platform). Deployed client applications use a simplified version without account_id/project_id scoping.
 
 ## Field Documentation
 
-| Field | Type | Required | Description | Constraints |
-|-------|------|----------|-------------|-------------|
-| name | string | yes | Display name of the tag | Length 1-50 characters |
-| slug | string | yes | URL-safe normalized identifier | Lowercase, slugified, unique per project |
-| project_id | integer | yes | Foreign key for multi-tenant project isolation | References projects.id |
-| account_id | integer | yes | Foreign key for multi-tenant account isolation | References accounts.id |
+| Field      | Type    | Required | Description                                                | Constraints                                          |
+| ---------- | ------- | -------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| name       | string  | yes      | Display name of the tag                                    | Length 1-50 characters                               |
+| slug       | string  | yes      | URL-safe normalized identifier                             | Lowercase, slugified, unique per project (SaaS only) |
+| project_id | integer | yes      | Foreign key for multi-tenant project isolation (SaaS only) | References projects.id                               |
+| account_id | integer | yes      | Foreign key for multi-tenant account isolation (SaaS only) | References accounts.id                               |
 
 ## Associations
 
@@ -20,7 +22,7 @@ Ecto schema representing content tags for categorizing and organizing content en
 - **account** - References accounts.id, cascade delete. Tags are deleted when account is deleted.
 
 ### many_to_many
-- **content** - Tags can be associated with multiple content items through the ContentTag join table
+- **content_admin** - Tags can be associated with multiple content_admin items through the ContentAdminTag join table
 
 ## Validation Rules
 

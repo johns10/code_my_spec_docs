@@ -2,7 +2,12 @@
 
 ## Purpose
 
-Orchestrates the content sync pipeline from Git repository to database, coordinating metadata parsing from sidecar YAML files, content processing (markdown/HTML/HEEx), and atomic database transactions. Implements a 'delete all and recreate' strategy where flat files are the source of truth and broadcasts PubSub events on sync completion for real-time LiveView updates.
+Orchestrates content sync pipelines in two different contexts:
+
+1. **Server-Side (CodeMySpec SaaS)**: Syncs from Git → ContentAdmin for validation only. Shows parse status to developers.
+2. **Client-Side (Client Appliances)**: Syncs from Git → Content with full schema. Triggered by server push.
+
+Both use the same parsing/processing logic but write to different schemas. Git repository is always the source of truth.
 
 ## Entity Ownership
 
@@ -10,40 +15,52 @@ This context owns no entities.
 
 ## Scope Integration
 
-- All sync operations scoped to `account_id` and `project_id` from scope
-- Synced content inherits scope foreign keys for multi-tenant isolation
-- PubSub broadcasts scoped to account and project topics via existing Content context broadcasting
-- File watcher configured from application config with scope from config
+**Server-Side (CodeMySpec SaaS)**:
+- Sync operations scoped to `account_id` and `project_id` from scope
+- ContentAdmin records inherit scope foreign keys
 - Scope validates project access before sync operations
+
+**Client-Side (Client Appliances)**:
+- NO scoping - client apps are single-tenant
+- No Scope struct needed for sync operations
 
 ## Public API
 
 ```elixir
-# Sync Operations
-@spec sync_from_git(Scope.t()) :: {:ok, sync_result()} | {:error, term()}
+# Server-Side API (syncs to ContentAdmin)
+@spec sync_to_content_admin(Scope.t()) :: {:ok, sync_result()} | {:error, term()}
+@spec list_content_admin_errors(Scope.t()) :: [ContentAdmin.t()]
 
-# Sync Status
-@spec list_content_errors(Scope.t()) :: [Content.t()]
+# Client-Side API (syncs to Content with full schema)
+@spec sync_to_content(repo_url :: String.t()) :: {:ok, sync_result()} | {:error, term()}
+
+# Shared - Push from Server to Client
+@spec push_to_client(Scope.t(), client_api_url :: String.t(), deploy_key :: String.t()) ::
+  {:ok, push_result()} | {:error, term()}
 
 # Type Definitions
 @type sync_result :: %{
   total_files: integer(),
   successful: integer(),
   errors: integer(),
-  duration_ms: integer(),
-  content_types: %{blog: integer(), page: integer(), landing: integer()}
+  duration_ms: integer()
+}
+
+@type push_result :: %{
+  synced_content_count: integer(),
+  client_response: map()
 }
 ```
 
 ## Components
 
-### ContentSync.MetaDataParser
+### ContentSync.FrontmatterParser
 
 | field | value |
 | ----- | ----- |
 | type  | other |
 
-Parses sidecar `.yaml` files to extract structured metadata for content files. Returns success tuples with parsed metadata maps or error tuples with details when files are missing, contain invalid YAML syntax, or have malformed structure.
+Parses frontmatter from markdown files (YAML between `---` delimiters). Extracts metadata like title, slug, tags, publish_at, SEO fields, etc. Returns parsed metadata map or error with details.
 
 ### ContentSync.ProcessorResult
 
@@ -51,7 +68,7 @@ Parses sidecar `.yaml` files to extract structured metadata for content files. R
 | ----- | ----- |
 | type  | other |
 
-Shared result structure for all content processors. Contains `raw_content`, `processed_content`, `parse_status`, and `parse_errors` fields.
+Shared result structure for all content processors. Contains `content` (raw), `processed_content` (HTML/HEEx), `parse_status` (:success/:error), and `parse_errors` (error details map).
 
 ### ContentSync.MarkdownProcessor
 
@@ -67,7 +84,7 @@ Converts markdown content to HTML using Earmark library. Populates `processed_co
 | ----- | ----- |
 | type  | other |
 
-Validates HTML content structure and checks for disallowed JavaScript elements. Copies validated HTML to `processed_content` field. Returns success tuples with embedded validation errors for improper HTML.
+Validates HTML content structure. Copies validated HTML to `processed_content` field. Returns success tuples with embedded validation errors for improper HTML.
 
 ### ContentSync.HeexProcessor
 
@@ -75,7 +92,7 @@ Validates HTML content structure and checks for disallowed JavaScript elements. 
 | ----- | ----- |
 | type  | other |
 
-Validates HEEx template syntax without rendering via `Phoenix.LiveView.HTMLEngine`. Stores raw HEEx in `raw_content` with `processed_content` set to nil (rendered at request time). Returns success tuples with embedded syntax errors for invalid templates.
+Validates HEEx template syntax without rendering via `Phoenix.LiveView.HTMLEngine`. Stores raw HEEx in `content` with `processed_content` set to nil (rendered at request time). Returns success tuples with embedded syntax errors for invalid templates.
 
 ### ContentSync.Sync
 
@@ -83,138 +100,144 @@ Validates HEEx template syntax without rendering via `Phoenix.LiveView.HTMLEngin
 | ----- | ----- |
 | type  | other |
 
-Core sync orchestrator that processes a directory of content files. Discovers files, routes to appropriate processors and MetaDataParser, assembles content attributes, and performs atomic database operations via transaction.
+Core sync orchestrator that processes a directory of content files. Discovers files, parses frontmatter, routes to appropriate processors, validates using Content.changeset, and performs atomic database operations via transaction. Works with both ContentAdmin (server) and Content (client) schemas.
 
-### ContentSync.FileWatcher
-
-| field | value     |
-| ----- | --------- |
-| type  | genserver |
-
-GenServer using FileSystem library that monitors content directories configured in application config (development only). Gets scope from application config and triggers `Sync.sync_directory/2` on file events with timer-based debouncing. Started conditionally based on environment configuration.
-
-### ContentSync.GitSync
+### ContentSync.GitClone
 
 | field | value |
 | ----- | ----- |
 | type  | other |
 
-Handles Git repository operations for content sync. Clones project's `content_repo` to temporary directory using Briefly for automatic cleanup. Returns local directory path for sync operations.
+Handles Git repository cloning. Uses Briefly for automatic temp directory cleanup. Returns local directory path for sync operations.
+
+### ContentSync.ClientPusher
+
+| field | value |
+| ----- | ----- |
+| type  | other |
+
+Handles pushing content from server to client appliances. Clones Git repo, parses all content with full schema, builds payload, and POSTs to client's `/api/content/sync` endpoint with authentication.
 
 ## Dependencies
 
-- Content (for `create_many/2`, `delete_all_content/1`, PubSub broadcasting)
+**Server-Side**:
+- ContentAdmin (for `create_many/2`, `delete_all_content/1`)
+- Content (for changeset validation only)
 - Projects (for retrieving `content_repo` field)
 - Git (for `clone/3` with authenticated credentials)
 
+**Client-Side**:
+- Content (for `sync_content_from_server/1` - creates Content records with tags)
+- Git (for `clone/3` if client has independent sync capability)
+
 ## Execution Flow
 
-### Git-Based Sync (Public API)
+### Server-Side: Sync to ContentAdmin (Validation)
+
+*Called when admin clicks "Sync from Git" in UI*
 
 1. **Scope Validation**: Verify scope has access to target project
-2. **Project Loading**: Load project via `Projects.get_project/2` to retrieve `content_repo` URL
-3. **Temp Directory Creation**: Call `GitSync.clone_to_temp/1` which uses Briefly to create temp directory
-4. **Git Clone**: GitSync delegates to `Git.clone/3` with authenticated credentials
-5. **Sync Delegation**: Call `Sync.sync_directory(scope, temp_directory_path)`
-6. **Automatic Cleanup**: Briefly cleans up temp directory when process exits
-7. **Result Return**: Return sync_result from sync operation
+2. **Load Project**: Load project via `Projects.get_project/2` to retrieve `content_repo` URL
+3. **Clone Git Repo**: GitClone creates temp dir and clones repo
+4. **Discover Files**: Scan `content/` directory for *.md, *.html, *.heex files
+5. **Transaction Start**: Begin database transaction
+6. **Delete All ContentAdmin**: Remove existing records for scope
+7. **Parse and Validate Each File**:
+   - Parse frontmatter (title, slug, tags, SEO, etc.)
+   - Route to processor based on extension (Markdown/Html/Heex)
+   - Get processor result (content, processed_content, parse_status, parse_errors)
+   - **Validate using Content.changeset** (reuse Content validation rules)
+   - If changeset invalid → set parse_status: :error, parse_errors: changeset errors
+   - Build ContentAdmin attrs: %{content, processed_content, parse_status, parse_errors, metadata: frontmatter}
+8. **Batch Insert**: Insert all ContentAdmin via `ContentAdmin.create_many/2`
+9. **Transaction Commit**: Commit atomically
+10. **Broadcast**: Notify admin UI of sync completion
+11. **Cleanup**: Briefly removes temp directory
+12. **Return Result**: Return sync_result with counts
 
-### Sync Directory Pipeline (Internal)
+### Server-Side: Push to Client
 
-1. **Directory Validation**: Verify directory exists and is readable
-2. **Transaction Start**: Begin database transaction for atomic operation
-3. **Content Deletion**: Delete all existing content via `Content.delete_all_content/1`
-4. **File Discovery**: Scan directory (flat, non-recursive) for files (*.md, *.html, *.heex)
-5. **File Processing Loop**: For each file:
-   - Read file contents from filesystem
-   - Parse metadata from sidecar `.yaml` file via MetaDataParser
-   - Determine content type from file extension
-   - Route to appropriate processor (MarkdownProcessor/HtmlProcessor/HeexProcessor)
-   - Build content attributes merging metadata + processor result
-6. **Batch Insert**: Insert all content via `Content.create_many/2` (includes errors)
-7. **Transaction Commit**: Commit if successful, rollback on failure
-8. **Completion Broadcast**: Publish `{:sync_completed, sync_result}` via Content context broadcasting
-9. **Result Return**: Return sync_result with counts
+*Called when admin clicks "Push to Client" button*
 
-### File Content Processing
+1. **Verify No Errors**: Check ContentAdmin.count_by_parse_status - must have 0 errors
+2. **Load Project Config**: Get client_api_url and deploy_key from project settings
+3. **Clone Git Repo**: Fresh clone to temp directory (Git is source of truth)
+4. **Discover Files**: Scan `content/` directory
+5. **Parse All Files with Full Schema**:
+   - Parse frontmatter (all fields: title, slug, tags, SEO, publish_at, etc.)
+   - Route to processor for content rendering
+   - Validate using Content.changeset
+   - Build full Content payload (NOT ContentAdmin minimal schema)
+   - Include tags array from frontmatter
+6. **Build Push Payload**: Array of content maps ready for client
+7. **Authenticate Request**: Sign request with deploy_key
+8. **POST to Client**: Send to `client_api_url/api/content/sync`
+9. **Handle Response**: Return success/error to admin
+10. **Cleanup**: Briefly removes temp directory
 
-1. **Metadata Loading**: MetaDataParser reads corresponding `.yaml` file (e.g., `post.md` → `post.yaml`)
-2. **Content Reading**: Read raw content from file (markdown/HTML/HEEx source)
-3. **Processor Routing**: Route to processor based on extension:
-   - `.md` → MarkdownProcessor
-   - `.html` → HtmlProcessor
-   - `.heex` → HeexProcessor
-4. **Processor Execution**: Processor returns `{:ok, ProcessorResult.t()}` with:
-   - `raw_content`: original file contents
-   - `processed_content`: converted HTML or nil
-   - `parse_status`: `:success` or `:error`
-   - `parse_errors`: error details map or nil
-5. **Attribute Assembly**: Merge metadata + processor result into content attributes
-6. **Error Handling**: If MetaDataParser returns `{:error, reason}`, wrap in ProcessorResult with `:error` status
+### Client-Side: Receive Content from Server
 
-### File Watcher Event Handling (Development Only)
+*Triggered by POST to `/api/content/sync` from server*
 
-1. **Initialization**: FileWatcher GenServer starts with scope from config
-2. **File Event**: Receive `{:file_event, _pid, {path, events}}` message
-3. **Timer Check**: Cancel existing debounce timer if present
-4. **Timer Start**: Start new debounce timer via `Process.send_after/3` (1000ms)
-5. **Debounce Complete**: On timer expiration, call `Sync.sync_directory(scope, watched_directory)`
-6. **Result Logging**: Log sync result for developer visibility
+1. **Authenticate Request**: Verify deploy_key in headers
+2. **Parse Payload**: Extract content list from JSON
+3. **Transaction Start**: Begin atomic sync
+4. **Delete All Content and Tags**: Clean slate
+5. **Process Each Content Item**:
+   - Extract tags array from content
+   - Upsert tags (create if not exists)
+   - Create Content record with all fields
+   - Create ContentTag associations
+6. **Transaction Commit**: Commit atomically
+7. **Return Success**: Return {:ok, stats}
 
-## Access Patterns
+## Architecture Notes
 
-- File watcher scope configured in config.exs with `account_id` and `project_id`
-- Content directories specified in config.exs per environment
-- All database operations filtered by scope's account_id and project_id
-- Sync errors queried via `Content.list_content_with_status(scope, %{parse_status: "error"})`
+### Why Re-sync from Git on Push?
 
-## State Management Strategy
+When pushing to client, we re-sync from Git (don't use ContentAdmin as source) because:
+1. Git is the source of truth, not ContentAdmin
+2. ContentAdmin might be stale (dev pushed to Git since last sync)
+3. Client needs full Content schema with tags, which ContentAdmin doesn't store properly
+4. Simpler than maintaining two parallel sync code paths
 
-### Configuration-Based File Watching
+### Validation Reuse
 
-Development configuration example:
-```elixir
-# config/dev.exs
-config :code_my_spec,
-  watch_content: true,
-  content_watch_directory: "/Users/developer/my_project/content",
-  content_watch_scope: %{
-    account_id: "dev_account",
-    project_id: "dev_project"
-  }
+Both ContentAdmin and Content use the same `Content.changeset/2` for validation:
+- Server validates against Content rules, stores errors in ContentAdmin
+- Push to client validates again before sending (ensures clean data)
+- Client doesn't need validation (server already validated)
+
+### Frontmatter Format
+
+Example markdown file with frontmatter:
+```markdown
+---
+title: My Blog Post
+slug: my-blog-post
+content_type: blog
+tags: [elixir, phoenix, testing]
+publish_at: 2025-01-15T10:00:00Z
+protected: false
+meta_title: My Blog Post - Best Practices
+meta_description: Learn about testing in Phoenix
+---
+
+# Content starts here
+This is the markdown content...
 ```
-
-- FileWatcher started only when `:watch_content` is true
-- Development environment defaults to watching enabled
-- Production disables file watching entirely
-- Scope (account_id/project_id) configured per environment
 
 ### Transaction Atomicity
 
 - All sync operations wrapped in Repo.transaction
-- Delete-and-recreate ensures database matches filesystem exactly
-- Rollback on transaction failure preserves previous content state
+- Delete-and-recreate ensures database matches Git exactly
+- Rollback on failure preserves previous state
 - Individual content errors don't abort transaction - stored in parse_errors
 
-### Per-File Error Tracking
+### Authentication
 
-- Content's `parse_status` field tracks processing success/failure
-- Content's `parse_errors` map field stores detailed error information
-- Query errors via `Content.list_content_with_status(scope, %{parse_status: "error"})`
-- No aggregate sync history stored - rely on content records themselves
-
-### PubSub Integration
-
-- Uses existing Content context broadcasting infrastructure
-- Topic format: `"account:#{account_id}:project:#{project_id}:content"`
-- Messages broadcast: `{:sync_completed, sync_result}`
-- LiveView pages subscribe to content topic and react to sync events
-
-### Git Repository Management
-
-- Uses Briefly library for automatic temporary directory cleanup
-- Each sync creates fresh temp directory via `Briefly.create(directory: true)`
-- GitSync clones repository to temp directory using `Git.clone/3`
-- Temp directory automatically cleaned up when process exits
-- No persistent cloned repositories or caching
-- Project's `content_repo` field stores Git repository URL
+Client API endpoint requires deploy_key for authentication:
+- Stored in project settings on server
+- Configured in client application environment
+- Sent in `Authorization` header: `Bearer <deploy_key>`
+- Client verifies key before accepting sync
