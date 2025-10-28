@@ -1,0 +1,34 @@
+# Metadata for control_over_prompts.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: control-over-prompts
+type: blog  # Options: blog, page, landing
+title: Code Generation is About Control, Not Prompts
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Code Generation is About Control, Not Prompts - CodeMySpec
+meta_description: The best way to get reliable code from an LLM is better control and enforcement through predefined workflows, validation, and test-driven development.
+og_title: Code Generation is About Control, Not Prompts
+og_description: Why enforcement architectures beat prompt engineering for reliable LLM code generation
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - llm
+  - code-generation
+  - software-architecture
+  - agentic-systems

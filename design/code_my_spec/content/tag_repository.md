@@ -2,18 +2,20 @@
 
 ## Purpose
 
-Provides scoped query builder functions for tag management within the ContentAdmin context. Handles tag normalization (lowercasing and slugification), upsert operations with conflict resolution on unique constraints (account_id, project_id, slug), and tag lookup queries. All operations enforce multi-tenant isolation through account_id and project_id scoping passed via Scope struct.
+Provides scoped query builder functions for ContentAdmin tag management within the CodeMySpec SaaS platform. Handles tag normalization (lowercasing and slugification), upsert operations with conflict resolution on unique constraints (account_id, project_id, slug), and tag lookup queries. All operations enforce multi-tenant isolation through account_id and project_id scoping passed via Scope struct.
+
+**Note**: This is for ContentAdmin (SaaS platform tags with multi-tenancy). The deployed client Content system has its own tag management without TagRepository - tags are managed directly via `Content.upsert_tag/1` with no scoping.
 
 ## Public API
 
 ```elixir
 # Tag Upsert
-@spec upsert_tag(Scope.t(), name :: String.t()) :: {:ok, Tag.t()} | {:error, Changeset.t()}
+@spec upsert_tag(Scope.t(), name :: String.t()) :: {:ok, ContentAdminTag.t()} | {:error, Changeset.t()}
 
 # Tag Queries
-@spec list_tags(Scope.t()) :: [Tag.t()]
-@spec get_tag_by_slug(Scope.t(), slug :: String.t()) :: Tag.t() | nil
-@spec get_tag_by_slug!(Scope.t(), slug :: String.t()) :: Tag.t()
+@spec list_tags(Scope.t()) :: [ContentAdminTag.t()]
+@spec get_tag_by_slug(Scope.t(), slug :: String.t()) :: ContentAdminTag.t() | nil
+@spec get_tag_by_slug!(Scope.t(), slug :: String.t()) :: ContentAdminTag.t()
 
 # Query Builders
 @spec by_account_and_project(Query.t(), Scope.t()) :: Query.t()
@@ -23,16 +25,16 @@ Provides scoped query builder functions for tag management within the ContentAdm
 ## Function Descriptions
 
 ### upsert_tag/2
-Creates a new tag or returns existing tag if one already exists with the same normalized slug within the account and project scope. Normalizes the tag name by converting to lowercase and generating a URL-safe slug. Uses `on_conflict: :nothing` to handle unique constraint violations gracefully.
+Creates a new ContentAdmin tag or returns existing tag if one already exists with the same normalized slug within the account and project scope. Normalizes the tag name by converting to lowercase and generating a URL-safe slug. Uses `on_conflict: :nothing` to handle unique constraint violations gracefully.
 
 ### list_tags/1
-Returns all tags within the specified account and project scope, ordered alphabetically by name.
+Returns all ContentAdmin tags within the specified account and project scope, ordered alphabetically by name.
 
 ### get_tag_by_slug/2 and get_tag_by_slug!/1
-Retrieves a tag by its slug within the account and project scope. The bang version raises `Ecto.NoResultsError` if not found.
+Retrieves a ContentAdmin tag by its slug within the account and project scope. The bang version raises `Ecto.NoResultsError` if not found.
 
 ### Query Builders
-Composable query functions for filtering tags by scope and slug. These can be chained together for complex queries and used by other repository functions.
+Composable query functions for filtering ContentAdmin tags by scope and slug. These can be chained together for complex queries and used by other repository functions.
 
 ### Constraint Violations
 - Handled automatically via `on_conflict: :nothing` in upsert operations
@@ -44,18 +46,18 @@ Composable query functions for filtering tags by scope and slug. These can be ch
 TagRepository is called exclusively by the ContentAdmin context module, never directly by controllers or LiveViews. The context module passes validated Scope structs and handles transaction coordination when tags are created during content_admin operations.
 
 ### Tag Normalization
-All tag names are normalized before database operations:
+All ContentAdmin tag names are normalized before database operations:
 - Converted to lowercase for case-insensitive matching
-- Slugified for URL-safe identifiers
-- Original name preserved for display purposes
+- Slugified for URL-safe identifiers using the ContentAdminTag schema's normalize_and_slugify function
+- Original name preserved for display purposes (normalized to lowercase)
 
 ### Scoping Strategy
-Every query automatically filters by `account_id` and `project_id` from the Scope struct to ensure multi-tenant isolation. No tag can be accessed outside its account and project boundaries.
+Every query automatically filters by `account_id` and `project_id` from the Scope struct to ensure multi-tenant isolation. No ContentAdmin tag can be accessed outside its account and project boundaries.
 
 ## Transaction Patterns
 
 ### Bulk Tag Sync
-When syncing multiple tags to content_admin (via ContentAdmin context), wrap operations in a transaction:
+When syncing multiple ContentAdmin tags to content_admin items (via ContentAdmin context), wrap operations in a transaction:
 1. Upsert each tag (returns existing or creates new)
 2. Collect tag IDs
 3. Delete existing content_admin_tag associations
@@ -64,7 +66,21 @@ When syncing multiple tags to content_admin (via ContentAdmin context), wrap ope
 
 ## Performance Considerations
 
-- Tags are indexed on `(account_id, project_id, slug)` for fast scoped lookups
+- ContentAdmin tags are indexed on `(account_id, project_id, slug)` for fast scoped lookups
 - Upsert operations use single query with `on_conflict` to minimize round trips
 - List queries should be paginated if tag counts exceed reasonable limits
-- Consider caching frequently accessed tags at application level
+- Consider caching frequently accessed ContentAdmin tags at application level
+
+## Relationship to Content Tags
+
+**ContentAdmin Tags** (this repository):
+- Multi-tenant with account_id/project_id scoping
+- Used in SaaS platform for content validation/preview
+- Managed via TagRepository with Scope parameter
+- Schema: `ContentAdminTag`
+
+**Content Tags** (deployed client):
+- Single-tenant, no scoping
+- Used in published content for end users
+- Managed directly via `Content.upsert_tag/1` with no repository
+- Schema: `Tag`

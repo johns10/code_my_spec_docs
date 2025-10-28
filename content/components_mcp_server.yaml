@@ -1,0 +1,39 @@
+# Metadata for components_mcp_server.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: components-mcp-server
+type: documentation  # Options: blog, page, landing
+title: Components MCP Server - AI Software Architect
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Components MCP Server - AI Phoenix Architect | CodeMySpec
+meta_description: MCP Server helps design contexts, dependencies, and analyze architectural health for Elixir applications.
+og_title: Components MCP Server - AI Software Architect
+og_description: Design clean Phoenix architecture with AI-guided context design, dependency management, and health monitoring
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: CodeMySpec Team
+  category: MCP Servers
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - documentation
+  - mcp-server
+  - components
+  - architecture
+  - phoenix
+  - contexts
+  - dependencies
+  - ai-architect
+  - claude-code
+  - elixir

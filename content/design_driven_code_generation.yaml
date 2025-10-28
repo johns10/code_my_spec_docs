@@ -1,0 +1,37 @@
+# Metadata for design_driven_code_generation.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: design-driven-code-generation
+type: blog  # Options: blog, page, landing
+title: Design-Driven Code Generation, The Missing Layer Between Specs and Code
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Design-Driven Generation, The Layer Between Specs and Code
+meta_description: Design-driven development adds explicit, reviewable designs that define component architecture before implementation begins.
+og_title: Design-Driven Code Generation, The Missing Layer
+og_description: Why positioning humans at architectural decision points—not code review—creates better AI-generated systems
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: CodeMySpec Team
+  category: AI Development
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - llm
+  - code-generation
+  - software-architecture
+  - design-driven-development
+  - test-driven-development
+  - phoenix
+  - elixir
