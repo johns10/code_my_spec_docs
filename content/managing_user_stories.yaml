@@ -12,8 +12,8 @@ publish_at: null  # ISO 8601 datetime or null for immediate publish
 expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
-meta_title: Managing User Stories for AI Code Assistants - Keep LLMs Focused
-meta_description: A practical approach to using user stories as context for AI code generation. Keep LLMs focused on requirements, maintain living documentation, and avoid technical debt.
+meta_title: User Stories for AI/LLM Code Assistants
+meta_description: Practical approach to using user stories for AI code generation. Keep LLMs focused on requirements, maintain living documentation, and avoid technical debt.
 og_title: How to manage user stories to get the most out of LLM's
 og_description: Learn how to use user_stories.md as a single source of truth to guide AI code generation, maintain requirements, and keep your team aligned.
 og_image: null  # URL to Open Graph image
