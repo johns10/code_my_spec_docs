@@ -8,7 +8,7 @@ title: Code Generation is About Control, Not Prompts
 
 # Publishing control
 protected: false  # Set to true to require authentication (routes to /private/*)
-publish_at: null  # ISO 8601 datetime or null for immediate publish
+publish_at: 2026-01-01  # ISO 8601 datetime or null for immediate publish
 expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
