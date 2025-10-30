@@ -129,7 +129,7 @@ See `docs/design/code_my_spec/content_sync/file_watcher.md` for detailed design.
 
 **Server-Side**:
 - ContentAdmin (for `create_many/2`, `delete_all_content/1`)
-- Projects (for retrieving `content_repo` field)
+- Projects (for retrieving `docs_repo` field)
 - Git (for `clone/3` with authenticated credentials)
 - Sync (agnostic file processor)
 
@@ -145,7 +145,7 @@ See `docs/design/code_my_spec/content_sync/file_watcher.md` for detailed design.
 *Called when admin clicks "Sync from Git" in UI, or automatically via FileWatcher in development*
 
 1. **Scope Validation**: Verify scope has access to target project
-2. **Load Project**: Load project via `Projects.get_project/2` to retrieve `content_repo` URL
+2. **Load Project**: Load project via `Projects.get_project/2` to retrieve `docs_repo` URL
 3. **Clone Git Repo**: Create temp dir and clone repo to local filesystem
 4. **Process Directory**: Call `Sync.process_directory(content_dir)` to get attribute maps
 5. **Transaction Start**: Begin database transaction

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Clones a project's content repository to a temporary directory using Briefly for automatic cleanup. Returns the local directory path for downstream sync operations. Handles repository validation and delegates authentication to the Git context. Each sync creates a fresh clone - no persistent caching or pull operations.
+Clones a project's docs repository to a temporary directory using Briefly for automatic cleanup. Returns the local directory path for downstream sync operations. Handles repository validation and delegates authentication to the Git context. Each sync creates a fresh clone - no persistent caching or pull operations.
 
 ## Public API
 
@@ -14,7 +14,7 @@ Clones a project's content repository to a temporary directory using Briefly for
 @type path :: String.t()
 @type error_reason ::
   :project_not_found |
-  :no_content_repo |
+  :no_docs_repo |
   :not_connected |
   :unsupported_provider |
   term()
@@ -25,8 +25,8 @@ Clones a project's content repository to a temporary directory using Briefly for
 ### Clone to Temporary Directory
 
 1. **Scope Validation**: Verify scope has `active_project_id` set
-2. **Project Loading**: Load project via `Projects.get_project/2` to retrieve `content_repo` URL
-3. **Content Repo Check**: Verify project has non-nil `content_repo` field
+2. **Project Loading**: Load project via `Projects.get_project/2` to retrieve `docs_repo` URL
+3. **Docs Repo Check**: Verify project has non-nil `docs_repo` field
 4. **Temp Directory Creation**: Create temporary directory via `Briefly.create(directory: true)`
 5. **Git Clone**: Delegate to `Git.clone/3` with scope, repo URL, and temp path
 6. **Path Return**: Return `{:ok, path}` with absolute path to cloned repository
@@ -46,9 +46,9 @@ GitSync uses the Briefly library for automatic temporary directory management:
 ```elixir
 def clone_to_temp(%Scope{} = scope) do
   with {:ok, project} <- Projects.get_project(scope, scope.active_project_id),
-       {:ok, content_repo} <- validate_content_repo(project),
+       {:ok, docs_repo} <- validate_docs_repo(project),
        {:ok, temp_dir} <- Briefly.create(directory: true),
-       {:ok, _path} <- Git.clone(scope, content_repo, temp_dir) do
+       {:ok, _path} <- Git.clone(scope, docs_repo, temp_dir) do
     {:ok, temp_dir}
   end
 end
@@ -69,7 +69,7 @@ See `lib/code_my_spec/git.ex` and `lib/code_my_spec/git/cli.ex` for authenticati
 GitSync uses error tuples exclusively:
 
 - **Project errors**: `{:error, :project_not_found}` - when project lookup fails
-- **Configuration errors**: `{:error, :no_content_repo}` - when project lacks content_repo URL
+- **Configuration errors**: `{:error, :no_docs_repo}` - when project lacks docs_repo URL
 - **Git errors**: Propagated from Git context (`:not_connected`, `:unsupported_provider`, etc.)
 - **Temp directory errors**: Propagated from Briefly
 

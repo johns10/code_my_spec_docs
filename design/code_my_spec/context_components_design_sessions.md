@@ -23,7 +23,6 @@ This context owns no entities.
 ### Stateless Orchestration with Child Session Coordination
 - All workflow state persisted through Sessions context
 - Workflow progress tracked via embedded Interactions in Session records
-- Child session IDs stored in interaction metadata for tracking
 - Review session ID stored in session state for validation
 - Session parent-child relationships enforced through session_id foreign key
 

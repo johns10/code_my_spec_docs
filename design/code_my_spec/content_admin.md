@@ -4,7 +4,7 @@
 
 The ContentAdmin Context manages content validation and preview within the CodeMySpec SaaS platform. It provides a minimal sync target for Git content that shows parse status and errors to developers. This is a validation layer - when content is ready to publish, we re-sync from Git directly to the client application with full Content schema.
 
-**Architectural Role**: ContentAdmin is for validation only. Developers sync from Git to see if their content parses correctly. When ready to publish, they click "Push to Client" which triggers a fresh sync from Git ’ Client (bypassing ContentAdmin).
+**Architectural Role**: ContentAdmin is for validation only. Developers sync from Git to see if their content parses correctly. When ready to publish, they click "Push to Client" which triggers a fresh sync from Git ï¿½ Client (bypassing ContentAdmin).
 
 ## Entity Ownership
 
@@ -98,7 +98,7 @@ Simple query builder for listing all content or filtering by parse_status. All q
 
 ### Git Sync to ContentAdmin (Validation)
 1. **Scope Validation**: Verify scope has access to target account and project
-2. **Git Clone**: ContentSync clones project's content_repo to temp directory
+2. **Git Clone**: ContentSync clones project's docs_repo to temp directory
 3. **Content Discovery**: Find all markdown/content files in `content/` directory
 4. **Transaction Start**: Begin database transaction
 5. **Delete All**: Delete all existing ContentAdmin records for scope (clean slate)
