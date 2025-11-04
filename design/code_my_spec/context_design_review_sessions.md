@@ -1,4 +1,4 @@
-# ContextReviewSession
+# ContextReviewSessions
 
 ## Purpose
 Orchestrates AI-driven holistic review of Phoenix context documentation and all child component designs. Sends Claude a comprehensive prompt including file paths to context design and child component designs, user stories, and project executive summary to validate architectural compatibility and identify integration issues.
