@@ -1,205 +1,127 @@
+# ExecuteReview
+
 ## Purpose
 
-Orchestrates the execution of an architectural review by composing a comprehensive prompt with file paths to context designs, child component designs, user stories, and project summaries, then coordinates with Claude via MCP to perform holistic validation and write structured findings to a designated review file.
+Generates a comprehensive review command that instructs Claude to analyze context design, child component designs, user stories, and project executive summary. Composes a structured prompt with file paths and validation criteria, then returns a Command struct for AI agent execution. Claude reads the files, validates architectural compatibility, checks for integration issues, and writes findings to the specified review file path.
 
 ## Public API
 
 ```elixir
-@type review_input :: %{
-  context_design_path: String.t(),
-  child_component_paths: [String.t()],
-  user_story_paths: [String.t()],
-  executive_summary_path: String.t(),
-  review_output_path: String.t()
-}
+# StepBehaviour callbacks
+@spec get_command(scope :: Scope.t(), session :: Session.t(), opts :: keyword()) ::
+  {:ok, Command.t()} | {:error, String.t()}
 
-@type review_result :: %{
-  review_file_path: String.t(),
-  issues_found: non_neg_integer(),
-  warnings_found: non_neg_integer(),
-  execution_time_ms: non_neg_integer()
-}
-
-# Execute architectural review
-@spec execute_review(Scope.t(), review_input()) ::
-  {:ok, review_result()} |
-  {:error, :invalid_paths} |
-  {:error, :file_not_found, String.t()} |
-  {:error, :path_traversal_attempt} |
-  {:error, :mcp_unavailable} |
-  {:error, :review_failed, String.t()}
-
-# Validate review input paths
-@spec validate_input_paths(Scope.t(), review_input()) ::
-  {:ok, review_input()} |
-  {:error, :invalid_paths | :file_not_found | :path_traversal_attempt, String.t()}
-
-# Compose review prompt
-@spec compose_review_prompt(review_input()) :: String.t()
-
-# Parse review results
-@spec parse_review_output(String.t()) ::
-  {:ok, %{issues: non_neg_integer(), warnings: non_neg_integer()}} |
-  {:error, :invalid_format}
+@spec handle_result(scope :: Scope.t(), session :: Session.t(), result :: Result.t(), opts :: keyword()) ::
+  {:ok, session_updates :: map(), updated_result :: Result.t()} | {:error, String.t()}
 ```
 
 ## Execution Flow
 
-### Execute Review
+### Command Generation (get_command/3)
 
-1. **Input Validation**
-   - Verify all required paths are present in `review_input`
-   - Ensure paths are absolute and within allowed project directories
-   - Detect and reject path traversal attempts (../, ~/, etc.)
-   - Return `{:error, :invalid_paths}` for malformed input
+1. **Load Session State**: Extract review-related paths from session.state:
+   - `context_design_path` - absolute path to context design document
+   - `child_component_paths` - list of component design file paths with metadata
+   - `user_story_paths` - list of user story file paths (if available)
+   - `executive_summary_path` - path to project executive summary
+   - `review_output_path` - where Claude should write review findings
 
-2. **File Existence Check**
-   - Verify each input file exists and is readable
-   - Check that files belong to the current scope's project
-   - Return `{:error, :file_not_found, path}` for missing files
-   - Collect file sizes for logging purposes
+2. **Load Review Rules**: Query Rules context for rules matching:
+   - session_type: "review" or "*"
+   - component_type: session.component.type or "*"
+   - Concatenate rule content with appropriate separators
 
-3. **Review Output Path Setup**
-   - Ensure review output directory exists (create if needed)
-   - Verify write permissions to output location
-   - Check that output path is within project's review directory
-   - Generate fallback path if provided path is invalid
-
-4. **Prompt Composition**
-   - Build comprehensive review instruction header
-   - Include context design file path with description
-   - List all child component design paths with component names
-   - Reference user story paths for requirement traceability
-   - Add executive summary path for project context
-   - Specify review output path and expected format
-   - Include validation criteria:
-     - Architectural compatibility between context and components
-     - Dependency coherence across components
-     - Alignment with user stories and requirements
-     - Phoenix/Elixir best practices compliance
-     - Potential integration issues or conflicts
-
-5. **MCP Communication**
-   - Verify MCP server availability
-   - Send composed prompt via MCP protocol
-   - Include timeout configuration (default: 5 minutes)
-   - Monitor for Claude's progress/status updates
-   - Return `{:error, :mcp_unavailable}` if server is down
-   - Return `{:error, :review_failed, reason}` on execution failure
-
-6. **Review Output Verification**
-   - Wait for Claude to complete writing review file
-   - Verify review file was created at expected path
-   - Validate review file is not empty
-   - Check file format and structure
-
-7. **Result Parsing**
-   - Read generated review file
-   - Parse structured findings (issues, warnings, recommendations)
-   - Extract metadata (issue counts, severity levels)
-   - Calculate execution duration
-
-8. **Result Return**
-   - Return `{:ok, review_result()}` with:
-     - Path to completed review file
-     - Count of issues found
-     - Count of warnings found
-     - Total execution time in milliseconds
-
-### Validate Input Paths
-
-1. **Path Format Validation**
-   - Check all paths are non-empty strings
-   - Verify paths are absolute (start with `/`)
-   - Ensure no nil or missing required paths
-
-2. **Security Validation**
-   - Detect path traversal attempts: `../`, `~/`, symbolic links
-   - Verify paths don't reference system directories
-   - Check paths are within project workspace
-
-3. **Scope Validation**
-   - Extract project identifier from scope
-   - Verify all paths belong to scope's project directory
-   - Ensure user has read access to referenced files
-
-4. **Existence Validation**
-   - Check each input file exists on filesystem
-   - Verify files are readable
-   - Return first missing file in error message
-
-5. **Result Return**
-   - Return `{:ok, review_input()}` if all validations pass
-   - Return specific error tuple for first validation failure
-
-### Compose Review Prompt
-
-1. **Header Construction**
-   - Add review instruction title
-   - State primary objectives: holistic validation, architectural compatibility
-   - Define expected output format and structure
-
-2. **Context Section**
-   - Add "Context Design" section header
-   - Include absolute path to context design file
-   - Add instruction to analyze architectural decisions
-
-3. **Components Section**
-   - Add "Child Components" section header
-   - List each component design path with component name
-   - Instruct to validate component integration patterns
-
-4. **Requirements Section**
-   - Add "User Stories" section header
-   - List all user story file paths
-   - Instruct to verify requirement coverage
-
-5. **Project Context Section**
-   - Add "Executive Summary" section header
-   - Include executive summary file path
-   - Instruct to validate alignment with project goals
-
-6. **Review Criteria**
-   - List specific validation points:
-     - Context boundary coherence
-     - Component dependency resolution
-     - Data flow patterns
-     - Error handling consistency
+3. **Compose Review Prompt**: Build comprehensive prompt including:
+   - **Header**: "You are conducting an architectural review of a Phoenix context and its child components."
+   - **Objective**: "Validate architectural compatibility, identify integration issues, verify requirement alignment, and ensure Phoenix best practices."
+   - **Context Design Section**:
+     - "Read the context design at: `{context_design_path}`"
+     - "Analyze the context's purpose, API boundaries, and architectural decisions"
+   - **Child Components Section**:
+     - For each child component: "Read component `{name}` design at: `{path}`"
+     - "Validate each component integrates properly with the context"
+     - "Check for dependency conflicts or circular dependencies"
+   - **User Stories Section** (if available):
+     - "Review user stories at: `{story_paths}`"
+     - "Verify that component designs address all story requirements"
+   - **Executive Summary Section** (if available):
+     - "Review project context at: `{executive_summary_path}`"
+     - "Ensure designs align with project goals and constraints"
+   - **Review Criteria**:
+     - Context boundary coherence and separation of concerns
+     - Component dependency resolution and order
+     - Data flow patterns and consistency
+     - Error handling strategy alignment
      - Test coverage feasibility
-     - Phoenix best practices
+     - Phoenix/Elixir conventions and best practices
+     - Public API design and usability
+   - **Output Instructions**:
+     - "Write your findings to: `{review_output_path}`"
+     - "Structure your review with these sections:"
+       - "## Executive Summary: 2-3 sentence overview"
+       - "## Issues: Blocking problems that must be fixed (numbered list)"
+       - "## Warnings: Concerns or potential problems (numbered list)"
+       - "## Recommendations: Suggested improvements (numbered list)"
+     - "At the end include: `Issues Found: N` and `Warnings Found: M`"
+   - **Review Rules**: Append concatenated rules from step 2
 
-7. **Output Instructions**
-   - Specify review file path for writing results
-   - Define structured format with sections:
-     - Executive Summary
-     - Issues (blocking problems)
-     - Warnings (concerns/suggestions)
-     - Recommendations (improvements)
-   - Request issue/warning counts at end
+4. **Create AI Agent Command**: Build Command struct:
+   - module: `__MODULE__`
+   - command: "claude"
+   - metadata:
+     - prompt: composed review prompt from step 3
+     - options: %{model: "claude-3-5-sonnet-20241022"}
+     - review_output_path: for verification in handle_result
 
-8. **Result Return**
-   - Return complete prompt as single string
-   - Include proper formatting and line breaks
+5. **Return Command**: Return `{:ok, command}` tuple
 
-### Parse Review Output
+### Result Processing (handle_result/4)
 
-1. **File Reading**
-   - Read review file contents
-   - Handle file read errors gracefully
+1. **Check Result Status**: Examine result.status
+   - If `:error` → return `{:error, result.error_message}` (orchestrator will retry or fail)
+   - If `:warning` → proceed but note warning in session state
+   - If `:ok` → continue validation
 
-2. **Format Detection**
-   - Check for expected section headers
-   - Verify structure matches prompt instructions
+2. **Verify Review File Created**: Extract review_output_path from command metadata
+   - Check if file exists at review_output_path using File.exists?/1
+   - If missing → return `{:error, "Review file not created at #{review_output_path}"}`
 
-3. **Metadata Extraction**
-   - Search for "Issues Found:" pattern
-   - Search for "Warnings Found:" pattern
-   - Extract numeric counts
+3. **Parse Review Metadata** (optional): Attempt to extract issue/warning counts
+   - Read review file content
+   - Search for "Issues Found: N" and "Warnings Found: M" patterns
+   - Store counts in session state for reporting (not required for success)
 
-4. **Validation**
-   - Ensure counts are non-negative integers
-   - Verify at least executive summary section exists
+4. **Build Session Updates**: Create map with review completion data:
+   - `review_completed_at`: DateTime.utc_now()
+   - `review_file_path`: review_output_path
+   - `issues_found`: extracted count or nil
+   - `warnings_found`: extracted count or nil
 
-5. **Result Return**
-   - Return `{:ok, %{issues: n, warnings: m}}` on success
-   - Return `{:error, :invalid_format}` if parsing fails
+5. **Return Success**: Return `{:ok, session_updates, result}` tuple
+   - Session updates merged into session.state
+   - Orchestrator proceeds to next step (Finalize)
+
+## Error Handling
+
+### Command Generation Errors
+- **Missing session state**: Return `{:error, "Required paths not found in session state"}` if context_design_path or review_output_path are missing
+- **Invalid component**: Return `{:error, "Session component not loaded"}` if session.component is nil or not loaded
+- **Rules query failure**: Log warning and proceed with empty rules (not a blocking error)
+
+### Result Processing Errors
+- **Agent execution failed**: Return `{:error, result.error_message}` - orchestrator retries or presents to user
+- **Review file missing**: Return `{:error, "Review file not created"}` - indicates agent didn't complete task
+- **File system errors**: Return `{:error, "Could not verify review file: #{reason}"}` - requires investigation
+
+### Human Intervention Points
+When handle_result returns an error:
+- Client presents error message to user
+- User can: retry step, manually create review file, or cancel session
+- Orchestrator waits for user decision before proceeding
+
+## Dependencies
+
+- Sessions (for accessing session state and component)
+- Rules (for loading review-specific rules)
+- Command (for building AI agent commands)
+- File (stdlib - for verifying review file existence)
