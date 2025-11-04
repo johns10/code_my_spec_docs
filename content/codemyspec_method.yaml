@@ -12,7 +12,7 @@ publish_at: null  # ISO 8601 datetime or null for immediate publish
 expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
-meta_title: The CodeMySpec Method - Stop Fighting AI Drift, Control Context | CodeMySpec
+meta_title: Stop Fighting AI Drift, Control Context
 meta_description: Methodology for controlling AI code generation - from user stories, architecture, production code.
 og_title: The CodeMySpec Method - Design-Driven AI Development
 og_description: Stop fighting AI drift. The proven 5-phase methodology for building production apps with AI - stories, context mapping, design docs, tests, code.
