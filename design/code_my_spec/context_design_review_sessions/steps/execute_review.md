@@ -40,25 +40,19 @@ Generates a comprehensive review command that instructs Claude to analyze Phoeni
    - Use `Stories.list_component_stories/2` with scope and context component ID
    - Format stories with title, description, and acceptance criteria for inclusion in prompt
 
-6. **Determine Project Executive Summary Path**: Use hardcoded path `docs/executive_summary.md`
-   - This file contains high-level project overview for architectural context
+6. **Determine Project Executive Summary**: Get from Project object on Session.
 
 7. **Calculate Review File Path**: Derive the review output file path from context design path
-   - Pattern: replace `.md` suffix with `_review.md`
-   - Example: `docs/design/code_my_spec/sessions.md` → `docs/design/code_my_spec/sessions_review.md`
+   - Place in context directory, name `design_review.md`
+   - Example: `docs/design/code_my_spec/sessions.md` → `docs/design/code_my_spec/sessions/design_review.md`
 
-8. **Retrieve Review Rules**: Query rules matching context review workflow
-   - Use `Rules.find_matching_rules/3` with scope, component type "context", and session type "review"
-   - Concatenate rule content with double newlines for inclusion in prompt
-
-9. **Build Review Prompt**: Construct comprehensive prompt containing:
+8.  **Build Review Prompt**: Construct comprehensive prompt containing:
    - Project name and description
    - Context name, description, and type
    - Context design file path for reading
    - List of child component design file paths
    - Formatted user stories the context satisfies
    - Project executive summary file path
-   - Review rules from the Rules system
    - Instructions to:
      - Read all design files to understand architecture
      - Validate consistency between context and child components
@@ -68,7 +62,7 @@ Generates a comprehensive review command that instructs Claude to analyze Phoeni
      - Write comprehensive review summary to specified review file path
    - Review file output path
 
-10. **Create Agent Command**: Build command using agent helper
+9.  **Create Agent Command**: Build command using agent helper
     - Use `Helpers.build_agent_command/5` with:
       - Step module: `__MODULE__`
       - Agent type: `:context_reviewer`

@@ -1,0 +1,245 @@
+<div class="methodology-page">
+  <% # Hero Section %>
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title"><%= @copy.hero.title %></h1>
+      <p class="hero-tagline"><%= @copy.hero.tagline %></p>
+      <p class="hero-description"><%= @copy.hero.description %></p>
+
+      <div class="hero-cta">
+        <a href="/content/managing_user_stories" class="btn btn-primary">
+          Start with Manual Process
+        </a>
+        <a href="/users/register" class="btn btn-secondary">
+          See the Automation
+        </a>
+      </div>
+    </div>
+
+    <% # Interactive Diagram - React component mounts here %>
+    <div id="methodology-diagram" phx-hook="MethodologyDiagram" data-phases={Jason.encode!(@copy.phases)}>
+      <% # Fallback for non-JS %>
+      <div class="diagram-fallback">
+        <%= for phase <- @copy.phases do %>
+          <div class="phase-card">
+            <span class="phase-number">Phase <%= phase.number %></span>
+            <h3><%= phase.icon %> <%= phase.title %></h3>
+            <p><%= phase.tagline %></p>
+          </div>
+          <%= if phase.number < 5 do %>
+            <div class="phase-arrow">↓</div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <% # Problem Section %>
+  <section class="problem">
+    <div class="container">
+      <h2><%= @copy.problem.title %></h2>
+      <p class="lead"><%= @copy.problem.description %></p>
+
+      <div class="problem-points">
+        <%= for point <- @copy.problem.points do %>
+          <div class="problem-point">
+            <h3><%= point.title %></h3>
+            <p><%= point.description %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <p class="conclusion"><%= @copy.problem.conclusion %></p>
+    </div>
+  </section>
+
+  <% # Solution Section %>
+  <section class="solution">
+    <div class="container">
+      <h2><%= @copy.solution.title %></h2>
+      <p class="lead"><%= @copy.solution.description %></p>
+
+      <ul class="approach">
+        <%= for item <- @copy.solution.approach do %>
+          <li><%= item %></li>
+        <% end %>
+      </ul>
+
+      <p class="tagline"><%= @copy.solution.tagline %></p>
+    </div>
+  </section>
+
+  <% # Phases Detail Section %>
+  <section class="phases-detail">
+    <div class="container">
+      <h2>The Five Phases</h2>
+
+      <%= for phase <- @copy.phases do %>
+        <article class={"phase phase-#{phase.number}"} id={"phase-#{phase.number}"}>
+          <div class="phase-header">
+            <span class="phase-number">Phase <%= phase.number %></span>
+            <h3><%= phase.icon %> <%= phase.title %></h3>
+            <p class="tagline"><%= phase.tagline %></p>
+          </div>
+
+          <div class="phase-creates">
+            <h4>What You Create</h4>
+            <p><%= phase.creates %></p>
+          </div>
+
+          <div class="phase-workflows">
+            <div class="workflow manual">
+              <h4>Manual</h4>
+              <p><%= phase.manual.description %></p>
+              <ul>
+                <%= for step <- phase.manual.steps do %>
+                  <li><%= step %></li>
+                <% end %>
+              </ul>
+              <%= if phase.manual.guide.status == :published do %>
+                <a href={phase.manual.guide.url} class="guide-link">
+                  <%= phase.manual.guide.title %> →
+                </a>
+              <% else %>
+                <span class="guide-link coming-soon">
+                  <%= phase.manual.guide.title %> (Coming Soon)
+                </span>
+              <% end %>
+            </div>
+
+            <div class="workflow automated">
+              <h4>Automated</h4>
+              <p><%= phase.automated.description %></p>
+              <%= if phase.automated.guide.status == :published do %>
+                <a href={phase.automated.guide.url} class="guide-link">
+                  <%= phase.automated.guide.title %> →
+                </a>
+              <% else %>
+                <span class="guide-link coming-soon">
+                  <%= phase.automated.guide.title %> (Coming Soon)
+                </span>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="phase-example">
+            <h4>Example from CodeMySpec</h4>
+            <p><strong><%= phase.example.title %></strong></p>
+            <p><%= phase.example.description %></p>
+            <code class="file-path"><%= phase.example.file %></code>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </section>
+
+  <% # Proof Section %>
+  <section class="proof">
+    <div class="container">
+      <h2><%= @copy.proof.title %></h2>
+      <p class="lead"><%= @copy.proof.description %></p>
+
+      <ul class="evidence">
+        <%= for evidence <- @copy.proof.evidence do %>
+          <li><%= evidence %></li>
+        <% end %>
+      </ul>
+
+      <p class="tagline"><%= @copy.proof.tagline %></p>
+    </div>
+  </section>
+
+  <% # Getting Started Section %>
+  <section class="getting-started">
+    <div class="container">
+      <h2><%= @copy.getting_started.title %></h2>
+
+      <div class="paths">
+        <%= for path <- @copy.getting_started.paths do %>
+          <div class="path">
+            <h3><%= path.name %></h3>
+            <p class="description"><%= path.description %></p>
+            <p class="time"><strong>Time:</strong> <%= path.time %></p>
+
+            <div class="best-for">
+              <strong>Best for:</strong>
+              <ul>
+                <%= for item <- path.best_for do %>
+                  <li><%= item %></li>
+                <% end %>
+              </ul>
+            </div>
+
+            <div class="steps">
+              <strong>Steps:</strong>
+              <ol>
+                <%= for step <- path.steps do %>
+                  <li><%= step %></li>
+                <% end %>
+              </ol>
+            </div>
+
+            <a href={path.cta.url} class="btn btn-primary">
+              <%= path.cta.text %>
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <% # FAQ Section %>
+  <section class="faq">
+    <div class="container">
+      <h2>FAQ</h2>
+
+      <div class="faq-list">
+        <%= for item <- @copy.faq do %>
+          <div class="faq-item">
+            <h3><%= item.question %></h3>
+            <p><%= item.answer %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <% # Related Content Section %>
+  <section class="related-content">
+    <div class="container">
+      <h2>Related Content</h2>
+
+      <div class="content-groups">
+        <div class="content-group">
+          <h3>Main Quest</h3>
+          <ul>
+            <%= for article <- @copy.related_content.main_quest do %>
+              <li>
+                <%= if article.status == :published do %>
+                  <a href={article.url}><%= article.title %></a>
+                <% else %>
+                  <span class="coming-soon"><%= article.title %> (Coming Soon)</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="content-group">
+          <h3>Side Quest</h3>
+          <ul>
+            <%= for article <- @copy.related_content.side_quest do %>
+              <li>
+                <%= if article.status == :published do %>
+                  <a href={article.url}><%= article.title %></a>
+                <% else %>
+                  <span class="coming-soon"><%= article.title %> (<%= article.status %>)</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
