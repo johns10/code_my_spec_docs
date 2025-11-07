@@ -44,7 +44,7 @@ I realized the problem wasn't "how do I make LLMs better at Elixir syntax?" It w
 
 Elixir's architectural standards, particularly Phoenix contexts, solve this. The vertical slice architecture, the separation of `MyApp` and `MyAppWeb` namespaces, the explicit context boundaries... these aren't just nice organizational principles. They're **constraints that make AI-generated code maintainable**.
 
-Even when the model screws the pooch and generates terrible code, IT'S ALL CONTAINED IN A SINGLE CONTEXT. It's much easier to catch earlier, and unwind. If you 
+Even when the model screws the pooch and generates terrible code, IT'S ALL CONTAINED IN A SINGLE CONTEXT. It's much easier to catch earlier, and unwind. If you have sufficient design documentation and context, you should be able to fully regenerate the module at any time.
 
 ### Why I'm Being Transparent
 
@@ -60,7 +60,7 @@ I'm posting this because:
 
 ### The Article
 
-I wrote up a full article about: [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](link)
+I wrote up a full article about: [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](https://codemyspec.com/blog/why-phoenix-contexts-are-great-for-llms?utm_source=reddit&utm_medium=social&utm_campaign=journey_series&utm_content=r_elixir_context_mapping)
 
 It covers:
 - Why AI tools fail at Elixir (imperative bias, OTP confusion, framework lag)
