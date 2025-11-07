@@ -1,5 +1,7 @@
 # How to manage user stories to get the most out of LLM's
 
+> **Part of the [CodeMySpec Methodology](/methodology)** — This guide covers Phase 1: Requirements & Stories, the foundation for design-driven AI development. Learn the full 5-phase process for controlling AI code generation.
+
 User stories are the interface to your entire product. Technically, they define the architecture, design, test and code in your application. They are also a plain english definition of what the product is and what it does. They can be used to define product positioning, documentation, and test assertions. 
 
 Specifically, when using LLM's, user stories are a critical piece of context that should be in the context window when you design and code modules that satisfy said requirements.
@@ -14,7 +16,7 @@ But no one maintains these and re-evaluates them over time to make sure the appl
 
 Now that LLM's are under widespread use in our industry, the chaos gets worse. Code is generated faster. There's more (and worse) technical debt to contend with. 
 
-It's more critical than ever that your application does what it's supposed to, and that there are checks and balances that can be continouously applied to the code models generate.
+It's more critical than ever that your application does what it's supposed to, and that there are checks and balances that can be continuously applied to the code models generate.
 
 ## My Solution: user_stories.md
 
@@ -44,7 +46,11 @@ I make a git submodule called docs, and I put `user_stories.md` in the root.
 Instead of just writing stories myself, I have conversations with the AI where *it interviews me*:
 
 ```
-Yeah I'm just an ideating about this elixir coating agent and I'm thinking about whether I should be developing my mCP tools as like quote on quote part of the application or like where I just have tools that I that are implemented and then I use them internally ... I know that I just basically answered my own question and I'm just talking to myself at this point but tell me what you think about this
+Yeah I'm just an ideating about this elixir coating agent and I'm thinking about whether I 
+should be developing my mCP tools as like quote on quote part of the application or like 
+where I just have tools that I that are implemented and then I use them internally ... I 
+know that I just basically answered my own question and I'm just talking to myself at this 
+point but tell me what you think about this
 ```
 
 Holy shit. That's bad. But it's seriously how I started asking the questions. This is my first requirements conversation. It doesn't have to be perfect, or even good to start a good conversation and start thinking through your ideas.

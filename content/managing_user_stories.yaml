@@ -3,7 +3,7 @@
 
 # Required fields
 slug: managing-user-stories
-type: blog  # Options: blog, page, landing
+type: page  # Options: blog, page, landing
 title: How to manage user stories to get the most out of LLM's
 
 # Publishing control
