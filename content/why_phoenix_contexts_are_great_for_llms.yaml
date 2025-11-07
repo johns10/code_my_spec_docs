@@ -1,0 +1,36 @@
+# Metadata for why_phoenix_contexts_are_great_for_llms.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: why-phoenix-contexts-are-great-for-llms
+type: blog  # Options: blog, page, landing
+title: Why Phoenix Contexts Are Perfect for LLM-Based Code Generation
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Why Phoenix Contexts Are Perfect for LLM Code Generation
+meta_description: Phoenix contexts provide self-contained modules, consistent patterns, and built-in testability that make them ideal for AI-assisted development.
+og_title: Why Phoenix Contexts Are Perfect for LLM-Based Code Generation
+og_description: Discover how Phoenix's architectural patterns - self-contained boundaries, DDD principles, and validatable designs - solve common AI code generation failures in Elixir projects.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - phoenix
+  - phoenix-contexts
+  - llm
+  - ai
+  - code-generation
+  - elixir
+  - architecture
+  - domain-driven-design
+  - ddd
+  - best-practices
+  - vertical-slice
+  - ai-assisted-development
