@@ -1,4 +1,4 @@
-# ContextReviewSessions
+# ContextDesignReviewSessions
 
 ## Purpose
 Orchestrates AI-driven holistic review of Phoenix context documentation and all child component designs. Sends Claude a comprehensive prompt including file paths to context design and child component designs, user stories, and project executive summary to validate architectural compatibility and identify integration issues.
@@ -27,7 +27,7 @@ This context owns no entities.
 - Review results written to file on client
 
 ## Components
-### ContextReviewSession.Orchestrator
+### ContextDesignReviewSessions.Orchestrator
 
 | field | value |
 | ----- | ----- |
@@ -35,7 +35,7 @@ This context owns no entities.
 
 Stateless orchestrator managing the sequence of context review steps. Coordinates the review execution and finalization.
 
-### ContextReviewSession.Steps.ExecuteReview
+### ContextDesignReviewSessions.Steps.ExecuteReview
 
 | field | value |
 | ----- | ----- |
@@ -43,7 +43,7 @@ Stateless orchestrator managing the sequence of context review steps. Coordinate
 
 Creates a review command that sends Claude a comprehensive prompt with file paths to context design, child component designs, user stories, and project executive summary. Instructs Claude to review documents holistically, validate architectural compatibility, check for integration issues, and write findings to specified review file path.
 
-### ContextReviewSession.Steps.Finalize
+### ContextDesignReviewSessions.Steps.Finalize
 
 | field | value |
 | ----- | ----- |
