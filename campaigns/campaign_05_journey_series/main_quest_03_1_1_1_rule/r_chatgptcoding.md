@@ -131,36 +131,40 @@ What do you use to keep agents from going off the rails?
 ## Full Post Draft
 
 ```markdown
-# My AI Agent Kept Inventing Its Own Architecture. One Simple Rule Fixed Everything.
+# LLM's kept inventing architecture in my code base. One simple rule fixed it.
 
-For 6 months I fought with Claude and ChatGPT over code structure. I'd design a feature, the agent would implement it, and by the end we'd have completely different architecture than what I asked for.
+I've been struggling with models for months over code structure. I'd plan an implementation, the agent would generate it, and by the end we'd have completely different architecture than what I wanted.
 
-I tried everything. More detailed prompts. System instructions. Breaking tasks into smaller pieces. Yelling at my screen.
+I've tried a lot of things. More detailed prompts. System instructions. Planning documentation. Breaking tasks into smaller pieces. Yelling at my screen.
 
-Nothing worked. The agent would start strong, then drift. Add helper modules I didn't ask for. Restructure things "for better organization." Create its own dependency patterns. By the time I caught the violations, other code depended on them. Refactoring became a nightmare.
+Nothing worked. The agent would start strong, then drift. Add helper modules I didn't ask for. Restructure things "for better organization." Create its own dependency patterns. By the time I caught the violations, other code depended on it..
 
-The worst was an MCP server project in C#. I was working with another dev and handed him [my process](https://codemyspec.com/content/my-first-serious-coding-workflow?utm_source=reddit&utm_medium=post&utm_campaign=journey_series&utm_content=main_quest_03_backstory) (detailed planning docs, implementation guidelines, the works). He followed it exactly. Had the LLM generate the whole feature.
+The worst was an MCP project in C#. I was working with another dev and handed him [my process](https://codemyspec.com/content/my-first-serious-coding-workflow?utm_source=reddit&utm_medium=post&utm_campaign=journey_series&utm_content=main_quest_03_backstory) (detailed planning docs, implementation guidelines, the works). He followed it exactly. Had the LLM generate the whole feature.
 
-The problem? It was an infrastructure component, but instead of implementing it AS infrastructure, the agent invented its own domain-driven design architecture INSIDE my infrastructure layer. Complete with its own entities, services, the whole nine yards.
+It was an infrastructure component, but instead of implementing it AS infrastructure, the agent invented its own domain-driven design architecture INSIDE my infrastructure layer. Complete with its own entities, services, the whole nine yards. The other dev wasn't as familiar with DDD so he didn't catch it. The [PR](https://github.com/johns10/AstralMcp/commit/4f316df391de0dbf279f12fbcd78a44202a8df5f) was GIANT so I didn't review as thoroughly as I should have.
 
-Compiled fine. Tests passed. Worked. Completely fucking wrong architecturally. Took 3 days to untangle because by the time I caught it, other code was calling into this nested architecture. That's when I realized: my previous method (detailed planning + guidelines) wasn't enough. I needed something MORE explicit.
+Compiled fine. Tests passed. Worked. Completely fucking wrong architecturally. Took 3 days to untangle because by the time I caught it, other code was calling into this nested architecture. That's when I realized: my previous method (architecture, planning, todo list) wasn't enough. I needed something MORE explicit.
 
-## Then I Realized Something Obvious
+## Going from broad plans to code violates first principles
 
-I was giving the AI architecture (high-level) and asking it to jump straight to code (low-level). The agent was filling in the gap with its own decisions. Some good, some terrible, all inconsistent.
+I was giving the AI architecture (high-level), and a broad plan, and asking it to jump straight to code (low-level). The agent was filling in the gap with its own decisions. Some good, some terrible, all inconsistent.
 
-I needed something in the middle. Specifications. Design documents. But not after coding - BEFORE coding.
+I thought about the first principles of Engineering. You need to design before you start coding.
 
-That's when I stumbled on what I call the **1:1:1 rule**:
+I actually got the inspiration from Elixir. Elixir has this convention: one code file, one test file. Clean, simple, obvious. I just extended it:
+
+**The 1:1:1 rule**:
 - One design doc per code file
 - One test file per code file
 - One implementation per design + test
 
-Design doc controls WHAT to build. Tests control HOW to verify. Agent just makes tests pass.
+Architecture documentation controls what components to build. Design doc controls how to build each components. Tests verify each component. Agent just writes code that satisfies designs and make tests pass.
+
+This is basically structured reasoning. Instead of letting the model "think" in unstructured text (which drifts), you force the reasoning into an artifact that CONTROLS the code generation.
 
 ## Here's What Changed
 
-Before asking for code, I write (or have Claude write) a design doc that describes exactly what the file should do:
+Before asking for code, I pair with Claude to write a design doc that describes exactly what the file should do:
 - **Purpose** - what and why this module exists
 - **Public API** - function signatures with types
 - **Execution Flow** - step-by-step operations
@@ -176,23 +180,24 @@ Once the design is solid, I hand it to the agent: "implement this design documen
 
 For my Phoenix/Elixir projects:
 ```
-docs/design/app/context/component.md � lib/app/context/component.ex
+docs/design/app/context/component.md
+lib/app/context/component.ex
+test/app/context/component_test.ex
 ```
 
-One doc, one code file. That's it.
+One doc, one code file. One test file. That's it.
 
-## What Actually Changed
+## Results
 
-Results after 2 months using this:
+At this point, major architectural violations are not a thing for me. I usually catch them immediately because each conversation is focused on generating one file with specific functions that I already understand from the design.
 
-- **AI architectural violations**: Basically zero (I catch them in design review before any code)
-- **Time debugging AI code**: Down ~60% (less improvisation = fewer surprises)
-- **Code regeneration**: Trivially easy (delete implementation, regenerate from design)
-- **Team onboarding**: Way faster (new devs read designs, understand intent immediately)
+I spend way less time debugging AI code because I know where everything lives. Additionally because I'm on vertical slice, mistakes are contained to a single context.
 
-The weirdest benefit: I stopped caring which AI model I use. Claude, GPT, whatever. They all follow designs fine. The design doc is doing the heavy lifting, not the model.
+If I have a redesign that's significant, I literally regenerate the entire module. I don't even waste time with refactoring. It's not worth it.
 
-## The Manual Process Works Fine
+I also don't have to use frontier models for EVERYTHING anymore. They all follow designs fine. The design doc is doing the heavy lifting, not the model.
+
+## This works manually
 
 I've been using this workflow manually - just me + Claude + markdown files. Recently started building [CodeMySpec](https://codemyspec.com?utm_source=reddit&utm_medium=post&utm_campaign=journey_series&utm_content=main_quest_03_1_1_1_rule) to automate it (AI generates designs from architecture, validates against schemas, spawns test generation, etc). But honestly, the manual process works fine. You don't need tooling to get value from this pattern.
 
