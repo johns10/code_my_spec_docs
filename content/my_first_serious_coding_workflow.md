@@ -99,7 +99,8 @@ If you’re in cursor land, this might be a rules file. If you’re in Cline lan
 
 What it won’t contain are architectural directions, coding standards, design principles, or best practices. Consider this like your coding process guidelines. Here’s mine at the moment:
 
-```# General Development Rules
+```
+# General Development Rules
 
 You should do task-based development. For every task, you should write the tests, implement the code, and run the tests to make sure everything works. Use `dotnet test` to run the tests or use `dotnet test --filter "FullyQualifiedName~TypeConversionTests"` to run a specific test.
 
@@ -138,7 +139,8 @@ This is THE MOST effective workflow I’ve used, and I’ve used many of them.
 Review Guidelines
 This document is much less well-refined, but here’s what I’m using:
 
-```# Review guidelines
+```
+# Review guidelines
 
 When you have finished a project:
 
