@@ -1,0 +1,34 @@
+# Metadata for product_manager_mcp_feature.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: product-manager-mcp-feature
+type: page  # Options: blog, page, landing
+title: Stories - Your AI Product Manager
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: AI Product Manager for Requirements Gathering
+meta_description: Get better user stories with an AI-guidded conversation than you'd write alone. Complete traceability from requirements to code.
+og_title: Stories - Your AI Product Manager
+og_description: Stop writing user stories. Start having conversations about what you want to build. AI product manager interviews you and creates structured, testable requirements.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - stories
+  - mcp-server
+  - product-management
+  - requirements-gathering
+  - user-stories
+  - ai-interviews
+  - traceability
+  - claude
+  - structured-data
+  - acceptance-criteria

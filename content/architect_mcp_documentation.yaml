@@ -1,0 +1,35 @@
+# Metadata for architect_mcp_feature.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: architect-mcp-documentation
+type: documentation  # Options: blog, page, landing
+title: Architect - AI-Guided Context Design
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: AI-Guided Phoenix Context Design for CodeMySpec
+meta_description: AI-guided architecture design. Map user stories to contexts, validate, refine, maintain traceability.
+og_title: Architect - AI-Guided Context Design
+og_description: Have AI design your Phoenix context architecture through expert-guided conversations. The Architect MCP Server turns architecture design into an iterative dialogue that maps user stories to well-defined contexts.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - architect
+  - mcp-server
+  - architecture
+  - phoenix-contexts
+  - context-design
+  - vertical-slice
+  - dependencies
+  - traceability
+  - claude
+  - structured-data
+  - domain-driven-design

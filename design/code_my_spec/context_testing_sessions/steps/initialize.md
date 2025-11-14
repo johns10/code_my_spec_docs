@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Prepares the development environment for context-wide implementation by creating a git branch for the coding session, and setting up the working directory at the project root for code implementation.
+Prepares the development environment for context-wide test generation by creating a git branch for the testing session and setting up the working directory at the project root. Component data is queried on-demand by subsequent steps rather than stored in session state.
 
 ## Public API
 
@@ -19,17 +19,17 @@ Prepares the development environment for context-wide implementation by creating
 
 ### get_command/3
 
-1. **Generate Branch Name**: Use `Utils.branch_name/1` to create sanitized branch name:
+1. **Generate Branch Name**: Use `ContextTestingSessions.Utils.branch_name/1` to create sanitized branch name:
    - Convert context component name to lowercase
    - Replace non-alphanumeric characters (except hyphens/underscores) with hyphens
    - Collapse multiple consecutive hyphens
    - Trim leading/trailing hyphens
-   - Prefix with `"code-context-coding-session-for-"`
+   - Prefix with `"test-context-testing-session-for-"`
 
 2. **Build Environment Attributes**: Construct map with:
    - `branch_name`: Sanitized branch name from step 1
    - `repo_url`: From `session.project.code_repo`
-   - `working_dir`: Set to `"."` for project root (implementing code, not docs)
+   - `working_dir`: Set to `"."` for project root (writing test files to test directory)
 
 3. **Generate Setup Command**: Delegate to `Environments.environment_setup_command/2`:
    - For `:local` environment: Clone repo, switch to new branch, install dependencies
@@ -45,15 +45,9 @@ Prepares the development environment for context-wide implementation by creating
 
 ### handle_result/4
 
-1. **Extract Branch Name**: Get branch name from session using `Utils.branch_name/1`
-
-2. **Build Session Updates**: Create session updates map:
-   - `:state` - Merge existing session state with new metadata:
-     - `branch_name`: Sanitized branch name for use by Finalize step
-     - `initialized_at`: Current UTC timestamp
-
-3. **Return Updates**: Return `{:ok, session_updates, result}` tuple:
-   - Session updates will be persisted by orchestrator
+1. **Return Empty Updates**: Return `{:ok, %{}, result}` tuple:
+   - No session state updates required
+   - Subsequent steps query component data on-demand from the database
    - Result is passed through unchanged for status tracking
 
 ## Test Assertions
@@ -62,12 +56,16 @@ Prepares the development environment for context-wide implementation by creating
   - test "generates sanitized branch name from context component name"
   - test "uses project code_repo URL from session"
   - test "sets working_dir to project root (.)"
-  - test "creates branch name with code-context-coding-session-for- prefix"
+  - test "creates branch name with test-context-testing-session-for- prefix"
   - test "sanitizes component name by replacing special characters with hyphens"
   - test "collapses multiple consecutive hyphens in branch name"
   - test "trims leading and trailing hyphens from branch name"
   - test "converts component name to lowercase for branch name"
+  - test "delegates to Environments.environment_setup_command/2"
+  - test "returns Command struct with module reference"
+  - test "returns error when session missing project.code_repo"
 
 - describe "handle_result/4"
+  - test "returns empty session updates map"
   - test "returns result unchanged"
-  - test "returns success tuple with session updates"
+  - test "returns success tuple with empty updates"

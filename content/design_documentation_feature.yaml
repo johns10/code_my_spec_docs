@@ -1,0 +1,36 @@
+# Metadata for design_documentation_feature.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: design-sessions-feature
+type: page  # Options: blog, page, landing
+title: Design Sessions - AI-Generated Component Specifications
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Automated Design Document Generation with AI
+meta_description: Stop jumping from architecture to code. Generate validated design specifications that control exactly what AI implements through orchestrated workflows.
+og_title: Design Sessions - AI-Generated Component Specifications
+og_description: Orchestrated AI workflows generate, validate, revise, and commit design documents automatically. Control code generation with structured specifications.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - design-sessions
+  - design-documents
+  - specifications
+  - orchestration
+  - validation
+  - phoenix-contexts
+  - component-design
+  - ai-workflows
+  - claude
+  - structured-data
+  - git-integration
+  - test-driven-development

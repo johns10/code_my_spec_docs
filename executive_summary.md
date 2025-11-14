@@ -30,4 +30,4 @@ Effective AI-assisted development requires systematic processes, clear component
 - **Fail-Fast**: Test-driven workflows detect issues early with clear failure paths
 
 ## Technology Stack
-Phoenix 1.8-rc, LiveView 1.1-rc, Ecto SQL, PostgreSQL, Oban (background jobs), Hermes MCP, OAuth2 Provider, Git CLI integration, FileSystem watchers
+Phoenix 1.8-rc, LiveView 1.1-rc, Tailwind, DaisyUI,G Ecto SQL, PostgreSQL, Oban (background jobs), Hermes MCP, OAuth2 Provider, Git CLI integration, FileSystem watchers

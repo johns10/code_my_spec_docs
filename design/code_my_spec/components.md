@@ -6,7 +6,8 @@ Manages component definitions, metadata, type classification, and inter-componen
 ## Entity Ownership
 - Component entity representing any Elixir code file (genserver, context, schema, repository, task, registry, etc.)
 - Dependency entity tracking inter-component relationships and resolution ordering
-- Component and Dependency repositories for data access
+- SimilarComponent entity tracking component similarity references for design context
+- Component, Dependency, and SimilarComponent repositories for data access
 
 ### Access Patterns
 - Components are filtered by user ownership through project association
@@ -37,6 +38,12 @@ Manages component definitions, metadata, type classification, and inter-componen
 @spec validate_dependency_graph(Scope.t()) :: :ok | {:error, [circular_dependency()]}
 @spec resolve_dependency_order(Scope.t()) :: {:ok, [Component.t()]} | {:error, :circular_dependencies}
 
+# Similar Component Management
+@spec list_similar_components(Scope.t(), Component.t()) :: [Component.t()]
+@spec add_similar_component(Scope.t(), Component.t(), Component.t()) :: {:ok, SimilarComponent.t()} | {:error, Changeset.t()}
+@spec remove_similar_component(Scope.t(), Component.t(), Component.t()) :: {:ok, SimilarComponent.t()} | {:error, Changeset.t()}
+@spec get_components_with_similar(Scope.t(), [Component.t()]) :: [Component.t()]  # Returns components with similar_components preloaded
+
 @type component_type :: :genserver | :context | :coordination_context | :schema | :repository | :task | :registry | :other
 @type dependency_type :: :require | :import | :alias | :use | :call | :other
 @type circular_dependency :: %{components: [Component.t()], path: [String.t()]}
@@ -46,8 +53,10 @@ Manages component definitions, metadata, type classification, and inter-componen
 ### Persistence
 - Component Ecto schema with user_id and project_id foreign keys
 - Dependency Ecto schema as simple join table between components
-- Component associations preload dependencies/dependents via Ecto associations
+- SimilarComponent Ecto schema as join table for component similarity relationships
+- Component associations preload dependencies/dependents and similar components via Ecto associations
 - Dependency relationships with source/target component references and scope validation
+- SimilarComponent relationships ensure both components belong to same project
 
 ### Transactions
 - Component and dependency operations within project transaction boundaries
@@ -77,6 +86,18 @@ Manages component definitions, metadata, type classification, and inter-componen
 - Relationship Type Classification
 - Scope Validation
 
+### CodeMySpec.Components.SimilarComponent
+
+| field | value  |
+| ----- | ------ |
+| type  | schema |
+
+- Schema Module
+- Join table for many-to-many self-referential relationship
+- Component/Similar Component References
+- Scope Validation
+- Ensures both components belong to same project
+
 ### CodeMySpec.Components.ComponentRepository
 
 | field | value      |
@@ -95,6 +116,16 @@ Manages component definitions, metadata, type classification, and inter-componen
 - Circular Dependency Detection
 - Topological Sort Algorithm
 - Resolution Order Calculation
+
+### CodeMySpec.Components.SimilarComponentRepository
+
+| field | value      |
+| ----- | ---------- |
+| type  | repository |
+
+- SimilarComponent Data Access
+- Query similar components for a given component
+- Batch preload similar components for multiple components
 
 ## Dependencies
 

@@ -10,7 +10,9 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
 - **Interaction**: Embedded entity representing command/result pairs within a session
 - **Command**: Embedded entity defining executable commands for workflow steps
 - **Result**: Embedded entity capturing command execution outcomes
+- **SessionEvent**: Separate table entity capturing real-time activity between command issuance and result submission
 - **Workflow Orchestration**: Coordinates multi-step session execution through pluggable step modules
+- **Event Handling**: Processes and stores real-time events from AI agent activity (see [sessions_events.md](./sessions_events.md))
 
 ## Access Patterns
 
@@ -41,6 +43,11 @@ Manages session lifecycle and workflow orchestration for AI-assisted development
   {:ok, Interaction.t()} | {:error, :session_not_found | :complete | :failed}
 @spec handle_result(Scope.t(), integer(), binary(), map(), keyword()) ::
   {:ok, Session.t()} | {:error, term()}
+
+# Event Management
+@spec handle_event(Scope.t(), integer(), map()) :: {:ok, Session.t()} | {:error, term()}
+@spec handle_events(Scope.t(), integer(), [map()]) :: {:ok, Session.t()} | {:error, term()}
+@spec get_events(Scope.t(), integer(), keyword()) :: [Event.t()]
 
 # Result Helpers
 @spec create_result(Scope.t(), map()) :: {:ok, Result.t()} | {:error, Changeset.t()}
@@ -182,3 +189,19 @@ Behaviour contract defining callbacks for workflow step modules (get_command/3, 
 | type  | other |
 
 Custom Ecto.Type for polymorphic session type field, mapping between session module atoms and database strings.
+
+### Sessions.SessionEvent
+
+| field | value  |
+| ----- | ------ |
+| type  | schema |
+
+Full Ecto schema (separate table) for real-time events capturing AI agent activity between command issuance and result submission. Stored in `session_events` table with foreign key to sessions. See [sessions_events.md](./sessions_events.md) for detailed design.
+
+### Sessions.EventHandler
+
+| field | value                |
+| ----- | -------------------- |
+| type  | coordination_context |
+
+Processes incoming events from clients, inserts them into session_events table, applies side effects, and broadcasts updates.

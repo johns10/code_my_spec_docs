@@ -1,0 +1,35 @@
+# Metadata for writing_design_documents.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: writing-design-documents
+type: page  # Options: blog, page, landing
+title: How to write design documents that keep AI from going off the rails
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Design Documents for AI Code Generation
+meta_description: Write one design doc per code file to prevent architectural drift and keep LLMs on track.
+og_title: How to write design documents that keep AI from going off the rails
+og_description: Stop AI from inventing its own structure. Learn the 1:1:1 approach - one design doc per code file - that gives you control over AI code generation.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - design-documents
+  - llm
+  - ai
+  - specifications
+  - architecture
+  - phoenix-contexts
+  - vertical-slice
+  - claude
+  - test-driven-development
+  - context-management
+  - best-practices

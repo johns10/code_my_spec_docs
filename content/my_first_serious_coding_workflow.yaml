@@ -1,0 +1,37 @@
+# Metadata for my_first_serious_coding_workflow.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: my-first-serious-coding-workflow
+type: blog  # Options: blog, page, landing
+title: My first serious coding workflow with AI
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: My First Serious AI Coding Workflow
+meta_description: Learn the architecture, planning, and process iteration that keeps LLMs on track.
+og_title: My first serious coding workflow with AI
+og_description: The model doesn't magically get better. Your plan does. Learn the task-based development workflow with memory files, todo lists, and small chats that actually works.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - workflow
+  - ai-assisted-development
+  - llm
+  - claude
+  - cline
+  - cursor
+  - test-driven-development
+  - architecture
+  - domain-driven-design
+  - planning
+  - best-practices
+  - process
+  - task-based-development

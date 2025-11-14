@@ -15,3 +15,4 @@ Never use case, if or "or" in your test assertions.
 Do not use try catch statements in tests.
 Use fixtures wherever possible.
 Delegate as much setup as possible.
+Use ExUnit.CaptureLog to prevent shitting up the logs.
