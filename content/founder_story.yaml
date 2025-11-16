@@ -13,7 +13,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: Why I Built CodeMySpec - Founder's Story
-meta_description: After 10 years of failed startups and learning to ship products the hard way, I built CodeMySpec to help others avoid the same decade of pain.
+meta_description: After 10 years of failed startups and learning the hard way, I built CodeMySpec to help others avoid the same decade of pain.
 og_title: Why I Built CodeMySpec - A Founder's Journey
 og_description: From cashing out my 401k to building UserDocs and Discussit, the 10-year journey that led to creating a structured framework for LLM-assisted development.
 og_image: null  # URL to Open Graph image
