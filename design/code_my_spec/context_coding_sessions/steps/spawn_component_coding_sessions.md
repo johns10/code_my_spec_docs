@@ -237,7 +237,6 @@ If handle_result fails validation, the orchestrator loops back to SpawnComponent
   - test "logs session creation failures with component details"
 
 - describe "handle_result/4"
-  - test "returns success when all child sessions complete and files exist and tests pass"
   - test "returns error when child sessions still active (with component names)"
   - test "returns error when any child session failed (with failure details)"
   - test "returns error when any child session cancelled (with component names)"

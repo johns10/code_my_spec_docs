@@ -39,12 +39,7 @@ Creates child ComponentTestingSession records for each component within the targ
    - Order by priority (descending), then name (ascending)
    - Return {:error, "No child components found for context"} if query returns empty list
 
-5. **Get Branch Name**: Extract branch name from session state
-   - Access session.state.branch_name set by Initialize step
-   - Branch will be inherited by child sessions for git operations
-   - Used in child sessions for test file commits
-
-6. **Create Child Sessions**: For each child component, create a ComponentTestingSession:
+5. **Create Child Sessions**: For each child component, create a ComponentTestingSession:
    - Build attrs map:
      ```elixir
      attrs = %{
@@ -54,35 +49,32 @@ Creates child ComponentTestingSession records for each component within the targ
        execution_mode: :agentic,           # critical for autonomous execution
        agent: parent_session.agent,        # inherit from parent
        environment: parent_session.environment,  # inherit from parent
-       project_id: scope.active_project_id,
-       state: %{
-         parent_branch_name: branch_name   # child inherits parent's git branch
-       }
+       project_id: scope.active_project_id
      }
      ```
    - Call Sessions.create_session(scope, attrs)
    - Collect session creation results with error handling per component
    - Log errors with component name and changeset details
 
-7. **Handle Session Creation Errors**: For any failed session creation
+6. **Handle Session Creation Errors**: For any failed session creation
    - Log error with component name and reason using Logger.error/1
    - Continue creating remaining sessions (partial success acceptable)
    - Return {:error, "Failed to spawn any child sessions"} if all sessions failed
 
-8. **Extract Session IDs**: Collect all successfully created session IDs into array
+7. **Extract Session IDs**: Collect all successfully created session IDs into array
    - Map created sessions to extract id field: Enum.map(sessions, & &1.id)
    - Store for return in command metadata
 
-9. **Build Spawn Command**: Create Command struct
+8. **Build Spawn Command**: Create Command struct
    - `module`: __MODULE__
    - `command`: "spawn_sessions"
    - `metadata`: %{child_session_ids: [list of session IDs]}
 
-10. **Return Command**: Return {:ok, command} tuple
+9. **Return Command**: Return {:ok, command} tuple
 
 ### Result Processing (handle_result/4)
 
-This step validates that all spawned child sessions have completed successfully with passing tests before proceeding to finalize.
+This step validates that all spawned child sessions have completed successfully before proceeding to finalize. It is the responsibility of each individual ComponentTestSession to ensure its test file exists and tests pass - this step only validates that all child sessions reached completion status.
 
 1. **Load Parent Session with Children**: Use SessionsRepository.get_session(scope, session.id)
    - Returns session with child_sessions preloaded (includes component for each child)
@@ -97,22 +89,11 @@ This step validates that all spawned child sessions have completed successfully 
    - If any child session has status :cancelled → return {:error, "Child sessions cancelled: [names]"}
    - Only proceed if all child sessions have status :complete
 
-3. **Verify Test Files Exist**: For each child session
-   - Access child_session.component (already preloaded)
-   - Use Utils.component_files/2 to get test_file path
-   - Check file existence with File.exists?/1
-   - If any files missing → return {:error, "Test files missing: [paths]"}
-
-4. **Verify Tests Pass**: For each child session
-   - Run mix test for component's test file
-   - Parse test output to verify all tests passed
-   - If any tests fail → return {:error, "Tests failing: [component names with error summaries]"}
-
-5. **Build Success Result**: If all validations pass
+3. **Build Success Result**: If all child sessions are complete
    - Update result status to :ok
    - Return {:ok, %{}, result} (no session state updates needed)
 
-6. **Build Error Result**: If any validation fails
+4. **Build Error Result**: If any child session is not complete
    - Update result status to :error with detailed error_message
    - Orchestrator will loop back to this step
    - Client will present failure information to user for intervention
@@ -125,7 +106,6 @@ This step validates that all spawned child sessions have completed successfully 
   - test "sets execution_mode to :agentic for all child sessions"
   - test "inherits agent and environment from parent session"
   - test "establishes parent-child relationship via session_id foreign key"
-  - test "inherits branch_name from parent session state"
   - test "orders child components by priority descending, then name ascending"
   - test "returns error when context component has no children"
   - test "returns error when context component not found"
@@ -140,12 +120,10 @@ This step validates that all spawned child sessions have completed successfully 
   - test "logs session creation failures with component details"
 
 - describe "handle_result/4"
-  - test "returns success when all child sessions complete and test files exist and tests pass"
+  - test "returns success when all child sessions complete"
   - test "returns error when child sessions still active (with component names)"
   - test "returns error when any child session failed (with failure details)"
   - test "returns error when any child session cancelled (with component names)"
-  - test "returns error when test files missing (with file paths)"
-  - test "returns error when tests fail (with component names and error summaries)"
   - test "returns error when parent session not found"
   - test "returns no session updates when validation succeeds"
   - test "updates result status to :ok when all validations pass"
