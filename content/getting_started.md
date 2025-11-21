@@ -163,26 +163,6 @@ Gitignore content:
 local/
 ```
 
-## Set Up Content Repository
-
-CodeMySpec uses a separate Git repository for content management, also managed as a submodule.
-
-### Create a GitHub Repository for Content
-
-1. Create a new GitHub repository (e.g., `your_project_name_content`)
-2. Initialize it with a README.md
-
-### Add as Submodule
-
-```bash
-# Add the content repository as a submodule
-git submodule add https://github.com/your_username/your_project_name_content.git lib/your_project_name_web/content
-
-# Initialize and update the submodule
-git submodule init
-git submodule update
-```
-
 ### Content Directory Structure
 
 The content directory must follow this specific structure:

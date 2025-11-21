@@ -218,6 +218,33 @@ fly secrets set PHX_HOST=codemyspec.com -a code-my-spec-prod
 fly secrets set PHX_HOST=uat.codemyspec.com -a code-my-spec-uat
 ```
 
+## Connecting Livebook to Production
+
+You can connect Livebook running on your local machine to your production Fly.io app for debugging and exploration.
+
+#### Get the full node name:
+
+The easiest way is to SSH into the machine and check:
+```bash
+fly ssh console -a code-my-spec-prod -C "/app/bin/code_my_spec remote"
+```
+
+Look at the IEx prompt - it shows the full node name:
+```
+iex(code-my-spec-prod-01KAFFHA457JZ6VD2Y3H5C5YKS@fdaa:0:e4ed:a7b:175:814b:1e52:2)1>
+```
+
+The node name format is: `{APP_NAME}-{IMAGE_REF}@{PRIVATE_IP}`
+
+**Important:** This node name changes with each deployment because `IMAGE_REF` is the deployment ID.
+
+#### Get the cookie:
+
+The cookie is stored in `envs/prod.env` as `RELEASE_COOKIE`:
+```bash
+grep RELEASE_COOKIE envs/prod.env
+```
+
 ## Important Notes
 
 - Each environment completely isolated
