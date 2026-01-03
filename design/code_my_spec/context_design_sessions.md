@@ -50,7 +50,7 @@ Sessions are scoped to both user and project through the existing session schema
 
 ## Component Diagram
 
-- ContextDesignSessions
+- ContextSpecSessions
   - Workflow Orchestration
     - Step progression logic (inspect last interaction → determine next step)
   - Workflow Steps

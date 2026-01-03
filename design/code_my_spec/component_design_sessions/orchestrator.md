@@ -29,10 +29,10 @@ The orchestrator manages a fixed sequence of steps, each implementing the `StepB
 @step_modules [
   Steps.Initialize,           # Environment setup and session state preparation
   Steps.ReadContextDesign,    # Load existing context design for reference
-  Steps.GenerateComponentDesign, # AI-driven component design generation
+  Steps.GenerateComponentSpec, # AI-driven component design generation
   Steps.ReadComponentDesign,  # Load generated design into session state
-  Steps.ValidateDesign,       # Validate design against rules and requirements
-  Steps.ReviseDesign,         # Iterative design improvement based on validation
+  Steps.ValidateSpec,       # Validate design against rules and requirements
+  Steps.ReviseSpec,         # Iterative design improvement based on validation
   Steps.Finalize             # Environment teardown and session completion
 ]
 ```
@@ -41,13 +41,13 @@ The orchestrator manages a fixed sequence of steps, each implementing the `StepB
 
 #### Linear Progression
 Most steps follow a linear progression on success:
-- `Initialize` → `ReadContextDesign` → `GenerateComponentDesign` → `ReadComponentDesign` → `ValidateDesign` → `Finalize`
+- `Initialize` → `ReadContextDesign` → `GenerateComponentSpec` → `ReadComponentDesign` → `ValidateSpec` → `Finalize`
 
 #### Revision Loop
 The orchestrator implements a validation-revision feedback loop:
-- `ValidateDesign` (success) → `Finalize`
-- `ValidateDesign` (error) → `ReviseDesign`
-- `ReviseDesign` (success) → `ValidateDesign`
+- `ValidateSpec` (success) → `Finalize`
+- `ValidateSpec` (error) → `ReviseSpec`
+- `ReviseSpec` (success) → `ValidateSpec`
 
 This creates an iterative improvement cycle where designs are refined until they pass validation.
 
@@ -88,4 +88,4 @@ The orchestrator makes errors explicit rather than hiding them:
 
 ### Internal Dependencies
 - `CodeMySpec.Sessions.{Interaction, Result}` - Session state management
-- `CodeMySpec.ComponentDesignSessions.Steps.*` - Individual step implementations
+- `CodeMySpec.ComponentSpecSessions.Steps.*` - Individual step implementations

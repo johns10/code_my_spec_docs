@@ -27,15 +27,15 @@ This context owns no entities.
 - Revision iteration count tracked to prevent infinite loops
 
 ## Components
-### ComponentDesignSessions.Orchestrator
+### ComponentSpecSessions.Orchestrator
 
 | field | value |
 | ----- | ----- |
 | type  | other |
 
-Stateless orchestrator managing the sequence of component documentation steps, determining workflow progression based on completed interactions. Handles revision loops by returning to ReviseDesign when validation fails.
+Stateless orchestrator managing the sequence of component documentation steps, determining workflow progression based on completed interactions. Handles revision loops by returning to ReviseSpec when validation fails.
 
-### ComponentDesignSessions.Steps.Initialize
+### ComponentSpecSessions.Steps.Initialize
 
 | field | value |
 | ----- | ----- |
@@ -43,7 +43,7 @@ Stateless orchestrator managing the sequence of component documentation steps, d
 
 Prepares the development environment and workspace for component documentation generation, setting up necessary directories and repository state.
 
-### ComponentDesignSessions.Steps.ReadContextDesign
+### ComponentSpecSessions.Steps.ReadContextDesign
 
 | field | value |
 | ----- | ----- |
@@ -51,7 +51,7 @@ Prepares the development environment and workspace for component documentation g
 
 Reads the design documentation of the parent context and stores it in the session state. This context design information will be included in subsequent prompts to ensure component documentation aligns with the overall context architecture and design patterns.
 
-### ComponentDesignSessions.Steps.GenerateComponentDesign
+### ComponentSpecSessions.Steps.GenerateComponentSpec
 
 | field | value |
 | ----- | ----- |
@@ -59,7 +59,7 @@ Reads the design documentation of the parent context and stores it in the sessio
 
 Generates comprehensive component documentation using AI agents, applying design rules specific to component documentation patterns and architectural requirements.
 
-### ComponentDesignSessions.Steps.ValidateDesign
+### ComponentSpecSessions.Steps.ValidateSpec
 
 | field | value |
 | ----- | ----- |
@@ -67,7 +67,7 @@ Generates comprehensive component documentation using AI agents, applying design
 
 Validates the generated component documentation against project standards, design rules, and architectural constraints to ensure quality and consistency. Returns validation feedback that can trigger design revision loops.
 
-### ComponentDesignSessions.Steps.ReviseDesign
+### ComponentSpecSessions.Steps.ReviseSpec
 
 | field | value |
 | ----- | ----- |
@@ -75,7 +75,7 @@ Validates the generated component documentation against project standards, desig
 
 Revises component documentation based on validation feedback, engaging in iterative conversation with AI agents to address specific validation issues and design concerns.
 
-### ComponentDesignSessions.Steps.Finalize
+### ComponentSpecSessions.Steps.Finalize
 
 | field | value |
 | ----- | ----- |

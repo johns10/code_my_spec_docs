@@ -119,11 +119,11 @@ The spawned ComponentDesignReviewSession is a dedicated session type with its ow
 - Read the context design file from state.context_design_path
 - Analyze for consistency, missing dependencies, and integration issues
 - Generate a review document at state.review_output_path
-- The workflow is distinct from ComponentDesignSessions and tailored for review activities
+- The workflow is distinct from ComponentSpecSessions and tailored for review activities
 
 ### Validation in handle_result
 
-Similar to SpawnComponentDesignSessions, this step performs validation in handle_result:
+Similar to SpawnComponentSpecSessions, this step performs validation in handle_result:
 - Client monitors review session until it reaches a terminal state
 - Client calls handle_result on parent session
 - handle_result validates review session is complete and document exists

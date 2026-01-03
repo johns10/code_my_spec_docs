@@ -34,7 +34,7 @@
 ```elixir
 %Component{
   name: "Stories",
-  type: :context,
+  type: "context",
   responsibilities: "Story CRUD, editing, change tracking",
   dependencies: [],
   public_functions: ["create_story/1", "update_story/2"],

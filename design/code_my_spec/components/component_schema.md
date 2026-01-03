@@ -107,7 +107,7 @@ end
 ```elixir
 attrs = %{
   name: "User Context", 
-  type: :context,
+  type: "context",
   module_name: "CodeMySpec.Accounts.Users",
   description: "Manages user accounts and authentication"
 }

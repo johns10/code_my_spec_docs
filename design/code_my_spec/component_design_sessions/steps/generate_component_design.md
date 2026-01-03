@@ -1,4 +1,4 @@
-# GenerateComponentDesign
+# GenerateComponentSpec
 
 ## Purpose
 

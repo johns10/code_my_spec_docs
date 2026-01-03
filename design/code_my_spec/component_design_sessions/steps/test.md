@@ -1,4 +1,4 @@
-# ComponentDesignSessions.Steps.GenerateComponentDesign
+# ComponentSpecSessions.Steps.GenerateComponentSpec
 
 ## Purpose
 Generates comprehensive component documentation using AI agents, applying design rules specific to component documentation patterns and architectural requirements. This step transforms component specifications and parent context information into detailed design documentation that serves as the foundation for component implementation.

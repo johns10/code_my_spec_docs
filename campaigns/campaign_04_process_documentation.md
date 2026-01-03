@@ -235,7 +235,7 @@ end
 ```elixir
 %Component{
   name: "Accounts",
-  type: :context,
+  type: "context",
   dependencies: ["Users.Repository", "Auth.JWT"],
   public_functions: ["create_account/1", "get_account/1"],
   tested: true,

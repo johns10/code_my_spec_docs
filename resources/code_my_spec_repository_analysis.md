@@ -212,7 +212,7 @@ The "Architect part" handles **context design, validation, and architectural ove
 
 The system provides multiple session types orchestrating the architect workflow:
 
-#### 3.3.1 ContextDesignSessions
+#### 3.3.1 ContextSpecSessions
 **Purpose**: Design entire new application contexts from user stories
 
 **Workflow Steps**:
@@ -221,13 +221,13 @@ The system provides multiple session types orchestrating the architect workflow:
 3. **Validation** - Check design against Phoenix patterns
 4. **Component Creation** - Generate Phoenix scaffolding
 
-#### 3.3.2 ComponentDesignSessions  
+#### 3.3.2 ComponentSpecSessions  
 **Purpose**: Design individual components within a context (AI-driven, no scaffolding)
 
 **Workflow Steps**:
 1. **Initialize** - Setup environment
 2. **Read Context Design** - Load parent context for reference
-3. **GenerateComponentDesign** - AI generates component design
+3. **GenerateComponentSpec** - AI generates component design
 4. **Validate Design** - Check against rules
 5. **Revise Design** - Loop until passing validation
 6. **Finalize** - Complete session
@@ -237,7 +237,7 @@ The system provides multiple session types orchestrating the architect workflow:
 
 **Workflow Steps**:
 1. **Initialize** - Create git branch
-2. **SpawnComponentDesignSessions** - Create child sessions for each component (PARALLEL!)
+2. **SpawnComponentSpecSessions** - Create child sessions for each component (PARALLEL!)
 3. **SpawnReviewSession** - Create review session for consistency validation
 4. **Finalize** - Create pull request with all designs
 
@@ -341,7 +341,7 @@ Components.validate_dependency_graph(scope)
 │ Architect Phase 2: Component Design (Parallel)      │
 ├─────────────────────────────────────────────────────┤
 │ ContextComponentsDesignSessions                     │
-│ ├── SpawnComponentDesignSessions (creates N child) │
+│ ├── SpawnComponentSpecSessions (creates N child) │
 │ │   ├── ComponentDesignSession #1 → Design         │
 │ │   ├── ComponentDesignSession #2 → Design         │
 │ │   └── ComponentDesignSession #N → Design         │
@@ -402,7 +402,7 @@ Each session maintains state through:
       result: %Result{status: :ok, output: "..."}
     },
     %Interaction{
-      command: %Command{module: Steps.GenerateComponentDesign, ...},
+      command: %Command{module: Steps.GenerateComponentSpec, ...},
       result: %Result{status: :ok, output: "Generated design"}
     }
   ]
@@ -424,9 +424,9 @@ Each session maintains state through:
 | Module                                         | Responsibility                                              |
 | ---------------------------------------------- | ----------------------------------------------------------- |
 | `Sessions.Orchestrator`                        | Main coordinator - routes to session-specific orchestrators |
-| `ContextDesignSessions.Orchestrator`           | Manages context design workflow steps                       |
+| `ContextSpecSessions.Orchestrator`             | Manages context design workflow steps                       |
 | `ContextComponentsDesignSessions.Orchestrator` | Coordinates parallel component design + review              |
-| `ComponentDesignSessions.Orchestrator`         | Manages individual component design workflow                |
+| `ComponentSpecSessions.Orchestrator`           | Manages individual component design workflow                |
 | `ContextDesignReviewSessions.Orchestrator`     | Manages architectural review workflow                       |
 
 ### 5.2 Session Step Modules
@@ -439,11 +439,11 @@ Each session type has step implementations following `StepBehaviour`:
 ```
 
 **Example Steps:**
-- `ContextComponentsDesignSessions.Steps.SpawnComponentDesignSessions` - Creates child sessions
+- `ContextComponentsDesignSessions.Steps.SpawnComponentSpecSessions` - Creates child sessions
 - `ContextComponentsDesignSessions.Steps.SpawnReviewSession` - Creates review session
-- `ComponentDesignSessions.Steps.GenerateComponentDesign` - AI design generation
-- `ComponentDesignSessions.Steps.ValidateDesign` - Design validation
-- `ComponentDesignSessions.Steps.ReviseDesign` - Iterative improvement
+- `ComponentSpecSessions.Steps.GenerateComponentSpec` - AI design generation
+- `ComponentSpecSessions.Steps.ValidateSpec` - Design validation
+- `ComponentSpecSessions.Steps.ReviseSpec` - Iterative improvement
 
 ### 5.3 Agent & Execution
 
@@ -507,7 +507,7 @@ PM validates all stories satisfied
 ```
 Architect Approves Component List
     ↓
-ContextComponentsDesignSessions.Steps.SpawnComponentDesignSessions
+ContextComponentsDesignSessions.Steps.SpawnComponentSpecSessions
     ↓ [Creates N child sessions in agentic mode]
     ├── ComponentDesignSession #1 (agentic: true)
     ├── ComponentDesignSession #2 (agentic: true)
@@ -529,14 +529,14 @@ Final architectural review document
 ### 6.3 Revision Loops in Component Design
 
 ```
-ComponentDesignSessions.Steps.GenerateComponentDesign
+ComponentSpecSessions.Steps.GenerateComponentSpec
     ↓ [AI generates design]
-ComponentDesignSessions.Steps.ValidateDesign
+ComponentSpecSessions.Steps.ValidateSpec
     ↓
     ├─ PASS: → Finalize ✅
-    └─ FAIL: → ReviseDesign
+    └─ FAIL: → ReviseSpec
          ↓ [AI revises based on feedback]
-         └─ Loop back to ValidateDesign
+         └─ Loop back to ValidateSpec
 ```
 
 ---
@@ -762,7 +762,7 @@ This enables:
 ### Design Generation Workflow
 1. **ContextComponentsDesignSessions** orchestrates:
    - Initialization
-   - **Spawning parallel ComponentDesignSessions** (one per component)
+   - **Spawning parallel ComponentSpecSessions** (one per component)
    - Each child session generates design with revision loops
    - **Spawning review session** for consistency validation
    - Creating PR with all designs
@@ -811,7 +811,7 @@ lib/code_my_spec/
 │   ├── component.ex
 │   └── dependency.ex
 │
-├── context_design_sessions.ex             # Context design workflow
+├── context_spec_sessions.ex             # Context design workflow
 ├── component_design_sessions.ex           # Component design workflow
 ├── context_components_design_sessions.ex  # Parallel component coordination
 ├── context_design_review_sessions.ex      # Review workflow

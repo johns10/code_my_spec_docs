@@ -126,10 +126,10 @@ end
 
 ```elixir
 @step_modules %{
-  initialize: CodeMySpec.ContextDesignSessions.Steps.Initialize,
-  generate_context_design: CodeMySpec.ContextDesignSessions.Steps.GenerateContextDesign,
-  validate_design: CodeMySpec.ContextDesignSessions.Steps.ValidateDesign,
-  finalize: CodeMySpec.ContextDesignSessions.Steps.Finalize
+  initialize: CodeMySpec.ContextSpecSessions.Steps.Initialize,
+  generate_context_design: CodeMySpec.ContextSpecSessions.Steps.GenerateContextSpec,
+  validate_design: CodeMySpec.ContextSpecSessions.Steps.ValidateSpec,
+  finalize: CodeMySpec.ContextSpecSessions.Steps.Finalize
 }
 ```
 
@@ -183,7 +183,7 @@ Cycle repeats until `{:done, status}` is returned
 ## Integration Points
 
 ### Context Design Sessions Context
-- Orchestrator manages sessions through `ContextDesignSessions` context
+- Orchestrator manages sessions through `ContextSpecSessions` context
 - Updates broadcast to subscribers via PubSub
 - Coordinates with `Sessions` context for persistence
 

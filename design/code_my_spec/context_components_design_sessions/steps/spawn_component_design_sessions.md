@@ -1,4 +1,4 @@
-# SpawnComponentDesignSessions
+# SpawnComponentSpecSessions
 
 ## Purpose
 
@@ -34,7 +34,7 @@ Creates child ComponentDesignSession records for each component within the targe
    - Build attrs map:
      ```elixir
      attrs = %{
-       type: CodeMySpec.ComponentDesignSessions,
+       type: CodeMySpec.ComponentSpecSessions,
        component_id: component.id,  # from session.state.components
        session_id: session.id,      # establishes parent-child relationship
        execution_mode: :agentic,    # critical for autonomous execution
@@ -148,7 +148,7 @@ The spawn_sessions command signals client to start all sessions concurrently:
 
 Context design file path is injected into child session state for AI agent reference:
 - Ensures component designs align with context architecture
-- AI agents read the file directly when needed (e.g., during GenerateComponentDesign)
+- AI agents read the file directly when needed (e.g., during GenerateComponentSpec)
 - Child sessions access path via session.state.context_design_path
 - Avoids unnecessary pre-reading of content
 - Design validation steps can also read the file when validating alignment

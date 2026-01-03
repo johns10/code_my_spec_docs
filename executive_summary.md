@@ -17,7 +17,7 @@ Effective AI-assisted development requires systematic processes, clear component
 ## Key Architecture
 - **Phoenix Contexts**: Stories, Components, Sessions, Projects, Content, Agents, Accounts, Users
 - **MCP Servers**: `StoriesServer` and `ComponentsServer` expose tools for AI agent consumption
-- **Session Orchestration**: `ComponentDesignSessions` and `ComponentTestSessions` manage AI-driven workflows through discrete steps
+- **Session Orchestration**: `ComponentSpecSessions` and `ComponentTestSessions` manage AI-driven workflows through discrete steps
 - **Project Coordinator**: Analyzes component requirements against filesystem and test results to determine next actions
 - **Repository Pattern**: Consistent data access layer with user/project scoping
 - **Multi-Tenant Security**: All operations scoped by `Scope` struct containing active account and project

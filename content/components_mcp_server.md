@@ -427,7 +427,7 @@ Recommendations:
 %Component{
   id: integer
   name: string
-  type: :context | :coordination_context | :schema | :repository | :genserver | :task | :registry | :behaviour | :other
+  type: "context" | :coordination_context | :schema | :repository | :genserver | :task | :registry | :behaviour | :other
   module_name: string  # Full Elixir module name
   description: string | nil
   priority: integer | nil
@@ -481,17 +481,17 @@ Recommendations:
 
 ### Component Types
 
-| Type | Purpose | Example |
-|------|---------|---------|
-| `:context` | Domain context owning entities | `MyApp.Accounts` |
-| `:coordination_context` | Workflow orchestration | `MyApp.ProjectCoordinator` |
-| `:schema` | Database entity | `MyApp.Accounts.User` |
-| `:repository` | Data access layer | `MyApp.Accounts.UserRepository` |
-| `:genserver` | Stateful process | `MyApp.Cache.Server` |
-| `:task` | Background job | `MyApp.Workers.EmailSender` |
-| `:registry` | Process lookup | `MyApp.SessionRegistry` |
-| `:behaviour` | Interface definition | `MyApp.PaymentGateway` |
-| `:other` | Other components | Custom types |
+| Type                    | Purpose                        | Example                         |
+| ----------------------- | ------------------------------ | ------------------------------- |
+| `:context`              | Domain context owning entities | `MyApp.Accounts`                |
+| `:coordination_context` | Workflow orchestration         | `MyApp.ProjectCoordinator`      |
+| `:schema`               | Database entity                | `MyApp.Accounts.User`           |
+| `:repository`           | Data access layer              | `MyApp.Accounts.UserRepository` |
+| `:genserver`            | Stateful process               | `MyApp.Cache.Server`            |
+| `:task`                 | Background job                 | `MyApp.Workers.EmailSender`     |
+| `:registry`             | Process lookup                 | `MyApp.SessionRegistry`         |
+| `:behaviour`            | Interface definition           | `MyApp.PaymentGateway`          |
+| `:other`                | Other components               | Custom types                    |
 
 ## Security & Multi-Tenancy
 

@@ -42,7 +42,7 @@ Step modules implement this callback to process command execution results:
 ## Design Notes
 
 ### Polymorphic Workflow Execution
-- Session.type field stores session module (e.g., CodeMySpec.ContextDesignSessions)
+- Session.type field stores session module (e.g., CodeMySpec.ContextSpecSessions)
 - Session module determines which step modules to execute in sequence
 - Step modules implement StepBehaviour to provide pluggable workflow steps
 - Orchestrator remains generic, delegating to step modules via callbacks
@@ -56,7 +56,7 @@ Step modules implement this callback to process command execution results:
 ### Integration Pattern
 ```elixir
 # Session type module determines next step
-defmodule CodeMySpec.ComponentDesignSessions do
+defmodule CodeMySpec.ComponentSpecSessions do
   def get_next_interaction(%Session{state: %{stage: :analyze}}) do
     {:ok, CodeMySpec.ComponentDesign.AnalyzeStep}
   end

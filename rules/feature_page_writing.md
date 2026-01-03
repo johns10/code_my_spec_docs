@@ -27,7 +27,7 @@ Each feature page should include:
 
 ## Simplification Principles
 
-- **Group related session types** - Present as "Design Workflows" rather than listing ContextDesignSessions, ComponentDesignSessions, etc.
+- **Group related session types** - Present as "Design Workflows" rather than listing ContextSpecSessions, ComponentSpecSessions, etc.
 - **Use familiar metaphors** - "Your AI Product Manager" is clearer than "Stories MCP Server"
 - **Tier information** - Core journey first, differentiators second, technical details last
 - **Assume progressive disclosure** - Link to deeper docs rather than explaining everything upfront

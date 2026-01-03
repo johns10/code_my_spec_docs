@@ -42,13 +42,13 @@ Stateless orchestrator managing the sequence of context component design steps, 
 The workflow consists of 4 steps with validation performed in each step's handle_result:
 
 **Initialize Step**
-- `:ok` status → proceed to `SpawnComponentDesignSessions`
+- `:ok` status → proceed to `SpawnComponentSpecSessions`
 - Any other status → retry `Initialize`
 
-**SpawnComponentDesignSessions Step**
+**SpawnComponentSpecSessions Step**
 - `:ok` status → proceed to `SpawnReviewSession`
-- `:error` status → loop back to `SpawnComponentDesignSessions` (validation failed in handle_result)
-- Any other status → retry `SpawnComponentDesignSessions`
+- `:error` status → loop back to `SpawnComponentSpecSessions` (validation failed in handle_result)
+- Any other status → retry `SpawnComponentSpecSessions`
 
 Note: This step's handle_result validates all child sessions are complete and files exist before returning :ok
 
@@ -81,9 +81,9 @@ Note: This step's handle_result validates review session is complete and documen
 
 The orchestrator implements retry-until-success validation loops through handle_result:
 
-1. **SpawnComponentDesignSessions Validation Loop**
+1. **SpawnComponentSpecSessions Validation Loop**
    - handle_result validates all child sessions are complete and files exist
-   - On `:error`: Orchestrator returns `SpawnComponentDesignSessions` to retry
+   - On `:error`: Orchestrator returns `SpawnComponentSpecSessions` to retry
    - Allows time for human intervention to fix failed sessions or missing files
    - Breaks loop when handle_result returns `:ok` status to proceed to review
 

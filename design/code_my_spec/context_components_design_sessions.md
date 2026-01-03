@@ -43,7 +43,7 @@ Stateless orchestrator managing the sequence of context component design steps, 
 
 Prepares the development environment by creating a git branch and loading the list of components within the target context.
 
-### ContextComponentsDesignSessions.Steps.SpawnComponentDesignSessions
+### ContextComponentsDesignSessions.Steps.SpawnComponentSpecSessions
 
 | field | value |
 | ----- | ----- |

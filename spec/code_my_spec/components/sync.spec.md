@@ -62,7 +62,7 @@ Synchronizes all context components from both spec files and implementation file
 Synchronizes all child components belonging to a parent context component from both spec files and implementation files.
 
 **Process**:
-1. Receives parent component (must have `type: :context` or `type: :coordination_context`)
+1. Receives parent component (must have `type: "context"` or `type: :coordination_context`)
 2. Scans `docs/spec/<context_path>/` directory for component spec files
 3. Uses `Paths.implementation_path/1` to determine the context's implementation directory
 4. Recursively scans the context's implementation subdirectory for `.ex` files (excluding the context file itself)

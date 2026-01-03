@@ -53,6 +53,20 @@ Handle keyboard input and system messages.
 2. Switch to session detail screen
 3. Return {:switch_screen, :session_detail, state}
 
+**'n' Key (Execute Next Command)**:
+1. Get selected session at selected_session_index
+2. Call Sessions.execute(scope, session.id)
+3. If {:ok, updated_session}:
+   - Update session in sessions list
+   - Clear error_message
+4. If {:error, :interaction_pending}:
+   - Set error_message "Session has pending interaction"
+5. If {:error, :session_complete}:
+   - Set error_message "Session is already complete"
+6. If {:error, reason}:
+   - Set error_message with reason
+7. Return {:ok, updated_state}
+
 **'t' Key (Open Terminal)**:
 1. Get selected session at selected_session_index
 2. Check if session has any interactions with terminal-bound commands
@@ -70,7 +84,7 @@ Handle keyboard input and system messages.
 4. Adjust selected_session_index if needed
 5. Return {:ok, updated_state}
 
-**'q' or Esc Key**:
+**Esc Key**:
 1. If terminal is open, call TerminalPanes.hide_terminal()
 2. Return {:switch_screen, :repl, state}
 
@@ -79,11 +93,14 @@ Handle keyboard input and system messages.
 - update/2 navigates down with arrow down
 - update/2 clamps index at boundaries
 - update/2 switches to session detail on Enter
+- update/2 executes next command on 'n' key
+- update/2 updates session after successful execution
+- update/2 shows error for pending interaction
+- update/2 shows error for complete session
 - update/2 opens terminal for sessions with terminal commands
 - update/2 shows error for sessions without terminal commands
 - update/2 deletes session on 'd' key
 - update/2 adjusts selection after delete
-- update/2 returns to REPL on 'q' or Esc
 - update/2 closes terminal on exit
 
 ### render/1
@@ -98,7 +115,7 @@ Render the sessions list screen.
 1. Render sessions list:
    - Header row with title "Active Sessions (count)"
    - If error_message is set, render flash message bar below header with error styling
-   - Instructions: "�/�: navigate | Enter: details | t: terminal | d: delete | q: exit"
+   - Instructions: "↑/↓: navigate | Enter: details | n: next cmd | t: terminal | d: delete | q: exit"
    - List panel with sessions
    - For each session:
      - Show selection indicator if selected
@@ -118,13 +135,13 @@ Render the sessions list screen.
 
 ## Fields
 
-| Field                   | Type           | Required | Description                        |
-| ----------------------- | -------------- | -------- | ---------------------------------- |
-| scope                   | Scope.t()      | No       | User scope for CLI                 |
-| sessions                | [Session.t()]  | Yes      | List of active sessions            |
-| selected_session_index  | integer()      | Yes      | Index of currently selected session|
-| error_message           | String.t()     | No       | Error message to display           |
-| terminal_session_id     | integer()      | No       | ID of session with terminal open   |
+| Field                  | Type          | Required | Description                         |
+| ---------------------- | ------------- | -------- | ----------------------------------- |
+| scope                  | Scope.t()     | No       | User scope for CLI                  |
+| sessions               | [Session.t()] | Yes      | List of active sessions             |
+| selected_session_index | integer()     | Yes      | Index of currently selected session |
+| error_message          | String.t()    | No       | Error message to display            |
+| terminal_session_id    | integer()     | No       | ID of session with terminal open    |
 
 ## Dependencies
 

@@ -108,11 +108,11 @@ Control LLMs through:
 - No step can proceed without explicit validation
 
 #### 3. Predefined Step Sequences
-Example from ComponentDesignSessions:
+Example from ComponentSpecSessions:
 - Initialize
-- GenerateComponentDesign
-- ValidateDesign
-- ReviseDesign (if validation fails)
+- GenerateComponentSpec
+- ValidateSpec
+- ReviseSpec (if validation fails)
 - Finalize
 
 The orchestrator enforces these sequences through explicit state transitions.

@@ -254,7 +254,7 @@ Manages user requirements as living documentation throughout the project lifecyc
 
 **Link to automation:** "Session Orchestration - Automating Design Generation"
 - File: `docs/content/session_orchestration.md` (to be written)
-- Implementation: `lib/code_my_spec/context_design_sessions/orchestrator.ex`
+- Implementation: `lib/code_my_spec/context_spec_sessions/orchestrator.ex`
 
 ---
 

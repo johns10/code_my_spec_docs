@@ -74,7 +74,7 @@ Other component types (`:genserver`, `:schema`, `:repository`, etc.) are not rel
 ```elixir
 schema do
   field :name, :string, required: true
-  field :type, :enum, values: [:context, :coordination_context], required: true  
+  field :type, :enum, values: ["context", "coordination_context"], required: true  
   field :module_name, :string, required: true
   field :description, :string, required: false
 end

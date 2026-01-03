@@ -1,4 +1,4 @@
-# ValidateDesign Step
+# ValidateSpec Step
 
 ## Purpose
 Validates the generated component design documentation by parsing it through the Documents context to ensure it contains all required fields and follows the correct structure according to the component type.

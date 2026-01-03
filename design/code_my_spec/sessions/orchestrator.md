@@ -48,7 +48,7 @@ Coordinates session workflow by determining the next step to execute, delegating
 ## Design Notes
 
 ### Polymorphic Session Types
-- Session.type field stores module name (e.g., CodeMySpec.ContextDesignSessions)
+- Session.type field stores module name (e.g., CodeMySpec.ContextSpecSessions)
 - Each session type module implements get_next_interaction/1 callback
 - This enables different workflow logic per session type without conditionals
 
