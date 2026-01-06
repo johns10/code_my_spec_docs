@@ -1,6 +1,6 @@
-# Requirements
+# CodeMySpec.Requirements
 
-Manages component and context requirement checking, persistence, and workflow queries. Requirements are computed from checker modules and persisted for efficient UI queries.
+Manages component requirement checking, persistence, and workflow queries. Requirements are computed from checker modules and persisted for efficient UI queries.
 
 ## Components
 
@@ -21,7 +21,7 @@ Manages component and context requirement checking, persistence, and workflow qu
 ### check_requirements/2
 
 ```elixir
-@spec check_requirements(requirement_specs :: [requirement_spec()], component_or_context :: struct()) :: [requirement_result()]
+@spec check_requirements(requirement_specs :: [requirement_spec()], component :: struct()) :: [requirement_result()]
 ```
 
 Checks requirements by calling each requirement spec's checker module.
