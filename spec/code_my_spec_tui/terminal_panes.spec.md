@@ -1,4 +1,4 @@
-# CodeMySpecCli.TerminalPanes
+# CodeMySpecTui.TerminalPanes
 
 **Type**: context
 

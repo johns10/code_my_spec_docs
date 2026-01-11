@@ -70,8 +70,8 @@ Apply dependency tree processing to all components.
 4. Return all processed components sorted by ID
 
 **Test Assertions**:
-- build/1 returns empty list for empty input
-- build/1 processes components in dependency order
+- returns empty list for empty input
+- processes components in dependency order
 
 ## Dependencies
 

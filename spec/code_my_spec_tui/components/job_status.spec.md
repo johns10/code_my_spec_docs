@@ -1,4 +1,4 @@
-# CodeMySpecCli.Components.JobStatus
+# CodeMySpecTui.Components.JobStatus
 
 A status indicator component that displays running background jobs. Subscribes to PubSub events and only shows when jobs are active.
 
