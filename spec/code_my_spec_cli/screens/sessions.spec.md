@@ -1,4 +1,4 @@
-# CodeMySpecTui.Screens.Sessions
+# CodeMySpecCli.Screens.Sessions
 
 **Type**: screen
 
