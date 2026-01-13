@@ -1,51 +1,39 @@
-# Requirements.CheckerBehaviour
+# CodeMySpec.Requirements.CheckerBehaviour
 
-Defines the interface for requirement checker modules. Each checker module implements a `check/2` callback that takes a requirement spec and an entity (component or context), then returns a check result map.
+Defines the interface contract for requirement checker modules. Checker modules implement the `check/4` callback to evaluate whether a component satisfies a specific requirement. The behaviour enables pluggable checker implementations for different requirement types (file existence, test status, dependencies, etc.) while maintaining a consistent interface for the requirements system. Checkers should be idempotent (same inputs produce same outputs), graceful (handle missing data without crashing), and fast (avoid expensive operations).
 
-## Principles
+## Delegates
 
-Checkers should be:
-- **Idempotent**: Same inputs always produce same outputs
-- **Graceful**: Handle missing data without crashing
-- **Fast**: Avoid expensive operations when possible
+None.
 
-## Types
+## Functions
 
-### check_result
+### check/4 (callback)
 
-```elixir
-@type check_result :: %{
-  satisfied: boolean(),
-  checked_at: DateTime.t(),
-  details: map()
-}
-```
-
-The result returned by checker modules containing:
-- `satisfied`: Whether the requirement is satisfied
-- `checked_at`: Timestamp when the check was performed
-- `details`: Additional context about the check result
-
-## Callbacks
-
-### check/2
+Checks if a requirement is satisfied for a given component within a scoped context.
 
 ```elixir
-@callback check(Requirement.requirement_spec(), struct()) :: check_result()
+@callback check(Scope.t(), RequirementDefinition.t(), Component.t(), keyword()) ::
+            Requirement.requirement_attrs()
 ```
 
-Checks if a requirement is satisfied for a given entity (component or context).
+**Process**:
+1. Receive scope, requirement definition, component, and options
+2. Extract relevant configuration from the requirement definition
+3. Perform the specific check logic (varies by implementation)
+4. Build and return a requirement_attrs map with satisfaction status, score, and details
 
-**Parameters**:
-- `requirement_spec`: The requirement specification containing name, checker module, and satisfied_by
-- `entity`: The component or context struct being checked
+**Test Assertions**:
+- returns satisfied: true with score 1.0 when requirement is met
+- returns satisfied: false with score 0.0 when requirement is not met
+- includes checked_at timestamp in result
+- includes details map with check-specific information
+- handles missing or invalid data gracefully without crashing
+- respects options passed in keyword list
 
-**Returns**: A `check_result` map
+## Dependencies
 
-## Example Implementations
-
-- **FileExistenceChecker**: Verifies files exist at expected paths
-- **HierarchicalChecker**: Checks if child components have satisfied requirements
-- **DependencyChecker**: Validates all dependencies are satisfied
-- **TestStatusChecker**: Confirms tests are passing
-- **ContextReviewFileChecker**: Checks if review documentation exists
+- CodeMySpec.Requirements.Requirement
+- CodeMySpec.Requirements.RequirementDefinition
+- CodeMySpec.Components.Component
+- CodeMySpec.Users.Scope

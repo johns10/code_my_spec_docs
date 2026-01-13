@@ -1,89 +1,105 @@
 # Requirements.RequirementsRepository
 
-Manages persisted component requirement satisfaction status for UI display and workflow queries. Requirements are recreated fresh on each sync operation - persistence enables efficient queries and UI state display.
+Repository module for managing persisted component requirement satisfaction status. Provides CRUD operations for requirements with project-scoped access control. Requirements track the satisfaction state of component design artifacts and support both persistent and in-memory operations.
+
+## Dependencies
+
+- CodeMySpec.Repo
+- CodeMySpec.Users.Scope
+- CodeMySpec.Components.Component
+- CodeMySpec.Requirements.Requirement
 
 ## Functions
 
-### create_requirement/4
+### clear_all_project_requirements/1
+
+Clears all requirements for the entire project. Performs a bulk delete of all requirements associated with components in the project.
 
 ```elixir
-@spec create_requirement(Scope.t(), Component.t(), requirement_attrs(), opts :: keyword()) :: {:ok, Requirement.t()} | {:error, Ecto.Changeset.t()}
+@spec clear_all_project_requirements(Scope.t()) :: {integer(), nil}
 ```
 
-Creates a requirement for a component.
-
-**Options**:
-- `:persist` - Whether to persist to database (default: true)
+**Process**:
+1. Query all component IDs for the project from scope
+2. Delete all requirements where component_id is in the subquery of project component IDs
+3. Return tuple with count of deleted records
 
 **Test Assertions**:
 
-- create_requirement/4 creates requirement with valid attributes
-- create_requirement/4 returns error with invalid attributes
-- create_requirement/4 associates requirement with component
-- create_requirement/4 skips persistence when persist: false
-- create_requirement/4 persists to database when persist: true
+- deletes all requirements for all components in the project
+- returns count of deleted requirements
+- does not affect requirements in other projects
+- returns {0, nil} when no requirements exist
+
+### create_requirement/4
+
+Creates a requirement for a component with optional persistence control.
+
+```elixir
+@spec create_requirement(Scope.t(), Component.t(), Requirement.requirement_attrs(), keyword()) ::
+        {:ok, Requirement.t()} | {:error, Ecto.Changeset.t()}
+```
+
+**Options**:
+- `:persist` - Whether to persist to database (default: true). When false, applies changeset action without database insert.
+
+**Process**:
+1. Build changeset from empty Requirement struct with provided attributes
+2. Associate the requirement with the component via put_assoc
+3. If persist option is true (default), insert into database
+4. If persist option is false, apply changeset action without persisting
+5. Return success tuple with requirement or error tuple with changeset
+
+**Test Assertions**:
+
+- creates a requirement with valid data
+- returns error with invalid data
+- associates requirement with component
+- persists to database when persist option is true (default)
+- skips persistence when persist option is false
 
 ### update_requirement/3
 
+Updates an existing requirement's satisfaction status and details.
+
 ```elixir
-@spec update_requirement(Scope.t(), Requirement.t(), requirement_attrs()) :: {:ok, Requirement.t()} | {:error, Ecto.Changeset.t()}
+@spec update_requirement(Scope.t(), Requirement.t(), Requirement.requirement_attrs()) ::
+        {:ok, Requirement.t()} | {:error, Ecto.Changeset.t()}
 ```
 
-Updates an existing requirement's satisfaction status.
+**Process**:
+1. Apply update_changeset to requirement with new attributes
+2. Persist updated requirement to database
+3. Return success tuple with updated requirement or error tuple with changeset
 
 **Test Assertions**:
 
-- update_requirement/3 updates requirement with valid attributes
-- update_requirement/3 returns error with invalid attributes
-- update_requirement/3 updates checked_at timestamp
+- updates requirement with valid data
+- returns error with invalid data
+- updates satisfaction status
+- updates details map
 
 ### clear_requirements/3
 
-```elixir
-@spec clear_requirements(Scope.t(), Component.t(), opts :: keyword()) :: Component.t()
-```
+Clears requirements for a specific component with optional database deletion.
 
-Clears requirements for a component.
+```elixir
+@spec clear_requirements(Scope.t(), Component.t(), keyword()) :: Component.t()
+```
 
 **Options**:
-- `:persist` - Whether to delete from database (default: false)
+- `:persist` - Whether to delete from database (default: false). When true, deletes all requirement records for the component.
 
 **Process**:
-1. Optionally deletes all requirement records for component from database
-2. Clears dependency associations from component struct
-3. Returns updated component
+1. If persist option is true, delete all requirement records for the component from database
+2. Clear outgoing_dependencies association on component struct
+3. Clear incoming_dependencies association on component struct
+4. Return updated component struct
 
 **Test Assertions**:
 
-- clear_requirements/3 deletes requirements from database when persist: true
-- clear_requirements/3 skips database deletion when persist: false
-- clear_requirements/3 clears dependency associations from struct
-- clear_requirements/3 returns component
-
-### list_requirements_for_component/2
-
-```elixir
-@spec list_requirements_for_component(Scope.t(), component_id :: integer()) :: [Requirement.t()]
-```
-
-Lists all requirements for a specific component.
-
-**Test Assertions**:
-
-- list_requirements_for_component/2 returns all requirements for component
-- list_requirements_for_component/2 returns empty list when no requirements
-- list_requirements_for_component/2 respects scope boundaries
-
-### by_satisfied_status/2
-
-```elixir
-@spec by_satisfied_status(Ecto.Query.t(), satisfied :: boolean()) :: Ecto.Query.t()
-```
-
-Query builder to filter requirements by satisfaction status.
-
-**Test Assertions**:
-
-- by_satisfied_status/2 filters to satisfied requirements when true
-- by_satisfied_status/2 filters to unsatisfied requirements when false
-- by_satisfied_status/2 returns queryable
+- deletes requirements from database when persist option is true
+- skips database deletion when persist option is false (default)
+- clears outgoing_dependencies on returned component
+- clears incoming_dependencies on returned component
+- returns component struct
