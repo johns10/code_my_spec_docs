@@ -177,13 +177,15 @@ Handle interaction result and update session state.
 4. Calls command module's handle_result callback
 5. Completes interaction with result
 6. Updates session state if needed
-7. Broadcast :updated event via SessionsBroadcaster
-8. Return {:ok, session}
+7. Checks orchestrator.complete? to mark session complete if appropriate
+8. Broadcast :updated event via SessionsBroadcaster
+9. Return {:ok, session}
 
 **Test Assertions**:
 - processes result via ResultHandler
 - broadcasts updated event
 - returns updated session with completed interaction
+- marks session complete when orchestrator.complete? returns true
 - returns {:error, :session_not_found} for invalid session_id
 - returns {:error, :interaction_not_found} for invalid interaction_id
 
@@ -291,7 +293,7 @@ Update session execution mode and regenerate pending command.
 3. Check for pending interaction (command without result)
 4. If pending exists:
    a. Get next step module from session type
-   b. Build opts based on new execution mode
+   b. Build opts based on new execution mode (:auto -> [auto: true], :manual -> [], :agentic -> [agentic: true])
    c. Regenerate command via step module
    d. Delete old pending interaction
    e. Create new interaction with regenerated command
@@ -361,15 +363,15 @@ Update a Result struct with new attributes (virtual, not persisted).
 
 ### CodeMySpec.Sessions.Session
 
-Ecto schema representing a session. Contains type (session workflow module), agent, environment, execution_mode, status, state, and associations to project, account, user, component, parent/child sessions, and interactions.
+Ecto schema representing a session. Contains type (session workflow module), agent (:claude_code), environment (:local, :vscode, :cli), execution_mode (:manual, :auto, :agentic), status (:active, :complete, :failed, :cancelled), state map, external_conversation_id, and associations to project, account, user, component, parent/child sessions, and interactions.
 
 ### CodeMySpec.Sessions.SessionServer
 
-GenServer managing session execution task lifecycle and message delivery. One server process per active session, registered by session_id via SessionRegistry. Creates interactions synchronously, spawns tasks for execution, handles async result delivery.
+GenServer managing session execution task lifecycle and message delivery. One server process per active session, registered by session_id via SessionRegistry. Creates interactions synchronously, spawns tasks for execution, handles async result delivery via message passing, and supports auto-continuation in :auto mode.
 
 ### CodeMySpec.Sessions.SessionsRepository
 
-Repository module for session data access operations. Handles database queries with scope filtering, session preloading, display name population, and status updates.
+Repository module for session data access operations. Handles database queries with scope filtering, session preloading with associations (project, component, interactions, component.parent_component, child_sessions), display name population, status updates, and external_conversation_id updates.
 
 ### CodeMySpec.Sessions.SessionsBroadcaster
 
@@ -377,88 +379,96 @@ Centralized broadcasting for session-related events. Handles PubSub broadcasting
 
 ### CodeMySpec.Sessions.Interaction
 
-Ecto schema representing an interaction within a session. Contains a command (embedded) and its result (embedded, nil until executed). Tracks step_name, completed_at timestamp, and has_many interaction_events.
+Ecto schema representing an interaction within a session. Contains a command (embedded), result (embedded, nil until executed), step_name, completed_at timestamp, and has_many interaction_events. Provides predicates: pending?/1, completed?/1, successful?/1, failed?/1.
 
 ### CodeMySpec.Sessions.InteractionsRepository
 
-Repository module for managing Interaction records. Provides CRUD operations: create, get, complete (add result), delete, and list_for_session.
+Repository module for managing Interaction records. Provides CRUD operations: create/2, get/1, get!/1, complete/2 (add result), delete/1, and list_for_session/1.
 
 ### CodeMySpec.Sessions.Command
 
-Embedded schema representing a command to be executed during a session. Contains module (step module), execution_strategy (:sync, :task, :async), command string, pipe, metadata map, and timestamp.
+Embedded schema representing a command to be executed during a session. Contains module (step module), execution_strategy (:sync, :task, :async), command string, pipe, metadata map, and timestamp. Provides new/3 factory function and runs_in_terminal?/1 predicate.
 
 ### CodeMySpec.Sessions.Result
 
-Embedded schema representing the result of executing a command. Contains status (:ok, :error, :warning), data map, code, error_message, stdout, stderr, duration_ms, and timestamp. Provides factory functions: success/2, error/2, warning/3, pending/2.
+Embedded schema representing the result of executing a command. Contains status (:ok, :pending, :error, :warning), data map, code, error_message, stdout, stderr, duration_ms, and timestamp. Provides factory functions: success/2, error/2, warning/3, pending/2.
 
 ### CodeMySpec.Sessions.CommandResolver
 
-Resolves and creates the next command for a session. Validates session status, clears pending interactions, gets next step module from session type, generates command, creates interaction, and broadcasts step_started event.
+Resolves and creates the next command for a session. Validates session status (not complete or failed), clears pending interactions, gets next step module from session type's get_next_interaction callback, generates command via step module's get_command callback, creates interaction, and broadcasts step_started event.
 
 ### CodeMySpec.Sessions.ResultHandler
 
-Handles interaction results and session state updates. Finds session and interaction, creates result struct, delegates to command module's handle_result callback, completes interaction, updates session state, and checks for session completion.
+Handles interaction results and session state updates. Finds session and interaction, creates result struct, delegates to command module's handle_result callback, completes interaction via InteractionsRepository.complete/2, optionally updates session state, and checks orchestrator.complete? to mark session complete.
 
 ### CodeMySpec.Sessions.Executor
 
-Executes commands to completion, handling all concurrency patterns. Takes InteractionContext and executes via environment, handling sync (immediate result), task (spawned, awaited), and async (external, wait for message) execution patterns.
+Executes commands to completion, handling all concurrency patterns. Takes InteractionContext and executes via Environments.run_command/3, handling sync (immediate result), task (spawned by command, awaited here), and async (external, wait for {:interaction_result, ...} message with 30-minute timeout) execution patterns.
 
 ### CodeMySpec.Sessions.InteractionContext
 
-Context struct prepared for executing an interaction. Contains environment, command, execution_opts, session, and interaction. Provides prepare/3 to build context from scope, session, and opts.
+Context struct prepared for executing an interaction. Contains environment, command, execution_opts, session, and interaction. Provides prepare/3 to build context from scope, session, and opts, creating execution environment and building execution_opts with session_id and interaction_id.
 
 ### CodeMySpec.Sessions.EventHandler
 
-Processes incoming events from CLI/VSCode clients, persists them to interaction_events table, applies session-level side effects (status changes, conversation_id, notifications, session_end), and broadcasts notifications to connected clients.
+Processes incoming events from CLI/VSCode clients, persists them to interaction_events table, applies session-level side effects (status changes from data.new_status, external_conversation_id from session_start, notification broadcasting, session_end result handling), updates InteractionRegistry with runtime status, and broadcasts notifications to connected clients.
 
 ### CodeMySpec.Sessions.InteractionEvent
 
-Ecto schema for events capturing real-time activity during interaction execution. Append-only log with event_type, data, metadata, sent_at timestamp. Event types include proxy_request, proxy_response, session_start, session_end, notification, post_tool_use, user_prompt_submit, stop.
+Ecto schema for events capturing real-time activity during interaction execution. Append-only log with event_type (:proxy_request, :proxy_response, :session_start, :session_end, :notification_hook, :session_stop_hook, :post_tool_use, :user_prompt_submit, :stop), data map, metadata map, sent_at timestamp.
 
 ### CodeMySpec.Sessions.SessionEvent
 
-Legacy Ecto schema for session-level events. Being replaced by InteractionEvent for finer-grained event tracking.
+Legacy Ecto schema for session-level events with event_type, data, metadata, and sent_at. Being superseded by InteractionEvent for finer-grained event tracking at the interaction level.
 
 ### CodeMySpec.Sessions.InteractionRegistry
 
-GenServer maintaining ephemeral runtime state for interactions executing asynchronously. Provides real-time visibility into interaction status through non-durable status updates from agent hook callbacks. State cleared when users interact in TUI.
+GenServer maintaining ephemeral runtime state for interactions executing asynchronously. Provides real-time visibility into interaction status through non-durable status updates from agent hook callbacks. Operations: register_status/1, update_status/2, get_status/1, clear_status/1, clear_all/0, list_active/0. State cleared when users interact in TUI.
 
 ### CodeMySpec.Sessions.RuntimeInteraction
 
-Ephemeral embedded schema for runtime interaction state. Contains interaction_id, agent_state, last_notification, last_activity, last_stopped, conversation_id, timestamp. Not persisted - lives only in InteractionRegistry.
+Ephemeral embedded schema for runtime interaction state. Contains interaction_id, agent_state, last_notification, last_activity, last_stopped, conversation_id, timestamp. Not persisted - lives only in InteractionRegistry. Uses changeset pattern for partial updates.
 
 ### CodeMySpec.Sessions.StepBehaviour
 
-Behaviour for workflow step modules in session orchestration. Defines callbacks: get_command/3 to generate commands and handle_result/4 to process results.
+Behaviour for workflow step modules in session orchestration. Defines callbacks: get_command/3 (scope, session, opts -> {:ok, Command.t()} | {:error, String.t()}) and handle_result/4 (scope, session, result, opts -> {:ok, session_updates, updated_result} | {:error, String.t()}).
 
 ### CodeMySpec.Sessions.OrchestratorBehaviour
 
-Behaviour for session type orchestrators. Defines callbacks: steps/0 for step module list, get_next_interaction/1 for next step determination, complete?/1 for completion check.
+Behaviour for session type orchestrators. Defines callbacks: steps/0 for ordered list of step modules, get_next_interaction/1 (session -> {:ok, module} | {:error, :session_complete | atom()}), complete?/1 (session_or_interaction -> boolean) for completion determination.
 
 ### CodeMySpec.Sessions.SessionType
 
-Custom Ecto type for session type atoms. Maps between atom module names and string database values. Supports legacy orchestrator types and new agent task types.
+Custom Ecto type for session type atoms. Maps between atom module names and string database values. Supports orchestrator types (ComponentSpecSessions, ComponentTestSessions, etc.) and agent task types (AgentTasks.ContextSpec, AgentTasks.ComponentSpec, etc.).
+
+### CodeMySpec.Sessions.CommandModuleType
+
+Custom Ecto type for command module atoms. Maps between atom module names and string database values for step/command modules.
+
+### CodeMySpec.Sessions.EventType
+
+Custom Ecto type for event_type atoms. Maps between event type atoms and string database values.
 
 ### CodeMySpec.Sessions.Utils
 
-Utility functions for working with sessions and interactions. Provides find_last_completed_interaction/1 to locate the most recent completed interaction in a session.
-
-### CodeMySpec.Sessions.AgentTasks.ComponentSpec
-
-Agent task session type for generating component specifications.
-
-### CodeMySpec.Sessions.AgentTasks.ComponentCode
-
-Agent task session type for generating component implementation code.
-
-### CodeMySpec.Sessions.AgentTasks.ComponentTest
-
-Agent task session type for generating component tests.
+Utility functions for working with sessions and interactions. Provides find_last_completed_interaction/1 to locate the most recent completed interaction in an active session, returning nil for complete/failed sessions.
 
 ### CodeMySpec.Sessions.AgentTasks.ContextSpec
 
-Agent task session type for generating context specifications.
+Agent task session type for generating context specifications. Implements OrchestratorBehaviour for single-step specification generation workflow.
 
 ### CodeMySpec.Sessions.AgentTasks.ContextComponentSpecs
 
-Agent task session type for generating specifications for all child components of a context.
+Agent task session type for generating specifications for all child components of a context. Orchestrates multi-component specification generation.
+
+### CodeMySpec.Sessions.AgentTasks.ComponentSpec
+
+Agent task session type for generating component specifications. Implements OrchestratorBehaviour for component-level spec generation workflow.
+
+### CodeMySpec.Sessions.AgentTasks.ComponentCode
+
+Agent task session type for generating component implementation code from specifications. Implements OrchestratorBehaviour for code generation workflow.
+
+### CodeMySpec.Sessions.AgentTasks.ComponentTest
+
+Agent task session type for generating component tests from specifications. Implements OrchestratorBehaviour for test generation workflow.
