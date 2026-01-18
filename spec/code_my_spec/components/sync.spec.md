@@ -24,21 +24,23 @@ Only parses and upserts files that have been modified since the component was la
 - `:force` - When true, ignores mtime and syncs all files (defaults to false)
 
 **Process**:
-1. Find all spec files: `docs/spec/**/*.spec.md` - collect as FileInfo structs with mtime
-2. Find all impl files: `lib/**/*.ex` (excluding `_build/`, `deps/`) - collect as FileInfo structs with mtime
-3. Load existing components from database to build module_name -> synced_at map
-4. For each file, skip if file mtime <= component synced_at (unless :force is true)
-5. For files that need syncing:
+1. Find all markdown files: `docs/spec/**/*.md`
+2. Filter all files that don't end with `spec.md` and add them to [parse_errors]
+3. Collect all specs and convert to FileInfo structs with mtime
+4. Find all impl files: `lib/**/*.ex` (excluding `_build/`, `deps/`) - collect as FileInfo structs with mtime
+5. Load existing components from database to build module_name -> synced_at map
+6. For each file, skip if file mtime <= component synced_at (unless :force is true)
+7. For files that need syncing:
    - Derive module name from path
    - Parse declared module name from file content
    - Warn if they don't match
    - Use implementation's declared name if present, else spec's, else path-derived
-6. Parse spec files for type and description (impl-only files default to type "other")
-7. Merge spec and impl data by resolved module name
-8. Upsert only changed components
-9. Derive parent relationships from module name hierarchy
-10. Cleanup components that no longer exist in filesystem
-11. Return all components (both synced and unchanged)
+8. Parse spec files for type and description (impl-only files default to type "other")
+9. Merge spec and impl data by resolved module name
+10. Upsert only changed components
+11. Derive parent relationships from module name hierarchy
+12. Cleanup components that no longer exist in filesystem
+13. Return all components (both synced and unchanged)
 
 **Test Assertions**:
 - uses implementation module name when present

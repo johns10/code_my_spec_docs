@@ -47,6 +47,29 @@ Returns child components of a parent component, ordered by priority descending t
 - returns child components ordered by priority then name
 - returns empty list when parent has no children
 
+### list_all_descendants/2
+
+Returns all descendants of a component recursively, traversing the entire subtree.
+
+```elixir
+@spec list_all_descendants(Scope.t(), Ecto.UUID.t()) :: [Component.t()]
+```
+
+**Process**:
+1. Get immediate children of the parent component
+2. For each child, recursively get its children
+3. Accumulate and return all descendants depth-first
+4. Preload requirements on all returned components
+
+**Test Assertions**:
+
+- returns all descendants recursively
+- returns empty list when no children exist
+- includes deeply nested descendants (4+ levels)
+- includes multiple branches in the tree
+- excludes components from other projects
+- preloads requirements on all descendants
+
 ### get_component!/2
 
 Gets a single component by ID within scope. Raises if not found or not in scope.
