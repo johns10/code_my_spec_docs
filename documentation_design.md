@@ -309,12 +309,6 @@ Rather than separate documentation types, integrate concerns based on file type 
 elixirc_options: [warnings_as_errors: true]
 ```
 
-**Static Analysis**:
-```elixir
-# Dialyzer for type checking
-dialyzer: [flags: [:error_handling, :underspecs, :unknown]]
-```
-
 **Boundary Enforcement**:
 ```elixir
 # Explicit structs for data boundaries

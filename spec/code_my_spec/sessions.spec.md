@@ -9,6 +9,9 @@ Phoenix context for managing sessions. Provides the public API for session lifec
 - get_session/2: CodeMySpec.Sessions.SessionsRepository.get_session/2
 - get_session!/2: CodeMySpec.Sessions.SessionsRepository.get_session!/2
 - update_external_conversation_id/3: CodeMySpec.Sessions.SessionsRepository.update_external_conversation_id/3
+- add_edited_file/2: CodeMySpec.Sessions.SessionsRepository.add_edited_file/2
+- get_edited_files/1: CodeMySpec.Sessions.SessionsRepository.get_edited_files/1
+- clear_edited_files/1: CodeMySpec.Sessions.SessionsRepository.clear_edited_files/1
 
 ## Functions
 
@@ -363,7 +366,7 @@ Update a Result struct with new attributes (virtual, not persisted).
 
 ### CodeMySpec.Sessions.Session
 
-Ecto schema representing a session. Contains type (session workflow module), agent (:claude_code), environment (:local, :vscode, :cli), execution_mode (:manual, :auto, :agentic), status (:active, :complete, :failed, :cancelled), state map, external_conversation_id, and associations to project, account, user, component, parent/child sessions, and interactions.
+Ecto schema representing a session. Contains type (session workflow module), agent (:claude_code), environment (:local, :vscode, :cli), execution_mode (:manual, :auto, :agentic), status (:active, :complete, :failed, :cancelled), state map, external_conversation_id, edited_files (list of file paths modified during session), and associations to project, account, user, component, parent/child sessions, and interactions.
 
 ### CodeMySpec.Sessions.SessionServer
 

@@ -40,7 +40,6 @@ DockYard follows the **"Elixir Way"** philosophy, emphasizing development *with*
 
 **Code quality toolchain**:
 - **Credo** for static analysis and consistency
-- **Dialyzer/Dialyxir** for type checking
 - **ExUnit** with emphasis on doctests
 - **mix format** for automated code formatting
 - **EctoFixtures** (their custom testing library)

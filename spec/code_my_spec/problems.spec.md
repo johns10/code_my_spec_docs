@@ -11,7 +11,6 @@ The Problems context provides a unified abstraction for problems, warnings, and 
 - replace_project_problems/2: CodeMySpec.Problems.ProblemRepository.replace_project_problems/2
 - clear_project_problems/1: CodeMySpec.Problems.ProblemRepository.clear_project_problems/1
 - from_credo/1: CodeMySpec.Problems.ProblemConverter.from_credo/1
-- from_dialyzer/1: CodeMySpec.Problems.ProblemConverter.from_dialyzer/1
 - from_compiler/1: CodeMySpec.Problems.ProblemConverter.from_compiler/1
 - from_test_failure/1: CodeMySpec.Problems.ProblemConverter.from_test_failure/1
 
@@ -26,7 +25,7 @@ The Problems context provides a unified abstraction for problems, warnings, and 
 
 ### CodeMySpec.Problems.ProblemConverter
 
-Utility module for transforming heterogeneous tool outputs (Credo, Dialyzer, compiler warnings, test failures) into normalized Problem structs. Provides consistent data transformation regardless of source tool format.
+Utility module for transforming heterogeneous tool outputs (Credo, compiler warnings, test failures) into normalized Problem structs. Provides consistent data transformation regardless of source tool format.
 
 ### CodeMySpec.Problems.Problem
 

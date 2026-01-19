@@ -52,7 +52,7 @@ Validates current project setup state by receiving validation report from VS Cod
 | ----- | ----- |
 | type  | other |
 
-Generates command to add required dependencies to mix.exs: file_system, ngrok (from GitHub), exunit_json_formatter (from GitHub), and dialyxir. Uses latest available versions. Only executes if dependencies_added requirement is false.
+Generates command to add required dependencies to mix.exs: file_system, ngrok (from GitHub), and exunit_json_formatter (from GitHub). Uses latest available versions. Only executes if dependencies_added requirement is false.
 
 ### ProjectSetupSessions.Steps.InstallDependencies
 
@@ -217,7 +217,7 @@ Extension provides:
 - **Session Trigger**: Initiates setup session via command palette
 
 Extension validation checks:
-- Dependencies exist in mix.exs (file_system, ngrok, exunit_json_formatter, dialyxir)
+- Dependencies exist in mix.exs (file_system, ngrok, exunit_json_formatter)
 - Dependencies installed in deps/ directory
 - Doc submodule exists at docs/ path
 - Content submodule exists at content/ path

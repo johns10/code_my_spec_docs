@@ -1,6 +1,6 @@
 # CodeMySpec.Problems.ProblemConverter
 
-Utility module for transforming heterogeneous tool outputs (Credo, Dialyzer, compiler warnings, test failures) into normalized Problem structs. Provides consistent data transformation regardless of source tool format.
+Utility module for transforming heterogeneous tool outputs (Credo, compiler warnings, test failures) into normalized Problem structs. Provides consistent data transformation regardless of source tool format.
 
 ## Dependencies
 
@@ -27,26 +27,6 @@ Transforms Credo analysis results into normalized Problem structs.
 - extracts file path and line number
 - preserves original Credo check name in rule field
 - stores Credo-specific metadata
-
-### from_dialyzer/1
-
-Transforms Dialyzer warnings into normalized Problem structs.
-
-```elixir
-@spec from_dialyzer(map()) :: Problem.t()
-```
-
-**Process**:
-1. Set severity based on warning type (always :warning for Dialyzer)
-2. Extract file path and line from warning location
-3. Set source to "dialyzer" and source_type to :static_analysis
-4. Parse warning message and categorize as "type"
-
-**Test Assertions**:
-- sets severity to :warning
-- extracts location information correctly
-- categorizes all Dialyzer output as type Problems
-- preserves full warning message
 
 ### from_compiler/1
 

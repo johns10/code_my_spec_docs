@@ -73,7 +73,7 @@ Get list of all registered static analyzer modules.
 
 **Process**:
 1. Return hardcoded list of analyzer modules in execution order
-2. List includes: Credo, Dialyzer, Boundary, Sobelow, SpecAlignment
+2. List includes: Credo, Boundary, Sobelow, SpecAlignment
 
 **Test Assertions**:
 - returns list of all analyzer modules
@@ -87,7 +87,6 @@ Get list of all registered static analyzer modules.
 - CodeMySpec.Problems.Problem
 - CodeMySpec.StaticAnalysis.AnalyzerBehaviour
 - CodeMySpec.StaticAnalysis.Analyzers.Credo
-- CodeMySpec.StaticAnalysis.Analyzers.Dialyzer
 - CodeMySpec.StaticAnalysis.Analyzers.Boundary
 - CodeMySpec.StaticAnalysis.Analyzers.Sobelow
 - CodeMySpec.StaticAnalysis.Analyzers.SpecAlignment

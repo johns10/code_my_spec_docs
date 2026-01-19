@@ -94,7 +94,7 @@ Render a summary of problem counts grouped by source tool, showing severity brea
 
 **Process**:
 1. Return "No problems found" for empty list
-2. Group problems by source (credo, dialyzer, boundary, sobelow, compiler, exunit, etc.)
+2. Group problems by source (credo, boundary, sobelow, compiler, exunit, etc.)
 3. For each source, count problems by severity
 4. Format each source as a line with severity counts
 5. Order sources alphabetically

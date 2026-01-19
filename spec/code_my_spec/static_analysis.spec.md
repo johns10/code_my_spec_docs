@@ -2,7 +2,7 @@
 
 **Type**: context
 
-Executes optional code quality and correctness tools against a project codebase. Provides a unified interface for running Credo (style/consistency), Dialyzer (type checking), Boundary (module dependency enforcement), Sobelow (security), and custom static analyzers. Each tool writes output to temporary JSON files for reliable parsing, then normalizes results into Problems for consistent reporting and tracking. Separate from compilation and testing, which remain distinct concepts.
+Executes optional code quality and correctness tools against a project codebase. Provides a unified interface for running Credo (style/consistency), Boundary (module dependency enforcement), Sobelow (security), and custom static analyzers. Each tool writes output to temporary JSON files for reliable parsing, then normalizes results into Problems for consistent reporting and tracking. Separate from compilation and testing, which remain distinct concepts.
 
 ## Delegates
 
@@ -31,10 +31,6 @@ Orchestrates execution of static analyzers against a project. Handles parallel e
 ### CodeMySpec.StaticAnalysis.Analyzers.Credo
 
 Runs Credo static analysis for code consistency and style checks. Executes `mix credo --format json` with file output for reliable JSON parsing, then converts to Problems.
-
-### CodeMySpec.StaticAnalysis.Analyzers.Dialyzer
-
-Runs Dialyzer for type checking and discrepancy detection. Executes `mix dialyzer --format short` and parses output into Problems.
 
 ### CodeMySpec.StaticAnalysis.Analyzers.Sobelow
 

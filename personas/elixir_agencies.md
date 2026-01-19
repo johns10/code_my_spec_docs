@@ -50,7 +50,7 @@ Research uncovered **systematic technical problems** with AI tools in Elixir con
 
 **Performance anti-patterns** emerge frequently in AI-generated code. Examples include O(n²) algorithms using `Enum.find/3` in loops, failure to use `preload/1` callbacks causing N+1 queries, and patterns that don't leverage LiveView's diff-based updates effectively.
 
-**Agency quality control challenges** require significant investment. Daniel Bergholz documented spending $45 monthly on AI credits while implementing comprehensive quality checks including Credo linting, Dialyzer type checking, and custom Phoenix/LiveView pattern validation. This represents a **hidden cost burden** that specialized tools could address.
+**Agency quality control challenges** require significant investment. Daniel Bergholz documented spending $45 monthly on AI credits while implementing comprehensive quality checks including Credo linting and custom Phoenix/LiveView pattern validation. This represents a **hidden cost burden** that specialized tools could address.
 
 ## Go-to-market strategy recommendations
 

@@ -145,3 +145,65 @@ Populates the virtual display_name field on a list of session structs.
 **Test Assertions**:
 - populates display_name on all sessions in list
 - returns empty list for empty input
+
+### add_edited_file/2
+
+Add a file path to the session's edited_files list.
+
+```elixir
+@spec add_edited_file(integer(), Path.t()) :: :ok | {:error, :session_not_found}
+```
+
+**Process**:
+1. Find session by ID
+2. Return `{:error, :session_not_found}` if not found
+3. Check if file path already exists in edited_files (dedup)
+4. If not present, append file path to edited_files array
+5. Persist update
+6. Return `:ok`
+
+**Test Assertions**:
+- adds file path to empty edited_files list
+- appends file path to existing edited_files list
+- does not add duplicate file paths
+- returns :ok on success
+- returns {:error, :session_not_found} when session does not exist
+
+### get_edited_files/1
+
+Get the list of edited file paths for a session.
+
+```elixir
+@spec get_edited_files(integer()) :: {:ok, [Path.t()]} | {:error, :session_not_found}
+```
+
+**Process**:
+1. Find session by ID
+2. Return `{:error, :session_not_found}` if not found
+3. Return `{:ok, edited_files}` with the list (empty list if nil)
+
+**Test Assertions**:
+- returns {:ok, []} for session with no edited files
+- returns {:ok, paths} for session with edited files
+- returns {:error, :session_not_found} when session does not exist
+
+### clear_edited_files/1
+
+Clear all edited file paths for a session.
+
+```elixir
+@spec clear_edited_files(integer()) :: :ok | {:error, :session_not_found}
+```
+
+**Process**:
+1. Find session by ID
+2. Return `{:error, :session_not_found}` if not found
+3. Set edited_files to empty list
+4. Persist update
+5. Return `:ok`
+
+**Test Assertions**:
+- clears edited_files list
+- returns :ok on success
+- returns {:error, :session_not_found} when session does not exist
+- is idempotent (clearing empty list succeeds)
