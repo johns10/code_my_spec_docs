@@ -270,8 +270,27 @@ Clears the component assignment from a story.
 - broadcasts updated event on success
 - story remains valid after clearing
 
+### story_fully_verified?/2
+
+Checks if all acceptance criteria for a story are verified.
+
+```elixir
+@spec story_fully_verified?(Scope.t(), Story.t()) :: boolean()
+```
+
+**Process**:
+1. Query AcceptanceCriteria.list_story_criteria/2 for the story
+2. Return true if all criteria have verified: true, false otherwise
+3. Return true if story has no criteria
+
+**Test Assertions**:
+- returns true when all criteria are verified
+- returns false when any criterion is not verified
+- returns true when story has no criteria
+
 ## Dependencies
 
+- CodeMySpec.AcceptanceCriteria
 - CodeMySpec.Stories.Story
 - CodeMySpec.Stories.StoriesRepository
 - CodeMySpec.Stories.RemoteClient
