@@ -2,7 +2,7 @@
 
 **Type**: context
 
-Phoenix context for managing acceptance criteria as first-class entities. Acceptance criteria belong to stories and represent testable conditions that define when a story is complete. This context extracts acceptance criteria from embedded strings within stories into proper domain entities with ordering, status tracking, and verification capabilities.
+Phoenix context for managing acceptance criteria as first-class entities. Acceptance criteria belong to stories and represent testable conditions that define when a story is complete. This context extracts acceptance criteria from embedded strings within stories into proper domain entities with status tracking and verification capabilities.
 
 ## Delegates
 
@@ -28,57 +28,6 @@ Subscribe to scoped notifications about acceptance criteria changes for an accou
 - subscribes to account-scoped criteria events
 - receives {:created, criterion}, {:updated, criterion}, {:deleted, criterion} messages
 
-### list_story_criteria/2
-
-Returns all acceptance criteria for a given story ordered by position.
-
-```elixir
-@spec list_story_criteria(Scope.t(), integer()) :: [Criterion.t()]
-```
-
-**Process**:
-1. Delegate to AcceptanceCriteriaRepository.list_story_criteria/2
-2. Return ordered list of criteria for the story
-
-**Test Assertions**:
-- returns all criteria for the story ordered by position
-- returns empty list when story has no criteria
-- respects project scope
-
-### get_criterion!/2
-
-Gets a single acceptance criterion by ID within scope. Raises if not found.
-
-```elixir
-@spec get_criterion!(Scope.t(), integer()) :: Criterion.t()
-```
-
-**Process**:
-1. Delegate to AcceptanceCriteriaRepository.get_criterion!/2
-2. Return criterion or raise Ecto.NoResultsError
-
-**Test Assertions**:
-- returns criterion when it exists in project
-- raises Ecto.NoResultsError when criterion doesn't exist
-- raises Ecto.NoResultsError when criterion exists but in different project
-
-### get_criterion/2
-
-Gets a single acceptance criterion by ID within scope. Returns nil if not found.
-
-```elixir
-@spec get_criterion(Scope.t(), integer()) :: Criterion.t() | nil
-```
-
-**Process**:
-1. Delegate to AcceptanceCriteriaRepository.get_criterion/2
-2. Return criterion or nil
-
-**Test Assertions**:
-- returns criterion when it exists in project
-- returns nil when criterion doesn't exist
-- returns nil when criterion exists but in different project
-
 ### create_criterion/3
 
 Creates a new acceptance criterion for a story within scope.
@@ -90,16 +39,14 @@ Creates a new acceptance criterion for a story within scope.
 **Process**:
 1. Verify story belongs to scope's account
 2. Set story_id, project_id, and account_id from context
-3. If position not provided, set to next available position for the story
-4. Delegate to AcceptanceCriteriaRepository.create_criterion/2
-5. On success, broadcast {:created, criterion} event
-6. Return result tuple
+3. Delegate to AcceptanceCriteriaRepository.create_criterion/1
+4. On success, broadcast {:created, criterion} event
+5. Return result tuple
 
 **Test Assertions**:
 - creates criterion with valid attributes
 - sets story_id from provided story
 - sets project_id and account_id from scope
-- auto-assigns next position when not provided
 - broadcasts created event on success
 - returns changeset error for invalid attributes
 - validates required fields (description)
@@ -126,7 +73,7 @@ Updates an existing acceptance criterion.
 
 ### delete_criterion/2
 
-Deletes an acceptance criterion and reorders remaining criteria.
+Deletes an acceptance criterion.
 
 ```elixir
 @spec delete_criterion(Scope.t(), Criterion.t()) :: {:ok, Criterion.t()} | {:error, Ecto.Changeset.t()}
@@ -135,15 +82,13 @@ Deletes an acceptance criterion and reorders remaining criteria.
 **Process**:
 1. Verify criterion belongs to scope's account
 2. Delete the criterion via AcceptanceCriteriaRepository.delete_criterion/1
-3. Reorder remaining criteria for the story to close gaps
-4. On success, broadcast {:deleted, criterion} event
-5. Return result tuple
+3. On success, broadcast {:deleted, criterion} event
+4. Return result tuple
 
 **Test Assertions**:
 - deletes criterion successfully
 - verifies ownership via account_id
 - broadcasts deleted event on success
-- reorders remaining criteria to close position gaps
 
 ### change_criterion/3
 
@@ -162,28 +107,6 @@ Returns an Ecto.Changeset for tracking criterion changes.
 - returns changeset for valid criterion
 - validates ownership before returning changeset
 - does not persist changes
-
-### reorder_criteria/3
-
-Reorders acceptance criteria for a story based on a list of criterion IDs.
-
-```elixir
-@spec reorder_criteria(Scope.t(), Story.t(), [integer()]) :: {:ok, [Criterion.t()]} | {:error, term()}
-```
-
-**Process**:
-1. Verify story belongs to scope's account
-2. Validate all criterion IDs belong to the story
-3. Update positions based on list order (1-indexed)
-4. Broadcast {:reordered, criteria} event on success
-5. Return updated criteria list
-
-**Test Assertions**:
-- reorders criteria based on ID list
-- assigns positions starting from 1
-- broadcasts reordered event on success
-- returns error when criterion ID doesn't belong to story
-- returns error when not all story criteria are included
 
 ### mark_verified/2
 
@@ -235,13 +158,12 @@ Imports acceptance criteria from a list of strings, creating criterion records f
 
 **Process**:
 1. Verify story belongs to scope's account
-2. Create criterion for each string with auto-assigned positions
+2. Create criterion for each string
 3. Broadcast {:created, criterion} for each created criterion
 4. Return list of created criteria
 
 **Test Assertions**:
 - creates criterion for each string
-- assigns sequential positions
 - handles empty list gracefully
 - broadcasts created event for each criterion
 
@@ -254,12 +176,12 @@ Exports acceptance criteria for a story as a list of description strings.
 ```
 
 **Process**:
-1. Load all criteria for the story ordered by position
+1. Load all criteria for the story ordered by inserted_at
 2. Extract description from each criterion
 3. Return list of description strings
 
 **Test Assertions**:
-- returns descriptions in position order
+- returns descriptions in creation order
 - returns empty list when story has no criteria
 - respects project scope
 
@@ -275,8 +197,8 @@ Exports acceptance criteria for a story as a list of description strings.
 
 ### AcceptanceCriteria.Criterion
 
-Ecto schema representing a single acceptance criterion. Contains the description text, ordering position, verification status, and belongs to a story. Scoped to account and project for multi-tenancy.
+Ecto schema representing a single acceptance criterion. Contains the description text, verification status, and belongs to a story. Scoped to account and project for multi-tenancy.
 
 ### AcceptanceCriteria.AcceptanceCriteriaRepository
 
-Repository for acceptance criteria CRUD operations with direct database access. Provides query composables for filtering by story, ordering by position, and verification status filtering.
+Repository for acceptance criteria CRUD operations with direct database access. Provides query composables for filtering by story and verification status filtering.
