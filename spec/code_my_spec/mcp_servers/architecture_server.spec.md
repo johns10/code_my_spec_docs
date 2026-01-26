@@ -10,8 +10,6 @@ MCP (Model Context Protocol) server that exposes architecture management tools t
 - CodeMySpec.McpServers.Architecture.Tools.ListSpecs
 - CodeMySpec.McpServers.Architecture.Tools.GetSpec
 - CodeMySpec.McpServers.Architecture.Tools.DeleteSpec
-- CodeMySpec.McpServers.Architecture.Tools.StartArchitectureDesign
-- CodeMySpec.McpServers.Architecture.Tools.ReviewArchitectureDesign
 - CodeMySpec.McpServers.Architecture.Tools.GetComponentView
 - CodeMySpec.McpServers.Architecture.Tools.ValidateDependencyGraph
 
@@ -84,13 +82,12 @@ Returns list of registered tool components available through this server.
 3. Each map includes component name and implementation module
 
 **Test Assertions**:
-- returns list of 9 registered tools
+- returns list of 8 registered tools
 - includes "create_spec" tool
 - includes "get_spec" tool
-- includes "start_architecture_design" tool
 - includes "validate_dependency_graph" tool
 - includes "update_spec_metadata" tool
 - includes "list_specs" tool
+- includes "list_spec_names" tool
 - includes "delete_spec" tool
-- includes "review_architecture_design" tool
 - includes "get_component_view" tool

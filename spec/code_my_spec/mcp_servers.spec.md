@@ -195,14 +195,6 @@ Tool for listing all specification files in the project.
 
 Tool for removing specification files from the system.
 
-### Architecture.Tools.StartArchitectureDesign
-
-Tool for initiating structured architecture design workflow sessions.
-
-### Architecture.Tools.ReviewArchitectureDesign
-
-Tool for initiating architecture review and validation workflow sessions.
-
 ### Architecture.Tools.GetComponentView
 
 Tool for generating detailed component view with dependencies and relationships.
