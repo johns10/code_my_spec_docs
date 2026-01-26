@@ -459,8 +459,8 @@ Each session type has step implementations following `StepBehaviour`:
 | ---------------------------- | ------------------------------------------------------ |
 | `Stories`                    | Story CRUD and satisfaction tracking                   |
 | `Stories.Story`              | Story schema - title, description, acceptance criteria |
-| `MCPServers.Stories.Tools.*` | Story operations exposed to LLM agents                 |
-| `MCPServers.StoriesServer`   | MCP endpoint for story tools                           |
+| `McpServers.Stories.Tools.*` | Story operations exposed to LLM agents                 |
+| `McpServers.StoriesServer`   | MCP endpoint for story tools                           |
 
 ### 5.5 Domain: Components (Architect)
 
@@ -469,8 +469,8 @@ Each session type has step implementations following `StepBehaviour`:
 | `Components`                    | Component CRUD and dependency management         |
 | `Components.Component`          | Component schema - contexts and their properties |
 | `Components.Dependency`         | Inter-component dependency relationships         |
-| `MCPServers.Components.Tools.*` | Architecture operations exposed to architect     |
-| `MCPServers.ComponentsServer`   | MCP endpoint for component tools                 |
+| `McpServers.Components.Tools.*` | Architecture operations exposed to architect     |
+| `McpServers.ComponentsServer`   | MCP endpoint for component tools                 |
 
 ### 5.6 Rules & Validation
 

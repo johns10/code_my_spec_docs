@@ -6,31 +6,31 @@ Provides MCP interface for story management operations using dedicated tool and 
 ## Server Structure
 Uses Hermes.Server with component-based architecture:
 ```elixir
-defmodule CodeMySpec.MCPServers.StoriesServer do
+defmodule CodeMySpec.McpServers.StoriesServer do
   use Hermes.Server,
     name: "stories-server",
     version: "1.0.0", 
     capabilities: [:tools, :resources, :prompts]
 
   # Tool components
-  component CodeMySpec.MCPServers.Stories.Tools.CreateStory
-  component CodeMySpec.MCPServers.Stories.Tools.CreateStories
-  component CodeMySpec.MCPServers.Stories.Tools.UpdateStory
-  component CodeMySpec.MCPServers.Stories.Tools.DeleteStory
-  component CodeMySpec.MCPServers.Stories.Tools.SetStoryComponent
-  component CodeMySpec.MCPServers.Stories.Tools.ClearStoryComponent
+  component CodeMySpec.McpServers.Stories.Tools.CreateStory
+  component CodeMySpec.McpServers.Stories.Tools.CreateStories
+  component CodeMySpec.McpServers.Stories.Tools.UpdateStory
+  component CodeMySpec.McpServers.Stories.Tools.DeleteStory
+  component CodeMySpec.McpServers.Stories.Tools.SetStoryComponent
+  component CodeMySpec.McpServers.Stories.Tools.ClearStoryComponent
   
   # Resource components  
-  component CodeMySpec.MCPServers.Stories.Resources.Story
-  component CodeMySpec.MCPServers.Stories.Resources.StoriesList
+  component CodeMySpec.McpServers.Stories.Resources.Story
+  component CodeMySpec.McpServers.Stories.Resources.StoriesList
   
   # Prompt components (conversation starters)
-  component CodeMySpec.MCPServers.Stories.Prompts.StoryInterview
-  component CodeMySpec.MCPServers.Stories.Prompts.StoryReview
+  component CodeMySpec.McpServers.Stories.Prompts.StoryInterview
+  component CodeMySpec.McpServers.Stories.Prompts.StoryReview
   
   def init(_arg, frame) do
     # Delegate to authorization middleware
-    CodeMySpec.MCPServers.Authorization.authenticate(frame)
+    CodeMySpec.McpServers.Authorization.authenticate(frame)
   end
 end
 ```
@@ -62,14 +62,14 @@ Common helpers used across components:
 
 ## Tool Implementation Pattern
 ```elixir
-defmodule CodeMySpec.MCPServers.Stories.Tools.CreateStory do
+defmodule CodeMySpec.McpServers.Stories.Tools.CreateStory do
   @moduledoc "Creates a user story"
 
   use Hermes.Server.Component, type: :tool
 
   alias CodeMySpec.Stories
-  alias CodeMySpec.MCPServers.Stories.StoriesMapper
-  alias CodeMySpec.MCPServers.Validators
+  alias CodeMySpec.McpServers.Stories.StoriesMapper
+  alias CodeMySpec.McpServers.Validators
 
   schema do
     field :title, :string, required: true
@@ -95,12 +95,12 @@ end
 
 ## Resource Implementation Pattern
 ```elixir
-defmodule CodeMySpec.MCPServers.Stories.Resources.Story do
+defmodule CodeMySpec.McpServers.Stories.Resources.Story do
   use Hermes.Server.Component, type: :resource
 
   alias CodeMySpec.Stories
-  alias CodeMySpec.MCPServers.Stories.StoriesMapper
-  alias CodeMySpec.MCPServers.Validators
+  alias CodeMySpec.McpServers.Stories.StoriesMapper
+  alias CodeMySpec.McpServers.Validators
 
   def uri_template, do: "story://{story_id}"
   def uri, do: "story://template"
@@ -122,11 +122,11 @@ end
 
 ## Prompt Implementation Pattern
 ```elixir
-defmodule CodeMySpec.MCPServers.Stories.Prompts.StoryInterview do
+defmodule CodeMySpec.McpServers.Stories.Prompts.StoryInterview do
   use Hermes.Server.Component, type: :prompt
 
   alias CodeMySpec.Stories
-  alias CodeMySpec.MCPServers.Validators
+  alias CodeMySpec.McpServers.Validators
 
   schema do
     field :project_id, :string, required: true
@@ -224,7 +224,7 @@ Dedicated mapper module for consistent formatting.
 
 ## Dependencies
 - **CodeMySpec.Stories**: Core business logic delegation
-- **CodeMySpec.MCPServers.Authorization**: Authentication middleware  
+- **CodeMySpec.McpServers.Authorization**: Authentication middleware  
 - **Hermes.Server**: Component framework and Response helpers
 - **Jason**: JSON serialization (via Response helpers)
 

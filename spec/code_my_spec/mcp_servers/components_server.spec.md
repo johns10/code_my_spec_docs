@@ -1,27 +1,27 @@
-# MCPServers.ComponentsServer
+# McpServers.ComponentsServer
 
 MCP (Model Context Protocol) server that exposes component management, dependency tracking, architecture analysis, and design workflow tools to AI agents via Hermes. Provides comprehensive CRUD operations for components, dependency graph manipulation, similar component tracking, context design workflows, and architecture health reporting.
 
 ## Dependencies
 
 - Hermes.Server
-- CodeMySpec.MCPServers.Components.Tools.CreateComponent
-- CodeMySpec.MCPServers.Components.Tools.UpdateComponent
-- CodeMySpec.MCPServers.Components.Tools.DeleteComponent
-- CodeMySpec.MCPServers.Components.Tools.GetComponent
-- CodeMySpec.MCPServers.Components.Tools.ListComponents
-- CodeMySpec.MCPServers.Stories.Tools.ListStories
-- CodeMySpec.MCPServers.Components.Tools.CreateDependency
-- CodeMySpec.MCPServers.Components.Tools.DeleteDependency
-- CodeMySpec.MCPServers.Components.Tools.AddSimilarComponent
-- CodeMySpec.MCPServers.Components.Tools.RemoveSimilarComponent
-- CodeMySpec.MCPServers.Components.Tools.StartContextDesign
-- CodeMySpec.MCPServers.Components.Tools.ReviewContextDesign
-- CodeMySpec.MCPServers.Components.Tools.ShowArchitecture
-- CodeMySpec.MCPServers.Components.Tools.ArchitectureHealthSummary
-- CodeMySpec.MCPServers.Components.Tools.ContextStatistics
-- CodeMySpec.MCPServers.Components.Tools.OrphanedContexts
-- CodeMySpec.MCPServers.Stories.Tools.SetStoryComponent
+- CodeMySpec.McpServers.Components.Tools.CreateComponent
+- CodeMySpec.McpServers.Components.Tools.UpdateComponent
+- CodeMySpec.McpServers.Components.Tools.DeleteComponent
+- CodeMySpec.McpServers.Components.Tools.GetComponent
+- CodeMySpec.McpServers.Components.Tools.ListComponents
+- CodeMySpec.McpServers.Stories.Tools.ListStories
+- CodeMySpec.McpServers.Components.Tools.CreateDependency
+- CodeMySpec.McpServers.Components.Tools.DeleteDependency
+- CodeMySpec.McpServers.Components.Tools.AddSimilarComponent
+- CodeMySpec.McpServers.Components.Tools.RemoveSimilarComponent
+- CodeMySpec.McpServers.Components.Tools.StartContextDesign
+- CodeMySpec.McpServers.Components.Tools.ReviewContextDesign
+- CodeMySpec.McpServers.Components.Tools.ShowArchitecture
+- CodeMySpec.McpServers.Components.Tools.ArchitectureHealthSummary
+- CodeMySpec.McpServers.Components.Tools.ContextStatistics
+- CodeMySpec.McpServers.Components.Tools.OrphanedContexts
+- CodeMySpec.McpServers.Stories.Tools.SetStoryComponent
 
 ## Functions
 

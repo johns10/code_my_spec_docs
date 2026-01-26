@@ -49,14 +49,14 @@ Stories Context → Database
 
 Show actual code from `stories_server.ex`:
 ```elixir
-defmodule CodeMySpec.MCPServers.StoriesServer do
+defmodule CodeMySpec.McpServers.StoriesServer do
   use Hermes.Server,
     name: "stories-server",
     version: "1.0.0",
     capabilities: [:tools]
 
-  component(CodeMySpec.MCPServers.Stories.Tools.CreateStory)
-  component(CodeMySpec.MCPServers.Stories.Tools.ListStories)
+  component(CodeMySpec.McpServers.Stories.Tools.CreateStory)
+  component(CodeMySpec.McpServers.Stories.Tools.ListStories)
   # ... other tools
 end
 ```

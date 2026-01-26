@@ -676,31 +676,31 @@ This layering helps with:
 **Tool Components:**
 ```elixir
 # Core CRUD
-component(CodeMySpec.MCPServers.Components.Tools.CreateComponent)
-component(CodeMySpec.MCPServers.Components.Tools.UpdateComponent)
-component(CodeMySpec.MCPServers.Components.Tools.DeleteComponent)
-component(CodeMySpec.MCPServers.Components.Tools.GetComponent)
-component(CodeMySpec.MCPServers.Components.Tools.ListComponents)
+component(CodeMySpec.McpServers.Components.Tools.CreateComponent)
+component(CodeMySpec.McpServers.Components.Tools.UpdateComponent)
+component(CodeMySpec.McpServers.Components.Tools.DeleteComponent)
+component(CodeMySpec.McpServers.Components.Tools.GetComponent)
+component(CodeMySpec.McpServers.Components.Tools.ListComponents)
 
 # Batch operations
-component(CodeMySpec.MCPServers.Components.Tools.CreateComponents)
-component(CodeMySpec.MCPServers.Components.Tools.CreateDependencies)
+component(CodeMySpec.McpServers.Components.Tools.CreateComponents)
+component(CodeMySpec.McpServers.Components.Tools.CreateDependencies)
 
 # Dependency management
-component(CodeMySpec.MCPServers.Components.Tools.CreateDependency)
-component(CodeMySpec.MCPServers.Components.Tools.DeleteDependency)
+component(CodeMySpec.McpServers.Components.Tools.CreateDependency)
+component(CodeMySpec.McpServers.Components.Tools.DeleteDependency)
 
 # Architecture and design
-component(CodeMySpec.MCPServers.Components.Tools.StartContextDesign)
-component(CodeMySpec.MCPServers.Components.Tools.ReviewContextDesign)
-component(CodeMySpec.MCPServers.Components.Tools.ShowArchitecture)
-component(CodeMySpec.MCPServers.Components.Tools.ArchitectureHealthSummary)
-component(CodeMySpec.MCPServers.Components.Tools.ContextStatistics)
-component(CodeMySpec.MCPServers.Components.Tools.OrphanedContexts)
+component(CodeMySpec.McpServers.Components.Tools.StartContextDesign)
+component(CodeMySpec.McpServers.Components.Tools.ReviewContextDesign)
+component(CodeMySpec.McpServers.Components.Tools.ShowArchitecture)
+component(CodeMySpec.McpServers.Components.Tools.ArchitectureHealthSummary)
+component(CodeMySpec.McpServers.Components.Tools.ContextStatistics)
+component(CodeMySpec.McpServers.Components.Tools.OrphanedContexts)
 
 # Story integration (from Stories Server)
-component(CodeMySpec.MCPServers.Stories.Tools.ListStories)
-component(CodeMySpec.MCPServers.Stories.Tools.SetStoryComponent)
+component(CodeMySpec.McpServers.Stories.Tools.ListStories)
+component(CodeMySpec.McpServers.Stories.Tools.SetStoryComponent)
 ```
 
 ## Related Documentation

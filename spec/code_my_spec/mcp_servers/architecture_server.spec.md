@@ -1,4 +1,4 @@
-# MCPServers.ArchitectureServer
+# McpServers.ArchitectureServer
 
 MCP server that exposes file-based architecture and spec management tools to AI agents via Hermes. Provides spec file creation/updates with automatic database synchronization, architecture analysis and impact tools, and guided design workflow tools that reference generated architecture views (overview, dependency graph, namespace hierarchy).
 
@@ -10,17 +10,17 @@ MCP server that exposes file-based architecture and spec management tools to AI 
 - CodeMySpec.Stories
 - CodeMySpec.Documents
 - CodeMySpec.ProjectSync
-- CodeMySpec.MCPServers.Architecture.Tools.CreateSpec
-- CodeMySpec.MCPServers.Architecture.Tools.UpdateSpecMetadata
-- CodeMySpec.MCPServers.Architecture.Tools.ListSpecs
-- CodeMySpec.MCPServers.Architecture.Tools.GetSpec
-- CodeMySpec.MCPServers.Architecture.Tools.DeleteSpec
-- CodeMySpec.MCPServers.Architecture.Tools.StartArchitectureDesign
-- CodeMySpec.MCPServers.Architecture.Tools.ReviewArchitectureDesign
-- CodeMySpec.MCPServers.Architecture.Tools.GetArchitectureSummary
-- CodeMySpec.MCPServers.Architecture.Tools.GetComponentImpact
-- CodeMySpec.MCPServers.Architecture.Tools.GetComponentView
-- CodeMySpec.MCPServers.Architecture.Tools.ValidateDependencyGraph
+- CodeMySpec.McpServers.Architecture.Tools.CreateSpec
+- CodeMySpec.McpServers.Architecture.Tools.UpdateSpecMetadata
+- CodeMySpec.McpServers.Architecture.Tools.ListSpecs
+- CodeMySpec.McpServers.Architecture.Tools.GetSpec
+- CodeMySpec.McpServers.Architecture.Tools.DeleteSpec
+- CodeMySpec.McpServers.Architecture.Tools.StartArchitectureDesign
+- CodeMySpec.McpServers.Architecture.Tools.ReviewArchitectureDesign
+- CodeMySpec.McpServers.Architecture.Tools.GetArchitectureSummary
+- CodeMySpec.McpServers.Architecture.Tools.GetComponentImpact
+- CodeMySpec.McpServers.Architecture.Tools.GetComponentView
+- CodeMySpec.McpServers.Architecture.Tools.ValidateDependencyGraph
 
 ## Functions
 

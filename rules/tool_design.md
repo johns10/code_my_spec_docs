@@ -83,7 +83,7 @@ end
 ## Naming Conventions
 
 ### Module Names
-- Follow pattern: `CodeMySpec.MCPServers.{Domain}.Tools.{Action}{Entity}`
+- Follow pattern: `CodeMySpec.McpServers.{Domain}.Tools.{Action}{Entity}`
 - Use descriptive action verbs (Create, Update, Delete, Start)
 - Use singular entity names
 

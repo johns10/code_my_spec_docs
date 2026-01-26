@@ -15,7 +15,7 @@ The ComponentsServer MCP server enables LLMs to manage Phoenix context architect
 ## Server Structure
 
 ### Main Server Module
-`CodeMySpec.MCPServers.ComponentsServer`
+`CodeMySpec.McpServers.ComponentsServer`
 - Uses Hermes.Server with capabilities: [:tools]
 - Similar structure to StoriesServer
 

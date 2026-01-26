@@ -1,4 +1,4 @@
-# CodeMySpec.MCPServers
+# CodeMySpec.McpServers
 
 MCP (Model Context Protocol) servers context providing AI agent interfaces to domain functionality.
 
