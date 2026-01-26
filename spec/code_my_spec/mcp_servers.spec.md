@@ -23,6 +23,10 @@ Hermes MCP server exposing user story management tools to AI agents. Registers 1
 
 Hermes MCP server exposing component architecture tools to AI agents. Registers 16 tools for component CRUD, dependency management, similar component tracking, and architecture analysis/design workflows.
 
+### ArchitectureServer
+
+Hermes MCP server exposing specification file management and architecture design tools to AI agents. Registers 9 tools for spec file CRUD, design workflow initiation, and dependency graph validation.
+
 ### AnalyticsAdminServer
 
 Hermes MCP server exposing Google Analytics 4 administrative tools to AI agents. Registers 14 tools for managing custom dimensions, custom metrics, and key events.
@@ -166,6 +170,46 @@ Tool for computing metrics on context size, complexity, and dependencies.
 ### Components.Tools.OrphanedContexts
 
 Tool for identifying components without parent relationships or stories.
+
+### Architecture.ArchitectureMapper
+
+Maps architecture domain entities and spec files to MCP response formats with JSON structures and validation results for AI agent consumption.
+
+### Architecture.Tools.CreateSpec
+
+Tool for creating specification files for components in the architecture.
+
+### Architecture.Tools.UpdateSpecMetadata
+
+Tool for updating metadata fields in existing specification files.
+
+### Architecture.Tools.GetSpec
+
+Tool for retrieving specification file content for a component.
+
+### Architecture.Tools.ListSpecs
+
+Tool for listing all specification files in the project.
+
+### Architecture.Tools.DeleteSpec
+
+Tool for removing specification files from the system.
+
+### Architecture.Tools.StartArchitectureDesign
+
+Tool for initiating structured architecture design workflow sessions.
+
+### Architecture.Tools.ReviewArchitectureDesign
+
+Tool for initiating architecture review and validation workflow sessions.
+
+### Architecture.Tools.GetComponentView
+
+Tool for generating detailed component view with dependencies and relationships.
+
+### Architecture.Tools.ValidateDependencyGraph
+
+Tool for detecting circular dependencies in the component architecture.
 
 ### AnalyticsAdmin.Tools.ListCustomDimensions
 
