@@ -1,4 +1,4 @@
-# DocumentValidityChecker
+# CodeMySpec.Requirements.DocumentValidityChecker
 
 Validates that a document file contains valid content according to its document type definition.
 Uses `CodeMySpec.Documents.create_dynamic_document/2` to validate the document structure.

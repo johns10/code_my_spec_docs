@@ -1,4 +1,4 @@
-# ProjectSync.Sync
+# CodeMySpec.ProjectSync.Sync
 
 Implementation module that performs the actual synchronization logic.
 

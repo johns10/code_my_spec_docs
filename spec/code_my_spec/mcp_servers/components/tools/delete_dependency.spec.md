@@ -1,4 +1,4 @@
-# DeleteDependency
+# CodeMySpec.McpServers.Components.Tools.DeleteDependency
 
 MCP tool for deleting dependency relationships between components. This tool exposes the dependency deletion capability to AI agents via the Hermes MCP protocol, allowing them to manage component architecture by removing dependency relationships.
 

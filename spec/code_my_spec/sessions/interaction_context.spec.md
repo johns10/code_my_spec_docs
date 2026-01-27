@@ -1,4 +1,4 @@
-# InteractionContext
+# CodeMySpec.Sessions.InteractionContext
 
 Struct and preparation logic for session interaction execution contexts.
 

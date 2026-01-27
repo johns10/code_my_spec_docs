@@ -1,4 +1,4 @@
-# TestError
+# CodeMySpec.Tests.TestError
 
 Embedded schema representing test failure information from ExUnit test runs. Captures error details including file location, line number, and error message. Used within TestResult to provide detailed failure context.
 

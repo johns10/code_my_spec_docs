@@ -1,4 +1,4 @@
-# Sessions.StepBehaviour
+# CodeMySpec.Sessions.StepBehaviour
 
 Defines the behaviour contract for workflow step modules in session orchestration. Each step module implements callbacks for command generation and result processing, enabling pluggable workflow steps that can be composed into session-specific execution sequences.
 

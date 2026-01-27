@@ -1,4 +1,4 @@
-# ReviewArchitectureDesign
+# CodeMySpec.McpServers.Architecture.Tools.ReviewArchitectureDesign
 
 MCP tool that reviews current architecture design against best practices, providing feedback on surface-to-domain separation, dependency flow, component organization, and alignment with user stories.
 

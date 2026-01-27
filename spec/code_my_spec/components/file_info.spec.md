@@ -1,4 +1,4 @@
-# CodeMySpec.Components.Sync.FileInfo
+# CodeMySpec.Components.FileInfo
 
 Struct representing a file's metadata for sync comparison.
 

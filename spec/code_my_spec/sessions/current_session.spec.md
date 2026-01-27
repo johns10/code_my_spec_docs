@@ -1,4 +1,4 @@
-# CurrentSession
+# CodeMySpec.Sessions.CurrentSession
 
 File-based persistence for tracking the active CLI session between process invocations. Stores session state in `.code_my_spec/internal/current_session/session.json` so the evaluate command can pick up context from the start command without bash script intermediaries.
 

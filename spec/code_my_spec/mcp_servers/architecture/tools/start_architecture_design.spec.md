@@ -1,4 +1,4 @@
-# StartArchitectureDesign
+# CodeMySpec.McpServers.Architecture.Tools.StartArchitectureDesign
 
 MCP tool that initiates a guided architecture design session by generating a comprehensive prompt for AI agents. Maps user stories to application surface components (controllers, liveviews, CLI modules) rather than abstract bounded contexts. References architecture view files for system state context.
 

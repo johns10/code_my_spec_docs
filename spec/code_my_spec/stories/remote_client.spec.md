@@ -1,4 +1,4 @@
-# Stories.RemoteClient
+# CodeMySpec.Stories.RemoteClient
 
 HTTP client for the Stories API using Req. Provides remote access to story CRUD operations when running in CLI/VSCode environments, communicating with the CodeMySpec server via authenticated HTTP requests.
 

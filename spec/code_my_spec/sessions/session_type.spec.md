@@ -1,4 +1,4 @@
-# SessionType
+# CodeMySpec.Sessions.SessionType
 
 Custom Ecto type for validating and serializing session types. Handles both legacy orchestrator-based session types and new agent task types, providing type-safe casting, loading, and dumping for database persistence.
 

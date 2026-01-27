@@ -1,4 +1,4 @@
-# Requirements.RequirementsRegistry
+# CodeMySpec.Requirements.RequirementsRegistry
 
 Central registry containing requirement definitions for component and context types. Provides the authoritative source for which requirements apply to each type.
 

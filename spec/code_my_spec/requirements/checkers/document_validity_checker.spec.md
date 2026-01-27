@@ -1,4 +1,4 @@
-# CodeMySpec.Requirements.DocumentValidityChecker
+# CodeMySpec.Requirements.Checkers.DocumentValidityChecker
 
 **Type**: logic
 

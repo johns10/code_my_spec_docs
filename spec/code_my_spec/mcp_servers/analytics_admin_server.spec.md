@@ -1,4 +1,4 @@
-# AnalyticsAdminServer
+# CodeMySpec.McpServers.AnalyticsAdminServer
 
 MCP server that exposes Google Analytics Admin API tools to AI agents via the Hermes protocol. This server provides comprehensive management capabilities for custom dimensions, custom metrics, and key events in Google Analytics 4 properties.
 

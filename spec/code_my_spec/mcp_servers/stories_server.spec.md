@@ -1,4 +1,4 @@
-# StoriesServer
+# CodeMySpec.McpServers.StoriesServer
 
 MCP server that exposes user story management tools to AI agents via the Hermes framework. Provides CRUD operations for stories, acceptance criteria management, and workflow initiation tools for story interviews and reviews.
 

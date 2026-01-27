@@ -1,4 +1,4 @@
-# AgentTypes
+# CodeMySpec.Agents.AgentTypes
 
 Registry module that provides predefined agent type configurations for the CodeMySpec platform. Each agent type represents a specialized AI assistant role with specific prompts, descriptions, and configurations.
 

@@ -1,4 +1,4 @@
-# Session
+# CodeMySpec.Sessions.Session
 
 Ecto schema representing a session that tracks AI-assisted workflows for component design, testing, and coding. Sessions maintain state, link to components/projects/accounts, and contain interactions that record commands and results.
 

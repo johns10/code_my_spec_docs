@@ -1,4 +1,4 @@
-# ContentRepository
+# CodeMySpec.Content.ContentRepository
 
 Provides data access functions for published Content entities. Handles content retrieval with optional scope filtering - passing a Scope allows access to protected content for authenticated users, while nil scope only returns public content. Does NOT apply multi-tenant filtering by account_id/project_id.
 

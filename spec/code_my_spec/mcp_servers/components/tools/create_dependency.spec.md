@@ -1,4 +1,4 @@
-# CreateDependency
+# CodeMySpec.McpServers.Components.Tools.CreateDependency
 
 MCP tool that creates dependency relationships between components and validates the dependency graph for circular dependencies.
 

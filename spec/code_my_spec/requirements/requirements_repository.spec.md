@@ -1,4 +1,4 @@
-# Requirements.RequirementsRepository
+# CodeMySpec.Requirements.RequirementsRepository
 
 Repository module for managing persisted component requirement satisfaction status. Provides CRUD operations for requirements with project-scoped access control. Requirements track the satisfaction state of component design artifacts and support both persistent and in-memory operations.
 

@@ -1,4 +1,4 @@
-# ReviewContextDesign
+# CodeMySpec.McpServers.Components.Tools.ReviewContextDesign
 
 MCP tool that reviews the current context design against best practices and provides architectural feedback. Analyzes system architecture, story assignments, and dependency relationships to help maintain clean architectural boundaries and ensure all stories are properly satisfied by components.
 

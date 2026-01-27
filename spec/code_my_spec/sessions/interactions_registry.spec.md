@@ -1,4 +1,4 @@
-# CodeMySpec.Sessions.InteractionRegistry
+# CodeMySpec.Sessions.InteractionsRegistry
 
 **Type**: GenServer
 

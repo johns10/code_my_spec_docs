@@ -1,4 +1,4 @@
-# SessionsBroadcaster
+# CodeMySpec.Sessions.SessionsBroadcaster
 
 Centralized broadcasting module for session-related events. Handles PubSub broadcasting for session lifecycle events, updates, and notifications to both account-level and user-level channels.
 

@@ -1,4 +1,4 @@
-# CreateDependencies
+# CodeMySpec.McpServers.Components.Tools.CreateDependencies
 
 MCP tool for batch creation of component dependencies. Accepts multiple dependency definitions and returns successful creations along with validation errors for any failures.
 

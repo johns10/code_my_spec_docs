@@ -1,4 +1,4 @@
-# ProjectSync.FileWatcherServer
+# CodeMySpec.ProjectSync.FileWatcherServer
 
 Singleton GenServer that manages the FileSystem watcher process and debounces file change events.
 

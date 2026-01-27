@@ -1,4 +1,4 @@
-# ListSpecs
+# CodeMySpec.McpServers.Architecture.Tools.ListSpecs
 
 MCP tool that lists all component specs in the project with optional filtering by component type.
 

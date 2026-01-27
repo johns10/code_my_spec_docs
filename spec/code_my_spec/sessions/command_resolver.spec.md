@@ -1,4 +1,4 @@
-# CommandResolver
+# CodeMySpec.Sessions.CommandResolver
 
 Resolves and advances session interactions by determining and creating the next command for a session workflow. Acts as the entry point for progressing sessions through their interaction sequence.
 

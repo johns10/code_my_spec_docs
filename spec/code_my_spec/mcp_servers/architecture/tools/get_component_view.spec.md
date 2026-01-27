@@ -1,4 +1,4 @@
-# GetComponentView
+# CodeMySpec.McpServers.Architecture.Tools.GetComponentView
 
 MCP tool that generates detailed markdown views of components including metadata, dependency relationships, child components, related stories, and visual dependency trees for architectural understanding.
 

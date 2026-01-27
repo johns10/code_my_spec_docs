@@ -1,4 +1,4 @@
-# ComponentSpec
+# CodeMySpec.Sessions.AgentTasks.ComponentSpec
 
 Agent task module for generating component specification documents via Claude Code slash commands.
 

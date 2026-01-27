@@ -1,4 +1,4 @@
-# Components.SimilarComponentRepository
+# CodeMySpec.Components.SimilarComponentRepository
 
 Repository for managing similar component relationships within a project scope. Similar components represent design inspiration and contextual references between components. Provides CRUD operations for bidirectional similarity lookups, bulk sync operations, and efficient batch preloading.
 

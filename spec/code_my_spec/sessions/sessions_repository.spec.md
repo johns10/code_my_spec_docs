@@ -1,4 +1,4 @@
-# SessionsRepository
+# CodeMySpec.Sessions.SessionsRepository
 
 Repository module providing data access operations for Session entities with user and project scoping. Handles session retrieval, completion, and preloading of associated data including interactions, components, and child sessions.
 

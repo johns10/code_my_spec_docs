@@ -1,4 +1,4 @@
-# Agents.Implementations.ClaudeCode
+# CodeMySpec.Agents.Implementations.ClaudeCode
 
 Claude Code CLI integration implementation of AgentBehaviour. Builds claude CLI commands with proper configuration for client execution.
 

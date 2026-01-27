@@ -1,4 +1,4 @@
-# Requirements.FileExistenceChecker
+# CodeMySpec.Requirements.FileExistenceChecker
 
 Implements the CheckerBehaviour to verify that required files exist for a component. Checks for spec files, code files, test files, and review files based on the requirement definition's name field. Uses the Environments abstraction for file existence checks to support different execution contexts (CLI, VS Code, local).
 

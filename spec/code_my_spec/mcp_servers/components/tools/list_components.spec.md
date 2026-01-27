@@ -1,4 +1,4 @@
-# ListComponents
+# CodeMySpec.McpServers.Components.Tools.ListComponents
 
 MCP tool that lists all components in a project, providing component summaries with essential metadata.
 

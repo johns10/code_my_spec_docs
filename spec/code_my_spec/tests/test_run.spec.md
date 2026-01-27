@@ -1,4 +1,4 @@
-# TestRun
+# CodeMySpec.Tests.TestRun
 
 Embedded schema representing a single test execution run with execution metadata, test statistics, results, and failure details. Used throughout the system for test-driven development workflows, quality validation, and project requirement coordination.
 

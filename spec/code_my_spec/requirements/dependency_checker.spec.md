@@ -1,4 +1,4 @@
-# DependencyChecker
+# CodeMySpec.Requirements.DependencyChecker
 
 Checks whether a component's dependencies have all their requirements satisfied. Implements the `CheckerBehaviour` to validate the `:dependencies_satisfied` requirement, ensuring a component can only proceed when its dependencies are ready.
 

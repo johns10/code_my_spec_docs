@@ -1,4 +1,4 @@
-# ContentAdminRepository
+# CodeMySpec.ContentAdmin.ContentAdminRepository
 
 Provides multi-tenant data access for ContentAdmin entities with account and project scoping. Handles retrieval of content admin records for validation and preview workflows, applying strict multi-tenant filtering via Scope.
 

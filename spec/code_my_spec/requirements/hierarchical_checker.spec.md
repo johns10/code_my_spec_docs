@@ -1,4 +1,4 @@
-# HierarchicalChecker
+# CodeMySpec.Requirements.HierarchicalChecker
 
 Implements `CheckerBehaviour` to verify hierarchical component requirements by recursively checking that all child components in a component tree satisfy specific artifact requirements (spec files, implementation files, test files) or are fully complete.
 

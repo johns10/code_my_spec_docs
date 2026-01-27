@@ -1,4 +1,4 @@
-# Components.Registry
+# CodeMySpec.Components.Registry
 
 Central registry containing all component type-specific metadata and behavior definitions.
 Provides the authoritative source for component type characteristics including requirements,

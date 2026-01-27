@@ -1,4 +1,4 @@
-# CodeMySpec.Code.Elixir
+# CodeMySpec.Code.ElixirAst
 
 **Type**: module
 

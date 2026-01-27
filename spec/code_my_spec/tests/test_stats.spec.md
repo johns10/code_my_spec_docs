@@ -1,4 +1,4 @@
-# TestStats
+# CodeMySpec.Tests.TestStats
 
 Embedded schema for capturing ExUnit test execution statistics and timing information. This struct is used within TestRun to aggregate test results and provides a standardized representation of test suite performance metrics.
 

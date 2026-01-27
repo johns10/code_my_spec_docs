@@ -1,4 +1,4 @@
-# Agents.AgentBehaviour
+# CodeMySpec.Agents.AgentBehaviour
 
 Defines the contract that all agent implementations must fulfill, ensuring consistent interface and behavior across different execution backends (Claude Code, OpenHands, custom agents, etc.). This behaviour is for **implementations**, not agent types.
 

@@ -1,4 +1,4 @@
-# ProjectSync.ChangeHandler
+# CodeMySpec.ProjectSync.ChangeHandler
 
 Routes file change events to appropriate synchronization operations.
 

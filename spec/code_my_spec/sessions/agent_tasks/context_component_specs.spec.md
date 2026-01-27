@@ -1,4 +1,4 @@
-# ContextComponentSpecs
+# CodeMySpec.Sessions.AgentTasks.ContextComponentSpecs
 
 Agent task for designing a context and all its child components through orchestrated subagent workflow.
 

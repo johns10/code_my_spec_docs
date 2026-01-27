@@ -1,4 +1,4 @@
-# TestResult
+# CodeMySpec.Tests.TestResult
 
 Embedded Ecto schema representing an individual test result from ExUnit execution. Captures test metadata (title, full title), execution outcome (passed/failed), and error details for failures. Used within TestRun to track test execution results.
 

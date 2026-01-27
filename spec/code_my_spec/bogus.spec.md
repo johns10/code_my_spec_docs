@@ -1,4 +1,4 @@
-# Bogus
+# CodeMySpec.Bogus
 
 ## Module
 CodeMySpec.Bogus
