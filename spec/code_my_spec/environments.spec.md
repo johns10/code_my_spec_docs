@@ -109,5 +109,5 @@ List contents of a directory in the execution environment.
 
 ## Dependencies
 
-- environments/cli.spec.md
-- environments/vscode.spec.md
+- Environments.Cli
+- Environments.Vscode

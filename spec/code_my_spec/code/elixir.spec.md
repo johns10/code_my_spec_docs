@@ -175,4 +175,4 @@ Extract module references that are used in the code but not explicitly declared 
 ## Dependencies
 
 - File
-- Code
+- CodeMySpec.Code

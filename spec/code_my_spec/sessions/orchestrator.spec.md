@@ -58,8 +58,8 @@ Process an interaction result (used for manual result delivery).
 
 ## Dependencies
 
-- executor.spec.md
-- command_resolver.spec.md
-- result_handler.spec.md
-- session.spec.md
-- sessions_repository.spec.md
+- CodeMySpec.Sessions.Executor
+- CodeMySpec.Sessions.CommandResolver
+- CodeMySpec.Sessions.ResultHandler
+- CodeMySpec.Sessions.Session
+- CodeMySpec.Sessions.SessionsRepository

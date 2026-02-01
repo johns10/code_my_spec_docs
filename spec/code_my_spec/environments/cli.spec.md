@@ -107,4 +107,4 @@ List contents of a directory from the server-side file system.
 
 ## Dependencies
 
-- environments/cli/tmux_adapter.spec.md
+- Environments.Cli.TmuxAdapter

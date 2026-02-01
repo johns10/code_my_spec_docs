@@ -87,4 +87,4 @@ Get the session_id currently displayed in the terminal.
 
 ## Dependencies
 
-- code_my_spec/environments/cli/tmux_adapter.spec.md
+- CodeMySpec.Environments.Cli.TmuxAdapter

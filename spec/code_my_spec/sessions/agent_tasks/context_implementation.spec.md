@@ -57,6 +57,6 @@ Validate all child components have passing tests and implementations.
 
 ## Dependencies
 
-- sessions/agent_tasks/component_test.spec.md
-- sessions/agent_tasks/component_code.spec.md
-- requirements.spec.md
+- Sessions.AgentTasks.ComponentTest
+- Sessions.AgentTasks.ComponentCode
+- CodeMySpec.Requirements

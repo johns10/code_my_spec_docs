@@ -111,5 +111,5 @@ List all interaction IDs with active runtime status.
 
 ## Dependencies
 
-- interaction.spec.md
-- event_handler.spec.md
+- CodeMySpec.Sessions.Interaction
+- CodeMySpec.Sessions.EventHandler

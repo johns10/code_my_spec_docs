@@ -2,17 +2,19 @@
 
 **Type**: context
 
-Context for working with BDD specifications. Provides file-based discovery, parsing, and rendering of Spex DSL specs without database persistence. Maps specs to stories and acceptance criteria through file naming conventions, enabling traceability between requirements and executable specifications.
+Context for working with BDD specifications. Provides file-based discovery and coverage analysis of Spex DSL specs without database persistence. Maps specs to stories and acceptance criteria through file naming conventions, enabling traceability between requirements and executable specifications.
 
 ## Delegates
 
-None
+### Spex
+
+Delegates to `CodeMySpec.BddSpecs.Spex` for executing BDD specifications.
 
 ## Functions
 
 ### list_specs/1
 
-Discovers all BDD spec files in the project's test/spex directory.
+Returns all BDD specs for the project as parsed summaries.
 
 ```elixir
 @spec list_specs(Scope.t()) :: [Spec.t()]
@@ -20,19 +22,20 @@ Discovers all BDD spec files in the project's test/spex directory.
 
 **Process**:
 1. Get project root from scope's active_project
-2. Glob for `test/spex/**/*_spex.exs` files
-3. Parse each file using Parser.parse/1
-4. Return list of Spec structs
+2. Glob for `test/spex/**/*_spex.exs` files relative to project root
+3. Parse each file using Parser.parse_file/1 internally
+4. Return list of Spec structs (summaries, no implementation code)
 
 **Test Assertions**:
 - returns all spec files in test/spex directory
 - returns empty list when no specs exist
-- parses files into Spec structs
+- returns Spec structs with scenarios and step descriptions
 - handles nested directory structures
+- respects project scope
 
 ### list_specs_for_story/2
 
-Returns specs linked to a specific story via file naming convention.
+Returns specs linked to a specific story.
 
 ```elixir
 @spec list_specs_for_story(Scope.t(), integer()) :: [Spec.t()]
@@ -47,10 +50,11 @@ Returns specs linked to a specific story via file naming convention.
 - returns specs in story directory
 - returns empty list when story has no specs
 - extracts story_id from directory naming convention
+- handles multiple specs for same story
 
 ### list_specs_for_criterion/2
 
-Returns specs linked to a specific acceptance criterion via file naming convention.
+Returns specs linked to a specific acceptance criterion.
 
 ```elixir
 @spec list_specs_for_criterion(Scope.t(), integer()) :: [Spec.t()]
@@ -65,84 +69,28 @@ Returns specs linked to a specific acceptance criterion via file naming conventi
 - returns specs matching criterion filename pattern
 - returns empty list when criterion has no specs
 - extracts criterion_id from filename convention
+- handles criterion spec with multiple scenarios
 
-### parse_spec/1
+### get_coverage_report/1
 
-Parses a single Spex DSL file into a Spec struct.
-
-```elixir
-@spec parse_spec(String.t()) :: {:ok, Spec.t()} | {:error, term()}
-```
-
-**Process**:
-1. Read file contents from path
-2. Delegate to Parser.parse/1
-3. Augment Spec with file_path and derived story_id/criterion_id from path
-4. Return result tuple
-
-**Test Assertions**:
-- returns {:ok, spec} for valid Spex file
-- returns {:error, reason} for invalid syntax
-- extracts story_id and criterion_id from file path
-- handles missing files gracefully
-
-### render_summary/1
-
-Renders a spec to a compact summary format for context windows.
+Returns a formatted coverage report showing spec coverage across stories.
 
 ```elixir
-@spec render_summary(Spec.t()) :: String.t()
-```
-
-**Process**:
-1. Delegate to SpecProjector.summary/1
-2. Return formatted string with spec name and step descriptions only
-
-**Test Assertions**:
-- returns compact markdown summary
-- includes spec name and scenario names
-- includes given/when/then descriptions without code
-- omits implementation details
-
-### render_coverage_report/1
-
-Generates a coverage report showing which stories and criteria have BDD specs.
-
-```elixir
-@spec render_coverage_report(Scope.t()) :: String.t()
+@spec get_coverage_report(Scope.t()) :: String.t()
 ```
 
 **Process**:
 1. Call list_specs/1 to get all specs
-2. Delegate to SpecProjector.coverage_map/1 to group by story
-3. Format as markdown report
-4. Return formatted string
+2. Load stories with criteria from CodeMySpec.Stories
+3. Use SpecProjector.format_coverage/2 internally to format coverage report
+4. Return markdown formatted report
 
 **Test Assertions**:
 - returns markdown formatted report
 - groups specs by story
 - shows criteria coverage within each story
-- indicates missing coverage
-
-### validate_spec_syntax/1
-
-Validates that a spec file has correct Spex DSL syntax.
-
-```elixir
-@spec validate_spec_syntax(String.t()) :: :ok | {:error, [String.t()]}
-```
-
-**Process**:
-1. Read file contents
-2. Attempt to parse with Code.string_to_quoted/1
-3. Walk AST to verify required macros (spex, scenario, given_/when_/then_)
-4. Return :ok or {:error, validation_errors}
-
-**Test Assertions**:
-- returns :ok for valid Spex syntax
-- returns {:error, reasons} for missing spex macro
-- returns {:error, reasons} for malformed scenarios
-- validates given_/when_/then_ step structure
+- indicates missing coverage with clear markers
+- includes summary statistics
 
 ### check_story_coverage/2
 
@@ -153,7 +101,7 @@ Checks which acceptance criteria for a story have BDD specs.
 ```
 
 **Process**:
-1. Get story's acceptance criteria IDs
+1. Get story's acceptance criteria IDs via CodeMySpec.AcceptanceCriteria
 2. Get specs for story via list_specs_for_story/2
 3. Extract criterion_ids from spec file paths
 4. Return map of covered and missing criterion IDs
@@ -161,37 +109,76 @@ Checks which acceptance criteria for a story have BDD specs.
 **Test Assertions**:
 - returns covered criteria IDs that have specs
 - returns missing criteria IDs without specs
-- handles story with full coverage
-- handles story with no specs
+- handles story with full coverage (empty missing list)
+- handles story with no specs (empty covered list)
+- handles story with no criteria
 
-## Dependencies
+### validate_spec_syntax/2
 
-- CodeMySpec.BddSpecs.Spec
-- CodeMySpec.BddSpecs.Scenario
-- CodeMySpec.BddSpecs.Step
-- CodeMySpec.BddSpecs.Parser
-- CodeMySpec.BddSpecs.SpecProjector
-- CodeMySpec.Users.Scope
-- CodeMySpec.Stories.Story
+Validates that a spec file has correct Spex DSL syntax.
+
+```elixir
+@spec validate_spec_syntax(Scope.t(), String.t()) :: :ok | {:error, [String.t()]}
+```
+
+**Process**:
+1. Read file contents from provided file path
+2. Use Parser.validate/1 internally to validate AST structure
+3. Verify required macros (spex, scenario, given_/when_/then_)
+4. Return :ok or {:error, validation_errors}
+
+**Test Assertions**:
+- returns :ok for valid Spex syntax
+- returns {:error, reasons} for missing spex macro
+- returns {:error, reasons} for malformed scenarios
+- validates given_/when_/then_ step structure
+- handles file not found errors
+
+### spec_file_path/2
+
+Returns the conventional file path for a story/criterion spec.
+
+```elixir
+@spec spec_file_path(Story.t(), Criterion.t()) :: String.t()
+```
+
+**Process**:
+1. Build path from story: `test/spex/stories/{story_id}_{slug}/`
+2. Append criterion filename: `criterion_{criterion_id}_spex.exs`
+3. Return full path
+
+**Test Assertions**:
+- returns path following naming convention
+- slugifies story title for directory name
+- uses criterion_id in filename
+- produces valid filesystem path
 
 ## Components
 
 ### BddSpecs.Spec
 
-Struct representing a parsed BDD specification file. Contains the spec name, file path, scenarios, and optional links to story and criterion IDs. No database persistence - purely in-memory representation for parsing and rendering.
+Struct representing a parsed BDD specification. Contains spec name, file path, scenarios with step descriptions, and derived story_id/criterion_id from file path. No implementation code retained - just the structural summary.
 
 ### BddSpecs.Scenario
 
-Struct representing a single scenario within a spec. Contains the scenario name and collections of given, when, and then step descriptions.
+Struct representing a scenario within a spec. Contains scenario name and lists of given/when/then step descriptions as strings.
 
 ### BddSpecs.Step
 
-Struct representing a single Given/When/Then step. Contains the step type, description text, and source line number for reference.
+Struct representing a Given/When/Then step. Contains step type (:given, :when, :then), description text, and source line number.
 
 ### BddSpecs.Parser
 
-Parses Spex DSL files into Spec structs using Elixir AST analysis. Extracts spex, scenario, given_, when_, and then_ macro calls from source files. Returns structured data without executing the specs.
+Parses Spex DSL files into Spec structs using Elixir AST analysis. Extracts spex, scenario, given_, when_, and then_ macro calls. Returns structured data without implementation code. Not exposed publicly - used internally by the context.
 
 ### BddSpecs.SpecProjector
 
-Renders parsed specs into various output formats optimized for different use cases. Provides summary views for context windows, full views for detailed inspection, and coverage maps linking specs back to stories.
+Renders Spec structs into formatted output. Provides coverage reports and summary views. Not exposed publicly - used internally by the context for report generation.
+
+## Dependencies
+
+- CodeMySpec.Stories
+- CodeMySpec.Stories.Story
+- CodeMySpec.AcceptanceCriteria
+- CodeMySpec.AcceptanceCriteria.Criterion
+- CodeMySpec.Users.Scope

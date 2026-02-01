@@ -53,4 +53,4 @@ Checks requirements by calling each requirement spec's checker module.
 
 ## Dependencies
 
-- components.spec.md
+- Components

@@ -145,7 +145,7 @@ Render the sessions list screen.
 
 ## Dependencies
 
-- code_my_spec/sessions.spec.md
-- code_my_spec/sessions/command.spec.md
-- code_my_spec_cli/terminal_panes.spec.md
-- code_my_spec_cli/screens/session.spec.md
+- CodeMySpec.Sessions
+- CodeMySpec.Sessions.Command
+- CodeMySpecCli.TerminalPanes
+- CodeMySpecCli.Screens.Session

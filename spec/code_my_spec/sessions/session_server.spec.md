@@ -136,5 +136,5 @@ Handle task failure.
 
 ## Dependencies
 
-- orchestrator.spec.md
-- session.spec.md
+- CodeMySpec.Sessions.Orchestrator
+- CodeMySpec.Sessions.Session

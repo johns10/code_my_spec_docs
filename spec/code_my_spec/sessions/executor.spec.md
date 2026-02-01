@@ -36,6 +36,6 @@ Execute a command according to its execution_strategy.
 
 ## Dependencies
 
-- command.spec.md
-- session.spec.md
-- environments.spec.md
+- CodeMySpec.Sessions.Command
+- CodeMySpec.Sessions.Session
+- CodeMySpec.Environments
