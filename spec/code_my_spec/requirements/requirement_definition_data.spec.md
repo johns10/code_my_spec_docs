@@ -127,7 +127,7 @@ Returns requirement definition for child component implementations.
 **Process**:
 1. Return RequirementDefinition for children_implementations requirement
 2. Uses HierarchicalChecker
-3. Can be satisfied by ContextCodingSessions
+3. Cannot be satisfied by session (satisfied_by: nil)
 4. Categorized as :hierarchy
 
 **Test Assertions**:
@@ -224,5 +224,4 @@ Returns standard requirement set for most component types.
 - CodeMySpec.ComponentTestSessions
 - CodeMySpec.ContextSpecSessions
 - CodeMySpec.ContextComponentsDesignSessions
-- CodeMySpec.ContextCodingSessions
 - CodeMySpec.ContextDesignReviewSessions

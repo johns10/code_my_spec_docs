@@ -8,7 +8,7 @@ Phoenix context for managing user stories within projects. Provides the public A
 
 - list_stories/1: StoriesRepository.list_stories/1
 - list_project_stories/1: StoriesRepository.list_project_stories/1
-- list_project_stories_by_component_priority/1: StoriesRepository.list_project_stories_by_component_priority/1
+- list_project_stories_by_priority/1: StoriesRepository.list_project_stories_by_priority/1
 - list_unsatisfied_stories/1: StoriesRepository.list_unsatisfied_stories/1
 - list_component_stories/2: StoriesRepository.list_component_stories/2
 - get_story!/2: StoriesRepository.get_story!/2
@@ -65,24 +65,24 @@ Returns all stories for the active project.
 - returns stories for the active project
 - excludes stories from other projects
 
-### list_project_stories_by_component_priority/1
+### list_project_stories_by_priority/1
 
-Returns stories ordered by their assigned component's priority.
+Returns stories ordered by their priority field.
 
 ```elixir
-@spec list_project_stories_by_component_priority(Scope.t()) :: [Story.t()]
+@spec list_project_stories_by_priority(Scope.t()) :: [Story.t()]
 ```
 
 **Process**:
-1. Query stories with left join on component
-2. Order by: unassigned stories last, then component priority ascending, then story title
-3. Preload component associations
+1. Query stories for the active project
+2. Order by: priority ascending (nulls last), then story title
+3. Preload component, criteria, and tags associations
 4. Return ordered list
 
 **Test Assertions**:
-- returns stories ordered by component priority
-- places unassigned stories at the end
-- preloads component association
+- returns stories ordered by priority
+- places stories without priority at the end
+- preloads component, criteria, and tags associations
 
 ### list_unsatisfied_stories/1
 

@@ -31,7 +31,7 @@ Returns all components for the scope's active project.
 
 ### list_child_components/2
 
-Returns child components of a parent component, ordered by priority descending then name ascending.
+Returns child components of a parent component, ordered by name ascending.
 
 ```elixir
 @spec list_child_components(Scope.t(), integer()) :: [Component.t()]
@@ -39,12 +39,12 @@ Returns child components of a parent component, ordered by priority descending t
 
 **Process**:
 1. Query components where parent_component_id matches and project_id matches scope
-2. Order by priority descending, then name ascending
+2. Order by name ascending
 3. Return list of child components
 
 **Test Assertions**:
 
-- returns child components ordered by priority then name
+- returns child components ordered by name
 - returns empty list when parent has no children
 
 ### list_all_descendants/2

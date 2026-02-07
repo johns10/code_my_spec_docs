@@ -47,22 +47,22 @@ Returns all stories for the active project via the remote API.
 - returns list of project stories on success
 - raises on API error
 
-### list_project_stories_by_component_priority/1
+### list_project_stories_by_priority/1
 
-Returns project stories ordered by component priority via the remote API.
+Returns project stories ordered by priority via the remote API.
 
 ```elixir
-@spec list_project_stories_by_component_priority(Scope.t()) :: [Story.t()]
+@spec list_project_stories_by_priority(Scope.t()) :: [Story.t()]
 ```
 
 **Process**:
-1. Make GET request to /api/stories-list/by-component-priority with OAuth token
+1. Make GET request to /api/stories-list/by-priority with OAuth token
 2. On success (200), deserialize each story from JSON response
 3. On error, raise with failure reason
 
 **Test Assertions**:
 
-- returns list of stories ordered by component priority
+- returns list of stories ordered by priority
 - raises on API error
 
 ### list_unsatisfied_stories/1

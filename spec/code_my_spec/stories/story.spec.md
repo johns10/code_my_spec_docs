@@ -11,6 +11,7 @@ Ecto schema representing user stories in the system. Stories capture requirement
 | description      | string                                     | Yes        | Detailed description of the story        |                                          |
 | acceptance_criteria | list(string)                            | Yes        | List of acceptance criteria              |                                          |
 | status           | enum (:in_progress, :completed, :dirty)    | No         | Current status of the story              |                                          |
+| priority         | integer                                    | No         | Scheduling priority (lower = higher priority) |                                       |
 | locked_at        | utc_datetime                               | No         | Timestamp when story was locked          |                                          |
 | lock_expires_at  | utc_datetime                               | No         | Timestamp when lock expires              |                                          |
 | locked_by        | id                                         | No         | User ID who locked the story             |                                          |
@@ -40,7 +41,7 @@ Builds a changeset for creating or updating a story with the given attributes.
 ```
 
 **Process**:
-1. Cast title, description, acceptance_criteria, status, locked_at, lock_expires_at, locked_by, project_id, and component_id attributes from the input map
+1. Cast title, description, acceptance_criteria, status, priority, locked_at, lock_expires_at, locked_by, project_id, and component_id attributes from the input map
 2. Validate that title, description, and acceptance_criteria are required
 3. Add foreign key constraint on component_id with custom error message
 4. Add unique constraint on title scoped to project_id

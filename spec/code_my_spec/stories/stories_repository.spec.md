@@ -47,26 +47,25 @@ Returns all stories for the scope's active project.
 - returns all stories for the project
 - excludes stories from other projects
 
-### list_project_stories_by_component_priority/1
+### list_project_stories_by_priority/1
 
-Returns all project stories ordered by component priority, with unassigned stories last.
+Returns all project stories ordered by story priority, with unassigned priority stories last.
 
 ```elixir
-@spec list_project_stories_by_component_priority(Scope.t()) :: [Story.t()]
+@spec list_project_stories_by_priority(Scope.t()) :: [Story.t()]
 ```
 
 **Process**:
-1. Query stories with left join on component association
-2. Filter by scope's active_project.id
-3. Order by: stories without components last, then component priority ascending, then title ascending
-4. Preload component association
-5. Return ordered list of stories
+1. Query stories for scope's active_project.id
+2. Order by: priority ascending (nulls last), then title ascending
+3. Preload component, criteria, and tags associations
+4. Return ordered list of stories
 
 **Test Assertions**:
 
-- returns stories ordered by component priority
-- places stories without components at the end
-- preloads component association
+- returns stories ordered by priority
+- places stories without priority at the end
+- preloads component, criteria, and tags associations
 
 ### list_unsatisfied_stories/1
 
@@ -234,23 +233,21 @@ Composable query function that filters stories by status.
 - filters stories by status
 - can be composed with other query functions
 
-### by_component_priority/2
+### by_priority/2
 
-Composable query function that filters stories by minimum component priority.
+Composable query function that filters stories by minimum priority.
 
 ```elixir
-@spec by_component_priority(Ecto.Query.t() | Story, integer()) :: Ecto.Query.t()
+@spec by_priority(Ecto.Query.t() | Story, integer()) :: Ecto.Query.t()
 ```
 
 **Process**:
-1. Join with component association
-2. Add where clause filtering by component priority >= min_priority
-3. Return modified query
+1. Add where clause filtering by story priority >= min_priority
+2. Return modified query
 
 **Test Assertions**:
 
-- filters stories by component priority threshold
-- requires join with component
+- filters stories by priority threshold
 
 ### search_text/2
 
@@ -303,6 +300,23 @@ Composable query function that filters stories with expired locks.
 
 - returns stories with expired locks
 - excludes stories with future lock expiration
+
+### ordered_by_priority/1
+
+Composable query function that orders stories by priority ascending (nulls last), then title ascending.
+
+```elixir
+@spec ordered_by_priority(Ecto.Query.t() | Story) :: Ecto.Query.t()
+```
+
+**Process**:
+1. Add order_by clause for priority ascending with nulls last, then title ascending
+2. Return modified query
+
+**Test Assertions**:
+
+- orders stories by priority then title
+- places stories without priority at the end
 
 ### ordered_by_name/1
 
