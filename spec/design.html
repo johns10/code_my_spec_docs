@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html data-theme="corporate">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4/dist/full.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { max-width: 960px; margin: 0 auto; padding: 2rem; }
+    section { margin-bottom: 3rem; }
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .swatch { padding: 20px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+    .swatch code { font-size: 11px; opacity: 0.8; display: block; margin-top: 4px; }
+    .wireframe { font-family: monospace; font-size: 13px; line-height: 1.5; background: var(--fallback-b2,oklch(var(--b2))); padding: 24px; border-radius: 8px; white-space: pre; overflow-x: auto; }
+
+    /* ── Custom Theme ─────────────────────────────────────────────
+       Define a custom DaisyUI theme entirely in CSS.
+       Colors use oklch(lightness chroma hue) format.
+       This is what would normally go in tailwind.config.js:
+         daisyui: { themes: [{ "my-brand": { ... } }] }
+       But works identically as pure CSS.
+    */
+    [data-theme="my-brand"] {
+      color-scheme: light;
+
+      --p:  55% 0.22 250;          /* primary — deep blue */
+      --pf: 45% 0.22 250;          /* primary focus */
+      --pc: 98% 0.01 250;          /* primary content (text on primary) */
+
+      --s:  65% 0.15 165;          /* secondary — teal */
+      --sf: 55% 0.15 165;          /* secondary focus */
+      --sc: 98% 0.01 165;          /* secondary content */
+
+      --a:  70% 0.18 50;           /* accent — warm amber */
+      --af: 60% 0.18 50;           /* accent focus */
+      --ac: 20% 0.02 50;           /* accent content */
+
+      --n:  30% 0.02 250;          /* neutral — dark slate */
+      --nf: 22% 0.02 250;          /* neutral focus */
+      --nc: 92% 0.01 250;          /* neutral content */
+
+      --b1: 98% 0.005 250;         /* base-100 — near white, slight blue tint */
+      --b2: 95% 0.008 250;         /* base-200 */
+      --b3: 90% 0.012 250;         /* base-300 */
+      --bc: 25% 0.02 250;          /* base content (main text) */
+
+      --in: 65% 0.19 240;          /* info */
+      --inc: 98% 0.01 240;
+      --su: 65% 0.19 150;          /* success */
+      --suc: 98% 0.01 150;
+      --wa: 75% 0.15 75;           /* warning */
+      --wac: 20% 0.02 75;
+      --er: 60% 0.22 25;           /* error */
+      --erc: 98% 0.01 25;
+
+      --rounded-box: 0.75rem;      /* border-radius for cards */
+      --rounded-btn: 0.5rem;       /* border-radius for buttons */
+      --rounded-badge: 1.9rem;     /* border-radius for badges */
+      --animation-btn: 0.25s;      /* button click animation */
+      --animation-input: 0.2s;     /* input animation */
+      --btn-focus-scale: 0.97;     /* button scale on focus */
+      --border-btn: 1px;           /* button border width */
+      --tab-border: 1px;
+      --tab-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-base-100 text-base-content">
+
+  <!-- Theme Switcher -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold">Design System</h1>
+    <select id="theme-switcher" class="select select-bordered select-sm"
+            onchange="document.documentElement.setAttribute('data-theme', this.value)">
+      <option value="my-brand">★ My Brand (custom)</option>
+      <option value="corporate">Corporate</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="nord">Nord</option>
+      <option value="dracula">Dracula</option>
+      <option value="business">Business</option>
+      <option value="lofi">Lofi</option>
+      <option value="winter">Winter</option>
+      <option value="cupcake">Cupcake</option>
+      <option value="retro">Retro</option>
+    </select>
+  </div>
+
+  <!-- ============================================================ -->
+  <section id="theme">
+    <h2 class="text-2xl font-semibold mb-4">Theme</h2>
+    <p class="mb-2">DaisyUI <code class="badge badge-ghost">corporate</code> theme. Toggle the dropdown above to preview alternatives.</p>
+    <div class="mockup-code mt-4">
+      <pre><code>&lt;html data-theme="corporate"&gt;</code></pre>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="colors">
+    <h2 class="text-2xl font-semibold mb-4">Colors</h2>
+
+    <h3 class="text-lg font-medium mb-3">Primary Palette</h3>
+    <div class="swatch-grid mb-6">
+      <div class="swatch bg-primary text-primary-content">Primary<code>bg-primary</code></div>
+      <div class="swatch bg-secondary text-secondary-content">Secondary<code>bg-secondary</code></div>
+      <div class="swatch bg-accent text-accent-content">Accent<code>bg-accent</code></div>
+      <div class="swatch bg-neutral text-neutral-content">Neutral<code>bg-neutral</code></div>
+    </div>
+
+    <h3 class="text-lg font-medium mb-3">Base Surfaces</h3>
+    <div class="swatch-grid mb-6">
+      <div class="swatch bg-base-100 border border-base-300">Base 100<code>bg-base-100</code></div>
+      <div class="swatch bg-base-200 border border-base-300">Base 200<code>bg-base-200</code></div>
+      <div class="swatch bg-base-300">Base 300<code>bg-base-300</code></div>
+    </div>
+
+    <h3 class="text-lg font-medium mb-3">Semantic</h3>
+    <div class="swatch-grid mb-6">
+      <div class="swatch bg-info text-info-content">Info<code>bg-info</code></div>
+      <div class="swatch bg-success text-success-content">Success<code>bg-success</code></div>
+      <div class="swatch bg-warning text-warning-content">Warning<code>bg-warning</code></div>
+      <div class="swatch bg-error text-error-content">Error<code>bg-error</code></div>
+    </div>
+
+    <h3 class="text-lg font-medium mb-3">Usage Guide</h3>
+    <table class="table table-zebra w-full">
+      <thead><tr><th>Role</th><th>Use for</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-primary">Primary</span></td><td>Main actions, active navigation, links</td></tr>
+        <tr><td><span class="badge badge-secondary">Secondary</span></td><td>Supporting actions, secondary buttons</td></tr>
+        <tr><td><span class="badge badge-accent">Accent</span></td><td>Highlights, badges, status indicators</td></tr>
+        <tr><td><span class="badge badge-neutral">Neutral</span></td><td>Borders, muted text, dividers</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="typography">
+    <h2 class="text-2xl font-semibold mb-4">Typography</h2>
+
+    <div class="card card-bordered bg-base-100">
+      <div class="card-body gap-6">
+        <div>
+          <div class="text-3xl font-bold">Page Title (h1)</div>
+          <div class="text-sm text-base-content/60 mt-1">text-3xl font-bold — one per page</div>
+        </div>
+        <div class="divider my-0"></div>
+        <div>
+          <div class="text-2xl font-semibold">Section Heading (h2)</div>
+          <div class="text-sm text-base-content/60 mt-1">text-2xl font-semibold — major sections</div>
+        </div>
+        <div class="divider my-0"></div>
+        <div>
+          <div class="text-xl font-medium">Card Title (h3)</div>
+          <div class="text-sm text-base-content/60 mt-1">text-xl font-medium — cards, subsections</div>
+        </div>
+        <div class="divider my-0"></div>
+        <div>
+          <div class="text-base">Body text at default size. Descriptions, form labels, and general content.</div>
+          <div class="text-sm text-base-content/60 mt-1">text-base — default body</div>
+        </div>
+        <div class="divider my-0"></div>
+        <div>
+          <div class="text-sm text-base-content/60">Secondary text, timestamps, metadata, and helper text.</div>
+          <div class="text-sm text-base-content/60 mt-1">text-sm text-base-content/60 — secondary</div>
+        </div>
+        <div class="divider my-0"></div>
+        <div>
+          <code class="bg-base-200 px-3 py-1.5 rounded text-sm">module_name.ex</code>
+          <div class="text-sm text-base-content/60 mt-2">font-mono text-sm — code, filenames</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="layout">
+    <h2 class="text-2xl font-semibold mb-4">Layout</h2>
+
+    <h3 class="text-lg font-medium mb-3">Page Structure</h3>
+    <div class="wireframe mb-6">┌──────────────────────────────────────────────────────┐
+│  Top Nav Bar                              [User ▾]   │
+├────────────┬─────────────────────────────────────────┤
+│            │                                         │
+│  Sidebar   │  Breadcrumb / Page Title                │
+│            │                                         │
+│  • Nav 1   │  Content Area                           │
+│  • Nav 2   │  max-w-7xl mx-auto                      │
+│  • Nav 3   │                                         │
+│            │  ┌─ Card ──────────┐ ┌─ Card ─────────┐│
+│            │  │                 │ │                 ││
+│            │  └─────────────────┘ └─────────────────┘│
+│            │                                         │
+└────────────┴─────────────────────────────────────────┘</div>
+
+    <h3 class="text-lg font-medium mb-3">List Page</h3>
+    <div class="card card-bordered bg-base-100 mb-6">
+      <div class="card-body p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-medium">Items</h3>
+          <button class="btn btn-primary btn-sm">+ New Item</button>
+        </div>
+        <div class="flex gap-2 mb-4">
+          <input type="text" placeholder="Search..." class="input input-bordered input-sm flex-1" />
+          <select class="select select-bordered select-sm"><option>Filter</option></select>
+        </div>
+        <table class="table table-zebra">
+          <thead><tr><th>Name</th><th>Status</th><th>Updated</th></tr></thead>
+          <tbody>
+            <tr><td>Item One</td><td><span class="badge badge-success badge-sm">Active</span></td><td class="text-sm text-base-content/60">2 hours ago</td></tr>
+            <tr><td>Item Two</td><td><span class="badge badge-ghost badge-sm">Draft</span></td><td class="text-sm text-base-content/60">Yesterday</td></tr>
+            <tr><td>Item Three</td><td><span class="badge badge-success badge-sm">Active</span></td><td class="text-sm text-base-content/60">3 days ago</td></tr>
+          </tbody>
+        </table>
+        <div class="flex justify-center mt-4">
+          <div class="join">
+            <button class="join-item btn btn-sm">«</button>
+            <button class="join-item btn btn-sm btn-active">1</button>
+            <button class="join-item btn btn-sm">2</button>
+            <button class="join-item btn btn-sm">3</button>
+            <button class="join-item btn btn-sm">»</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="text-lg font-medium mb-3">Form Page</h3>
+    <div class="flex justify-center mb-6">
+      <div class="card card-bordered bg-base-100 w-full max-w-lg">
+        <div class="card-body">
+          <h3 class="card-title">New Item</h3>
+          <div class="form-control w-full">
+            <label class="label"><span class="label-text">Name</span></label>
+            <input type="text" placeholder="Enter name" class="input input-bordered w-full" />
+          </div>
+          <div class="form-control w-full">
+            <label class="label"><span class="label-text">Description</span></label>
+            <textarea class="textarea textarea-bordered w-full" placeholder="Enter description"></textarea>
+          </div>
+          <div class="form-control w-full">
+            <label class="label"><span class="label-text">Status</span></label>
+            <select class="select select-bordered w-full">
+              <option>Active</option>
+              <option>Draft</option>
+            </select>
+          </div>
+          <div class="card-actions justify-end mt-4">
+            <button class="btn btn-ghost">Cancel</button>
+            <button class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="text-lg font-medium mb-3">Navigation</h3>
+    <ul class="list-disc list-inside space-y-1 text-sm">
+      <li>Fixed sidebar, collapsible on mobile</li>
+      <li>Top bar with breadcrumb and user menu</li>
+      <li>Active nav item: <code class="bg-base-200 px-1.5 py-0.5 rounded text-xs">bg-primary text-primary-content</code></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="tone">
+    <h2 class="text-2xl font-semibold mb-4">Tone</h2>
+    <p class="mb-4">
+      Clean and professional. Rounded corners, generous whitespace, minimal shadows.
+      Data-dense tables but spacious forms. No decorative elements — every visual
+      element serves a functional purpose. Primary color reserved for actions and
+      active states, not decoration.
+    </p>
+
+    <div class="flex gap-6 items-end">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-base-200 rounded-lg mb-2"></div>
+        <div class="text-xs text-base-content/60">rounded-lg</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-base-200 rounded-lg shadow-sm mb-2"></div>
+        <div class="text-xs text-base-content/60">shadow-sm</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-base-100 border border-base-300 rounded-lg mb-2"></div>
+        <div class="text-xs text-base-content/60">bordered</div>
+      </div>
+      <div class="text-center">
+        <div class="flex flex-col gap-1.5 w-16 mb-2">
+          <div class="h-3 bg-base-300 rounded"></div>
+          <div class="h-3 bg-base-300 rounded w-3/4"></div>
+          <div class="h-3 bg-base-300 rounded w-5/6"></div>
+          <div class="h-3 bg-base-300 rounded w-2/3"></div>
+        </div>
+        <div class="text-xs text-base-content/60">airy spacing</div>
+      </div>
+    </div>
+
+    <h3 class="text-lg font-medium mt-6 mb-3">Button Hierarchy</h3>
+    <div class="flex flex-wrap gap-3 items-center">
+      <button class="btn btn-primary">Primary Action</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-ghost">Ghost / Cancel</button>
+      <button class="btn btn-sm btn-outline">Small Outline</button>
+      <button class="btn btn-sm btn-error btn-outline">Destructive</button>
+    </div>
+
+    <h3 class="text-lg font-medium mt-6 mb-3">Feedback States</h3>
+    <div class="flex flex-col gap-3">
+      <div class="alert alert-info"><span>Info: Something informational.</span></div>
+      <div class="alert alert-success"><span>Success: Operation completed.</span></div>
+      <div class="alert alert-warning"><span>Warning: Check this first.</span></div>
+      <div class="alert alert-error"><span>Error: Something went wrong.</span></div>
+    </div>
+
+    <h3 class="text-lg font-medium mt-6 mb-3">Empty State</h3>
+    <div class="flex flex-col items-center justify-center py-12 text-base-content/40">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+      </svg>
+      <p class="text-lg font-medium mb-1">No items yet</p>
+      <p class="text-sm mb-4">Get started by creating your first item.</p>
+      <button class="btn btn-primary btn-sm">+ New Item</button>
+    </div>
+  </section>
+
+</body>
+</html>
