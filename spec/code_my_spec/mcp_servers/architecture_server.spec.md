@@ -6,7 +6,6 @@ MCP (Model Context Protocol) server that exposes architecture management tools t
 
 - Hermes.Server
 - CodeMySpec.McpServers.Architecture.Tools.CreateSpec
-- CodeMySpec.McpServers.Architecture.Tools.UpdateSpecMetadata
 - CodeMySpec.McpServers.Architecture.Tools.ListSpecs
 - CodeMySpec.McpServers.Architecture.Tools.GetSpec
 - CodeMySpec.McpServers.Architecture.Tools.DeleteSpec
@@ -82,11 +81,10 @@ Returns list of registered tool components available through this server.
 3. Each map includes component name and implementation module
 
 **Test Assertions**:
-- returns list of 8 registered tools
+- returns list of registered tools
 - includes "create_spec" tool
 - includes "get_spec" tool
 - includes "validate_dependency_graph" tool
-- includes "update_spec_metadata" tool
 - includes "list_specs" tool
 - includes "list_spec_names" tool
 - includes "delete_spec" tool
