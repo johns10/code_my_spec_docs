@@ -53,6 +53,9 @@ Dependencies:
 - CodeMySpec.Accounts.Account
 - CodeMySpec.Accounts.MembersRepository
 
+### AgentTasks
+**context**
+
 ### Analytics
 **module**
 
@@ -70,12 +73,6 @@ A coordination context that generates and maintains text-based architectural vie
 Dependencies:
 - CodeMySpec.Users.Scope
 - CodeMySpec.Components
-
-### ArchitectureDesign
-**module**
-
-### ArchitectureReview
-**module**
 
 ### Authorization
 **context**
@@ -109,44 +106,6 @@ Dependencies:
 ### Compile
 **context**
 
-### ComponentCode
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Utils
-- CodeMySpec.Tests
-- CodeMySpec.Rules
-- CodeMySpec.Environments
-- CodeMySpec.Components
-
-### ComponentSpec
-**module**
-
-Agent task module for generating component specification documents via Claude Code slash commands.
-
-Dependencies:
-- CodeMySpec.Documents
-- CodeMySpec.Documents.DocumentSpecProjector
-- CodeMySpec.Utils
-- CodeMySpec.Components.Component
-- CodeMySpec.Rules
-- CodeMySpec.Environments
-
-### ComponentTest
-**module**
-
-Dependencies:
-- CodeMySpec.Utils
-- CodeMySpec.Components.Component
-- CodeMySpec.Tests
-- CodeMySpec.Rules
-- CodeMySpec.Compile
-- CodeMySpec.Quality
-- CodeMySpec.Environments
-- CodeMySpec.Components
-
 ### Components
 **context**
 
@@ -159,68 +118,6 @@ Dependencies:
 ### ContentSync
 **context**
 
-### ContextComponentSpecs
-**module**
-
-Agent task for designing a context and all its child components through orchestrated subagent workflow.
-
-Dependencies:
-- CodeMySpec.AgentTasks.ComponentSpec
-- CodeMySpec.Components.ComponentRepository
-- CodeMySpec.Requirements
-- CodeMySpec.AgentTasks.ContextSpec
-- CodeMySpec.Environments
-
-### ContextDesignReview
-**module**
-
-### ContextImplementation
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Requirements
-
-### ContextSpec
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Documents
-- CodeMySpec.Documents.DocumentSpecProjector
-- CodeMySpec.Utils
-- CodeMySpec.Rules
-- CodeMySpec.Environments
-- CodeMySpec.Components
-- CodeMySpec.Stories
-
-### DesignUi
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Components.ComponentRepository
-- CodeMySpec.Environments
-
-### DevelopContext
-**module**
-
-Orchestrates the full lifecycle of a context from specification through implementation.
-
-Dependencies:
-- CodeMySpec.AgentTasks.ComponentSpec
-- CodeMySpec.Utils
-- CodeMySpec.Components.ComponentRepository
-- CodeMySpec.Requirements
-- CodeMySpec.AgentTasks.ComponentCode
-- CodeMySpec.AgentTasks.ContextSpec
-- CodeMySpec.AgentTasks.ComponentTest
-- CodeMySpec.Environments
-- CodeMySpec.AgentTasks.ContextDesignReview
-
 ### Documents
 **context**
 
@@ -230,9 +127,6 @@ Dependencies:
 **context**
 
 
-
-### EvaluateAgentTask
-**module**
 
 ### Field
 **module**
@@ -263,79 +157,17 @@ Embedded schema representing a function from a spec.
 ### GitHub
 **context**
 
-### ImplementLiveView
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Components.ComponentRepository
-- CodeMySpec.Requirements
-- CodeMySpec.AgentTasks.ComponentCode
-- CodeMySpec.AgentTasks.LiveViewCode
-- CodeMySpec.AgentTasks.ComponentTest
-- CodeMySpec.Environments
-- CodeMySpec.AgentTasks.LiveViewTest
-
 ### Integrations
 **context**
 
 ### Invitations
 **context**
 
-### LiveViewCode
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Tests
-- CodeMySpec.Rules
-- CodeMySpec.Environments
-- CodeMySpec.Components
-
-### LiveViewSpec
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Documents
-- CodeMySpec.Documents.DocumentSpecProjector
-- CodeMySpec.Utils
-- CodeMySpec.Components.Component
-- CodeMySpec.Rules
-- CodeMySpec.Environments
-- CodeMySpec.Components
-
-### LiveViewTest
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Tests
-- CodeMySpec.Rules
-- CodeMySpec.Compile
-- CodeMySpec.StaticAnalysis
-- CodeMySpec.Environments
-- CodeMySpec.Components
-
 ### LocalServer
 **context**
 
 ### Mailer
 **context**
-
-### ManageImplementation
-**module**
-
-Master agent task that orchestrates the full implementation lifecycle of a project. Provides the master prompt that drives the agent through an iterative loop:
-
-Dependencies:
-- CodeMySpec.BddSpecs
-- CodeMySpec.Environments
-- CodeMySpec.BddSpecs.Spex
 
 ### McpServers
 **context**
@@ -359,14 +191,6 @@ Dependencies:
 ### ProjectCoordinator
 **context**
 
-### ProjectSetup
-**module**
-
-
-
-Dependencies:
-- CodeMySpec.Environments
-
 ### ProjectSetupWizard
 **context**
 
@@ -387,11 +211,6 @@ Dependencies:
 - CodeMySpec.Utils
 - CodeMySpec.Components
 - CodeMySpec.Code
-
-### RefactorModule
-**module**
-
-Agent task for guiding interactive refactoring sessions with Claude Code. Routes to component or context-specific refactoring based on the component type.
 
 ### Release
 **context**
@@ -427,9 +246,6 @@ Embedded schema representing a parsed spec file.
 
 
 
-### StartAgentTask
-**module**
-
 ### StaticAnalysis
 **context**
 
@@ -464,17 +280,8 @@ Dependencies:
 - CodeMySpec.Tags.StoryTag
 - CodeMySpec.Stories.Story
 
-### TaskContext
-**module**
-
-### TaskMarker
-**module**
-
 ### Tests
 **context**
-
-### TrackEdits
-**module**
 
 ### Transcripts
 **context**
@@ -488,39 +295,22 @@ Dependencies:
 ### Utils
 **context**
 
-### ValidateEdits
-**module**
-
-A Claude Code stop hook handler that validates files edited during an agent session. When Claude stops, this hook retrieves edited files from session state (populated by the TrackEdits post-tool-use hook), categorizes them by analyzer type, runs validators in sequence, and returns actionable feedback so Claude can fix issues before the session terminates.
-
-Dependencies:
-- CodeMySpec.Documents
-- CodeMySpec.BddSpecs
-- CodeMySpec.Tests
-- CodeMySpec.FileEdits
-- CodeMySpec.Compile
-- CodeMySpec.Problems.Problem
-- CodeMySpec.Problems.ProblemRenderer
-
 ### Validation
 **context**
 
-Validates files edited during Claude Code sessions.
-
-### Vault
-**context**
-
-### WriteBddSpecs
-**module**
-
 
 
 Dependencies:
-- CodeMySpec.BddSpecs.Parser
-- CodeMySpec.BddSpecs
-- CodeMySpec.Environments
-- CodeMySpec.Components
-- CodeMySpec.Stories
+- CodeMySpec.Transcripts.ClaudeCode.Transcript
+- CodeMySpec.Problems
+- CodeMySpec.Validation.Pipeline
+- CodeMySpec.ProjectSync.Sync
+- CodeMySpec.Validation.TaskEvaluator
+- CodeMySpec.Problems.ProblemRenderer
+- CodeMySpec.Transcripts.ClaudeCode.FileExtractor
+
+### Vault
+**context**
 
 
 ## CodeMySpecWeb
@@ -810,11 +600,6 @@ A Claude Code post-tool-use hook that tracks files edited during an agent sessio
 Dependencies:
 - CodeMySpec.Sessions
 
-### ValidateEdits
-**module**
-
-A Claude Code stop hook that validates files edited during an agent session. Delegates to `CodeMySpec.Sessions.AgentTasks.ValidateEdits` for the actual validation logic.
-
 
 ## Root Components
 
@@ -877,12 +662,6 @@ Dependencies:
 ## Root Components
 
 ### UpdateComponent
-**module**
-
-
-## Root Components
-
-### UpdateSpecMetadata
 **module**
 
 

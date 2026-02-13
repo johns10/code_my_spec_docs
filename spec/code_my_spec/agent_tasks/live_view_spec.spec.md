@@ -2,17 +2,19 @@
 
 **Type**: module
 
-Generates a specification for a LiveView page or component following the UI spec format: route, params, child components, user interactions (action → behavior + context calls), dependencies, and a Design section containing reference DaisyUI/HTML markup. Like ComponentSpec but for UI components — produces specs that LiveViewTest can write assertions against and LiveViewCode can implement to.
+Generates a specification for a LiveView page or component following the UI spec format: route, params, child components, user interactions (action → behavior + context calls), dependencies, and a structural Design section. The Design section describes layout structure, DaisyUI component choices, and responsive behavior in prose — not renderable HTML. Like ComponentSpec but for UI components — produces specs that LiveViewTest can write assertions against and LiveViewCode can implement to.
 
 ## Dependencies
 
 - CodeMySpec.Rules
 - CodeMySpec.Utils
 - CodeMySpec.Environments
-- CodeMySpec.Documents
 - CodeMySpec.Documents.DocumentSpecProjector
 - CodeMySpec.Components
 - CodeMySpec.Components.Component
+- CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Requirements
+- CodeMySpec.Requirements.RequirementsFormatter
 
 ## Functions
 
@@ -31,7 +33,7 @@ Generate the spec-writing prompt for a LiveView, including the UI spec format te
 4. Check for existing implementation and test files via `Environments.file_exists?/2`
 5. Include parent component spec file path when parent exists
 6. List similar components for pattern inspiration using `Components.list_similar_components/2`
-7. Build spec prompt with UI-specific format guidance: route, params, child components, interactions, dependencies, Design HTML section
+7. Build spec prompt with UI-specific format guidance: route, params, child components, interactions, dependencies, structural Design section
 8. Return the prompt text
 
 **Test Assertions**:
@@ -45,7 +47,7 @@ Generate the spec-writing prompt for a LiveView, including the UI spec format te
 - includes existing test file path when tests exist
 - includes parent component spec file path when parent exists
 - includes similar components for pattern inspiration
-- includes UI spec format guidance with route, interactions, and Design sections
+- includes UI spec format guidance with route, interactions, and structural Design section
 - returns error if rules cannot be loaded
 
 ### evaluate/3
@@ -57,16 +59,15 @@ Validate the generated spec file and provide feedback if needed.
 ```
 
 **Process**:
-1. Read the spec file from the component's spec path via `Environments.read_file/2`
-2. Validate the spec content against document schema using `Documents.create_dynamic_document/2`
-3. Return `:valid` if validation passes
-4. Build revision feedback with validation errors if validation fails
-5. Return error tuple if spec file is missing or unreadable
+1. Reload component from database to get latest requirements
+2. Check specification artifact requirements via `Requirements.check_requirements/4` with `artifact_types: [:specification]`
+3. When no persisted requirements match, fall back to Registry definitions for the component type
+4. Return `:valid` if all specification requirements are satisfied
+5. Build revision feedback with unsatisfied requirements via `RequirementsFormatter.format_unsatisfied/2` if any fail
 
 **Test Assertions**:
-- returns {:ok, :valid} when spec file is valid
-- returns {:ok, :invalid, feedback} when spec file has validation errors
-- includes validation error details in feedback
-- returns error when spec file does not exist
-- returns error when spec file is empty
-- returns error when spec file cannot be read
+- returns {:ok, :valid} when all specification requirements are satisfied
+- returns {:ok, :invalid, feedback} when specification requirements are unsatisfied
+- includes unsatisfied requirement details in feedback
+- returns {:ok, :invalid, feedback} when spec file does not exist (via fallback checker)
+- returns {:ok, :invalid, feedback} when spec content is invalid (via fallback checker)

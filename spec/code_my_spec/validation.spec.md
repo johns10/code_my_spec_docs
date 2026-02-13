@@ -2,45 +2,72 @@
 
 **Type**: context
 
-Validates files edited during Claude Code sessions. Orchestrates the full validation flow: runs a generic pipeline (compile, tests, static analysis, BDD specs, spec validation) on all tracked file edits, persists discovered problems to the database, clears tracked file edits, triggers a full project sync so requirements reflect the latest state, and optionally evaluates task-specific criteria for subagent sessions identified by transcript markers. Called from the hook controller on Stop and SubagentStop events. Returns a block/allow decision for the Claude Code hook protocol.
+Validates files edited during Claude Code sessions. Parses transcripts to extract edited files, runs the generic validation pipeline, persists discovered problems, triggers a project sync, and evaluates agent tasks. Exposes two entry points — one for SubagentStop (component task from transcript marker) and one for Stop (session stack evaluation). Called from the hook controller.
 
 ## Functions
 
-### run/2
+### validate_subagent/2
 
-Execute the full validation flow for a set of edited files.
+Handle SubagentStop: validate edited files and evaluate the component task.
 
 ```elixir
-@spec run(Scope.t(), keyword()) :: {:ok, :valid} | {:error, [Problem.t()] | String.t()}
+@spec validate_subagent(Scope.t(), keyword()) :: {:ok, :valid} | {:error, [Problem.t()] | String.t()}
 ```
 
 **Options**:
-- `:files` - List of file paths to validate (overrides FileEdits lookup)
-- `:transcript_path` - Subagent transcript path (triggers task evaluation via TaskContext)
+- `:transcript_path` - Path to the subagent's transcript file (required)
 
 **Process**:
-1. Get files: use provided `:files` option, or fall back to `FileEdits.list_all/0` for all tracked edits
-2. If no files, return `{:ok, :valid}` immediately
-3. Run `Pipeline.run/3` on all files to get `[Problem.t()]`
-4. Persist problems via `Problems.replace_problems_for_files/3`
-5. Clear tracked file edits via `FileEdits.truncate_all/0`
-6. Run full sync via `Sync.sync_all/2` (requirements read persisted problems)
-7. If `:transcript_path` provided, resolve task via `TaskContext.resolve/2` and call `module.evaluate/3`
-8. Decide: if problems exist, return `{:error, problems}`. If task evaluation failed, return `{:error, feedback}`. Otherwise return `{:ok, :valid}`
+1. Parse transcript to extract edited files via `FileExtractor`
+2. If no edited files, return `{:ok, :valid}`
+3. Run `Pipeline.run/2` on edited files → `pipeline_problems`
+4. Resolve component task from transcript marker via `TaskEvaluator.evaluate_component/2`  → `task_result`
+5. Persist `pipeline_problems` via `Problems.replace_problems_for_files/3`
+6. Run `Sync.sync_all/1`
+7. Combine: if `pipeline_problems` exist, return `{:error, problems}`. If `task_result` is error, return `{:error, feedback}`. Otherwise `{:ok, :valid}`
 
 **Test Assertions**:
-- returns `{:ok, :valid}` when no files to validate
-- returns `{:ok, :valid}` when pipeline finds no problems and no task evaluation
+- returns `{:ok, :valid}` when transcript has no edited files
+- returns `{:ok, :valid}` when pipeline and component evaluation both pass
 - returns `{:error, problems}` when pipeline finds problems
-- persists problems to database after pipeline runs
-- clears all tracked file edits after persisting problems
+- returns `{:error, feedback}` when component task evaluation fails
+- runs pipeline on all edited files from transcript
+- evaluates component task on task's own files (not edited files)
+- persists pipeline problems scoped to edited files
 - runs sync after persisting problems
-- evaluates task when transcript_path is provided and TaskContext resolves
-- returns `{:error, feedback}` when task evaluation is invalid
-- skips task evaluation when no transcript_path provided
-- skips task evaluation when TaskContext returns :none
-- rescues task evaluation errors and returns `{:error, message}`
-- uses provided files option instead of FileEdits lookup when given
+- returns `{:ok, :valid}` when no task marker found in transcript
+
+### validate_stop/2
+
+Handle Stop: validate edited files and evaluate the session stack.
+
+```elixir
+@spec validate_stop(Scope.t(), keyword()) :: {:ok, :valid} | {:error, [Problem.t()] | String.t()}
+```
+
+**Options**:
+- `:transcript_path` - Path to the main session's transcript file (required)
+- `:session_id` - External conversation ID for session lookup (required)
+
+**Process**:
+1. Parse transcript to extract edited files via `FileExtractor`
+2. If no edited files and no sessions, return `{:ok, :valid}`
+3. Run `Pipeline.run/2` on edited files → `pipeline_problems`
+4. Evaluate session stack via `TaskEvaluator.evaluate_sessions/2` using `:session_id` → `session_result`
+5. Persist `pipeline_problems` via `Problems.replace_problems_for_files/3`
+6. Run `Sync.sync_all/1`
+7. Combine: if `pipeline_problems` exist, return `{:error, problems}`. If `session_result` is error, return `{:error, feedback}`. Otherwise `{:ok, :valid}`
+
+**Test Assertions**:
+- returns `{:ok, :valid}` when transcript has no edited files and no active sessions
+- returns `{:ok, :valid}` when pipeline passes and all sessions pass
+- returns `{:error, problems}` when pipeline finds problems
+- returns `{:error, feedback}` when session evaluation fails
+- runs pipeline on all edited files from transcript
+- evaluates session stack filtered by session_id
+- persists pipeline problems scoped to edited files
+- runs sync after persisting problems
+- returns `{:ok, :valid}` when no active sessions found
 
 ### format_output/1
 
@@ -62,15 +89,20 @@ Format a validation result into the Claude Code hook response map.
 
 ## Dependencies
 
-- CodeMySpec.AgentTasks.TaskContext
-- CodeMySpec.FileEdits
 - CodeMySpec.Problems
 - CodeMySpec.Problems.ProblemRenderer
 - CodeMySpec.ProjectSync.Sync
+- CodeMySpec.Transcripts.ClaudeCode.FileExtractor
+- CodeMySpec.Transcripts.ClaudeCode.Transcript
 - CodeMySpec.Validation.Pipeline
+- CodeMySpec.Validation.TaskEvaluator
 
 ## Components
 
 ### CodeMySpec.Validation.Pipeline
 
-Runs the validation pipeline on a set of files. Categorizes files by type, compiles the project, then runs tests, static analysis, BDD specs, and spec validation. Returns a flat list of all problems found, filtered to only the edited files.
+Runs the generic validation pipeline on a set of files. Categorizes files by type, compiles the project, then runs tests, static analysis (Credo, Sobelow), BDD specs, and spec document validation. Returns a flat list of all problems found, filtered to only the provided files.
+
+### CodeMySpec.Validation.TaskEvaluator
+
+Evaluates agent tasks. Two entry points: `evaluate_component/2` resolves a component task from a transcript marker and delegates to the task module's `evaluate/3`. `evaluate_sessions/2` looks up sessions by external conversation ID, evaluates the session stack (highest priority), deletes passing sessions, and returns combined feedback for failures.

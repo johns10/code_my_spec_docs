@@ -148,6 +148,22 @@ Returns requirement definition for context design review file existence.
 
 **Test Assertions**:
 
+### review_valid/0
+
+Returns requirement definition for context design review document validity.
+
+```elixir
+@spec review_valid() :: RequirementDefinition.t()
+```
+
+**Process**:
+1. Return RequirementDefinition for review_valid requirement
+2. Uses ContextReviewValidityChecker
+3. Can be satisfied by ContextDesignReview
+4. Categorized as :review
+
+**Test Assertions**:
+
 ### context_spec_file/0
 
 Returns requirement definition for context-specific specification file.
@@ -219,6 +235,7 @@ Returns standard requirement set for most component types.
 - CodeMySpec.Requirements.DependencyChecker
 - CodeMySpec.Requirements.HierarchicalChecker
 - CodeMySpec.Requirements.ContextReviewFileChecker
+- CodeMySpec.Requirements.ContextReviewValidityChecker
 - CodeMySpec.ComponentSpecSessions
 - CodeMySpec.ComponentCodingSessions
 - CodeMySpec.ComponentTestSessions

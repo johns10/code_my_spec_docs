@@ -45,25 +45,29 @@ Validate the generated spec file and provide feedback if needed.
 ```
 
 **Process**:
-1. Read the spec file from the session's component spec path
-2. Validate the spec content against document schema using `Documents.create_dynamic_document/2`
-3. Return `:valid` if validation passes
-4. Build revision feedback with validation errors if validation fails
-5. Return error tuple if spec file is missing or unreadable
+1. Reload the component via `ComponentRepository.get_component/2` to get current requirements
+2. Check specification artifact requirements using `check_artifact_requirements/3`
+   - If persisted requirements exist for `:specification`, filter and return them
+   - If none exist, fall back to Registry definitions for the component type
+3. Filter for unsatisfied requirements
+4. Return `{:ok, :valid}` if all satisfied
+5. Return `{:ok, :invalid, feedback}` with formatted unsatisfied requirements if any fail
 
 **Test Assertions**:
-- returns {:ok, :valid} when spec file is valid
-- returns {:ok, :invalid, feedback} when spec file has validation errors
-- includes validation error details in feedback
-- returns error when spec file does not exist
-- returns error when spec file is empty
-- returns error when spec file cannot be read
+- returns {:ok, :valid} when specification requirements are satisfied
+- returns {:ok, :invalid, feedback} when specification requirements are unsatisfied
+- includes requirement descriptions in feedback
+- falls back to Registry definitions when no persisted requirements exist
+- reloads component from database to get current requirements
 
 ## Dependencies
 
+- CodeMySpec.Components.Component
+- CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Components.Registry
+- CodeMySpec.Documents.DocumentSpecProjector
+- CodeMySpec.Environments
+- CodeMySpec.Requirements
+- CodeMySpec.Requirements.RequirementsFormatter
 - CodeMySpec.Rules
 - CodeMySpec.Utils
-- CodeMySpec.Environments
-- CodeMySpec.Documents
-- CodeMySpec.Documents.DocumentSpecProjector
-- CodeMySpec.Components.Component

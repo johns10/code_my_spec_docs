@@ -46,27 +46,34 @@ Evaluate Claude's output and provide feedback if needed.
 ```
 
 **Process**:
-1. Read generated spec file using read_spec_file/1
-2. Validate document against context_spec schema using Documents.create_dynamic_document/2
-3. Create child spec files from parsed components section using create_child_spec_files/2
-4. Return {:ok, :valid} if spec passes validation and child files created successfully
-5. Return {:ok, :invalid, feedback} with validation errors for Claude to fix if document invalid
-6. Return {:error, reason} if file reading or other operations fail
+1. Reload the component via `ComponentRepository.get_component/2` to get current requirements
+2. Check specification artifact requirements using `check_artifact_requirements/3`
+   - If persisted requirements exist for `:specification`, filter and return them
+   - If none exist, fall back to Registry definitions for the component type
+3. Filter for unsatisfied requirements
+4. If any unsatisfied, return `{:ok, :invalid, feedback}` with formatted requirements
+5. If all satisfied, read spec file and validate document structure
+6. Create child spec stub files from parsed components section (won't overwrite existing)
+7. Return `{:ok, :valid}` if child files created successfully
 
 **Test Assertions**:
-- returns {:ok, :valid} when spec file exists and passes validation
-- returns {:ok, :invalid, feedback} when spec file is invalid with validation errors
+- returns {:ok, :valid} when specification requirements are satisfied and child files created
+- returns {:ok, :invalid, feedback} when specification requirements are unsatisfied
 - creates child spec files for components listed in Components section
-- returns {:error, reason} when spec file not found
-- returns {:error, reason} when spec file is empty
-- builds revision feedback with validation errors for Claude
+- does not overwrite existing child spec files
+- falls back to Registry definitions when no persisted requirements exist
+- reloads component from database to get current requirements
 
 ## Dependencies
 
-- CodeMySpec.Rules
-- CodeMySpec.Utils
-- CodeMySpec.Environments
+- CodeMySpec.Components
+- CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Components.Registry
 - CodeMySpec.Documents
 - CodeMySpec.Documents.DocumentSpecProjector
+- CodeMySpec.Environments
+- CodeMySpec.Requirements
+- CodeMySpec.Requirements.RequirementsFormatter
+- CodeMySpec.Rules
 - CodeMySpec.Stories
-- CodeMySpec.Components
+- CodeMySpec.Utils

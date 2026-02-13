@@ -50,7 +50,7 @@ Returns the type definition for a given component type, including requirements, 
 - returns default type definition with "Unknown" display_name for nil type
 - returns default type definition for unrecognized type string
 - type definitions include icon and color fields
-- context types include review_file and hierarchy requirements
+- context types include review_file, review_valid, and hierarchy requirements
 - schema type excludes test_file and tests_passing requirements
 
 ### get_requirements_for_type/1
@@ -67,7 +67,7 @@ Returns the list of requirement definitions for a given component type.
 
 **Test Assertions**:
 - returns default requirements for "genserver" type
-- returns context-specific requirements for "context" type including children_designs and review_file
+- returns context-specific requirements for "context" type including children_designs, review_file, and review_valid
 - returns context-specific requirements for "coordination_context" type
 - returns schema-specific requirements for "schema" type (spec_file, schema_spec_valid, implementation_file only)
 - returns default requirements for "repository" type

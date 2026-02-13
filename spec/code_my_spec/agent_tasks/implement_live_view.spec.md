@@ -2,7 +2,7 @@
 
 **Type**: context
 
-Orchestrates implementing a single LiveView and its child components via subagents. Mirrors ContextImplementation's command/evaluate pattern: generates LiveViewTest and LiveViewCode prompt files for the parent LiveView, and ComponentTest/ComponentCode prompt files for each child component. The orchestration prompt guides the agent through dependency order — child components first, then the parent LiveView that composes them. Screenshot artifacts produced by LiveView tests provide visual feedback during the code implementation phase.
+Orchestrates implementing a single LiveView and its child components via subagents. Mirrors ContextImplementation's command/evaluate pattern: generates LiveViewTest and LiveViewCode prompt files for the parent LiveView, and ComponentTest/ComponentCode prompt files for each child component. The orchestration prompt guides the agent through dependency order — child components first, then the parent LiveView that composes them. HTML artifacts captured by LiveView tests are rendered in a headless browser to produce screenshots, providing visual feedback during the code implementation phase.
 
 ## Dependencies
 
