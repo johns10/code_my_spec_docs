@@ -2,7 +2,7 @@
 
 **Type**: module
 
-Agent task module for component implementation sessions with Claude Code. Provides two entry points: `command/3` generates the implementation prompt with spec location, test file, similar components for patterns, and coding rules; `evaluate/3` runs tests after Claude implements the component and returns feedback for fixing failures.
+Agent task module for component implementation sessions with Claude Code. Provides two entry points: `command/3` generates the implementation prompt with spec location, test file, similar components for patterns, and coding rules; `evaluate/3` checks code artifact requirements and queries persisted problems for the component's code and test files, returning combined feedback.
 
 ## Functions
 
@@ -41,7 +41,7 @@ Generate the implementation prompt for Claude to code a component.
 
 ### evaluate/3
 
-Evaluate Claude's implementation by running tests and providing feedback.
+Evaluate Claude's implementation by checking code requirements and querying persisted problems.
 
 ```elixir
 @spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
@@ -49,30 +49,26 @@ Evaluate Claude's implementation by running tests and providing feedback.
 
 **Process**:
 1. Extract component and project from session map
-2. Get code_file and test_file paths via Utils.component_files/2
-3. Check required files exist using Environments.file_exists?/2:
-   - If missing, return {:ok, :invalid, feedback} listing missing files
-4. Run tests via Tests.execute/2 with ExUnitJsonFormatter
-5. Parse test results:
-   - If 0 failures, return {:ok, :valid}
-   - If failures > 0, return {:ok, :invalid, failure_feedback}
-   - If parse error (compile error), return {:ok, :invalid, execution_error_feedback}
+2. Reload component from database via ComponentRepository.get_component/2
+3. Check code artifact requirements via Requirements.check_requirements/4 with artifact_types: [:code]
+4. Build requirement feedback from unsatisfied requirements (nil if all pass)
+5. Check problems via ProblemFeedback.for_code_task/3 (queries code file + test file problems)
+6. Combine requirement feedback and problem feedback via ProblemFeedback.combine/2
 
 **Test Assertions**:
-- returns {:ok, :valid} when all tests pass
-- returns {:ok, :invalid, feedback} when tests fail with failure details
-- returns {:ok, :invalid, feedback} when code file missing
-- returns {:ok, :invalid, feedback} when test file missing
-- returns {:ok, :invalid, feedback} when both files missing
-- returns {:ok, :invalid, feedback} on compile error with raw output
-- feedback includes test failure count and total test count
-- feedback includes failure titles and error messages
-- creates environment from session.environment for file checks
+- returns {:ok, :valid} when all code requirements are satisfied and no problems exist
+- returns {:ok, :invalid, feedback} when code requirements are unsatisfied
+- returns {:ok, :invalid, feedback} when problems exist on code file even if requirements pass
+- returns {:ok, :invalid, feedback} when problems exist on test file even if requirements pass
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
+- reloads component from database before checking requirements
 
 ## Dependencies
 
+- CodeMySpec.AgentTasks.ProblemFeedback
+- CodeMySpec.Components
+- CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Requirements
+- CodeMySpec.Requirements.RequirementsFormatter
 - CodeMySpec.Rules
 - CodeMySpec.Utils
-- CodeMySpec.Components
-- CodeMySpec.Tests
-- CodeMySpec.Environments

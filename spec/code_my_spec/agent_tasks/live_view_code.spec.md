@@ -6,11 +6,13 @@ Implements a LiveView module to pass its tests, with visual feedback from render
 
 ## Dependencies
 
-- CodeMySpec.Rules
+- CodeMySpec.AgentTasks.ProblemFeedback
 - CodeMySpec.Components
 - CodeMySpec.Components.ComponentRepository
 - CodeMySpec.Requirements
 - CodeMySpec.Requirements.RequirementsFormatter
+- CodeMySpec.Rules
+- CodeMySpec.Utils
 
 ## Functions
 
@@ -51,23 +53,25 @@ Generate the implementation prompt for a LiveView, referencing spec, tests, codi
 
 ### evaluate/3
 
-Evaluate Claude's implementation by checking code artifact requirements. Run tests, render HTML artifacts in headless browser to produce screenshots, and provide visual + functional feedback.
+Evaluate Claude's implementation by checking code artifact requirements and querying persisted problems.
 
 ```elixir
 @spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
 ```
 
 **Process**:
-1. Extract component from session map
-2. Reload component from database via ComponentRepository.get_component/2 to get latest requirements
+1. Extract component and project from session map
+2. Reload component from database via ComponentRepository.get_component/2
 3. Check code artifact requirements via Requirements.check_requirements/4 with artifact_types: [:code]
-4. If any requirements unsatisfied, return {:ok, :invalid, feedback} with formatted unsatisfied requirements
-5. If all code requirements satisfied, return {:ok, :valid}
+4. Build requirement feedback from unsatisfied requirements (nil if all pass)
+5. Check problems via ProblemFeedback.for_code_task/3 (queries code file + test file problems)
+6. Combine requirement feedback and problem feedback via ProblemFeedback.combine/2
 
 **Test Assertions**:
-- returns {:ok, :valid} when all code requirements are satisfied
+- returns {:ok, :valid} when all code requirements are satisfied and no problems exist
 - returns {:ok, :invalid, feedback} when implementation_file requirement is unsatisfied
 - returns {:ok, :invalid, feedback} when tests_passing requirement is unsatisfied
+- returns {:ok, :invalid, feedback} when problems exist on code or test files even if requirements pass
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
 - ignores non-code artifact type requirements
-- feedback includes "requirements not met" context message
 - reloads component from database before checking requirements

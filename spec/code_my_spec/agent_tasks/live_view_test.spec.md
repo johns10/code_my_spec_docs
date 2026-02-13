@@ -6,15 +6,14 @@ Writes tests for a LiveView module. Like ComponentTest but specialized for LiveV
 
 ## Dependencies
 
-- CodeMySpec.Rules
-- CodeMySpec.Utils
+- CodeMySpec.AgentTasks.ProblemFeedback
 - CodeMySpec.Components
 - CodeMySpec.Components.Component
 - CodeMySpec.Components.ComponentRepository
 - CodeMySpec.Requirements
 - CodeMySpec.Requirements.RequirementsFormatter
-- CodeMySpec.Problems
-- CodeMySpec.Problems.ProblemRenderer
+- CodeMySpec.Rules
+- CodeMySpec.Utils
 
 ## Functions
 
@@ -57,7 +56,7 @@ Generate the test-writing prompt for a LiveView, with LiveView-specific testing 
 
 ### evaluate/3
 
-Validate LiveView tests by checking test requirements and non-test-failure problems. Follows the same pattern as ComponentTest: check test artifact requirements first, then check for blocking problems (compilation, credo) while filtering out test failures which are expected in TDD mode.
+Validate LiveView tests by checking test requirements and querying persisted problems. Follows the same pattern as ComponentTest: check test artifact requirements, then check for blocking problems (compilation, credo) while filtering out test failures which are expected in TDD mode.
 
 ```elixir
 @spec evaluate(CodeMySpec.Users.Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
@@ -67,12 +66,9 @@ Validate LiveView tests by checking test requirements and non-test-failure probl
 1. Extract component and project from session map
 2. Reload component from database via `ComponentRepository.get_component/2` to get latest requirements
 3. Check test artifact requirements via `Requirements.check_requirements/4` with `artifact_types: [:tests]`
-4. If any requirements are unsatisfied, return `{:ok, :invalid, feedback}` with formatted unsatisfied requirements via `RequirementsFormatter.format_unsatisfied/2`
-5. If requirements pass, get test file path via `Utils.component_files/2`
-6. List problems for the test file via `Problems.list_project_problems/2` filtered by `file_path`
-7. Filter out test failures (`source_type == :test`) — these are expected in TDD mode
-8. If non-test problems remain (compilation errors, credo issues), return `{:ok, :invalid, feedback}` with problems formatted via `ProblemRenderer.render_for_feedback/2`
-9. If no blocking problems, return `{:ok, :valid}`
+4. Build requirement feedback from unsatisfied requirements (nil if all pass)
+5. Check problems via `ProblemFeedback.for_test_task/3` (queries test file problems, filters out test failures)
+6. Combine requirement feedback and problem feedback via `ProblemFeedback.combine/2`
 
 **Test Assertions**:
 - returns {:ok, :valid} when all test requirements are satisfied and no blocking problems exist
@@ -80,6 +76,7 @@ Validate LiveView tests by checking test requirements and non-test-failure probl
 - returns {:ok, :invalid, feedback} when test spec alignment fails
 - returns {:ok, :invalid, feedback} when compilation errors exist in test file
 - returns {:ok, :valid} even when test failures exist (TDD mode — test failures are filtered out)
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
 - includes unsatisfied requirement details in feedback
 - includes problem details in feedback for non-test problems
 - reloads component from database before checking requirements

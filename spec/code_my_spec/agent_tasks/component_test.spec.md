@@ -2,14 +2,14 @@
 
 ## Dependencies
 
-- CodeMySpec.Rules
-- CodeMySpec.Utils
+- CodeMySpec.AgentTasks.ProblemFeedback
 - CodeMySpec.Components
 - CodeMySpec.Components.Component
-- CodeMySpec.Environments
-- CodeMySpec.Quality
-- CodeMySpec.Tests
-- CodeMySpec.Compile
+- CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Requirements
+- CodeMySpec.Requirements.RequirementsFormatter
+- CodeMySpec.Rules
+- CodeMySpec.Utils
 
 ## Functions
 
@@ -38,7 +38,7 @@ Generate the command prompt for Claude to write component tests.
 
 ### evaluate/3
 
-Evaluate Claude's output by running tests and checking quality.
+Evaluate Claude's output by checking test requirements and querying persisted problems.
 
 ```elixir
 @spec evaluate(CodeMySpec.Users.Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
@@ -46,22 +46,19 @@ Evaluate Claude's output by running tests and checking quality.
 
 **Process**:
 1. Extract component and project from session
-2. Get component file paths using Utils.component_files/2
-3. Check if test file exists, return invalid with error if missing
-4. Check if implementation exists to determine TDD mode
-5. Check compilation using Compile.execute/0
-6. If compilation fails, return invalid with formatted compilation errors
-7. If compilation passes, run quality checks including test execution, TDD state validation, and spec alignment
-8. Validate quality scores against required thresholds (alignment >= 0.9, overall >= 0.95)
-9. Return valid if all checks pass, otherwise return invalid with formatted errors
+2. Reload component from database via ComponentRepository.get_component/2
+3. Check test artifact requirements via Requirements.check_requirements/4 with artifact_types: [:tests]
+4. Build requirement feedback from unsatisfied requirements (nil if all pass)
+5. Check problems via ProblemFeedback.for_test_task/3 (queries test file problems, filters out test failures)
+6. Combine requirement feedback and problem feedback via ProblemFeedback.combine/2
 
 **Test Assertions**:
-- returns invalid when test file doesn't exist
-- returns invalid when compilation fails
-- runs tests when compilation passes
-- checks TDD state when in TDD mode (no implementation)
-- checks spec alignment against test assertions
-- returns valid when all quality checks pass
-- returns invalid with errors when quality checks fail
-- requires alignment score of at least 0.9
-- requires overall score of at least 0.95
+- returns {:ok, :valid} when all test requirements are satisfied and no blocking problems exist
+- returns {:ok, :invalid, feedback} when test file does not exist
+- returns {:ok, :invalid, feedback} when test spec alignment fails
+- returns {:ok, :invalid, feedback} when compilation errors exist in test file
+- returns {:ok, :valid} even when test failures exist (TDD mode — test failures are filtered out)
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
+- includes unsatisfied requirement details in feedback
+- includes problem details in feedback for non-test problems
+- reloads component from database before checking requirements

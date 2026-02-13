@@ -2,7 +2,7 @@
 
 **Type**: module
 
-Consolidated context spec session for Claude Code slash commands. Generates comprehensive prompts for creating Phoenix bounded context specifications with design rules, user stories, and similar component examples. Validates generated specs against context_spec document schema and creates child component spec files from parsed sections.
+Consolidated context spec session for Claude Code slash commands. Generates comprehensive prompts for creating Phoenix bounded context specifications with design rules, user stories, and similar component examples. Validates generated specs against artifact requirements, checks for persisted problems on the spec file, and creates child component spec files from parsed sections.
 
 ## Functions
 
@@ -39,7 +39,7 @@ Generate the command/prompt for Claude to create a context specification.
 
 ### evaluate/3
 
-Evaluate Claude's output and provide feedback if needed.
+Evaluate Claude's output by checking requirements, querying persisted problems, and creating child spec files.
 
 ```elixir
 @spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
@@ -50,15 +50,19 @@ Evaluate Claude's output and provide feedback if needed.
 2. Check specification artifact requirements using `check_artifact_requirements/3`
    - If persisted requirements exist for `:specification`, filter and return them
    - If none exist, fall back to Registry definitions for the component type
-3. Filter for unsatisfied requirements
-4. If any unsatisfied, return `{:ok, :invalid, feedback}` with formatted requirements
-5. If all satisfied, read spec file and validate document structure
-6. Create child spec stub files from parsed components section (won't overwrite existing)
-7. Return `{:ok, :valid}` if child files created successfully
+3. Build requirement feedback from unsatisfied requirements (nil if all pass)
+4. Check problems via `ProblemFeedback.for_spec_task/3` (queries spec file problems)
+5. Combine requirement feedback and problem feedback via `ProblemFeedback.combine/2`
+6. If invalid, return feedback immediately (problems block child stub creation)
+7. If valid, read spec file and validate document structure
+8. Create child spec stub files from parsed components section (won't overwrite existing)
+9. Return `{:ok, :valid}` if child files created successfully
 
 **Test Assertions**:
-- returns {:ok, :valid} when specification requirements are satisfied and child files created
+- returns {:ok, :valid} when specification requirements are satisfied, no problems, and child files created
 - returns {:ok, :invalid, feedback} when specification requirements are unsatisfied
+- returns {:ok, :invalid, feedback} when spec file has problems even if requirements pass
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
 - creates child spec files for components listed in Components section
 - does not overwrite existing child spec files
 - falls back to Registry definitions when no persisted requirements exist
@@ -66,6 +70,7 @@ Evaluate Claude's output and provide feedback if needed.
 
 ## Dependencies
 
+- CodeMySpec.AgentTasks.ProblemFeedback
 - CodeMySpec.Components
 - CodeMySpec.Components.ComponentRepository
 - CodeMySpec.Components.Registry

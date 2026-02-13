@@ -6,15 +6,17 @@ Generates a specification for a LiveView page or component following the UI spec
 
 ## Dependencies
 
-- CodeMySpec.Rules
-- CodeMySpec.Utils
-- CodeMySpec.Environments
-- CodeMySpec.Documents.DocumentSpecProjector
+- CodeMySpec.AgentTasks.ProblemFeedback
 - CodeMySpec.Components
 - CodeMySpec.Components.Component
 - CodeMySpec.Components.ComponentRepository
+- CodeMySpec.Components.Registry
+- CodeMySpec.Documents.DocumentSpecProjector
+- CodeMySpec.Environments
 - CodeMySpec.Requirements
 - CodeMySpec.Requirements.RequirementsFormatter
+- CodeMySpec.Rules
+- CodeMySpec.Utils
 
 ## Functions
 
@@ -52,7 +54,7 @@ Generate the spec-writing prompt for a LiveView, including the UI spec format te
 
 ### evaluate/3
 
-Validate the generated spec file and provide feedback if needed.
+Validate the generated spec file by checking requirements and querying persisted problems.
 
 ```elixir
 @spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
@@ -60,14 +62,18 @@ Validate the generated spec file and provide feedback if needed.
 
 **Process**:
 1. Reload component from database to get latest requirements
-2. Check specification artifact requirements via `Requirements.check_requirements/4` with `artifact_types: [:specification]`
-3. When no persisted requirements match, fall back to Registry definitions for the component type
-4. Return `:valid` if all specification requirements are satisfied
-5. Build revision feedback with unsatisfied requirements via `RequirementsFormatter.format_unsatisfied/2` if any fail
+2. Check specification artifact requirements via `check_artifact_requirements/3`
+   - If persisted requirements exist for `:specification`, filter and return them
+   - If none exist, fall back to Registry definitions for the component type
+3. Build requirement feedback from unsatisfied requirements (nil if all pass)
+4. Check problems via `ProblemFeedback.for_spec_task/3` (queries spec file problems)
+5. Combine requirement feedback and problem feedback via `ProblemFeedback.combine/2`
 
 **Test Assertions**:
-- returns {:ok, :valid} when all specification requirements are satisfied
+- returns {:ok, :valid} when all specification requirements are satisfied and no problems exist
 - returns {:ok, :invalid, feedback} when specification requirements are unsatisfied
+- returns {:ok, :invalid, feedback} when spec file has problems even if requirements pass
+- returns {:ok, :invalid, feedback} combining requirement and problem feedback when both fail
 - includes unsatisfied requirement details in feedback
-- returns {:ok, :invalid, feedback} when spec file does not exist (via fallback checker)
-- returns {:ok, :invalid, feedback} when spec content is invalid (via fallback checker)
+- falls back to Registry definitions when no persisted requirements exist
+- reloads component from database before checking requirements

@@ -182,12 +182,6 @@ Dependencies:
 ### Problems
 **context**
 
-
-
-Dependencies:
-- CodeMySpec.Repo
-- CodeMySpec.Projects
-
 ### ProjectCoordinator
 **context**
 

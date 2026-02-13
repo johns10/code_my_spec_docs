@@ -84,6 +84,10 @@ codemyspecweb_userauth[CodeMySpecWeb.UserAuth]
 codemyspec_contentsync[CodeMySpec.ContentSync]
 testappweb_dashboardlive[TestAppWeb.DashboardLive]
 codemyspec_agenttasks[CodeMySpec.AgentTasks]
+codemyspec_agenttasks --> codemyspec_utils
+codemyspec_agenttasks --> codemyspec_components
+codemyspec_agenttasks --> codemyspec_requirements
+codemyspec_agenttasks --> codemyspec_rules
 codemyspec_mcpservers --> codemyspec_acceptancecriteria
 codemyspec_mcpservers --> codemyspec_stories
 codemyspec_quality --> codemyspec_tests
@@ -99,7 +103,6 @@ codemyspec_requirements --> codemyspec_users
 codemyspec_accounts --> codemyspec_users
 codemyspec_components --> codemyspec_repo
 codemyspec_components --> codemyspec_users
-codemyspec_agenttasks --> codemyspec_requirements
 codemyspeccli_hooks --> codemyspec_sessions
 codemyspec_acceptancecriteria --> codemyspec_users
 codemyspec_acceptancecriteria --> codemyspec_stories
@@ -118,12 +121,6 @@ codemyspec_validation --> codemyspec_utils
 codemyspec_validation --> codemyspec_sessions
 codemyspec_validation --> codemyspec_components
 codemyspec_content --> codemyspec_repo
-codemyspec_validation --> codemyspec_documents
-codemyspec_validation --> codemyspec_bddspecs
-codemyspec_validation --> codemyspec_tests
-codemyspec_validation --> codemyspec_compile
-codemyspec_validation --> codemyspec_staticanalysis
-codemyspec_agenttasks --> codemyspec_components
 codemyspec_agenttasks --> codemyspec_environments
 codemyspec_contentadmin --> codemyspec_repo
 codemyspec_contentadmin --> codemyspec_users
@@ -133,14 +130,12 @@ codemyspec_git --> codemyspec_integrations
 codemyspec_git --> codemyspec_users
 codemyspec_agenttasks --> codemyspec_stories
 codemyspec_problems --> codemyspec_projects
-codemyspec_agenttasks --> codemyspec_problems
-codemyspec_agenttasks --> codemyspec_utils
-codemyspec_agenttasks --> codemyspec_rules
 codemyspec_acceptancecriteria --> codemyspec_repo
 codemyspec_contentsync --> codemyspec_users
 codemyspec_tags --> codemyspec_users
 codemyspec_tags --> codemyspec_stories
 codemyspec_mcpservers --> codemyspec_environments
+codemyspec_agenttasks --> codemyspec_documents
 codemyspec_requirements --> codemyspec_sessions
 codemyspec_architecture --> codemyspec_documents
 codemyspec_architecture --> codemyspec_environments
@@ -149,7 +144,6 @@ codemyspec_staticanalysis --> codemyspec_documents
 codemyspec_staticanalysis --> codemyspec_code
 codemyspec_staticanalysis --> codemyspec_utils
 codemyspec_architecture --> codemyspec_users
-codemyspec_problems --> codemyspec_repo
 codemyspec_stories --> codemyspec_components
 codemyspec_quality --> codemyspec_utils
 codemyspec_quality --> codemyspec_components
@@ -165,8 +159,5 @@ codemyspec_stories --> codemyspec_accounts
 codemyspec_tests --> codemyspec_problems
 codemyspec_accounts --> codemyspec_authorization
 codemyspec_content --> codemyspec_users
-codemyspec_agenttasks --> codemyspec_documents
 codemyspec_components --> codemyspec_requirements
-codemyspec_agenttasks --> codemyspec_tests
-codemyspec_agenttasks --> codemyspec_compile
-codemyspec_agenttasks --> codemyspec_quality
+codemyspec_agenttasks --> codemyspec_problems

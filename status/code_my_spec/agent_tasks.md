@@ -120,7 +120,17 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
-- [ ] tests_passing - Component tests are passing
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.AgentTasks.DevelopLiveView (module)
+
+- [x] spec_file - Component specification file exists
+- [x] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
 
 
 ## CodeMySpec.AgentTasks.EvaluateAgentTask (module)
@@ -133,24 +143,14 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.AgentTasks.ImplementLiveView (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [ ] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.AgentTasks.LiveViewCode (module)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [ ] tests_passing - Component tests are passing
+- [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
 
 
 ## CodeMySpec.AgentTasks.LiveViewSpec (module)
@@ -159,7 +159,7 @@
 - [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
+- [ ] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -169,7 +169,7 @@
 - [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
+- [ ] test_spec_alignment - Test file implements all spec test assertions
 - [ ] tests_passing - Component tests are passing
 
 
@@ -180,6 +180,16 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.AgentTasks.ProblemFeedback (module)
+
+- [x] spec_file - Component specification file exists
+- [x] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
