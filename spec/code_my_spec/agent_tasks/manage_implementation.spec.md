@@ -1,47 +1,61 @@
 # CodeMySpec.AgentTasks.ManageImplementation
 
-Master agent task that orchestrates the full implementation lifecycle of a project. Provides the master prompt that drives the agent through an iterative loop:
+State machine that orchestrates the full implementation lifecycle of a project. Directly delegates to WriteBddSpecs, DevelopContext, and DevelopLiveView — tracking the current task via a status file and returning delegated prompts directly. No LLM orchestration decisions.
 
-1. **Write BDD specs** for the next incomplete story (via `/write-bdd-specs`)
-2. **Develop context** to make failing BDD specs pass (via `/develop-context`)
-3. Repeat until all stories are complete and all specs pass
+The orchestration is **story-focused** and driven by **BDD spec execution results**:
 
-This task sits at the **bottom of the session priority stack**. When the agent tries to stop, the stop hook evaluates all active sessions in priority order. Higher-priority sessions (e.g. WriteBddSpecs, DevelopContext) are evaluated first — they must be satisfied before ManageImplementation's evaluate is reached. This means the agent finishes its current task-level work before the project-level iteration logic runs.
+1. **Run all BDD specs** globally
+2. If specs are **failing** → map failures to stories → find the **highest-priority failing story** → develop its component dependency chain in order
+3. If specs are **passing** → write BDD specs for the next incomplete story (creating new failing specs)
+4. If all specs pass and no stories remain → **done**
 
-The iteration loop lives in `evaluate/3`: run BDD specs, check for incomplete stories, and either allow the agent to stop (all done) or block with instructions for the next cycle.
+This creates an interleaved loop: write specs for one story, develop its full dependency chain until those specs pass, then write specs for the next story. Development stays focused on a single story at a time. All development is at the context/liveview level — DevelopContext and DevelopLiveView handle their own children internally.
 
 ## Dependencies
 
-- CodeMySpec.BddSpecs
-- CodeMySpec.BddSpecs.Spex
-- CodeMySpec.Environments
+- CodeMySpec.BddSpecs — spec execution and story coverage checking
+- CodeMySpec.BddSpecs.Parser — extracting story IDs from spec file paths
+- CodeMySpec.Components — querying components with dependencies and requirements
+- CodeMySpec.Components.DependencyTree — topological sorting of component chains
+- CodeMySpec.Stories — story priority ordering
+- CodeMySpec.Environments — file I/O for status tracking and spec file globbing
+- CodeMySpec.AgentTasks.WriteBddSpecs — delegated BDD spec writing
+- CodeMySpec.AgentTasks.DevelopContext — delegated context development
+- CodeMySpec.AgentTasks.DevelopLiveView — delegated LiveView development
 
 ## Functions
 
 ### command/3
 
-Sync the project and generate the master prompt for the implementation loop.
+Sync the project, run BDD specs, and delegate to the appropriate task.
 
 ```elixir
-@spec command(Scope.t(), map(), keyword()) :: {:ok, String.t()}
+@spec command(Scope.t(), map(), keyword()) :: {:ok, String.t()} | {:error, term()}
 ```
 
 **Process**:
 
-1. Sync project state
-2. Build the master prompt instructing the agent to alternate between writing BDD specs and developing contexts
-3. Return the master prompt
+1. Sync project state (unless `skip_sync: true`)
+2. Run all BDD specs globally to determine current state
+3. If specs failing → map failures to story IDs via `Parser.derive_story_id/1` → find the highest-priority story among those with failing specs → `find_next_developable_for_story/2` → delegate to DevelopContext or DevelopLiveView
+4. If specs passing → find next incomplete story → delegate to WriteBddSpecs
+5. If all complete → return done message
+6. Write status file tracking the delegated task (includes `target_story_id` for develop tasks)
+7. Return the delegated task's prompt wrapped with a heading that includes story title
 
 **Test Assertions**:
 
-- returns master prompt with instructions for the write-specs / implement cycle
-- master prompt references `/write-bdd-specs` and `/develop-context` skills
+- writes specs when no BDD spec files exist for a story (specs trivially pass, stories incomplete)
+- develops component linked to a story when that story's specs are failing
+- develops dependency before target component when the target's `dependencies_satisfied` requirement is unsatisfied
+- develops liveview component linked to story (dispatches to DevelopLiveView)
+- returns all_complete message when no stories and no failing specs
+- writes status file with task type, component IDs, and `target_story_id`
+- prioritizes stories by priority field when multiple stories have failing specs
 
 ### evaluate/3
 
-Evaluate project state to decide whether the agent can stop or must continue.
-
-Runs BDD specs and checks for incomplete stories. This is reached only after all higher-priority sessions in the stack have been satisfied.
+Read the status file, evaluate the delegated task, then run BDD specs to decide what's next.
 
 ```elixir
 @spec evaluate(Scope.t(), map(), keyword()) ::
@@ -50,15 +64,53 @@ Runs BDD specs and checks for incomplete stories. This is reached only after all
 
 **Process**:
 
-1. Run BDD specs against the working directory
-2. If specs are failing, return `{:ok, :invalid, failure_feedback}` — agent must fix failures
-3. If specs pass, check for the next incomplete story
-4. If a story exists, return `{:ok, :invalid, next_story_prompt}` — agent should invoke `/write-bdd-specs`
-5. If no incomplete stories remain, return `{:ok, :valid}` — agent may stop
+1. Read `docs/status/implementation_status.json` to determine the current task
+2. Evaluate the delegated task (WriteBddSpecs.evaluate, DevelopContext.evaluate, or DevelopLiveView.evaluate)
+3. If delegated task returns `:invalid` → pass through feedback (agent keeps working on current task)
+4. If delegated task returns `:valid` → clear status → run BDD specs → decide next task:
+   - Same story's specs still failing → develop next component in its chain (return `{:ok, :invalid, prompt}`)
+   - Specs passing, stories remain → advance to writing BDD specs (return `{:ok, :invalid, prompt}`)
+   - All complete → return `{:ok, :valid}`
+5. If no status file exists → return `{:ok, :valid}` (nothing in progress)
 
 **Test Assertions**:
 
-- returns `{:ok, :invalid, feedback}` with failure details when BDD specs are failing
-- returns `{:ok, :invalid, prompt}` directing agent to write BDD specs when next story exists
-- returns `{:ok, :valid}` when all stories complete and specs pass
-- handles BDD spec execution errors gracefully
+- returns `{:ok, :valid}` when no status file exists
+- evaluates WriteBddSpecs when status indicates bdd task
+- evaluates DevelopContext when status indicates context task
+- passes through `:invalid` feedback from delegated tasks
+- advances to next task when delegated task completes
+- handles errors gracefully (rescue around the whole flow)
+
+### Private: decide_next_task/2
+
+The core orchestration decision point. Runs BDD specs and uses the result to determine what to do next.
+
+- Specs failing → map failures to stories → find highest-priority failing story → `find_next_developable_for_story/2` → `{:develop, story, component, task_module}`
+- No story found for failures → `{:specs_failing_no_target, failures}`
+- Story found but blocked → `{:story_blocked, story, reason}`
+- Specs passing → `get_next_incomplete_story` → `{:write_bdd_specs, story}`
+- All done → `:all_complete`
+
+### Private: decide_on_failing_specs/3
+
+Maps BDD spec failures to stories by priority:
+
+1. Extract story IDs from `failure.spex` paths via `Parser.derive_story_id/1`
+2. Fallback: if no story IDs parsed (e.g., compilation errors), derive from spec files on disk
+3. Get stories ordered by priority, find the first matching a failing story ID
+4. Call `find_next_developable_for_story/2` for that story
+
+### Private: find_next_developable_for_story/2
+
+Given a story with failing specs, finds the next component to develop in its dependency chain:
+
+1. Get story's `component_id` → target component
+2. Get all components with deps + requirements via `list_components_with_dependencies/1`
+3. Collect transitive dependency chain for the target component
+4. Topologically sort the chain via `DependencyTree.build/1`
+5. Find first component in sorted chain that:
+   - type is in `@developable_types` (context, coordination_context, liveview, liveview_component)
+   - has unsatisfied requirements
+   - `dependencies_satisfied?/1` returns true
+6. Return `{:develop, story, component, task_module}` or `{:story_blocked, story, reason}`
