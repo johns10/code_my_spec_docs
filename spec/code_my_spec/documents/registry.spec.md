@@ -35,5 +35,3 @@ section descriptions for generating specification documents.
 - all definitions include section_descriptions map for applicable sections
 
 ## Dependencies
-
-- CodeMySpec.Components.ComponentType

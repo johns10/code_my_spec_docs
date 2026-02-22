@@ -1,12 +1,7 @@
-# MetricFlowWeb.DashboardLive (context)
+# MetricFlowWeb.DashboardLive (liveview)
 
-- [x] spec_file - Context specification file exists
-- [ ] spec_valid - Context specification is valid
-- [x] children_designs - Child component designs are complete
-- [ ] review_file - Context design review file exists
-- [ ] review_valid - Context design review is valid
-- [x] children_implementations - Child component implementations are complete
-- [x] dependencies_satisfied - Component dependencies are satisfied
+- [x] spec_file - LiveView specification file exists
+- [ ] spec_valid - LiveView specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions

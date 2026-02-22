@@ -31,11 +31,11 @@ Generate the spec-writing prompt for a LiveView, including the UI spec format te
 **Process**:
 1. Extract component from session map
 2. Retrieve design rules matching the component type using `Rules.find_matching_rules/2` with session type "design"
-3. Get document specification for the component type via `DocumentSpecProjector.project_spec/1`
+3. Get document specification for the component type via `DocumentSpecProjector.project_spec/1` (uses "liveview" document type from Documents.Registry with route, user interactions, design sections)
 4. Check for existing implementation and test files via `Environments.file_exists?/2`
 5. Include parent component spec file path when parent exists
 6. List similar components for pattern inspiration using `Components.list_similar_components/2`
-7. Build spec prompt with UI-specific format guidance: route, params, child components, interactions, dependencies, structural Design section
+7. Build spec prompt including design rules and document specifications
 8. Return the prompt text
 
 **Test Assertions**:

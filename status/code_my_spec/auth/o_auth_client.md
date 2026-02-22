@@ -1,9 +1,9 @@
-# CodeMySpecCli.Hooks.TrackEdits
+# CodeMySpec.Auth.OAuthClient
 
 
-## CodeMySpecCli.Hooks.TrackEdits (module)
+## CodeMySpec.Auth.OAuthClient (module)
 
-- [x] spec_file - Component specification file exists
+- [ ] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists

@@ -45,7 +45,6 @@ Validates document content against component type-specific schema.
 ## Dependencies
 
 - CodeMySpec.Requirements.RequirementDefinition
-- CodeMySpec.Requirements.CheckResult
 - CodeMySpec.Components.Component
 - CodeMySpec.Components.Registry
 - CodeMySpec.Documents.Registry

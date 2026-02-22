@@ -293,7 +293,6 @@ Checks if all acceptance criteria for a story are verified.
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.Stories.Story
 - CodeMySpec.Stories.StoriesRepository
-- CodeMySpec.Stories.RemoteClient
 - CodeMySpec.Users.Scope
 - Phoenix.PubSub
 

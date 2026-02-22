@@ -1,0 +1,1 @@
+Our compiler integration does catch compiler issues and the model fixes them, but we don't catch them in the test environment, so we have a bunch of failing compiler issues and tests that aren't getting fixed.

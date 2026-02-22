@@ -1,1 +1,0 @@
-When I call from the CLI to get stories for a project when my user doesn't have a current active project and a current active account, or it doesn't match, it breaks the flow. When we call in from the API, we need to respect the scope of the caller, not the scope of the active users.

@@ -3,24 +3,28 @@ component_type: "liveview_component"
 session_type: "design"
 ---
 
-## Component Design Template
+# Phoenix LiveComponent Design Rules
 
-### File Structure
-- Place in `docs/design/my_app_web/{context}_live/components/`
-- Name files by component: `account_card.md`, `members_list.md`
+## Assigns
+- Always include `:id` assign (required by LiveComponent)
+- Document all assigns in a table: Assign, Type, Required, Description
+- Use typed assigns (`User.t()`, `Changeset.t()`) for clarity
 
-### Required Sections
+## Events
+- Use `phx-target={@myself}` to scope events to this component
+- Communicate with parent views via `send(self(), {:event_name, data})`
+- Keep event handling local — don't reach into parent assigns
 
-1. **Purpose** - Single sentence describing what this component does
-2. **Usage** - Code example showing how to use the component
-3. **Props** - List of all props with types and descriptions
-4. **Template** - UI structure and styling approach
-5. **Events** - User interactions handled by this component (if any)
-6. **Additional Sections** - As needed:
-   - **Validation** - Form validation rules
-   - **States** - Different visual states
-   - **Examples** - Multiple usage examples
-   - **Logic** - Complex behavior explanations
+## File Structure
+- Place in `lib/my_app_web/live/{context}_live/` alongside sibling views
+- Name files by purpose: `form_component.ex`, `filter_component.ex`
+
+## Required Spec Sections
+
+1. **Assigns** - Table of all assigns with types and required flag
+2. **Design** - Layout structure, DaisyUI components, responsive behavior
+3. **Events** (optional) - handle_event callbacks with phx-target={@myself}
+4. **Dependencies** (optional) - Domain contexts this component calls
 
 ## Style Guidelines
 

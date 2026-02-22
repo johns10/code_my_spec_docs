@@ -154,6 +154,6 @@ Handle task failure.
 - CodeMySpec.Tests
 - CodeMySpec.Tests.TestRun
 - CodeMySpec.Problems
-- CodeMySpec.Scope
+- CodeMySpec.Users.Scope
 - Logger
 - Task

@@ -236,9 +236,3 @@ Returns standard requirement set for most component types.
 - CodeMySpec.Requirements.HierarchicalChecker
 - CodeMySpec.Requirements.ContextReviewFileChecker
 - CodeMySpec.Requirements.ContextReviewValidityChecker
-- CodeMySpec.ComponentSpecSessions
-- CodeMySpec.ComponentCodingSessions
-- CodeMySpec.ComponentTestSessions
-- CodeMySpec.ContextSpecSessions
-- CodeMySpec.ContextComponentsDesignSessions
-- CodeMySpec.ContextDesignReviewSessions

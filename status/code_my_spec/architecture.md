@@ -1,12 +1,10 @@
 # CodeMySpec.Architecture
 
 
-## CodeMySpec.Architecture (context)
+## CodeMySpec.Architecture (module)
 
-- [x] spec_file - Context specification file exists
-- [x] spec_valid - Context specification is valid
-- [x] review_file - Context design review file exists
-- [x] review_valid - Context design review is valid
+- [x] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
@@ -46,7 +44,7 @@
 ## CodeMySpec.Architecture.Proposal (module)
 
 - [x] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
+- [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions

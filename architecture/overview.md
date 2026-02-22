@@ -2,29 +2,11 @@
 
 ## Root Components
 
-### AddCriterion
-**module**
-
-
-## Root Components
-
-### AddSimilarComponent
-**module**
-
-
-## Root Components
-
-### ClearStoryComponent
-**module**
-
-
-## CodeMySpec
-
 ### CodeMySpec
-**context**
+**module**
 
 ### AcceptanceCriteria
-**context**
+**module**
 
 
 
@@ -41,7 +23,7 @@ Dependencies:
 **module**
 
 ### Accounts
-**context**
+**module**
 
 The Accounts context manages multi-tenant account architecture with personal and team accounts, user membership relationships, role-based permissions, and access control throughout the CodeMySpec platform.
 
@@ -54,7 +36,7 @@ Dependencies:
 - CodeMySpec.Accounts.MembersRepository
 
 ### AgentTasks
-**context**
+**module**
 
 ### Analytics
 **module**
@@ -63,10 +45,10 @@ Dependencies:
 **module**
 
 ### Application
-**context**
+**module**
 
 ### Architecture
-**context**
+**module**
 
 A coordination context that generates and maintains text-based architectural views for AI agent consumption. Provides projectors that create documentation artifacts (mermaid diagrams, component hierarchies, namespace trees) written to the repository and synchronized with current project state during full syncs.
 
@@ -75,10 +57,10 @@ Dependencies:
 - CodeMySpec.Components
 
 ### Authorization
-**context**
+**module**
 
 ### BddSpecs
-**context**
+**module**
 
 
 
@@ -93,38 +75,38 @@ Dependencies:
 **module**
 
 ### Bogus
-**context**
+**module**
 
 ### ClientUsers
-**context**
+**module**
 
 ### Code
-**context**
+**module**
 
 
 
 ### Compile
-**context**
+**module**
 
 ### Components
-**context**
+**module**
 
 ### Content
-**context**
+**module**
 
 ### ContentAdmin
-**context**
+**module**
 
 ### ContentSync
-**context**
+**module**
 
 ### Documents
-**context**
+**module**
 
 
 
 ### Environments
-**context**
+**module**
 
 
 
@@ -139,7 +121,7 @@ Embedded schema representing a schema field.
 
 
 ### FileEdits
-**context**
+**module**
 
 ### Function
 **module**
@@ -152,25 +134,32 @@ Embedded schema representing a function from a spec.
 
 
 ### Git
-**context**
+**module**
+
+Context module for Git operations using authenticated credentials. Provides a thin wrapper around Git CLI operations for cloning and pulling repositories using OAuth tokens from the Integrations context.
+
+Dependencies:
+- CodeMySpec.Git.Behaviour
+- CodeMySpec.Users.Scope
+- CodeMySpec.Git.CLI
 
 ### GitHub
-**context**
+**module**
 
 ### Integrations
-**context**
+**module**
 
 ### Invitations
-**context**
+**module**
 
 ### LocalServer
-**context**
+**module**
 
 ### Mailer
-**context**
+**module**
 
 ### McpServers
-**context**
+**module**
 
 MCP (Model Context Protocol) servers context providing AI agent interfaces to domain functionality.
 
@@ -179,25 +168,34 @@ Dependencies:
 - CodeMySpec.Components
 - CodeMySpec.Stories
 
+### OAuthClient
+**module**
+
 ### Problems
-**context**
+**module**
+
+
+
+Dependencies:
+- CodeMySpec.Repo
+- CodeMySpec.Projects
 
 ### ProjectCoordinator
-**context**
+**module**
 
 ### ProjectSetupWizard
-**context**
+**module**
 
 ### ProjectSync
-**context**
+**module**
 
 Public API for orchestrating synchronization of the entire project from filesystem to database and maintaining real-time sync via file watching.
 
 ### Projects
-**context**
+**module**
 
 ### Quality
-**context**
+**module**
 
 
 
@@ -207,21 +205,21 @@ Dependencies:
 - CodeMySpec.Code
 
 ### Release
-**context**
+**module**
 
 ### Repo
-**context**
+**module**
 
 ### Requirements
-**context**
+**module**
 
 Manages component requirement checking, persistence, and workflow queries. Requirements are computed from checker modules and persisted for efficient UI queries.
 
 ### Rules
-**context**
+**module**
 
 ### Sessions
-**context**
+**module**
 
 
 
@@ -241,7 +239,7 @@ Embedded schema representing a parsed spec file.
 
 
 ### StaticAnalysis
-**context**
+**module**
 
 
 
@@ -251,19 +249,21 @@ Dependencies:
 - CodeMySpec.Projects
 
 ### Stories
-**context**
+**module**
 
 
 
 Dependencies:
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.Users.Scope
-- CodeMySpec.Stories.RemoteClient
 - CodeMySpec.Stories.Story
 - CodeMySpec.Stories.StoriesRepository
 
+### Strategy
+**module**
+
 ### Tags
-**context**
+**module**
 
 
 
@@ -275,22 +275,24 @@ Dependencies:
 - CodeMySpec.Stories.Story
 
 ### Tests
-**context**
+**module**
+
+The Tests context provides a functional interface for executing ExUnit tests with real-time streaming and structured result parsing. It executes mix test commands asynchronously via Erlang ports, streams JSON-formatted test events, and returns parsed test run data including statistics, failures, and passes.
 
 ### Transcripts
-**context**
+**module**
 
 ### UserPreferences
-**context**
+**module**
 
 ### Users
-**context**
+**module**
 
 ### Utils
-**context**
+**module**
 
 ### Validation
-**context**
+**module**
 
 
 
@@ -304,13 +306,13 @@ Dependencies:
 - CodeMySpec.Transcripts.ClaudeCode.FileExtractor
 
 ### Vault
-**context**
+**module**
 
 
-## CodeMySpecWeb
+## Root Components
 
 ### CodeMySpecWeb
-**context**
+**module**
 
 ### Accept
 **module**
@@ -319,31 +321,31 @@ Dependencies:
 **module**
 
 ### ChangesetJSON
-**context**
+**module**
 
 ### Confirmation
 **module**
 
 ### ContentSyncController
-**context**
+**module**
 
 ### CoreComponents
-**context**
+**module**
 
 ### CurrentPathHook
 **module**
 
 ### Endpoint
-**context**
+**module**
 
 ### ErrorHTML
-**context**
+**module**
 
 ### ErrorJSON
-**context**
+**module**
 
 ### FallbackController
-**context**
+**module**
 
 ### Form
 **module**
@@ -364,7 +366,7 @@ Dependencies:
 **module**
 
 ### Gettext
-**context**
+**module**
 
 ### Import
 **module**
@@ -391,13 +393,13 @@ Dependencies:
 **module**
 
 ### IntegrationsController
-**context**
+**module**
 
 ### Invitations
 **module**
 
 ### Layouts
-**context**
+**module**
 
 ### Login
 **module**
@@ -418,19 +420,19 @@ Dependencies:
 **module**
 
 ### OAuthController
-**context**
+**module**
 
 ### OAuthHTML
-**context**
+**module**
 
 ### Overview
 **module**
 
 ### PageController
-**context**
+**module**
 
 ### PageHTML
-**context**
+**module**
 
 ### PendingInvitations
 **module**
@@ -442,19 +444,22 @@ Dependencies:
 **module**
 
 ### Presence
-**context**
+**module**
 
 ### ProjectBreadcrumb
 **module**
 
 ### ProjectController
-**context**
+**module**
 
 ### ProjectCoordinatorController
-**context**
+**module**
 
 ### ProjectCoordinatorJSON
-**context**
+**module**
+
+### ProjectScopeOverride
+**module**
 
 ### Public
 **module**
@@ -463,13 +468,13 @@ Dependencies:
 **module**
 
 ### Router
-**context**
+**module**
 
 ### Scheduler
 **module**
 
 ### SessionChannel
-**context**
+**module**
 
 ### Settings
 **module**
@@ -490,75 +495,36 @@ Dependencies:
 **module**
 
 ### StoriesController
-**context**
+**module**
 
 ### StoriesJSON
-**context**
+**module**
 
 ### Telemetry
-**context**
+**module**
 
 ### TypeaheadComponent
-**context**
+**module**
 
 ### UserAuth
-**context**
+**module**
 
 ### UserController
-**context**
+**module**
 
 ### UserSessionController
-**context**
+**module**
 
 ### UserSocket
-**context**
-
-
-## Root Components
-
-### CreateComponent
 **module**
 
 
 ## Root Components
-
-### CreateComponents
-**module**
-
-
-## DashboardLive
 
 ### DashboardLive
-**context**
+**liveview**
 
 Dashboard view
-
-
-## DashboardLive
-
-### DashboardLive
-**context**
-
-Dashboard view
-
-
-## Dashboards
-
-### Dashboards
-**context**
-
-Dashboard management
-
-### Dashboard
-**module**
-
-Dashboard entity
-
-
-## Root Components
-
-### DeleteSpec
-**module**
 
 
 ## Root Components
@@ -569,98 +535,36 @@ Dashboard entity
 
 ## Root Components
 
-### GetComponent
-**module**
-
-
-## Root Components
-
 ### GetJohns10Token
 **module**
 
 
-## Hooks
-
-### Hooks
-**context**
-
-It does the damn thing
-
-### TrackEdits
-**module**
-
-A Claude Code post-tool-use hook that tracks files edited during an agent session. When Claude uses Write or Edit tools, this hook captures the file path and stores it in session state, building a record of all files modified during the session for later validation.
-
-Dependencies:
-- CodeMySpec.Sessions
-
-
 ## Root Components
 
-### JobStatus
-**module**
-
-A status indicator component that displays running background jobs. Subscribes to PubSub events and only shows when jobs are active.
-
-
-## Session
-
 ### Session
-**context**
+**module**
 
 Ecto schema for agent task sessions. Tracks type (agent task module), agent, environment, execution mode, status lifecycle, and parent/child hierarchy. Scoped by account, project, and user.
 
 
-## SessionStack
+## Root Components
 
 ### SessionStack
-**context**
+**module**
 
 Filesystem-based session stack that controls stop hook behavior. Each session is a directory under  .code_my_spec/internal/sessions/{session_id}/  with  session.json  metadata and working files. Evaluates sessions by priority on stop hook — blocking the agent until tasks complete. Users can  ls  to see active sessions or  rm -rf  to cancel.
 
 
-## SessionType
+## Root Components
 
 ### SessionType
-**context**
+**module**
 
 Custom Ecto type mapping agent task module atoms to string representations. Validates against known agent task modules.
 
 
 ## Root Components
 
-### Sessions
-**module**
-
-
-
-Dependencies:
-- CodeMySpecCli.TerminalPanes
-- CodeMySpec.Sessions
-
-
-## StructIntrospector
-
 ### StructIntrospector
-**context**
-
-
-## TerminalPanes
-
-### TerminalPanes
-**context**
-
-
-
-
-## Root Components
-
-### UpdateComponent
-**module**
-
-
-## Root Components
-
-### UpdateStory
 **module**
 

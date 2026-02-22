@@ -1,14 +1,32 @@
 # CodeMySpec.McpServers
 
 
-## CodeMySpec.McpServers (context)
+## CodeMySpec.McpServers (module)
 
-- [x] spec_file - Context specification file exists
-- [x] spec_valid - Context specification is valid
-- [ ] review_file - Context design review file exists
-- [ ] review_valid - Context design review is valid
+- [x] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Stories.Tools.AddCriterion (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Components.Tools.AddSimilarComponent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
@@ -83,6 +101,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Stories.Tools.ClearStoryComponent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Components.ComponentsMapper (module)
 
 - [x] spec_file - Component specification file exists
@@ -110,6 +138,26 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Components.Tools.CreateComponent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Components.Tools.CreateComponents (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -253,16 +301,6 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.McpServers.Architecture.Tools.ExecuteProposal (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.McpServers.Formatters (module)
 
 - [x] spec_file - Component specification file exists
@@ -279,6 +317,16 @@
 - [ ] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Components.Tools.GetComponent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
@@ -307,9 +355,9 @@
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -347,9 +395,9 @@
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -413,16 +461,6 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.McpServers.Architecture.Tools.ListSpecNames (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.McpServers.ArchitectureServer.ListSpecs (module)
 
 - [x] spec_file - Component specification file exists
@@ -437,9 +475,9 @@
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -546,7 +584,7 @@
 ## CodeMySpec.McpServers.Stories.Tools.StartStoryInterview (module)
 
 - [x] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
+- [x] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
@@ -556,7 +594,7 @@
 ## CodeMySpec.McpServers.Stories.Tools.StartStoryReview (module)
 
 - [x] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
+- [x] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
@@ -603,6 +641,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Components.Tools.UpdateComponent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Stories.Tools.UpdateCriterion (module)
 
 - [x] spec_file - Component specification file exists
@@ -639,6 +687,16 @@
 - [ ] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Stories.Tools.UpdateStory (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 

@@ -87,6 +87,5 @@ Get list of all registered static analyzer modules.
 - CodeMySpec.Problems.Problem
 - CodeMySpec.StaticAnalysis.AnalyzerBehaviour
 - CodeMySpec.StaticAnalysis.Analyzers.Credo
-- CodeMySpec.StaticAnalysis.Analyzers.Boundary
 - CodeMySpec.StaticAnalysis.Analyzers.Sobelow
 - CodeMySpec.StaticAnalysis.Analyzers.SpecAlignment

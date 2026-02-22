@@ -1,4 +1,4 @@
-# Tests Context
+# CodeMySpec.Tests
 
 The Tests context provides a functional interface for executing ExUnit tests with real-time streaming and structured result parsing. It executes mix test commands asynchronously via Erlang ports, streams JSON-formatted test events, and returns parsed test run data including statistics, failures, and passes.
 
@@ -59,4 +59,3 @@ Execute mix test synchronously with real-time streaming and JSON result parsing.
 - Logger
 - Briefly
 - Jason
-- CodeMySpec.Sessions.InteractionRegistry
