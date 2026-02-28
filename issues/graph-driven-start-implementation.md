@@ -82,26 +82,27 @@ concerns that need to be handled differently.
 
 ## What Remains
 
-### BDD spec integration
+### BDD spec integration — DONE
 
-The old StartImplementation had a BDD spec pipeline: run specs → find failing story →
-dispatch WriteBddSpecs or fix-failing-specs. This was removed in the refactor.
+BDD specs now execute in batches at two points instead of inline during requirement sync:
 
-BDD specs are story-level requirements (`bdd_spec_existence`, `bdd_spec_passing`) that
-should be handled by the requirement graph. The checkers need to:
+1. **Start path** — `StartAgentTask.run_project_task` calls `Pipeline.run_all_spex(scope)`
+   after sync, persists spex problems, then creates the session.
+2. **Stop path** — `Validation.validate_stop` checks if the session is a
+   `StartImplementation` session; if so, runs `Pipeline.run_all_spex(scope)` and merges
+   the spex problems into the pipeline results before `persist_and_sync`.
 
-1. **`bdd_spec_existence`** — check if spex files exist for the story
-2. **`bdd_spec_passing`** — run the story's spex files and check they pass
+`BddSpecPassingChecker` no longer runs specs inline. Instead it reads cached spex
+problems from the Problems table (`Problems.list_project_problems(scope, source: "spex")`)
+and filters by the story's spec file paths. No problems = satisfied.
 
-These checkers exist in the requirements registry (`requirement_definition_data.ex`)
-but need real checker implementations that actually run specs and check files. Currently
-they use placeholder checkers.
+`BddSpecExistenceChecker` — unchanged (just checks file existence via glob).
 
-**Relevant files:**
-- `lib/code_my_spec/requirements/requirement_definition_data.ex` — definitions with checker modules
-- `lib/code_my_spec/requirements/bdd_spec_existence_checker.ex` — needs implementation
-- `lib/code_my_spec/requirements/bdd_spec_passing_checker.ex` — needs implementation
-- `lib/code_my_spec/agent_tasks/write_bdd_specs.ex` — task module for `bdd_spec_existence`
+**Files:**
+- `lib/code_my_spec/requirements/bdd_spec_passing_checker.ex` — reads cached Problems
+- `lib/code_my_spec/validation/pipeline.ex` — `run_all_spex/1` batch runner
+- `lib/code_my_spec/agent_tasks/start_agent_task.ex` — `run_project_task/3` with batch spex
+- `lib/code_my_spec/validation.ex` — batch spex on implementation Stop
 
 ### Story-component linkage errors
 
