@@ -11,8 +11,8 @@
 
 
 Dependencies:
-- CodeMySpec.AcceptanceCriteria.AcceptanceCriteriaRepository
 - CodeMySpec.Users.Scope
+- CodeMySpec.AcceptanceCriteria.AcceptanceCriteriaRepository
 - CodeMySpec.AcceptanceCriteria.Criterion
 - CodeMySpec.Stories.Story
 
@@ -30,10 +30,10 @@ The Accounts context manages multi-tenant account architecture with personal and
 Dependencies:
 - CodeMySpec.Accounts.AccountsRepository
 - CodeMySpec.Users.Scope
-- CodeMySpec.Accounts.Member
-- CodeMySpec.Authorization
-- CodeMySpec.Accounts.Account
 - CodeMySpec.Accounts.MembersRepository
+- CodeMySpec.Accounts.Account
+- CodeMySpec.Authorization
+- CodeMySpec.Accounts.Member
 
 ### AgentTasks
 **module**
@@ -67,9 +67,9 @@ Dependencies:
 Dependencies:
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.Users.Scope
+- CodeMySpec.Stories
 - CodeMySpec.AcceptanceCriteria.Criterion
 - CodeMySpec.Stories.Story
-- CodeMySpec.Stories
 
 ### Binary
 **module**
@@ -139,8 +139,8 @@ Embedded schema representing a function from a spec.
 Context module for Git operations using authenticated credentials. Provides a thin wrapper around Git CLI operations for cloning and pulling repositories using OAuth tokens from the Integrations context.
 
 Dependencies:
-- CodeMySpec.Git.Behaviour
 - CodeMySpec.Users.Scope
+- CodeMySpec.Git.Behaviour
 - CodeMySpec.Git.CLI
 
 ### GitHub
@@ -164,11 +164,14 @@ Dependencies:
 MCP (Model Context Protocol) servers context providing AI agent interfaces to domain functionality.
 
 Dependencies:
+- CodeMySpec.Stories
 - CodeMySpec.Sessions
 - CodeMySpec.Components
-- CodeMySpec.Stories
 
 ### OAuthClient
+**module**
+
+### Paths
 **module**
 
 ### Problems
@@ -177,8 +180,8 @@ Dependencies:
 
 
 Dependencies:
-- CodeMySpec.Repo
 - CodeMySpec.Projects
+- CodeMySpec.Repo
 
 ### ProjectCoordinator
 **module**
@@ -200,9 +203,9 @@ Public API for orchestrating synchronization of the entire project from filesyst
 
 
 Dependencies:
+- CodeMySpec.Code
 - CodeMySpec.Utils
 - CodeMySpec.Components
-- CodeMySpec.Code
 
 ### Release
 **module**
@@ -244,9 +247,9 @@ Embedded schema representing a parsed spec file.
 
 
 Dependencies:
-- CodeMySpec.Problems
-- CodeMySpec.Users.Scope
 - CodeMySpec.Projects
+- CodeMySpec.Users.Scope
+- CodeMySpec.Problems
 
 ### Stories
 **module**
@@ -256,8 +259,8 @@ Dependencies:
 Dependencies:
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.Users.Scope
-- CodeMySpec.Stories.Story
 - CodeMySpec.Stories.StoriesRepository
+- CodeMySpec.Stories.Story
 
 ### Strategy
 **module**
@@ -268,10 +271,10 @@ Dependencies:
 
 
 Dependencies:
-- CodeMySpec.Tags.TagRepository
-- CodeMySpec.Tags.Tag
 - CodeMySpec.Users.Scope
+- CodeMySpec.Tags.TagRepository
 - CodeMySpec.Tags.StoryTag
+- CodeMySpec.Tags.Tag
 - CodeMySpec.Stories.Story
 
 ### Tests
@@ -297,13 +300,13 @@ The Tests context provides a functional interface for executing ExUnit tests wit
 
 
 Dependencies:
+- CodeMySpec.Problems.ProblemRenderer
+- CodeMySpec.Validation.TaskEvaluator
+- CodeMySpec.ProjectSync.Sync
+- CodeMySpec.Transcripts.ClaudeCode.FileExtractor
+- CodeMySpec.Validation.Pipeline
 - CodeMySpec.Transcripts.ClaudeCode.Transcript
 - CodeMySpec.Problems
-- CodeMySpec.Validation.Pipeline
-- CodeMySpec.ProjectSync.Sync
-- CodeMySpec.Validation.TaskEvaluator
-- CodeMySpec.Problems.ProblemRenderer
-- CodeMySpec.Transcripts.ClaudeCode.FileExtractor
 
 ### Vault
 **module**

@@ -1,0 +1,1 @@
+I want some sort of production mode that basically makes it where all changes have to be wrapped up in feature flags. And then I want my, you know, like a release agent that helps to release feature flag code and then monitor whether it's screwing things up.
