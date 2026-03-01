@@ -1,8 +1,8 @@
 # Architecture Overview
 
-## TestComponent10055
+## TestComponent10594
 
-### TestComponent10055
+### TestComponent10594
 **context**
 
 A test component

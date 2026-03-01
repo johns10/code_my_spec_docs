@@ -70,11 +70,12 @@ defp dispatch(env, scope) do
 end
 ```
 
-Status file stores `{"requirement_id": "..."}` — evaluate reloads it and calls
-`Dispatch.evaluate`, then re-dispatches if valid.
+Status file stores requirement name, scope, and owner FKs for observability —
+evaluate does NOT read it. Instead, evaluate syncs and re-walks the graph.
+If the agent's work satisfied the requirement, the graph moves forward.
 
-Syncing: `StartAgentTask` syncs before `command/3`. `evaluate/3` syncs before
-evaluating (agent may have created files) and again before re-dispatching.
+Syncing: `StartAgentTask` syncs before `command/3`. `evaluate/3` syncs and
+then re-dispatches via `dispatch_or_complete` (no stale ID lookups).
 
 **Deleted:** All BDD spec resolution, story dispatch, chain walking, blocked handling,
 pre-flight, fix-failing-specs. These were duplicating graph logic or are story-level
@@ -220,11 +221,9 @@ StartAgentTask.run
 HookController("Stop")
   → TaskEvaluator.evaluate_sessions
     → StartImplementation.evaluate
-      → load requirement from status
-      → Sync.sync_all (refresh after agent work)
-      → Dispatch.evaluate(req, scope, session)
-        → :local  → task_module.evaluate/3
-        → :children → find_actionable children, orchestrate, check completeness
-      → if valid → clear status → sync again → re-dispatch next
-      → if invalid → return feedback
+      → Sync.sync_all (refresh requirements after agent work)
+      → dispatch_or_complete (re-walk graph)
+        → get_next_actions → find next unsatisfied requirement
+        → if found → Dispatch.command → write status → return :invalid with prompt
+        → if complete → clear status → return :valid
 ```
