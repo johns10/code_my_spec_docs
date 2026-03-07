@@ -1,6 +1,8 @@
 # CodeMySpec.StaticAnalysis.Runner
 
-**Type**: module
+## Type
+
+module
 
 Orchestrates execution of static analyzers against a project. Handles parallel execution, error isolation, and result aggregation.
 

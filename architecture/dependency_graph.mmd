@@ -1,2 +1,32 @@
 flowchart TD
-testcomponent10594[TestComponent10594]
+codemyspec_stories[CodeMySpec.Stories]
+codemyspec_acceptancecriteria[CodeMySpec.AcceptanceCriteria]
+codemyspec_bddspecs[CodeMySpec.BddSpecs]
+codemyspec_validation[CodeMySpec.Validation]
+codemyspec_agenttasks_developliveview[CodeMySpec.AgentTasks.DevelopLiveView]
+codemyspec_staticanalysis[CodeMySpec.StaticAnalysis]
+codemyspec_documents[CodeMySpec.Documents]
+codemyspec_tags[CodeMySpec.Tags]
+codemyspec_problems[CodeMySpec.Problems]
+codemyspec_sessions[CodeMySpec.Sessions]
+codemyspec_code[CodeMySpec.Code]
+codemyspec_quality[CodeMySpec.Quality]
+testappweb_dashboardlive[TestAppWeb.DashboardLive]
+codemyspec_testcontext[CodeMySpec.TestContext]
+codemyspec_issues[CodeMySpec.Issues]
+codemyspec_stories --> codemyspec_acceptancecriteria
+codemyspec_staticanalysis --> codemyspec_problems
+codemyspec_acceptancecriteria --> codemyspec_stories
+codemyspec_bddspecs --> codemyspec_acceptancecriteria
+codemyspec_bddspecs --> codemyspec_stories
+codemyspec_validation --> codemyspec_problems
+codemyspec_validation --> codemyspec_sessions
+codemyspec_validation --> codemyspec_staticanalysis
+codemyspec_validation --> codemyspec_bddspecs
+codemyspec_validation --> codemyspec_documents
+codemyspec_tags --> codemyspec_stories
+codemyspec_staticanalysis --> codemyspec_code
+codemyspec_staticanalysis --> codemyspec_documents
+codemyspec_bddspecs --> codemyspec_code
+codemyspec_quality --> codemyspec_code
+codemyspec_issues --> codemyspec_documents

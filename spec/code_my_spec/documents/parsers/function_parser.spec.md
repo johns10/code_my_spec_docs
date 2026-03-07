@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.Parsers.FunctionParser
 
-**Type**: other
+## Type
+
+other
 
 Parse Functions section AST into Function embedded schema structs.
 

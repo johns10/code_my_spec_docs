@@ -1,6 +1,8 @@
 # CodeMySpec.Specs.SpecParser
 
-**Type**: logic
+## Type
+
+logic
 
 Parse markdown AST into Spec embedded schema structs.
 

@@ -1,6 +1,8 @@
 # CodeMySpec.Environments.Environment
 
-**Type**: struct
+## Type
+
+struct
 
 Opaque struct representing an execution context. Encapsulates implementation-specific details.
 

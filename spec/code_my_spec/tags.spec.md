@@ -1,6 +1,8 @@
 # CodeMySpec.Tags
 
-**Type**: context
+## Type
+
+context
 
 Simple tagging system for organizing stories. Tags are strings scoped to a project, and stories can have multiple tags.
 

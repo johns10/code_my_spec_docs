@@ -1,33 +1,61 @@
-# CodeMySpec - AI-Assisted Phoenix Development Platform
+# CodeMySpec - AI-Driven Development Automation Platform
 
 ## Core Mission
-CodeMySpec is a Phoenix/LiveView application that helps teams manage software development workflows through structured requirement gathering, component design, and test-driven development. The platform integrates with AI agents (Claude Code) via MCP servers to assist with design generation and test creation while maintaining human oversight of architectural decisions.
+CodeMySpec is a two-part platform — a Phoenix/LiveView web application (SaaS) and a local CLI/plugin — that automates software development workflows by orchestrating AI agents (Claude Code) through structured requirement gathering, component architecture, spec-driven development, and automated validation. The platform manages the full lifecycle from user stories through implementation, using graph-driven task orchestration, real-time hook-based feedback, and a multi-stage validation pipeline to keep AI agents productive and aligned with architectural decisions.
 
 ## Foundational Principle
-Effective AI-assisted development requires systematic processes, clear component boundaries, and traceability from requirements through implementation. CodeMySpec provides the scaffolding to manage user stories, component architecture, dependencies, and testing workflows while AI agents handle generation tasks.
+Effective AI-assisted development requires systematic processes, clear component boundaries, and traceability from requirements through implementation. CodeMySpec provides the scaffolding — requirement graphs, dependency-aware task dispatch, BDD specs, and automated quality gates — while AI agents handle the generation work within those guardrails.
+
+## Platform Components
+
+### 1. Web Application (SaaS)
+The Phoenix web app provides the management layer:
+- **User Story Management**: Web UI for creating, editing, importing, and organizing stories with acceptance criteria and tagging
+- **Component Architecture**: Define Phoenix contexts/modules with type classification (context, repository, schema, liveview, etc.) and dependency tracking with graph visualization
+- **Requirements Graph**: Dependency-aware requirement definitions that link stories to components and track implementation status
+- **Content Management**: Git-based content sync for markdown/HTML/HEEx files with dual-mode processing (server-side validation, client-side full schema)
+- **Multi-Tenancy**: Account-based scoping with invitations, members, and project isolation
+- **OAuth2 Provider**: Secure agent/CLI authentication via OAuth2 with PKCE support
+- **MCP Servers**: Stories (~15 tools), Components (~17 tools), and Architecture (~2 tools) servers exposed via Hermes for AI agent consumption
+
+### 2. CLI & Claude Code Plugin
+A local webserver (port 4002) packaged as a native binary via Burrito, acting as a Claude Code extension:
+- **26 Skills**: User-invocable slash commands (e.g., `/start-implementation`, `/develop-liveview`, `/write-bdd-specs`, `/qa-app`, `/fix-issues`) that trigger agent task sessions
+- **6 Agent Definitions**: Role-specialized agents (qa, researcher, spec-writer, code-writer, test-writer, bdd-spec-writer) with tool access constraints
+- **Hook Integration**: Real-time Claude Code hooks (Stop, SubagentStop, PreToolUse, PostToolUse) that trigger validation pipelines and track file edits
+- **MCP Architecture Server**: HTTP MCP endpoint providing architecture tools to Claude Code
+- **Knowledge Base**: Comprehensive framework reference (Phoenix, LiveView, HEEx, Tailwind/DaisyUI, BDD/SexySpex, Boundary)
+- **Local Storage**: SQLite database (`~/.codemyspec/cli.db`) for credentials, project cache, and stories
+- **LaunchAgent Support**: macOS daemon management for persistent background operation
 
 ## Current Implementation
-1. **User Story Management**: Web UI for creating, editing, and organizing user stories with project scoping
-2. **Component Architecture**: Define Phoenix contexts/modules with type classification (context, repository, schema, liveview, etc.) and dependency tracking
-3. **MCP Integration**: Expose Stories and Components APIs to AI agents via Hermes MCP servers for Claude Code/Desktop integration
-4. **Session Orchestration**: Structured workflows for component design and test generation with AI agents
-5. **Content Sync**: Git-based content management for syncing markdown/HTML/HEEx files with frontmatter metadata
-6. **Multi-Tenancy**: Account-based scoping with OAuth2 provider for secure agent access
+1. **Graph-Driven Task Orchestration**: `ProjectCoordinator` traverses the requirement/dependency graph via `NextActionable` to find ready work, then `Dispatch` translates requirements into agent task prompts
+2. **35+ Agent Tasks**: Specialized task modules for specs (ComponentSpec, LiveViewSpec, ContextDesignReview), code generation (ComponentCode, DevelopContext, DevelopLiveView), QA (QaApp, QaStory, TriageIssues, FixIssues), and research (TechnicalStrategy, ResearchTopic)
+3. **Validation Pipeline**: Hook-triggered multi-stage validation — compile, test, Credo, Sobelow, BDD specs (SexySpex), spec documents, QA documents — with problem aggregation and persistence
+4. **Session Management**: Filesystem-backed sessions (`.code_my_spec/sessions/`) with status tracking, prompt generation, and evaluation
+5. **Transcript Analysis**: Parse Claude Code transcripts to identify edited files, evaluate task completion, and extract component markers
+6. **Content Sync**: Dual-mode git-based sync with Markdown/HTML processing, frontmatter metadata, and file watcher for dev mode
+7. **Architecture Governance**: Boundary-enforced module dependencies, architecture health summaries, Mermaid diagram generation, and orphaned context detection
 
 ## Key Architecture
-- **Phoenix Contexts**: Stories, Components, Sessions, Projects, Content, Agents, Accounts, Users
-- **MCP Servers**: `StoriesServer` and `ComponentsServer` expose tools for AI agent consumption
-- **Session Orchestration**: `ComponentSpecSessions` and `ComponentTestSessions` manage AI-driven workflows through discrete steps
-- **Project Coordinator**: Analyzes component requirements against filesystem and test results to determine next actions
-- **Repository Pattern**: Consistent data access layer with user/project scoping
-- **Multi-Tenant Security**: All operations scoped by `Scope` struct containing active account and project
+- **Phoenix Contexts**: Stories, Components, Requirements, Projects, Content, Accounts, Users, BddSpecs, Problems, Validation, StaticAnalysis, Architecture, plus 10+ supporting contexts
+- **MCP Servers**: `StoriesServer`, `ComponentsServer`, and `ArchitectureServer` expose ~34 tools via Hermes HTTP endpoints with OAuth2 protection
+- **Project Coordinator**: Graph traversal (`NextActionable`) + task dispatch (`Dispatch`) + status file generation for observable orchestration
+- **Validation Pipeline**: `Pipeline.run/3` chains compile → test → Credo → Sobelow → Spex → spec/QA document validators, returning `Problem` structs
+- **Repository Pattern**: Consistent data access layer with Scope-based scoping (user, account, project, cwd)
+- **Environment Abstraction**: Unified interface for CLI (tmux), server, and VS Code execution contexts
+- **PubSub Broadcasting**: Real-time updates for accounts, projects, stories, components, and sessions
 
 ## Key Principles
-- **Process-Guided AI**: Structured session workflows guide AI agents through design and test generation
-- **Human-in-the-Loop**: Approval gates and review steps maintain architectural integrity
-- **Traceability**: Stories link to components; components track dependencies; sessions maintain audit trail
-- **Context Boundaries**: Component types enforce Phoenix architectural patterns
-- **Fail-Fast**: Test-driven workflows detect issues early with clear failure paths
+- **Graph-Driven Orchestration**: Dependency-aware traversal determines what to work on next, not manual sequencing
+- **Process-Guided AI**: Structured task modules generate prompts with constraints, then evaluate results against acceptance criteria
+- **Automated Quality Gates**: Every edit triggers compilation, tests, linting, security analysis, and BDD spec validation
+- **Human-in-the-Loop**: Approval gates, design reviews, and QA workflows maintain architectural integrity
+- **Traceability**: Stories → requirements → components → specs → tests → problems, all linked and tracked
+- **Context Boundaries**: `use Boundary` in every module enforces Phoenix architectural patterns at compile time
+- **Observable State**: Status files, prompts, and problems written to `.code_my_spec/status/` for agent and human consumption
 
 ## Technology Stack
-Phoenix 1.8-rc, LiveView 1.1-rc, Tailwind, DaisyUI,G Ecto SQL, PostgreSQL, Oban (background jobs), Hermes MCP, OAuth2 Provider, Git CLI integration, FileSystem watchers
+**Web App**: Phoenix 1.8, LiveView 1.1, Tailwind, DaisyUI, Ecto SQL, PostgreSQL, Hermes MCP, OAuth2 Provider (ex_oauth2_provider), Cloak (encryption), PaperTrail (audit), Git CLI, FileSystem watchers, SexySpex (BDD), Boundary (dependency enforcement)
+
+**CLI/Plugin**: Burrito (native binary packaging), Bandit (HTTP server), SQLite (ecto_sqlite3), Optimus (CLI parsing), OAuth2 client with PKCE, Phoenix PubSub, shared domain logic from web app

@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.QaStory
 
-**Type**: module
+## Type
+
+module
 
 Per-story agent task for QA-testing a single user story. Takes a story ID, loads the story (title, description, acceptance criteria) and its BDD specs, projects specs via SpecProjector, and builds a prompt pointing the agent at the story context, specs, and router. The agent decides how to authenticate, navigate, and verify. Defines a structured output format so the evaluate function can validate results.
 

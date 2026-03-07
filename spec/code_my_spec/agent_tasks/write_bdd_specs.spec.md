@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.WriteBddSpecs
 
-**Type**: agent_task
+## Type
+
+agent_task
 
 Agent task module for generating BDD specification files for a single story at a time. Writes specs for all acceptance criteria of one story. Auto-selects the top-priority incomplete story if none specified in the session. Generates a comprehensive prompt, writes it to a subagent prompt file, and returns a short orchestration prompt instructing the agent to invoke the bdd-spec-writer subagent.
 

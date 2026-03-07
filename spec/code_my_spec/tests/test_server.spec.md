@@ -1,6 +1,8 @@
 # CodeMySpec.Tests.TestServer
 
-**Type**: genserver
+## Type
+
+genserver
 
 Manages asynchronous test execution with request batching. Only one test run per project at a time - if tests are already running and new requests arrive, the requested files are queued and merged into the next run. Executes tests via the Tests context, converts failures to Problems for persistence, and delivers results via callbacks. One server process per application, registered by module name.
 

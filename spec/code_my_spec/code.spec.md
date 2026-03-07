@@ -1,6 +1,8 @@
 # CodeMySpec.Code
 
-**Type**: context
+## Type
+
+context
 
 Provides AST operations on code files for extracting structured information like dependencies, functions, and test assertions. Enables static analysis and metadata extraction across different programming languages.
 

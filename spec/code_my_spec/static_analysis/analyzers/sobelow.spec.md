@@ -1,6 +1,8 @@
 # CodeMySpec.StaticAnalysis.Analyzers.Sobelow
 
-**Type**: module
+## Type
+
+module
 
 Runs Sobelow security scanner for common Phoenix vulnerabilities. Executes `mix sobelow --format json --private`, captures stdout to a temporary file for reliable JSON parsing, then converts to Problems. Implements the AnalyzerBehaviour to provide consistent interface for static analysis execution.
 

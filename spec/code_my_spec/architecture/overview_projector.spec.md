@@ -1,6 +1,8 @@
 # CodeMySpec.Architecture.OverviewProjector
 
-**Type**: module
+## Type
+
+module
 
 Generates comprehensive markdown overviews of all components organized by context. Lists components with types, descriptions, and dependencies in a format optimized for AI agent consumption during design sessions.
 

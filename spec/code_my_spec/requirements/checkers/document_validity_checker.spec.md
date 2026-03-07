@@ -1,6 +1,8 @@
 # CodeMySpec.Requirements.Checkers.DocumentValidityChecker
 
-**Type**: logic
+## Type
+
+logic
 
 Validates component specification documents against their type-specific schemas. Reads document_type from component type definition to determine which validation rules apply. Returns quality score based on completeness and structural correctness.
 

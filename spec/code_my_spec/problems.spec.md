@@ -1,6 +1,8 @@
 # CodeMySpec.Problems
 
-**Type**: context
+## Type
+
+context
 
 The Problems context provides a unified abstraction for problems, warnings, and errors discovered across different analysis tools and validation processes. It normalizes heterogeneous tool outputs into a consistent data model that can be used both ephemerally (in-memory during sessions) and persistently (stored for project-level fitness tracking).
 

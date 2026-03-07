@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.ComponentCode
 
-**Type**: module
+## Type
+
+module
 
 Agent task module for component implementation sessions with Claude Code. Provides two entry points: `command/3` generates the implementation prompt with spec location, test file, similar components for patterns, and coding rules; `evaluate/3` checks code artifact requirements and queries persisted problems for the component's code and test files, returning combined feedback.
 

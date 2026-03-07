@@ -1,6 +1,8 @@
 # CodeMySpec.Validation
 
-**Type**: context
+## Type
+
+context
 
 Validates files edited during Claude Code sessions. Parses transcripts to extract edited files, runs the generic validation pipeline, persists discovered problems, triggers a project sync, and evaluates agent tasks. Exposes two entry points — one for SubagentStop (component task from transcript marker) and one for Stop (session stack evaluation). Called from the hook controller.
 

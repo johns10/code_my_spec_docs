@@ -1,7 +1,7 @@
 # CodeMySpec.Environments
 
 
-## CodeMySpec.Environments (module)
+## CodeMySpec.Environments (logic)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
@@ -11,7 +11,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Environments.Cli (module)
+## CodeMySpec.Environments.Cli (logic)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
@@ -21,7 +21,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Environments.Environment (module)
+## CodeMySpec.Environments.Environment (struct)
 
 - [x] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid
@@ -51,7 +51,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Environments.Cli.TmuxAdapter (module)
+## CodeMySpec.Environments.Cli.TmuxAdapter (logic)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid

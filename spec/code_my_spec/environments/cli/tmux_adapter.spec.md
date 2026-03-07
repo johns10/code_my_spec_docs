@@ -1,6 +1,8 @@
 # CodeMySpec.Environments.Cli.TmuxAdapter
 
-**Type**: logic
+## Type
+
+logic
 
 Adapter for tmux operations, enabling Cli environment to be tested without actual tmux dependency.
 

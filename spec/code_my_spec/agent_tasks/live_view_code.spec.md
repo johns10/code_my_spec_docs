@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.LiveViewCode
 
-**Type**: module
+## Type
+
+module
 
 Implements a LiveView module to pass its tests, with visual feedback from rendered screenshots. Like ComponentCode but the evaluate step also reads screenshots produced by headless-rendering the HTML artifacts captured during tests. Tests save rendered HTML at key visual states; a post-processing step renders those artifacts in a headless browser to produce screenshots. When tests pass, the agent still sees the screenshots to confirm the UI looks correct before declaring done. References a resources directory for progressive-disclosure LiveView guidance rather than embedding it in the prompt.
 

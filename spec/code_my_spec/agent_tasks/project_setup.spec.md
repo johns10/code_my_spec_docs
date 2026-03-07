@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.ProjectSetup
 
-**Type**: module
+## Type
+
+module
 
 Agent task that guides developers through complete Phoenix project setup for CodeMySpec integration. Generates comprehensive setup instructions and evaluates current setup state by checking prerequisites, project structure, and dependencies. Designed to be run from a target directory that will become (or already is) a Phoenix project root.
 

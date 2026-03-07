@@ -1,6 +1,8 @@
 # CodeMySpec.Sessions.SessionsRepository
 
-**Type**: repository
+## Type
+
+repository
 
 Filesystem-backed CRUD for sessions. Each session is a directory under `.code_my_spec/internal/sessions/{id}/` containing a `session.json` file. All file operations go through `CodeMySpec.Environments` so the repository works across CLI, local, and VS Code environments.
 

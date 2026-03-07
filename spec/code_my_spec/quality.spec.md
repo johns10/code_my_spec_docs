@@ -1,6 +1,8 @@
 # CodeMySpec.Quality
 
-**Type**: context
+## Type
+
+context
 
 Provides abstractions and functionality for checking quality of Elixir code and test files including compilation validation, test status, credo warnings, and test-spec alignment verification. 
 Enables quality gates and validation throughout the development workflow.

@@ -1,6 +1,8 @@
 # CodeMySpec.Sessions.SessionStack
 
-**Type**: module
+## Type
+
+module
 
 Evaluates the session stack on stop hook. Reads all active sessions via SessionsRepository, sorts by priority (highest first), and calls each agent task module's evaluate function in order. The first evaluation that returns invalid blocks the agent with feedback. Passing evaluations remove the session. When no sessions remain, the agent stops cleanly.
 

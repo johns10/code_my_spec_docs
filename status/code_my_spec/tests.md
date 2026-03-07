@@ -41,7 +41,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Tests.TestServer (module)
+## CodeMySpec.Tests.TestServer (genserver)
 
 - [x] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid

@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.Parsers.DependencyParser
 
-**Type**: other
+## Type
+
+other
 
 Parse Dependencies section AST into a list of module name strings.
 

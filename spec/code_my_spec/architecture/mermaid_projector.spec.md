@@ -1,6 +1,8 @@
 # CodeMySpec.Architecture.MermaidProjector
 
-**Type**: module
+## Type
+
+module
 
 Generates a simple Mermaid flowchart showing contexts and their dependency relationships.
 

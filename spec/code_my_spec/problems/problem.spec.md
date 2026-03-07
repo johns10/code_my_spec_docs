@@ -1,6 +1,8 @@
 # CodeMySpec.Problems.Problem
 
-**Type**: schema
+## Type
+
+schema
 
 Schema representing a normalized problem from any analysis or testing tool. Supports both ephemeral (in-memory) usage during sessions and persistent storage for project-level fitness tracking.
 

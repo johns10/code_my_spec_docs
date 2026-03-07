@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.DesignUi
 
-**Type**: module
+## Type
+
+module
 
 Interviews the user to establish the project's design system, producing a self-contained HTML file (`docs/design/design_system.html`) that serves as both documentation and live preview. The file uses the DaisyUI CDN with a theme switcher so colors, typography, and components render in the actual theme. Custom themes are defined as CSS variables (`[data-theme="my-brand"]`) directly in the file — the same values that go into `tailwind.config.js`. The agent walks the user through theme selection, color palette, typography scale, layout patterns, and tone, building the HTML as they go. All LiveView agent tasks (LiveViewSpec, LiveViewTest, LiveViewCode) reference this file for visual consistency.
 

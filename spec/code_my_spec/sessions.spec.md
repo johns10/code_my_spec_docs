@@ -1,6 +1,8 @@
 # CodeMySpec.Sessions
 
-**Type**: context
+## Type
+
+context
 
 Manages agent task sessions backed by the filesystem. Each session is a directory under `.code_my_spec/internal/sessions/{id}/` containing `session.json` and working files. The stop hook evaluates the session stack to block the agent until tasks complete. Sessions are visible (`ls`) and cancellable (`rm -rf`) by users.
 

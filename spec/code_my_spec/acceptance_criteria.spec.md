@@ -1,6 +1,8 @@
 # CodeMySpec.AcceptanceCriteria
 
-**Type**: context
+## Type
+
+context
 
 Phoenix context for managing acceptance criteria as first-class entities. Acceptance criteria belong to stories and represent testable conditions that define when a story is complete. This context extracts acceptance criteria from embedded strings within stories into proper domain entities with status tracking and verification capabilities.
 

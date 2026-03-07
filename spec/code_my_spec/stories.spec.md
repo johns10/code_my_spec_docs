@@ -1,6 +1,8 @@
 # CodeMySpec.Stories
 
-**Type**: context
+## Type
+
+context
 
 Phoenix context for managing user stories within projects. Provides the public API for story CRUD operations, component assignments, and PubSub notifications. Supports pluggable implementations for local database access (StoriesRepository) or remote HTTP API (RemoteClient) based on configuration.
 

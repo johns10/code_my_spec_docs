@@ -1,6 +1,8 @@
 # CodeMySpec.Documents
 
-**Type**: context
+## Type
+
+context
 
 Context for managing document parsing, validation, and creation from markdown content. Provides a centralized registry for document type definitions, convention-based section parsers, and validation against structured document schemas. Documents are parsed into structured data with type-specific schemas for functions, fields, and components.
 

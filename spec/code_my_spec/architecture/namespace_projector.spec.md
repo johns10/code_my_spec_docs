@@ -1,6 +1,8 @@
 # CodeMySpec.Architecture.NamespaceProjector
 
-**Type**: module
+## Type
+
+module
 
 Generates hierarchical tree views of components organized by Elixir module namespace. Produces indented text trees showing the structural organization of the codebase by module path.
 

@@ -1,6 +1,8 @@
 # CodeMySpec.Specs.FieldParser
 
-**Type**: logic
+## Type
+
+logic
 
 Parse Fields section table AST into Field embedded schema structs.
 

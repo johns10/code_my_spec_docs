@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.Function
 
-**Type**: schema
+## Type
+
+schema
 
 Embedded schema representing a function from a spec document. Used by the document parsing system to store structured function documentation including name, description, type specification, process steps, and test assertions.
 

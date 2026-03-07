@@ -1,6 +1,8 @@
 # CodeMySpec.Sessions.Session
 
-**Type**: schema
+## Type
+
+schema
 
 Embedded schema representing an agent task session. Serialized to/from JSON for filesystem storage — no database table. Uses Ecto embedded schema for casting and validation via changesets.
 

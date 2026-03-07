@@ -1,6 +1,8 @@
 # CodeMySpec.Requirements.ContextReviewFileChecker
 
-**Type**: module
+## Type
+
+module
 
 Checker for context-level design review file existence. This checker verifies that a context has an associated design review file, which documents the architectural analysis and validation of the context and its child components. Implements the CheckerBehaviour callback interface.
 

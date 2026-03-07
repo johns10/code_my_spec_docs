@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.Field
 
-**Type**: schema
+## Type
+
+schema
 
 Embedded schema representing a schema field from a spec document's Fields section. Used by FieldParser to store structured field metadata parsed from markdown tables.
 

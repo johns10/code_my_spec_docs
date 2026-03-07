@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.ContextImplementation
 
-**Type**: logic
+## Type
+
+logic
 
 Orchestrates implementing an entire context (tests + code for all child components) via subagents. Generates prompt files for test-writer and code-writer subagents, returns orchestration instructions with light dependency guidance, and validates all components pass quality checks.
 

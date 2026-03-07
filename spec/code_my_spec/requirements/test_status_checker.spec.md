@@ -1,6 +1,8 @@
 # CodeMySpec.Requirements.TestStatusChecker
 
-**Type**: module
+## Type
+
+module
 
 Checks whether a component's tests are passing by examining its component_status. Implements the CheckerBehaviour callback to evaluate the :tests_passing requirement. Returns satisfied true only when tests exist and are passing; returns appropriate failure reasons for missing tests, failing tests, or tests not yet run.
 

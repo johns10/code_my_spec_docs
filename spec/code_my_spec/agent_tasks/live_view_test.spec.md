@@ -1,6 +1,8 @@
 # CodeMySpec.AgentTasks.LiveViewTest
 
-**Type**: module
+## Type
+
+module
 
 Writes tests for a LiveView module. Like ComponentTest but specialized for LiveView concerns: mounts the view via `live/2`, tests handle_event callbacks, and validates rendered HTML structure. Produces tests that verify functional correctness of the LiveView against its spec — visual validation (HTML artifact capture and screenshots) is handled separately by BDD specs.
 

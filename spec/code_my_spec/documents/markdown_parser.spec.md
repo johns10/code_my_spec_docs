@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.MarkdownParser
 
-**Type**: other
+## Type
+
+other
 
 Generic markdown parser that extracts H2 sections into a map with support for pluggable convention-based section parsers.
 

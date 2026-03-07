@@ -1,6 +1,8 @@
 # CodeMySpec.Requirements.RequirementDefinitionData
 
-**Type**: data
+## Type
+
+data
 
 Central registry of all requirement definitions used across component types. Provides reusable requirement templates that combine checkers, session types, and categorization for consistent requirement checking.
 

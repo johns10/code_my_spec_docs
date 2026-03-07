@@ -1,6 +1,8 @@
 # CodeMySpec.Requirements.RequirementDefinition
 
-**Type**: schema
+## Type
+
+schema
 
 Immutable template defining what needs to be checked for a component. Maps to runtime Requirement instances which track satisfaction status. Enables artifact type categorization for UI grouping and clear separation between definition (what to check) and instance (whether satisfied).
 

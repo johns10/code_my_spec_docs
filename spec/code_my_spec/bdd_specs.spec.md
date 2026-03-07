@@ -1,6 +1,8 @@
 # CodeMySpec.BddSpecs
 
-**Type**: context
+## Type
+
+context
 
 Context for working with BDD specifications. Provides file-based discovery and coverage analysis of Spex DSL specs without database persistence. Maps specs to stories and acceptance criteria through file naming conventions, enabling traceability between requirements and executable specifications.
 

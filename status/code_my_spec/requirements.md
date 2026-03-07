@@ -11,6 +11,56 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.Requirements.AcceptedIssuesChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.AllStoriesCompleteChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.ArtifactExistenceChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.BddSpecExistenceChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.BddSpecPassingChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.Requirements.CheckerBehaviour (module)
 
 - [x] spec_file - Component specification file exists
@@ -25,6 +75,26 @@
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.ComponentCompleteChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.ComponentLinkedChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
@@ -71,7 +141,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Requirements.Checkers.DocumentValidityChecker (module)
+## CodeMySpec.Requirements.Checkers.DocumentValidityChecker (logic)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
@@ -101,6 +171,36 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.Requirements.IncomingIssuesChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.ProjectQaChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.Registry (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.Requirements.Requirement (module)
 
 - [x] spec_file - Component specification file exists
@@ -111,17 +211,14 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Requirements.RequirementDefinition (module)
+## CodeMySpec.Requirements.RequirementDefinition (schema)
 
 - [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
+- [x] spec_valid - Schema specification is valid
 - [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.Requirements.RequirementDefinitionData (module)
+## CodeMySpec.Requirements.RequirementDefinitionData (data)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
@@ -167,6 +264,16 @@
 - [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.Requirements.StoryQaChecker (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 

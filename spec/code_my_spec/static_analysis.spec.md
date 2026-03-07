@@ -1,6 +1,8 @@
 # CodeMySpec.StaticAnalysis
 
-**Type**: context
+## Type
+
+context
 
 Executes optional code quality and correctness tools against a project codebase. Provides a unified interface for running Credo (style/consistency), Boundary (module dependency enforcement), Sobelow (security), and custom static analyzers. Each tool writes output to temporary JSON files for reliable parsing, then normalizes results into Problems for consistent reporting and tracking. Separate from compilation and testing, which remain distinct concepts.
 

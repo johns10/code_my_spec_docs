@@ -5,20 +5,20 @@ MCP server that exposes Google Analytics Admin API tools to AI agents via the He
 ## Dependencies
 
 - Hermes.Server
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListCustomDimensions
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.GetCustomDimension
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateCustomDimension
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateCustomDimension
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.ArchiveCustomDimension
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListCustomMetrics
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateCustomMetric
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.GetCustomMetric
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateCustomMetric
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.ArchiveCustomMetric
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListKeyEvents
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateKeyEvent
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateKeyEvent
-- CodeMySpec.McpServers.AnalyticsAdmin.Tools.DeleteKeyEvent
+- CodeMySpec.McpServers.AnalyticsAdmin.ListCustomDimensions
+- CodeMySpec.McpServers.AnalyticsAdmin.GetCustomDimension
+- CodeMySpec.McpServers.AnalyticsAdmin.CreateCustomDimension
+- CodeMySpec.McpServers.AnalyticsAdmin.UpdateCustomDimension
+- CodeMySpec.McpServers.AnalyticsAdmin.ArchiveCustomDimension
+- CodeMySpec.McpServers.AnalyticsAdmin.ListCustomMetrics
+- CodeMySpec.McpServers.AnalyticsAdmin.CreateCustomMetric
+- CodeMySpec.McpServers.AnalyticsAdmin.GetCustomMetric
+- CodeMySpec.McpServers.AnalyticsAdmin.UpdateCustomMetric
+- CodeMySpec.McpServers.AnalyticsAdmin.ArchiveCustomMetric
+- CodeMySpec.McpServers.AnalyticsAdmin.ListKeyEvents
+- CodeMySpec.McpServers.AnalyticsAdmin.CreateKeyEvent
+- CodeMySpec.McpServers.AnalyticsAdmin.UpdateKeyEvent
+- CodeMySpec.McpServers.AnalyticsAdmin.DeleteKeyEvent
 
 ## Functions
 

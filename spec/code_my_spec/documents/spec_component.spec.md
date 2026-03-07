@@ -1,6 +1,8 @@
 # CodeMySpec.Documents.SpecComponent
 
-**Type**: schema
+## Type
+
+schema
 
 Embedded schema representing a component reference from a context design document. Contains module name and description for components listed in the Components section of context specs.
 

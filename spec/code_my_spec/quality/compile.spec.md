@@ -1,6 +1,8 @@
 # CodeMySpec.Quality.Compile
 
-**Type**: other
+## Type
+
+other
 
 Validates compilation results from mix compile.machine output. Parses JSON compiler diagnostics and checks for errors and warnings, providing quality scores based on compilation success.
 

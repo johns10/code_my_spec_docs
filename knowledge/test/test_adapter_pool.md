@@ -109,7 +109,7 @@ defmodule MyFeatureTest do
 
   import CodeMySpec.UsersFixtures
 
-  @test_repo_url "https://github.com/johns10/test_phoenix_project.git"
+  @test_repo_url "https://github.com/Code-My-Spec/test_phoenix_project.git"
 
   setup do
     scope = full_scope_fixture()
