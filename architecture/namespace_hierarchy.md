@@ -23,6 +23,7 @@ CodeMySpec [module]
 │   ├── DevelopController [module]
 │   ├── DevelopLiveContext [module]
 │   ├── DevelopLiveView [context]
+│   ├── FixAllBddSpecs [module]
 │   ├── FixBddSpecs [agent_task]
 │   ├── FixIssues [module]
 │   ├── LiveContextSpec [module]
@@ -34,6 +35,9 @@ CodeMySpec [module]
 │   ├── ProjectBootstrap [module]
 │   ├── ProjectSetup [module]
 │   ├── QaApp [module]
+│   ├── QaJourneyExecute [module]
+│   ├── QaJourneyPlan [module]
+│   ├── QaJourneyWallaby [module]
 │   ├── QaSetup [module]
 │   ├── QaStory [module]
 │   ├── RefactorModule [module] Agent task for guiding interactive refactoring sessions with Claude Code. Routes to component or context-specific ref...
@@ -83,6 +87,7 @@ CodeMySpec [module]
 │   ├── Dependency [module] Ecto schema representing a directed dependency relationship between two components. Models "source depends on target"...
 │   ├── DependencyRepository [module] Repository for managing component dependency relationships within a project scope. Provides CRUD operations for depen...
 │   ├── DependencyTree [module] Build nested dependency trees for components by processing them in optimal order. Uses topological sorting to ensure ...
+│   ├── DirtyTracker [module]
 │   ├── FileInfo [module] Struct representing a file's metadata for sync comparison. **type**: struct
 │   ├── HierarchicalTree [module] Build nested hierarchical trees for components based on parent-child relationships. Unlike dependency trees which req...
 │   ├── Registry [module] Central registry containing all component type-specific metadata and behavior definitions. Provides the authoritative...
@@ -240,6 +245,11 @@ CodeMySpec [module]
 │   │       └── UpdateComponent [module]
 │   ├── ComponentsServer [module] MCP (Model Context Protocol) server that exposes component management, dependency tracking, architecture analysis, an...
 │   ├── Formatters [module] Formats responses and errors for MCP servers in a hybrid format combining human-readable summaries with structured da...
+│   ├── Issues
+│   │   ├── IssuesMapper [module]
+│   │   └── Tools
+│   │       └── CreateIssue [module]
+│   ├── IssuesServer [module]
 │   ├── Stories
 │   │   ├── StoriesMapper [module] Maps story data to MCP responses using a hybrid format that combines human-readable summaries with structured JSON da...
 │   │   └── Tools
@@ -272,12 +282,14 @@ CodeMySpec [module]
 ├── Paths [module]
 ├── Problems [context]
 │   ├── Problem [schema]
+│   ├── ProblemAssigner [module]
 │   ├── ProblemConverter [module] Utility module for transforming heterogeneous tool outputs (Credo, compiler warnings, test failures) into normalized ...
 │   ├── ProblemRenderer [module] Utility module for rendering Problem structs into human and AI-readable formats. Transforms normalized problems from ...
 │   └── ProblemRepository [module] Repository module providing scoped data access operations for problems. Handles database queries with proper scope fi...
 ├── ProjectCoordinator [module]
 │   ├── ComponentAnalyzer [module]
 │   ├── Dispatch [module] Translates a `%Requirement{}` from NextActionable into an executable prompt (command) or a validation pass (evaluate)...
+│   ├── ImplementationStatus [module]
 │   └── NextActionable [module] Finds the next actionable requirement for a project by recursively descending through entities. Uses the `scope` fiel...
 ├── ProjectSetupWizard [module]
 │   ├── GithubIntegration [module]
@@ -298,6 +310,7 @@ CodeMySpec [module]
 ├── Repo [module]
 ├── Requirements [module] Manages component requirement checking, persistence, and workflow queries. Requirements are computed from checker mod...
 │   ├── AcceptedIssuesChecker [module]
+│   ├── AllBddSpecsPassingChecker [module]
 │   ├── AllStoriesCompleteChecker [module]
 │   ├── ArtifactExistenceChecker [module]
 │   ├── BddSpecExistenceChecker [module]
@@ -316,6 +329,9 @@ CodeMySpec [module]
 │   ├── HierarchicalChecker [module] Implements `CheckerBehaviour` to verify hierarchical component requirements by recursively checking that all child co...
 │   ├── IncomingIssuesChecker [module]
 │   ├── ProjectQaChecker [module]
+│   ├── QaJourneyExecuteChecker [module]
+│   ├── QaJourneyPlanChecker [module]
+│   ├── QaJourneyWallabyChecker [module]
 │   ├── Registry [module]
 │   ├── Requirement [module] Embedded schema representing a component requirement instance with its satisfaction status. Created from RequirementD...
 │   ├── RequirementDefinition [schema]
@@ -459,6 +475,7 @@ CodeMySpecWeb [module]
 ├── PushSubscriptionController [module]
 ├── Router [module]
 ├── SessionChannel [module]
+├── StoriesChannel [module]
 ├── StoriesController [module]
 ├── StoriesJSON [module]
 ├── StoryLive

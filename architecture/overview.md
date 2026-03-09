@@ -499,6 +499,9 @@ Dependencies:
 ### SimilarComponentsSelector
 **module**
 
+### StoriesChannel
+**module**
+
 ### StoriesController
 **module**
 

@@ -166,6 +166,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.AgentTasks.FixAllBddSpecs (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.AgentTasks.FixBddSpecs (agent_task)
 
 - [x] spec_file - Component specification file exists
@@ -230,9 +240,9 @@
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -273,6 +283,36 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.AgentTasks.QaJourneyExecute (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.AgentTasks.QaJourneyPlan (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.AgentTasks.QaJourneyWallaby (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 

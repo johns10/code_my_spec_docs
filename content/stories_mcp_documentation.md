@@ -2,143 +2,39 @@
 
 ## Overview
 
-The Stories MCP Server (`stories-server`) is CodeMySpec's requirement management interface that enables Claude Code and Claude Desktop to create, manage, and review user story definitions. This server implements the Model Context Protocol (MCP) to provide story creation, quality review, and component linking capabilities.
+The Stories MCP Server (`stories-server`) is CodeMySpec's web-accessible MCP server for managing user stories, acceptance criteria, tags, and guided story sessions. It exposes 12 tools covering story CRUD, structured acceptance criteria management, tagging, and AI-guided interview/review sessions.
+
+**Endpoint:** `/mcp/stories` (web)
+**Transport:** Streamable HTTP via Hermes MCP
+**Auth:** OAuth2 token required, ProjectScopeOverride plug
 
 ## What It Does
 
-The Stories Server manages user story lifecycle by:
+The Stories Server manages the user story lifecycle:
 
-1. **Creating and managing user stories** with title, description, and acceptance criteria
-2. **Conducting quality reviews** of stories against best practices
-3. **Linking stories to components** that implement them
-4. **Tracking story status** (in_progress, completed, dirty)
-5. **Providing interview guidance** for AI-driven requirement gathering
+1. **Creating and managing user stories** with title, description, priority, and structured acceptance criteria
+2. **Managing acceptance criteria** individually (add, update, delete) with verification protection
+3. **Tagging stories** for organization by domain, epic, persona, or custom categories
+4. **Conducting guided sessions** for AI-driven requirement gathering (interview) and quality review
+5. **Tracking story status** (in_progress, completed, dirty)
 
-Stories are stored as database records enabling queries, status tracking, and traceability to implementing components.
+Stories are stored as database records with PaperTrail versioning for audit trail, enabling queries, status tracking, and traceability to implementing components.
 
-## Philosophy
+## Available Tools (12)
 
-CodeMySpec follows **structured processes with tight specifications and human oversight**. The Stories Server embodies this by:
-
-- Guiding AI through systematic requirement gathering instead of generating massive specs from vague prompts
-- Maintaining human approval during planning (stories are reviewed before proceeding)
-- Creating precise specifications that constrain downstream generation
-- Establishing traceability from user needs through implementation
-
-## How to Use It
-
-### Prerequisites
-
-1. Install the MCP server in Claude Desktop or Claude Code
-2. Ensure you have an active project and account in CodeMySpec
-3. The server automatically scopes all operations to your active account/project
-
-### Typical Workflow
-
-```
-1. Start interview → AI conducts PM-guided requirement discussion
-2. Create stories → Add stories individually or in batch
-3. Review quality → AI evaluates stories against best practices
-4. Refine stories → Update stories as requirements evolve
-5. Link to components → Assign stories to implementing contexts
-6. Track status → Monitor in_progress, completed, dirty states
-```
-
-## Available Tools
-
-### Interview and Review
-
-#### start_story_interview
-
-**Purpose:** Begins an interactive requirement gathering session with AI Product Manager persona.
-
-**Parameters:** None
-
-**What it does:**
-- Loads existing project stories for context
-- Provides AI with expert PM persona and interview guidelines
-- Generates structured prompt guiding requirement discussion
-
-**PM Guidelines Provided:**
-- Ask leading questions to understand requirements
-- Identify missing acceptance criteria and edge cases
-- Suggest error scenarios and validation rules
-- Guide toward "As a... I want... So that..." format
-- Identify story dependencies
-- Clarify tenancy requirements (user vs account scoping)
-- Address security requirements upfront
-- Contain complexity pragmatically
-- Cover entire use case comprehensively
-
-**Example Usage:**
-```
-User: I want to build API key management
-AI: [Uses start_story_interview]
-    [Loads existing stories]
-    [Generates PM interview prompt]
-
-    Let me ask some questions:
-    - Who manages keys - account admins or individual users?
-    - What operations are needed? (create, revoke, rotate, list)
-    - Do keys need scopes or rate limits?
-    ...
-```
-
-#### start_story_review
-
-**Purpose:** Conducts comprehensive quality review of all project stories.
-
-**Parameters:** None
-
-**What it does:**
-- Loads all stories in current project
-- Provides AI with review criteria and evaluation process
-- Generates quality assessment against best practices
-
-**Review Criteria:**
-- Follows "As a... I want... So that..." format
-- Business value clearly articulated
-- Acceptance criteria specific and testable
-- Appropriately sized (not too large/small)
-- Dependencies identified
-- Edge cases considered
-- Security implications addressed
-- Tenancy requirements clear
-
-**Review Process:**
-1. Evaluate each story against criteria
-2. Identify gaps and inconsistencies
-3. Suggest specific enhancements
-4. Highlight implementation risks
-
-**Example Output:**
-```
-Story 1: User Registration
-✓ Clear business value
-✓ Well-sized story
-❌ Missing: duplicate email handling edge case
-❌ Missing: specific password complexity requirements
-Recommendation: Add acceptance criteria for password rules and duplicate email error messages
-```
-
-### CRUD Operations
+### Story CRUD (6 tools)
 
 #### create_story
 
-**Purpose:** Creates a single user story.
+**Purpose:** Creates a user story with title, description, and acceptance criteria.
 
 **Parameters:**
-- `title` (string, required): Story title
-- `description` (string, required): Full story description
-- `acceptance_criteria` (list of strings, required): Testable acceptance criteria
+- `title` (string, required): Story title (e.g., "User Login Feature")
+- `description` (string, required): User story in "As a [human role], I want [goal] so that [business value]" format. The role MUST be a real human (user, admin, manager) - never a system, API, or service.
+- `acceptance_criteria` (list of strings, required): List of acceptance criteria strings
+- `priority` (integer, optional): Priority order (1 = highest). Lower numbers are higher priority.
 
 **Returns:** Created story with ID, status, timestamps, and metadata
-
-**Validation:**
-- Title must be present and non-empty
-- Description must be present
-- Acceptance criteria must be non-empty list
-- All fields scoped to active project and account
 
 **Example:**
 ```json
@@ -148,75 +44,11 @@ Recommendation: Add acceptance criteria for password rules and duplicate email e
   "acceptance_criteria": [
     "Admin can generate new API key from settings page",
     "Key is displayed once and never shown again",
-    "Key includes created date and name/description field",
-    "System enforces maximum 10 keys per account",
-    "Key format is cryptographically secure random string"
-  ]
+    "System enforces maximum 10 keys per account"
+  ],
+  "priority": 1
 }
 ```
-
-#### create_stories
-
-**Purpose:** Creates multiple user stories in batch.
-
-**Parameters:**
-- `stories` (list of maps, required): Array of story objects with title, description, acceptance_criteria
-
-**Returns:** JSON with:
-- `successes`: Array of successfully created stories
-- `failures`: Array of {index, errors} for validation failures
-
-**Behavior:**
-- Processes all stories even if some fail validation
-- Each story validated independently
-- Failures include array index and specific error messages
-- All successful stories committed in single transaction
-
-**Example:**
-```json
-{
-  "stories": [
-    {
-      "title": "Admin creates API key",
-      "description": "As an account admin...",
-      "acceptance_criteria": ["..."]
-    },
-    {
-      "title": "Admin revokes API key",
-      "description": "As an account admin...",
-      "acceptance_criteria": ["..."]
-    }
-  ]
-}
-```
-
-#### get_story
-
-**Purpose:** Retrieves a single story by ID.
-
-**Parameters:**
-- `id` (integer, required): Story ID
-
-**Returns:** Story record with all fields and associations
-
-**Errors:**
-- 404 if story not found
-- 403 if story belongs to different account/project
-
-#### list_stories
-
-**Purpose:** Lists all stories in current project.
-
-**Parameters:**
-- `status` (enum, optional): Filter by status (in_progress, completed, dirty)
-- `component_id` (integer, optional): Filter by assigned component
-
-**Returns:** Array of story records
-
-**Behavior:**
-- Automatically filtered by active project and account
-- Results include component assignments if present
-- Ordered by inserted_at descending (newest first)
 
 #### update_story
 
@@ -233,13 +65,8 @@ Recommendation: Add acceptance criteria for password rules and duplicate email e
 
 **Behavior:**
 - Only provided fields are updated
-- If story is linked to component and content changes, status automatically set to "dirty"
+- If story is linked to component and content changes, status may be set to "dirty"
 - Version history tracked via PaperTrail
-
-**Validation:**
-- Story must belong to active project
-- Cannot update locked stories (locked by another user)
-- Status must be valid enum value
 
 #### delete_story
 
@@ -250,40 +77,133 @@ Recommendation: Add acceptance criteria for password rules and duplicate email e
 
 **Returns:** Success confirmation or error
 
+#### get_story
+
+**Purpose:** Retrieves a single story by ID.
+
+**Parameters:**
+- `id` (integer, required): Story ID
+
+**Returns:** Story record with all fields, acceptance criteria, tags, and associations
+
+#### list_stories
+
+**Purpose:** Lists stories in a project with pagination and filtering.
+
+**Parameters:**
+- `limit` (integer, optional): Max stories to return (default: 20, max: 100)
+- `offset` (integer, optional): Stories to skip for pagination (default: 0)
+- `search` (string, optional): Filter by title or description (case-insensitive)
+- `tag` (string, optional): Filter by tag name
+
+**Returns:** Array of stories with full details, plus total count for pagination
+
+#### list_story_titles
+
+**Purpose:** Lists story titles in a project (lightweight).
+
+**Parameters:**
+- `search` (string, optional): Filter by title (case-insensitive)
+
+**Returns:** Just ID, title, and component_id for each story - no criteria or full descriptions
+
+**Use case:** Quick lookups, selection lists, or finding a story ID without loading full details.
+
+### Acceptance Criteria (3 tools)
+
+#### add_criterion
+
+**Purpose:** Adds a new acceptance criterion to a story.
+
+**Parameters:**
+- `story_id` (string, required): Story ID to add criterion to
+- `description` (string, required): The acceptance criterion text
+
+**Returns:** Created criterion with the parent story
+
+**Note:** Use `get_story` to see existing criteria before adding.
+
+#### update_criterion
+
+**Purpose:** Updates the description of an existing acceptance criterion.
+
+**Parameters:**
+- `criterion_id` (string, required): Criterion ID (from get_story response)
+- `description` (string, required): New description text
+
+**Returns:** Updated criterion
+
+**Restrictions:** Cannot update verified (locked) criteria. Verified criteria are protected from changes. Use `get_story` to check verification status before updating.
+
+#### delete_criterion
+
+**Purpose:** Deletes an acceptance criterion from a story.
+
+**Parameters:**
+- `criterion_id` (string, required): Criterion ID (from get_story response)
+
+**Returns:** Deleted criterion confirmation
+
+**Restrictions:** Cannot delete verified (locked) criteria. Verified criteria are protected from removal.
+
+### Tagging (2 tools)
+
+#### tag_stories
+
+**Purpose:** Adds a tag to multiple stories at once.
+
+**Parameters:**
+- `story_ids` (list of strings, required): List of story IDs to tag
+- `tag` (string, required): Tag name to apply to all stories
+
+**Returns:** Summary of successes and failures with the applied tag
+
+**Tag naming conventions:**
+- Simple tags: `notifications`, `urgent`, `mvp`
+- Prefixed tags: `epic:verification-flow`, `persona:driver`, `domain:billing`
+- Prefixed tags enable category-based filtering via `list_stories(tag: "persona:driver")`
+
 **Behavior:**
-- Removes story and all associations (component links)
-- Cannot delete locked stories
-- Soft delete if PaperTrail versioning enabled
+- Processes all story IDs even if some fail
+- Already-tagged stories are treated as success (idempotent)
+- Returns failures only for stories not found
 
-### Component Linking
+#### list_project_tags
 
-#### set_story_component
+**Purpose:** Lists all tags used in the project.
 
-**Purpose:** Links a story to the component that satisfies it.
+**Parameters:** None
 
-**Parameters:**
-- `story_id` (integer, required): Story ID
-- `component_id` (integer, required): Component ID
+**Returns:** All available tags that have been applied to stories or components
 
-**Returns:** Updated story with component assignment
+**Use case:** See what organizational categories exist before tagging or filtering.
 
-**Validation:**
-- Both story and component must exist
-- Both must belong to same project
-- Cannot link story to multiple components (one-to-one relationship)
+### Sessions (1 tool)
 
-**Use case:** After architecture design, assign each story to the Phoenix context responsible for implementing it.
+#### start_story_session
 
-#### clear_story_component
-
-**Purpose:** Removes component assignment from a story.
+**Purpose:** Starts a guided session for working with user stories.
 
 **Parameters:**
-- `story_id` (integer, required): Story ID
+- `mode` (string, required): Session mode - "interview" or "review"
 
-**Returns:** Updated story with component_id set to null
+**Modes:**
 
-**Use case:** When component changes or story needs reassignment during architecture refactoring.
+**Interview mode:** AI conducts PM-guided requirement discussion.
+- Loads existing project stories for context
+- Provides AI with expert PM persona and interview guidelines
+- Enforces human-focused personas (never "As a system...")
+- Guides toward well-formed stories with clear business value
+- Identifies missing acceptance criteria, edge cases, dependencies
+- Addresses tenancy and security requirements
+
+**Review mode:** AI evaluates completeness and quality of existing stories.
+- Loads all stories with numbered format for evaluation
+- Validates personas are real humans (flags system/API personas)
+- Checks "As a [role], I want [goal] so that [value]" format
+- Evaluates acceptance criteria specificity and testability
+- Identifies gaps, inconsistencies, and risks
+- Provides specific, actionable feedback per story
 
 ## Story Data Model
 
@@ -291,21 +211,36 @@ Recommendation: Add acceptance criteria for password rules and duplicate email e
 %Story{
   id: integer
   title: string
-  description: string
-  acceptance_criteria: list of strings  # Stored as JSON array
+  description: string              # "As a [role], I want [goal] so that [value]"
   status: :in_progress | :completed | :dirty
-  component_id: integer | nil  # Foreign key to Component
-  project_id: integer  # Foreign key to Project
-  account_id: integer  # Foreign key to Account
-  locked_at: datetime | nil  # Collaboration lock timestamp
-  lock_expires_at: datetime | nil  # Lock expiration (15 minutes default)
-  locked_by: integer | nil  # User ID of lock holder
-  inserted_at: datetime
-  updated_at: datetime
+  priority: integer | nil
+  component_id: integer | nil      # Foreign key to Component
+  project_id: integer
+  account_id: integer
+  locked_at: datetime | nil        # Collaboration lock timestamp
+  lock_expires_at: datetime | nil  # Lock expiration (30 minutes)
+  locked_by: integer | nil         # User ID of lock holder
 
   # Associations
-  component: Component | nil  # Loaded via preload
-  project: Project  # Loaded via preload
+  criteria: [Criterion]            # Structured acceptance criteria
+  tags: [Tag]                      # Organization tags
+  component: Component | nil
+
+  inserted_at: datetime
+  updated_at: datetime
+}
+```
+
+### Acceptance Criteria Model
+
+Acceptance criteria are stored as structured records (not plain string arrays):
+
+```elixir
+%Criterion{
+  id: integer
+  description: string
+  verified: boolean         # When true, criterion is locked from edits/deletes
+  story_id: integer
 }
 ```
 
@@ -313,153 +248,98 @@ Recommendation: Add acceptance criteria for password rules and duplicate email e
 
 - **`in_progress`**: Story is being refined or implementation is in progress
 - **`completed`**: Story is satisfied by a component and implementation is complete
-- **`dirty`**: Story was modified after component was created (requires review and potential re-implementation)
-
-### Status Transitions
-
-```
-in_progress → completed (when linked to completed component)
-completed → dirty (when story content modified after completion)
-dirty → in_progress (when acknowledged and ready for re-work)
-```
+- **`dirty`**: Story was modified after component was created (requires review)
 
 ### Locking Mechanism
 
-Stories can be locked for editing to prevent concurrent modification conflicts:
-
-- Lock acquired automatically when user begins editing in UI
-- Lock expires after 15 minutes of inactivity
-- Other users cannot modify locked stories
+Stories can be locked for editing to prevent concurrent modification:
+- Lock duration: 30 minutes
+- Locked stories cannot be modified by other users
 - Lock holder can release lock manually
 - Expired locks are cleaned up automatically
+- Locking supports acquire/release/extend operations
 
 ## Security & Multi-Tenancy
 
 All operations are automatically scoped to active account and project:
-
 - Stories cannot be accessed across accounts
 - All queries filter by `account_id` and `project_id`
-- MCP frame contains scope information passed to all tools
+- MCP frame contains scope information from OAuth2 token
 - Component links validated within project boundaries
-
-**Scope Structure:**
-```elixir
-%Scope{
-  user: %User{id: integer}
-  active_account: %Account{id: integer}
-  active_project: %Project{id: integer}
-}
-```
+- All scope validation goes through the Validators module
 
 ## Integration with Workflow
 
 The Stories Server is the **first step** in CodeMySpec's structured development process:
 
 ```
-1. Stories (this server) → Define requirements
-2. Architect → Design Phoenix contexts from stories
-3. Design Sessions → Generate component specs
-4. Test Sessions → Generate tests from acceptance criteria
-5. Coding Sessions → Implement components with TDD
+1. Stories (this server) -> Define requirements
+2. Architecture Server   -> Analyze story groupings
+3. Components Server     -> Design contexts from stories
+4. Design Sessions       -> Generate component specs
+5. Test/Coding Sessions  -> Implement with TDD
 ```
 
 Stories drive:
 - Component design scope (which features to implement)
-- Test generation (what to validate via acceptance criteria)
-- Implementation priorities (dependency order)
+- Test generation (acceptance criteria become test assertions)
+- Implementation priorities (priority field + dependency order)
 - Traceability (why each component exists)
-
-## Validation Rules
-
-**Story Creation:**
-- Title required, max 255 characters
-- Description required, no length limit
-- Acceptance criteria must be non-empty array of strings
-- Each acceptance criterion must be non-empty string
-
-**Story Update:**
-- Cannot update stories locked by another user
-- Cannot set invalid status values
-- Cannot link to non-existent components
-- Content changes on completed stories trigger "dirty" status
-
-**Story Deletion:**
-- Cannot delete locked stories
-- Component links automatically removed
-- Soft delete preserves audit trail
-
-## Error Handling
-
-**Validation Errors:**
-- Missing required fields (title, description, acceptance_criteria)
-- Empty acceptance criteria array
-- Invalid status enum value
-- Story locked by another user
-
-**Not Found Errors:**
-- Story ID doesn't exist
-- Component ID doesn't exist for linking
-- Story doesn't belong to active project
-
-**Permission Errors:**
-- Story belongs to different account
-- Attempting to modify locked story
-
-All errors return descriptive messages with field-level details for validation failures.
-
-## Common Patterns
-
-### Interview-Driven Story Creation
-
-```
-1. User initiates conversation about feature
-2. AI calls start_story_interview
-3. AI asks clarifying questions based on PM guidelines
-4. User provides details through natural conversation
-5. AI calls create_stories with batch of refined stories
-6. AI calls start_story_review to validate quality
-7. User reviews and refines as needed
-```
-
-### Architecture-Driven Component Linking
-
-```
-1. User completes architecture design (creates contexts)
-2. For each context, identify which stories it satisfies
-3. Call set_story_component for each story-context pair
-4. Verify no unsatisfied stories remain
-5. Stories now have complete traceability to implementation
-```
-
-### Quality Review Workflow
-
-```
-1. User calls start_story_review periodically
-2. AI evaluates all stories against criteria
-3. AI identifies gaps, conflicts, or risks
-4. User updates stories based on feedback
-5. Repeat review after major requirement changes
-```
-
-## Tips for Effective Use
-
-1. **Start with interview, not creation**: Use `start_story_interview` to flesh out requirements through conversation
-2. **Iterate with AI**: Let AI ask questions rather than writing perfect stories immediately
-3. **Use batch creation**: After interview, call `create_stories` with multiple refined stories
-4. **Review regularly**: Call `start_story_review` as project evolves to catch drift
-5. **Be specific in acceptance criteria**: These become test assertions - avoid vague statements
-6. **One feature per story**: Keep stories focused and appropriately sized
-7. **Address tenancy upfront**: Clarify user-scoped vs account-scoped features during interviews
-8. **Consider security early**: Discuss auth, authz, and data protection during requirement gathering
-9. **Link stories promptly**: Assign components during architecture design for traceability
-10. **Monitor dirty status**: When stories change after completion, assess impact on implementation
 
 ## Version History
 
 Stories use PaperTrail for version tracking:
-
 - Every create, update, delete recorded
 - Previous versions retrievable for audit
 - Change attribution to user
 - Timestamps for all modifications
-- Useful for understanding requirement evolution
+
+## Technical Implementation
+
+**Framework:** Hermes MCP Server
+**Server name:** `stories-server` v1.0.0
+**Capabilities:** Tools only (no resources or prompts)
+**Location:** `lib/code_my_spec/mcp_servers/stories_server.ex`
+
+**Tool modules:**
+```elixir
+# Story CRUD
+component(CodeMySpec.McpServers.Stories.Tools.CreateStory)
+component(CodeMySpec.McpServers.Stories.Tools.UpdateStory)
+component(CodeMySpec.McpServers.Stories.Tools.DeleteStory)
+component(CodeMySpec.McpServers.Stories.Tools.GetStory)
+component(CodeMySpec.McpServers.Stories.Tools.ListStories)
+component(CodeMySpec.McpServers.Stories.Tools.ListStoryTitles)
+
+# Acceptance criteria
+component(CodeMySpec.McpServers.Stories.Tools.AddCriterion)
+component(CodeMySpec.McpServers.Stories.Tools.UpdateCriterion)
+component(CodeMySpec.McpServers.Stories.Tools.DeleteCriterion)
+
+# Tagging
+component(CodeMySpec.McpServers.Stories.Tools.ListProjectTags)
+component(CodeMySpec.McpServers.Stories.Tools.TagStories)
+
+# Sessions
+component(CodeMySpec.McpServers.Stories.Tools.StartStorySession)
+```
+
+**Note:** `CreateStories` (batch creation) exists as a module but is currently commented out/disabled in the server registration.
+
+## Error Handling
+
+**Validation errors:**
+- Missing required fields (title, description, acceptance_criteria)
+- Invalid session mode (must be "interview" or "review")
+- Criterion verified (cannot update/delete locked criteria)
+
+**Not found errors:**
+- Story ID does not exist
+- Criterion ID does not exist
+- Story does not belong to active project
+
+**Permission errors:**
+- Story belongs to different account
+- Invalid OAuth2 token
+
+All errors return descriptive messages with field-level details for validation failures.

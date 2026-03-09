@@ -2,67 +2,57 @@
 
 In 2010, I cashed out my 401k, stopped paying my mortgage, quit my job, and went all-in on a building automation software startup.
 
-How much did I make when it was over?
+How much did I make? Nothing. Zero.
 
-Nothing. Zero. Not a single dollar.
+But I learned something: there was real money in software. I just needed to figure out how to ship.
 
-But I learned something important: there was money to be made in software. Real money. I just needed to figure out how to actually ship products.
+So I taught myself Python. For the next three years, I failed to ship a single application. I could write code. Shipping was a different skill entirely.
 
-So I started teaching myself Python. For the next **three years**, I failed to ship a single application. I could write code, sure. But shipping actual applications? That was a different skill entirely.
+## Finally Shipping
 
-## Finally Shipping (But Still Not Succeeding)
+In 2019, I discovered Elixir and shipped my first product: UserDocs. A tool that automatically documented web apps by capturing screenshots as it clicked through your application.
 
-In 2019, I discovered Elixir and finally shipped my first product: UserDocs. It was a tool that automatically documented web apps by capturing screenshots as it clicked through your application.
+Worked perfectly. Code was solid. Product did exactly what it promised.
 
-It worked perfectly. The code was solid. The product did exactly what it promised.
+Zero customers.
 
-I got exactly zero customers.
+I tried content marketing. Reached out to potential users. Nothing stuck.
 
-I tried content marketing on LinkedIn. I reached out to potential users. Nothing stuck. Nobody cared.
+Tried again with Discussit -- an LLM product that ingested phone calls and texts and created intelligent summaries. Great technology. Zero traction.
 
-Then I tried again with Discussit, an LLM product that ingested phone calls and texts and created intelligent summaries.
+## The Pattern
 
-Same result. Great technology. Zero traction.
+Almost a decade building products nobody used. Or maybe they wanted them. I just couldn't figure out distribution while also building.
 
-## The 10-Year Pattern
+I had a problem I couldn't solve alone.
 
-By this point, I'd spent almost a **decade** building software products that nobody wanted. Or maybe they wanted them. I just couldn't figure out distribution and marketing while also building the product.
+## Back to First Principles
 
-I had a problem I couldn't solve on my own.
+I got obsessed with LLMs. Not because they were trendy -- because I thought they might finally help me ship successfully.
 
-## Going Back to First Principles
+But here's the thing. Throwing prompts at an LLM doesn't work any better than throwing code at a problem without planning.
 
-Over the last year, I got obsessed with large language models. Not because they were trendy, but because I thought they might finally help me ship products successfully.
+I started thinking about how real software teams work: product managers create specs, architects design the system, engineers design modules, write tests, implement. This process exists for a reason. So why was everyone just having unstructured conversations with LLMs and hoping for the best?
 
-But here's the thing: just throwing prompts at an LLM doesn't work any better than throwing code at a problem without planning.
-
-I started thinking about how real software teams actually work:
-
-- Product managers create specifications based on customer needs
-- Architects design the overall system
-- Engineers design modules, write tests, and implement features
-
-This process exists for a reason. It works. So why was I (and everyone else) just having unstructured conversations with LLMs and hoping for the best?
-
-## Building the Tool I Needed
+## Building What I Needed
 
 That's when I built CodeMySpec.
 
-It's a structured framework that guides you through specifying, architecting, designing, and coding. It uses LLMs at each stage, but with a clear process that actually works.
+A framework that applies the same discipline real software teams use — requirements, architecture, design, implementation, testing — but with AI at each stage instead of a team of ten.
 
-No more random prompting. No more starting over because you didn't think through the architecture. No more feeling lost halfway through implementation.
+Not another chat interface. A structured process with validation at every step. The kind of process that catches problems before they compound instead of after they've spread through your codebase.
 
-Just a clear path from "I have an idea" to "I shipped something that works."
+A clear path from "I have an idea" to "I shipped something that works."
 
 ## Why I'm Sharing This
 
-After 15 years in enterprise systems and 2 years working specifically with LLM-assisted development, I've realized something:
+After 15 years in enterprise systems and 2 years working with LLM-assisted development:
 
 **I don't want you to spend 10 years learning what I learned.**
 
-If you're trying to build and ship software products. Whether you're an aspiring engineer, a solo entrepreneur, or someone with an idea but no technical background. CodeMySpec is designed to help you succeed without the decade of pain I went through.
+Whether you're an aspiring engineer, a solo entrepreneur, or someone with an idea but no technical background -- CodeMySpec is designed to help you ship without the decade of pain I went through.
 
-I built it because I needed it to exist. Now I'm sharing it because your success is how I finally achieve mine.
+I built it because I needed it. I'm sharing it because your success is how I finally achieve mine.
 
 ---
 

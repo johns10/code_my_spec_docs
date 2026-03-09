@@ -1,162 +1,93 @@
 # Code Generation is About Control, Not Prompts
 
-The AI coding assistant market in 2025 is obsessed with the wrong things. Companies compete on context window sizes, prompt engineering techniques, and sophisticated memory systems. They tout their agents' ability to "understand" your codebase and "intelligently" decide what to do next.
+Every AI coding tool competes on the wrong thing. Bigger context windows. Better prompts. More sophisticated memory. More autonomy for the agent.
 
-But here's the truth: **the best way to get reliable code from an LLM isn't about better prompting.** It's better control and better enforcement.
+Here's what I learned building CodeMySpec: **the best way to get reliable code from an LLM isn't better prompting. It's better enforcement.**
 
 ## The Prompt Engineering Trap
 
-Current AI coding tools—Cursor, Windsurf, GitHub Copilot, and dozens of others—fundamentally approach code generation the same way: give the LLM maximum context, craft the perfect prompt, and hope it does the right thing.
+Cursor, Windsurf, Copilot -- they all work the same way. Give the LLM maximum context, craft a prompt, hope it does the right thing.
 
-Cursor's Agent mode can "autonomously search for relevant code snippets, open files that need editing, generate modification plans, and even run tests." Windsurf promises its Cascade assistant can "seamlessly switch between answering questions and autonomously executing multi-step tasks." The industry has embraced **agentic AI**: systems where LLMs dynamically direct their own processes and tool usage.
+Sound familiar?
 
-This sounds impressive until you ship to production.
+The LLM decides what files to read. What order to work in. Whether to run tests. When it's "done." You're along for the ride.
 
-The problem isn't that LLMs are bad at code generation—they're remarkably good. The problem is that **autonomous decision-making compounds errors exponentially**. An LLM might:
+This works fine for small tasks. But autonomous decision-making compounds errors. An LLM will skip validation it thinks is unnecessary. It'll generate tests that pass but test the wrong behavior. It'll drift from your architecture as context accumulates. Each decision looks reasonable in isolation. Collectively, they're chaos.
 
-- Skip validation steps it deems unnecessary
-- Generate tests that pass but don't actually test the right behavior
-- Refactor code in ways that break subtle invariants
-- Drift away from architectural patterns as context accumulates
-- Hallucinate workflows that seem reasonable but violate your domain constraints
-
-Recent studies show a correlation between widespread LLM adoption and decreased stability in software releases. The tools that promise to make us more productive are making our software worse because they optimize for the wrong thing: **giving the LLM freedom instead of giving it structure.**
+**Autonomy without constraints is technical debt with a faster commit rate.**
 
 ## Control vs. Suggestions
 
-Traditional AI coding tools work through suggestion:
+Traditional tools work through suggestion: "Here's my codebase, here's the feature, please write good code."
 
-> "Here's my codebase. Here's the feature I want. Please write good code and tests."
+Then they add guardrails after the fact -- sandboxed execution, human review gates, safety checks. These are defensive measures against an adversarial problem. You're trying to catch the LLM after it goes off the rails.
 
-The LLM then decides:
-- What files to read
-- What order to do things
-- Whether to run tests
-- How to handle failures
-- When it's "done"
+Control-based systems don't prevent bad decisions. They prevent certain decisions from being made at all.
 
-Some tools add guardrails—safety checks after the fact, sandboxed execution environments, human review gates. But these are **defensive measures against an adversarial problem**. You're trying to catch the LLM when it goes off the rails.
+## How We Enforce It
 
-**Control-based systems work differently. They don't try to prevent the LLM from making bad decisions—they prevent it from making certain decisions at all.**
+We built on a different premise: code generation should be a constrained workflow, not an autonomous agent.
 
-## Enforcement Architecture
+### 1. Requirement Dependency DAG
 
-We build on a radically different premise: **code generation should be a constrained, procedural workflow, not an autonomous agent.**
+Instead of letting the LLM decide what to do next, we define a directed acyclic graph of 22 requirement checkers. Each checker has explicit dependencies. The hierarchical checker validates parent-child satisfaction. The dependency checker ensures all prerequisites pass before implementation starts.
 
-Here's what that means in practice:
+The LLM cannot skip steps. The orchestrator enforces the sequence through the graph. If a requirement fails, the only path forward is fixing it.
 
-### 1. Predefined Step Sequences
+### 2. Stop-and-Validate Pattern
 
-Instead of letting the LLM decide what to do next, define explicit workflows. For example, a component design workflow might look like:
+The agent writes one artifact. Stops. The validation pipeline runs: compiler, tests, Credo, Sobelow, Spex (BDD specs), spec doc validation, QA. Only after validation passes does the next step begin.
 
-```
-Initialize → Generate → Validate → Revise (if needed) → Finalize
-```
-
-The LLM cannot skip validation. It cannot decide tests are optional. An orchestrator enforces the sequence through explicit state transitions. If validation fails, the only next step is revision—no exceptions, no autonomy.
-
-### 2. Step Contracts
-
-Each step implements a strict interface with two key responsibilities:
-
-1. **Command Generation**: Define exactly what command to execute
-2. **Result Handling**: Validate and process the output
-
-Each step must explicitly update session state and cannot proceed without successful validation. This isn't "prompt engineering." It's **interface enforcement**. The LLM doesn't get to decide how to handle results—your code does.
+This isn't prompt engineering. It's interface enforcement. The LLM doesn't decide how to handle results -- the pipeline does.
 
 ### 3. Structural Validation Between Steps
 
-Don't ask the LLM to "make sure it's valid." Parse its output against a required structure. For example, if the LLM generates a design document, validate it has all required sections before proceeding.
+We don't ask the LLM to "make sure it's valid." We parse its output against required structure. Design documents get validated against type-specific required and optional sections -- specs, context specs, schemas, LiveViews, architecture proposals, ADRs. Each document type has its own rules.
 
-If validation fails, the system transitions to a revision step with explicit error details. The LLM doesn't get to explain why the missing section doesn't matter—the system rejects it and forces correction.
+If validation fails, the system forces correction with explicit error details. The LLM doesn't get to explain why the missing section doesn't matter.
 
 ### 4. Test-Driven Enforcement
 
-Make testing a mandatory workflow step, not an LLM suggestion:
+Testing is a mandatory workflow step, not an LLM suggestion. The validation pipeline runs compiler checks, then tests, then static analysis, then BDD specs. Tests pass or the workflow doesn't complete.
 
-```
-Generate → RunTests → FixFailures (if needed) → RunTests again
-```
+The LLM cannot decide "the tests are flaky." The problems system captures every failure as a unified representation. Fix it or stop.
 
-Execute actual tests and parse the output. If tests fail, automatically trigger a fix step with the exact failure messages. Loop until tests pass or a human intervenes.
+### 5. Dirty Tracking and Scoped Analysis
 
-The LLM cannot decide "the tests are flaky" or "this failure doesn't matter." Tests pass or the workflow doesn't complete.
+File changes mark components as dirty. The validation pipeline runs scoped analysis only on dirty components through the problems system. No wasted cycles revalidating clean code. No opportunity for the LLM to claim unrelated failures.
 
-### 5. Stateless Orchestration
+### 6. Boundary Enforcement
 
-Traditional AI assistants maintain conversational state—the LLM's context window accumulates history, and its decisions are influenced by everything that came before. This creates **context drift**: the LLM gradually moves away from your original intent as the conversation evolves.
-
-Instead, treat each interaction as:
-- Created with explicit scope and context
-- Executed as a discrete command
-- Validated independently
-- Stored as an immutable record
-
-The next step gets the current session state, not a conversation history. The orchestrator determines what happens next based on the *result status*, not LLM interpretation.
-
-### 6. Scoped Isolation
-
-Require explicit scope for all operations. Sessions should only access data within defined boundaries—a UI component session shouldn't read authentication code, for example.
-
-This isolation prevents cross-contamination and limits blast radius. The LLM can't "helpfully" wander into unrelated parts of your codebase.
+Every module uses `use Boundary` for compile-time dependency enforcement. 14 component types with specific requirements per type. The LLM can't "helpfully" wander into unrelated parts of your codebase -- the compiler won't let it.
 
 ## What This Prevents
 
-This control-based architecture eliminates entire classes of LLM failures:
+**Hallucinated Workflows**: The requirement DAG defines all possible transitions. The LLM cannot invent process steps.
 
-**Hallucinated Workflows**: The LLM cannot invent process steps. The orchestrator defines all possible state transitions.
-
-**Validation Bypass**: Structural validation happens between steps, enforced by code, not prompts.
+**Validation Bypass**: 22 requirement checkers, enforced by code, not prompts.
 
 **Context Drift**: State is explicit and scoped, not accumulated in conversation history.
 
-**Test Avoidance**: Tests are mandatory steps in the workflow, not LLM suggestions.
+**Test Avoidance**: Tests are mandatory steps in the pipeline.
 
-**Unbounded Generation**: Each step has specific input/output contracts. The LLM generates within those bounds or the interaction fails.
-
-**Inconsistent Patterns**: Architectural patterns are encoded in the step implementations and validation logic, not described in prompts.
+**Architectural Violations**: `use Boundary` catches dependency violations at compile time.
 
 ## The Cost of Control
 
-This approach isn't free. Control-based systems require:
+This approach isn't free. More upfront design. Less flexibility. The LLM can't creatively adapt to unexpected situations -- you need a human for that.
 
-**More Upfront Design**: You must define your workflows, validation rules, and step sequences before the LLM runs.
+But here's what you get: **predictability**. When a controlled workflow completes, every required validation passed. All tests ran. The design conforms to required structure. You have a complete audit trail.
 
-**Less Flexibility**: The LLM cannot creatively adapt to unexpected situations. If something doesn't fit your workflow, you need a human.
-
-**Infrastructure Complexity**: Orchestrators, step behaviors, result handlers—these are sophisticated systems.
-
-**Perceived Slowness**: Validation steps and mandatory testing add latency.
-
-But here's what you get in return: **predictability**. When a control-based workflow completes, you know:
-- Every required validation passed
-- All tests executed and passed
-- The design conforms to required structure
-- State transitions followed the defined workflow
-- You have a complete audit trail of what happened
-
-## The Industry Will Follow
-
-Right now, the AI coding tool market is in its "agent maximalism" phase. Every company is racing to give their LLM more autonomy, more tools, more freedom to "think" and "decide."
-
-This is a dead end.
-
-As more teams ship LLM-generated code to production, they'll discover what some of us are already learning: **autonomy without constraints is technical debt with a faster commit rate.**
-
-The tools that win won't be the ones with the best prompts or the biggest context windows. They'll be the ones with the best **enforcement architectures**—systems that use LLMs as powerful code generators within rigidly controlled workflows.
-
-Prompt engineering is about asking nicely. Control is about making it impossible to do the wrong thing.
+I've found that predictability beats speed every time in production systems.
 
 ## What This Means for You
 
-If you're building with AI coding assistants today:
+Stop optimizing prompts. They'll always be fragile. Ask instead: what workflow constraints would make bad outputs impossible?
 
-**Stop optimizing prompts.** They'll always be fragile. Instead, ask: what workflow constraints would make bad outputs impossible?
+Stop adding more context. LLMs already have enough context to generate bad code confidently. Add structural validation between generation steps.
 
-**Stop adding more context.** LLMs already have enough context to generate bad code confidently. Add **structural validation** between generation steps.
+Stop treating the LLM as an agent. Treat it as a powerful, unreliable code generator that needs supervision at every step.
 
-**Stop treating the LLM as an agent.** Treat it as a powerful, unreliable code generator that needs adult supervision at every step.
+Start building enforcement architectures. Define your workflows as dependency graphs. Make validation mandatory. Build pipelines that cannot be bypassed.
 
-**Start building enforcement architectures.** Define your workflows explicitly. Make your validation steps mandatory. Create state machines that cannot be bypassed.
-
-The future of AI-assisted development isn't smarter agents. It's better cages.
+The future of AI-assisted development isn't smarter agents. It's better engineering.

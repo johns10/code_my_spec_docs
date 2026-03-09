@@ -43,6 +43,7 @@
 - [ ] [CodeMySpecWeb.PushSubscriptionController](.code_my_spec/status/code_my_spec_web/push_subscription_controller.md) (2/6)
 - [ ] [CodeMySpecWeb.Router](.code_my_spec/status/code_my_spec_web/router.md) (3/6)
 - [ ] [CodeMySpecWeb.SessionChannel](.code_my_spec/status/code_my_spec_web/session_channel.md) (2/6)
+- [ ] [CodeMySpecWeb.StoriesChannel](.code_my_spec/status/code_my_spec_web/stories_channel.md) (2/6)
 - [ ] [CodeMySpecWeb.StoriesController](.code_my_spec/status/code_my_spec_web/stories_controller.md) (2/6)
 - [ ] [CodeMySpecWeb.StoriesJSON](.code_my_spec/status/code_my_spec_web/stories_json.md) (2/6)
 - [ ] [CodeMySpecWeb.StoryLive](.code_my_spec/status/code_my_spec_web/story_live.md) (10/30)
