@@ -1,0 +1,36 @@
+# Metadata for verification_pipeline.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: verification-pipeline
+type: blog  # Options: blog, page, landing
+title: "The Part Nobody Talks About: Verifying AI-Generated Code"
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: "Verifying AI-Generated Code: The QA Pipeline - CodeMySpec"
+meta_description: How CodeMySpec verifies AI-generated code with a 7-stage validation pipeline, dirty tracking, BDD specs, and end-to-end QA journeys.
+og_title: "The Part Nobody Talks About: Verifying AI-Generated Code"
+og_description: AI generates code fast. Verifying it's correct is the actual hard problem. Here's how we built a pipeline that does it automatically.
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - testing
+  - verification
+  - validation-pipeline
+  - bdd
+  - qa
+  - software-architecture

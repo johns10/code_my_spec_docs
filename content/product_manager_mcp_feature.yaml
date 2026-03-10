@@ -13,7 +13,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: AI Product Manager for Requirements Gathering
-meta_description: Get better user stories with an AI-guidded conversation than you'd write alone. Complete traceability from requirements to code.
+meta_description: Get better user stories with an AI-guided conversation than you'd write alone. Complete traceability from requirements to code.
 og_title: Stories - Your AI Product Manager
 og_description: Stop writing user stories. Start having conversations about what you want to build. AI product manager interviews you and creates structured, testable requirements.
 og_image: null  # URL to Open Graph image

@@ -13,7 +13,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: Validated Design Documents for AI Code Generation
-meta_description: Write specs first, validate automatically, then let AI implement what you specified. 15 document types with type-specific section validation.
+meta_description: Write specs first, validate automatically, then let AI implement what you specified. 17 document types with type-specific validation.
 og_title: Design Docs - Validated Specs Before Code
 og_description: Stop letting AI invent structure. Write validated design documents that control exactly what gets implemented. Type-specific validation catches problems before code.
 og_image: null  # URL to Open Graph image

@@ -13,7 +13,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: "Remote Permission Approval for AI Coding Agents - CodeMySpec"
-meta_description: How we built a full-stack permission approval system for Claude Code that lets you approve dangerous tool calls from your phone, with Web Push, Phoenix Channels, and SSE.
+meta_description: How we built a full-stack permission approval system for Claude Code that lets you approve tool calls from your phone with Web Push and Phoenix Channels.
 og_title: "Remote Permission Approval: Trust Boundaries for AI Agents"
 og_description: A deep dive into building human-in-the-loop permission systems for autonomous AI coding agents
 og_image: null  # URL to Open Graph image

@@ -58,7 +58,7 @@ client_api_url: "https://www.codemyspec.com/api"
 # POST /api/bootstrap/install-rules        → coding standards
 ```
 
-**CLAUDE.md** gets an auto-managed section between `<!-- code_my_spec:start -->` and `<!-- code_my_spec:end -->` markers. Add your own content outside them.
+**CLAUDE.md** gets an auto-managed section between `code_my_spec:start` and `code_my_spec:end` HTML comment markers. Add your own content outside them.
 
 **AGENTS.md** is generated per-project — the full development guide agents reference during sessions.
 
