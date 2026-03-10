@@ -1,0 +1,38 @@
+# Metadata for fuellytics_bdd_and_qa.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: fuellytics-bdd-and-qa
+type: blog  # Options: blog, page, landing
+title: "How CodeMySpec Built and Verified a Fuel Card App in 5 Days"
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: null  # ISO 8601 datetime or null for immediate publish
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: "How CodeMySpec Built and Verified a Fuel Card App in 5 Days"
+meta_description: 55 commits, 100K+ lines, 100+ QA issues caught in 5 active development days. How BDD specs and agentic QA verified a fuel card management platform.
+og_title: "How CodeMySpec Built and Verified a Fuel Card App in 5 Days"
+og_description: "The git log says 6 weeks. The actual generation happened in 5 active days. Here's how we verified it wasn't a house of cards."
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: CodeMySpec Team
+  category: Case Study
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - case-study
+  - fuellytics
+  - bdd
+  - qa
+  - verification
+  - elixir
+  - phoenix
+  - stripe
