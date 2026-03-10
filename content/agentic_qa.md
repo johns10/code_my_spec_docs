@@ -8,7 +8,7 @@ Unit tests check logic. [BDD specs](/pages/bdd-specs-for-ai-generated-code) chec
 
 That's a whole category of bugs that nobody catches until production. The kind where individual components work fine in isolation but break when the full system runs together. The kind where the API response shape is technically correct but the data inside it is wrong.
 
-On Fuellytics — a financial services platform I built with AI in about 5 active development days — QA agents found over 100 issues that passed all other tests. Including a fraud vulnerability that BDD specs explicitly marked as passing.
+On Fuellytics — a fuel card management app we built with AI in about 5 active development days — QA agents found over 100 issues that passed all other tests. Including a fraud vulnerability that BDD specs explicitly marked as passing.
 
 ## Story QA
 
@@ -62,8 +62,8 @@ On Fuellytics, over 100 issues went through this pipeline across 30+ stories. Th
 
 ## What This Makes Possible
 
-I submitted Fuellytics for Stripe Treasury production access. That's a serious approval process — they review your fraud controls, compliance handling, and financial operations.
+We submitted Fuellytics for Stripe Treasury production access. That's a serious approval process — they review your fraud controls, compliance handling, and financial operations.
 
-I was confident in the submission because QA told me exactly what worked and what didn't. Not "I think the fraud detection works." Not "tests pass." The QA agent tested every story against the running app and filed issues for everything it found. I fixed them. I know what state the application is in because the evidence is sitting in 30+ result documents with screenshots and reproduction steps.
+We were confident in the submission because QA told us exactly what worked and what didn't. Not "we think the fraud detection works." Not "tests pass." The QA agent tested every story against the running app and filed issues for everything it found. We fixed them. We know what state the application is in because the evidence is sitting in 30+ result documents with screenshots and reproduction steps.
 
 That's the difference between "it should work" and "here's the proof."

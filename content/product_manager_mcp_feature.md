@@ -49,4 +49,4 @@ Components satisfy stories. Tests validate acceptance criteria. When something b
 
 [See the full Stories feature →](/pages/stories-feature)
 
-[See the Stories MCP technical reference →](/pages/stories-mcp-documentation)
+[See the Stories MCP technical reference →](/pages/stories-mcp-server)
