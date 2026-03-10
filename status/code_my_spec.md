@@ -23,7 +23,7 @@
 - [ ] [CodeMySpec.Components](.code_my_spec/status/code_my_spec/components.md) (67/90)
 - [ ] [CodeMySpec.Content](.code_my_spec/status/code_my_spec/content.md) (26/36)
 - [ ] [CodeMySpec.ContentAdmin](.code_my_spec/status/code_my_spec/content_admin.md) (11/18)
-- [ ] [CodeMySpec.ContentSync](.code_my_spec/status/code_my_spec/content_sync.md) (45/60)
+- [ ] [CodeMySpec.ContentSync](.code_my_spec/status/code_my_spec/content_sync.md) (46/60)
 - [ ] [CodeMySpec.Documents](.code_my_spec/status/code_my_spec/documents.md) (70/92)
 - [ ] [CodeMySpec.Encrypted](.code_my_spec/status/code_my_spec/encrypted.md) (3/6)
 - [ ] [CodeMySpec.Environments](.code_my_spec/status/code_my_spec/environments.md) (25/36)
