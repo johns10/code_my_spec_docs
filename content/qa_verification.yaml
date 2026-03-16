@@ -7,11 +7,11 @@ title: "QA Verification: Testing What the System Actually Does"
 
 # Publishing control
 protected: false
-publish_at: 2026-03-16T00:00:00Z
+publish_at: 2026-03-15T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "QA Verification - Automated Story and Journey Testing - CodeMySpec"
+meta_title: "QA Verification - Story and Journey Testing"
 meta_description: How CodeMySpec runs story QA, journey testing, and issue triage with AI doing the testing and procedural state machines controlling the flow.
 og_title: "QA Verification: Testing What the System Actually Does"
 og_description: Story QA, journey testing, and automated issue triage. AI tests the running application. Procedural code ensures every phase completes with validated artifacts.

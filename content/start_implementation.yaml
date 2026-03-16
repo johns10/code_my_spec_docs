@@ -7,11 +7,11 @@ title: "Start Implementation: The Full Cycle"
 
 # Publishing control
 protected: false
-publish_at: 2026-03-16T00:00:00Z
+publish_at: 2026-03-15T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "Start Implementation - Full Autonomous Development Cycle - CodeMySpec"
+meta_title: "Start Implementation - Full Dev Cycle"
 meta_description: The graph-driven orchestrator that walks stories to deployed software. How CodeMySpec dispatches architecture, implementation, and QA tasks autonomously.
 og_title: "Start Implementation: The Full Cycle"
 og_description: Define your stories. The system designs architecture, generates specs, implements code, runs QA, and triages issues. One loop until everything passes.
