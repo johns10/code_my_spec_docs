@@ -1,5 +1,3 @@
-<!-- cms:task type="ContextSpec" component="Empty" -->
-
 Your task is to generate a specification for a Phoenix bounded context.
 
 # Project

@@ -1,0 +1,33 @@
+# Metadata for context_development.md
+
+# Required fields
+slug: context-development
+type: documentation
+title: "Context Development: Let the AI Build the Whole Thing"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-16T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Context Development - Orchestrated Bounded Context Lifecycle - CodeMySpec"
+meta_description: How develop-context orchestrates an entire bounded context from specs through design review to implementation. The AI walks the component tree in dependency order.
+og_title: "Context Development: Let the AI Build the Whole Thing"
+og_description: Stop driving one file at a time. The develop-context command handles specs, design review, implementation, and testing for an entire bounded context.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - contexts
+  - orchestration
+  - phoenix-contexts
+  - bounded-contexts
+  - automation
+  - level-3

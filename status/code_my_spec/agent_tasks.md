@@ -31,36 +31,6 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.AgentTasks.ComponentCode (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.ComponentSpec (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.ComponentTest (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.AgentTasks.ContextComponentSpecs (module)
 
 - [x] spec_file - Component specification file exists
@@ -71,27 +41,7 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.AgentTasks.ContextDesignReview (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.AgentTasks.ContextImplementation (logic)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.ContextSpec (module)
 
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
@@ -155,85 +105,15 @@
 
 - [x] spec_file - Context specification file exists
 - [ ] spec_valid - Context specification is valid
-- [x] children_designs - Child component designs are complete
 - [ ] review_file - Context design review file exists
 - [ ] review_valid - Context design review is valid
-- [x] children_implementations - Child component implementations are complete
-- [ ] dependencies_satisfied - Component dependencies are satisfied
 - [x] implementation_file - Context implementation file exists
 - [x] test_file - Context test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.FixAllBddSpecs (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.FixBddSpecs (agent_task)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.FixIssues (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.LiveContextSpec (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.LiveViewCode (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.LiveViewSpec (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.LiveViewTest (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
+- [x] children_designs - Child component designs are complete
+- [x] children_implementations - Child component implementations are complete
+- [ ] dependencies_satisfied - Component dependencies are satisfied
 
 
 ## CodeMySpec.AgentTasks.ManageImplementation (module)
@@ -326,16 +206,6 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.AgentTasks.QaStory (module)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.AgentTasks.RefactorModule (module)
 
 - [x] spec_file - Component specification file exists
@@ -366,46 +236,6 @@
 - [x] tests_passing - Component tests are passing
 
 
-## CodeMySpec.AgentTasks.StartAgentTask (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.StartImplementation (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.TaskContext (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.TaskMarker (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
 ## CodeMySpec.AgentTasks.TechnicalStrategy (module)
 
 - [x] spec_file - Component specification file exists
@@ -413,34 +243,4 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.TrackEdits (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.TriageIssues (module)
-
-- [ ] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
-- [x] tests_passing - Component tests are passing
-
-
-## CodeMySpec.AgentTasks.WriteBddSpecs (agent_task)
-
-- [x] spec_file - Component specification file exists
-- [x] spec_valid - Component specification is valid
-- [x] implementation_file - Component implementation file exists
-- [x] test_file - Component test file exists
-- [ ] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing

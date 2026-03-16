@@ -1,0 +1,33 @@
+# Metadata for architecture_design.md
+
+# Required fields
+slug: architecture-design
+type: documentation
+title: "Architecture Design: Defining the System Before Code Exists"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-16T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Architecture Design - Stories to Components - CodeMySpec"
+meta_description: How CodeMySpec maps user stories to bounded contexts and component graphs with guided design sessions, ADRs, and design reviews validated by procedural code.
+og_title: "Architecture Design: Defining the System Before Code Exists"
+og_description: Architecture design, technical strategy, and design reviews. The human defines structure, procedural code validates proposals, AI handles the creative work.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - architecture
+  - design-review
+  - adr
+  - phoenix-contexts
+  - bounded-contexts
+  - level-4

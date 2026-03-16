@@ -60,39 +60,6 @@ Parses JSONL failure file into Failure structs.
 - parses real passing spex output from cached run (via TestAdapter)
 - parses real failing spex output from cached run (via TestAdapter)
 
-## Components
-
-### Spex.Failure
-
-Struct representing a single test failure with BDD context.
-
-**Fields**:
-- `spex` - string, name of the spex (test group)
-- `scenario` - string | nil, scenario name or nil if outside scenario
-- `steps` - list of Step structs
-- `error` - Error struct with failure details
-
-### Spex.Step
-
-Struct representing a BDD step executed during the test.
-
-**Fields**:
-- `type` - string, "Given", "When", "Then", or "And"
-- `description` - string, step description text
-- `status` - string, "passed" or "failed"
-
-### Spex.Error
-
-Struct representing the error details of a failure.
-
-**Fields**:
-- `message` - string, error/assertion message
-- `file` - string | nil, source file path
-- `line` - integer | nil, line number
-- `stacktrace` - list of stacktrace entry maps
-- `left` - string | nil, left side of assertion (assertion errors only)
-- `right` - string | nil, right side of assertion (assertion errors only)
-
 ## Dependencies
 
 None (uses only stdlib and Jason)

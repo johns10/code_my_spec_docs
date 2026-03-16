@@ -3,8 +3,11 @@
 
 ## CodeMySpecWeb.UserPreferenceLive (live_context)
 
-_No requirements defined_
-
+- [ ] spec_file - Live context specification file exists
+- [ ] spec_valid - Live context specification is valid
+- [ ] children_designs - Child component designs are complete
+- [ ] children_implementations - Child component implementations are complete
+- [ ] dependencies_satisfied - Component dependencies are satisfied
 
 
 ## CodeMySpecWeb.UserPreferenceLive.Form (module)
@@ -13,5 +16,5 @@ _No requirements defined_
 - [ ] spec_valid - Component specification is valid
 - [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
-- [x] test_spec_alignment - Test file implements all spec test assertions
+- [ ] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing

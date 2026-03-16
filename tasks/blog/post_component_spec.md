@@ -1,5 +1,3 @@
-<!-- cms:task type="ComponentSpec" component="Blog.Post" -->
-
 Generate a Phoenix component spec for the following.
 Project: some name
 Project Description: 
