@@ -1,0 +1,37 @@
+# Metadata for cli_agents_compared_2026.md
+
+# Required fields
+slug: cli-agents-compared-2026
+type: page
+title: "The Best CLI Coding Agents in 2026: Claude Code vs Codex vs Gemini CLI vs Aider vs OpenCode vs Goose"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-17T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "CLI Coding Agents 2026: Claude Code vs Codex vs Gemini"
+meta_description: "6 CLI coding agents compared: benchmarks, pricing, and Reddit sentiment. Claude Code, Codex CLI, Gemini CLI, Aider, OpenCode, and Goose."
+og_title: "The Best CLI Coding Agents in 2026"
+og_description: "Claude Code leads on quality (80.8% SWE-bench). Codex wins on value ($20/mo daily driver). Gemini CLI is free. Aider gives model freedom. Here's how to choose."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - cli-agents
+  - claude-code
+  - codex
+  - gemini-cli
+  - aider
+  - opencode
+  - comparison
+  - tools
+  - terminal

@@ -1,0 +1,34 @@
+# Metadata for dead_tools_supermaven_aide_void.md
+
+# Required fields
+slug: dead-ai-coding-tools-supermaven-aide-void
+type: page
+title: "What Happened to Supermaven, Aide, and Void: AI Coding Tools That Didn't Make It"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-23T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "What Happened to Supermaven, Aide, and Void?"
+meta_description: "Supermaven was acquired. Aide is sunsetting. Void went silent. Why AI coding tools die, what patterns predict failure, and which tools are at risk today."
+og_title: "What Happened to Supermaven, Aide, and Void"
+og_description: "For every Cursor that hits $2B ARR, several AI coding tools don't make it. Their stories are a map of what works and what doesn't."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - supermaven
+  - aide
+  - void
+  - market-analysis
+  - acquisitions
+  - tools

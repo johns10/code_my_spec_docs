@@ -1,0 +1,33 @@
+# Metadata for mcp_protocol_explained.md
+
+# Required fields
+slug: mcp-protocol-explained
+type: page
+title: "MCP: The Protocol Connecting AI Coding Tools"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-21T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "MCP: The Protocol Connecting AI Coding Tools"
+meta_description: "Model Context Protocol is USB for AI agents. 1,000+ servers, adopted by Anthropic, OpenAI, Google. What MCP is, who supports it, and what it enables."
+og_title: "MCP: The Protocol Connecting AI Coding Tools"
+og_description: "MCP went from proprietary to industry standard in under a year. 1,000+ servers. Adopted by every major AI coding tool. Here's what you need to know."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - mcp
+  - model-context-protocol
+  - ai-coding
+  - integrations
+  - developer-tools
+  - standards

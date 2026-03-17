@@ -1,0 +1,33 @@
+# Metadata for agent_profile_codex_cli.md
+
+# Required fields
+slug: codex-cli-review-2026
+type: page
+title: "Codex CLI in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-27T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Codex CLI Review 2026: Pricing, Benchmarks, Community"
+meta_description: "OpenAI Codex CLI deep dive: open source in Rust, Terminal-Bench leader, 9,000+ plugins, and what Reddit developers actually think. Pricing, strengths, and weaknesses."
+og_title: "Codex CLI in 2026"
+og_description: "Open source, Rust-native, and the Terminal-Bench leader. Codex CLI is OpenAI's answer to Claude Code."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - codex
+  - openai
+  - cli-agents
+  - open-source
+  - review

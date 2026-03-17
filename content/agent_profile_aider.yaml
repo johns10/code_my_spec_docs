@@ -1,0 +1,33 @@
+# Metadata for agent_profile_aider.md
+
+# Required fields
+slug: aider-review-2026
+type: page
+title: "Aider in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-29T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Aider Review 2026: Pricing, Benchmarks, Community"
+meta_description: "Aider deep dive: 50+ model support, 4.2x token efficiency vs Claude Code, best-in-class git integration, and what Reddit developers actually think."
+og_title: "Aider in 2026"
+og_description: "The OG open-source coding agent. 50+ models, best git integration, and the benchmark everyone else measures against."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - aider
+  - open-source
+  - cli-agents
+  - model-agnostic
+  - review

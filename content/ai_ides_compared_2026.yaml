@@ -1,0 +1,35 @@
+# Metadata for ai_ides_compared_2026.md
+
+# Required fields
+slug: ai-ides-compared-2026
+type: page
+title: "AI IDEs Compared in 2026: Cursor vs Windsurf vs Zed vs Kiro"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-19T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "AI IDEs Compared 2026: Cursor vs Windsurf vs Zed vs Kiro"
+meta_description: "Cursor, Windsurf, Zed, and Kiro compared: pricing, philosophy, benchmarks, and Reddit sentiment. Which AI IDE actually fits your workflow?"
+og_title: "AI IDEs Compared in 2026: Cursor vs Windsurf vs Zed vs Kiro"
+og_description: "Cursor hit $2B ARR. Windsurf got acquired. Zed renders at 120fps. Kiro writes specs before code. Which AI IDE philosophy wins?"
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - cursor
+  - windsurf
+  - zed
+  - kiro
+  - ide
+  - comparison
+  - tools

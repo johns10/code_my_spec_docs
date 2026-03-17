@@ -1,0 +1,33 @@
+# Metadata for agent_profile_github_copilot.md
+
+# Required fields
+slug: github-copilot-review-2026
+type: page
+title: "GitHub Copilot in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-30T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "GitHub Copilot Review 2026: Pricing, Benchmarks, Community"
+meta_description: "GitHub Copilot deep dive: $10/mo Pro tier, Coding Agent, 60M+ code reviews, Copilot Memory, and what Reddit developers actually think."
+og_title: "GitHub Copilot in 2026"
+og_description: "The incumbent AI coding tool evolved into a full agent system. 60M code reviews, async agents from Issues, and the cheapest premium model access."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - github-copilot
+  - microsoft
+  - ide-extension
+  - review
+  - coding-agent

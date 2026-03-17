@@ -1,8 +1,8 @@
-# New bug
+# Test issue 57954
 
 ## Status
 
-incoming
+resolved
 
 ## Severity
 
@@ -14,8 +14,12 @@ app
 
 ## Description
 
-It's broken
+Something is broken
 
 ## Source
 
 Braindump import
+
+## Resolution
+
+All fixed

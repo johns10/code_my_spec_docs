@@ -1,0 +1,34 @@
+# Metadata for codemyspec_vs_kiro_specs.md
+
+# Required fields
+slug: codemyspec-vs-kiro-specs
+type: page
+title: "CodeMySpec Specs vs Kiro EARS: Two Approaches to Spec-Driven AI Development"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-22T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "CodeMySpec vs Kiro: Spec-Driven AI Dev Compared"
+meta_description: "Amazon's Kiro generates specs before code using EARS notation. CodeMySpec takes a platform approach. How two tools are betting on spec-driven AI development."
+og_title: "CodeMySpec Specs vs Kiro EARS"
+og_description: "Both tools bet that better specifications produce better AI-generated code. They just disagree about where specs should live and who should own them."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - specifications
+  - kiro
+  - ears
+  - bdd
+  - spec-driven-development
+  - ai-coding
+  - comparison

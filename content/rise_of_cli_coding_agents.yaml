@@ -1,0 +1,33 @@
+# Metadata for rise_of_cli_coding_agents.md
+
+# Required fields
+slug: rise-of-cli-coding-agents
+type: page
+title: "The Rise of CLI Coding Agents: Why Terminal-Native AI is Having a Moment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-18T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Rise of CLI Coding Agents: Why Terminal AI Won"
+meta_description: "Claude Code accounts for 4% of GitHub commits. Gemini CLI hit 90K stars. The terminal won the AI coding war nobody expected. Here's why."
+og_title: "The Rise of CLI Coding Agents"
+og_description: "In 2024, AI belonged in the IDE. In 2026, the terminal is the hottest interface for AI coding. Claude Code, Codex CLI, Gemini CLI changed everything."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - cli-agents
+  - terminal
+  - claude-code
+  - trends
+  - developer-tools

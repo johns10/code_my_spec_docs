@@ -1,0 +1,33 @@
+# Metadata for agent_profile_cursor.md
+
+# Required fields
+slug: cursor-review-2026
+type: page
+title: "Cursor in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-26T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Cursor Review 2026: Pricing, Benchmarks, Community"
+meta_description: "Cursor deep dive: $2B ARR, Background Agents, MCP Apps, credit-based billing, and what Reddit developers actually think. Features, pricing, and honest assessment."
+og_title: "Cursor in 2026"
+og_description: "$2B ARR and the fastest-scaling SaaS ever. But developers are leaving for CLI agents. Here's the full picture."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - cursor
+  - ide
+  - review
+  - mcp
+  - background-agents
