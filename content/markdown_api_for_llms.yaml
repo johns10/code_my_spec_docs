@@ -7,7 +7,7 @@ publish_at: 2026-03-23T00:00:00Z
 expires_at: null
 
 meta_title: "Building a Markdown API for LLM Collaboration - CodeMySpec"
-meta_description: "What if your AI agent navigated your project like a human browses a wiki? A web server returning navigable markdown replaces CLAUDE.md stuffing, MCP proliferation, and filesystem sync problems."
+meta_description: "A web server returning navigable markdown replaces CLAUDE.md stuffing, MCP proliferation, and filesystem sync problems."
 og_title: "Building a Markdown API for LLM Collaboration"
 og_description: "From files to shell scripts to a full markdown web server. How I solved the problem of giving an LLM access to knowledge, tools, and database state without burning context."
 og_image: null
