@@ -1,0 +1,36 @@
+# Metadata for claude_code_skills_guide.md
+
+# Required fields
+slug: claude-code-skills-guide
+type: page
+title: "Claude Code Skills: Writing Apps for Agents"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-19T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Claude Code Skills Guide - Writing Apps for AI Agents"
+meta_description: "What Claude Code skills are, how they work, and why they matter. Skills are markdown applications that AI agents execute on demand - the first step toward writing software for agents instead of humans."
+og_title: "Claude Code Skills: Writing Apps for Agents"
+og_description: "Skills aren't prompts. They're applications written for AI agents. Learn how to create, structure, and compose Claude Code skills with real-world examples."
+og_image: null
+
+# Additional metadata
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+# Tags
+tags:
+  - claude-code
+  - skills
+  - slash-commands
+  - workflow
+  - tutorial
+  - progressive-disclosure
+  - agents
+  - extensibility

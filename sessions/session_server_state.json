@@ -1,0 +1,64 @@
+{
+  "active_tasks": {
+    "t1": {
+      "session_type": null,
+      "task_id": "t1",
+      "agent_id": "agent-x",
+      "component_module_name": null,
+      "assigned_at": "2026-03-21T05:21:34Z"
+    },
+    "task-1": {
+      "session_type": null,
+      "task_id": "task-1",
+      "agent_id": "agent-abc",
+      "component_module_name": null,
+      "assigned_at": "2026-03-21T05:21:34Z"
+    }
+  },
+  "prepared_tasks": {
+    "0578cb25-4446-4aaf-b359-4a433940e4e1": {
+      "prompt": "hello",
+      "session_type": null,
+      "task_id": "0578cb25-4446-4aaf-b359-4a433940e4e1",
+      "component_module_name": null,
+      "prepared_at": "2026-03-21T05:21:34Z"
+    },
+    "task-dup": {
+      "prompt": "first",
+      "session_type": null,
+      "task_id": "task-dup",
+      "component_module_name": null,
+      "prepared_at": "2026-03-21T05:21:34Z"
+    }
+  },
+  "completed_tasks": {
+    "t1": {
+      "result": "complete",
+      "session_type": null,
+      "task_id": "t1",
+      "agent_id": "agent-a",
+      "component_module_name": null,
+      "completed_at": "2026-03-21T05:21:33Z"
+    },
+    "t2": {
+      "result": "failed",
+      "session_type": null,
+      "task_id": "t2",
+      "agent_id": "agent-b",
+      "component_module_name": null,
+      "completed_at": "2026-03-21T05:21:33Z"
+    },
+    "task-1": {
+      "result": "complete",
+      "session_type": null,
+      "task_id": "task-1",
+      "agent_id": "agent-1",
+      "component_module_name": null,
+      "completed_at": "2026-03-21T05:21:33Z"
+    }
+  },
+  "agent_task_index": {
+    "agent-abc": "task-1",
+    "agent-x": "t1"
+  }
+}

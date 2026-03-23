@@ -1,8 +1,8 @@
-# Test issue 57954
+# Test issue 23747
 
 ## Status
 
-resolved
+incoming
 
 ## Severity
 
@@ -19,7 +19,3 @@ Something is broken
 ## Source
 
 Braindump import
-
-## Resolution
-
-All fixed
