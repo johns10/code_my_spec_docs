@@ -46,7 +46,7 @@ As of March 2026, Copilot Memory is enabled by default, MCP support is GA in VS 
 ## Weaknesses
 
 - Agent depth lags behind Cursor (no subagents, no cloud agents with computer use, no automations)
-- SWE-bench score (56.0%) trails Claude Code (80.8%) and Cursor (51.7% but with speed advantage)
+- Code quality trails Claude Code and Cursor per community consensus on complex autonomous tasks
 - Premium request quotas burn fast for heavy users (300/mo on Pro)
 - Surprise charges possible ($0.04/request overage, student plan confusion)
 - Coding Agent best for low-to-medium complexity in well-tested codebases
@@ -81,16 +81,16 @@ As of March 2026, Copilot Memory is enabled by default, MCP support is GA in VS 
 
 > "Copilot is mature, battle-tested, and works inside your existing setup, making it the 'don't change anything' option." -- Second Talent review
 
-## Benchmarks
+## Performance Notes
 
-| Benchmark | Score | Notes |
-|-----------|-------|-------|
-| SWE-bench Verified | **56.0%** (280/500) | 89.91s per task (Feb 2026) |
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the tools developers use. GitHub Copilot as a product has not been independently benchmarked against other coding agents in a standardized way. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+
+**Product metrics:**
+| Metric | Value | Notes |
+|--------|-------|-------|
 | Code Reviews | **60M+** completed | 1 in 5 reviews on GitHub, 10X growth |
 
-For comparison: Claude Code (Opus 4.6) at 80.8%, Cursor at 51.7% (but 30% faster per task).
-
-Note: SWE-Bench Verified retired Feb 2026 due to saturation/contamination. SWE-Bench Pro is successor where top models score ~23%.
+**Community consensus:** Copilot's strength is breadth (widest editor support, cheapest premium model access, deepest GitHub integration) rather than autonomous coding depth. For complex multi-file autonomous tasks, developers generally prefer Claude Code or Cursor. Copilot excels as the "don't change anything" option for teams already on GitHub.
 
 ## Recent Changes (2025-2026)
 

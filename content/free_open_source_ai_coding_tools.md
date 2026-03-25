@@ -25,7 +25,7 @@ This guide covers every serious free and open-source AI coding tool in 2026, org
 Let's get this out of the way: **Gemini CLI is the only tool where you pay literally nothing** and still get a competitive coding agent.
 
 - **60 requests/minute, 1,000 requests/day** with any personal Google account
-- **Gemini 3 Flash** on the free tier scores **78% on SWE-bench** — that's better than many paid tools
+- **Gemini 3 Flash** on the free tier delivers competitive coding quality
 - 1M token context window
 - MCP support, Plan Mode, open source (Apache 2.0)
 - Jules integration for async background work

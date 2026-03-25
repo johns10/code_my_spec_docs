@@ -79,17 +79,22 @@ The ecosystem includes Agent Teams (multi-agent orchestration with worktree isol
 
 > "While you blinked, AI consumed all of software development." -- Dylan Patel, SemiAnalysis, on Claude Code's 4% GitHub commit share
 
-## Benchmarks
+## Performance Notes
 
-| Benchmark | Score | Rank |
-|-----------|-------|------|
-| SWE-bench Verified | **80.8%** (Opus 4.6 Thinking) | #1 (March 2026) |
-| SWE-bench Overall | **79.2%** (Opus 4.6 Thinking) | #1 |
-| SWE-bench Pro | **59%** (Opus 4.6) | Top tier |
-| SWE-bench Verified | **79.6%** (Sonnet 4.6) | #2 (half the cost of Opus) |
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. Claude Code as a product has never been submitted to SWE-bench. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+
+The closest tool-level benchmark data comes from HAL/CORE-Bench, which measures agents (not just models):
+- **77.8%** on CORE-Bench Hard with Claude Opus 4.5
+- **62.2%** on CORE-Bench Hard with Claude Sonnet 4.5
+
+**Product metrics:**
+| Metric | Value | Notes |
+|--------|-------|-------|
 | Blind code quality tests | **67% win rate** vs competitors | -- |
 | GitHub commit share | **4%** of all public commits (~135K/day) | #1 AI tool |
 | Code Review impact | **54%** substantive reviews (up from 16%) | -- |
+
+**Community consensus:** Developers consistently rate Claude Code as the highest-quality CLI agent for production code. 46% "most loved" rating in developer surveys (vs Cursor at 19%, GitHub Copilot at 9%).
 
 ## Recent Changes (2025-2026)
 

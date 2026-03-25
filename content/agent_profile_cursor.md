@@ -81,15 +81,17 @@ The acquisition of Supermaven (Nov 2025) brought best-in-class autocomplete in-h
 
 > "By prioritizing the vibe coding use case, Cursor made itself unusable for full-time software engineers." -- ischemist.com
 
-## Benchmarks
+## Performance Notes
 
-| Benchmark | Score | Notes |
-|-----------|-------|-------|
-| SWE-bench Verified | **51.7%** (258/500) | 62.95s per task, 30% faster than alternatives (Feb 2026) |
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not IDE-based coding agents. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+
+**Product metrics:**
+| Metric | Value | Notes |
+|--------|-------|-------|
 | BugBot resolution rate | **76%** | Up from 52%. 35%+ fixes merged unmodified. |
 | CursorBench | Proprietary | Uses "Cursor Blame" -- traces committed code back to agent requests |
 
-Note: Cursor's SWE-bench scores reflect the IDE agent, not the underlying model. Claude Opus 4.6 (used in Claude Code) scores 80.8% on SWE-bench Verified -- the ~30 point gap reflects agent tooling differences, not just model quality.
+**Community consensus:** Cursor's strength is the integrated IDE experience -- tab completion, Composer multi-file editing, and Background Agents. Developers who prioritize autonomous code quality often prefer Claude Code; developers who prioritize workflow integration and UX prefer Cursor.
 
 ## Recent Changes (2025-2026)
 

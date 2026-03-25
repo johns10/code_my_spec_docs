@@ -14,7 +14,7 @@ expires_at: null
 meta_title: "Open Source vs Vendor-Locked AI Coding Tools"
 meta_description: "The most-loved tool (Claude Code) is fully closed. The most-starred (OpenCode, 117K) is fully open. Analysis of 21 tools shows when to choose which."
 og_title: "Open Source vs Vendor-Locked AI Coding Tools"
-og_description: "Aider uses 4.2x fewer tokens. Claude Code scores 80.8% on SWE-bench. Data from 21 tools shows the real tradeoffs between open and proprietary AI coding."
+og_description: "Aider uses 4.2x fewer tokens. Claude Code is the community quality leader. Data from 21 tools shows the real tradeoffs between open and proprietary AI coding."
 og_image: null
 
 metadata:

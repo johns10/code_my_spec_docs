@@ -12,9 +12,9 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Codex CLI Review 2026: Pricing, Benchmarks, Community"
-meta_description: "Codex CLI deep dive: open source Rust CLI, Terminal-Bench leader, 9,000+ plugins, and what Reddit devs actually think. Pricing, strengths, weaknesses."
+meta_description: "Codex CLI deep dive: open source Rust CLI, 2-3x token efficiency, 9,000+ plugins, and what Reddit devs actually think. Pricing, strengths, weaknesses."
 og_title: "Codex CLI in 2026"
-og_description: "Open source, Rust-native, and the Terminal-Bench leader. Codex CLI is OpenAI's answer to Claude Code."
+og_description: "Open source, Rust-native, and the DevOps community favorite. Codex CLI is OpenAI's answer to Claude Code."
 og_image: null
 
 metadata:

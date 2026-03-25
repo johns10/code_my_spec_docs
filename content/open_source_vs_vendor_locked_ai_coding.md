@@ -60,7 +60,7 @@ Aider, OpenCode, Goose, Cline, and Roo Code all support local models. Claude Cod
 
 Claude Code's extended thinking, Codex CLI's voice transcription, Cursor's Composer model — these features only exist because the tool is tightly coupled with the model.
 
-Extended thinking (where Claude shows its reasoning steps before answering) is a Claude-specific feature that other tools can't access the same way. The quality gap is real: Claude Code scores 80.8% on SWE-bench Verified. The same Claude model through Aider may not reach the same score because Aider can't leverage model-specific features.
+Extended thinking (where Claude shows its reasoning steps before answering) is a Claude-specific feature that other tools can't access the same way. The quality gap is real: Claude Code is consistently rated the highest-quality CLI agent per community consensus and blind code quality tests (67% win rate). The same Claude model through Aider may not produce the same quality because Aider can't leverage model-specific features like extended thinking.
 
 ### 2. Polished UX
 

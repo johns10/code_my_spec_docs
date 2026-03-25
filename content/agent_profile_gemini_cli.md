@@ -4,7 +4,7 @@
 
 Gemini CLI is Google's entry into the CLI coding agent space. It launched with the most generous free tier in the category -- 1,000 requests per day with just a personal Google account. Combined with a 1M token context window, it's the most accessible entry point for developers who want to try agentic coding without paying.
 
-With Gemini 3.1 Pro scoring 80.6% on SWE-bench Verified (third behind Claude Opus 4.5 and 4.6), the quality gap has nearly closed. Gemini 3 Flash, available on the free tier, scores 78% -- making it the best free coding agent by benchmark performance.
+Quality has improved significantly with Gemini 3.1 Pro, though community sentiment is that it's competitive but inconsistent compared to Claude. The free tier with Gemini 3 Flash makes it the most accessible entry point for developers trying agentic coding.
 
 The ecosystem includes Jules (async agent delegation), Conductor (project management with automated reviews), Plan Mode (read-only analysis), and Google Workspace integration. At ~89.8K GitHub stars with 100+ contributors and Apache 2.0 licensing, it's a genuinely open alternative to proprietary CLI agents.
 
@@ -28,9 +28,9 @@ The ecosystem includes Jules (async agent delegation), Conductor (project manage
 
 ## Strengths
 
-- Zero-cost entry -- best free coding agent by benchmark (Gemini 3 Flash at 78% SWE-bench)
-- Gemini 3.1 Pro nearly matches Claude Opus on benchmarks (80.6% vs 80.8%)
-- Leads Terminal-Bench 2.0 (78.4%, ahead of GPT-5.3-Codex at 77.3%)
+- Zero-cost entry -- best free coding agent available
+- Gemini 3.1 Pro quality has improved significantly, closing the gap with Claude per community reports
+- Competitive on terminal-heavy workflows
 - Massive context window handles large codebases
 - Jules for async/autonomous work
 - Conductor for project management and automated reviews
@@ -77,15 +77,11 @@ The ecosystem includes Jules (async agent delegation), Conductor (project manage
 
 > "I hope they don't nerf it like they did with 3.0" -- u/cryptobrant, r/Bard
 
-## Benchmarks
+## Performance Notes
 
-| Benchmark | Model | Score | Notes |
-|-----------|-------|-------|-------|
-| SWE-bench Verified | Gemini 3.1 Pro | **80.6%** | 3rd behind Claude Opus 4.5 (80.9%) and Opus 4.6 (80.8%) |
-| SWE-bench Verified | Gemini 3 Flash | **78%** | Best free-tier model; outperforms Gemini 3 Pro |
-| Terminal-Bench 2.0 | Gemini 3.1 Pro | **78.4%** | #1 on this benchmark, ahead of GPT-5.3-Codex (77.3%) |
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. Gemini CLI as a product has never been submitted to SWE-bench. There is no widely-adopted benchmark for comparing coding agents head-to-head.
 
-March 2026 SWE-bench Verified top 5: Claude Opus 4.5 (80.9%) > Claude Opus 4.6 (80.8%) > Gemini 3.1 Pro (80.6%) > MiniMax M2.5 (80.2%) > GPT-5.2 (80.0%)
+**Community consensus:** The free tier is the primary draw -- 1,000 requests/day with competitive quality. Gemini 3.1 Pro is a significant quality upgrade that crosses the "good enough" threshold for personal coding. However, quality is inconsistent -- "either great or garbage and it's a coin toss" -- and server instability (429 errors) remains the top complaint. Most developers see it as "good for free/prototyping" but prefer Claude for production work.
 
 ## Recent Changes (2025-2026)
 
@@ -95,7 +91,7 @@ March 2026 SWE-bench Verified top 5: Claude Opus 4.5 (80.9%) > Claude Opus 4.6 (
 - **v0.31.0** (Feb 27, 2026) -- Gemini 3.1 Pro Preview support, experimental browser agent
 - **Conductor automated reviews** (Mar 2026) -- Guideline enforcement, test validation, security scanning
 - **Jules extension** -- Async agent delegation for background coding (bug fixing, refactoring, dependency updates)
-- **Gemini 3 Flash in CLI** (late 2025) -- Brought 78% SWE-bench to free tier users
+- **Gemini 3 Flash in CLI** (late 2025) -- Brought competitive coding quality to free tier users
 - **Google Workspace integration** -- Gmail, Drive, Calendar natively in CLI
 
 ## Integration Ecosystem

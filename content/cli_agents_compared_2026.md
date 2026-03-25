@@ -16,7 +16,7 @@ This isn't a "which one is best" article — it's a "which one is best for you" 
 | **Free Tier** | Limited | With ChatGPT+ | Yes (1,000 req/day) | Yes (BYOK) | Yes (BYOK) | Yes (BYOK) |
 | **Entry Price** | $20/mo (Pro) | $20/mo (Plus) | Free | API costs only | API costs only | API costs only |
 | **LLM Backends** | Claude only | OpenAI only | Gemini only | 50+ models | 75+ models | Any LLM |
-| **SWE-bench** | 80.8% | 57.7% | 80.6% | N/A (benchmark tool) | — | — |
+| **Quality Tier** | Highest (community consensus) | Strong for DevOps | Competitive, inconsistent | Depends on model | Depends on model | Depends on model |
 | **Context Window** | 1M (Opus) | — | 1M | Varies by model | Varies by model | Varies by model |
 | **MCP Support** | Yes | Yes (9,000+ plugins) | Yes | No (third-party) | No | Yes |
 | **Key Strength** | Code quality | Token efficiency | Free tier | Model freedom | Fastest growing | Extensibility |
@@ -27,11 +27,13 @@ This isn't a "which one is best" article — it's a "which one is best for you" 
 
 The vendor agents dominate benchmarks — but in different ways.
 
-**Claude Code** leads SWE-bench Verified at 80.8% (Opus 4.6). In blind code quality tests, it wins 67% of the time against all competitors. Developers consistently describe its output as "more thoughtful and architecturally sound." The tradeoff: it uses 4.2x more tokens than Aider to get there.
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. None of these CLI tools have been submitted to SWE-bench as products. There is no widely-adopted benchmark for comparing coding agents head-to-head. The comparisons below draw on independent testing (Render, Composio, Morph) and community sentiment.
 
-**Gemini CLI** is the surprise closer at 80.6% on SWE-bench — just 0.2% behind Claude. It also leads Terminal-Bench 2.0 at 78.4%. The catch: real-world reliability doesn't match benchmarks. Users report it's "either great or garbage and it's a coin toss."
+**Claude Code** is the community consensus leader for code quality. In blind code quality tests, it wins 67% of the time against all competitors. Developers consistently describe its output as "more thoughtful and architecturally sound." The tradeoff: it uses 4.2x more tokens than Aider to get there.
 
-**Codex CLI** dominates terminal-heavy workflows: Terminal-Bench 2.0 at 77.3% vs Claude's 65.4%. For DevOps, infrastructure, and CI/CD work, it's the best tool. Its Achilles heel is frontend — "GPT-5.4 really struggles with UI and frontend optimization."
+**Gemini CLI** has improved significantly with Gemini 3.1 Pro, but real-world reliability remains inconsistent. Users report it's "either great or garbage and it's a coin toss." The free tier makes it the best entry point for evaluation.
+
+**Codex CLI** excels at terminal-heavy workflows per community consensus. For DevOps, infrastructure, and CI/CD work, developers consistently prefer it. Its Achilles heel is frontend — "GPT-5.4 really struggles with UI and frontend optimization."
 
 **Aider** doesn't compete on benchmarks — it runs them. The Aider Polyglot leaderboard is the de facto standard for evaluating coding model quality, used by Unsloth, Qwen, and the entire r/LocalLLaMA community. Your results depend on which model you bring.
 
@@ -107,7 +109,7 @@ A pattern emerged across Reddit: many developers use two or more CLI agents.
 
 ## The CodeMySpec Angle
 
-All six of these tools share a gap: they're great at executing instructions but none of them help you write better instructions. The quality of the spec determines the quality of the code — whether you're using Claude Code at 80.8% SWE-bench or Aider with a local model.
+All six of these tools share a gap: they're great at executing instructions but none of them help you write better instructions. The quality of the spec determines the quality of the code — whether you're using the highest-rated agent or a local model through Aider.
 
 CodeMySpec fits into the layer above: generating the specifications that any of these agents can consume. Through MCP servers (supported by Claude Code, Codex, Gemini CLI, and Goose) or context files (CLAUDE.md, .cursorrules, GEMINI.md), CodeMySpec specs can feed into whichever agent your team prefers.
 

@@ -4,7 +4,7 @@
 
 Codex CLI is OpenAI's terminal-native coding agent. Unlike Claude Code, it's fully open source (Apache 2.0, written in Rust) with 62K+ GitHub stars and 365 contributors. It ships with optimized models (GPT-5.3-Codex, codex-mini) and recently added GPT-5.4.
 
-At $20/mo via ChatGPT Plus with generous usage limits, it's the daily-driver choice for cost-conscious developers. It dominates Terminal-Bench 2.0 (77.3% vs Claude Code's 65.4%), making it the go-to for DevOps, infrastructure, and CI/CD work. The Codex App (desktop, macOS + Windows) enables parallel agent threads across projects.
+At $20/mo via ChatGPT Plus with generous usage limits, it's the daily-driver choice for cost-conscious developers. Community consensus places it as the go-to for DevOps, infrastructure, and CI/CD work, with 2-3x token efficiency vs Claude Code. The Codex App (desktop, macOS + Windows) enables parallel agent threads across projects.
 
 The ecosystem is massive: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in alpha, and Codex-Spark on Cerebras WSE-3 running at 1,000+ tokens/sec.
 
@@ -12,7 +12,7 @@ The ecosystem is massive: 553 releases in 10 months, 9,000+ plugins, a Rust rewr
 
 - **Open source in Rust** -- Apache 2.0, 365 contributors, full audit trail
 - **Token efficiency** -- Uses 2-3x fewer tokens than Claude Code for comparable results
-- **Terminal-Bench leader** -- 77.3%, dominates terminal/DevOps workflows
+- **DevOps/infra strength** -- Community consensus leader for terminal-heavy workflows
 - **GitHub-integrated code review** -- Auto-reviews PRs, so entrenched that Codex flagged a Claude-generated PR (609 upvotes, r/OpenAI)
 - **Codex App** -- Desktop interface for parallel agent threads (macOS + Windows)
 - **Voice transcription** -- Hold spacebar to dictate prompts in TUI
@@ -33,7 +33,7 @@ The ecosystem is massive: 553 releases in 10 months, 9,000+ plugins, a Rust rewr
 
 - Best value at $20/mo -- generous limits, users report rarely hitting caps
 - Token-efficient -- 2-3x fewer tokens than Claude for comparable work
-- Dominates terminal-heavy workflows (DevOps, infra, CI/CD)
+- Excels at terminal-heavy workflows (DevOps, infra, CI/CD) per community consensus
 - Open source builds trust and enables customization (365 contributors)
 - Fastest release cadence (553 releases in 10 months)
 - Codex App enables parallel multi-agent work
@@ -52,14 +52,14 @@ The ecosystem is massive: 553 releases in 10 months, 9,000+ plugins, a Rust rewr
 - Erratic behavior in extended sessions
 - Image generation integration broken (can't replicate OpenAI's own demos)
 - Custom code review instructions missing in Codex App (CLI-only)
-- SWE-bench trails Claude significantly (56.8-57.7% vs 79.2%)
+- Code quality trails Claude per community consensus, especially on complex multi-file tasks
 
 ## Community Sentiment
 
 ### What People Love
 
 - **Token efficiency and cost** -- 2-3x fewer tokens than Claude Code. Plus plan at $20/mo is vastly cheaper than Claude Code intensive usage. Users rarely hit limits even with heavy use including worktrees. -- u/Jippylong12, r/ChatGPTCoding
-- **Terminal workflow dominance** -- Terminal-Bench 2.0 leader at 77.3%. DevOps/infra/CI-CD devs consistently prefer it.
+- **Terminal workflow dominance** -- DevOps/infra/CI-CD devs consistently prefer it for terminal-heavy work.
 - **Code review** -- GitHub-integrated auto-review on PRs is a killer feature. So entrenched that one user's Claude Code PR got flagged by Codex auto-review (609 upvotes, r/OpenAI).
 - **Open source ecosystem** -- 365 contributors, 553 releases, community building best-practice repos.
 - **Voice transcription** -- Hold spacebar to dictate prompts; major productivity win.
@@ -81,22 +81,16 @@ The ecosystem is massive: 553 releases in 10 months, 9,000+ plugins, a Rust rewr
 
 > "Honestly, Codex is like a Surgeon and Claude is more like a Surgical Resident" -- u/Reza______, r/vibecoding
 
-## Benchmarks
+## Performance Notes
 
-| Benchmark | GPT-5.3-Codex | GPT-5.4 | vs Claude Opus 4.6 |
-|-----------|---------------|---------|---------------------|
-| SWE-Bench Pro | **56.8%** | **57.7%** | Opus trails (59% on regular SWE-bench) |
-| Terminal-Bench 2.0 | **77.3%** (#1) | 75.1% | Claude at 65.4% |
-| SWE-bench Verified | -- | -- | Claude leads at 79.2-80.8% |
-| OSWorld-Verified | **64.7%** | -- | -- |
-| Blind code quality | -- | -- | Claude 67% win rate |
+**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. Neither Codex CLI nor Claude Code as products have been submitted to SWE-bench. Terminal-Bench scores are similarly model-level, not tool-level measurements. There is no widely-adopted benchmark for comparing coding agents head-to-head.
 
-Key insight: Codex dominates terminal/DevOps benchmarks; Claude dominates general SWE benchmarks. Different tools for different workflows.
+**Community consensus:** Codex CLI excels at DevOps, infrastructure, and terminal-heavy workflows. Developers consistently report 2-3x token efficiency vs Claude Code. Claude is preferred for complex multi-file architecture work and frontend. Different tools for different workflows.
 
 ## Recent Changes (2025-2026)
 
-- **GPT-5.4** (March 2026) -- Latest model, slightly edges GPT-5.3-Codex on SWE-Bench Pro but trails on Terminal-Bench
-- **GPT-5.3-Codex** (Feb 5, 2026) -- 25% faster, new Terminal-Bench and SWE-Bench records
+- **GPT-5.4** (March 2026) -- Latest model
+- **GPT-5.3-Codex** (Feb 5, 2026) -- 25% faster, optimized for coding tasks
 - **Codex App for macOS** (Feb 2, 2026) -- Desktop app for parallel agent threads
 - **Codex App for Windows** (March 4, 2026) -- Native PowerShell + Windows sandbox
 - **Rust rewrite (codex-rs)** -- In alpha (v0.115.0-alpha.24), replacing Node.js/TypeScript for zero-dependency install

@@ -82,27 +82,17 @@ Aider's Polyglot benchmark has become the de facto standard for evaluating codin
 
 > "Aider + the Gemini family works SO UNBELIEVABLY FAST." -- u/MrPanache52, r/ChatGPTCoding
 
-## Benchmarks
+## Performance Notes
 
-### Aider Polyglot Leaderboard (March 2026)
+### Aider Polyglot Benchmark
 
-225 Exercism coding exercises across C++, Go, Java, JavaScript, Python, Rust. Two attempts per problem.
+Aider maintains its own coding benchmark: 225 Exercism exercises across C++, Go, Java, JavaScript, Python, Rust, two attempts per problem. **Important:** This benchmark measures models-through-Aider, not Aider itself vs other tools. Scores change frequently as models are updated. See [aider.chat/docs/leaderboards](https://aider.chat/docs/leaderboards/) for current scores.
 
-| Model | Polyglot Score | Notes |
-|-------|---------------|-------|
-| Claude Opus 4.5 | **80.9%** | #1 |
-| Claude Opus 4.6 | **80.8%** | |
-| Gemini 3.1 Pro | **80.6%** | |
-| MiniMax M2.5 | **80.2%** | |
-| GPT-5.2 | **80.0%** | |
-| Grok 4 | **79.6%** | |
-| DeepSeek V3.2-Exp | **74.2%** | $1.30/run -- 22x cheaper than GPT-5 |
-| Gemini 2.5 Pro Preview | **72.9%** | |
-| Claude 3.7 Sonnet | **64.9%** | |
+The Polyglot leaderboard has become the de facto standard for evaluating coding model quality, used by Unsloth, the Qwen team, and the r/LocalLLaMA community.
 
 ### Token Efficiency (vs Claude Code)
 
-- Aider uses **4.2x fewer tokens** than Claude Code on same tasks
+- Aider uses **4.2x fewer tokens** than Claude Code on same tasks (Morph comparison)
 - Code works without human edits **71%** of the time (vs Claude Code's 78%)
 - Tradeoff: cheaper but slightly lower first-pass quality
 

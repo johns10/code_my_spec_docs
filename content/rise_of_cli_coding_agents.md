@@ -65,7 +65,7 @@ The CLI agent space has split into three distinct philosophies:
 
 Deep integration with one model family. Best-in-class quality for their respective models. The tradeoff: you're locked into one provider's pricing, rate limits, and quality trajectory.
 
-- **Claude Code** — Highest code quality (80.8% SWE-bench), most expensive, usage limits frustrate users
+- **Claude Code** — Highest code quality per community consensus, most expensive, usage limits frustrate users
 - **Codex CLI** — Best token efficiency, dominates terminal workflows, weak on frontend
 - **Gemini CLI** — Only truly free option (1,000 req/day), competitive benchmarks, inconsistent quality
 
