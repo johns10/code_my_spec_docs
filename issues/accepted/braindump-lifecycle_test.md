@@ -1,12 +1,12 @@
-# Critical bug
+# Lifecycle Test
 
 ## Status
 
-accepted
+resolved
 
 ## Severity
 
-critical
+high
 
 ## Scope
 
@@ -14,8 +14,12 @@ app
 
 ## Description
 
-App crashes on startup.
+A test issue description
 
 ## Source
 
 Braindump import
+
+## Resolution
+
+All fixed

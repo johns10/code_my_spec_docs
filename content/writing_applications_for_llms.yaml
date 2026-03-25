@@ -1,0 +1,34 @@
+# Metadata for writing_applications_for_llms.md
+
+# Required fields
+slug: writing-applications-for-llms
+type: page
+title: "Writing Applications for LLMs"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-26T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Writing Applications for LLMs: Apps vs Harnesses"
+meta_description: "Your CLAUDE.md is settings. Your skills are libraries. Your hooks are middleware. Two activities, one progression."
+og_title: "Writing Applications for LLMs"
+og_description: "Everyone calls it harness engineering. But the harness and the application are two different things."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - claude-code
+  - harness-engineering
+  - skills
+  - hooks
+  - orchestration
+  - context-engineering
