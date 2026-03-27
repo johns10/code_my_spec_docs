@@ -1,30 +1,43 @@
-# CodeMySpec.Issues (module)
+# CodeMySpec.Issues
+
+
+## CodeMySpec.Issues (context)
+
+- [x] spec_file - Context specification file exists
+- [x] spec_valid - Context specification is valid
+- [x] review_file - Context design review file exists
+- [x] review_valid - Context design review is valid
+- [x] implementation_file - Context implementation file exists
+- [x] test_file - Context test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+- [x] children_designs - Child component designs are complete
+- [x] children_implementations - Child component implementations are complete
+- [ ] dependencies_satisfied - Component dependencies are satisfied
+
+
+## CodeMySpec.Issues.Issue (schema)
 
 - [x] spec_file - Component specification file exists
-- [ ] spec_valid - Component specification is valid
+- [x] spec_valid - Schema specification is valid
+- [x] implementation_file - Component implementation file exists
+
+
+## CodeMySpec.Issues.IssuesRepository (repository)
+
+- [x] spec_file - Component specification file exists
+- [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
-## Contexts
 
-- [x] [CodeMySpec.Issues.Issue](.code_my_spec/status/code_my_spec/issues/issue.md) (3/3)
-- [x] [CodeMySpec.Issues.Projector](.code_my_spec/status/code_my_spec/issues/projector.md) (6/6)
+## CodeMySpec.Issues.Projector (module)
 
-
-## Stories (0/13 complete)
-
-- [ ] #125 Redesign Workflows (0/5)
-- [ ] #460 BDD Specification Lifecycle (0/5)
-- [ ] #461 Context Development Lifecycle (0/5)
-- [ ] #462 LiveView Development Lifecycle (0/5)
-- [ ] #463 Controller Development (0/5)
-- [ ] #464 Design System Creation (0/5)
-- [ ] #465 Application QA Testing (0/5)
-- [ ] #466 AI-Assisted Story Management (0/5)
-- [ ] #467 Static Analysis Pipeline (0/5)
-- [ ] #468 Transcript Capture and Replay (0/5)
-- [ ] #469 Session Management (0/5)
-- [ ] #470 Problem Feedback Loop (0/5)
-- [ ] #471 Architecture Review (0/5)
+- [x] spec_file - Component specification file exists
+- [x] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing

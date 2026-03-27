@@ -1,14 +1,17 @@
-# some name — Project Status
+# Code My Spec — Project Status
 
 
 ## Project Requirements
 
-- [x] all_bdd_specs_passing - All BDD specs pass across all stories
-- [ ] all_stories_complete - All story requirements satisfied
+- [x] project_setup - Project bootstrap setup is complete
+- [x] technical_strategy - Technical strategy decisions file exists
+- [x] qa_integration_plan - Integration specs exist and all verified
 - [x] architecture_designed - Architecture proposal executed
-- [x] issues_resolved - All medium+ accepted issues have been resolved
 - [x] issues_triaged - All incoming QA issues have been triaged
-- [ ] qa_journey_execute - QA journey result exists and valid
+- [x] issues_resolved - All medium+ accepted issues have been resolved
+- [ ] all_stories_complete - All story requirements satisfied
+- [ ] qa_preflight - App-level integration verification complete
+- [x] all_bdd_specs_passing - All BDD specs pass across all stories
 - [ ] qa_journey_plan - QA journey plan exists and valid
+- [ ] qa_journey_execute - QA journey result exists and valid
 - [ ] qa_journey_wallaby - Wallaby journey tests exist
-- [ ] technical_strategy - Technical strategy decisions file exists

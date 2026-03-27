@@ -1,0 +1,39 @@
+# Metadata for the_model_layer.md
+
+# Required fields
+slug: the-model-layer
+type: page
+title: "The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)"
+
+# Publishing control
+protected: false
+publish_at: null
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Model Layer: What Your AI Coding Tool Is"
+meta_description: The model didn't write your code. It predicted tokens. Everything else is the harness. Here's why that matters more than benchmarks.
+og_title: "The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)"
+og_description: Claude didn't write your auth system. GPT didn't refactor your database. The model is a token predictor. Everything else is the harness. Here's why that matters.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Anatomy of Agentic Coding Systems
+  series_part: 2
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - llm
+  - model-layer
+  - agentic-coding
+  - benchmarks
+  - swe-bench
+  - harness-engineering
+  - claude
+  - gpt
+  - gemini

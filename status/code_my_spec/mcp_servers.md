@@ -11,6 +11,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Issues.Tools.AcceptIssue (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Stories.Tools.AddCriterion (module)
 
 - [ ] spec_file - Component specification file exists
@@ -51,6 +61,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Stories.Tools.AnalyzeStoryLinkage (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Components.Tools.ArchitectureHealthSummary (module)
 
 - [x] spec_file - Component specification file exists
@@ -78,6 +98,36 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.ArchiveCustomDimension (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.ArchiveCustomMetric (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.BootstrapMapper (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -141,6 +191,26 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateCustomDimension (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateCustomMetric (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Components.Tools.CreateDependencies (module)
 
 - [x] spec_file - Component specification file exists
@@ -166,6 +236,16 @@
 - [ ] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.CreateKeyEvent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
@@ -231,6 +311,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.DeleteKeyEvent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.ArchitectureServer.DeleteSpec (module)
 
 - [x] spec_file - Component specification file exists
@@ -248,6 +338,26 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Issues.Tools.DismissIssue (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Tasks.Tools.EvaluateTask (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -311,6 +421,66 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.GetCustomDimension (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.GetCustomMetric (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.GetInitStatus (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Issues.Tools.GetIssue (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Requirements.Tools.GetNextRequirement (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.GetSetupStatus (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.ArchitectureServer.GetSpec (module)
 
 - [x] spec_file - Component specification file exists
@@ -341,6 +511,66 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Bootstrap.Tools.InitProject (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.InstallAgentsMd (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.InstallAppResources (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.InstallClaudeMd (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.InstallCredoChecks (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Bootstrap.Tools.InstallRules (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Issues.IssuesMapper (module)
 
 - [ ] spec_file - Component specification file exists
@@ -356,7 +586,7 @@
 - [ ] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
-- [ ] test_file - Component test file exists
+- [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
@@ -371,12 +601,62 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListCustomDimensions (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListCustomMetrics (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Issues.Tools.ListIssues (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.ListKeyEvents (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Stories.Tools.ListProjectTags (module)
 
 - [ ] spec_file - Component specification file exists
 - [ ] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Requirements.Tools.ListRequirements (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
@@ -421,6 +701,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.LocalServer (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Components.Tools.OrphanedContexts (module)
 
 - [x] spec_file - Component specification file exists
@@ -438,6 +728,26 @@
 - [x] implementation_file - Component implementation file exists
 - [x] test_file - Component test file exists
 - [ ] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Requirements.RequirementsMapper (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.Issues.Tools.ResolveIssue (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
 
 
@@ -531,6 +841,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Tasks.Tools.StartTask (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [x] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Stories.StoriesMapper (module)
 
 - [x] spec_file - Component specification file exists
@@ -561,6 +881,16 @@
 - [x] tests_passing - Component tests are passing
 
 
+## CodeMySpec.McpServers.Tasks.TasksMapper (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
 ## CodeMySpec.McpServers.Components.Tools.UpdateComponent (module)
 
 - [ ] spec_file - Component specification file exists
@@ -576,6 +906,36 @@
 - [x] spec_file - Component specification file exists
 - [x] spec_valid - Component specification is valid
 - [x] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateCustomDimension (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateCustomMetric (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
+- [ ] test_file - Component test file exists
+- [x] test_spec_alignment - Test file implements all spec test assertions
+- [x] tests_passing - Component tests are passing
+
+
+## CodeMySpec.McpServers.AnalyticsAdmin.Tools.UpdateKeyEvent (module)
+
+- [ ] spec_file - Component specification file exists
+- [ ] spec_valid - Component specification is valid
+- [ ] implementation_file - Component implementation file exists
 - [ ] test_file - Component test file exists
 - [x] test_spec_alignment - Test file implements all spec test assertions
 - [x] tests_passing - Component tests are passing
