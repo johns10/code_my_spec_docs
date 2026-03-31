@@ -4,7 +4,7 @@
 
 controller
 
-Handles the `Stop` Claude Code hook event. Receives POST requests at `/api/hooks` (dispatched when `hook_event_name` is `Stop`). Validates the session transcript, then determines whether the agent should be allowed to stop or should be directed to continue working. Blocks the stop with a `draft_task` instruction when actionable project requirements remain. Fires an async `task_complete` push notification on all allowed-stop paths.
+Handles the `Stop` Claude Code hook event. Receives POST requests at `/api/hooks` (dispatched when `hook_event_name` is `Stop`). Validates the session transcript, then determines whether the agent should be allowed to stop or should be directed to continue working. Blocks the stop with a `get_next_requirement` instruction when actionable project requirements remain. Fires an async `task_complete` push notification on all allowed-stop paths.
 
 ## Functions
 
@@ -27,7 +27,7 @@ Entry point for the Stop hook. Extracts `session_id` and `transcript_path` from 
 
 **Test Assertions**:
 - returns empty JSON map when validation succeeds and no more work remains
-- returns block decision with draft_task instruction when validation succeeds and actionable requirements exist
+- returns block decision with get_next_requirement instruction when validation succeeds and actionable requirements exist
 - returns block decision from Validation.format_output when validate_stop returns an error
 - renders JSON for all response paths
 
@@ -48,19 +48,19 @@ Decides whether the agent may stop after passing validation. Looks up the sessio
    b. If `has_active_subagent_task?(session)` — log "Active subagent task, allowing stop", call `notify_complete/0`, return `%{}`
    c. If `has_active_manual_task?(session)` — log "Active manual task, allowing stop", call `notify_complete/0`, return `%{}`
    d. Otherwise — call `Requirements.next_actionable_project(scope)` and branch:
-      - Non-empty list: log "More work available, blocking stop", return block map with `draft_task` reason
+      - Non-empty list: log "More work available, blocking stop", return block map with `get_next_requirement` reason
       - Empty list: log "No more work, allowing stop", call `notify_complete/0`, return `%{}`
 
 **Return values**:
 - Allow stop (all permit paths): `%{}`
-- Block stop: `%{"decision" => "block", "reason" => "Task completed successfully. There is more work to do on this project.\n\nCall `draft_task` to get your next assignment.\n"}`
+- Block stop: `%{"decision" => "block", "reason" => "Task completed successfully. There is more work to do on this project.\n\nCall `get_next_requirement` to find your next assignment, then `start_task` to begin.\n"}`
 
 **Test Assertions**:
 - returns empty map when session_id is nil
 - returns empty map when no active session is found for the given session_id
 - returns empty map when session has an active sub-agent task
 - returns empty map when session has an active manual task
-- returns block map with draft_task reason when Requirements.next_actionable_project returns a non-empty list
+- returns block map with get_next_requirement reason when Requirements.next_actionable_project returns a non-empty list
 - returns empty map when Requirements.next_actionable_project returns an empty list
 - calls notify_complete on all allow-stop paths
 - does not call notify_complete on the block path

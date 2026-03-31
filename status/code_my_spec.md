@@ -36,7 +36,7 @@
 - [ ] [CodeMySpec.Invitations](.code_my_spec/status/code_my_spec/invitations.md) (14/24)
 - [ ] [CodeMySpec.Issues](.code_my_spec/status/code_my_spec/issues.md) (25/26)
 - [ ] [CodeMySpec.Mailer](.code_my_spec/status/code_my_spec/mailer.md) (3/6)
-- [ ] [CodeMySpec.McpServers](.code_my_spec/status/code_my_spec/mcp_servers.md) (362/588)
+- [ ] [CodeMySpec.McpServers](.code_my_spec/status/code_my_spec/mcp_servers.md) (368/594)
 - [ ] [CodeMySpec.Notifications](.code_my_spec/status/code_my_spec/notifications.md) (13/24)
 - [ ] [CodeMySpec.Oauth](.code_my_spec/status/code_my_spec/oauth.md) (9/23)
 - [ ] [CodeMySpec.Paths](.code_my_spec/status/code_my_spec/paths.md) (3/6)

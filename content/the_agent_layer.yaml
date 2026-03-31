@@ -1,0 +1,39 @@
+# Metadata for the_agent_layer.md
+
+# Required fields
+slug: the-agent-layer
+type: page
+title: "The Agent Layer: How AI Coding Tools Actually Work"
+
+# Publishing control
+protected: false
+publish_at: null
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Agent Layer: How AI Coding Tools Actually Work"
+meta_description: The agent loop is a while loop that changed software. Here's how tool use, context management, and ReAct turn a token predictor into a coding tool.
+og_title: "The Agent Layer: How AI Coding Tools Actually Work"
+og_description: Every AI coding tool runs the same core pattern. A while loop calling a model, executing tools, and feeding results back in. Here's how it works and why it's not enough.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Anatomy of Agentic Coding Systems
+  series_part: 3
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - agent-layer
+  - agentic-coding
+  - react-pattern
+  - tool-use
+  - context-engineering
+  - mcp
+  - claude-code
+  - cursor
+  - copilot

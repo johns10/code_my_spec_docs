@@ -1,0 +1,38 @@
+# Metadata for the_orchestration_layer.md
+
+# Required fields
+slug: the-orchestration-layer
+type: page
+title: "The Orchestration Layer: Coordinating Multiple Agents"
+
+# Publishing control
+protected: false
+publish_at: null
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Orchestration Layer: Coordinating Multiple Agents"
+meta_description: One agent hitting its ceiling? Multi-agent coordination is the next frontier. Here's what works, what doesn't, and why the demo-to-production gap is wide.
+og_title: "The Orchestration Layer: Coordinating Multiple Agents"
+og_description: Sub-agents, agent teams, parallel worktrees. Multi-agent coding is here but the hard problems aren't solved yet. Here's what's actually working in production.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Anatomy of Agentic Coding Systems
+  series_part: 6
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - orchestration-layer
+  - agentic-coding
+  - multi-agent
+  - sub-agents
+  - agent-teams
+  - claude-code
+  - cursor
+  - langgraph

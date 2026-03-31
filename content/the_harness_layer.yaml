@@ -1,0 +1,38 @@
+# Metadata for the_harness_layer.md
+
+# Required fields
+slug: the-harness-layer
+type: page
+title: "The Harness Layer: Why the Wrapper Matters More Than the Model"
+
+# Publishing control
+protected: false
+publish_at: null
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Harness Layer: Why the Wrapper Matters Most"
+meta_description: "OpenAI shipped 1M lines with zero manually written source. The secret wasn't the model. It was the harness - constraints, verification, lifecycle."
+og_title: "The Harness Layer: Why the Wrapper Matters More Than the Model"
+og_description: Three engineers. Five months. One million lines of code. Zero lines written by hand. The model isn't the bottleneck. The harness is.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Anatomy of Agentic Coding Systems
+  series_part: 4
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - harness-layer
+  - harness-engineering
+  - agentic-coding
+  - verification
+  - claude-code
+  - cursor
+  - copilot
+  - openai-codex
