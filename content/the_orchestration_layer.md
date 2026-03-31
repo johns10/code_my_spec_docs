@@ -93,7 +93,7 @@ The orchestration layer is where the biggest unsolved problems live. The teams t
 
 ---
 
-*This is Part 6 of "The Anatomy of Agentic Coding Systems." [Part 5 covered the Environment Layer](/articles/05-the-environment-layer) - where AI code actually runs. Next: Article 7, "What Cursor Actually Is: An Agentic System Breakdown."*
+*This is Part 6 of "The Anatomy of Agentic Coding Systems." [Part 5 covered the Environment Layer](/pages/the-environment-layer) - where AI code actually runs. Next: Article 7, "What Cursor Actually Is: An Agentic System Breakdown."*
 
 ---
 

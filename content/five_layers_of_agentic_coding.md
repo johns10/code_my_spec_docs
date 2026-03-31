@@ -39,7 +39,7 @@ The model is a next-token predictor. That's it. You give it a sequence of tokens
 
 The model determines the ceiling of reasoning quality. But a great model with a bad harness produces worse results than a decent model with a great harness. On SWE-bench Verified, the same model swings nearly 5 points depending on the scaffold wrapping it. The model matters. It's just not the bottleneck most people think it is.
 
-**[Read the full article: The Model Layer](/articles/02-the-model-layer)**
+**[Read the full article: The Model Layer](/pages/the-model-layer)**
 
 ## The agent layer
 
@@ -47,7 +47,7 @@ The agent layer is a while loop. The model receives messages, decides whether to
 
 The engineering isn't in the loop itself, it's in what surrounds it: tool design (how tools are defined shapes how the model uses them), context management (what fits in the window at any moment), and compaction (what happens when the window fills up). These decisions, not the model, are what separate a good tool from a great one.
 
-**[Read the full article: The Agent Layer](/articles/03-the-agent-layer)**
+**[Read the full article: The Agent Layer](/pages/the-agent-layer)**
 
 ## The harness layer
 
@@ -59,7 +59,7 @@ OpenAI's Codex team shipped [roughly a million lines of production code](https:/
 
 The industry figured this out in three phases: prompt engineering taught us to communicate with models, context engineering taught us to inform them, harness engineering teaches us to _constrain_ them.
 
-**[Read the full article: The Harness Layer](/articles/04-the-harness-layer)**
+**[Read the full article: The Harness Layer](/pages/the-harness-layer)**
 
 ## The environment layer
 
@@ -69,7 +69,7 @@ The environment determines what the agent can see, touch, and break. CLI agents 
 
 Anthropic's research found that [infrastructure setup alone swings Terminal-Bench 2.0 scores by 6 percentage points](https://www.anthropic.com/engineering/infrastructure-noise), often exceeding the gap between top models. The environment isn't a detail.
 
-**[Read the full article: The Environment Layer](/articles/05-the-environment-layer)**
+**[Read the full article: The Environment Layer](/pages/the-environment-layer)**
 
 ## The orchestration layer
 
@@ -79,7 +79,7 @@ Sub-agents (Claude Code's Agent tool, Cursor's parallel worktrees) are the most 
 
 The gap between multi-agent demos and reliable multi-agent production systems is wider than most marketing copy suggests. But the direction is clear.
 
-**[Read the full article: The Orchestration Layer](/articles/06-the-orchestration-layer)**
+**[Read the full article: The Orchestration Layer](/pages/the-orchestration-layer)**
 
 ## Where the real tools sit
 
@@ -108,7 +108,7 @@ The five-layer framework makes this visible. And once you see it, you can't unse
 
 ---
 
-_This is Part 1 of "The Anatomy of Agentic Coding Systems." The series continues with [Part 2: The Model Layer](/articles/02-the-model-layer)._
+_This is Part 1 of "The Anatomy of Agentic Coding Systems." The series continues with [Part 2: The Model Layer](/pages/the-model-layer)._
 
 ---
 
@@ -116,11 +116,11 @@ _This is Part 1 of "The Anatomy of Agentic Coding Systems." The series continues
 
 This article synthesizes from the five layer articles in this series. Each has its own detailed source list:
 
-- [Part 2: The Model Layer](/articles/02-the-model-layer) - 15 sources
-- [Part 3: The Agent Layer](/articles/03-the-agent-layer) - 23 sources
-- [Part 4: The Harness Layer](/articles/04-the-harness-layer) - 12 sources
-- [Part 5: The Environment Layer](/articles/05-the-environment-layer) - 13 sources
-- [Part 6: The Orchestration Layer](/articles/06-the-orchestration-layer) - 12 sources
+- [Part 2: The Model Layer](/pages/the-model-layer) - 15 sources
+- [Part 3: The Agent Layer](/pages/the-agent-layer) - 23 sources
+- [Part 4: The Harness Layer](/pages/the-harness-layer) - 12 sources
+- [Part 5: The Environment Layer](/pages/the-environment-layer) - 13 sources
+- [Part 6: The Orchestration Layer](/pages/the-orchestration-layer) - 12 sources
 
 Key references cited directly in this overview:
 
