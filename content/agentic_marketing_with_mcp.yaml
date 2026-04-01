@@ -1,0 +1,34 @@
+# Metadata for agentic_marketing_with_mcp.md
+
+# Required fields
+slug: agentic-marketing-with-mcp
+type: page
+title: "How I Do Marketing with Claude Code and MCP Tools"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-01T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Marketing with Claude Code and MCP Tools"
+meta_description: "I'm an engineer who hates marketing. Here's the feedback loop I built with Claude Code, Reddit MCP, Google Analytics, and Search Console."
+og_title: "How I Do Marketing with Claude Code and MCP Tools"
+og_description: "Not a marketing guru. An engineer with a feedback loop. Reddit MCP, GA4, Search Console, slash commands, and 30 minutes a day."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - marketing
+  - mcp
+  - claude-code
+  - reddit
+  - solopreneur
+  - agentic-marketing
+  - feedback-loops
+  - google-analytics
