@@ -1,0 +1,35 @@
+# Metadata for agentic_devops_knowledge_files.md
+
+# Required fields
+slug: agentic-devops-knowledge-files
+type: page
+title: "Teaching AI Agents to Deploy: Knowledge Files vs. Direct Access"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-01T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "AI Agents and Deployment: Knowledge Files vs MCP"
+meta_description: "AI agents can write code but can't deploy it. I close the gap with 4 markdown files instead of giving my agent cloud credentials."
+og_title: "Teaching AI Agents to Deploy: Knowledge Files vs. Direct Access"
+og_description: "The deployment gap is real. Here's how knowledge files close it without giving your agent the keys to production."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - devops
+  - deployment
+  - knowledge-files
+  - mcp
+  - claude-code
+  - docker
+  - hetzner
+  - cloudflare
