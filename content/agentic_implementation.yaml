@@ -1,0 +1,37 @@
+# Metadata for agentic_implementation.md
+
+# Required fields
+slug: agentic-implementation
+type: blog
+title: "The Implementation Phase: AI Writes the Code, But Who's Actually Driving?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "AI Writes the Code, But Who's Driving?"
+meta_description: "Devs are 19% slower with AI but perceive 20% faster. Vibe coding has 2.74x more security vulns. Here's what the implementation phase actually looks like."
+og_title: "The Implementation Phase: AI Writes the Code, But Who's Actually Driving?"
+og_description: "Copilot has 20M users. Cursor hit $2B ARR. The adoption question is settled. The reality is the interesting part."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 4
+  featured: false
+
+tags:
+  - ai
+  - implementation
+  - agentic-coding
+  - vibe-coding
+  - harness-engineering
+  - code-generation
+  - cursor
+  - copilot
+  - claude-code

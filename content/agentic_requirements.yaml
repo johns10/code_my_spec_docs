@@ -1,0 +1,36 @@
+# Metadata for agentic_requirements.md
+
+# Required fields
+slug: agentic-requirements
+type: blog
+title: "Bad Requirements Are Why Your AI Agent Writes Bad Code"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Why Your AI Agent Writes Bad Code"
+meta_description: "The bottleneck moved from writing code to knowing what to build. Here's how AI is changing requirements gathering and why bad specs kill agent output."
+og_title: "Bad Requirements Are Why Your AI Agent Writes Bad Code"
+og_description: "AI agents are great at implementation. They're terrible at reading your mind. Here's how requirements gathering is changing."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 1
+  featured: false
+
+tags:
+  - ai
+  - requirements
+  - product-management
+  - agentic-coding
+  - user-stories
+  - spec-driven-development
+  - kiro
+  - mcp

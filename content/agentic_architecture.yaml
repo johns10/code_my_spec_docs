@@ -1,0 +1,37 @@
+# Metadata for agentic_architecture.md
+
+# Required fields
+slug: agentic-architecture
+type: blog
+title: "Architecture for AI Agents: Which Patterns Actually Work?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Architecture for AI Agents: Which Patterns Work?"
+meta_description: "A 26-point quality gap between AI-only code and human-guided architecture. Here's which patterns produce the best agent output, ranked."
+og_title: "Architecture for AI Agents: Which Patterns Actually Work?"
+og_description: "Modular monoliths, vertical slices, hexagonal, microservices - ranked by how well AI agents perform in each. With evidence."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 2
+  featured: false
+
+tags:
+  - ai
+  - architecture
+  - agentic-coding
+  - bounded-contexts
+  - modular-monolith
+  - microservices
+  - domain-driven-design
+  - vertical-slices
+  - phoenix

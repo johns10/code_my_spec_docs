@@ -1,0 +1,36 @@
+# Metadata for agentic_testing.md
+
+# Required fields
+slug: agentic-testing
+type: blog
+title: "Testing AI-Generated Code: The Self-Confirming Loop and How to Break It"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Testing AI-Generated Code: The Self-Confirming Loop"
+meta_description: "When the same AI writes your code and your tests, you don't have tests. You have a mirror. Here's how to break the loop."
+og_title: "Testing AI-Generated Code: The Self-Confirming Loop and How to Break It"
+og_description: "AI-authored code produces 1.7x more issues per PR. The agent that wrote the code also wrote the tests. Here's why that's a problem."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 5
+  featured: false
+
+tags:
+  - ai
+  - testing
+  - agentic-coding
+  - tdd
+  - bdd
+  - self-confirming-loop
+  - code-quality
+  - verification

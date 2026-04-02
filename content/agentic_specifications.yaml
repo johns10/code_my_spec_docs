@@ -1,0 +1,36 @@
+# Metadata for agentic_specifications.md
+
+# Required fields
+slug: agentic-specifications
+type: blog
+title: "Your AI Agent Is Only as Good as Your Spec"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Your AI Agent Is Only as Good as Your Spec"
+meta_description: "Refactoring dropped 60% and duplication rose 48% after AI adoption. The fix is spec-driven development. Here's how it works."
+og_title: "Your AI Agent Is Only as Good as Your Spec"
+og_description: "Code is no longer the asset. The specification is. When agents generate code at near-zero cost, the spec becomes the primary deliverable."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 3
+  featured: false
+
+tags:
+  - ai
+  - specifications
+  - spec-driven-development
+  - agentic-coding
+  - kiro
+  - design-documents
+  - openapi
+  - code-quality

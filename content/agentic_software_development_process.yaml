@@ -1,0 +1,39 @@
+# Metadata for agentic_software_development_process.md
+
+# Required fields
+slug: agentic-software-development-process
+type: blog
+title: "The Agentic Software Development Process"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Agentic Software Development Process"
+meta_description: "Most teams use AI agents for one phase of development. Here's what the full lifecycle looks like across all eight phases, with data."
+og_title: "The Agentic Software Development Process"
+og_description: "Requirements, architecture, specs, implementation, testing, QA, deployment, maintenance. The full agentic lifecycle, phase by phase."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 0
+  featured: true
+
+tags:
+  - ai
+  - agentic-coding
+  - software-development
+  - process
+  - requirements
+  - architecture
+  - specifications
+  - testing
+  - verification
+  - deployment
+  - maintenance

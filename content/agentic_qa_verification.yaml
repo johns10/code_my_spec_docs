@@ -1,0 +1,36 @@
+# Metadata for agentic_qa_verification.md
+
+# Required fields
+slug: agentic-qa-verification
+type: blog
+title: "The Verification Gap: Why Agents Ship Broken Code and What to Do About It"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Verification Gap in Agentic Coding"
+meta_description: "96% of developers don't trust AI code but commit it anyway. The verification gap is the central problem. Here's how to close it."
+og_title: "The Verification Gap: Why Agents Ship Broken Code"
+og_description: "Generating code is easy. Verifying it works is where everything falls apart. Browser automation, model-as-judge, and hooks that force quality."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 6
+  featured: false
+
+tags:
+  - ai
+  - qa
+  - verification
+  - agentic-coding
+  - browser-automation
+  - playwright
+  - harness-engineering
+  - code-review
