@@ -8,7 +8,7 @@ I've been building software for years and I'm terrible at marketing. Not "humble
 
 But I needed to market CodeMySpec. So I did what any engineer would do. I turned it into an engineering problem.
 
-## How it actually started
+## How did I get started with AI-powered marketing as a developer?
 
 I sat down with Claude and came up with a strategy based on some theories I had. My users hang out on Reddit. I'm active on r/elixir. I know the AI coding subs. So we started there.
 
@@ -24,7 +24,7 @@ Then I wanted to make sure I was set up for SEO, because the Reddit comments wer
 
 The pattern is always the same: strategize, add a tool, execute, review results, adjust strategy, add another tool, execute, review. Each cycle makes the next one better. I didn't plan a "marketing stack." I added each piece when I needed it.
 
-## The loop today
+## What does the daily marketing loop look like with Claude Code and MCP?
 
 I tell Claude to scan Reddit. It uses a Reddit MCP server to pull hot and new posts from r/elixir, r/ChatGPTCoding, r/vibecoding, and r/ClaudeAI. It writes lead files - little markdown docs with the thread title, score, top comment vibe, and an angle for why my experience is relevant. I pick 2-3 threads.
 
@@ -34,7 +34,7 @@ Then I pull Google Analytics through another MCP server. Every link carries a UT
 
 I adjust based on what the data says. Then I scan again. I run the loop daily.
 
-## The MCP stack
+## Which MCP servers make up the marketing stack?
 
 Four servers, each doing one thing.
 
@@ -48,7 +48,7 @@ Four servers, each doing one thing.
 
 I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-response`, `/scan-twitter`, `/draft-tweet`, `/news-scan`. Each one reads my memory files first so Claude has context about my positioning before it starts.
 
-## What I learned the hard way
+## What are the biggest mistakes to avoid with AI-assisted marketing?
 
 **AI-drafted comments bomb.** Early on I let Claude write the full comment and I'd tweak it slightly. Reddit could tell. The comments that perform are the ones I dictate and Claude polishes. The natural cadence, the tangents, the genuine reactions - that's what makes it human.
 
@@ -58,7 +58,7 @@ I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-re
 
 **The content has to exist first.** You can't link to something you haven't written. I have 100+ articles in my content library. When a thread asks about testing AI-generated code, I have an article for that. The marketing works because the content already exists and is genuinely useful. I have a content system in my harness where I write a markdown file with a YAML sidecar, git push, and it's live. When I spot a content gap from a Reddit thread, I can write the article and publish it the same day.
 
-## The numbers
+## What kind of results can a solo developer expect from this approach?
 
 Here's what the last 28 days actually look like, pulled from my GA4 and Search Console MCP tools right now:
 
@@ -72,11 +72,23 @@ Here's what the last 28 days actually look like, pulled from my GA4 and Search C
 
 Is this going to make me rich? Not yet. Can a solo developer run this in 30 minutes a day and see real traffic? Yeah.
 
-## Everything is files
+## Why does storing everything as files make the marketing system work?
 
 The leads, the touchpoints, the content, the strategy docs, the analytics baselines - it's all git-tracked markdown. When I scan Reddit next week, Claude reads the touchpoints and knows what I've already said, which threads I've engaged, and what angles worked. The system remembers what I forget.
 
 Marketing advice for engineers usually falls into "just put yourself out there" (useless) or "hire a marketer" (expensive). What actually works is treating it like engineering. Define inputs. Build a process. Create feedback loops. Iterate on data. You don't need a marketing degree. You need Claude Code, a few MCP servers, and the willingness to show up where your users talk.
+
+## Frequently Asked Questions
+
+**Can an engineer with no marketing experience use MCP tools for marketing?** Yes. The entire approach is built around engineering principles: define inputs, build a repeatable process, create feedback loops, and iterate on data. You do not need marketing expertise. You need the willingness to show up where your users are and let the data guide your next move.
+
+**How much time does this marketing loop take per day?** About 30 minutes once the MCP servers are configured and the slash commands are set up. The scanning, drafting, and analytics review are fast because Claude handles the data gathering. The human time goes into picking threads, dictating authentic responses, and reviewing analytics.
+
+**Why not let AI write the full Reddit comment?** Reddit communities can detect AI-written comments quickly, and those comments perform poorly. The comments that drive real engagement are ones where you dictate your genuine thoughts and let Claude polish the phrasing. The natural cadence, tangents, and authentic reactions are what make a comment resonate.
+
+**Do I need a large content library before starting?** Not to start, but the approach works best when you have content to link to. You can begin by being helpful in discussions without linking anything. As you spot content gaps from real conversations, write articles to fill those gaps. Over time, your library grows organically based on actual demand.
+
+**Which MCP servers are essential to get started?** Start with just the Reddit MCP server and Google Analytics MCP server. Reddit lets you find and engage with your audience. Analytics lets you see what is working. Add Search Console and Twitter MCP servers later as your needs grow.
 
 ---
 

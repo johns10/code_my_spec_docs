@@ -2,7 +2,7 @@
 
 When generating code with LLMs, you need architectural patterns that are self-contained, follow recognizable mental models, and produce testable code. Phoenix contexts nail all three.
 
-## The Problem: AI Writing Elixir
+## What Goes Wrong When AI Generates Elixir Code Without Constraints?
 
 LLMs trained primarily on JavaScript, Python, and Java default to imperative patterns. Instead of function clauses with pattern matching, they generate verbose if/else chains. Instead of supervision trees, they suggest try/catch. Instead of pipelines, they write mutation-style loops.
 
@@ -14,7 +14,7 @@ The fix isn't better prompting. It's architectural patterns that are consistent,
 
 **Phoenix contexts provide exactly this.**
 
-## What Are Phoenix Contexts?
+## What Are Phoenix Contexts and How Do They Organize Code?
 
 Contexts group related functionality around business domains rather than technical concerns. Instead of scattering "user" code across models, controllers, and views, a context organizes everything related to user management into a single module called `Accounts`. Shopping cart logic lives in `Shopping`. Payment processing in `Billing`.
 
@@ -22,7 +22,7 @@ The context module is the public interface -- the only entry point other parts o
 
 In CodeMySpec, we extend this further. We have two types of contexts: **context** (domain logic) and **coordination_context** (orchestrates across child contexts). Child components -- schema, repository, GenServer, task, controller, LiveView, and others (14 types total) -- live inside their parent context's namespace. All public context functions take `%Scope{}` as the first parameter.
 
-## Why This Works for LLMs
+## Why Do Phoenix Contexts Work So Well for LLM Code Generation?
 
 ### Self-Contained Units
 
@@ -69,7 +69,7 @@ end
 
 Same pattern, same rules. The LLM doesn't learn a new construct -- it applies the existing one.
 
-## Testability Built In
+## How Do Contexts Make AI-Generated Code Easier to Test?
 
 Contexts create natural test boundaries. You test the public API and assert on results. One test file per code file, matching the 1:1:1 principle (spec, code, test).
 
@@ -89,7 +89,7 @@ end
 
 Isolated. Predictable. The LLM recognizes function signatures and generates appropriate tests -- happy path, error cases, edge cases. No elaborate mocking setups.
 
-## Validatable Architecture
+## How Can You Validate AI Architecture Decisions Programmatically?
 
 Because contexts follow predictable patterns, we can validate design decisions programmatically -- not just test behavior.
 
@@ -101,7 +101,7 @@ Because contexts follow predictable patterns, we can validate design decisions p
 
 You're not trying to validate spaghetti. You're validating well-defined modules with clear responsibilities and explicit boundaries.
 
-## vs. Other Patterns
+## How Do Phoenix Contexts Compare to Other Architectural Patterns?
 
 **vs. Traditional MVC**: Business logic scatters. Models bloat. Controllers implement business rules. Phoenix contexts prevent this with a dedicated layer separated from web concerns (`MyApp` vs `MyAppWeb`).
 
@@ -111,7 +111,7 @@ You're not trying to validate spaghetti. You're validating well-defined modules 
 
 **vs. Microservices**: Not mutually exclusive. Contexts provide logical boundaries within your codebase. Start with a well-organized monolith. Extract specific contexts into services later if scaling demands it. The boundaries were there from the start -- you're moving a well-defined module, not refactoring spaghetti.
 
-## What This Means in Practice
+## What Does LLM-Assisted Development Look Like With Phoenix Contexts?
 
 When you structure a Phoenix application around contexts, LLM-assisted development gets dramatically easier:
 
@@ -120,10 +120,22 @@ When you structure a Phoenix application around contexts, LLM-assisted developme
 - **Clear review criteria**: "Does this belong in this context? Does it follow existing patterns? Are the tests covering the right behavior?"
 - **Safe refactoring**: If a context grows too large, split it. Self-contained nature means changes don't cascade.
 
-## The Bottom Line
+## What Makes Phoenix Contexts the Best Foundation for AI Code Generation?
 
 Phoenix contexts give LLM-based code generation exactly what it needs: self-contained modules with clear boundaries, consistent patterns rooted in DDD, compile-time boundary enforcement, and built-in testability.
 
 When you pair this with a validation pipeline that checks 22 requirements across the full stack -- compiler, tests, static analysis, BDD specs, document structure -- you get AI-generated code you can actually trust.
 
 For teams using LLMs in their development process, Phoenix contexts aren't just a good organizational choice. They're the architectural foundation that makes the whole thing work.
+
+## Frequently Asked Questions
+
+**Do LLMs generate better Elixir code when using Phoenix contexts?** Yes, significantly. Contexts give the LLM a self-contained scope with clear boundaries, so it does not need to maintain a mental model of the entire application. Combined with compile-time boundary enforcement via `use Boundary`, the LLM cannot accidentally introduce cross-cutting dependencies or scatter business logic into controllers.
+
+**What is the difference between a context and a coordination context?** A context encapsulates domain logic for a single business area like Accounts or Billing. A coordination context orchestrates operations across multiple child contexts, such as OrderFulfillment calling into Orders, Inventory, and Billing. Both follow the same pattern and rules, so the LLM does not need to learn a new construct for cross-context work.
+
+**How does boundary enforcement actually work at compile time?** Every module uses `use Boundary`, which declares its allowed dependencies. The Elixir compiler then checks that no module accesses another module outside its declared boundaries. If an LLM generates code that aliases the Repo directly in a controller, the build fails immediately rather than being flagged for review later.
+
+**Can you use Phoenix contexts without Elixir for AI code generation?** The principles translate to any language -- grouping code by business domain, enforcing boundaries, keeping public APIs explicit. However, Elixir's compile-time boundary checking and Phoenix's built-in context generator make enforcement automatic rather than convention-based, which is particularly valuable when an AI is generating the code.
+
+**How many component types does CodeMySpec support within a context?** CodeMySpec supports 14 component types that live inside a parent context's namespace, including schema, repository, GenServer, task, controller, LiveView, and others. Each type has specific requirements and validation rules. This variety is managed through just two core constructs -- contexts and child components -- keeping the architecture simple for LLMs to navigate.

@@ -2,11 +2,11 @@
 
 I spent six months teaching myself to code with AI before the aha moment hit. Not a better model. A better plan.
 
-## The Setup
+## What Tools Do You Need to Start AI-Assisted Coding?
 
 I used Claude for planning and Cline (inside Cursor) for coding. Cline was more effective for agentic work. Cost more, but I value time over dollars.
 
-## The Plan
+## What Does an Effective AI Coding Workflow Look Like?
 
 Five components: architecture, planning, coding, review, and process iteration. I want to be very clear -- I don't do any of this by hand. I work with the model to generate all of it.
 
@@ -68,7 +68,7 @@ When you've finished a project:
 
 You did make a new branch for this, right?
 
-## Where This Led
+## How Did This Workflow Evolve Into Something Bigger?
 
 This workflow was the foundation. It taught me the core principle: **process beats prompting.**
 
@@ -80,8 +80,18 @@ Instead of copy-pasting context into every chat, MCP servers give AI direct acce
 
 The workflow principles haven't changed. I still use them every day. CodeMySpec just removed the tedium that made them hard to sustain.
 
-## The Lesson
+## What Is the Most Important Lesson for AI-Assisted Development?
 
 Back up from the technology, the tooling, the hype. Being good at AI-assisted development means going back to first principles of software design. Critically inspect your workflows. Constantly improve them.
 
 Not even good engineers get good at coding with AI overnight. A good plan and a good understanding of what you want to build -- that's what separates shipping from spinning.
+
+## Frequently Asked Questions
+
+**Do you need to know how to code to use an AI coding workflow?** You need to understand software architecture and design principles, even if you are not writing code by hand. The workflow depends on choosing a proven architecture, writing a detailed technical implementation plan, and knowing when the AI's output is correct. Without that understanding, you cannot effectively review what the model produces.
+
+**Why do you start a new chat for every task instead of continuing one long conversation?** Long conversations cause the model to drift from its guidelines and accumulate context that confuses later tasks. Short, focused chats with the same prefaced guidelines keep the model on rails. The memory file carries forward everything the model needs to know between sessions.
+
+**What is the most common mistake people make when coding with AI?** Skipping the planning phase. People jump straight to prompting without a technical implementation plan, a defined architecture, or a todo list. The model then makes ad hoc decisions about structure, dependencies, and patterns that compound into architectural chaos over time.
+
+**How does CodeMySpec improve on this manual workflow?** CodeMySpec automates the manual parts -- context injection, task sequencing, memory management, and validation enforcement. Instead of copy-pasting guidelines into every chat, MCP servers provide direct access to architecture and stories. Instead of hoping the model ran tests, a validation pipeline enforces it automatically after every task.

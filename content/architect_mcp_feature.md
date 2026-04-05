@@ -18,10 +18,10 @@ Your architecture lives as structured data in your database. Every component kno
 Tell the AI you're ready to design architecture. It automatically loads all your unsatisfied user stories and any existing component definitions.
 
 **2. AI analyzes and proposes structure**
-The AI identifies natural groupings in your stories and asks targeted questions: "Should authentication and user management be one context or separate? Should rate limiting be part of the ApiKeys context or its own coordination context?" It then drafts an architecture proposal mapping stories to both domain contexts and surface components.
+The AI identifies natural groupings in your stories and asks targeted questions: "Should authentication and user management be one context or separate? Should rate limiting be part of the ApiKeys context or its own coordination context?" It then drafts an architecture proposal mapping stories to surface components and defining domain contexts.
 
 **3. Map stories to components together**
-Based on the conversation, create domain contexts (that own entities), coordination contexts (that orchestrate workflows), and surface components (LiveViews, controllers). The AI helps you assign stories to the right components with dual mapping -- each story links to both a backend context and a frontend surface component.
+Based on the conversation, create domain contexts (that own entities), coordination contexts (that orchestrate workflows), and surface components (LiveViews, controllers). The AI helps you assign stories to surface components -- domain context involvement is derived through the dependency graph.
 
 **4. Define dependencies**
 Declare which components depend on which. The system validates there are no circular dependencies and that domain boundaries stay clean.

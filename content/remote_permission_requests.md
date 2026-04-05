@@ -6,7 +6,7 @@ Claude Code has a permission system. When the agent wants to run a tool that isn
 
 I needed a way to approve these requests from my phone. So I built one.
 
-## The Problem is Bigger Than Notifications
+## Why Are Push Notifications Not Enough for AI Agent Permissions?
 
 The obvious solution is push notifications. There are already tools out there that do this well — [claude-remote-approver](https://github.com/yuuichieguchi/claude-remote-approver) hooks into Claude Code's permission system and sends notifications via ntfy.sh with approve, deny, and even "always approve" action buttons. It handles AskUserQuestion too. It works and it ships in an afternoon.
 
@@ -19,7 +19,7 @@ But when I started building my version, I realized I wanted more than a notifica
 
 Those questions pushed me toward building a full-stack permission system.
 
-## The Architecture
+## How Does the Remote Permission Approval System Work?
 
 Here's how permission requests flow through CodeMySpec:
 
@@ -75,7 +75,7 @@ User taps → LiveView → Approve/Deny
 PubSub → Channel → WebSocket → Local Server → SSE → Hook → Claude Code continues
 ```
 
-## Why This Complexity?
+## Why Build a Full-Stack Permission System Instead of a Simple Notification Tool?
 
 A fair question. Tools like claude-remote-approver are maybe 200 lines of code and solve the core problem. This is several thousand lines across multiple files. Why bother?
 
@@ -87,7 +87,7 @@ A fair question. Tools like claude-remote-approver are maybe 200 lines of code a
 
 **Authentication.** Web Push subscriptions are tied to authenticated users. The approval page requires login. There's no shared secret or public topic that someone else could respond to.
 
-## Building It in Phoenix
+## Why Is Phoenix Ideal for Building an Agent Permission System?
 
 Phoenix is almost unfairly good at this. The stack I needed was:
 
@@ -101,3 +101,15 @@ Phoenix is almost unfairly good at this. The stack I needed was:
 Every one of these is a first-class Phoenix citizen or a well-maintained library. The hardest part wasn't any individual piece — it was wiring them together into a coherent flow. Phoenix's built-in PubSub made the broadcasting trivial. Channels gave me authenticated real-time communication without thinking about it. LiveView meant the approval page was a single `.ex` file.
 
 If you're building agent infrastructure and wondering which stack to use, the real-time capabilities of Phoenix/Elixir make this kind of system almost too easy.
+
+## Frequently Asked Questions
+
+**How fast is the round trip from permission request to agent resuming?** The entire flow -- from the hook firing, through the production server, Web Push notification, user approval on their phone, and the decision cascading back to the waiting agent -- takes about 2 seconds. The agent pauses seamlessly and resumes immediately after the decision arrives.
+
+**What happens if I miss the push notification?** The permission request is persisted in the database with a pending status. You can approve it from any browser where you are authenticated -- your laptop, phone, or any other device. The request does not vanish if the notification fails to deliver.
+
+**Is this secure enough for production use?** Web Push subscriptions are tied to authenticated users via VAPID keys. The approval page requires login. Every permission request and its resolution is stored in the database with timestamps for audit purposes. There is no shared secret or public topic that an unauthorized person could respond to.
+
+**Can I use this with AI agents other than Claude Code?** The architecture is designed around Claude Code's hook system, which fires shell commands on specific events. Any AI coding agent that supports similar hook or callback mechanisms could integrate with the same permission flow by posting requests to the local server endpoint.
+
+**How does this compare to claude-remote-approver?** claude-remote-approver is a lightweight solution of about 200 lines that sends notifications via ntfy.sh with action buttons. It solves the core notification problem well. This system adds persistence, a full approval UI with complete tool input context, audit history, and authenticated access, at the cost of significantly more code and infrastructure.

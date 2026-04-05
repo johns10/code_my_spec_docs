@@ -10,9 +10,9 @@ This is where procedural code matters most. The AI proposes. Deterministic valid
 
 The `/architecture-design` command starts a guided session that turns user stories into a component graph.
 
-The agent receives every unsatisfied user story, the current component count, and generated architecture views -- an overview, a Mermaid dependency graph, and a namespace hierarchy. Its job is to analyze the stories, identify bounded contexts, and map each story to both a surface component (the LiveView or controller the user interacts with) and a domain component (the context or schema that implements the logic).
+The agent receives every unsatisfied user story, the current component count, and generated architecture views -- an overview, a Mermaid dependency graph, and a namespace hierarchy. Its job is to analyze the stories, identify bounded contexts, and map each story to surface components (the LiveView or controller the user interacts with). Domain context involvement is derived through the dependency graph -- if a surface component depends on a context, stories on that surface automatically flow to the context.
 
-This dual-mapping is enforced by procedural validation, not AI judgment. Every story must appear on both a surface component and a domain component. The system checks real story IDs, not AI-generated ones. If the mapping is incomplete or invalid, the agent gets specific feedback about exactly what's wrong.
+Story mapping is enforced by procedural validation, not AI judgment. Every story must appear on a surface component. The system checks real story IDs, not AI-generated ones. If the mapping is incomplete or invalid, the agent gets specific feedback about exactly what's wrong.
 
 The agent writes a proposal to a markdown file following a strict document schema. When the session stops, procedural code parses the proposal, validates it, and executes it -- creating spec files for every component, linking stories to components in the database, and building out the component tree. No human reads the proposal line by line. The validation catches structural problems. The human reviews the architecture at the level of "does this decomposition make sense for the product?"
 

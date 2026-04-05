@@ -10,7 +10,7 @@ I've spent the last year building with AI agents across the full development lif
 
 Here's the process, phase by phase.
 
-## 1. Requirements: the bottleneck moved
+## 1. Why Have Requirements Become the New Bottleneck in AI-Assisted Development?
 
 A year ago the hard part was writing code. Now the hard part is knowing what to build. AI agents are shockingly good at implementation. They're terrible at reading your mind.
 
@@ -20,7 +20,7 @@ The fix: requirements as conversations, not documents. Tools like [ChatPRD](http
 
 **[Full article: Bad Requirements Are Why Your AI Agent Writes Bad Code](/blog/agentic-requirements)**
 
-## 2. Architecture: the 26-point gap
+## 2. How Big Is the Quality Gap Between AI-Only Code and Human-Guided Architecture?
 
 BSWEN measured a [26-point quality gap](https://docs.bswen.com/blog/2026-03-25-why-vibe-coding-fails-production/) between AI-only code and human-guided architecture (59/105 vs 85/105). The entire gap comes from design dimensions: async design, abstraction quality, maintainability, code organization. AI handles implementation fine when given clear architectural direction. The problem is nobody provides it.
 
@@ -28,7 +28,7 @@ The emerging winner is the modular monolith with bounded contexts. Shopify prove
 
 **[Full article: Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)**
 
-## 3. Specifications: the asset shifted
+## 3. Why Are Specifications Now More Valuable Than the Code Itself?
 
 Code is no longer the asset. The specification is. When agents generate code at near-zero cost, the thing that constrains, directs, and validates that code becomes the primary deliverable.
 
@@ -38,7 +38,7 @@ Spec-driven development tools (Kiro, spec-kit, Tessl, cc-sdd, BMAD-METHOD) all c
 
 **[Full article: Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)**
 
-## 4. Implementation: the paradox
+## 4. Why Are Developers Slower With AI Tools Despite Feeling Faster?
 
 Everyone's talking about AI code generation like it's solved. [Copilot has 20M users](https://www.getpanto.ai/blog/github-copilot-statistics). [Cursor hit $2B ARR](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/). [41% of code is now AI-generated](https://www.netcorpsoftwaredevelopment.com/blog/ai-generated-code-statistics).
 
@@ -48,7 +48,7 @@ The skill that matters isn't prompting. It's [harness engineering](/pages/the-ha
 
 **[Full article: The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)**
 
-## 5. Testing: the self-confirming loop
+## 5. What Is the Self-Confirming Loop in AI-Generated Tests?
 
 When the same AI writes your code and your tests, you don't have tests. You have a mirror. The agent misunderstands a requirement, writes wrong code, writes tests that confirm the wrong behavior. Tests pass. Coverage looks great. App is broken.
 
@@ -58,7 +58,7 @@ The fix: TDD where the agent is told which specific tests to check (not just "do
 
 **[Full article: Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)**
 
-## 6. QA and verification: the real gap
+## 6. Why Do 96% of Developers Distrust AI Code but Ship It Anyway?
 
 [96% of developers don't trust AI code](https://www.itpro.com/software/development/software-developers-not-checking-ai-generated-code-verification-debt) but commit it anyway. [50% don't verify](https://www.itpro.com/software/development/software-developers-not-checking-ai-generated-code-verification-debt) before committing. DORA found that for [every 25% increase in AI adoption, delivery stability decreases ~7.2%](https://dev.to/dmitry_turmyshev/quality-assurance-in-ai-assisted-software-development-risks-and-implications-34kk).
 
@@ -68,7 +68,7 @@ The testing pyramid is inverting. E2E tests verify behavior. Unit tests verify i
 
 **[Full article: The Verification Gap: Why Agents Ship Broken Code](/blog/agentic-qa-verification)**
 
-## 7. Deployment: knowledge files, not cloud credentials
+## 7. How Do You Teach AI Agents to Deploy Without Giving Them Cloud Credentials?
 
 [78% of enterprises have AI agent pilots](https://www.digitalapplied.com/blog/ai-agent-scaling-gap-march-2026-pilot-to-production) but under 15% reach production. The deployment gap is real. Agents build apps but can't ship them.
 
@@ -76,7 +76,7 @@ Two approaches: give agents direct infrastructure access through MCP servers ([A
 
 **[Full article: Teaching AI Agents to Deploy](/blog/agentic-devops-knowledge-files)**
 
-## 8. Maintenance: where agents earn their keep
+## 8. Why Is Maintenance the Phase Where AI Agents Deliver the Most Proven Value?
 
 [60-80% of total software cost](https://flairstech.com/blog/ai-software-maintenance-support) is maintenance. Always has been. And it's where agents deliver the most proven value because maintenance tasks have clear success criteria.
 
@@ -86,10 +86,22 @@ The paradox: AI agents are generating technical debt faster than they're cleanin
 
 **[Full article: Maintenance: Where Agents Actually Earn Their Keep](/blog/agentic-maintenance)**
 
-## The process, not the tools
+## Why Does the Development Process Matter More Than the AI Tools You Choose?
 
 The tools change every month. The process doesn't. Define what to build. Design how it fits together. Specify the contracts. Generate the code. Test it from multiple angles. Verify the running application. Deploy with documented knowledge. Maintain with the same rigor you built with.
 
 Most teams are doing step 4 (implementation) and skipping the other seven. That's why AI-generated codebases fall apart at month three. The code was generated fine. Everything around the code was missing.
 
 The agentic software development process isn't about finding the best AI coding tool. It's about building the full lifecycle so the tool has something to work with.
+
+## Frequently Asked Questions
+
+**What is the agentic software development process?** The agentic software development process uses AI agents across all eight phases of software development: requirements, architecture, specifications, implementation, testing, QA verification, deployment, and maintenance. Most teams only use AI for implementation (phase 4) and skip the other seven, which is why AI-generated codebases tend to fall apart after three months.
+
+**Why do AI-generated codebases degrade after a few months?** The code itself was generated fine, but everything around it was missing. Without structured requirements, architectural guidance, specifications, proper testing, and verification, teams accumulate hidden defects and lose understanding of their own systems. Augment Code documents a predictable decay pattern where integration challenges emerge by month 4-9 and debugging overwhelms teams beyond month 9.
+
+**Which phase of software development benefits most from AI agents?** Maintenance delivers the most proven, measurable value because maintenance tasks have clear success criteria -- a bug is fixed or it is not, a test passes or it does not. Implementation gets the most attention but produces mixed results, with one rigorous study showing experienced developers are actually 19% slower with AI tools despite perceiving themselves as faster.
+
+**How do you prevent AI agents from shipping broken code?** Build verification into every phase. Write specifications before generating code so you have something to validate against. Use TDD with explicit test targets rather than generic instructions. Run QA against the actual running application, not just unit tests. Use separate agents for code generation and code review to avoid the self-confirming loop where the same agent writes code and validates its own work.
+
+**What is harness engineering and why is it replacing prompt engineering?** Harness engineering is the practice of building constraint and verification layers around AI coding agents -- convention files, test commands, linting, type checking, and pre-commit hooks. The agent loop itself is commodity technology shared across all tools. The harness is what separates productive sessions from failures, and it represents the primary skill shift for developers working with AI in 2026.

@@ -4,7 +4,7 @@ Every AI coding tool competes on the wrong thing. Bigger context windows. Better
 
 Here's what I learned building CodeMySpec: **the best way to get reliable code from an LLM isn't better prompting. It's better enforcement.**
 
-## The Prompt Engineering Trap
+## Why does prompt engineering fail for complex code generation?
 
 Cursor, Windsurf, Copilot -- they all work the same way. Give the LLM maximum context, craft a prompt, hope it does the right thing.
 
@@ -16,7 +16,7 @@ This works fine for small tasks. But autonomous decision-making compounds errors
 
 **Autonomy without constraints is technical debt with a faster commit rate.**
 
-## Control vs. Suggestions
+## What is the difference between control-based and suggestion-based code generation?
 
 Traditional tools work through suggestion: "Here's my codebase, here's the feature, please write good code."
 
@@ -24,7 +24,7 @@ Then they add guardrails after the fact -- sandboxed execution, human review gat
 
 Control-based systems don't prevent bad decisions. They prevent certain decisions from being made at all.
 
-## How We Enforce It
+## How do you enforce workflow constraints on an AI code generator?
 
 We built on a different premise: code generation should be a constrained workflow, not an autonomous agent.
 
@@ -60,7 +60,7 @@ File changes mark components as dirty. The validation pipeline runs scoped analy
 
 Every module uses `use Boundary` for compile-time dependency enforcement. 14 component types with specific requirements per type. The LLM can't "helpfully" wander into unrelated parts of your codebase -- the compiler won't let it.
 
-## What This Prevents
+## What kinds of problems does a control-based approach prevent?
 
 **Hallucinated Workflows**: The requirement DAG defines all possible transitions. The LLM cannot invent process steps.
 
@@ -72,7 +72,7 @@ Every module uses `use Boundary` for compile-time dependency enforcement. 14 com
 
 **Architectural Violations**: `use Boundary` catches dependency violations at compile time.
 
-## The Cost of Control
+## What are the tradeoffs of enforcing control over AI code generation?
 
 This approach isn't free. More upfront design. Less flexibility. The LLM can't creatively adapt to unexpected situations -- you need a human for that.
 
@@ -80,7 +80,7 @@ But here's what you get: **predictability**. When a controlled workflow complete
 
 I've found that predictability beats speed every time in production systems.
 
-## What This Means for You
+## How should you rethink your approach to AI code generation?
 
 Stop optimizing prompts. They'll always be fragile. Ask instead: what workflow constraints would make bad outputs impossible?
 
@@ -91,3 +91,15 @@ Stop treating the LLM as an agent. Treat it as a powerful, unreliable code gener
 Start building enforcement architectures. Define your workflows as dependency graphs. Make validation mandatory. Build pipelines that cannot be bypassed.
 
 The future of AI-assisted development isn't smarter agents. It's better engineering.
+
+## Frequently Asked Questions
+
+**What is a requirement dependency DAG in AI code generation?** A requirement dependency DAG is a directed acyclic graph that defines the order in which code generation tasks must be completed. Each requirement has explicit prerequisites, and the system enforces the sequence so the LLM cannot skip steps or work out of order. This eliminates the class of errors caused by autonomous task selection.
+
+**Can you use control-based code generation with any AI coding tool?** The principles apply to any tool, but the enforcement mechanisms need to be built into your workflow. You need validation pipelines, structural checks between steps, and an orchestrator that gates progress. Tools like Claude Code with MCP servers make this easier because you can build the enforcement into the tool interface itself.
+
+**Does control-based generation slow down development?** It adds overhead per step but reduces total time by eliminating rework. When every step is validated before proceeding, you catch errors early instead of discovering them after thousands of lines of generated code. Predictability beats raw speed for production systems.
+
+**What is the stop-and-validate pattern?** The stop-and-validate pattern means the agent writes one artifact, stops, and a validation pipeline runs automatically before the next step begins. The pipeline can include compiler checks, tests, static analysis, and structural validation. The LLM does not decide whether validation passed -- the pipeline does.
+
+**How does boundary enforcement prevent architectural drift?** Boundary enforcement uses compile-time dependency checking to prevent modules from importing code they should not access. In Elixir, `use Boundary` enforces this at the compiler level. The LLM cannot introduce cross-boundary dependencies because the code will not compile, regardless of what the prompt says.

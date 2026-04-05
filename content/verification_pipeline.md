@@ -6,7 +6,7 @@ Nobody shows you what happens three weeks later when you realize the tests were 
 
 AI generates code fast. Verifying it's correct? That's the actual hard problem.
 
-## Why Verification is Different From Testing
+## How Is Verification Different From Testing?
 
 Testing asks: does this function return the expected output?
 
@@ -14,7 +14,7 @@ Verification asks: does this codebase, as a whole, satisfy the requirements it w
 
 Testing is one step. Verification is a pipeline.
 
-## The Pipeline
+## What Does the Verification Pipeline Run After Every AI Task?
 
 When an AI agent finishes a task in CodeMySpec, it doesn't just "submit." A validation hook fires and runs scoped analysis on every component the agent touched:
 
@@ -30,7 +30,7 @@ If any step fails, the agent gets specific feedback about what broke and why. No
 
 The agent doesn't decide whether to address the feedback. It must.
 
-## Dirty Tracking: Don't Validate Everything Every Time
+## How Does Dirty Tracking Avoid Validating the Entire Codebase Every Time?
 
 Running seven validation tools across an entire codebase after every change would be slow and wasteful. So we don't.
 
@@ -42,7 +42,7 @@ After analysis completes, timestamps update. The component is clean until its fi
 
 This is what makes continuous validation practical. You're not choosing between "validate everything" and "validate nothing." You're validating exactly what changed, every time something changes.
 
-## The Problems System
+## How Does the Problems System Store and Track All Validation Failures?
 
 Every failure from every tool flows into one place: the Problems context.
 
@@ -62,7 +62,7 @@ Test failures, compilation errors, security warnings, BDD spec failures, and doc
 
 This matters because it eliminates the "I think the tests were passing" ambiguity. Problems are persisted records, not terminal output that scrolled past. When the requirement system asks "is this component's test requirement satisfied?" it queries the problems table. No interpretation. No judgment calls.
 
-## Hooks: Where Enforcement Happens
+## How Do Hooks Enforce Automatic Validation Without Human Intervention?
 
 The validation pipeline doesn't run because the AI decides to run it. It runs because hooks make it automatic.
 
@@ -83,7 +83,7 @@ The result is binary: `{:ok, :valid}` or `{:error, feedback}`. Compilation error
 
 No human has to remember to run tests. No AI has to decide whether to skip validation. The hook fires. The pipeline runs. Problems are recorded. Requirements are updated. Every time.
 
-## BDD Specs: Requirements as Executable Tests
+## How Do BDD Specs Turn Requirements Into Executable Tests?
 
 Unit tests verify implementation. BDD specs verify requirements.
 
@@ -104,7 +104,7 @@ When specs fail, `FixBddSpecs` reads the structured failures from the Problems s
 
 This creates a closed loop: story → criteria → specs → implementation → validation → feedback → fix. Requirements are never just documentation. They're executable assertions that run on every change.
 
-## QA Journeys: End-to-End Verification
+## How Do QA Journeys Verify the Running Application End-to-End?
 
 Unit tests and BDD specs verify components in isolation. QA journeys verify the running application.
 
@@ -120,7 +120,7 @@ The QA system follows a state machine through four phases:
 
 Each phase has its own requirement checker. The system knows whether journey plans exist, whether they've been executed, whether Wallaby tests have been generated. Progress is tracked through the same requirement system that tracks everything else.
 
-## The Requirement Graph Ties It Together
+## How Does the Requirement Graph Connect All the Verification Steps?
 
 None of this runs in isolation. The requirement system defines dependencies between validation steps:
 
@@ -128,7 +128,7 @@ A component can't be "implementation complete" until its spec file exists and is
 
 22 requirement checkers, arranged in a dependency graph, tracking progress per component. When the validation pipeline updates problems, requirements recalculate automatically. You always know exactly where every component stands — not because someone updated a tracker, but because the system computed it from actual validation results.
 
-## What This Means in Practice
+## What Does This Look Like During a Real Implementation Session?
 
 I run multi-hour implementation sessions. The agent works through a task, the hook fires, validation runs, problems update, requirements recalculate. If something breaks, the agent gets specific feedback. If everything passes, the next task begins.
 
@@ -137,3 +137,15 @@ I don't review every line of generated code. I review the verification results. 
 That's the shift. You stop verifying code and start verifying that your verification system is comprehensive. Define good requirements. Write precise acceptance criteria. Design thorough specs. Then let the pipeline enforce them continuously.
 
 The AI generates code. The pipeline tells you whether it's right. Your job is making sure "right" is well-defined.
+
+## Frequently Asked Questions
+
+**Does the verification pipeline slow down AI code generation?** Dirty tracking ensures only the components whose files actually changed get revalidated. The pipeline does not run across the entire codebase after every change. This scoped approach makes continuous validation practical without meaningfully slowing down the development cycle.
+
+**What happens when the AI agent fails a validation step?** The agent receives structured feedback -- not just "tests failed" but specific problem records with severity, source, file path, line number, and component assignment. Compilation errors and validation failures block progress. The agent must address the feedback before the next task begins.
+
+**How many requirement checkers does CodeMySpec use?** There are 22 requirement checkers arranged in a dependency graph. They track progress per component across the full stack, including compiler health, test results, static analysis, BDD spec coverage, document structure, and QA journey status. When the validation pipeline updates problems, requirements recalculate automatically.
+
+**Can this verification approach work with languages other than Elixir?** The pipeline architecture -- dirty tracking, structured problems, requirement graphs, and hook-based enforcement -- is language-agnostic in concept. The specific tools (ExUnit, Credo, Sobelow) are Elixir-specific, but each could be swapped for equivalents in other ecosystems like ESLint, Jest, or Bandit for their respective languages.
+
+**What is the difference between BDD specs and QA journeys?** BDD specs verify individual acceptance criteria from user stories through API and interface calls in isolation. QA journeys test end-to-end flows across multiple stories and contexts against the live running application, catching seam bugs that only surface when features interact in the real environment.

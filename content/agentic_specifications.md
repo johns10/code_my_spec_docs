@@ -4,7 +4,7 @@ I've been watching developers skip specifications for two years now. They fire u
 
 The reality is: code is no longer the asset. The specification is the asset. When AI agents can generate code at near-zero cost, the thing that constrains, directs, and validates that code becomes the primary deliverable.
 
-## Spec-Driven Development Is Here
+## What Is Spec-Driven Development and Why Does It Matter for AI Agents?
 
 Spec-driven development inverts the traditional workflow. Instead of writing code and hoping it matches what you intended, you write a structured specification first and let the agent implement against it. Thoughtworks called it ["one of the most important practices to emerge in 2025."](https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices)
 
@@ -12,7 +12,7 @@ Martin Fowler [defines a spec](https://martinfowler.com/articles/exploring-gen-a
 
 The workflow across all these tools converges on the same pattern: define [requirements](/blog/agentic-requirements), design the [architecture](/blog/agentic-architecture), decompose into tasks, generate code, validate against the spec. Augment Code adds a crucial insight: [debug specifications, not code](https://www.augmentcode.com/guides/what-is-spec-driven-development). When AI output is wrong, fix the spec and regenerate rather than patching the generated code.
 
-## The Tools
+## Which Tools Support Spec-Driven Development With AI Agents?
 
 **[Kiro](https://kiro.dev/)** (AWS) is the simplest and most widely known. Three-phase workflow: Requirements using EARS notation, Design, Tasks. EARS forces you to be specific. Instead of "handle errors gracefully," you get "When the API returns a 429 status code, the system shall retry with exponential backoff starting at 1 second, with a maximum of 3 retries." That precision is what agents need.
 
@@ -24,7 +24,7 @@ The workflow across all these tools converges on the same pattern: define [requi
 
 **[BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD)** is the most comprehensive. Twelve-plus domain-expert agents (Analyst, PM, Architect, Scrum Master, Developer, QA) each defined as markdown files. It splits development into Upstream (Thinking) and Downstream (Building). Documentation is the source of truth. 100% free and open source.
 
-## Design Documents as Executable Contracts
+## How Do Design Documents Become Executable Contracts for AI Agents?
 
 Design documents are evolving from passive reference material into operational instructions for AI agents. The same document that communicates intent to humans now constrains machine behavior.
 
@@ -32,7 +32,7 @@ David Haberlah [puts it well](https://medium.com/@haberlah/how-to-write-prds-for
 
 Addy Osmani's spec framework, based on [GitHub's analysis of 2,500+ agent files](https://www.oreilly.com/radar/how-to-write-a-good-spec-for-ai-agents/), identifies six critical areas: commands, testing procedures, project structure, code style, git workflow, and boundaries. His three-tier boundary system is the most useful thing in the whole piece: "Always do" (agent proceeds), "Ask first" (needs approval), "Never do" (hard stop). The most common helpful constraint? "Never commit secrets."
 
-## The Specification Gap
+## What Is the Specification Gap and Why Does It Cause AI Code Quality Failures?
 
 The specification gap is the failure to write specs before generating code. It is the single largest source of quality failures in AI-assisted development.
 
@@ -42,7 +42,7 @@ The [VibeContract paper](https://arxiv.org/abs/2603.15691) calls it the "illusio
 
 Augment Code documents a [predictable three-month decay pattern](https://www.augmentcode.com/guides/vibe-coding-vs-spec-driven-development): months 1-3 everything ships fast; months 4-9 integration challenges emerge; month 9 onward you're drowning in debugging because the team has lost understanding of their own system.
 
-## OpenAPI: The Mature Example
+## How Do OpenAPI Specifications Act as Guardrails for AI-Generated Code?
 
 OpenAPI specifications are the most mature example of structured schemas as AI guardrails. The relationship is natural: OpenAPI already provides machine-readable descriptions of exactly what an API does, what parameters it accepts, and what responses to expect.
 
@@ -50,7 +50,7 @@ The mechanism works through function calling. OpenAPI specs get converted to fun
 
 The broader pattern applies everywhere: JSON Schema for data validation, Protocol Buffers for service contracts, GraphQL schemas for queries, TypeScript types for code-level contracts. Formal, machine-readable specifications constrain AI output to valid values. That's the whole game.
 
-## How to Write Specs That Actually Work
+## How Do You Write Specifications That AI Agents Can Execute Correctly?
 
 After working with spec-driven development across multiple projects, here's what I've learned makes the difference:
 
@@ -69,3 +69,15 @@ After working with spec-driven development across multiple projects, here's what
 The specification is not overhead. It is the product. Every hour you spend writing a clear spec saves you three hours of debugging generated code that almost does the right thing but doesn't.
 
 What's your experience been? Are you writing specs before you prompt, or are you still fixing the output after the fact?
+
+## Frequently Asked Questions
+
+**What is spec-driven development and how is it different from traditional development?** Spec-driven development inverts the traditional workflow by writing a structured specification first and letting the AI agent implement against it. Instead of writing code and hoping it matches intent, you define behavior-oriented artifacts in natural language that serve as guidance to AI coding agents. Thoughtworks called it one of the most important practices to emerge in 2025.
+
+**Why does AI-generated code quality degrade after three months without specifications?** Augment Code documents a predictable decay pattern: months 1-3 everything ships fast, months 4-9 integration challenges emerge, and beyond month 9 teams drown in debugging because they have lost understanding of their own system. Without specifications as a stable reference point, there is no way to verify that generated code matches original intent as the codebase grows.
+
+**What is the best format for writing specifications that AI agents can follow?** Use structured, machine-readable formats wherever possible -- OpenAPI for APIs, JSON Schema for data validation, TypeScript types for code-level contracts. Make acceptance criteria testable with precise thresholds rather than vague descriptions. Break specs into modules to avoid the "curse of instructions" where agent performance drops as requirements pile up in a single prompt.
+
+**How do tools like Kiro, spec-kit, and Tessl compare for spec-driven development?** Kiro (AWS) uses EARS notation to force requirement precision across three phases. GitHub spec-kit is open source and works across multiple AI tools with a constitution.md for project principles. Tessl takes the most radical approach where specs are the maintained artifact and code is regenerated from them. All converge on the same core workflow: define requirements, design architecture, decompose into tasks, generate, and validate.
+
+**Should you fix AI-generated code or fix the specification and regenerate?** Fix the specification and regenerate. Augment Code's key insight is to debug specifications, not code. When AI output is wrong, patching the generated code creates a divergence between your spec and your implementation that compounds over time. Fixing the spec and regenerating keeps the specification as the single source of truth.
