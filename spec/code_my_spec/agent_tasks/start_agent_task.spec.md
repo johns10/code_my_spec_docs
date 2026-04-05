@@ -51,7 +51,7 @@ Returns the list of session types that don't require a component/module_name arg
 
 **Test Assertions**:
 - returns a list of strings
-- includes "project_setup", "architecture_design", "write_bdd_specs"
+- includes "project_setup", "architecture_design", "write_bdd_specs", "sync"
 - does not include component-bound tasks like "component_spec" or "component_code"
 
 ### run/2
