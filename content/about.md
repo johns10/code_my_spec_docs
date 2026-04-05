@@ -41,6 +41,7 @@ CodeMySpec's development process and methodology are documented publicly. The Me
 
 - [LinkedIn](https://www.linkedin.com/in/john-davenport-software/)
 - [X / Twitter](https://x.com/johns10d)
+- [YouTube](https://www.youtube.com/@codemyspec)
 - [GitHub](https://github.com/code-my-spec)
 - [CodeMySpec](https://codemyspec.com)
 
