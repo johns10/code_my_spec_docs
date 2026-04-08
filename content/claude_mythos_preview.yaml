@@ -1,0 +1,33 @@
+# Metadata for claude_mythos_preview.md
+
+# Required fields
+slug: claude-mythos-preview
+type: blog
+title: "Claude Mythos: What We Know, What We Don't, and Why the Harness Still Matters"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Claude Mythos: What We Know and What We Don't"
+meta_description: "Anthropic's next model leaked before they were ready. 93.9% SWE-bench claimed. Here's what's confirmed, what's speculation, and why the harness still matters."
+og_title: "Claude Mythos: What We Know, What We Don't, and Why the Harness Still Matters"
+og_description: "A better model raises the ceiling. It doesn't change the process. Here's what we actually know about Claude Mythos."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - claude
+  - mythos
+  - anthropic
+  - benchmarks
+  - harness-engineering
+  - agentic-coding
