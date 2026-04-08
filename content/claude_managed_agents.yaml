@@ -1,0 +1,33 @@
+# Metadata for claude_managed_agents.md
+
+# Required fields
+slug: claude-managed-agents
+type: blog
+title: "Anthropic Just Made the Agent Harness a Product"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Claude Managed Agents: The Harness Is Now a Product"
+meta_description: "Anthropic launched Managed Agents in public beta. They're literally selling the harness now. Here's what it is, what it costs, and why it matters."
+og_title: "Anthropic Just Made the Agent Harness a Product"
+og_description: "Managed Agents is a hosted agent runtime. Anthropic is now using the word 'harness' in their product marketing. The thesis is validated."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - claude
+  - managed-agents
+  - harness-engineering
+  - anthropic
+  - agent-sdk
+  - agentic-coding
