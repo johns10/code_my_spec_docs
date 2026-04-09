@@ -1,0 +1,34 @@
+# Metadata for what_is_code.md
+
+# Required fields
+slug: what-is-code
+type: blog
+title: "What Is Code, Actually?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-09T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "What Is Code? The Vibe Coder's Guide"
+meta_description: "A plain-English guide to what code is, what JavaScript, React, Supabase, and Vercel actually are, and why your AI picked them."
+og_title: "What Is Code, Actually?"
+og_description: "You don't need to learn to code. You need to know what the pieces are. A plain-English glossary for vibe coders."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Vibe Coding Basics
+  featured: false
+  series: bare-minimum-vibe-coder
+  series_order: 1
+
+tags:
+  - vibe-coding
+  - beginners
+  - javascript
+  - react
+  - supabase
+  - what-is-code
