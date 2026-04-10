@@ -1,6 +1,8 @@
 # How I Built a Local Embedding Pipeline in Elixir That Searches My Own Docs
 
-I wanted Claude Code to search my project docs and hex dependency docs without calling an external API. No OpenAI embeddings endpoint. No network. Everything local. Here's what I built.
+I wanted my Elixir harness to search HexDocs for all my current dependency versions and my project documentation without calling an external API. No OpenAI embeddings endpoint. No Ollama sidecar. No network calls. Everything embedded in the desktop app.
+
+I got inspired by the [HexDocs MCP server](https://hexdocs.pm/hexdocs_mcp/readme.html). They had a cool approach, but they were scraping HexDocs instead of using the local dependencies, and they were embedding with Ollama through a Node MCP server. I wanted it all contained inside my harness, which is an Elixir desktop app built with Burrito. That constraint shaped every decision.
 
 ## The Architecture
 
@@ -35,7 +37,7 @@ sequenceDiagram
 
 ### 1. DocExtractor: Pulling Markdown Out of Compiled Bytecode
 
-This is the part I'm most proud of. Every compiled Elixir module has documentation baked into the BEAM file as an EEP-48 chunk. It's already markdown. You just read it out.
+This is the part I'm most proud of. The docs are already markdown, baked right into the BEAM bytecode. You don't need to scrape anything. My extractor uses `:beam_lib.chunks/2` to read the raw doc chunks directly from `.beam` files in `_build/`:
 
 ```elixir
 defp extract_beam(path) do
@@ -54,13 +56,11 @@ defp extract_beam(path) do
 end
 ```
 
-No network. No HTML parsing. No scraping hexdocs.pm. Just `:beam_lib.chunks/2` on the compiled files in `_build/`. The docs are right there in the bytecode.
-
-The extractor walks every `.beam` file in a dependency's ebin directory, pulls the EEP-48 chunk, checks that the format is markdown, and renders module doc plus function docs into a single markdown string.
+No network. No HTML parsing. No scraping hexdocs.pm. The docs are right there in the compiled files. Every dependency you've compiled already has its documentation sitting in `_build/`. I just walk the ebin directory, pull the EEP-48 chunks, and render module docs plus function docs into markdown strings.
 
 ### 2. Serving: Local Embeddings with Ortex
 
-The embedding model runs entirely on my machine.
+My first attempt was with Bumblebee and Nx. That failed because I couldn't get it wrapped into Burrito (the tool I use to package the desktop app). Ortex worked because it's just ONNX Runtime with a clean NIF - no complex build dependencies.
 
 ```elixir
 defmodule CodeMySpec.Embeddings.Serving do
@@ -71,17 +71,17 @@ defmodule CodeMySpec.Embeddings.Serving do
   @max_length 256
 ```
 
-GenServer running all-MiniLM-L6-v2 through Ortex (Elixir's ONNX Runtime binding). Model ships in `priv/models/`. Tokenizer downloads from HuggingFace on first use and caches.
+It's a GenServer that loads all-MiniLM-L6-v2 through Ortex. The ONNX model ships with the app in `priv/models/`. Tokenizer downloads from HuggingFace on first use and caches locally.
 
-The pipeline: tokenize, truncate and pad to uniform length, build Nx tensors (ONNX BERT expects int64), run Ortex inference, mean pool hidden states with attention mask, L2 normalize. Out come 384-dimensional embeddings.
+The inference pipeline: tokenize with the HuggingFace tokenizer, truncate and pad to uniform length, build Nx tensors (ONNX BERT expects int64), run through Ortex, mean pool the hidden states with the attention mask, L2 normalize. Out come 384-dimensional embeddings. Nx is still in the stack for the tensor math - mean pooling and normalization.
 
 I picked all-MiniLM-L6-v2 because it's 80MB, fast, and good enough for doc search. No need for a giant model when you're matching "how do I create a Phoenix channel" against API docs.
 
-### 3. EmbeddingService: Chunk, Deduplicate, Store
+### 3. EmbeddingService: Chunk, Deduplicate, Store in sqlite_vec
 
-Takes a directory of markdown, chunks it (1500 chars, 200 overlap), embeds the chunks, stores in SQLite with sqlite_vec.
+Takes a directory of markdown, chunks it (1500 chars, 200 overlap), embeds the chunks, and stores everything in SQLite using the sqlite_vec extension for vector search.
 
-Content-hash deduplication: unchanged chunks skip re-embedding. Re-indexing the whole knowledge base after editing one file takes seconds.
+Content-hash deduplication: unchanged chunks skip re-embedding. Re-indexing the whole knowledge base after editing one file takes seconds because only changed chunks get re-embedded.
 
 ```elixir
 defp content_hash(text) do
@@ -89,7 +89,7 @@ defp content_hash(text) do
 end
 ```
 
-Search is cosine distance via sqlite_vec:
+sqlite_vec gives me cosine distance search right inside SQLite. No separate vector database. No Pinecone. No Weaviate. Just an extension on the database I'm already using:
 
 ```elixir
 sql = """
@@ -101,22 +101,23 @@ LIMIT ?2
 """
 ```
 
-No Pinecone. No Weaviate. Just SQLite with the vec extension sitting next to my app data.
+Embeddings stored as `vec_f32` columns. The schema uses `SqliteVec.Ecto.Float32` for the Ecto type. Everything sits right next to my app data in the same database file.
 
 ### 4. MCP Tools: Claude Code Interface
 
-Two MCP tools expose the search:
+Two MCP tools expose the search to Claude Code:
 
 **semantic_search** - Search project knowledge, specs, rules, design docs. Claude asks "find docs about authentication" and gets the most relevant chunks.
 
-**search_hexdocs** - Search embedded hex dependency docs. Claude asks "how does Phoenix.Channel handle joins" and gets actual current API docs, not hallucinated ones from training data.
+**search_hexdocs** - Search embedded hex dependency docs. Claude asks "how does Phoenix.Channel handle joins" and gets the actual current API docs for whatever version I'm running, not hallucinated ones from training data.
 
-Same embedding service under the hood. Different source filter.
+Same embedding service under the hood, different source filter.
 
 ## The Stack
 
 | Component | Library | Purpose |
 |-----------|---------|---------|
+| Doc extraction | Code.fetch_docs / :beam_lib | EEP-48 markdown from BEAM files |
 | Model inference | Ortex (ONNX Runtime) | Run all-MiniLM-L6-v2 locally |
 | Tokenization | Tokenizers (HuggingFace) | BERT tokenization |
 | Tensor math | Nx | Mean pooling, L2 normalization |
@@ -124,15 +125,7 @@ Same embedding service under the hood. Different source filter.
 | Database | SQLite via Ecto | Chunk storage, deduplication |
 | MCP server | Anubis | Tool interface for Claude Code |
 
-Everything runs in the same BEAM VM as my Phoenix app. No sidecar services. No Docker containers for vector databases. No API keys.
-
-## Why This Matters
-
-The hex docs extraction is the thing I haven't seen anyone else do. Most embedding pipelines start with "scrape the docs website" or "call the API." In Elixir, the docs are already compiled into the bytecode. EEP-48 was designed for programmatic access to documentation. I'm just using it for something the authors probably didn't anticipate.
-
-Local-first means it works offline, costs nothing per query, and keeps my project data out of third-party services. Content-hash deduplication means I can re-index aggressively without wasting compute.
-
-Because it's all exposed through MCP, Claude Code searches my docs mid-task without me copying and pasting anything. It asks for what it needs, searches the embeddings, and gets accurate, current documentation back.
+Everything runs in the same BEAM VM. No sidecar services. No Docker containers for vector databases. No API keys. The whole thing packages into a Burrito desktop app.
 
 ## What I'd Do Differently
 
