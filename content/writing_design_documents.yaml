@@ -8,7 +8,7 @@ title: How to write design documents that keep AI from going off the rails
 
 # Publishing control
 protected: false  # Set to true to require authentication (routes to /private/*)
-publish_at: 2026-01-01T00:00:00Z  # ISO 8601 datetime or null for immediate publish
+publish_at: "2025-11-13T00:00:00Z"
 expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
