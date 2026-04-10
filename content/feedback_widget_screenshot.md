@@ -1,12 +1,12 @@
 # How the CodeMySpec Feedback Widget Captures Screenshots in LiveView
 
-I built a feedback widget that lets users report issues from inside the app. The part I'm proudest of is the screenshot capture - one click and it grabs exactly what the user is looking at, uploads it to S3, and attaches it to the issue. All without leaving the page.
+I built a feedback widget that captures screenshots. One click, it grabs exactly what the user sees, uploads to S3, attaches it to the bug report. No page navigation, no browser extensions.
 
 ## The Widget
 
-It's a floating LiveComponent. Little chat bubble in the bottom-right corner. Click it, fill out a title, description, severity, optionally capture a screenshot, submit. The issue shows up in CodeMySpec with the screenshot attached.
+Floating LiveComponent. Chat bubble in the bottom-right. Click it, fill out title/description/severity, optionally grab a screenshot, submit. Issue shows up in CodeMySpec with the screenshot attached.
 
-The widget checks its own connection status on mount. If the user hasn't connected their app to CodeMySpec via OAuth, it renders nothing. No hooks, no prop-drilling, no layout changes needed. Just drop it in root.html.heex and it handles itself.
+It checks its own OAuth connection on mount. No CodeMySpec integration? Renders nothing. No hooks, no prop-drilling. Drop it in root.html.heex and forget about it.
 
 ```mermaid
 sequenceDiagram
@@ -36,7 +36,7 @@ sequenceDiagram
 
 ## The Screenshot Capture
 
-This is the fun part. The user clicks "Capture Screenshot" and the widget grabs exactly what's on screen right now. Not a browser API screenshot - a rendered-to-canvas capture of the DOM.
+The fun part. User clicks "Capture Screenshot" and the widget grabs exactly what's on screen. Not a browser API screenshot - a rendered-to-canvas capture of the DOM.
 
 ### The JavaScript
 
@@ -44,7 +44,6 @@ This is the fun part. The user clicks "Capture Screenshot" and the widget grabs 
 import { toCanvas } from "html-to-image";
 
 export async function captureScreenshot() {
-  // Suppress 404 noise from html-to-image trying to fetch url(#id) SVG refs
   const origFetch = window.fetch;
   window.fetch = function(input, init) {
     const url = typeof input === "string" ? input : input?.url || "";
@@ -79,17 +78,17 @@ export async function captureScreenshot() {
 window.__captureScreenshot = captureScreenshot;
 ```
 
-Three things worth noting:
+Three things I want to call out:
 
-**The fetch monkey-patch.** `html-to-image` tries to fetch every URL it finds in the DOM, including SVG `url(#id)` references. Those aren't real URLs - they're internal SVG references. The library turns them into fetch requests that 404 and spam the console. The patch intercepts any fetch containing `#` and returns an empty 200. Ugly but effective. The original fetch is restored in the `finally` block.
+**The fetch monkey-patch.** `html-to-image` fetches every URL in the DOM, including SVG `url(#id)` refs. Those aren't real URLs. The library turns them into fetch requests that 404 and spam the console. The patch intercepts any fetch with `#` and returns an empty 200. Ugly, effective. Restored in `finally`.
 
-**The widget filters itself out.** The `filter` callback checks `node.id === "cms-feedback"` and returns false. The screenshot captures the page as the user sees it, without the feedback form floating on top.
+**Self-filtering.** The `filter` callback skips `node.id === "cms-feedback"`. The screenshot captures the page without the feedback form floating on top of it.
 
-**Scroll position handling.** The `style.transform` offset accounts for where the user has scrolled. Without this, you'd capture the top of the page regardless of scroll position. With it, you capture exactly the viewport the user is looking at.
+**Scroll position.** The `style.transform` offset accounts for scroll. Without it you capture the top of the page. With it you capture exactly the viewport the user is looking at.
 
 ### The Colocated Hook
 
-Phoenix 1.8 lets you colocate JavaScript hooks directly in the LiveView template:
+Phoenix 1.8 colocated hooks are one of my favorite features. The JS lives right in the template:
 
 ```elixir
 <script :type={Phoenix.LiveView.ColocatedHook} name=".CmsScreenshot">
@@ -111,13 +110,13 @@ Phoenix 1.8 lets you colocate JavaScript hooks directly in the LiveView template
 </script>
 ```
 
-No separate JS file for the hook. No app.js registration. The hook lives right next to the template that uses it. It listens for clicks on `[data-capture-screenshot]`, calls the global screenshot function, and pushes the result back to the LiveComponent.
+No separate JS file. No app.js registration. The hook lives where it's used. Listens for clicks on `[data-capture-screenshot]`, calls the screenshot function, pushes the result back to the LiveComponent.
 
-The two-event flow (`capture_start` then `screenshot_captured`) lets the widget show a "Capturing..." spinner while the canvas renders. On a complex page that render can take a second.
+Two-event flow (`capture_start` then `screenshot_captured`) so the widget can show a spinner. Canvas rendering can take a second on complex pages.
 
 ## The Upload Flow
 
-Once the user has a screenshot and submits the form, the upload is a three-step presigned flow:
+Presigned S3 upload. The app server never touches the file:
 
 ```elixir
 defp upload_screenshot(scope, data_url) do
@@ -134,31 +133,25 @@ defp upload_screenshot(scope, data_url) do
 end
 ```
 
-1. Decode the base64 data URL back to binary
-2. Ask the CodeMySpec API for a presigned S3 upload URL
-3. PUT the binary directly to S3
-
-The app server never touches the file. The presigned URL means S3 handles the upload directly. The issue just gets the S3 key as a reference.
+Decode base64 to binary. Get a presigned URL from CodeMySpec. PUT directly to S3. Issue gets the S3 key as a reference.
 
 ## The Generator
 
-The whole thing ships as a Mix generator:
+Ships as a Mix generator:
 
 ```bash
 $ mix cms_gen.feedback_widget
 ```
 
-It generates three files:
-- `lib/app_web/live/feedback_widget.ex` - the LiveComponent
-- `lib/app/codemyspec/client.ex` - HTTP client for the CodeMySpec API
-- `assets/js/screenshot.js` - the screenshot capture
+Three files:
+- `feedback_widget.ex` - the LiveComponent
+- `codemyspec/client.ex` - HTTP client for the API
+- `screenshot.js` - the capture logic
 
-Drop the component in your root layout, install `html-to-image`, configure your OAuth credentials. That's it.
+Drop the component in your root layout, install `html-to-image`, configure OAuth. Done.
 
-The generator approach means every app that integrates with CodeMySpec gets the same widget with the same screenshot capability. No copy-pasting. No maintaining forks. Just run the generator and you have a working feedback system with screenshot capture.
+## Why I'm Proud of This
 
-## Why I Like This
+I've spent years reading bug reports that say "the button doesn't work." Now they say "the button doesn't work" plus a picture of exactly what the user was looking at. Gets you 80% of the way to reproducing the issue before you even open the code.
 
-The screenshot makes bug reports actually useful. "The button doesn't work" becomes "the button doesn't work" plus a picture of exactly what the user was looking at. I've spent years reading bug reports that describe something I can't reproduce. Screenshots don't solve that entirely, but they get you 80% of the way there.
-
-The colocated hook is one of my favorite Phoenix 1.8 features. Before this, you'd have a JS file registered in app.js that's conceptually tied to a specific LiveView but physically separated from it. Now the hook lives where it's used. When I read the widget code, I see the hook right there.
+The colocated hook is what makes it feel clean. Before Phoenix 1.8, you'd have a JS file in app.js conceptually tied to a LiveView but physically somewhere else. Now I read the widget code and the hook is right there.
