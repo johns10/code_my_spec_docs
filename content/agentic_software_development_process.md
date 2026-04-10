@@ -12,9 +12,7 @@ Here's the process, phase by phase.
 
 ## 1. Why Have Requirements Become the New Bottleneck in AI-Assisted Development?
 
-A year ago the hard part was writing code. Now the hard part is knowing what to build. AI agents are shockingly good at implementation. They're terrible at reading your mind.
-
-[Atlassian said it bluntly](https://www.atlassian.com/blog/artificial-intelligence/how-ai-turns-software-engineers-into-product-engineers): "Shipping the wrong feature quickly is worse than shipping the right feature slowly." Every gap in your requirements is an invitation for the agent to guess. The probability of all those guesses being correct [approaches zero](https://docs.bswen.com/blog/2026-03-25-why-vibe-coding-fails-production/) in any real system.
+A year ago the hard part was writing code. Now the hard part is knowing what to build. AI agents are shockingly good at implementation but terrible at reading your mind. [Atlassian said it bluntly](https://www.atlassian.com/blog/artificial-intelligence/how-ai-turns-software-engineers-into-product-engineers): "Shipping the wrong feature quickly is worse than shipping the right feature slowly." Every gap in your requirements is an invitation for the agent to guess, and the probability of all those guesses being correct [approaches zero](https://docs.bswen.com/blog/2026-03-25-why-vibe-coding-fails-production/) in any real system.
 
 The fix: requirements as conversations, not documents. Tools like [ChatPRD](https://www.chatprd.ai/) (100K+ PMs), [Kiro](https://kiro.dev/) (AWS), and [GitHub spec-kit](https://github.com/github/spec-kit) turn requirements gathering into an interview where the AI asks the questions you'd miss. MCP servers connect agents directly to Jira, Linear, and structured story systems so requirements are live data, not stale documents.
 
@@ -50,9 +48,7 @@ The skill that matters isn't prompting. It's [harness engineering](/pages/the-ha
 
 ## 5. What Is the Self-Confirming Loop in AI-Generated Tests?
 
-When the same AI writes your code and your tests, you don't have tests. You have a mirror. The agent misunderstands a requirement, writes wrong code, writes tests that confirm the wrong behavior. Tests pass. Coverage looks great. App is broken.
-
-[CodeRabbit analyzed 470 PRs](https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report): AI code produces 1.7x more issues, 8x more performance problems, 1.5-2x more security vulnerabilities. The tests didn't catch any of it.
+When the same AI writes your code and your tests, you don't have tests — you have a mirror. The agent misunderstands a requirement, writes wrong code, then writes tests that confirm the wrong behavior. Tests pass, coverage looks great, and the app is broken. [CodeRabbit analyzed 470 PRs](https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report) and found that AI code produces 1.7x more issues, 8x more performance problems, and 1.5-2x more security vulnerabilities. The tests didn't catch any of it.
 
 The fix: TDD where the agent is told which specific tests to check (not just "do TDD" - that [makes things worse](https://arxiv.org/abs/2603.17973)). BDD specs from acceptance criteria so tests come from requirements, not implementation. The [cassette pattern](https://anaynayak.medium.com/eliminating-flaky-tests-using-vcr-tests-for-llms-a3feabf90bc5) for non-deterministic LLM output. And Meta's [JiTTests](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/) concept: ephemeral tests per PR, discarded after they run.
 
@@ -88,11 +84,7 @@ The paradox: AI agents are generating technical debt faster than they're cleanin
 
 ## Why Does the Development Process Matter More Than the AI Tools You Choose?
 
-The tools change every month. The process doesn't. Define what to build. Design how it fits together. Specify the contracts. Generate the code. Test it from multiple angles. Verify the running application. Deploy with documented knowledge. Maintain with the same rigor you built with.
-
-Most teams are doing step 4 (implementation) and skipping the other seven. That's why AI-generated codebases fall apart at month three. The code was generated fine. Everything around the code was missing.
-
-The agentic software development process isn't about finding the best AI coding tool. It's about building the full lifecycle so the tool has something to work with.
+The tools change every month. The process doesn't. Define what to build, design how it fits together, specify the contracts, generate the code, test it from multiple angles, verify the running application, deploy with documented knowledge, and maintain with the same rigor you built with. Most teams are doing step 4 (implementation) and skipping the other seven — that's why AI-generated codebases fall apart at month three. The code was generated fine; everything around the code was missing. The agentic software development process isn't about finding the best AI coding tool. It's about building the full lifecycle so the tool has something to work with.
 
 ## Frequently Asked Questions
 
