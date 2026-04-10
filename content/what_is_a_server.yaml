@@ -1,0 +1,35 @@
+# Metadata for what_is_a_server.md
+
+# Required fields
+slug: what-is-a-server
+type: blog
+title: "What Is a Server and Why Are You Paying For One?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-09T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "What Is a Server? The Vibe Coder's Guide"
+meta_description: "A server is just a computer. Every service your AI signs you up for is someone else's computer. Here's why you're paying $50/month and how to pay $4."
+og_title: "What Is a Server and Why Are You Paying For One?"
+og_description: "Vercel, Supabase, Netlify - they're all just computers. A plain-English guide to what servers are and why your AI keeps signing you up for them."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Vibe Coding Basics
+  featured: false
+  series: bare-minimum-vibe-coder
+  series_order: 3
+
+tags:
+  - vibe-coding
+  - beginners
+  - servers
+  - hosting
+  - vercel
+  - supabase
+  - deployment

@@ -83,3 +83,35 @@ Next time you start a project, before you build anything, try this:
 > "Before we start, list every service, framework, and tool you're planning to use. For each one, tell me what it is, what it does in this project, and whether it costs money."
 
 I've watched people on r/vibecoding go from zero to $50/month in surprise bills within a week because they didn't know what their AI was signing them up for. One prompt saves you from that.
+
+## If You're Still Here and Want the Gory Details
+
+You don't need to know any of this. But if you're curious about what actually happens when your code "runs," here's the short version.
+
+Your AI writes something like this in JavaScript:
+
+```javascript
+let price = quantity * 9.99
+```
+
+That's human-readable. The computer can't run it directly. So it goes through a pipeline:
+
+```
+JavaScript (what your AI writes)
+        ↓
+   Bytecode (compact instructions the engine understands)
+        ↓
+   Machine Code (binary - the 1s and 0s your CPU actually executes)
+```
+
+**JavaScript** is the top layer. It's what you see in your project files. Readable by humans, written by your AI.
+
+**Bytecode** is the middle layer. The JavaScript engine (V8 in Chrome/Node, SpiderMonkey in Firefox) compiles your JavaScript into a compact intermediate format. You never see this. It's what the engine works with internally.
+
+**Machine code** is the bottom layer. The engine compiles hot bytecode down to actual binary instructions that run directly on the CPU. This is the 1s and 0s. This is what the computer actually executes.
+
+This happens automatically. You don't control it. Your AI doesn't think about it. But when someone says "JavaScript is interpreted" or "JavaScript is compiled" - it's actually both. It gets interpreted into bytecode first, then the frequently-run parts get compiled further into machine code for speed.
+
+The same idea applies to other languages, just with different steps. Python compiles to `.pyc` bytecode files. Java compiles to bytecode that runs on the JVM. Rust and C compile directly to machine code (no bytecode step). Different paths, same destination: binary instructions running on a processor.
+
+That's it. Code goes in, binary comes out, the CPU does what you asked. Everything else is just layers of translation.
