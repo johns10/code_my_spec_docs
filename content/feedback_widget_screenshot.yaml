@@ -1,0 +1,33 @@
+# Metadata for feedback_widget_screenshot.md
+
+# Required fields
+slug: feedback-widget-screenshot
+type: blog
+title: "How the CodeMySpec Feedback Widget Captures Screenshots in LiveView"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-10T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Screenshot Capture in Phoenix LiveView Feedback Widget"
+meta_description: "One-click screenshot capture in a LiveView feedback widget using html-to-image, colocated hooks, and presigned S3 uploads."
+og_title: "How the CodeMySpec Feedback Widget Captures Screenshots in LiveView"
+og_description: "One click captures the page, uploads to S3, attaches to the bug report. Built with Phoenix 1.8 colocated hooks and html-to-image."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - phoenix
+  - liveview
+  - screenshot
+  - feedback
+  - colocated-hooks
+  - s3
+  - html-to-image
