@@ -11,7 +11,7 @@ publish_at: "2026-04-10T00:00:00Z"
 expires_at: null
 
 # SEO Metadata
-meta_title: "Local Embedding Pipeline in Elixir with Ortex, sqlite_vec, and MCP"
+meta_title: "Local Embedding Pipeline in Elixir with Ortex"
 meta_description: "Pull docs from compiled BEAM files, embed locally with Ortex, search with sqlite_vec, serve through MCP. No API calls. No network."
 og_title: "How I Built a Local Embedding Pipeline in Elixir"
 og_description: "Extract docs from BEAM bytecode, embed with Ortex, search with sqlite_vec, serve through MCP to Claude Code. Everything local."
