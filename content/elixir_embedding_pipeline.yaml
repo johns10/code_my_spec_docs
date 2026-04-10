@@ -1,0 +1,34 @@
+# Metadata for elixir_embedding_pipeline.md
+
+# Required fields
+slug: elixir-embedding-pipeline
+type: blog
+title: "How I Built a Local Embedding Pipeline in Elixir That Searches My Own Docs"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-10T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Local Embedding Pipeline in Elixir with Ortex, sqlite_vec, and MCP"
+meta_description: "Pull docs from compiled BEAM files, embed locally with Ortex, search with sqlite_vec, serve through MCP. No API calls. No network."
+og_title: "How I Built a Local Embedding Pipeline in Elixir"
+og_description: "Extract docs from BEAM bytecode, embed with Ortex, search with sqlite_vec, serve through MCP to Claude Code. Everything local."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - elixir
+  - embeddings
+  - ortex
+  - sqlite-vec
+  - mcp
+  - beam
+  - semantic-search
+  - claude-code

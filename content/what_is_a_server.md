@@ -76,3 +76,35 @@ That gives you a map of where your money goes.
 > "Can this app run on a single VPS with Postgres instead of using separate services for hosting, database, and file storage?"
 
 Sometimes the answer is genuinely no - payment processing should always be Stripe or similar. But for a lot of vibe-coded apps, the answer is yes, and you'll go from $50/month to $4.
+
+## If You're Still Here: What's Actually Inside My $4 Server
+
+Here's what my Hetzner setup actually looks like. It's three levels of computers running on one physical machine.
+
+```mermaid
+block-beta
+    columns 1
+    block:bare["Bare Metal Server (physical computer in a data center)"]
+        columns 2
+        block:myvps["My VPS ($4/mo)"]
+            columns 2
+            app["Docker: My App"]
+            db["Docker: Postgres"]
+        end
+        block:others["Other Customers"]
+            columns 2
+            vps2["Someone else's VPS"]
+            vps3["Someone else's VPS"]
+        end
+    end
+```
+
+**Level 1: The bare metal.** A real, physical computer sitting in a Hetzner data center in Germany or Finland. Rack-mounted, plugged into power and internet. This is the actual machine.
+
+**Level 2: The VPS.** Hetzner runs a hypervisor on that bare metal - software that carves one physical computer into multiple virtual computers. My $4/month gets me one of those virtual slices. It looks and acts like its own computer with its own operating system, but it's sharing the physical hardware with other customers. This is what "Virtual Private Server" means.
+
+**Level 3: Docker containers.** Inside my VPS, I run Docker. Docker creates isolated boxes called containers. My app runs in one container. My Postgres database runs in another. They can talk to each other, but they're separated - if my app crashes, the database keeps running. If I need to update my app, I just replace that container.
+
+So it's computers inside computers inside computers. Three levels deep, all on one physical machine, for $4/month. This is what Vercel and Supabase are doing too - they're just hiding the layers from you and charging more for the convenience.
+
+When someone says "deploy to the cloud," this is what they mean. Your code ends up in a container, on a virtual machine, on a physical server, in a data center somewhere. The "cloud" is just other people's computers stacked three levels deep.

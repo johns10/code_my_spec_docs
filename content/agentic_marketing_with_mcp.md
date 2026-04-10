@@ -44,9 +44,11 @@ Four servers, each doing one thing.
 
 **Google Search Console MCP** ([mcp-gsc](https://github.com/AminForou/mcp-gsc)) - Indexing status, query impressions, canonical issues. I found out Google thought my site's canonical URL was an old ngrok tunnel. Would never have caught that without this.
 
-**Twitter MCP** - Same pattern as Reddit. Search conversations, draft replies.
+**Twitter MCP** ([twitter-mcp](https://github.com/EnesCinr/twitter-mcp)) - Same pattern as Reddit. Search conversations, surface reply opportunities, draft tweets.
 
-I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-response`, `/scan-twitter`, `/draft-tweet`, `/news-scan`. Each one reads my memory files first so Claude has context about my positioning before it starts.
+**Claude SEO Plugin** ([claude-seo](https://github.com/AgriciDaniel/claude-seo)) - This one changed the game for me. It's a full SEO audit and optimization skill for Claude Code. It runs parallel subagents for technical SEO, content quality, schema markup, sitemaps, performance, and AI search readiness. I ran `/seo audit` on my site and it scored me 56/100, found my canonical URLs were doubling, my schema JSON-LD had broken URLs, and Cloudflare was blocking every AI crawler. Fixed all of it the same day. It also handles Google PageSpeed, CrUX field data, and URL indexing submissions. I submitted 23 URLs for indexing through it in one session.
+
+I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-response`, `/scan-twitter`, `/draft-tweet`, `/news-scan`, `/seo audit`. Each one reads my memory files first so Claude has context about my positioning before it starts.
 
 ## What are the biggest mistakes to avoid with AI-assisted marketing?
 
@@ -58,19 +60,23 @@ I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-re
 
 **The content has to exist first.** You can't link to something you haven't written. I have 100+ articles in my content library. When a thread asks about testing AI-generated code, I have an article for that. The marketing works because the content already exists and is genuinely useful. I have a content system in my harness where I write a markdown file with a YAML sidecar, git push, and it's live. When I spot a content gap from a Reddit thread, I can write the article and publish it the same day.
 
+**Let Reddit threads tell you what to write.** My best-performing content series came from reading r/vibecoding threads. Someone posted a list of 15 tools vibe coders should use. The top comment was "Too many words, just prompt." The second comment: "I have no idea what any of that means." So I wrote a series explaining those fundamentals in plain English. The articles get linked in threads that are asking the exact questions they answer. The content writes itself when you listen to what people are confused about.
+
 ## What kind of results can a solo developer expect from this approach?
 
-Here's what the last 28 days actually look like, pulled from my GA4 and Search Console MCP tools right now:
+Here's what the numbers actually look like after running this for about six weeks, pulled from my GA4 and Search Console MCP tools:
 
-- 227 users, 439 sessions, 1,402 pageviews total
-- Reddit comments drove 189 sessions (43% of all traffic), 109 unique users, 606 pageviews
-- 61% of those Reddit sessions were engaged (116 out of 189), averaging nearly 5 minutes each
-- My CLI agents comparison article got 124 views from 87 users, mostly from Reddit
-- 12 people hit the registration page. From Reddit comments alone.
-- Google Search Console shows 32 impressions across 28 days with 4 content pages appearing on page 1-2. Organic is basically zero right now. Early days.
-- My top Reddit comment this month (on an agentic workflows thread in r/ClaudeAI) scored 17 upvotes and drove a pile of sessions
+- Two consecutive all-time traffic records in one week (61 users, then 80 users the next day)
+- Reddit UTM comments drove 107 sessions in 3 days, averaging 4:25 per session. People are reading entire articles.
+- 30 registered users. 7 signups in the last 7 days - registration pace tripled from the previous month.
+- 9 out of 10 people who visited the registration page came from Reddit comments.
+- My best-performing comment by volume (CLI agents comparison) drove 67 sessions from 42 users.
+- My best-performing comment by depth (a reply on a "month 3 wall" frustration thread) drove only 12 sessions - but those users averaged 17 minutes and 13.8 pages each. They read the entire site.
+- My highest-upvoted comment (87 upvotes, about multi-agent FOMO) had no link at all. It built reputation without driving direct traffic. That's fine - reputation compounds.
 
-Is this going to make me rich? Not yet. Can a solo developer run this in 30 minutes a day and see real traffic? Yeah.
+The funnel analysis surprised me. High upvotes don't always mean high click-through. Thread size and comment position matter more than upvote count. And empathy comments in frustration threads produce the deepest readers - the people most likely to sign up. Tool comparison comments produce volume. You need both.
+
+Is this going to make me rich? Not yet. Can a solo developer run this in 30 minutes a day and see real, measurable traction? Yeah.
 
 ## Why does storing everything as files make the marketing system work?
 
@@ -88,7 +94,9 @@ Marketing advice for engineers usually falls into "just put yourself out there" 
 
 **Do I need a large content library before starting?** Not to start, but the approach works best when you have content to link to. You can begin by being helpful in discussions without linking anything. As you spot content gaps from real conversations, write articles to fill those gaps. Over time, your library grows organically based on actual demand.
 
-**Which MCP servers are essential to get started?** Start with just the Reddit MCP server and Google Analytics MCP server. Reddit lets you find and engage with your audience. Analytics lets you see what is working. Add Search Console and Twitter MCP servers later as your needs grow.
+**Which MCP servers are essential to get started?** Start with just the Reddit MCP server and Google Analytics MCP server. Reddit lets you find and engage with your audience. Analytics lets you see what is working. Add Search Console and Twitter MCP servers later as your needs grow. The SEO plugin is worth installing early - it catches technical issues that silently kill your search presence.
+
+**How do you track which comments actually lead to signups?** Every link carries UTM parameters: source, medium, campaign, and content. The content tag is unique per comment, so I can trace a signup back through the funnel: Reddit thread impressions, comment upvotes, UTM click-through, GA4 session, pages read, registration page view, signup. The data showed me that empathy comments in frustration threads produce the deepest readers, while tool comparison comments produce the most volume. Different strategies for different goals.
 
 ---
 

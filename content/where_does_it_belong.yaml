@@ -1,0 +1,34 @@
+# Metadata for where_does_it_belong.md
+
+# Required fields
+slug: where-does-it-belong
+type: blog
+title: "What Is It and Where Does It Belong?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-10T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Where Does It Belong? Client vs Server for Vibe Coders"
+meta_description: "Does the toilet belong in the bathroom or the living room? A guide to putting the right parts of your app in the right place."
+og_title: "What Is It and Where Does It Belong?"
+og_description: "Most vibe-coded app problems come down to things in the wrong place. The toilet test for client vs server placement."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Vibe Coding Basics
+  featured: false
+  series: bare-minimum-vibe-coder
+  series_order: 5
+
+tags:
+  - vibe-coding
+  - beginners
+  - client-server
+  - security
+  - architecture
+  - supabase

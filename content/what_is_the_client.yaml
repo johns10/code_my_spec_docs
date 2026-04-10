@@ -1,0 +1,35 @@
+# Metadata for what_is_the_client.md
+
+# Required fields
+slug: what-is-the-client
+type: blog
+title: "What Is the Client? (It's More Powerful Than You Think)"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-10T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "What Is the Client? The Vibe Coder's Guide"
+meta_description: "The client isn't just a browser. Browser apps, PWAs, mobile apps, desktop apps - what they are, what they can do, and why it matters."
+og_title: "What Is the Client? (It's More Powerful Than You Think)"
+og_description: "Your user's device is a real computer. Browser apps, PWAs, mobile, desktop - a plain-English guide to the different kinds of clients."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Vibe Coding Basics
+  featured: false
+  series: bare-minimum-vibe-coder
+  series_order: 4
+
+tags:
+  - vibe-coding
+  - beginners
+  - client
+  - browser
+  - pwa
+  - mobile
+  - desktop
