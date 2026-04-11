@@ -1,38 +1,42 @@
 # Technical SEO — Remaining Issues
 
-Audit performed 2026-03-26. Items 1-5 from the original audit are resolved.
+Full audit performed 2026-04-10. All items from the 2026-03-26 audit are resolved.
 
 ## Open
 
-### 6. Blog index title is just "Blog" (Low)
-The `/blog` page title is "Blog" with no branding or keyword context. Should be something like "Blog - CodeMySpec" or "AI Development Insights | CodeMySpec".
+### 12. Blog publication dates cluster in a narrow window (Info)
+30+ posts published within a 9-day window (April 1-10). While each post is individually well-researched, the temporal pattern could draw manual review attention from Google's quality raters. No code fix — address by spacing future publications.
 
-**Fix:** Set `page_title` in the `ContentLive.Index` mount.
+### 13. Author page could be richer (Low)
+The author page has ~350 words of prose with proper Person schema, but could benefit from a list of authored articles and external publication links to strengthen E-E-A-T signals.
 
-### 7. Methodology page has no canonical URL (Low)
-The `/methodology` hardcoded page doesn't assign `canonical_url`. It should set `https://codemyspec.com/methodology`.
+### 14. No pricing page or pricing transparency (Low)
+The SoftwareApplication schema declares `price: 0` but the site has no pricing page. Users cannot evaluate the product's commercial model.
 
-**Fix:** Add `canonical_url: "https://codemyspec.com/methodology"` to the methodology copy metadata, or assign it in mount.
+## Resolved (2026-04-10 Audit)
 
-### 8. No og:image on any page (Low)
-No content has an OG image set. Social sharing shows no thumbnail. Needs a default OG image and per-page overrides via the existing `og_image` field on content.
+- ~~6. Blog index title is just "Blog"~~ — Fixed: now "Phoenix AI Development Blog — CodeMySpec"
+- ~~7. Methodology page has no canonical URL~~ — Fixed: canonical_url assigned in mount
+- ~~8. No og:image on any page~~ — Fixed: og-default.png fallback + per-page OG images for all blog posts
+- ~~9. Homepage title could be stronger~~ — Acceptable at 63 chars with good keyword coverage
+- ~~10. Google Fonts render-blocking CSS~~ — Fixed: media="print" onload pattern + preload
+- ~~11. No hreflang tags~~ — N/A (English only site)
+- ~~12. Organization logo SVG in schema~~ — Fixed: switched to logo-300.png for Google rich results
+- ~~13. Missing og:site_name~~ — Fixed: added to root layout
+- ~~14. Missing favicon link tag~~ — Fixed: added to root layout
+- ~~15. Sitemap uses uniform build timestamp~~ — Fixed: uses actual content updated_at/publish_at dates
+- ~~16. Sitemap includes inaccessible URL (/pages/control-over-prompts)~~ — Fixed: verification filter added
+- ~~17. Hero images ~900KB PNGs~~ — Fixed: converted to WebP (78-93% savings)
+- ~~18. Missing Blog schema entity on /blog~~ — Fixed: added Blog entity with publisher reference
+- ~~19. Missing ProfilePage schema on /author~~ — Fixed: added ProfilePage entity
+- ~~20. Missing @id on MetricFlow Article~~ — Fixed: added @id to case study schema
+- ~~21. Docs TechArticle missing proficiencyLevel~~ — Fixed: added proficiencyLevel and articleSection
 
-**Fix:** Add a default OG image fallback in `root.html.heex` (e.g., site logo or branded card). Set per-content OG images via the content admin SEO metadata fields.
+## Resolved (2026-03-26 Audit)
 
-### 9. Homepage title could be stronger (Low)
-Currently "CodeMySpec — Keep Your Architecture, Let AI Do the Typing". This is decent but long (60 chars). Could be tightened for search click-through.
-
-### 10. Google Fonts render-blocking CSS (Low)
-The Google Fonts stylesheet loads synchronously. Consider using `font-display: swap` (already in URL) with a `media="print" onload="this.media='all'"` pattern for non-blocking loading.
-
-### 11. No hreflang tags (Very Low)
-Only relevant if targeting multiple languages in the future.
-
-## Resolved
-
-- ~~1. Homepage missing meta description~~ — Fixed: added via `home_copy.exs` meta map
-- ~~2. Homepage missing OG tags~~ — Fixed: og:title, og:description now set
-- ~~3. Duplicate H1 on content pages~~ — Fixed: `strip_leading_h1/1` removes markdown H1 from processed_content
-- ~~4. Wrong canonical URL on /pages/ routes~~ — Fixed: `@content_type_paths` map corrects atom-to-path mapping
-- ~~5. No structured data (JSON-LD)~~ — Fixed: Article schema on blog posts, WebPage on other content, WebSite on homepage
-- ~~4b. www does not redirect to non-www~~ — Fixed: Cloudflare Page Rule, 301 `www.codemyspec.com/*` → `codemyspec.com/$1`
+- ~~1. Homepage missing meta description~~ — Fixed
+- ~~2. Homepage missing OG tags~~ — Fixed
+- ~~3. Duplicate H1 on content pages~~ — Fixed
+- ~~4. Wrong canonical URL on /pages/ routes~~ — Fixed
+- ~~5. No structured data (JSON-LD)~~ — Fixed
+- ~~4b. www does not redirect to non-www~~ — Fixed

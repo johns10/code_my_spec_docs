@@ -1,0 +1,32 @@
+# Metadata for ai_agent_skill_trajectory.md
+
+# Required fields
+slug: ai-agent-skill-trajectory
+type: blog
+title: "The Skill Trajectory for Working with AI Agents"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-11T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "AI Agent Skill Trajectory: Prompt to Harness Engineering"
+meta_description: "Five levels from prompt engineering to platform engineering. Where most developers are, where the leverage is, and how to level up."
+og_title: "The Skill Trajectory for Working with AI Agents"
+og_description: "Prompt engineering is level 1. Harness engineering is level 3. Most developers are stuck at 1 and don't know 3-5 exist."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - harness-engineering
+  - prompt-engineering
+  - context-engineering
+  - ai-agents
+  - agentic-coding
+  - skill-development
