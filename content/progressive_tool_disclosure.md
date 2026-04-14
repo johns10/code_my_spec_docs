@@ -1,85 +1,212 @@
-# Progressive Tool Disclosure: How Claude Handles Hundreds of MCP Tools
+# What Is Progressive Disclosure and Why It Matters for AI Agents
 
-*How AI coding tools solve the "too many tools" problem, and what it means for your MCP setup.*
+*A 30-year-old UX principle is the most important technique in AI agent context management. Here's why, and how to use it.*
 
 ---
 
-Connect five MCP servers to Claude (GitHub, Slack, Jira, Sentry, Grafana) and you've burned [roughly 55,000 tokens](https://www.anthropic.com/engineering/advanced-tool-use) before Claude reads your first message. That's over a quarter of a 200K context window gone to tool definitions just sitting there.
+Boris Cherny, the creator of Claude Code, recently [debugged a user's problem](https://www.threads.com/@boris_cherny/post/DSnyfjUCGZ2/) over DMs. The user's agent was underperforming. Slow, confused, picking the wrong tools. The diagnosis? MCP servers and skills were consuming over 50% of the context window before the user typed a single word. Cherny's advice: "audit your /context from time to time."
 
-Two Chrome-related MCP servers alone ate [31,700 tokens](https://paddo.dev/blog/claude-code-hidden-mcp-flag/), nearly 16% of my context. And it gets worse than wasted tokens. [Tool selection accuracy collapses from 43% to under 14%](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents) when you overload the model with too many definitions. It picks the wrong tool seven out of eight times.
+This is the problem nobody talks about. We keep giving agents more tools, more skills, more knowledge, and they keep getting worse. Not because the models are bad, but because we're drowning them in context they don't need yet.
 
-So how does Claude handle dozens of MCP servers with hundreds of tools? Progressive tool disclosure.
+The fix is a concept from 1980s interface design. It's called progressive disclosure, and it turns out to be the defining architectural pattern for AI agent context management.
 
-## How it actually works
+## The Original Insight
 
-Don't load every tool definition into context at startup. Give the model a search tool to find the right tools on demand.
+Jakob Nielsen [defined progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/) as a design strategy: show users only what they need right now, and defer everything else to a secondary screen. The concept is older than the web. It comes from early GUI research in the 1970s and 1980s.
 
-Here's Claude's flow:
+Think about a print dialog. You see "Print" and "Cancel." Maybe page range and copies. That's it. Margins, paper size, duplex settings, color profiles? Hidden behind an "Advanced" button. Not because those features don't matter, but because most people don't need them most of the time.
 
-1. At startup, Claude sees only its core tools (Read, Edit, Bash, Grep, Glob) plus [ToolSearch](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool).
-2. MCP tool definitions are deferred. Claude knows they exist (just the names), but full schemas aren't in context.
-3. When Claude needs a tool, it calls ToolSearch. That returns the 3-5 most relevant tool definitions.
-4. Those definitions get injected inline as `tool_reference` blocks. Claude can now call them normally.
-5. The system prompt prefix stays untouched, so [prompt caching is preserved](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool).
+Nielsen found that progressive disclosure improves three of five core usability metrics: learnability, efficiency, and error rate. [The Decision Lab](https://thedecisionlab.com/reference-guide/design/progressive-disclosure) frames this through cognitive load theory. When you present too many options at once, people freeze, make mistakes, or give up.
 
-The savings are real. Claude Code production shows a [46.9% reduction in total agent tokens](https://medium.com/@joe.njenga/claude-code-just-cut-mcp-context-bloat-by-46-9-51k-tokens-down-to-8-5k-with-new-tool-search-ddf9e905f734) (51K down to 8.5K). Anthropic reports [over 85% reduction](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) in typical multi-server setups.
+The same thing happens to language models. Give a model 200 tool definitions and it picks the wrong tool [seven out of eight times](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents). Give it 15 relevant tools and it works fine. The cognitive load problem is not uniquely human.
 
-## But doesn't this add latency?
+## Context Is a Budget, Not a Dump Truck
 
-Yes. One extra round-trip per tool discovery. If a task needs tools from GitHub and Slack, the model searches for the GitHub tool, uses it, then searches for the Slack tool next turn. Multi-intent queries aren't a separate problem, they're just more turns in the normal agent loop.
+Here's the math that should change how you think about context windows.
 
-The mitigation: keep your 3-5 most used tools as non-deferred. Those load at startup with full schemas. Only the long tail gets deferred. In most real workflows, 80% of tool calls hit the same handful of tools. Those stay fast.
+Attention is O(n^2). [Doubling your context quadruples the processing cost](https://www.shaped.ai/blog/context-window-optimization-why-ranking-not-stuffing-is-the-scaling-law-for-agents). That 200K context window isn't free. Every token of tool metadata you load at startup is a token you can't use for actual work, and it makes the work you do more expensive.
 
-The alternative, loading everything upfront, either blows your context window or degrades accuracy so badly the model picks wrong tools anyway. A search round-trip that finds the right tool beats an overloaded context that picks the wrong one.
+It gets worse. Models have [U-shaped recall](https://datagrid.com/blog/optimize-ai-agent-context-windows-attention): they remember the beginning and end of the context window well, but the middle is a dead zone. So all that tool metadata sitting in the middle of your context? The model is barely paying attention to it anyway.
 
-## Three different approaches
+[Honra calls this "context rot"](https://www.honra.io/articles/progressive-disclosure-for-ai-agents): agents perform worse with excessive upfront information. They hallucinate false connections. They over-call tools. They enter retry loops. The more you give them, the dumber they get.
 
-**Anthropic (Claude)** works at the context level. Deferred tools aren't in the system prompt. When discovered, definitions append inline. Saves tokens aggressively, adds a search round-trip.
+[Research on cognitive load in LLMs](https://arxiv.org/html/2509.19517v2) confirms this isn't anecdotal. Extraneous information produces graded, reproducible performance degradation. It's not a cliff. It's a slope. Every unnecessary token makes the model a little worse.
 
-**Manus** works at the [decoding level](https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus). All tool definitions stay in context (full token cost), but logits masking prevents the model from selecting irrelevant tools during generation. Preserves the KV cache perfectly since the prompt never changes, but saves zero tokens.
+The reality is that context is currency. You have a budget. Spend it on what matters for the task at hand.
 
-**Cloudflare** takes the most radical approach with [Code Mode](https://blog.cloudflare.com/code-mode-mcp/). Instead of hundreds of tool definitions, they collapse their entire API into two tools: `search()` and `execute()`. The model writes code against a typed SDK in a V8 sandbox. Their full API would consume 1.17 million tokens as traditional MCP. Code Mode uses ~1,000. A 99.9% reduction.
+## The MCP Tool Bloat Problem
 
-Different bets. Anthropic bets search latency is acceptable for massive token savings. Manus bets cache efficiency matters more than token count. Cloudflare bets code generation is more natural than tool selection for large APIs.
+MCP is awesome for connecting agents to external services. It's also the fastest way to destroy your agent's performance.
 
-## Implementing it yourself
+Each MCP server exports a set of tools. Each tool definition includes a name, description, and full JSON schema for its parameters. That runs 1-8KB per tool. A typical server exports 20-80 tools. Connect ten servers and you're looking at tens of thousands of tokens of tool definitions loaded at startup. [Five MCP servers can burn roughly 55,000 tokens](https://www.anthropic.com/engineering/advanced-tool-use) before the agent reads your first message.
 
-**Using Claude's API directly**, mark tools with `defer_loading: true` and add a tool search tool:
+[Junia documented this problem thoroughly](https://www.junia.ai/blog/mcp-context-window-problem): models "get dumber mid-task" as tool metadata displaces actual instructions. The agent starts strong, then goes off the rails because the important context has been pushed into the attention dead zone by tool schemas it doesn't need.
 
-```python
-tools = [
-    {"type": "tool_search_tool_bm25_20251119", "name": "tool_search"},
-    {
-        "name": "create_github_issue",
-        "description": "Create an issue in a GitHub repository",
-        "input_schema": {...},
-        "defer_loading": True
-    },
-]
+Anthropic's own engineering team measured the impact. Their [code execution approach](https://www.anthropic.com/engineering/code-execution-with-mcp) (having agents write code to call tools instead of using tool definitions directly) showed a 47% reduction in total token usage. Claude Code's [ToolSearch feature](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) achieves over 85% reduction in typical multi-server setups by deferring tool schemas and loading them on demand.
+
+The pattern is clear: don't load everything at once. Load what you need, when you need it.
+
+## Skills Are Progressive Disclosure
+
+If you're using Claude Code, you already have progressive disclosure built in. Skills are the mechanism.
+
+Here's how the three-tier pattern works:
+
+```
+Tier 1: DISCOVERY (~100 tokens per skill)
+  Skill name + short description in the tool catalog.
+  Loaded at startup. Cheap.
+
+Tier 2: ACTIVATION (~5,000 tokens)
+  SKILL.md file read on invocation.
+  Instructions, context, workflow steps.
+
+Tier 3: EXECUTION (variable)
+  Reference files read on demand.
+  Code examples, data files, templates.
+  Only loaded if the skill actually needs them.
 ```
 
-The API handles the rest. Anthropic has a [complete Python implementation with embeddings](https://platform.claude.com/cookbooks/tool_use) in their cookbook, and docs for [building custom tool search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#custom-tool-search-implementation) using `tool_reference` blocks if you want your own search logic.
+[Lee Han Chung's deep dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/) into the mechanics is the best breakdown I've seen. The key insight: skills modify both the conversation context and the execution context, but only when invoked.
 
-**Rolling your own** without the built-in tool search: expose three meta-tools instead of all your tools directly: `list_tools` (names and descriptions), `describe_tool` (full schema), `execute_tool` (run it). [Benchmarks show](https://www.speakeasy.com/blog/100x-token-reduction-dynamic-toolsets) this keeps initial token usage flat from 40 to 400 tools, while static loading exceeds 200K context at around 200 tools.
+The [Lazy Skills analysis](https://boliv.substack.com/p/lazy-skills-a-token-efficient-approach) puts hard numbers on this: 97% token savings with no capability loss. At startup, each skill costs roughly 50-100 tokens for its metadata. Loading every skill body upfront would cost hundreds of thousands of tokens.
 
-**Or just keep it simple.** If you have fewer than 10-15 tools, progressive disclosure adds complexity without much benefit. The problem only gets real at scale.
+[HumanLayer learned this the hard way](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents): "We kept stuffing every instruction and tool into the system prompt, and the agent kept getting worse." Skills that activate conditionally through SKILL.md files fixed the problem.
 
-## What this means for you
+This is the same pattern Nielsen described in the 1990s. Show the print button. Hide the margins setting. Load it when someone clicks "Advanced."
 
-If you're using Claude Code or Claude.ai, this is already handled. Your MCP tools are deferred by default. If you're building agents with the API, use `defer_loading: true` for anything beyond your core tools. And if you're building MCP servers, write clear, specific tool descriptions. The model searches by description text, so "manage resources" gets bad results. "Create a GitHub pull request with title, body, base branch, and head branch" gets good ones.
+## Your CLAUDE.md Is Probably Too Long
+
+I see people with 500-line CLAUDE.md files wondering why their agent is slow and confused. That's the equivalent of showing every setting on the first screen.
+
+[HumanLayer keeps their root CLAUDE.md under 60 lines](https://www.humanlayer.dev/blog/writing-a-good-claude-md). [Alex Op recommends under 50](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/). The principle is the same: tell the agent how to find information, not all the information.
+
+Here's the structure that works. Your root CLAUDE.md is a table of contents:
+
+```markdown
+# Project Name
+
+Read `docs/architecture.md` before making structural changes.
+Read `docs/testing.md` before writing tests.
+Read `docs/api.md` before modifying endpoints.
+
+## Quick Reference
+- Language: Elixir
+- Framework: Phoenix 1.8
+- Test command: mix test
+- Deploy: fly deploy
+```
+
+That's it. Maybe 30 lines. The agent reads the architecture doc when it needs to make structural changes. It reads the testing doc when it needs to write tests. It doesn't load everything at startup.
+
+[Alex Op nails the framing](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/): stateless sessions are a design constraint to optimize around, not fight. Every session starts fresh. Instead of trying to front-load everything, build a filesystem structure the agent can navigate.
+
+The three tiers map cleanly:
+
+1. **Universal context** (CLAUDE.md, ~50 lines): project identity, pointers to docs
+2. **Domain-specific docs** (subdirectories): architecture, testing, API conventions
+3. **Specialized agents** (skills, subagents): deep expertise loaded on demand
+
+## Progressive Disclosure Flow
+
+Here's how this looks as an architecture:
+
+```mermaid
+flowchart TD
+    A[Agent Starts] --> B[Load CLAUDE.md<br/>~50 lines, pointers only]
+    B --> C[Load Core Tools<br/>Read, Edit, Bash, Grep, Glob]
+    C --> D{What does the<br/>task require?}
+
+    D -->|Needs MCP tool| E[ToolSearch<br/>~100 tokens query]
+    E --> F[Load specific tool schema<br/>1-8KB, just the one needed]
+
+    D -->|Needs domain knowledge| G[Read subdirectory doc<br/>architecture.md, testing.md]
+
+    D -->|Needs specialized workflow| H[Invoke Skill<br/>~100 tokens metadata]
+    H --> I[Load SKILL.md<br/>~5K tokens instructions]
+    I --> J[Load references on demand<br/>Only what the skill needs]
+
+    D -->|Simple task| K[Execute directly<br/>No extra context needed]
+
+    F --> L[Execute Task]
+    G --> L
+    J --> L
+    K --> L
+
+    style A fill:#f0f0f0,stroke:#333
+    style B fill:#e1f5fe,stroke:#0288d1
+    style C fill:#e1f5fe,stroke:#0288d1
+    style D fill:#fff3e0,stroke:#f57c00
+    style L fill:#e8f5e9,stroke:#388e3c
+```
+
+The key: at every decision point, the agent loads only what it needs for the next step. Nothing is preloaded "just in case."
+
+## Practical Patterns You Can Use Today
+
+Here's what to actually do. These patterns work right now, today, with Claude Code.
+
+| Pattern | How It Works | When to Use It |
+|---------|-------------|----------------|
+| **Minimal CLAUDE.md** | 50 lines max. Pointers to docs, not docs themselves. | Every project |
+| **Subdirectory docs** | `/docs/architecture.md`, `/docs/testing.md`, etc. | Projects with multiple concern areas |
+| **Skills directories** | `.claude/skills/deploy/SKILL.md` with bundled context | Repeatable workflows (deploy, review, migrate) |
+| **ToolSearch** | Defer MCP tool schemas, search on demand | More than 10-15 MCP tools |
+| **Subagent delegation** | [Offload tasks to agents with clean context](https://www.threads.com/@boris_cherny/post/DUMZy85EoFj/) | Parallel workstreams, long conversations |
+| **File reference systems** | [Peek/load/extract](https://lethain.com/agents-large-files/) instead of full ingestion | Large files, codebases with big config files |
+| **Progress files** | [Cross-session state via `progress.md`](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) | Multi-session work, long-running agents |
+| **Index files** | Lightweight AGENTS.md listing what's where | Monorepos, multi-module projects |
+
+[Martin Fowler's team at Thoughtworks](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html) documented these patterns in their context engineering guide. [Anthropic's own context engineering guide](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) says it plainly: find the smallest set of high-signal tokens.
+
+Both [Anthropic](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) and [OpenAI](https://openai.com/index/harness-engineering/) now recommend progressive disclosure as a core harness engineering technique. This isn't one vendor's opinion. It's industry consensus.
+
+## What to Tell Your AI
+
+If you want to implement progressive disclosure in your project today, here's the checklist:
+
+1. **Audit your context.** Run `/context` in Claude Code. How much of your window is tool definitions? If it's over 20%, you have a problem.
+
+2. **Trim your CLAUDE.md.** Cut it to under 50 lines. Replace inline documentation with "Read X before doing Y" pointers.
+
+3. **Organize docs into subdirectories.** Create `/docs/` with one file per concern. Architecture, testing, API conventions, deployment.
+
+4. **Convert repeatable workflows to skills.** If you explain the same process to your agent repeatedly, that's a skill. Package it with a SKILL.md and reference files.
+
+5. **Audit your MCP servers.** Do you actually use all of them every session? Disable the ones you don't. ToolSearch handles the rest, but fewer servers means less noise.
+
+6. **Use subagents for parallel work.** Don't let one long conversation accumulate context from six different tasks. Delegate.
+
+Progressive disclosure is not a new idea. Jakob Nielsen wrote about it before most AI engineers were born. But it turns out to be the single most important pattern for building agents that actually work. The teams that treat context as currency build agents that get smarter as they gain capabilities. The teams that dump everything into the system prompt build agents that get dumber.
+
+Audit your /context. You might be surprised what's eating your tokens.
 
 ---
 
 ## Sources
 
-1. [Tool Search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) - Anthropic
-2. [Tool Search with Embeddings Cookbook](https://platform.claude.com/cookbooks/tool_use) - Anthropic (Python implementation)
-3. [Custom Tool Search Implementation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#custom-tool-search-implementation) - Anthropic
-4. [Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use) - Anthropic Engineering
-5. [Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - Anthropic Engineering
-6. [Context Engineering: Lessons from Building Manus](https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus) - Manus
-7. [Code Mode for MCP](https://blog.cloudflare.com/code-mode-mcp/) - Cloudflare
-8. [The Bloat Tax Breaking AI Agents](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents) - AgentPMT
-9. [100x Token Reduction with Dynamic Toolsets](https://www.speakeasy.com/blog/100x-token-reduction-dynamic-toolsets) - Speakeasy
-10. [Claude Code's Hidden MCP Flag](https://paddo.dev/blog/claude-code-hidden-mcp-flag/) - Paddo.dev
-11. [Claude Code Just Cut MCP Context Bloat by 46.9%](https://medium.com/@joe.njenga/claude-code-just-cut-mcp-context-bloat-by-46-9-51k-tokens-down-to-8-5k-with-new-tool-search-ddf9e905f734) - Medium
+1. [Progressive Disclosure](https://www.nngroup.com/articles/progressive-disclosure/) - Jakob Nielsen, Nielsen Norman Group
+2. [Boris Cherny on context bloat](https://www.threads.com/@boris_cherny/post/DSnyfjUCGZ2/) - Threads
+3. [Boris Cherny on subagents](https://www.threads.com/@boris_cherny/post/DUMZy85EoFj/) - Threads
+4. [Building Claude Code with Boris Cherny](https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny) - The Pragmatic Engineer
+5. [Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - Anthropic Engineering
+6. [Agent Skills Overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) - Anthropic
+7. [Code Execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp) - Anthropic Engineering
+8. [Tool Search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) - Anthropic
+9. [Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) - Anthropic Engineering
+10. [Context Window Optimization](https://www.shaped.ai/blog/context-window-optimization-why-ranking-not-stuffing-is-the-scaling-law-for-agents) - Shaped
+11. [Why AI Agents Need Progressive Disclosure](https://www.honra.io/articles/progressive-disclosure-for-ai-agents) - Honra
+12. [MCP Context Window Problem](https://www.junia.ai/blog/mcp-context-window-problem) - Junia
+13. [Claude Agent Skills Deep Dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/) - Lee Han Chung
+14. [Stop Bloating Your CLAUDE.md](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/) - Alex Op
+15. [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md) - HumanLayer
+16. [Skill Issue: Harness Engineering](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents) - HumanLayer
+17. [Lazy Skills: Token-Efficient Approach](https://boliv.substack.com/p/lazy-skills-a-token-efficient-approach) - Boliv
+18. [Context Engineering for Coding Agents](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html) - Martin Fowler / Birgitta Bockeler
+19. [Building Internal Agents: Progressive Disclosure](https://lethain.com/agents-large-files/) - Will Larson
+20. [Harness Engineering](https://openai.com/index/harness-engineering/) - OpenAI
+21. [Progressive Disclosure](https://thedecisionlab.com/reference-guide/design/progressive-disclosure) - The Decision Lab
+22. [Cognitive Load Limits in LLMs](https://arxiv.org/html/2509.19517v2) - arXiv
+23. [Fix AI Agents: Context Window Attention](https://datagrid.com/blog/optimize-ai-agent-context-windows-attention) - Datagrid
+24. [Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use) - Anthropic Engineering
+25. [The Bloat Tax Breaking AI Agents](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents) - AgentPMT

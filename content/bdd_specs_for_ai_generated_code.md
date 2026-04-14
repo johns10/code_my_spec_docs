@@ -1,24 +1,101 @@
 # BDD Specs for AI-Generated Code
 
-Unit tests verify your code works. BDD specs verify your app does what users actually want.
+BDD was supposed to be dead. Tricentis killed SpecFlow. SmartBear donated Cucumber to the community and walked away. Developers complained for years that Gherkin specs were ceremony for ceremony's sake.
+
+Then AI agents showed up, and that "unnecessary ceremony" turned out to be exactly what they needed.
+
+## Why BDD Is Back
+
+BDD fell out of favor because developers hated writing specs. Dan North created it in 2003. Given/When/Then came from Chris Matts in 2004. The idea was sound: describe what software should do in plain language, automate those descriptions as tests.
+
+The problem was humans. When you already know what you're building, a Gherkin spec feels like translating your thoughts into a format nobody asked for. Most teams skipped the Three Amigos meeting. The developer wrote code, then wrote Gherkin after the fact. The spec became documentation of what was built, not a specification of what should be built.
+
+AI agents changed this. Human developers carry context in their heads. They know what the PM meant even when the ticket is vague. They infer intent from Slack conversations. AI agents don't have any of that. They need structured, unambiguous instructions. They need to know exactly what "done" looks like. As Meir Michanie wrote: "Agents don't need opinions. They need instructions."
+
+That's what a BDD spec is.
+
+Birgitta Bockeler at Thoughtworks made the connection: spec-by-example is "essentially the few-shot prompt technique" applied to software requirements. The arXiv research backs it up: human-refined specifications reduce errors in LLM-generated code by up to 50%.
 
 ## "Tests Pass" != "It Works"
 
-Here's a pattern I see constantly. The AI generates code. It generates tests. The tests pass. You ship it. A user finds a bug that the tests should have caught.
+I see this constantly. AI generates code. Generates tests. Tests pass. You ship. User finds a bug the tests should have caught.
 
-The problem isn't that there are no tests. The problem is that the tests validate the AI's *interpretation* of what you wanted — not what you actually wanted. If the model misunderstands a requirement, it writes code that handles it wrong and tests that confirm the wrong behavior. Self-confirming loop. Tests pass. App is wrong.
+The tests validate the AI's *interpretation* of what you wanted, not what you actually wanted. Model misunderstands a requirement, writes code that handles it wrong and tests that confirm the wrong behavior. Self-confirming loop.
 
 Unit tests answer: "does this function return the expected output?" They don't answer: "does this application do what the user story said it should do?"
 
-That's a different question entirely.
+BDD specs break the loop. The source of truth is human-written acceptance criteria, not the AI's assumptions.
 
-## One Scenario Per Acceptance Criterion
+## Specs Work in Both Directions
 
-Every acceptance criterion on every user story becomes an executable BDD scenario. Not "the AI wrote some tests." Each test traces back to a specific criterion that a human approved.
+Instructions going in. Verification coming out.
 
-A user story says: "When a driver's fuel card is swiped, the system sends an SMS notification within seconds." That story has acceptance criteria: SMS is sent on swipe, SMS contains the transaction amount and location, SMS includes a verification link, the link contains the right tokens, the system tracks delivery status.
+```mermaid
+graph LR
+    A[Write BDD Spec] --> B[Agent Reads Spec]
+    B --> C[Agent Implements Code]
+    C --> D[Run Spec as Test]
+    D -->|Pass| E[Ship It]
+    D -->|Fail| F[Agent Fixes Code]
+    F --> D
+```
 
-Each of those criteria becomes its own spec file:
+Going in, the spec tells the agent what to build:
+
+```gherkin
+Feature: Password Reset
+
+  Scenario: User requests a password reset with a valid email
+    Given a registered user with email "alice@example.com"
+    When the user requests a password reset
+    Then the system sends a reset email to "alice@example.com"
+    And the reset link expires in 24 hours
+
+  Scenario: User requests a password reset with an unregistered email
+    Given no user exists with email "nobody@example.com"
+    When someone requests a password reset for "nobody@example.com"
+    Then the system responds with the same success message
+    And no email is sent
+```
+
+Coming out, that same spec runs as a test. Agent changes something elsewhere, password reset breaks, spec catches it.
+
+## The Vibe Coding Problem
+
+The pattern is predictable. Someone prompts an AI to build an app. Works for the demo. Add features by prompting more. Things break. Prompt to fix. Breaks something else. Two weeks in, nobody knows what the app is supposed to do.
+
+BDD forces the discipline vibe coding skips. Before you tell the agent to build something, you define what "working" means. Concrete scenarios. Specific inputs. Expected outputs. The spec is the contract between you and the agent.
+
+Twenty minutes on a spec saves two hours of prompt iteration.
+
+## What Good Specs Look Like
+
+Write declaratively. What should happen, not how the UI looks. AI agents are especially bad with imperative specs because they couple tests to implementation details that change constantly.
+
+**Bad (imperative):**
+```gherkin
+When I click the "Login" button
+And I type "alice" in the username field
+And I type "secret123" in the password field
+And I click "Submit"
+Then I see the text "Welcome, Alice"
+```
+
+**Good (declarative):**
+```gherkin
+When Alice logs in with valid credentials
+Then she has access to her dashboard
+```
+
+One behavior per scenario. Domain language, not jargon.
+
+## How I Actually Do It
+
+Every acceptance criterion on every user story becomes an executable BDD scenario. Each test traces back to a specific criterion a human approved.
+
+Story: "When a driver's fuel card is swiped, the system sends an SMS notification within seconds." Criteria: SMS sent on swipe, contains transaction amount and location, includes verification link.
+
+Each criterion gets its own spec file:
 
 ```
 test/spex/373_sms_notification_with_pwa_link/
@@ -26,11 +103,7 @@ test/spex/373_sms_notification_with_pwa_link/
   criterion_3706_sms_contains_transaction_amount_location_timestamp_spex.exs
 ```
 
-The directory is named after the story. Each file is named after the criterion. You can look at the file tree and know exactly what's being tested and why.
-
-## How It Works
-
-The specs use a given/when/then DSL that reads like the acceptance criteria they came from:
+Directory named after the story. File named after the criterion. Look at the file tree, know exactly what's tested and why.
 
 ```elixir
 spex "SMS sent within seconds of card swipe" do
@@ -56,24 +129,39 @@ spex "SMS sent within seconds of card swipe" do
 end
 ```
 
-The agent generates these specs from the user stories, not from the code. That's the key difference. The source of truth is what you told the system to build, not what it decided to build.
+Agent generates specs from user stories, not from code. Source of truth is what you told the system to build.
 
-On Fuellytics — a fuel card management platform with fraud detection and Stripe Treasury — this produced 20+ story directories of BDD specs covering everything from SMS notifications to card locking to compliance controls. Over 31,000 lines of test code total.
+On Fuellytics (fuel card management, fraud detection, Stripe Treasury), this produced 20+ story directories. Over 31,000 lines of test code.
 
-## Write Them, Fix Them, Move On
+## What This Catches (and Doesn't)
 
-The `WriteBddSpecs` agent picks the next story with incomplete criterion coverage and generates scenarios for every acceptance criterion. When specs fail, the `FixBddSpecs` agent gets structured feedback — which scenario failed, on which line, against which criterion — and fixes the implementation or the spec.
+BDD specs catch requirement misunderstandings and regressions. They catch the case where the AI built something that technically works but doesn't match the user story.
 
-Specs must pass before the next step in the pipeline. The AI doesn't get to decide its own tests are good enough. The requirement system blocks progress until specs are green.
+They don't catch everything. They test through APIs and interfaces. They don't open a browser. They don't catch integration issues that only surface when features interact in the running app.
 
-This is the automation that replaces manually clicking through the app after every change. Instead of "let me check if the SMS thing still works," the BDD suite checks it on every run against every criterion you defined.
+That's [agentic QA](/pages/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
 
-## What This Catches (and What It Doesn't)
+## What to Tell Your AI
 
-BDD specs catch requirement misunderstandings. They catch the case where the AI built something that technically works but doesn't match what the user story described. They catch regressions — when a change to one feature breaks a criterion on another story.
+1. **Write the spec first.** Three to five Gherkin scenarios. Happy path and critical edge cases.
 
-They don't catch everything. BDD specs test components through their APIs and interfaces. They don't open a browser and click through the full application the way a user would. They don't catch integration issues that only surface when multiple features interact in the running app.
+2. **Put it in the repo.** `.feature` files in `features/` or `specs/`. Agent reads them as context.
 
-That's a different layer of verification — [agentic QA](/pages/agentic-qa), where an AI agent tests the running application end-to-end with browser automation. BDD specs reduce how much QA has to catch. They don't eliminate it.
+3. **Implement against the spec.** Not "build me a login system." Say "implement `features/authentication.feature` and make all scenarios pass."
 
-The combination is what works: BDD specs verify the app does what users want. QA verifies it actually does it in practice.
+4. **Run specs after every change.** Regression safety net. Spec goes red, you know immediately.
+
+5. **Iterate specs, not just code.** Requirements change? Update the spec first. Then tell the agent to make them pass again.
+
+BDD isn't back because someone invented something new. It's back because the thing it always provided finally has a consumer that actually wants it.
+
+---
+
+**Sources:**
+- [Dan North - Introducing BDD](https://dannorth.net/blog/introducing-bdd/) (2006)
+- [Birgitta Bockeler / Thoughtworks - Spec-Driven Development](https://www.thoughtworks.com/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices)
+- [arXiv - Spec-Driven Development: From Code to Contract](https://arxiv.org/html/2602.00180v1)
+- [Meir Michanie - Why BDD Is Essential in the Age of AI Agents](https://medium.com/@meirgotroot/why-bdd-is-essential-in-the-age-of-ai-agents-65027f47f7f6)
+- [Andy Knight / Automation Panda - Is BDD Dying?](https://automationpanda.com/2025/03/06/is-bdd-dying/)
+- [Cucumber - Anti-Patterns](https://cucumber.io/blog/bdd/cucumber-antipatterns-part-one/)
+- [GitHub Blog - Spec-Driven Development with AI](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)

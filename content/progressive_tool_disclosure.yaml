@@ -1,20 +1,20 @@
 # Metadata for progressive_tool_disclosure.md
 
 # Required fields
-slug: progressive-tool-disclosure
+slug: progressive-disclosure
 type: page
-title: "Progressive Tool Disclosure: How Claude Handles Hundreds of MCP Tools"
+title: "What Is Progressive Disclosure and Why It Matters for AI Agents"
 
 # Publishing control
 protected: false
-publish_at: "2026-04-01T00:00:00Z"
+publish_at: "2026-04-08T00:00:00Z"
 expires_at: null
 
 # SEO Metadata
-meta_title: "How Claude Handles Hundreds of MCP Tools"
-meta_description: "Five MCP servers burn 55K tokens before Claude reads your first message. Progressive tool disclosure fixes this. Here's how it works."
-og_title: "Progressive Tool Disclosure: How Claude Handles Hundreds of MCP Tools"
-og_description: "Connect too many MCP servers and your context window fills up with tool definitions. Here's how Claude, Manus, and Cloudflare solve this differently."
+meta_title: "Progressive Disclosure for AI Agents: Context Management"
+meta_description: "Progressive disclosure is a 30-year-old UX principle that solves AI agent context bloat. Practical patterns for skills, CLAUDE.md, and MCP tools."
+og_title: "What Is Progressive Disclosure and Why It Matters for AI Agents"
+og_description: "Your agent gets worse when you give it more. A 30-year-old UX principle explains why, and how to fix it with skills, subdirectory docs, and ToolSearch."
 og_image: null
 
 metadata:
