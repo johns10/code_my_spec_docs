@@ -1,0 +1,33 @@
+# Metadata for architecture_design_guide.md
+
+# Required fields
+slug: architecture-design-guide
+type: documentation
+title: "Architecture Design: Map Your Stories to Components Before the Agent Starts Coding"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Architecture Design for AI Agents: Stories to Components"
+meta_description: "Your AI agent creates files wherever it feels like because you never defined the architecture. Map stories to components in a markdown file and the agent follows the structure."
+og_title: "Architecture Design: Map Your Stories to Components Before the Agent Starts Coding"
+og_description: "Three features in and you have overlapping modules and circular dependencies. Write an architecture document first. The agent reads it."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - architecture
+  - agentic-coding
+  - tutorial
+  - ai-development
+  - user-stories
+  - component-design
