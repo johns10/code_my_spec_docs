@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Architecture Design for AI Agents: Stories to Components"
-meta_description: "Your AI agent creates files wherever it feels like because you never defined the architecture. Map stories to components in a markdown file and the agent follows the structure."
+meta_description: "Map stories to components in a markdown file. The agent reads the architecture document and knows where things go."
 og_title: "Architecture Design: Map Your Stories to Components Before the Agent Starts Coding"
 og_description: "Three features in and you have overlapping modules and circular dependencies. Write an architecture document first. The agent reads it."
 og_image: null

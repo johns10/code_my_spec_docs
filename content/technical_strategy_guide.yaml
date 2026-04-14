@@ -11,8 +11,8 @@ publish_at: "2026-04-08T00:00:00Z"
 expires_at: null
 
 # SEO Metadata
-meta_title: "Technical Strategy for AI Agents: ADRs and Pre-Made Decisions"
-meta_description: "Your AI agent keeps picking the wrong dependencies because you never told it what you'd already decided. Write your stack choices as ADRs before the agent writes code."
+meta_title: "Technical Strategy for AI-Assisted Development"
+meta_description: "Write your technology decisions as ADRs before the agent writes code. The agent researches options, you approve."
 og_title: "Technical Strategy: Decide Your Stack Before the Agent Does It for You"
 og_description: "Most vibe coders let the AI pick their stack. That's how you end up with 15 services and surprise bills. Write your decisions down first."
 og_image: null
