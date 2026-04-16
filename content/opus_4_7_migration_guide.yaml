@@ -1,0 +1,31 @@
+# Metadata for opus_4_7_migration_guide.md
+
+# Required fields
+slug: opus-4-7-migration-guide
+type: blog
+title: "Opus 4.7 Migration Guide: What Breaks, What's Better, What to Watch"
+
+# Publishing control
+protected: false
+publish_at: 2026-04-16T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Claude Opus 4.7 Migration Guide for Developers"
+meta_description: "Practical migration guide for Claude Opus 4.7: three breaking API changes, a stealth 35% cost increase via tokenizer, behavioral shifts, and what's actually better."
+og_title: "Opus 4.7 Migration Guide"
+og_description: "Three breaking API changes, a stealth price increase, and real performance gains. Here's exactly what to change before you upgrade."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - claude
+  - opus
+  - migration
+  - api
+  - agentic-coding

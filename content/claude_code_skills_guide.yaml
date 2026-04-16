@@ -11,8 +11,8 @@ publish_at: 2026-03-19T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "Claude Code Skills Guide - Writing Apps for AI Agents"
-meta_description: "What Claude Code skills are, how they work, and why they matter. Markdown applications that AI agents execute on demand."
+meta_title: "Claude Code Skills Guide (2026) - With Examples"
+meta_description: "How to write Claude Code skills that actually work. Real examples, common mistakes, and how skills differ from prompts, MCP servers, and hooks."
 og_title: "Claude Code Skills: Writing Apps for Agents"
 og_description: "Skills aren't prompts. They're applications written for AI agents. Learn how to create, structure, and compose Claude Code skills with real-world examples."
 og_image: null

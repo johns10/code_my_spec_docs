@@ -11,8 +11,8 @@ publish_at: "2026-04-08T00:00:00Z"
 expires_at: null
 
 # SEO Metadata
-meta_title: "Cursor 3.0: IDE to Agent Switchboard"
-meta_description: "Cursor 3 rebuilt the entire interface around agent management, not code editing. Parallel agent fleets, multi-surface control, and what it means."
+meta_title: "Cursor 3 Review: What Actually Changed (2026)"
+meta_description: "Cursor 3 killed the IDE and replaced it with an agent switchboard. Parallel agents, Composer 2, mobile control. Here's what works and what doesn't."
 og_title: "Cursor 3 Isn't an IDE Anymore. It's an Agent Switchboard."
 og_description: "Cursor ditched the IDE layout for an agent-first paradigm. The primary interface is now managing AI agents, not writing code."
 og_image: null

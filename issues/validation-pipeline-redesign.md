@@ -2,116 +2,233 @@
 
 ## Problem
 
-The stop hook validation pipeline (`Validation.validate_stop`) is blunt. It runs every analyzer (compiler, credo, sobelow, `mix test --stale`, `mix spex --stale`) on every stop, regardless of what the agent was working on. A spec-writing task doesn't need test execution. A code task doesn't need spex. The pipeline doesn't know and doesn't care.
+The stop hook validation has smeared responsibilities. `TaskEvaluator.evaluate_stop` is a god function that syncs files, runs the analysis pipeline, and evaluates tasks. The Pipeline queries changed files internally while the StopController also queries them for logging. `FileSync.sync` (full) is used instead of `sync_changed` (incremental). `mix test --stale` and `mix spex --stale` aren't wired up at all.
 
-This creates two problems:
-1. **Slow** — runs analyzers that aren't relevant to the work
-2. **Noisy** — surfaces failures from unrelated code the agent may have touched
+Two layers need clear responsibilities:
+1. **Validation** — runs analyzers, writes to DB. Does NOT decide pass/fail.
+2. **Task Evaluation** — reads DB, decides pass/fail. Pure read, no side effects.
 
-Meanwhile, the task evaluate functions (`ComponentCode.evaluate/2`, etc.) mostly just read DB state — requirements and persisted Problems. They don't run analyzers themselves. So if the right analyzers didn't run, evaluate reads stale data.
+## Sequence
 
-## Design
+```mermaid
+sequenceDiagram
+    participant CC as Claude Code
+    participant SC as StopController
+    participant V as Validation
+    participant FS as FileSync
+    participant SA as StaticAnalysis
+    participant T as Tests/BddSpecs
+    participant TE as TaskEvaluator
+    participant DB as Problems DB
 
-Two layers with clear responsibilities:
+    CC->>SC: Stop hook fires
+    SC->>SC: Resolve session + task
+    
+    alt Active subagent tasks
+        SC-->>CC: Allow stop (skip everything)
+    end
 
-### Layer 1: Validation (runs analyzers, writes to DB)
+    SC->>V: validate_stop(scope, task)
+    
+    V->>FS: sync_changed(scope, base_dir: cwd)
+    FS-->>V: changed_paths
+    
+    V->>V: Files.changed_since(scope, task.started_at)
+    Note over V: changed_files = File records changed during task
 
-The validation layer decides which analyzers to run based on:
-- **The active task** — each task module declares which analyzers it needs
-- **Generic safety** — compilation always runs (catches breakage from any edit)
+    alt No changed files
+        V-->>SC: {:ok, %{changed_files: []}}
+        Note over V: Skip compile + all analysis
+    end
 
-It runs the analyzers, persists results to the Problems table, and recalculates requirements. It does NOT decide pass/fail.
+    V->>SA: compile(scope)
+    SA->>SA: Compile.execute(cwd: scope.cwd)
+    SA->>DB: Clear compiler problems for changed file paths + persist new
+    
+    alt Compiler errors
+        SA-->>V: {:error, reason}
+        V-->>SC: {:error, reason}
+        SC-->>CC: Block: "Fix compiler errors"
+    end
+    
+    SA-->>V: :ok
 
-### Layer 2: Task Evaluation (reads DB, decides pass/fail)
+    V->>V: resolve_analyzers(task, changed_files)
+    Note over V: 1. Role-derived from @role_analyzers<br/>2. Task module analyzers/0 callback<br/>3. Merge + dedup
 
-Each task's `evaluate/2` reads the freshly-persisted state:
-- Are my requirements satisfied?
-- Do I have blocking problems?
+    V->>SA: run_analyzers(scope, analyzers, changed_files)
+    SA->>SA: Run credo, spec_validation, etc.
+    SA->>DB: Clear problems for changed file paths per source + persist new
+    SA-->>V: :ok
 
-Returns `{:ok, :valid}` or `{:ok, :invalid, feedback}`. Pure read — no side effects.
+    alt :exunit_stale in analyzers
+        V->>T: Tests.execute(["--stale"], project_root: cwd)
+        T->>DB: Clear + persist test failure problems
+        T-->>V: :ok
+    end
 
-This is mostly how evaluate already works. The change is ensuring the validation layer has run the right analyzers before evaluate reads the results.
+    alt :spex_stale in analyzers (task-declared only)
+        V->>T: BddSpecs.execute(["--stale"], cwd: cwd)
+        T->>DB: Clear + persist spex failure problems
+        T-->>V: :ok
+    end
 
-### Stop Hook Flow
+    V-->>SC: {:ok, %{changed_files: [...]}}
 
+    SC->>TE: evaluate_sessions(scope, session_id)
+    Note over TE: Pure DB read — requirements + problems
+    TE-->>SC: {:ok, :valid} or {:error, feedback}
+
+    alt Eval failed
+        SC-->>CC: Block: feedback
+    else Eval passed + continuous mode
+        SC->>SC: maybe_continue_with_next_task
+        SC-->>CC: Block: "call get_next_requirement" or Allow stop
+    end
 ```
-Stop hook arrives
-  │
-  ├─ 1. incremental_sync(scope, base_dir: cwd)
-  │     Syncs file mtimes, recalculates requirements
-  │
-  ├─ 2. Validation.run_for_task(scope, active_task)
-  │     ├─ Always: compile (generic safety)
-  │     ├─ Task-declared: e.g. ComponentCode → [:exunit]
-  │     ├─ Task-declared: e.g. WriteBddSpecs → [:spex]
-  │     ├─ Task-declared: e.g. ComponentSpec → [] (nothing extra)
-  │     └─ Persist Problems, recalculate affected requirements
-  │
-  ├─ 3. TaskEvaluator.evaluate_sessions(scope, session_id)
-  │     └─ task.evaluate(scope, task) — reads DB only
-  │
-  └─ 4. Check next_actionable_project → block or allow
+
+## Analyzer Resolution
+
+Two sources merged:
+
+1. **Task module `analyzers/0`** — what the task explicitly needs (e.g. ComponentCode → `[:exunit]`)
+2. **Role-derived from `@role_analyzers`** — what the changed files demand (e.g. implementation file → `[:credo, :exunit_stale]`)
+
+Both are collected and deduped. The task callback augments role-derived, not replaces.
+
+### `@role_analyzers` map (tuning surface)
+
+```elixir
+@role_analyzers %{
+  implementation: [:credo, :exunit_stale],
+  test: [:credo, :exunit_stale],
+  spec: [:validate_spec],
+  bdd_spec: [:validate_bdd],
+  qa_brief: [:validate_qa],
+  qa_result: [:validate_qa],
+  architecture: [],
+  rule: [],
+  config: [],
+  review: [],
+  integration: [],
+  json: [],
+  task_artifact: []
+}
 ```
 
-### `analyzers/0` Callback on Agent Tasks
+Note: `:spex` is NOT in the role map — BDD spec execution only runs when the task module explicitly declares it via `analyzers/0`. This avoids running slow spex checks on every stop when BDD files happen to change.
 
-New optional callback that each task module can implement:
+### `analyzers/0` callback on task modules
 
 ```elixir
 @callback analyzers() :: [analyzer_key]
-@type analyzer_key :: :compiler | :credo | :sobelow | :exunit | :spex
+@type analyzer_key :: :credo | :sobelow | :exunit_stale | :spex_stale | :validate_spec | :validate_bdd | :validate_qa
 ```
-
-Default returns `[]`. Task modules opt-in:
 
 | Task Module | analyzers() |
 |-------------|-------------|
 | ProjectSetup | `[]` |
 | ComponentSpec | `[]` |
-| ComponentCode | `[:exunit]` |
-| ComponentTest | `[:exunit]` |
-| WriteBddSpecs | `[:spex]` |
-| FixBddSpecs | `[:spex]` |
+| ComponentCode | `[:exunit_stale]` |
+| ComponentTest | `[:exunit_stale]` |
+| WriteBddSpecs | `[:spex_stale]` |
+| FixBddSpecs | `[:spex_stale]` |
 | ContextSpec | `[]` |
 | ContextDesignReview | `[]` |
-| DevelopComponent | `[:exunit]` |
+| DevelopComponent | `[:exunit_stale]` |
 
-Compilation always runs regardless — it's not in the callback, it's in the validation layer's base set. Credo/sobelow could be in the base set too, or opt-in per task.
+Compilation always runs regardless — not in the callback, in the Validation base set.
 
 ### `--stale` for Tests and Spex
 
-`mix test --stale` handles dependency tracking for us — we don't need to figure out which test files are affected by which source changes. Elixir's manifest tracks compile-time and runtime references transitively.
+Both `mix test --stale` and `mix spex --stale` handle dependency tracking — Elixir's manifest tracks compile-time and runtime references transitively. No need to figure out which files are affected.
 
-For spex: `mix spex` doesn't support `--stale` (confirmed in research_stale_tests.md). Options:
-- Pass explicit file paths (current approach)
-- Build our own mtime tracking
-- Contribute `--stale` to sexy_spex
+## Module Responsibilities
 
-### Generic Edits (Agent Goes Off-Rails)
+### `Validation` context (`lib/code_my_spec/validation.ex`)
 
-If the agent edits 5 files outside its task scope, compilation catches any breakage. That's the generic safety net. We don't need to run per-component analysis on every touched file — compilation is transitive and catches everything `--stale` would surface.
+The orchestrator. Owns the stop hook validation flow.
 
-If we want credo/sobelow on generic edits, those go in the base set (always run) rather than task-declared.
+```elixir
+defmodule CodeMySpec.Validation do
+  @spec validate_stop(Scope.t(), task | nil, keyword()) ::
+    {:ok, %{changed_files: [File.t()]}} | {:error, String.t()}
+  def validate_stop(scope, task, opts \\ [])
+end
+```
 
-## What Exists Today
+Steps: sync_changed → changed_files → (no changes? early return) → compile via StaticAnalysis → resolve_analyzers via StaticAnalysis → run_analyzers via StaticAnalysis → run_tests → return.
 
-- `Validation.Pipeline` — runs all analyzers generically, returns Problems
-- `StaticAnalysis.AnalyzerBehaviour` — `run/2`, `available?/1`, `name/0` callbacks
-- `StaticAnalysis.Runner` — executes analyzers by atom key (`:credo`, `:sobelow`)
-- `Problems` context — persists/queries problems by component, source, file
-- `DirtyTracker` — compares `files_changed_at` vs `last_analyzed_at` (can be removed; `sync_changed` handles mtime comparison)
-- Agent task modules — implicit `command/2` + `evaluate/2` contract, no formal behaviour
+### `StaticAnalysis` context (`lib/code_my_spec/static_analysis.ex`)
+
+Public API boundary. Validation calls this, never Pipeline directly.
+
+- `StaticAnalysis.compile(scope)` → `:ok | {:error, reason}`
+- `StaticAnalysis.run_analyzers(scope, analyzers, changed_files)` → `:ok`
+- `StaticAnalysis.resolve_analyzers(task, changed_files)` → `[analyzer_key]`
+
+Delegates to Pipeline for implementation.
+
+### `StaticAnalysis.Pipeline` (`lib/code_my_spec/static_analysis/pipeline.ex`)
+
+Implementation module behind the StaticAnalysis context. Not called directly.
+
+Keeps the `@role_analyzers` map and analyzer resolution logic. Loses the `run_pipeline/3` god function.
+
+### Problem Persistence Scoping
+
+Analyzers clear and persist problems **only for the affected file paths**, not project-wide:
+
+- `clear_problems_for_source(scope, [source: "compiler"], changed_file_paths)` — not `:all`
+- `clear_problems_for_source(scope, [source: "credo"], changed_file_paths)` — scoped
+- `clear_problems_for_source(scope, [source: "exunit"], changed_file_paths)` — scoped
+
+This preserves problems from previous runs on untouched files. Only the files that changed get their problems refreshed.
+
+### `TaskEvaluator` (`lib/code_my_spec/validation/task_evaluator.ex`)
+
+Pure evaluation. Reads DB, decides pass/fail.
+
+- Remove `evaluate_stop/3` and all sync/analysis helpers
+- Keep `evaluate_sessions/2`, `evaluate_session/2`, `evaluate_task/3`
+
+### `StopController` (`lib/code_my_spec_local_web/controllers/hooks/stop_controller.ex`)
+
+Thin HTTP layer. Resolves session/task, calls Validation, calls TaskEvaluator, decides block/allow.
+
+### `SubagentStopController`
+
+Same pattern, passes `agent_id` to resolve the right task.
+
+## What Exists Today (reuse)
+
+- `FileSync.sync_changed/2` — incremental sync (`file_sync.ex:93`)
+- `Tests.execute/2` — runs `mix test` with args (`tests.ex:33`)
+- `BddSpecs.execute/2` — runs `mix spex` (`bdd_specs.ex:189`)
+- `ProblemConverter.from_test_failure/1` — test failures → problems
+- `ProblemConverter.from_compiler/1` — compiler diagnostics → problems
+- `StaticAnalysis.Runner.run/3` — run individual analyzers
+- `Problems.replace_problems_for_files/3` — incremental problem persistence
+- `Problems.clear_problems_for_source/3` — clear by source
+- `Files.changed_since/3` — file records changed since timestamp
 
 ## Implementation Sequence
 
-1. **Add `analyzers/0` callback** to agent task modules (optional, default `[]`)
-2. **Create `Validation.run_for_task/2`** — takes scope + active task, resolves analyzers, runs them, persists results
-3. **Wire into StopController** — insert between `incremental_sync` and `TaskEvaluator`
-4. **Remove DirtyTracker dependency** from the stop hook path
-5. **Update evaluate functions** as needed (most already read DB state correctly)
+1. Refactor `Pipeline` — split `run_pipeline/3` into `compile/1` + `run_analyzers/3`
+2. Rewrite `Validation` context — `validate_stop/3` as orchestrator
+3. Wire `:exunit_stale` and `:spex` as analyzer types
+4. Slim `TaskEvaluator` — remove `evaluate_stop/3` and helpers
+5. Slim `StopController` — call Validation → TaskEvaluator → decide
+6. Slim `SubagentStopController` — same pattern
+7. Update `StaticAnalysis` context delegates
 
-## Open Questions
+## Resolved Questions
 
-- Should credo/sobelow be in the base set (always run) or task-declared?
-- Should we compile only on code-touching tasks, or always? (Probably always — it's cheap and catches unexpected breakage)
-- How to handle spex without `--stale` support?
+- No changed files = skip everything (no compile, no analysis, no tests)
+- Compiler runs when files changed (not task-declared, in Validation base set)
+- Credo runs when implementation/test files change (role-derived, not base set)
+- Both `mix test --stale` and `mix spex --stale` handle dependency tracking
+- Spex only runs when task module declares it — not role-derived from bdd_spec files
+- Task `analyzers/0` augments role-derived analyzers, not replaces
+- Problem persistence is scoped to changed file paths, not project-wide
+- Pipeline is fronted through StaticAnalysis context — never called directly

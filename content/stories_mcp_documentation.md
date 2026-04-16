@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Stories MCP Server (`stories-server`) is CodeMySpec's web-accessible MCP server for managing user stories, acceptance criteria, tags, and guided story sessions. It exposes 12 tools covering story CRUD, structured acceptance criteria management, tagging, and AI-guided interview/review sessions.
+The Stories MCP Server (`stories-server`) is CodeMySpec's web-accessible MCP server for managing user stories, acceptance criteria, tags, and guided story sessions. It exposes 17 tools covering story CRUD, structured acceptance criteria management, tagging, AI-guided interview/review sessions, issue triage, and issue management.
 
 **Endpoint:** `/mcp/stories` (web)
 **Transport:** Streamable HTTP via Hermes MCP
@@ -20,7 +20,7 @@ The Stories Server manages the user story lifecycle:
 
 Stories are stored as database records with PaperTrail versioning for audit trail, enabling queries, status tracking, and traceability to implementing components.
 
-## Available Tools (12)
+## Available Tools (17)
 
 ### Story CRUD (6 tools)
 
@@ -55,11 +55,12 @@ Stories are stored as database records with PaperTrail versioning for audit trai
 **Purpose:** Updates an existing story.
 
 **Parameters:**
-- `id` (integer, required): Story ID
+- `id` (string, required): Story ID (use list_story_titles to find IDs)
 - `title` (string, optional): New title
-- `description` (string, optional): New description
-- `acceptance_criteria` (list of strings, optional): New acceptance criteria
-- `status` (enum, optional): New status (in_progress, completed, dirty)
+- `description` (string, optional): New description in "As a [role], I want [goal] so that [value]" format. Role must be a real human, not a system or technical component.
+- `acceptance_criteria` (list of strings, optional): Replace unverified criteria with these. Verified (locked) criteria are preserved and cannot be modified or deleted.
+- `tags` (list of strings, optional): Replace all tags with these
+- `priority` (integer, optional): Priority order (1 = highest). Lower numbers are higher priority.
 
 **Returns:** Updated story or validation errors
 
@@ -70,19 +71,19 @@ Stories are stored as database records with PaperTrail versioning for audit trai
 
 #### delete_story
 
-**Purpose:** Deletes a story.
+**Purpose:** Deletes a story permanently.
 
 **Parameters:**
-- `id` (integer, required): Story ID
+- `id` (string, required): Story ID (use list_story_titles to find IDs)
 
 **Returns:** Success confirmation or error
 
 #### get_story
 
-**Purpose:** Retrieves a single story by ID.
+**Purpose:** Retrieves a single story by ID with full details including acceptance criteria.
 
 **Parameters:**
-- `id` (integer, required): Story ID
+- `story_id` (string, required): Story ID (use list_story_titles to find IDs)
 
 **Returns:** Story record with all fields, acceptance criteria, tags, and associations
 
@@ -178,6 +179,49 @@ Stories are stored as database records with PaperTrail versioning for audit trai
 
 **Use case:** See what organizational categories exist before tagging or filtering.
 
+### Issues (4 tools)
+
+#### list_issues
+
+**Purpose:** Lists issues with optional filters. Registered from the Issues server module.
+
+**Parameters:** See Issues MCP documentation for full parameter details.
+
+#### get_issue
+
+**Purpose:** Gets full details of a single issue.
+
+**Parameters:** See Issues MCP documentation for full parameter details.
+
+#### accept_issue
+
+**Purpose:** Accepts an incoming issue, optionally linking it to a story.
+
+**Parameters:** See Issues MCP documentation for full parameter details.
+
+#### dismiss_issue
+
+**Purpose:** Dismisses an issue with a reason.
+
+**Parameters:** See Issues MCP documentation for full parameter details.
+
+### Triage (1 tool)
+
+#### triage_issues
+
+**Purpose:** Starts a triage session for incoming external issues. Fetches incoming issues and story titles, then returns a structured prompt guiding through triage decisions.
+
+**Parameters:**
+- `min_severity` (string, optional): Minimum severity to triage: critical, high, medium (default), low, info
+
+**Behavior:**
+- Fetches all incoming issues at or above the specified severity
+- Loads current project stories for context
+- Returns a structured prompt that guides the AI through triaging each issue:
+  - Obvious bug, no story change needed: accept the issue
+  - Requires story/requirements change: update or create a story, then accept with story_id
+  - Not valid: dismiss with reason
+
 ### Sessions (1 tool)
 
 #### start_story_session
@@ -214,9 +258,9 @@ Stories are stored as database records with PaperTrail versioning for audit trai
   description: string              # "As a [role], I want [goal] so that [value]"
   status: :in_progress | :completed | :dirty
   priority: integer | nil
-  component_id: integer | nil      # Foreign key to Component
-  project_id: integer
-  account_id: integer
+  component_id: uuid | nil         # Foreign key to Component
+  project_id: uuid
+  account_id: uuid
   locked_at: datetime | nil        # Collaboration lock timestamp
   lock_expires_at: datetime | nil  # Lock expiration (30 minutes)
   locked_by: integer | nil         # User ID of lock holder
@@ -225,6 +269,8 @@ Stories are stored as database records with PaperTrail versioning for audit trai
   criteria: [Criterion]            # Structured acceptance criteria
   tags: [Tag]                      # Organization tags
   component: Component | nil
+  first_version: Version | nil     # PaperTrail first version
+  current_version: Version | nil   # PaperTrail current version
 
   inserted_at: datetime
   updated_at: datetime
@@ -240,7 +286,12 @@ Acceptance criteria are stored as structured records (not plain string arrays):
   id: integer
   description: string
   verified: boolean         # When true, criterion is locked from edits/deletes
+  verified_at: datetime | nil
   story_id: integer
+  project_id: uuid | nil
+
+  inserted_at: datetime
+  updated_at: datetime
 }
 ```
 
@@ -296,7 +347,7 @@ Stories use PaperTrail for version tracking:
 
 ## Technical Implementation
 
-**Framework:** Hermes MCP Server
+**Framework:** Anubis MCP Server
 **Server name:** `stories-server` v1.0.0
 **Capabilities:** Tools only (no resources or prompts)
 **Location:** `lib/code_my_spec/mcp_servers/stories_server.ex`
@@ -322,6 +373,15 @@ component(CodeMySpec.McpServers.Stories.Tools.TagStories)
 
 # Sessions
 component(CodeMySpec.McpServers.Stories.Tools.StartStorySession)
+
+# Issue tools (for triage workflow)
+component(CodeMySpec.McpServers.Issues.Tools.ListIssues)
+component(CodeMySpec.McpServers.Issues.Tools.GetIssue)
+component(CodeMySpec.McpServers.Issues.Tools.AcceptIssue)
+component(CodeMySpec.McpServers.Issues.Tools.DismissIssue)
+
+# Triage
+component(CodeMySpec.McpServers.Stories.Tools.TriageIssues)
 ```
 
 **Note:** `CreateStories` (batch creation) exists as a module but is currently commented out/disabled in the server registration.

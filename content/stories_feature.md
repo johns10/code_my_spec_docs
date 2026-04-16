@@ -40,7 +40,7 @@ During architecture design, AI automatically loads unsatisfied stories and exist
 
 ## The MCP Server
 
-12 tools organized by function (plus `set_story_component` available in the Components Server):
+17 tools organized by function (plus `set_story_component` available in the Components Server):
 
 | Category | Tools |
 |----------|-------|
@@ -48,6 +48,8 @@ During architecture design, AI automatically loads unsatisfied stories and exist
 | CRUD | `create_story`, `update_story`, `delete_story`, `get_story`, `list_stories`, `list_story_titles` |
 | Criteria | `add_criterion`, `update_criterion`, `delete_criterion` |
 | Organization | `list_project_tags`, `tag_stories` |
+| Issues | `list_issues`, `get_issue`, `accept_issue`, `dismiss_issue` |
+| Triage | `triage_issues` |
 
 All operations scoped to your active account and project.
 
