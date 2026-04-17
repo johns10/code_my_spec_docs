@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Claude Opus 4.7 Migration Guide for Developers"
-meta_description: "Practical migration guide for Claude Opus 4.7: three breaking API changes, a stealth 35% cost increase via tokenizer, behavioral shifts, and what's actually better."
+meta_description: "Claude Opus 4.7 migration guide: three breaking API changes, a stealth 35% cost increase via tokenizer, and what's actually better."
 og_title: "Opus 4.7 Migration Guide"
 og_description: "Three breaking API changes, a stealth price increase, and real performance gains. Here's exactly what to change before you upgrade."
 og_image: null
