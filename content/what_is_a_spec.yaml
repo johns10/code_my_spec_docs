@@ -1,0 +1,28 @@
+# Metadata for what_is_a_spec.md
+
+slug: what-is-a-spec
+type: blog
+title: "What Is a Spec? The Most Overloaded Word in Software"
+
+publish_at: "2026-04-17T00:00:00Z"
+expires_at: null
+
+meta_title: "What Is a Spec? 13 Meanings, One Winner"
+meta_description: "Spec means 13 different things in software. If you're doing spec-driven development with AI, most definitions are wrong. BDD specs are the one that verifies."
+
+og_title: "What Is a Spec? The Most Overloaded Word in Software"
+og_description: "The SDD movement is building on a word nobody has defined. Here are all 13 meanings and which one actually works for AI coding agents."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Spec-Driven Development
+  featured: false
+
+tags:
+  - specifications
+  - bdd
+  - spec-driven-development
+  - ai-coding
+  - harness-engineering
