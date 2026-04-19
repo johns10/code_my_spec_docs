@@ -1,0 +1,13 @@
+slug: why-my-harness-produced-incomplete-apps
+type: blog
+title: "Why My Harness Produced Incomplete Apps (and What I Changed)"
+meta_title: "Why My AI Harness Produced Incomplete Apps"
+meta_description: "I got specs wrong twice before getting them right. The journey from module specs to BDD specs to executable boundary testing for AI-generated code."
+tags:
+  - bdd
+  - harness-engineering
+  - spec-driven-development
+  - build-in-public
+  - opus-4-7
+publish_at: 2026-04-19
+author: John Davenport
