@@ -246,3 +246,60 @@ test problems and persist the current run's failures.
   Then old credo problems for file A are cleared
   And no new problems are inserted
   And the requirement calculator now sees file A as clean
+
+
+# Feature: Stop Response Compactness
+
+The stop hook response goes straight into the agent's context window.
+When the stop is blocked, every byte we emit is a byte the agent can't
+spend on the fix. The response must be compact, scoped to what the
+agent can act on, and hard-capped in size.
+
+## Scenario: Advisory problems are summarized, not enumerated, when the stop is blocked
+
+  Given a stop where credo finds 2 violations on changed files (blocking)
+  And mix test --stale finds 45 failures on untouched components (advisory, block_changed demoted)
+  When the response is formatted
+  Then the blocking section enumerates both credo violations
+  And the advisory section is a single summary line per source: "exunit: 45 failures on untouched scope (advisory)"
+  And no individual advisory problem details appear in the response
+
+## Scenario: Advisory problems do not appear when the stop is allowed
+
+  Given a stop where the only problems are advisory (e.g. block_changed demoted everything)
+  When the response is formatted
+  Then the response is the allow signal (an empty map, %{})
+  And the advisory problems are logged server-side
+  And the agent receives no advisory text in its context
+
+## Scenario: Blocking problem messages are compacted to one line
+
+  Given an exunit failure whose message includes a stacktrace and left/right assertion dump
+  When the problem is rendered into the blocking response
+  Then the line is "file_path:line — first line of message, truncated to ~200 chars"
+  And the stacktrace is stripped
+  And the left/right dump is stripped
+
+## Scenario: Per-source truncation caps problem enumeration
+
+  Given 50 credo violations all on changed files (blocking)
+  When the response is formatted
+  Then the first N per source are listed (current cap: 10)
+  And a footer says "... 40 more credo problems"
+  And the agent is directed to use get_issue for details
+
+## Scenario: Total response size is capped
+
+  Given blocking problems whose formatted length would exceed 4 KB
+  When the response is formatted
+  Then later problems are truncated
+  And a tail footer is appended: "... N more problems omitted (response size limit)"
+  And the response body is under 4 KB
+
+## Scenario: A single blocking problem is never further truncated
+
+  Given one blocking credo violation with a 300-char message
+  When the response is formatted
+  Then the message is truncated to ~200 chars
+  And the single problem fits under the size cap
+  And no overflow footer is appended (nothing was omitted)

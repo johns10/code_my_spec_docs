@@ -47,3 +47,21 @@
 - Freestyle Agent stops with unsatisfied requirements but no problems, stop is allowed
 - Freestyle Agent stops with test failures in the DB, stop is blocked
 - Task Agent stops with unsatisfied requirements, stop is blocked (evaluation runs)
+
+## Rule: Advisory problems in a blocking response are summarized, not enumerated
+
+- Stop blocked by 2 credo violations on changed files AND 45 exunit failures on untouched components — response enumerates the 2 credo violations, summarizes exunit as `exunit: 45 failures on untouched scope (advisory)`
+- Stop blocked by 3 credo violations on changed files with zero advisory problems — response contains only the 3 blocking violations, no advisory section
+- Stop allowed with only advisory problems — response is the allow signal (empty map), advisory problems are logged server-side but not returned
+
+## Rule: Blocking problem messages are compacted
+
+- ExUnit failure with multi-line assertion output (left/right/stacktrace) — renders as one line with just the first line of the message
+- Credo finding with a long suggestion — renders as `file:line — first 200 chars...`
+- Compiler error with a stacktrace — stacktrace is stripped, only the file:line and the diagnostic message remain
+
+## Rule: Stop response body has a hard size ceiling
+
+- 500 sobelow findings, all on changed files — response lists the first N per source, then `... 480 more problems (use get_issue to inspect)`
+- 3 test failures total — response lists all 3, no truncation
+- Blocking problems with very long messages cumulatively exceed 4 KB — later problems get truncated with the overflow footer

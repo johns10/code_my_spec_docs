@@ -42,3 +42,34 @@ analyzer configuration UI exists.
 
 We don't figure out which test files to run. Elixir's manifest tracks
 dependencies transitively. We pass --stale and trust it.
+
+## Rule: Advisory problems in a blocking response are summarized, not enumerated
+
+When the stop is blocked AND there are advisory problems (e.g. test
+failures on untouched components under `block_changed`), the blocking
+response must summarize the advisory set by source + count only — it
+must not enumerate each advisory problem. The agent cannot act on
+advisory problems this turn (they're not in scope), so enumerating
+them wastes the agent's context window.
+
+When there are no blocking problems, advisory problems are not
+included in the response at all — they're logged server-side and
+surface through the UI.
+
+## Rule: Blocking problem messages are compacted
+
+Each blocking problem renders as one line: `file_path:line — first
+line of message, truncated to ~200 chars`. Stacktraces, assertion
+left/right dumps, and multi-line messages get truncated. The agent
+has `get_issue` / UI tools to inspect any single problem in full —
+the stop response exists to tell them *what* to fix, not to reproduce
+the full failure.
+
+## Rule: Stop response body has a hard size ceiling
+
+The total formatted `reason` string is capped (target: 4 KB). If
+blocking problems would exceed the cap, the per-source listing is
+truncated and a footer like `... 12 more problems (use get_issue to
+inspect)` is appended. This prevents runaway output from pathological
+cases (e.g. 500 sobelow findings) from blowing past the agent's
+context budget.
