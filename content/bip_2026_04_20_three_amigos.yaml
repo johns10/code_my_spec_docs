@@ -1,0 +1,13 @@
+slug: bip-2026-04-20-three-amigos
+type: blog
+title: "Build In Public: The Three Amigos Problem"
+meta_title: "BIP: The Three Amigos Problem"
+meta_description: "My harness was too module-spec heavy and too light on product management. Now prototyping a three amigos process for better BDD specs."
+tags:
+  - build-in-public
+  - bdd
+  - three-amigos
+  - spec-driven-development
+  - harness-engineering
+publish_at: 2026-04-20
+author: John Davenport

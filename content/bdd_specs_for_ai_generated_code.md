@@ -133,13 +133,34 @@ Agent generates specs from user stories, not from code. Source of truth is what 
 
 On Fuellytics (fuel card management, fraud detection, Stripe Treasury), this produced 20+ story directories. Over 31,000 lines of test code.
 
+## Specs at the Boundary
+
+The most effective BDD specs exercise the full application at its boundaries with realistic I/O. Not mocked. Not simplified. Realistic recordings of what actually flows across the boundary.
+
+Most applications have two or three interaction surfaces. A web app has HTTP requests from the browser and API calls to external services. A coding harness has the filesystem (agent reads/writes files), the UI (user interacts through the browser), and tool calls (model invokes MCP servers).
+
+The spec provides realistic inputs at one boundary and asserts on realistic outputs at another. Everything in between is the application doing its job.
+
+```gherkin
+Scenario: Card swipe triggers SMS notification
+  Given a Stripe issuing_authorization.created webhook with amount $47.50 at "Shell Station #4421"
+  When the webhook hits /api/webhooks/card-swipe
+  Then the system queues an SMS to the card holder
+  And the SMS contains "$47.50" and "Shell Station #4421"
+  And the SMS contains a verification link with a valid token
+```
+
+This spec exercises the full path: webhook in, SMS out. The fixture is a realistic Stripe payload, not a simplified mock. The assertion checks what actually gets sent, not internal state.
+
+Compare to a unit test that checks "the SMS service was called with the right arguments." That confirms implementation details. The boundary spec confirms the system works end-to-end from the perspective of the external systems it talks to.
+
+The three amigos process (product owner, developer, tester) produces these boundary specs by asking: what comes in? What goes out? What are the edge cases at the boundary? The examples that emerge from that conversation become your fixtures.
+
 ## What This Catches (and Doesn't)
 
-BDD specs catch requirement misunderstandings and regressions. They catch the case where the AI built something that technically works but doesn't match the user story.
+BDD specs catch requirement misunderstandings and regressions. They catch the case where the AI built something that technically works but doesn't match the user story. Boundary specs specifically catch integration failures that unit tests miss.
 
-They don't catch everything. They test through APIs and interfaces. They don't open a browser. They don't catch integration issues that only surface when features interact in the running app.
-
-That's [agentic QA](/pages/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
+They don't catch everything. They don't catch UX issues, performance problems, or edge cases you didn't think to specify. That's [agentic QA](/pages/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
 
 ## What to Tell Your AI
 
