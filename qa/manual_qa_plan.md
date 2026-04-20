@@ -95,6 +95,13 @@ Exercise approach: the HTTP transport goes async for many tools (202 Accepted, r
 - 2026-04-20: **Missing migration** — `task_artifact` in Elixir `File` schema enum but not in Postgres `file_role` enum. Crashed `sync_project` & `get_next_requirement` on any project with task artifacts. Fix: added migration `20260420200000_add_task_artifact_to_file_role.exs`.
 - 2026-04-20: **Issue tools crashed on non-UUID input** — Ecto raised `invalid_text_representation`. Fix: `IssuesRepository.get_issue/2` now casts via `Ecto.UUID.cast/1` and returns nil on `:error`.
 - 2026-04-20: **`read_knowledge` silent fallback** — unknown library name fell through to `:knowledge` default. Fixed with explicit validation.
+- 2026-04-20: **`list_knowledge` + `embed_hexdocs` string-key bug** — tools matched `%{"library" => _}` / `%{"package" => _}` but schema delivers atom keys. Every call silently fell to defaults: library was always `:knowledge`, path was always root, package filter always ignored. Fixed.
+- 2026-04-20: **Embed/search tools crashed in dev runtime** — `embed_docs`, `embed_hexdocs`, `semantic_search`, `search_hexdocs` all raised (missing Ortex module / missing `doc_embeddings` table) when Phoenix dev server handled the call. The pipeline only ships with the CLI binary (Ortex + sqlite_vec are `only: [:dev_cli, :prod_cli]`). Added `CodeMySpec.Embeddings.available?/0` gate; all 4 tools now return a clean "embeddings unavailable in this runtime" message.
+- 2026-04-20: **`embed_docs` docstring was wrong** — said "Ollama + mxbai-embed-large", actual impl is Ortex + all-MiniLM-L6-v2. Fixed.
+- 2026-04-20: **`list_tasks` crashed on valid session_id** — tool read `frame.assigns[:scope]` (nil — correct key is `:current_scope`), so `Sessions.get_by_external_id/2` got nil and raised FunctionClauseError. Fix: thread the scope from the already-validated `validate_local_scope`.
+- 2026-04-20: **Issue lifecycle** — create → get → accept → resolve walks end-to-end green. Dismiss path too. Re-dismissing a dismissed issue returns a clean "cannot transition from dismissed to dismissed" validation error.
+- 2026-04-20: **`start_task` / `evaluate_task` / `assign_task` without session** — all return "No session_id available. The PreToolUse hook should inject it automatically." Good UX, no crashes.
+- 2026-04-20: **`create_issue` validation** — missing title, bad severity, bad scope all return clean `## Validation Error` with field-level detail.
 
 ## Section 4 — Security regression (45 min)
 
