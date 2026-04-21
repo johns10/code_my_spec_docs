@@ -26,7 +26,7 @@ The installer detects your OS and architecture, then downloads the `cms` binary 
 Before your agent calls any MCP tool, you need a valid OAuth token. Open the admin UI in your browser:
 
 ```
-http://localhost:4003/init
+http://localhost:4003/auth
 ```
 
 Click **Sign in**. This runs an OAuth PKCE flow against the CodeMySpec server and stores the token locally.
@@ -55,7 +55,7 @@ The graph computes what to work on next based on prerequisites: specs before tes
 
 ## The local admin UI
 
-Beyond `/init` and `/projects`, the extension's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
+Beyond `/auth` and `/projects`, the extension's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
 
 - Requirements list and graph view
 - Architecture overview and dependency graph
@@ -75,8 +75,8 @@ If you're not using Claude Code and only want to interview stories with AI, add 
 curl http://localhost:4003/health
 ```
 
-**`not_authenticated` error.** Visit `http://localhost:4003/init` and sign in before calling any MCP tool.
+**`not_authenticated` error.** Visit `http://localhost:4003/auth` and sign in before calling any MCP tool.
 
 **macOS blocks the binary.** Allow it under System Preferences &rarr; Security & Privacy.
 
-**Auth token expired.** Revisit `http://localhost:4003/init` and sign in again.
+**Auth token expired.** Revisit `http://localhost:4003/auth` and sign in again.
