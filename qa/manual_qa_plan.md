@@ -60,7 +60,164 @@ Confirmed issue during audit: `cms --help` with a cold Burrito cache dumps 200MB
 
 Audit (2026-04-20) identified 31 tools on the local server. Test each at least once. Priority reflects first-user impact.
 
-Exercise approach: the HTTP transport goes async for many tools (202 Accepted, response on separate SSE stream). Hardest to script. Shortcut — call tool modules directly via `mix run` with a constructed `Frame` + `Scope`. Bypasses transport but exercises tool + domain logic. See `/tmp/mcp_smoke.exs` for the harness used 2026-04-20.
+### How to exercise MCP tools
+
+Two approaches. **Use the direct-Elixir harness for bug hunting** — it's the one that caught everything in the 2026-04-20 pass. HTTP is worth doing once at the end to confirm the transport wraps correctly.
+
+#### Prerequisites
+
+- `mix phx.server` running on `:4003` (the local dev server must be up for hot reload, but you drive tests in a separate shell).
+- A real project row with `local_path` set — test against `metric_flow` or any other linked project. Create one via `init_project` if needed.
+- An auth token seeded into `client_users`. Quickest path:
+  ```elixir
+  # mix run --no-compile -e '<paste below>'
+  {:ok, token_line} = System.cmd("mix", ["run", "--no-compile", "-e", "Mix.Tasks.GetJohns10Token.run([])"])
+  # Grab the bearer token from stdout, then:
+  expires_at = DateTime.utc_now() |> DateTime.add(7200, :second) |> DateTime.truncate(:second)
+  attrs = %{id: 1, email: "johns10@gmail.com", oauth_token: "<paste_token>",
+            oauth_refresh_token: "unused", oauth_expires_at: expires_at}
+  %CodeMySpec.ClientUsers.ClientUser{}
+  |> CodeMySpec.ClientUsers.ClientUser.changeset(attrs)
+  |> CodeMySpec.Repo.insert(on_conflict: {:replace_all_except, [:id]}, conflict_target: [:email])
+  ```
+  Without this, every auth-required tool returns `not_authenticated` and you can't exercise their happy paths.
+
+#### Approach A — Direct Elixir (recommended for bug hunting)
+
+Fastest iteration, best failure modes (real stacktraces, no HTTP async silliness). Bypasses transport but exercises every tool + domain boundary.
+
+Template harness (`/tmp/smoke.exs`):
+
+```elixir
+alias Anubis.Server.Frame
+alias CodeMySpec.{Users, Accounts, Projects, Repo}
+import Ecto.Query
+
+user = Repo.one(from u in Users.User, limit: 1)
+account = Repo.one(from a in Accounts.Account, limit: 1)
+project = Repo.one(from p in Projects.Project,
+                   where: not is_nil(p.local_path),
+                   limit: 1)
+
+scope = %Users.Scope{
+  user: user,
+  active_account: account,
+  active_account_id: account.id,
+  active_project: project,
+  active_project_id: project.id,
+  cwd: project.local_path,
+  environment: CodeMySpec.Environments.Environment.new(:local, project.local_path)
+}
+
+frame = %Frame{assigns: %{current_scope: scope, working_dir: project.local_path}}
+
+run = fn label, mod, params ->
+  IO.puts("\n===== #{label} =====")
+  try do
+    case mod.execute(params, frame) do
+      {:reply, resp, _} ->
+        is_err = Map.get(resp, :isError, false)
+        text = resp.content |> Enum.map_join("\n", fn c -> Map.get(c, "text", "") end)
+        IO.puts("[#{if is_err, do: "ERR", else: "OK"}] #{String.slice(text, 0, 400)}")
+        text
+    end
+  rescue
+    e -> IO.puts("[RAISE] #{Exception.message(e) |> String.slice(0, 400)}"); nil
+  end
+end
+
+# Happy path
+run.("list_stories", CodeMySpec.McpServers.Stories.Tools.ListStories, %{})
+
+# Intentionally broken inputs — these surfaced real bugs in 2026-04-20
+run.("get_issue (bad uuid)", CodeMySpec.McpServers.Issues.Tools.GetIssue,
+  %{issue_id: "not-a-uuid"})
+run.("list_issues (bad status)", CodeMySpec.McpServers.Issues.Tools.ListIssues,
+  %{status: "bogus"})
+run.("list_stories (negative limit)", CodeMySpec.McpServers.Stories.Tools.ListStories,
+  %{limit: -5})
+run.("list_tasks (fake session)", CodeMySpec.McpServers.Tasks.Tools.ListTasks,
+  %{session_id: "ghost-session"})
+run.("read_knowledge (traversal)", CodeMySpec.McpServers.Knowledge.Tools.ReadKnowledge,
+  %{path: "../../../../etc/passwd"})
+run.("read_knowledge (bad library)", CodeMySpec.McpServers.Knowledge.Tools.ReadKnowledge,
+  %{library: "bogus", path: "foo.md"})
+```
+
+Run it:
+
+```bash
+mix run --no-compile /tmp/smoke.exs 2>&1 | grep -E "^===|^\[(OK|ERR|RAISE)"
+```
+
+Always use `--no-compile` — a running `mix phx.server` holds the `_build/` lock and a plain `mix run` will trip over `CodeMySpec.Environments.registry_child_spec/0 is undefined`. The `--no-compile` flag bypasses the re-compile that would otherwise conflict.
+
+Filter `grep -v "^\[debug\]\|^SELECT\|^↳\|^\[90m"` when output is too noisy.
+
+**What to look for:**
+
+- `[RAISE]` = bug. Any Ecto `invalid_text_representation`, `UndefinedFunctionError`, `FunctionClauseError`, or `ArgumentError` from `String.to_existing_atom` means the tool doesn't guard its inputs.
+- `[ERR]` with `inspect(atom)` or `inspect({:tuple, …})` in the user-facing message = sloppy error formatting. Compare to clean cases like "Invalid severity: ...". Allowed values should be shown.
+- `[OK]` with empty content or content containing `nil`, `your_app`, or `[]` placeholders = silent-success bug. `install_agents_md` without `mix.exs` looked like this.
+
+#### Approach B — HTTP (transport smoke)
+
+Use this once per pass to confirm the Anubis transport wraps the tool responses cleanly. Do not use for input-validation hunting — the async 202 model is a pain to script.
+
+Helper scripts live at `/tmp/mcp_call.sh` (init + send) and `/tmp/mcp_tool.sh` (tools/call). Rough recipe:
+
+```bash
+# Init (captures mcp-session-id)
+rm -f /tmp/mcp_session.txt /tmp/mcp_counter.txt
+/tmp/mcp_call.sh initialize \
+  '{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"qa","version":"0.1"}}'
+
+# notifications/initialized (required)
+curl -sS -X POST http://localhost:4003/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "X-Working-Dir: $PWD" \
+  -H "mcp-session-id: $(cat /tmp/mcp_session.txt)" \
+  --data-binary '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+
+# Call a tool
+/tmp/mcp_tool.sh list_projects
+```
+
+Streamable HTTP returns 200 + inline SSE for synchronous tool responses, **or** 202 with empty body + response on a separate long-lived GET stream. Open a persistent GET before POST'ing the tool call to catch async responses:
+
+```bash
+curl -sS -N -X GET http://localhost:4003/mcp \
+  -H "Accept: text/event-stream" \
+  -H "mcp-session-id: $(cat /tmp/mcp_session.txt)" > /tmp/mcp_stream.log &
+```
+
+Then `tail -f /tmp/mcp_stream.log` while you POST calls. Each response arrives as a `data: {...}` line.
+
+#### Edge-case library that keeps paying dividends
+
+Feed every tool that takes an ID at least one of these. Multiple real bugs came out of it.
+
+| Input | What to try | Why |
+|---|---|---|
+| **ID params** | `"not-a-uuid"`, `"00000000-0000-0000-0000-000000000000"`, `999999999` | Catches unguarded `Ecto.UUID.cast`, missing `get_by` → nil handling. |
+| **Enum-ish strings** | `"bogus"`, `"EXTRA-critical"`, `""`, `nil` | Catches `String.to_existing_atom/1` raises (see SessionType fix). |
+| **Pagination** | `limit: -5`, `limit: 0`, `limit: 500`, `offset: 99999` | Catches Postgres `invalid_row_count_in_limit_clause` and unbounded queries. |
+| **Required string fields** | `""`, `" "`, 10KB string | Catches missing length validation. |
+| **Path params** | `"../../../etc/passwd"`, `"/etc/passwd"`, `"does/not/exist.md"` | Catches traversal + silent-not-found bugs. |
+| **Precondition mismatch** | Tool needing `mix.exs` run from `/tmp/empty_dir`; tool needing session run without session_id | Catches silent-success fallbacks. |
+| **State transitions** | `dismiss_issue` on an already-dismissed issue; `start_task` twice for same requirement | Catches missing state-machine guards. |
+
+#### Common gotchas
+
+- **Running server holds `_build/` lock.** `mix run` rebuilds and sometimes fails startup with odd "module not available" errors. Always use `mix run --no-compile`.
+- **`Map.get(params, "key")` is always wrong on tool input.** Anubis delivers atom-keyed params. String-key patterns silently fall through to defaults (see `list_knowledge` + `embed_hexdocs` bugs).
+- **`%Scope{}` in frame must be under `:current_scope`**, not `:scope`. Several tools had this typo and crashed on a valid session_id.
+- **`scope.active_project` may not be loaded** even when `active_project_id` is set. Tools that access `scope.active_project.name` crash if a partial scope slips through. Always resolve via `Validators.validate_local_scope/1`.
+- **Embeddings are CLI-binary-only.** Running `embed_*` / `semantic_search` under `mix phx.server` should return "embeddings unavailable in this runtime", not raise. Regression test: kill the running server, `mix run --no-compile` a call — should still be graceful.
+- **Pagination with no matches** returns an odd "Showing 100000-99999 of 51 total" style message. Not a crash, but a display regression to watch for.
+
+---
 
 ### P0 — First-user flow (must work)
 
