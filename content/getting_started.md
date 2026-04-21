@@ -19,61 +19,29 @@ cd code_my_spec_claude_code_extension
 claude extension add $(pwd)
 ```
 
-The installer detects your OS and architecture, then downloads the `cms` binary from the latest GitHub release.
+The installer detects your OS and architecture, then downloads the `cms` binary from the latest GitHub release. Starting the extension launches a local Phoenix app on port **4003** with an admin UI, the MCP server, the skill suite, and hooks wired into Claude Code's lifecycle.
 
-The extension ships with:
+## 2. Sign in (do this first)
 
-- A local Phoenix server on port **4003** with an admin LiveView UI at `/init` and `/projects/...`
-- The **LocalServer** MCP with tools for requirements, tasks, architecture, stories, issues, knowledge, and hexdocs
-- The skill suite: `codemyspec:design`, `codemyspec:implement`, `codemyspec:qa`, `codemyspec:develop`, and more
-- Hooks wired into Claude Code's `SessionStart`, `PreToolUse`, `PostToolUse`, and `Stop` lifecycle for automatic evaluation
-
-## 2. Sign in
-
-The extension runs a Phoenix app locally. Open the admin UI in your browser:
+Before your agent calls any MCP tool, you need a valid OAuth token. Open the admin UI in your browser:
 
 ```
 http://localhost:4003/init
 ```
 
-Click **Sign in**. This kicks off an OAuth PKCE flow against the CodeMySpec server, opens your default browser to authorize, and persists the token locally.
+Click **Sign in**. This runs an OAuth PKCE flow against the CodeMySpec server and stores the token locally.
 
-Alternatively, inside Claude Code the agent can call the `list_projects` MCP tool. If you're not authenticated, the response will include an auth URL for you to visit.
+You have to do this before running anything else. If the agent calls `list_projects` without a token, it'll get a `not_authenticated` error and stop &mdash; it won't prompt you to sign in.
 
 ## 3. Link your project
 
-Pick a CodeMySpec project and link it to your working directory.
+From the admin UI, go to `http://localhost:4003/projects`, pick a project, and point it at your Phoenix project directory.
 
-**From the admin UI:**
-
-1. Go to `http://localhost:4003/projects`
-2. Pick a project and link it to your Phoenix project's working directory
-
-**Or from inside Claude Code** (with your Phoenix project as the working directory):
-
-1. `list_projects` &mdash; returns projects in your account
-2. `init_project` with the `project_id` &mdash; sets `local_path` to `$PWD` on the project record
+Or inside Claude Code (with your Phoenix project as `$PWD`), tell the agent to link it. The agent calls `list_projects`, then `init_project` with the `project_id`. That sets `local_path` to `$PWD` on the project record.
 
 ## 4. Run the setup loop
 
-Inside Claude Code, ask the agent to run the project setup. It evaluates 12 steps and inlines prompts for any that are incomplete:
-
-| Step | What it does |
-|---|---|
-| `ApplicationInWeb` | Restructure application files into a `_web` boundary |
-| `CodemyspecDeps` | Add required hex dependencies |
-| `Compilers` | Wire the `boundary` compiler |
-| `SpexConfig` | Configure Spex for BDD tests |
-| `TestBoundaries` | Tag test files with their boundaries |
-| `TestSupportNamespace` | Move test support under the app namespace |
-| `ProjectStructure` | Create `.code_my_spec/` directories |
-| `IgnoredPaths` | Add `.gitignore` entries |
-| `AgentsMd` | Install `.code_my_spec/AGENTS.md` |
-| `Rules` | Copy design and test rules per component type |
-| `CredoChecks` | Install the Credo configuration |
-| `ClaudeMd` | Install the managed section in `CLAUDE.md` |
-
-Each step is idempotent. Order doesn't matter &mdash; the setup loop re-evaluates every step each run and only prompts for incomplete ones.
+Inside Claude Code, ask the agent to run project setup. It runs the `ProjectSetup` task, which renders a 12-step checklist and inlines the prompt for every incomplete step. Each step is idempotent; order doesn't matter. Re-run until everything checks off.
 
 ## 5. Drive development with the requirement graph
 
@@ -83,52 +51,31 @@ Once setup passes, the main loop is:
 get_next_requirement → start_task → (do the work) → evaluate_task → repeat
 ```
 
-The graph computes what to work on next based on prerequisites: specs before tests, tests before implementation, implementation before review. Follow the task prompts &mdash; they include file paths, spec templates, and the rules for the component type.
+The graph computes what to work on next based on prerequisites: specs before tests, tests before implementation, implementation before review. Follow the task prompts &mdash; they include file paths, spec templates, and the rules for the component type. `AGENTS.md` (installed during setup) has the full workflow reference.
 
-## Project structure
+## The local admin UI
 
-After setup, your project contains:
+Beyond `/init` and `/projects`, the extension's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
 
-```
-.code_my_spec/
-├── architecture/     Component graph, dependency diagram, decisions
-├── spec/             Module specifications (*.spec.md)
-├── rules/            Design and test rules by component type
-├── status/           Implementation status per component
-├── issues/           incoming/, accepted/, dismissed/
-├── knowledge/        Project-specific research
-├── qa/               QA briefs, results, journey plans
-├── plugin_knowledge/ Framework reference docs (from the extension)
-└── integrations/     Integration specs
-```
+- Requirements list and graph view
+- Architecture overview and dependency graph
+- Stories, issues, sessions, knowledge browser
 
-## What's running locally
-
-Once the extension is loaded, Claude Code starts a Phoenix app on port 4003 with:
-
-- **MCP endpoint** at `http://localhost:4003/mcp` (with `X-Working-Dir` header set by the plugin)
-- **Admin LiveView UI** at `http://localhost:4003/projects/:project_name/...` &mdash; requirements, architecture graph, stories, issues, sessions, knowledge browser
-- **REST API** for hook callbacks, skill dispatching, notifications, and permission requests
-
-Claude Code connects to the MCP server via the extension's `plugin.json`. You usually won't hit the REST API directly &mdash; the skills and hooks do.
+Useful when you want to see what the agent sees without asking it.
 
 ## Just want the Product Manager?
 
-If you're not using Claude Code and only want to interview stories with AI, add the remote Stories MCP server to your MCP client:
-
-```
-https://www.codemyspec.com/mcp/stories
-```
-
-See [Stories MCP server](/pages/stories-mcp-server) for the full tool reference.
+If you're not using Claude Code and only want to interview stories with AI, add the remote Stories MCP server to your MCP client. See [Stories MCP setup](/documentation/stories-mcp-setup).
 
 ## Troubleshooting
 
-**Extension server not running.** Claude Code starts the extension via the `SessionStart` hook. If the server isn't up, check:
+**Extension server not running.** Claude Code starts the extension via the `SessionStart` hook. Check:
 
 ```bash
 curl http://localhost:4003/health
 ```
+
+**`not_authenticated` error.** Visit `http://localhost:4003/init` and sign in before calling any MCP tool.
 
 **macOS blocks the binary.** Allow it under System Preferences &rarr; Security & Privacy.
 
