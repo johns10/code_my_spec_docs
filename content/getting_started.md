@@ -21,30 +21,47 @@ claude extension add $(pwd)
 
 The installer detects your OS and architecture, then downloads the `cms` binary from the latest GitHub release. Starting the extension launches a local Phoenix app on port **4003** with an admin UI, the MCP server, the skill suite, and hooks wired into Claude Code's lifecycle.
 
-## 2. Sign in (do this first)
+## 2. Sign in
 
-Before your agent calls any MCP tool, you need a valid OAuth token. Open the admin UI in your browser:
+Inside Claude Code, with your Phoenix project as `$PWD`:
 
 ```
-http://localhost:4003/auth
+/codemyspec:init auth
 ```
 
-Click **Sign in**. This runs an OAuth PKCE flow against the CodeMySpec server and stores the token locally.
+The skill opens `http://localhost:4003/auth` in your browser. Click **Sign in** — OAuth PKCE runs against the CodeMySpec server and the token is stored locally. You only do this once (tokens refresh automatically).
 
-You have to do this before running anything else. If the agent calls `list_projects` without a token, it'll get a `not_authenticated` error and stop &mdash; it won't prompt you to sign in.
+Without a token, every MCP tool returns `not_authenticated` and stops. If you skip the skill you can hit the URL directly; the result is the same.
 
-## 3. Tell the agent to use `get_next_requirement`
+## 3. Initialize the project
 
-That's it. Open Claude Code with your Phoenix project as `$PWD` and say:
+Still inside Claude Code:
+
+```
+/codemyspec:init
+```
+
+This walks the agent through the 6-step pre-project checklist:
+
+1. **Auth** — confirms you completed step 2
+2. **Elixir** — correct version installed
+3. **Phoenix installer** — `mix phx.new` available
+4. **PostgreSQL** — running and reachable
+5. **Phoenix project** — `mix.exs` and a usable Phoenix app in `$PWD`
+6. **CLI config** — calls `list_projects` + `init_project` to link this directory to a CodeMySpec project
+
+Each step is idempotent; the skill re-evaluates on every call and only inlines prompts for unfinished steps. Re-run until every step checks off. You can watch the same checklist in the browser at `http://localhost:4003/projects/:project_name/init` once the project is linked.
+
+## 4. Tell the agent to use `get_next_requirement`
+
+Now the main development loop takes over. Say:
 
 > Use the `get_next_requirement` tool.
 
 The tool is self-driving. It inspects the project state and returns the right prompt for whatever comes next:
 
-- **No project linked** → it returns the init checklist, which walks the agent through `list_projects` and `init_project`.
-- **Project linked but empty graph** → it tells the agent to call `sync_project`.
-- **Setup incomplete** → it runs the `ProjectSetup` checklist and inlines the prompt for every unfinished step.
-- **Setup done** → it returns the highest-priority unsatisfied requirement. The agent calls `start_task`, does the work, and the stop hook auto-evaluates.
+- **Project-level setup incomplete** → runs the `ProjectSetup` checklist and inlines the prompt for every unfinished step.
+- **Setup done** → returns the highest-priority unsatisfied requirement. The agent calls `start_task`, does the work, and the stop hook auto-evaluates.
 
 Every time the agent looks lost, the answer is the same: `get_next_requirement`. The main development loop is just:
 
