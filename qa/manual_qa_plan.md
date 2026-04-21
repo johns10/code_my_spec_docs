@@ -1,6 +1,6 @@
 # CodeMySpec Manual QA Plan
 
-Living doc. Walk sections in order; skip anything already proven. Add findings inline as you discover them. Last-audited: 2026-04-20.
+Living doc. Walk sections in order; skip anything already proven. Add findings inline as you discover them. Last-audited: 2026-04-20 (confidence pass).
 
 ---
 
@@ -17,12 +17,12 @@ Living doc. Walk sections in order; skip anything already proven. Add findings i
 
 Get the repo into a state that won't embarrass on a first clone.
 
-- [ ] Delete `erl_crash.dump` from repo root (already gitignored but currently on disk).
-- [ ] Delete `diagnostics.jsonl` from repo root if not needed by tooling.
-- [ ] Confirm `vpn.conf` is either needed + safe to publish, or remove + gitignore.
-- [ ] Confirm `braindump.md` should ship — if not, gitignore.
-- [ ] Run `git status --short` — nothing surprising should be dirty.
-- [ ] Resolve skill file casing (see Section 5 finding): pick one of `SKILL.md` / `skill.md` and make all seven skills match.
+- [ ] Delete `erl_crash.dump` from repo root (already gitignored but currently on disk). 2026-04-20 re-check: still present (4MB, Apr 20).
+- [ ] Delete `diagnostics.jsonl` from repo root if not needed by tooling. 2026-04-20 re-check: still present (0 bytes).
+- [x] Confirm `vpn.conf` is either needed + safe to publish, or remove + gitignore. 2026-04-20: gitignored ✓.
+- [ ] Confirm `braindump.md` should ship — if not, gitignore. 2026-04-20: 0-byte file, NOT gitignored. Decide.
+- [x] Run `git status --short` — nothing surprising should be dirty. 2026-04-20: clean aside from `.code_my_spec` submodule marker.
+- [ ] Resolve skill file casing (see Section 5 finding): pick one of `SKILL.md` / `skill.md` and make all seven skills match. 2026-04-20: unchanged — `init/SKILL.md` + `sync/SKILL.md` (uppercase), `design|develop|implement|product|qa/skill.md` (lowercase).
 
 ## Section 1 — Fresh-install happy path (60 min, clean machine or VM)
 
@@ -47,7 +47,7 @@ _(append here as you go)_
 
 Confirmed issue during audit: `cms --help` with a cold Burrito cache dumps 200MB+ of debug unpack logs to stdout, and on second invocation produces no visible help output while the binary hangs consuming CPU.
 
-- [ ] Run `cms --help` on a clean box. Pass: useful help text shown. **Fail as of 2026-04-20** — dumps Burrito debug, no help printed on second run.
+- [!] Run `cms --help` on a clean box. Pass: useful help text shown. **Fail as of 2026-04-20** — dumps Burrito debug, no help printed on second run. **Confirmed 2026-04-20 (confidence pass)**: warm-cache run produces no stdout, pegs CPU at 92%, had to SIGTERM.
 - [ ] Run `cms` with no args. Pass: either prints help or starts the server with a clear banner. Currently: hangs with no output.
 - [ ] Confirm whether `cms` is meant to be invoked by the user directly or only by the extension's hooks. Document the answer in the README.
 - [ ] If there's a server-start path: confirm shutdown signal (ctrl-C) works cleanly and doesn't leave Phoenix ports bound.
@@ -55,6 +55,7 @@ Confirmed issue during audit: `cms --help` with a cold Burrito cache dumps 200MB
 ### Findings
 
 - 2026-04-20: Two `cms` processes left running at ~90% CPU after killing terminal. Investigate Burrito launcher behavior when stdout isn't a tty; likely related to `PatchLauncherStep`.
+- 2026-04-20 (confidence pass): Reproduced — `cms --help` from `/tmp/qa_cms_test` hung silently at 92% CPU until SIGTERM. Also observed two `beam.smp` processes from Apr 12 CLI runs still in state TN (stopped) — burrito launcher leaves orphan beam processes when prematurely killed. Fix upstream in Burrito fork.
 
 ## Section 3 — MCP tools verification matrix
 
@@ -224,8 +225,8 @@ Feed every tool that takes an ID at least one of these. Multiple real bugs came 
 - [x] `list_projects` — 2026-04-20 OK. Auth-required, returns clean "Failed to list projects: not_authenticated" when no token.
 - [ ] `init_project` — with valid project_id, with missing X-Working-Dir header, with duplicate. Only tested "bad uuid" path, which hits auth first.
 - [x] `sync_project` — **FIXED 2026-04-20**: was crashing with `invalid input value for enum file_role: "task_artifact"`. Missing migration added (`20260420200000_add_task_artifact_to_file_role.exs`).
-- [x] `get_next_requirement` — **FIXED 2026-04-20**: same enum issue; fixed by same migration. Returns correct init-checklist when no project linked.
-- [ ] `start_task` / `evaluate_task` / `assign_task` — full lifecycle end-to-end. `start_task` with bogus params returns a clear error ("Must provide requirement_name + entity_type + entity_id, or requirement_name + module_name").
+- [x] `get_next_requirement` — **FIXED 2026-04-20**: same enum issue; fixed by same migration. Returns correct init-checklist when no project linked. Confidence pass: happy path returns MetricFlow.Agencies context prompt; no-auth path returns correct 4/6 init checklist.
+- [ ] `start_task` / `evaluate_task` / `assign_task` — full lifecycle end-to-end. `start_task` with bogus params returns a clear error ("Must provide requirement_name + entity_type + entity_id, or requirement_name + module_name"). Confidence pass: `start_task`/`assign_task` without session return clean message; `evaluate_task` not tested with real session.
 
 ### P1 — Bootstrap installers
 
@@ -258,23 +259,36 @@ Feed every tool that takes an ID at least one of these. Multiple real bugs came 
 - 2026-04-20: **`list_tasks` crashed on valid session_id** — tool read `frame.assigns[:scope]` (nil — correct key is `:current_scope`), so `Sessions.get_by_external_id/2` got nil and raised FunctionClauseError. Fix: thread the scope from the already-validated `validate_local_scope`.
 - 2026-04-20: **Issue lifecycle** — create → get → accept → resolve walks end-to-end green. Dismiss path too. Re-dismissing a dismissed issue returns a clean "cannot transition from dismissed to dismissed" validation error.
 - 2026-04-20: **`start_task` / `evaluate_task` / `assign_task` without session** — all return "No session_id available. The PreToolUse hook should inject it automatically." Good UX, no crashes.
-- 2026-04-20: **`create_issue` validation** — missing title, bad severity, bad scope all return clean `## Validation Error` with field-level detail.
+- 2026-04-20: **`create_issue` validation** — missing title, bad severity, bad scope all return clean `## Validation Error` with field-level detail. Valid scope values: `:app`, `:qa`, `:docs` (default `:app`). Heads-up: the old harness was calling with `scope: "project"` which is not a valid value — expected Validation Error is the correct behavior.
+- 2026-04-20 (confidence pass): **`get_component` with bad UUID raises** — same class of bug already fixed for Issues. `Components.get_component!/2` lets Ecto raise `value "not-a-uuid" cannot be dumped to type :binary_id`, and a valid-format but missing UUID raises `expected at least one result but got none`. Fix: cast via `Ecto.UUID.cast/1` in `ComponentRepository.get_component/2` (or whatever the non-bang version is), return nil on `:error`, and have the tool map nil → "Component not found." Do the same sweep on any other tool calling a `!` repo function with user-supplied IDs. **FIXED 2026-04-21**: `ComponentRepository.get_component/2` now casts via `Ecto.UUID.cast/1` and returns nil on `:error`; `Components.Tools.GetComponent` switched to the non-bang version and maps nil → "Component not found". Verified: both bad-uuid and zero-uuid inputs now return clean errors; real ID still returns the component.
+- 2026-04-20 (confidence pass): **`get_story` with bad id raises** — Story uses integer id; calling `Stories.get_story(scope, "not-a-number")` lets Ecto raise `cannot be cast to type :id`. Fix: guard with `Integer.parse/1` in the tool or in `StoriesRepository.get_story/2` and return nil on non-integer input. Affects any other tool that threads user strings into story id lookups. **FIXED 2026-04-21**: `StoriesRepository.get_story/2` now runs input through a private `cast_story_id/1` helper (accepts int, or `Integer.parse` round-trip), returns nil on non-integer input. Verified: bad/empty/999999 all return "Story not found", 557 still returns the story.
+- 2026-04-20 (confidence pass): **`architecture_health_summary` crashes on JSON encoding** — raises `protocol JSON.Encoder not implemented for CodeMySpec.Components.Component (a struct), the protocol must be explicitly implemented`. The tool serializes component structs directly. Fix: `@derive {JSON.Encoder, only: [...]}` on `Components.Component` (and any other structs the tool embeds), or map to a plain map before encoding. Tool is fully broken until fixed. **FIXED 2026-04-21**: (a) `DependencyRepository.format_cycles/1` now reshapes each cycle to plain maps via new `component_summary/1` — no more raw `%Component{}` struct leak into cycles; (b) `ArchitectureHealthSummary.analyze_dependency_issues/2` no longer stores the raw `{:error, cycles}` tuple in the response (it was a JSON-encode failure mode of its own). Tool now returns a clean JSON blob including cycle paths.
+- 2026-04-20 (confidence pass): **Harness RAISEs that are NOT bugs** (schema validation catches in the real Anubis flow): `show_requirement` and `evaluate_task` fail `no function clause` when executed with empty params directly from Elixir — normal HTTP path rejects missing required fields at schema layer. `list_projects` also fails with `could not find persistent term for endpoint CodeMySpecLocalWeb.Endpoint` when run via `mix run --no-compile` because the endpoint isn't started in that BEAM node. All three are harness artifacts only.
+- 2026-04-20 (confidence pass): **Happy-path verified end-to-end**: `list_projects` (via HTTP), `list_stories`, `list_story_titles`, `list_issues`, `list_components`, `list_knowledge`, `list_requirements`, `validate_dependency_graph`, `analyze_stories`, `show_architecture_overview`, `list_project_tags`, `context_statistics`, `orphaned_contexts`, `get_next_requirement`, `analyze_story_linkage`, `get_component` (real id), `get_story` (real id), `read_knowledge` (valid path), plus full issue lifecycle create→get→accept→resolve→resolve_again (clean transition error).
+- 2026-04-20 (confidence pass): **Embeddings tools** (`embed_docs`, `embed_hexdocs`, `semantic_search`) all return graceful "Embeddings are unavailable in this runtime" under `mix phx.server`. Fix from prior pass holding.
+- 2026-04-20 (confidence pass): **Pagination edge cases** clean — `limit: -5`, `limit: 0`, `offset: 99999`, `limit: 500` all return without crashing. `offset: 99999` still displays "No more stories. Showing 100000-99999 of 53 total." — ugly but not a bug.
+- 2026-04-20 (confidence pass): **Path traversal protection** holds — `read_knowledge` with `../../../../etc/passwd` returns "Invalid path"; with `/etc/passwd` returns "Knowledge entry not found". Both correct.
+- 2026-04-20 (confidence pass): **`install_agents_md` in empty dir** (no mix.exs) now returns a clear error ("mix.exs not found in /tmp/qa_empty_XXXXX. This doesn't look like an Elixir project — CodeMySpec currently only supports Phoenix/Elixir."). `install_claude_md` and `install_rules` succeed in empty dirs (no mix.exs dependency) — intended since CLAUDE.md has no app-specific content.
 
 ## Section 4 — Security regression (45 min)
 
 From security audit 2026-04-20. One critical, rest defense-in-depth.
 
-- [ ] **CRITICAL**: OAuth access + refresh tokens stored plaintext in `oauth_access_tokens` (migration `priv/repo/migrations/20250718022705_create_oauth_tables.exs:32-46`). Plan: migrate column to `CodeMySpec.Encrypted.Binary` before public launch.
-- [ ] HTML injection in `lib/code_my_spec_local_web/controllers/bootstrap_controller.ex:156,177`: `#{error}` interpolated raw into HTML. Localhost-only, but fix anyway with `Phoenix.HTML.html_escape/1`.
-- [ ] Rate limit on `/oauth/token`, `/oauth/register`, `/api/*` — none today (`lib/code_my_spec_web/router.ex:82-88,122-153`). Decide launch posture: add `plug_require_ratelimit` or explicitly accept the risk for first 100 users.
-- [ ] CSP header missing on local web router (`lib/code_my_spec_local_web/router.ex:11`). Low impact, quick win.
-- [ ] `String.to_atom` on untrusted input (`lib/code_my_spec/sessions/session_type.ex:61,73`). Replace with `String.to_existing_atom` or allowlist.
-- [ ] Confirm `envs/.env` is gitignored (confirmed 2026-04-20) and no duplicate `.env*` slipped into other dirs.
-- [ ] Run `mix sobelow --skip --compact` and triage remaining findings.
+- [ ] **CRITICAL**: OAuth access + refresh tokens stored plaintext in `oauth_access_tokens` (migration `priv/repo/migrations/20250718022705_create_oauth_tables.exs:32-46`). Plan: migrate column to `CodeMySpec.Encrypted.Binary` before public launch. 2026-04-20 re-check: still plaintext.
+- [x] HTML injection in `lib/code_my_spec_local_web/controllers/bootstrap_controller.ex:156,177`: `#{error}` interpolated raw into HTML. Localhost-only, but fix anyway with `Phoenix.HTML.html_escape/1`. 2026-04-20 re-check: line 150 still `<p>#{error}</p>`; sobelow still flags it as `XSS.SendResp`. **FIXED 2026-04-21**: `send_error_html/2` now escapes via `Phoenix.HTML.html_escape/1 |> Phoenix.HTML.safe_to_string/1` before interpolating.
+- [ ] Rate limit on `/oauth/token`, `/oauth/register`, `/api/*` — none today (`lib/code_my_spec_web/router.ex:82-88,122-153`). Decide launch posture: add `plug_require_ratelimit` or explicitly accept the risk for first 100 users. 2026-04-20 re-check: confirmed no Hammer/PlugAttack/exrated in deps, no RateLimit plug anywhere in `lib/`.
+- [ ] CSP header missing on local web router (`lib/code_my_spec_local_web/router.ex:11`). Low impact, quick win. 2026-04-20 re-check: browser pipeline calls `put_secure_browser_headers` which ships a default CSP — present but lenient.
+- [x] `String.to_atom` on untrusted input (`lib/code_my_spec/sessions/session_type.ex:61,73`). Replace with `String.to_existing_atom` or allowlist. 2026-04-20 re-check: **already fixed** — both `cast_full_atom/1` (:69) and `load/1` (:77) now use `String.to_existing_atom` with `@valid_types` allowlist.
+- [x] Confirm `envs/.env` is gitignored (confirmed 2026-04-20) and no duplicate `.env*` slipped into other dirs. 2026-04-20 re-check: repo-wide find finds only `envs/.env`.
+- [x] Run `mix sobelow --skip --compact` and triage remaining findings.
 
 ### Findings
 
-_(append here as you go)_
+- 2026-04-20 (confidence pass): sobelow output triaged:
+  - **HIGH**: `Misc.BinToTerm` — `:erlang.binary_to_term(docs_bin)` at `lib/code_my_spec/embeddings/doc_extractor.ex:73`. Input is the `~c"Docs"` chunk of a BEAM file loaded via `:beam_lib.chunks/2`. Risk is bounded (BEAM comes from compiled deps we ship / user installs), but if we ever extract docs from user-supplied binaries this becomes remote code. Flag for follow-up: either restrict to `:safe` or document the trust boundary.
+  - **MEDIUM (new)**: `XSS.SendResp` at `lib/code_my_spec_local_web/plugs/project_scope.ex:30,36`. Interpolates `name` (route param) and `inspect(reason)` into HTML bodies. LocalOnly-gated but should `html_escape`. **FIXED 2026-04-21**: plug now routes all error halts through `text_halt/3` which sets `text/plain` content-type, removing the XSS vector regardless of body contents.
+  - **MEDIUM**: `DOS.StringToAtom` at `lib/code_my_spec/static_analysis/analyzers/spec_alignment.ex:210` — `String.to_atom(func_name)` from parsed spec content. Spec content is user-authored; this is an atom-exhaustion vector. Replace with `String.to_existing_atom` or cap. **FIXED 2026-04-21**: `parse_function_signature/1` now returns the function name as a string; `build_impl_function_map/1` converts impl atoms to strings via `Atom.to_string/1` so the comparison still works both ways. No atom creation from untrusted input.
+  - **LOW**: Directory-traversal findings in `agent_tasks/write_bdd_specs.ex`, `bdd_specs.ex`, `embeddings/*`, `mcp_servers/bootstrap/tools/install_*`, `environments/*`, etc. Most are intended — tools write files relative to the user's local project root. Revisit only if a tool takes an untrusted path from the MCP caller without a validator.
 
 ## Section 5 — Extension surface (30 min)
 
@@ -291,30 +305,36 @@ The `CodeMySpec/` directory is what Claude Code loads. First-user breakage lives
 ### Findings
 
 - 2026-04-20: Skill casing inconsistency found. Risk unknown until tested on a fresh Claude Code install.
+- 2026-04-20 (confidence pass): Re-confirmed casing split — `init/SKILL.md`, `sync/SKILL.md` (uppercase, Apr 15 mtime), vs `design|develop|implement|product|qa/skill.md` (lowercase, Apr 14 mtime). 7 skill dirs total.
+- 2026-04-20 (confidence pass): `plugin.json` `stories` endpoint is `https://dev.codemyspec.com/mcp/stories` — **decide before public launch**: point at prod or keep dev while private.
+- 2026-04-20 (confidence pass): All eight plugin bin scripts exist and are +x: `agent-task`, `approve`, `auto-update`, `bootstrap-auth-start`, `bootstrap-auth-status`, `bootstrap-projects`, `hook`, `skill`. `skill` with no args returns a clean JSON usage error and exits 0.
+- 2026-04-20 (confidence pass): Agent files (`qa.md`, `researcher.md`, `bdd-spec-writer.md`, `code-writer.md`, `spec-writer.md`, `test-writer.md`) reference only two MCP tools — `mcp__plugin_codemyspec_local__start_task` and `mcp__plugin_codemyspec_local__evaluate_task`. Both exist. No dangling refs.
 
 ## Section 6 — Tests (owned by parallel agent)
 
 Tests: 3025 total, 49 failures (1.6%). Failures look like surface drift (return-tuple mismatches, slug-format mismatches). Not a ship-blocker.
 
-- [ ] Get to green. Parallel agent handling.
-- [ ] Run `mix credo --strict` and note any new regressions.
-- [ ] Run `mix boundary` — no violations.
-- [ ] Run `mix format --check-formatted`.
+- [x] Get to green. Parallel agent handling. **2026-04-20 confidence pass: 1 doctest + 3011 tests, 0 failures, 18 excluded, 62s runtime.**
+- [x] Run `mix credo --strict` and note any new regressions. 2026-04-20: 53 warnings, 147 refactoring, 235 readability, 102 software design — 537 suggestions total. Not a gate.
+- [!] Run `mix boundary` — no violations. 2026-04-20: `mix boundary` task doesn't exist; `mix boundary.spec` **crashes** with a `FunctionClauseError` deep inside `boundary 0.10.4 Boundary.Mix.View.build/0`. Library incompat with current deps. Needs investigation — either upgrade boundary or pin back. Not a ship-blocker but hides boundary regressions. 2026-04-21 dig: the real crash is `ArgumentError: 1st argument: the table identifier does not refer to an existing ETS table` at `Boundary.Mix.CompilerState.ets_keys/1`. Boundary's compiler hook populates an ETS table during compilation that gets torn down before `boundary.spec` runs — an upstream lifecycle bug, not something we can fix in-project. Options: wait for a newer boundary release compatible with Elixir 1.19/OTP 28, or fork and guard the `:ets.first/1` call.
+- [!] Run `mix format --check-formatted`. 2026-04-20: at least one test file unformatted — a `write_file(...)` call needs to wrap onto multiple lines. Easy fix with `mix format`.
 
 ### Findings
 
 - 2026-04-20: Three known categories — `TechnicalStrategyTest` feedback text expectations, `QaAppTest` slug format (`login-form-broken` vs `login_form_broken`), agent-task evaluator return shape drift.
+- 2026-04-20 (confidence pass): All three categories landed green. 3011/3011 tests pass. `--warnings-as-errors` still aborts the run because several compile-time warnings remain in lib/test code; triage warnings before wiring `--warnings-as-errors` into CI.
+- 2026-04-21: After the six fixes below, re-ran full suite — **3011/3011 still green**. One regression was caught during the re-run: `SpecAlignmentTest` "detects extra test assertions" failed because `find_extra_test_assertions/4` had a `is_atom(name)` guard that no longer matched after switching function names to strings. Guard changed to `is_binary(name)` and tests pass.
 
 ## Section 7 — Post-ship monitoring (set up before launch)
 
-- [ ] Error reporting wired (Sentry/Honeybadger/Logflare?). Confirm prod config.
-- [ ] Oban job failure alerts.
+- [ ] Error reporting wired (Sentry/Honeybadger/Logflare?). Confirm prod config. 2026-04-20: **nothing wired** — no Sentry/Honeybadger/Logflare/AppSignal/Rollbar references anywhere in `config/*.exs` or `mix.exs`.
+- [ ] Oban job failure alerts. 2026-04-20: no `Oban` config in `config/*.exs` — either Oban is unused or it's configured dynamically. Confirm and wire alerts either way.
 - [ ] Basic uptime check on `https://dev.codemyspec.com` (or wherever prod is).
-- [ ] Analytics on MCP tool calls — which tools get used, which never do.
+- [ ] Analytics on MCP tool calls — which tools get used, which never do. 2026-04-20: no telemetry/analytics keys in config.
 
 ### Findings
 
-_(append here as you go)_
+- 2026-04-20 (confidence pass): Section 7 is entirely unstarted. Before public launch, pick at least one error sink (Sentry is lowest-friction in Phoenix) and wire a basic health probe on the prod endpoint. Without it, the first production crash will be invisible.
 
 ---
 
