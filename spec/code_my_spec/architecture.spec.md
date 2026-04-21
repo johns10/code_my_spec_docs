@@ -1,11 +1,10 @@
 # CodeMySpec.Architecture
 
-A coordination context that generates and maintains text-based architectural views for AI agent consumption. Provides projectors that create documentation artifacts (mermaid diagrams, component hierarchies, namespace trees) written to the repository and synchronized with current project state during full syncs.
+A coordination context that generates and maintains text-based architectural views for AI agent consumption. Provides projectors that create documentation artifacts (component hierarchies, namespace trees) written to the repository and synchronized with current project state during full syncs.
 
 ## Delegates
 
 - generate_overview/1: CodeMySpec.Architecture.OverviewProjector.project/1
-- generate_dependency_graph/1: CodeMySpec.Architecture.MermaidProjector.project/1
 - generate_namespace_hierarchy/1: CodeMySpec.Architecture.NamespaceProjector.project/1
 
 ## Functions
@@ -140,17 +139,3 @@ Generates a detailed markdown view of a component and its full dependency tree.
 
 - CodeMySpec.Components
 - CodeMySpec.Users.Scope
-
-## Components
-
-### CodeMySpec.Architecture.OverviewProjector
-
-Generates comprehensive markdown overviews of all components organized by context. Lists components with types, descriptions, and dependencies in a format optimized for AI agent consumption during design sessions.
-
-### CodeMySpec.Architecture.MermaidProjector
-
-Generates a simple Mermaid flowchart showing contexts and their dependency relationships.
-
-### CodeMySpec.Architecture.NamespaceProjector
-
-Generates hierarchical tree views of components organized by Elixir module namespace. Produces indented text trees showing the structural organization of the codebase by module path.
