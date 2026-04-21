@@ -33,19 +33,20 @@ Click **Sign in**. This runs an OAuth PKCE flow against the CodeMySpec server an
 
 You have to do this before running anything else. If the agent calls `list_projects` without a token, it'll get a `not_authenticated` error and stop &mdash; it won't prompt you to sign in.
 
-## 3. Link your project
+## 3. Tell the agent to use `get_next_requirement`
 
-From the admin UI, go to `http://localhost:4003/projects`, pick a project, and point it at your Phoenix project directory.
+That's it. Open Claude Code with your Phoenix project as `$PWD` and say:
 
-Or inside Claude Code (with your Phoenix project as `$PWD`), tell the agent to link it. The agent calls `list_projects`, then `init_project` with the `project_id`. That sets `local_path` to `$PWD` on the project record.
+> Use the `get_next_requirement` tool.
 
-## 4. Run the setup loop
+The tool is self-driving. It inspects the project state and returns the right prompt for whatever comes next:
 
-Inside Claude Code, ask the agent to run project setup. It runs the `ProjectSetup` task, which renders a 12-step checklist and inlines the prompt for every incomplete step. Each step is idempotent; order doesn't matter. Re-run until everything checks off.
+- **No project linked** → it returns the init checklist, which walks the agent through `list_projects` and `init_project`.
+- **Project linked but empty graph** → it tells the agent to call `sync_project`.
+- **Setup incomplete** → it runs the `ProjectSetup` checklist and inlines the prompt for every unfinished step.
+- **Setup done** → it returns the highest-priority unsatisfied requirement. The agent calls `start_task`, does the work, and the stop hook auto-evaluates.
 
-## 5. Drive development with the requirement graph
-
-Once setup passes, the main loop is:
+Every time the agent looks lost, the answer is the same: `get_next_requirement`. The main development loop is just:
 
 ```
 get_next_requirement → start_task → (do the work) → evaluate_task → repeat
