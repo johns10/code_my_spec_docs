@@ -48,35 +48,14 @@ claude mcp remove codemyspec-stories
 
 ## Claude Desktop
 
-**Option A: Settings UI** (Claude Desktop 0.11+)
+Point and click. No config file needed.
 
-1. Open Claude Desktop &rarr; Settings &rarr; Developer
-2. Click **Edit Config** (or **Add MCP Server** if available)
-3. Add the server URL: `https://www.codemyspec.com/mcp/stories`
-4. Restart Claude Desktop
+1. Open Claude Desktop &rarr; **Settings** &rarr; **Customize**
+2. Click **Add Connector**
+3. Paste the URL: `https://www.codemyspec.com/mcp/stories`
+4. Sign in when the OAuth window opens
 
-**Option B: Config file**
-
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
-
-```json
-{
-  "mcpServers": {
-    "codemyspec-stories": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote@latest",
-        "https://www.codemyspec.com/mcp/stories"
-      ]
-    }
-  }
-}
-```
-
-This uses the `mcp-remote` bridge to proxy stdio &harr; HTTP and handle OAuth. Requires Node.js installed.
-
-Restart Claude Desktop. You should see **codemyspec-stories** in the MCP indicator (the hammer icon) at the bottom of the chat input.
+The connector shows up in the chat input immediately. No restart required.
 
 ## Cursor
 
@@ -93,10 +72,6 @@ Edit `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per project):
 ```
 
 Restart Cursor. Open Settings &rarr; MCP to confirm the server is connected.
-
-## Other clients
-
-Any MCP client that supports remote HTTP servers with OAuth will work. If your client only supports stdio, wrap the URL with `mcp-remote` as shown in the Claude Desktop config-file option above.
 
 ## First use
 
