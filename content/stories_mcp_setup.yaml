@@ -1,0 +1,35 @@
+# Metadata for stories_mcp_setup.md
+# Setup guide for connecting the remote Stories MCP server to Claude Code,
+# Claude Desktop, Cursor, and other MCP-capable clients.
+
+# Required fields
+slug: stories-mcp-setup
+type: page  # Options: blog, page, landing
+title: Add the Stories MCP Server - Setup Guide
+
+# Publishing control
+protected: false
+publish_at: "2026-04-20T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: Stories MCP Setup - Claude Code, Desktop, Cursor
+meta_description: Step-by-step guide to connecting CodeMySpec's remote Stories MCP server to Claude Code, Claude Desktop, Cursor, and other MCP-capable AI clients via OAuth.
+og_title: Add the Stories MCP Server - Setup Guide
+og_description: Connect your AI client to CodeMySpec's Product Manager MCP server. Claude Code, Claude Desktop, and Cursor instructions included.
+og_image: null
+
+metadata:
+  template: tutorial
+  category: Getting Started
+
+# Tags
+tags:
+  - mcp
+  - model-context-protocol
+  - user-stories
+  - claude-code
+  - claude-desktop
+  - cursor
+  - setup
+  - tutorial
