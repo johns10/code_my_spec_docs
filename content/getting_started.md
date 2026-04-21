@@ -58,6 +58,7 @@ The graph computes what to work on next based on prerequisites: specs before tes
 
 Beyond `/auth` and `/projects`, the extension's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
 
+- **Init checklist** at `/projects/:project_name/init` — the 6-step pre-setup checklist (Auth, Elixir, Phoenix installer, PostgreSQL, Phoenix project, CLI config) with per-step instructions. Same data `get_next_requirement` walks the agent through, rendered for humans.
 - Requirements list and graph view
 - Architecture overview and dependency graph
 - Stories, issues, sessions, knowledge browser
