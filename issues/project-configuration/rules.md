@@ -28,25 +28,28 @@ These replace the bundled require_specs and require_unit_tests on Project.
 Compiler errors always block (non-negotiable). Compiler warnings block by
 default but the engineer can turn that off.
 
-## Rule: Expensive analyzers are configurable with four modes
+## Rule: Analyzers and validators are configurable with four modes
 
-Each configurable analyzer supports: off / block all / block changed / don't block.
+Each configurable source supports: off / block all / block changed / don't block.
 
-| Analyzer          | Default       |
+| Source            | Default       |
 |-------------------|---------------|
 | compile_warnings  | block         |
 | credo             | block changed |
 | exunit            | block all     |
 | spex              | off           |
+| spec_validation   | block changed |
+| qa_validation     | block changed |
+
+spec_validation covers document schema validation and H1 title matching on
+spec/review files. qa_validation covers qa brief/result schema checks. Both
+are cheap (millisecond cost) but still configurable — their problems persist
+across turns, so "always block on every matching problem in the DB" punishes
+the engineer for prior stubs and unrelated work. `block_changed` scopes the
+block to files the agent actually touched this turn.
 
 ## Rule: ProjectConfiguration is created with defaults on first use
 
 When config is read for a project that doesn't have a ProjectConfiguration
 record yet, one is created automatically with all defaults. The engineer
 never has to visit the config screen to get the standard behavior.
-
-## Rule: Cheap static validations always run and block on changed files
-
-Document schema validation, H1 title matching, spec dependency checks —
-millisecond-cost checks on spec/review files. Always on, always block changed.
-Not in the config UI. Not configurable.

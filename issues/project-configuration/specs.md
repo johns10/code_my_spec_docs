@@ -49,6 +49,8 @@ Scenario: Default configuration is created on first use
   And credo is set to block_changed
   And exunit is set to block_all
   And spex is set to off
+  And spec_validation is set to block_changed
+  And qa_validation is set to block_changed
 
 Scenario: Engineer turns off credo during a large refactor
   Given a project with credo set to block_changed
@@ -85,22 +87,53 @@ Scenario: Engineer turns off compile warning blocking
 
 ---
 
-### Cheap Validations (Not Configurable)
+### Spec and QA Validation Configuration
 
-Scenario: Spec file with missing required section blocks
-  Given the agent modified a spec file during the task
-  And the spec file is missing the required Dependencies section
+Scenario: Default block_changed scopes spec validation to touched files
+  Given a project with spec_validation set to block_changed
+  And an existing spec file in the DB with a persisted validation error
+  And the agent did not modify that spec file
+  When the stop hook fires
+  Then the persisted spec_validation problem is not blocking
+  And the stop is allowed
+
+Scenario: Spec file with missing required section blocks when changed
+  Given a project with spec_validation set to block_changed
+  And the agent modified a spec file during the task
+  And the spec file is missing a required section
   When the stop hook fires
   Then spec validation runs on the changed file
   And the stop is blocked with the validation error
-  And this check is not affected by any configuration setting
 
-Scenario: Spec validation only runs on changed spec files
-  Given an existing spec file with validation errors
-  And the agent did not modify that file
+Scenario: Engineer sets spec_validation to block_all
+  Given a project with spec_validation set to block_all
+  And an existing spec file in the DB with a persisted validation error
+  And the agent did not modify that spec file
   When the stop hook fires
-  Then spec validation does not run on the untouched file
-  And the agent is not blocked by its errors
+  Then the persisted spec_validation problem blocks the stop
+
+Scenario: Engineer sets spec_validation to dont_block
+  Given a project with spec_validation set to dont_block
+  When the agent modifies a spec file with a missing required section
+  And the stop hook fires
+  Then the spec_validation problem is persisted
+  But the stop is allowed regardless
+
+Scenario: Engineer sets spec_validation to off
+  Given a project with spec_validation set to off
+  When the agent modifies a spec file with a missing required section
+  And the stop hook fires
+  Then spec validation does not run on the changed file
+  And no spec_validation problem is persisted
+  And the stop is allowed
+
+Scenario: qa_validation follows the same four modes
+  Given a project with qa_validation set to block_changed
+  And an existing qa brief in the DB with a persisted validation error
+  And the agent did not modify that qa brief
+  When the stop hook fires
+  Then the persisted qa_validation problem is not blocking
+  And the stop is allowed
 
 ---
 

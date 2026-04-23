@@ -20,12 +20,16 @@
 - Engineer turns off compile_warnings blocking, agent is allowed to stop with warnings
 - Agent introduces a syntax error, blocked regardless of warning setting
 
-## Rule: Expensive analyzers are configurable with four modes
+## Rule: Analyzers and validators are configurable with four modes
 
 - Engineer sets credo to off, credo does not run at all during stop hook
 - Engineer sets exunit to block changed, test failures on untouched components don't block
 - Engineer sets exunit to don't block, test failures are persisted but agent is allowed to stop
 - Engineer sets spex to block all, spex runs on every stop and any failure blocks
+- Engineer leaves spec_validation at default block_changed, stub spec files in the DB don't block turns that didn't touch them
+- Engineer sets spec_validation to block_all, stub spec files in the DB block every turn until fixed
+- Engineer sets spec_validation to off while in rapid prototyping, no spec validation runs
+- Engineer sets qa_validation to dont_block, broken QA briefs are persisted but don't block the stop
 - Engineer resets everything to defaults after a refactor is done
 
 ## Rule: ProjectConfiguration is created with defaults on first use
@@ -33,8 +37,3 @@
 - First stop hook on a new project, ProjectConfiguration is created with defaults, pipeline works normally
 - Engineer has never visited the config screen, everything behaves as if they set the defaults manually
 
-## Rule: Cheap static validations always run and block on changed files
-
-- Agent modifies a spec file with a missing required section, blocked
-- Agent modifies an implementation file, no spec validation runs (wrong role)
-- Spec validation finds issues on an untouched file, agent is not blocked
