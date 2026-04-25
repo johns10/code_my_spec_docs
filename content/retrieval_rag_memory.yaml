@@ -2,7 +2,7 @@ slug: retrieval-rag-memory
 type: blog
 title: "Retrieval and RAG: The Category Everyone Reaches for First"
 meta_title: "RAG Memory for AI Coding: Why Most Don't Need It"
-meta_description: "RAG is over-applied to coding and the right tool for huge unstructured corpora. Why retrieval breaks for most coding work, and the failure modes nobody mentions: silently wrong retrieval, semantic distance is not relevance, and context rot."
+meta_description: "RAG is over-applied to coding. Why retrieval breaks for most coding work, and the failure modes nobody mentions: wrong retrieval, context rot."
 tags:
   - agent-memory
   - rag

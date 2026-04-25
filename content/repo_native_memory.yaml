@@ -2,7 +2,7 @@ slug: repo-native-memory
 type: blog
 title: "Repo-Native Memory: The Boring Answer That Wins"
 meta_title: "Repo-Native Memory: The Boring Answer That Wins"
-meta_description: "Markdown files in your repo beat MemPalace, mem0, and every dedicated memory system I've tried for AI coding. Cline Memory Bank, Doug's journal, and Claude Code's own auto-memory all converge on the same pattern."
+meta_description: "Markdown files in your repo beat MemPalace, mem0, and every dedicated memory system. Cline Memory Bank, Doug's journal, Claude Code auto-memory."
 tags:
   - agent-memory
   - repo-native

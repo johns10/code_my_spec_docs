@@ -2,7 +2,7 @@ slug: transcript-derived-memory
 type: blog
 title: "Transcript-Derived Memory: The Category Nobody's Writing About"
 meta_title: "Transcript-Derived Memory for AI Coding"
-meta_description: "Process Claude Code session transcripts after the fact to extract durable memory. session-kit, claude-mem, claude-memory-compiler, and Anthropic's own autoDream. The under-discussed third leg of agent memory."
+meta_description: "Process Claude Code transcripts into durable memory. session-kit, claude-mem, claude-memory-compiler, autoDream. The under-discussed third leg."
 tags:
   - agent-memory
   - transcript-derived

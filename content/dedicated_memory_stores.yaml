@@ -2,7 +2,7 @@ slug: dedicated-memory-stores
 type: blog
 title: "Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs"
 meta_title: "Dedicated Memory Stores for AI Agents: When to Use Them"
-meta_description: "MemPalace, mem0, Letta, and vendor memory features all promise the agent will finally remember. The contamination, opacity, and lock-in failure modes outweigh the convenience for coding work. Here's what actually breaks."
+meta_description: "MemPalace, mem0, Letta, vendor memory features. Why contamination, opacity, and lock-in outweigh the convenience for coding work. What actually breaks."
 tags:
   - agent-memory
   - mempalace
