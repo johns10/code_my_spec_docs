@@ -2,20 +2,20 @@
 
 ## Overview
 
-Aider is the OG open-source CLI coding agent. Created by Paul Gauthier, it predates the current wave of vendor CLI agents and has built the deepest git integration of any tool in the space. Every edit is auto-committed with a descriptive message, and `/undo` reverts cleanly.
+Aider is the OG open-source CLI coding agent, and it still gets the fundamentals right in ways the vendor CLIs don't. Paul Gauthier started it before the wave, and the git integration is the deepest in the space -- every edit auto-committed with a real message, clean `/undo`, committer tagged "(aider)" so you can audit what the model touched.
 
-The key selling point is model flexibility -- Aider works with 50+ models from any provider, including local models via Ollama. This makes it the tool of choice for developers who want to switch between models or avoid vendor lock-in. At ~$60/mo heavy usage (vs $200/mo for Claude Code), it's significantly cheaper for equivalent work.
+The real draw is model freedom. 50+ models from any provider, local models through Ollama, no vendor telling you which one you're allowed to use this week. If you care about switching models for the task or running air-gapped, this is the tool. And at ~$60/mo heavy usage versus $200/mo for Claude Code, it's a lot cheaper for equivalent work.
 
-Aider's Polyglot benchmark has become the de facto standard for evaluating coding model quality -- used by Unsloth, the r/LocalLLaMA community, Qwen team, and model comparison posts across the ecosystem. With 41K+ stars, it has a loyal community that values precision, token efficiency, and model freedom.
+Aider's Polyglot leaderboard has quietly become the de facto standard for evaluating coding *models* -- Unsloth, the r/LocalLLaMA community, the Qwen team all use it. 41K+ stars, one of the fastest-rising AI open source projects, built by people who care about precision, token efficiency, and not being locked in.
 
 ## Key Differentiators
 
-- **Git integration is unmatched** -- Auto-commits with descriptive messages, clean `/undo`, appends "(aider)" to committer name for AI tracking
-- **Model agnostic** -- 50+ models, any provider, local models. The "Switzerland" of coding agents
-- **Aider Polyglot benchmark** -- De facto standard for coding model evaluation (225 Exercism exercises across 6 languages)
-- **Token efficiency** -- Uses 4.2x fewer tokens than Claude Code on same tasks (Morph comparison)
-- **Repo-map** -- Builds a map of your entire codebase for context
-- **Auto-fix loop** -- Runs linters/tests, auto-fixes errors, re-runs
+- **Best git integration in the category** -- Auto-commits with descriptive messages, clean `/undo`, "(aider)" committer tag for audit trails.
+- **Model agnostic** -- 50+ models, any provider, local via Ollama. The Switzerland of coding agents.
+- **Aider Polyglot leaderboard** -- Measures which *model* works best through Aider (225 Exercism exercises, 6 languages). The industry-standard read on model coding ability.
+- **Token efficiency** -- 4.2x fewer tokens than Claude Code on the same tasks (Morph benchmark).
+- **Repo-map** -- Builds a map of your whole codebase for context.
+- **Auto-fix loop** -- Runs linters and tests, fixes errors, re-runs. No babysitting.
 
 ## Pricing
 
@@ -28,28 +28,28 @@ Aider's Polyglot benchmark has become the de facto standard for evaluating codin
 
 ## Strengths
 
-- True model flexibility -- use whatever's best for your task, switch freely
+- Real model flexibility -- pick the best model for the task, switch freely
 - 4.2x more token-efficient than Claude Code
-- Git workflow is seamless and best-in-class
-- Mature, stable, well-documented
-- Free (BYOK) -- ~$60/mo heavy use vs $200/mo for Claude Code
-- Benchmark authority -- Polyglot leaderboard is industry standard
-- Supports local models for air-gapped or privacy-sensitive work
+- Best-in-class git workflow, no special effort required
+- Mature, stable, well-documented -- feels built by someone who ships
+- BYOK means ~$60/mo heavy use vs $200/mo for Claude Code
+- Polyglot leaderboard gives it real credibility with the local-model crowd
+- Local models for air-gapped or privacy-sensitive work
 - Voice commands and image/web page inclusion
-- 41K+ GitHub stars, among fastest-rising AI open source projects
+- 41K+ stars, one of the fastest-rising AI OSS projects
 
 ## Weaknesses
 
-- Not fully agentic -- requires confirming every step, no autonomous mode
-- Manual context management is tedious vs tools that auto-index
-- No native MCP support (issue #4506 open, third-party servers exist)
-- Output scrolling problem -- changes fly by faster than you can review
-- Auto-commit granularity can be wrong (too coarse or too fine)
+- Not fully agentic -- you confirm every step. No autonomous mode.
+- Manual context management is tedious compared to auto-indexing tools
+- No native MCP (issue #4506 open, third-party servers exist)
+- Output scrolls by faster than you can review -- you end up ignoring LLM output
+- Auto-commit granularity is often wrong (too coarse or too fine)
 - Model switching mid-session is cumbersome
-- Solo maintainer (Paul Gauthier) -- bus factor concern
+- Solo maintainer (Paul Gauthier) -- bus factor
 - Claude Code is "in its own league" for production code quality
-- API costs can spike with Opus-class models ($15-40/day)
-- Lacks enterprise collaboration tools
+- Opus-class usage can spike to $15-40/day
+- Nothing for teams -- no collaboration tooling
 
 ## Community Sentiment
 
@@ -90,6 +90,8 @@ Aider maintains its own coding benchmark: 225 Exercism exercises across C++, Go,
 
 The Polyglot leaderboard has become the de facto standard for evaluating coding model quality, used by Unsloth, the Qwen team, and the r/LocalLLaMA community.
 
+**Aider Polyglot leaderboard snapshot (April 2026):** GPT-5 (high) leads at 88.0%, followed by GPT-5 (medium) at 86.7% and o3-pro (high) at 84.9%. Gemini 2.5 Pro with 32k thinking tokens reached 83.1%, entering the top 5. Note: these scores reflect *model* capability when run through Aider's specific scaffold -- not a comparison of Aider against other coding tools. Check [aider.chat/docs/leaderboards](https://aider.chat/docs/leaderboards/) for the live leaderboard.
+
 ### Token Efficiency (vs Claude Code)
 
 - Aider uses **4.2x fewer tokens** than Claude Code on same tasks (Morph comparison)
@@ -98,14 +100,13 @@ The Polyglot leaderboard has become the de facto standard for evaluating coding 
 
 ## Recent Changes (2025-2026)
 
-- **Model support additions** -- GPT-5.1/5.2, GPT-5-pro, Claude Sonnet 4/Opus 4 series, Gemini 2.5 Pro/Flash with thinking tokens, o3-pro
-- **Default model aliases updated** -- flash to gemini-2.5-flash, gemini to gemini-2.5-pro
-- **Token tracking** -- Total tokens sent/received in benchmark stats
-- **Auto-fetching model parameters** for OpenRouter models (context window, pricing)
-- **Prompt caching** for cost savings
-- **Voice command support**
-- **Image and web page inclusion** in chat context
-- **Auto linting/testing** on AI-generated code
+- **v0.82.0** (April 14, 2026) -- GPT-4.1 mini/nano, Grok-3, new "patch" edit format, better architect mode compatibility.
+- **v0.81.0** (April 4, 2026) -- Quasar-alpha support (free on OpenRouter); stops retrying when providers report insufficient credits.
+- **v0.80.0** (March 31, 2026) -- OpenRouter OAuth, Scala support, external editor via Ctrl-X Ctrl-E.
+- **Model additions** -- GPT-5.1/5.2, GPT-5-pro, Claude Sonnet 4/Opus 4 series, Gemini 2.5 Pro/Flash with thinking tokens, o3-pro.
+- **Prompt caching** -- Real cost savings on repeated context.
+- **Voice commands, image and web page inclusion** -- Been there for a while, still rare in competing CLIs.
+- **Auto lint/test loop** on AI-generated code.
 
 ## Integration Ecosystem
 
@@ -118,14 +119,14 @@ The Polyglot leaderboard has become the de facto standard for evaluating coding 
 
 ## CodeMySpec Integration
 
-Aider's model flexibility and git-first workflow make it a natural fit for spec-driven development, especially for cost-conscious teams.
+Aider's model flexibility and git-first workflow make it a natural fit for spec-driven development, especially if you're watching costs.
 
-- **Context files:** Aider uses `/add` to include files in context and `/read` for read-only reference files. CodeMySpec specs can be added as read-only context files, giving the model full spec visibility without risk of modification. No native equivalent to `CLAUDE.md` auto-loading.
-- **MCP support:** No native MCP support (GitHub issue #4506 open). Third-party MCP servers exist (`disler/aider-mcp-server`, `sengokudaikon/aider-mcp-server`). CodeMySpec would need to use file-based spec delivery until native MCP lands.
-- **Hooks support:** No pre/post hook system. The auto-fix loop (run linters/tests, fix errors, re-run) provides partial verification. Specs with test commands can leverage this loop for automated compliance checking.
-- **Subagent support:** No multi-agent or subagent support. Single-threaded conversations only. Parallel work requires running multiple Aider instances manually.
-- **Skills/commands support:** No skills/commands system. Custom workflows require external scripting or wrapper scripts around the Aider CLI.
-- **Memory/persistence:** No persistent memory across sessions. Each session starts fresh. The repo-map provides codebase awareness, but spec context must be re-added each session via `/add` or `/read`.
+- **Context files:** `/add` for mutable context, `/read` for read-only. CodeMySpec specs drop in as `/read` references -- full visibility, zero risk of the model rewriting them. No `CLAUDE.md`-style auto-load.
+- **MCP support:** Not native yet (issue #4506 open). Third-party servers exist (`disler/aider-mcp-server`, `sengokudaikon/aider-mcp-server`). File-based spec delivery until native MCP lands.
+- **Hooks support:** No pre/post hooks. The auto-fix loop (run linters/tests, fix, re-run) is the closest thing, and it works well for spec-driven test compliance.
+- **Subagent support:** None. Single conversation, single thread. Parallel work means running multiple Aider instances manually.
+- **Skills/commands support:** None. Custom workflows require wrapper scripts around the CLI.
+- **Memory/persistence:** No persistent memory. Fresh session every time. Repo-map gives codebase awareness; spec context gets re-added each session via `/add` or `/read`.
 
 ## Related Articles
 

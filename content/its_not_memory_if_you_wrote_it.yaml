@@ -1,0 +1,13 @@
+slug: its-not-memory-if-you-wrote-it
+type: blog
+title: "It's Not Memory If You Wrote It: The CLAUDE.md Confusion"
+meta_title: "It's Not Memory If You Wrote It: The CLAUDE.md Confusion"
+meta_description: "The most-starred memory system in AI coding has 87k+ stars and isn't actually memory. The conflation between operating instructions and memory is causing wrong tool choices and wasted infrastructure."
+tags:
+  - agent-memory
+  - claude-md
+  - harness-engineering
+  - memory-systems-series
+  - context-engineering
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport

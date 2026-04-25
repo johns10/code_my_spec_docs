@@ -2,20 +2,20 @@
 
 ## Overview
 
-Gemini CLI is Google's entry into the CLI coding agent space. It launched with the most generous free tier in the category -- 1,000 requests per day with just a personal Google account. Combined with a 1M token context window, it's the most accessible entry point for developers who want to try agentic coding without paying.
+Google quietly turned Gemini 3 Pro into a paid-only feature on March 25, 2026. The free tier is Flash-only now. If you were riding the free tier for the Pro-quality experience, that's gone.
 
-Quality has improved significantly with Gemini 3.1 Pro, though community sentiment is that it's competitive but inconsistent compared to Claude. The free tier with Gemini 3 Flash makes it the most accessible entry point for developers trying agentic coding.
+What's left is still the most generous free tier in the category -- 1,000 Flash requests per day with a personal Google account -- and that's genuinely useful. Gemini 3.1 Pro is a real upgrade when you pay for it, competitive with Claude on a good day and a coin toss on a bad one. The community is pretty clear: good for free and prototyping, Claude still wins for production.
 
-The ecosystem includes Jules (async agent delegation), Conductor (project management with automated reviews), Plan Mode (read-only analysis), and Google Workspace integration. At ~89.8K GitHub stars with 100+ contributors and Apache 2.0 licensing, it's a genuinely open alternative to proprietary CLI agents.
+The rest of the package is solid: Jules for async background work, Conductor for Markdown-based project plans and automated reviews, Plan Mode on by default, native Google Workspace hooks. 102K GitHub stars, 100+ contributors, Apache 2.0. Actually open source, not "source-available open."
 
 ## Key Differentiators
 
-- **Free tier is unmatched** -- 1,000 req/day, 60 req/min at no cost
-- **Jules integration** -- Async autonomous agent for heavy tasks (clones repo, works in VM, submits PRs)
-- **Conductor extension** -- Context-driven development with Markdown-stored plans/specs, automated code reviews (guideline enforcement, test validation, security scanning)
-- **1M token context** -- Matches the largest context windows available
-- **Apache 2.0** -- Truly open source, permissive license, 100+ contributors
-- **Plan Mode** -- Read-only analysis before making changes, enabled by default
+- **Biggest free tier in the category** -- 1,000 Flash requests/day, no credit card. Pro models now cost money (since March 25, 2026).
+- **Jules** -- Async agent that clones the repo, works in a VM, submits PRs. Fire-and-forget for bugs and refactors.
+- **Conductor** -- Markdown plans + specs, automated reviews (guidelines, tests, security). Closest thing to spec-driven workflow in a vendor CLI.
+- **1M token context** -- Tied for largest in the category.
+- **Apache 2.0, actually** -- Permissive license, 100+ contributors. Qwen Code CLI forked from it.
+- **Plan Mode on by default** -- Read-only analysis before it touches your code.
 
 ## Pricing
 
@@ -28,44 +28,43 @@ The ecosystem includes Jules (async agent delegation), Conductor (project manage
 
 ## Strengths
 
-- Zero-cost entry -- best free coding agent available
-- Gemini 3.1 Pro quality has improved significantly, closing the gap with Claude per community reports
-- Competitive on terminal-heavy workflows
-- Massive context window handles large codebases
-- Jules for async/autonomous work
-- Conductor for project management and automated reviews
-- Google Workspace integration (Gmail, Drive, Calendar in CLI workflows)
-- Open source with permissive license and active development (multiple releases/month)
-- gVisor and experimental LXC sandboxing for security
+- Cheapest real path into agentic coding -- nothing else beats 1,000 free Flash requests/day
+- Gemini 3.1 Pro is a real step up, competitive with Claude on most tasks
+- 1M context handles large codebases without chunking gymnastics
+- Jules for background async work
+- Conductor for Markdown-driven project management and automated reviews
+- Native Google Workspace hooks (Gmail, Drive, Calendar)
+- Apache 2.0, active development, multiple releases a month
+- gVisor sandboxing by default, experimental LXC
 
 ## Weaknesses
 
-- Gemini models only -- no model flexibility
-- Server instability and 429 rate limit errors are the #1 complaint
-- Inconsistent quality -- "either great or garbage and it's a coin toss"
-- Tool call errors and formatting issues in agentic workflows
-- Pricing/plan confusion -- Google One AI Pro, Workspace, API pricing overlap confusingly
-- Workspace plan users sometimes can't access latest models
-- Antigravity IDE (Google's VS Code fork) still unstable in preview
-- Community perception: "good for free/prototyping" but "Claude is better for production"
+- Gemini only -- no model swap
+- 429s are the top complaint, and the March 25 "paid users get priority" fix hasn't cleaned it up; paying customers are still hitting the same errors
+- Quality is inconsistent -- "either great or garbage and it's a coin toss"
+- Tool-call and formatting errors in agent workflows
+- Pricing is a maze -- Google One AI Pro, Workspace, API pricing all overlap
+- Workspace plan users sometimes can't even access the latest models
+- Antigravity IDE is still unstable in preview
+- Verdict from the community: fine for free and prototyping, reach for Claude for production
 
 ## Community Sentiment
 
 ### What People Love
 
-- **Free tier is incredibly generous** -- 60 req/min, 1,000 req/day, no paid subscription. Drives people to cancel competing subscriptions.
-- **Google One bundle value** -- 2TB storage + AI Pro + NotebookLM + Antigravity + Gemini CLI makes people cancel Claude. "I decided to test antigravity with Gemini 3.1 Pro and... it's really good! I would not put it above Opus but... it doesn't need to actually." -- u/razer54, r/Bard
-- **Gemini 3.1 Pro quality** -- Significant upgrade, crossing the "good enough" threshold for personal coding (95 upvotes on launch thread).
-- **Plan Mode** -- Read-only analysis before changes, enabled by default, well-received.
-- **Open source** -- Apache 2.0, ~89.8K stars, 100+ contributors. Qwen Code CLI reportedly forked from it.
+- **The free tier is absurd** -- 60 req/min, 1,000 req/day, no card. People cancel competing subscriptions over it.
+- **Google One bundle** -- 2TB + AI Pro + NotebookLM + Antigravity + Gemini CLI. "I decided to test antigravity with Gemini 3.1 Pro and... it's really good! I would not put it above Opus but... it doesn't need to actually." -- u/razer54, r/Bard
+- **Gemini 3.1 Pro quality jump** -- Crosses the "good enough" threshold for personal coding (95 upvotes on launch thread).
+- **Plan Mode on by default** -- Read-only analysis before it touches code.
+- **Actually open source** -- Apache 2.0, 100+ contributors, Qwen Code CLI forked from it.
 
 ### Common Complaints
 
-- **Server instability / 429 errors (#1 complaint)** -- "Constant 429s"; "servers are so overloaded that all models are practically not usable" -- r/Bard, multiple threads
-- **Tool call errors and formatting** -- "Gemini often runs into tool call errors, formatting issues, or retries tasks multiple times" -- u/mugeshrao142, r/vibecoding
-- **Inconsistent quality** -- "Gemini however is either great or garbage and it's a coin toss" -- u/ZeidLovesAI, r/vibecoding
-- **Pricing/plan confusion** -- "there's so many different ways/plans to pay for gemini it's very confusing" -- u/Just_Lingonberry_352, r/Bard
-- **Still behind Claude for agentic coding** -- "Gemini is good at a lot of things, agentic coding isn't one of them" -- u/mxforest, r/Bard
+- **429s everywhere** -- "Constant 429s"; "servers are so overloaded that all models are practically not usable" -- r/Bard, multiple threads. The top complaint, bar none.
+- **Tool calls break** -- "Gemini often runs into tool call errors, formatting issues, or retries tasks multiple times" -- u/mugeshrao142, r/vibecoding
+- **Coin-toss quality** -- "Gemini however is either great or garbage and it's a coin toss" -- u/ZeidLovesAI, r/vibecoding
+- **Pricing maze** -- "there's so many different ways/plans to pay for gemini it's very confusing" -- u/Just_Lingonberry_352, r/Bard
+- **Still behind Claude for agentic work** -- "Gemini is good at a lot of things, agentic coding isn't one of them" -- u/mxforest, r/Bard
 
 ### Notable Quotes
 
@@ -81,18 +80,30 @@ The ecosystem includes Jules (async agent delegation), Conductor (project manage
 
 **A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. Gemini CLI as a product has never been submitted to SWE-bench. There is no widely-adopted benchmark for comparing coding agents head-to-head.
 
-**Community consensus:** The free tier is the primary draw -- 1,000 requests/day with competitive quality. Gemini 3.1 Pro is a significant quality upgrade that crosses the "good enough" threshold for personal coding. However, quality is inconsistent -- "either great or garbage and it's a coin toss" -- and server instability (429 errors) remains the top complaint. Most developers see it as "good for free/prototyping" but prefer Claude for production work.
+**Community consensus:** The free tier is the draw. Gemini 3.1 Pro is a real quality jump and crosses the "good enough" bar for personal coding. But quality is inconsistent -- "either great or garbage" -- and 429s remain the #1 complaint. Good for free and prototyping, Claude for production.
 
 ## Recent Changes (2025-2026)
 
-- **v0.34.0-preview.1** (Mar 12, 2026) -- Plan Mode enabled by default, experimental LXC sandbox, native gVisor sandboxing, task tracker CRUD tools
-- **v0.33.1** (Mar 12, 2026) -- HTTP auth for A2A remote agents, Plan Mode research subagents, compact header redesign
-- **v0.32.0** (Mar 3, 2026) -- Generalist agent enabled, model steering in workspace
-- **v0.31.0** (Feb 27, 2026) -- Gemini 3.1 Pro Preview support, experimental browser agent
-- **Conductor automated reviews** (Mar 2026) -- Guideline enforcement, test validation, security scanning
-- **Jules extension** -- Async agent delegation for background coding (bug fixing, refactoring, dependency updates)
-- **Gemini 3 Flash in CLI** (late 2025) -- Brought competitive coding quality to free tier users
-- **Google Workspace integration** -- Gmail, Drive, Calendar natively in CLI
+### The big one
+
+- **Pro models went paid-only** (March 25, 2026) -- Free tier is Flash only now. Gemini 3 Pro / 3.1 Pro require a paid subscription (GitHub Discussion #22970). Paid accounts also got capacity priority -- though paid users still report 429s through rollout.
+
+### March-April 2026
+
+- **v0.39.0-preview** (April 14) -- Unified subagent tooling (single `invoke_subagent` replaces legacy tools); `/memory inbox` for reviewing extracted skills.
+- **v0.38.2** (April 17) -- Context Compression Service, Persistent Policy Approvals (stop confirming the same tool every session), Background Process Monitoring.
+- **v0.37.0** (April 8) -- Dynamic Sandbox Expansion with worktree support on Linux and Windows.
+- **v0.36.0** (April 1) -- Native macOS/Windows sandboxing for subagents; native Git worktree support.
+- **v0.35.0** (March 24) -- SandboxManager (bubblewrap/seccomp on Linux); customizable keybindings (Kitty protocol).
+- **v0.34.0-preview.1** (Mar 12) -- Plan Mode on by default, experimental LXC sandbox, native gVisor.
+- **v0.31.0** (Feb 27) -- Gemini 3.1 Pro Preview support, experimental browser agent.
+
+### Earlier
+
+- **Conductor automated reviews** (Mar 2026) -- Guideline enforcement, test validation, security scanning.
+- **Jules extension** -- Async agent delegation for background coding.
+- **Gemini 3 Flash in CLI** (late 2025) -- Brought the free tier up to competitive coding quality.
+- **Google Workspace integration** -- Gmail, Drive, Calendar natively in CLI.
 
 ## Integration Ecosystem
 
@@ -106,14 +117,14 @@ The ecosystem includes Jules (async agent delegation), Conductor (project manage
 
 ## CodeMySpec Integration
 
-Gemini CLI's free tier and Conductor extension make it a strong fit for developers exploring spec-driven development without upfront cost.
+The free tier and Conductor make Gemini CLI a strong fit for anyone exploring spec-driven development without opening a wallet.
 
-- **Context files:** `GEMINI.md` is the native project context file, analogous to `CLAUDE.md`. CodeMySpec can generate `GEMINI.md` files from specs, providing directory-specific instructions that Gemini CLI reads automatically on every session.
-- **MCP support:** Full MCP server support with admin allowlisting. CodeMySpec can serve specs via MCP. Google's Codelab for building MCP servers suggests strong ongoing investment in the protocol.
-- **Hooks support:** No documented pre/post hook system. Conductor's automated reviews (guideline enforcement, test validation, security scanning) provide post-change verification that could incorporate spec compliance checks.
-- **Subagent support:** Jules handles async autonomous work (clones repo, works in VM, submits PRs). Plan Mode research subagents can analyze a spec before implementation begins. Limited compared to Claude Code's Agent Teams.
-- **Skills/commands support:** Experimental skills support in recent versions. Conductor's Markdown-based project plans are philosophically aligned with CodeMySpec's spec-driven approach -- specs could feed directly into Conductor plans.
-- **Memory/persistence:** No persistent memory across sessions. `GEMINI.md` and MCP are the primary mechanisms. Conductor stores plans in Markdown, which provides a form of persistence for project context.
+- **Context files:** `GEMINI.md` is the native project-context file, same idea as `CLAUDE.md`. CodeMySpec generates `GEMINI.md` from specs, and Gemini CLI picks it up automatically.
+- **MCP support:** Full server support with admin allowlisting. CodeMySpec serves specs via MCP. Google even published a Codelab on building MCP servers -- the protocol investment is real.
+- **Hooks support:** No pre/post hook system. Conductor's automated reviews (guidelines, tests, security) are the closest thing and can carry spec-compliance checks.
+- **Subagent support:** Jules handles async autonomous work (clones repo, works in VM, submits PRs). Plan Mode research subagents can analyze a spec before anyone writes code. Thinner than Claude Code's Agent Teams but usable.
+- **Skills/commands:** Experimental skills support in recent versions. Conductor's Markdown plans line up philosophically with CodeMySpec -- specs feed directly into Conductor.
+- **Memory/persistence:** No persistent memory. `GEMINI.md` + MCP + Conductor's Markdown plans are your persistence layer.
 
 ## Related Articles
 

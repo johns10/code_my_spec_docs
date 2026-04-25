@@ -66,3 +66,41 @@ docs_repo: "https://github.com/johns10/code_my_spec_docs"
 module_name: CodeMySpec
 name: Code My Spec
 project_id: 708492f9-454e-482f-a2eb-be64f0356b87
+ignored_paths:
+  # Standard Phoenix-generated infrastructure
+  - lib/code_my_spec.ex
+  - lib/code_my_spec/repo.ex
+  - lib/code_my_spec/mailer.ex
+  - lib/code_my_spec/release.ex
+  - lib/code_my_spec/vault.ex
+  - lib/code_my_spec_web.ex
+  - lib/code_my_spec_web/application.ex
+  - lib/code_my_spec_web/endpoint.ex
+  - lib/code_my_spec_web/router.ex
+  - lib/code_my_spec_web/telemetry.ex
+  - lib/code_my_spec_web/gettext.ex
+  - lib/code_my_spec_web/components/core_components.ex
+  - lib/code_my_spec_web/components/layouts.ex
+  - lib/code_my_spec_web/controllers/error_*
+  - lib/code_my_spec_web/controllers/page_*
+  - lib/code_my_spec_web/channels/user_socket.ex
+  - lib/code_my_spec_web/channels/presence.ex
+  # phx.gen.auth-generated modules
+  - lib/code_my_spec_web/user_auth.ex
+  - lib/code_my_spec_web/controllers/user_session_controller.ex
+  - lib/code_my_spec_web/live/user_live/login.ex
+  - lib/code_my_spec_web/live/user_live/registration.ex
+  - lib/code_my_spec_web/live/user_live/settings.ex
+  - lib/code_my_spec_web/live/user_live/confirmation.ex
+  - lib/code_my_spec_web/live/user_live/check_email.ex
+  # Local CLI Phoenix app infrastructure
+  - lib/code_my_spec_local_web.ex
+  - lib/code_my_spec_local_web/application.ex
+  - lib/code_my_spec_local_web/endpoint.ex
+  - lib/code_my_spec_local_web/router.ex
+  - lib/code_my_spec_local_web/migrator.ex
+  - lib/code_my_spec_local_web/socket_supervisor.ex
+  - lib/code_my_spec_local_web/components/core_components.ex
+  - lib/code_my_spec_local_web/components/layouts.ex
+  - lib/code_my_spec_local_web/controllers/error_*
+  - lib/code_my_spec_local_web/controllers/health_controller.ex

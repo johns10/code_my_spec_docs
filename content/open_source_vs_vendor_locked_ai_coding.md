@@ -1,96 +1,84 @@
 # Open Source vs Vendor-Locked AI Coding Tools: The Tradeoffs That Matter
 
-## The Spectrum
+The open/closed question in AI coding isn't binary, and the honest answer is annoying: the most-loved tool (Claude Code, 46% in dev surveys) is fully closed, and the most-starred tool (OpenCode, 117K stars) is fully open. Pick your poison.
 
-AI coding tools don't fall into a clean open/closed binary. There's a spectrum:
+## The Spectrum
 
 | Level | Examples | What's Open | What's Not |
 |---|---|---|---|
 | **Fully open** | Aider, OpenCode, Goose | Tool code, model choice, data flow | Nothing |
-| **Open tool, locked model** | Gemini CLI, Codex CLI | Tool code (Apache 2.0) | Model (Gemini-only, OpenAI-only) |
-| **Closed tool, multi-model** | Cursor | Model choice (Claude, GPT, Gemini) | Tool code, pricing |
+| **Open tool, locked model** | Gemini CLI, Codex CLI | Tool code (Apache 2.0) | Model |
+| **Closed tool, multi-model** | Cursor | Model choice | Tool code, pricing |
 | **Closed tool, locked model** | Claude Code, Kiro | Nothing | Tool code, model, pricing |
 | **Open editor, BYO AI** | Zed | Editor code (GPL), model choice | AI billing markup |
 
-The interesting finding: the most-loved tool (Claude Code, 46% in dev surveys) is fully closed, and the most-starred tool (OpenCode, 117K stars) is fully open. There's no universal right answer.
+## Case Study: The April 2026 Harness Ban
+
+On April 4, 2026, Anthropic banned third-party harnesses like OpenClaw from running against Claude subscription plans. The stated reason was prompt-cache efficiency. Call it what you want -- this is a moat move.
+
+Before April 4, a Claude Max subscriber could drive the Claude model through whatever front-end they liked. After April 4, the model is coupled to first-party Claude Code unless you switch to metered API billing. The model didn't change. The pricing page didn't change. A policy changed, and an entire category of open-source tooling lost access overnight.
+
+This is what "closed tool, locked model" actually means when the vendor decides to tighten the screws. And it's not an isolated move. On March 25, Google restricted Gemini 3 and 3.1 Pro to paid Gemini CLI subscriptions -- free tier is Flash-only, paid users get priority routing during congestion. On April 20, GitHub paused new Pro, Pro+, and Student signups and pulled Claude Opus from the Pro tier (Pro+ only). That's supply-side rationing.
+
+Vendors are tightening. That's the weather you're building your workflow in. If you're on a vendor plan, assume the ground can shift any Tuesday.
 
 ## Where Open Source Wins
 
 ### 1. Cost Control
 
-BYOK (Bring Your Own Key) tools let you pay API costs directly. No markup, no subscription, no credits that vanish unexpectedly.
+BYOK tools let you pay API costs directly. No markup, no subscription, no credits that vanish unexpectedly.
 
-**Aider** uses 4.2x fewer tokens than Claude Code on the same tasks. At ~$60/month heavy use vs Claude Code's $100-200/month, the savings are real.
+Aider uses 4.2x fewer tokens than Claude Code on the same tasks. At ~$60/month heavy use vs Claude Code's $100-200/month, the savings are real. Gemini CLI's free tier (1,000 requests/day on Flash) is unbeatable for evaluation and hobby work.
 
-**Gemini CLI** offers 1,000 free requests/day. For students, hobbyists, and evaluation, this is unbeatable.
+The budget hack that keeps showing up on Reddit: Aider + Gemini Flash or DeepSeek V3.1 runs at 1/10th the cost of any vendor tool with competitive quality.
 
-The budget hack that keeps appearing in Reddit threads: Aider + Gemini 2.5 Flash or DeepSeek V3.1 runs at 1/10th the cost of any vendor tool with competitive quality.
-
-"There's no reason to burn your money on Claude when you can run DeepSeek V3.1/Qwen3-235B at home." — u/segmond, r/LocalLLaMA (270-upvote thread)
+"There's no reason to burn your money on Claude when you can run DeepSeek V3.1/Qwen3-235B at home." -- u/segmond, r/LocalLLaMA (270-upvote thread)
 
 ### 2. Model Freedom
 
-When Claude has a bad day (rate limits, quality regression, pricing change), open-source users switch models. Vendor-locked users wait.
+When Claude has a bad day -- rate limits, quality regression, a new pricing schedule -- open-source users switch models. Vendor-locked users wait.
 
-This isn't theoretical. Claude Code users consistently complain about usage limits: "A $20 plan that runs out after 12 prompts isn't a daily driver." When that happens, Aider users switch to GPT-5 or DeepSeek for the afternoon.
+Claude Code users complain constantly about usage limits: "A $20 plan that runs out after 12 prompts isn't a daily driver." When that happens, Aider users switch to GPT-5 or DeepSeek for the afternoon. When a new model ships -- Gemini 3.1 Pro, DeepSeek V3.2 -- open tools support it that week. Vendor tools support it never, by design.
 
-Model freedom also means future-proofing. When a new model launches (Gemini 3.1 Pro, DeepSeek V3.2), open tools support it immediately. Vendor tools support it never — by design.
+### 3. Auditability
 
-### 3. Auditability and Trust
-
-If you can read the code, you know what it does. For enterprises worried about data exfiltration, for security-conscious developers, for regulated industries — open source provides an audit trail that proprietary tools can't.
-
-Zed's GPL license means anyone can verify what the editor sends to which servers. Aider's Apache 2.0 license means anyone can fork and customize. Void's 28K stars (even paused) represent developers who valued transparency.
+If you can read the code, you know what it does. For regulated industries, security-conscious teams, and anyone nervous about data exfiltration, that's the whole game. Zed (GPL) and Aider (Apache 2.0) are inspectable. Claude Code isn't.
 
 ### 4. No Abandonment Risk
 
-Proprietary tools die when companies die (or pivot, or get acquired). Open-source tools survive because the code survives.
+Proprietary tools die when companies die, pivot, or get acquired. Supermaven got absorbed into Cursor. Aide is sunsetting. Their users lost their workflows. If Aider's maintainer retired tomorrow, the code is still Apache 2.0 -- someone forks it and life goes on.
 
-Supermaven (acquired into Cursor) and Aide (sunsetting) are recent examples. Their users lost their workflow. If Aider's maintainer retired tomorrow, the code is still Apache 2.0 — anyone can fork and continue.
+### 5. Local Models
 
-### 5. Local Models and Air-Gapped Environments
-
-Only open tools support local models via Ollama or similar. For organizations that can't send code to external APIs — defense, healthcare, financial services — this is the only option.
-
-Aider, OpenCode, Goose, Cline, and Roo Code all support local models. Claude Code, Codex CLI, and Cursor do not (or only partially).
+Only open tools support Ollama and local inference. If you work in defense, healthcare, or financial services where code can't leave the network, Aider/OpenCode/Goose/Cline/Roo Code are the only options. Claude Code, Codex CLI, and Cursor don't do this.
 
 ## Where Vendor Lock-In Wins
 
 ### 1. Deep Model Integration
 
-Claude Code's extended thinking, Codex CLI's voice transcription, Cursor's Composer model — these features only exist because the tool is tightly coupled with the model.
-
-Extended thinking (where Claude shows its reasoning steps before answering) is a Claude-specific feature that other tools can't access the same way. The quality gap is real: Claude Code is consistently rated the highest-quality CLI agent per community consensus and blind code quality tests (67% win rate). The same Claude model through Aider may not produce the same quality because Aider can't leverage model-specific features like extended thinking.
+Claude Code's extended thinking, Codex CLI's voice transcription, Cursor's Composer model -- these only exist because the tool and the model ship together. You can point Aider at Claude, but you don't get extended thinking. The quality gap is real: Claude Code wins 67% of blind code-quality comparisons in community tests, and part of that is model-specific features other tools can't touch.
 
 ### 2. Polished UX
 
-Vendor tools invest in experience. Cursor's sub-200ms completions, 8 parallel Background Agents, MCP Apps rendering interactive UIs in chat, Automations triggering agents from Slack messages — these require enormous engineering investment that open-source projects can't match.
+Cursor's sub-200ms completions, 8 parallel Background Agents, MCP Apps rendering UIs in chat, Automations triggering from Slack -- open-source projects can't match that engineering spend.
 
-"After using Aider for a few weeks, going back to co-pilot, roo code, augment, etc, feels like crawling in comparison." — u/MrPanache52, r/ChatGPTCoding
+"After using Aider for a few weeks, going back to co-pilot, roo code, augment, etc, feels like crawling in comparison." -- u/MrPanache52, r/ChatGPTCoding
 
-But the reverse is also true: "I dropped Cursor cold turkey when Claude Code 4.6 came out." The UX gap is real but not always in favor of the IDE.
+The reverse also happens: "I dropped Cursor cold turkey when Claude Code 4.6 came out." UX preference isn't always on the IDE side.
 
 ### 3. Enterprise Features
 
-SOC 2, HIPAA, FedRAMP, SSO, audit logs, IP indemnity — enterprises need these, and proprietary tools deliver them as a bundle.
-
-Windsurf leads with FedRAMP and HIPAA. GitHub Copilot has the deepest enterprise integration. Cursor has Teams and Enterprise tiers. Open-source tools generally don't offer compliance certifications (Roo Code's SOC 2 Type 2 is an exception).
+SOC 2, HIPAA, FedRAMP, SSO, audit logs, IP indemnity. Windsurf leads on FedRAMP and HIPAA. GitHub Copilot has the deepest enterprise integration. Open-source tools rarely carry compliance certifications (Roo Code's SOC 2 Type 2 is the exception).
 
 ### 4. Ecosystem Network Effects
 
-Cursor has 30+ partner plugins (Atlassian, Datadog, GitLab). Codex CLI has 9,000+ MCP plugins. GitHub Copilot has 60M+ code reviews. These ecosystems create value that compounds with adoption — the more people use the tool, the more integrations get built, the more useful the tool becomes.
-
-Open-source tools have communities but rarely have commercial ecosystems at this scale.
+Cursor has 30+ partner plugins (Atlassian, Datadog, GitLab). Codex CLI ships 9,000+ MCP plugins. GitHub Copilot claims 60M+ code reviews. Open-source tools have communities but rarely commercial ecosystems at this scale.
 
 ### 5. Predictable Pricing (Sometimes)
 
-"$20/month for unlimited completions + 300 premium requests" is easier to budget than "pay per API token and hope you stay under $60." For organizations with procurement processes, a line item is simpler than a variable cost.
-
-The irony: Cursor's credit-based billing is often less predictable than BYOK. "When Cursor silently raised their price by over 20x... what is the message the users are getting?" But at least it has a ceiling.
+"$20/month for unlimited completions + 300 premium requests" is easier for procurement than "pay per token and hope." The irony is that Cursor's credit billing has gotten less predictable than BYOK: "When Cursor silently raised their price by over 20x... what is the message the users are getting?" But at least there's a ceiling.
 
 ## The Data: What 21 Tools Tell Us
-
-Across the 21 tools in our landscape analysis:
 
 | Metric | Open Source | Proprietary |
 |---|---|---|
@@ -99,50 +87,48 @@ Across the 21 tools in our landscape analysis:
 | **MCP support** | 60% | 80% |
 | **Local model support** | 100% | 0-10% |
 | **Enterprise compliance** | Rare | Common |
-| **Multi-model support** | Standard | Varies |
 
-The open-source tools win on stars, cost, and flexibility. The proprietary tools win on features, compliance, and ecosystem.
+Star counts for the major open-source tools as of April 2026: OpenCode ~117K, Gemini CLI ~102K (up from ~90K in March), Cline ~58K, Aider ~43.7K (up from ~41K), Roo Code ~22K. Momentum is concentrated in BYOK terminal agents -- the exact category most exposed to the lockdown moves above.
+
+Open source wins stars, cost, and flexibility. Proprietary wins features, compliance, and ecosystem. Nobody wins both.
 
 ## The Hybrid Approach
 
-The most practical answer isn't "pick one." It's "use both strategically."
+The practical answer isn't pick one. It's use both.
 
-The hybrid pattern appearing across Reddit:
-- **Claude Code** (proprietary) for complex architecture and production code
-- **Aider** (open) for cost-efficient iteration and model flexibility
-- **Gemini CLI** (open) for free prototyping and experimentation
-- **Codex CLI** (open tool, locked model) for DevOps and code review
+- **Claude Code** for complex architecture and production code
+- **Aider** for cost-efficient iteration and model flexibility
+- **Gemini CLI** for free prototyping
+- **Codex CLI** for DevOps and code review
 
-You get the quality of vendor tools where it matters and the flexibility of open tools where it doesn't.
+You get vendor-tool quality where it matters and open-tool flexibility where it doesn't. The tradeoff: your workflow spans four tools instead of one.
 
 ## Decision Framework
 
 | Choose Open Source When... | Choose Vendor Tools When... |
 |---|---|
-| Cost control is critical | Code quality on first attempt matters most |
+| Cost control is critical | First-attempt code quality matters most |
 | You need model flexibility | You want polished UX and parallel agents |
 | You work in regulated/air-gapped environments | Enterprise compliance is required |
 | You want to avoid abandonment risk | You want the largest ecosystem |
-| You prefer transparent tools you can audit | You're willing to pay for deep model integration |
+| You want tools you can audit | You'll pay for deep model integration |
 
 ## The CodeMySpec Angle
 
-The open-vs-closed divide creates an opportunity for a tool-agnostic specification layer.
+Here's what I think the April 4 harness ban really signals: the model is not the thing you own. The vendor owns the model. What you can own is the specification -- the artifact that describes what you're building, independent of which tool consumes it.
 
-If you write specs for Claude Code, they work in Claude Code. If you write specs for Cursor, they work in Cursor. But if you write specs as portable artifacts — served via MCP to any tool, or generated as CLAUDE.md / .cursorrules / GEMINI.md — they work everywhere.
+If you write specs for Claude Code, they work in Claude Code. If you write them as portable artifacts -- served via MCP, or generated as CLAUDE.md / .cursorrules / GEMINI.md -- they work across whatever tool you pick up next. When the vendor tightens the screws (and they will), your spec still works.
 
-CodeMySpec's bet: specifications should be open, even if the tools that consume them aren't.
+That's CodeMySpec's bet: specifications should be open, even when the tools that consume them aren't.
 
-This aligns with the hybrid workflow. A developer using Claude Code for architecture and Aider for iteration shouldn't need to rewrite their specs. The spec is the constant; the tool is the variable.
-
-Cross-reference: ["Control Over Prompts"](/blog/control-over-prompts) — why owning your specifications matters more than owning your tools.
+Cross-reference: ["Control Over Prompts"](/blog/control-over-prompts) -- why owning your specifications matters more than owning your tools.
 
 ## Sources
 
 - [Aider LLM Leaderboards](https://aider.chat/docs/leaderboards/)
-- [Aider vs Claude Code — Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
-- [Cursor $2B ARR — TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
-- [Claude Code Stats — DemandSage](https://www.demandsage.com/claude-ai-statistics/)
+- [Aider vs Claude Code -- Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
+- [Cursor $2B ARR -- TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
+- [Claude Code Stats -- DemandSage](https://www.demandsage.com/claude-ai-statistics/)
 - [Zed Pricing](https://zed.dev/pricing)
 - [Gemini CLI Quotas](https://geminicli.com/docs/resources/quota-and-pricing/)
 - Reddit: [r/ChatGPTCoding](https://reddit.com/r/ChatGPTCoding/), [r/LocalLLaMA](https://reddit.com/r/LocalLLaMA/), [r/vibecoding](https://reddit.com/r/vibecoding/)

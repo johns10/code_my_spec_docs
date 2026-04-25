@@ -2,19 +2,21 @@
 
 ## Overview
 
-Claude Code is Anthropic's terminal-native coding agent. It runs in your shell, reads your codebase, edits files, runs commands, and manages git workflows. It's the most deeply integrated CLI agent for the Claude model family.
+Claude Code is Anthropic's CLI agent, and as of Opus 4.7 it's the one I reach for when code quality has to be right the first time. It runs in your shell, reads your codebase, edits files, runs commands, and handles git.
 
-As of March 2026, Claude Code accounts for roughly 4% of all public GitHub commits (~135K/day), projected to reach 20%+ by end of 2026. It went from zero to the #1 developer tool in eight months. Anthropic's estimated Claude Code run-rate is $2.5B by early 2026, with 18.9M MAU and 300K+ business customers across all Claude products.
+The numbers are absurd. 4% of all public GitHub commits (~135K/day) as of March 2026, projected to hit 20%+ by year-end. Zero to #1 developer tool in eight months. Estimated $2.5B run-rate by early 2026, 18.9M MAU, 300K+ business customers.
 
-The ecosystem includes Agent Teams (multi-agent orchestration with worktree isolation), Code Review for PRs, a unified skills/commands system, and 1,000+ community-built MCP servers.
+Around it: Agent Teams (multi-agent with worktree isolation), Code Review for PRs, a unified skills/commands system, and 1,000+ community MCP servers.
 
 ## Key Differentiators
 
-- **Deepest Claude integration** -- Optimized specifically for Claude models, including extended thinking that other tools can't access the same way
-- **Agent Teams** (Feb 2026) -- Multi-agent collaboration with team lead coordination, inter-agent messaging, git worktree isolation per agent
-- **Code Review** (March 2026) -- Agent team-based PR review; before launch 16% of PRs got substantive review comments, after launch 54% do
-- **MCP-native** -- First-class Model Context Protocol support; MCP donated to Linux Foundation's Agentic AI Foundation
-- **Skills ecosystem** -- Unified skills/commands system; Agent Skills spec adopted by OpenAI for Codex CLI
+- **Deepest Claude integration** -- Extended thinking and adaptive budgets no other tool gets at the same level
+- **Agent Teams** (Feb 2026) -- Multi-agent with team lead coordination, inter-agent messaging, and a git worktree per agent
+- **Code Review** (March 2026) -- Agent-team PR review. Substantive review coverage jumped from 16% to 54% after launch
+- **MCP-native** -- First to ship it. Anthropic donated MCP to the Linux Foundation
+- **Skills ecosystem** -- Unified skills/commands. The Agent Skills spec was picked up by OpenAI for Codex CLI
+- **/ultrareview** (April 2026) -- Cloud multi-agent code review in parallel. Max/Team/Enterprise only
+- **Auto mode + xhigh effort** (April 2026) -- Model picks Opus vs Sonnet per request on Max; new effort level between `high` and `max`
 
 ## Pricing
 
@@ -29,43 +31,43 @@ The ecosystem includes Agent Teams (multi-agent orchestration with worktree isol
 
 ## Strengths
 
-- Best-in-class reasoning through Claude Opus/Sonnet with extended thinking
-- Terminal-native means it works with any editor/workflow
-- Strong git integration (auto-commits, PR reviews, worktree isolation)
+- Best reasoning in the category. Opus/Sonnet with extended thinking is hard to beat on complex work
+- Terminal-native, so it works with any editor
+- Git integration is the real deal -- auto-commits, PR reviews, worktree isolation
 - 1M token context window (Opus 4.6)
-- Growing ecosystem -- 1,000+ MCP servers, hundreds of community skills
-- GitHub Actions integration reduces code review time ~40% in CI/CD
-- 67% win rate in blind code quality tests vs competitors
+- Deepest ecosystem -- 1,000+ MCP servers, hundreds of community skills
+- GitHub Actions integration cuts code review time ~40% in CI/CD
 
 ## Weaknesses
 
-- No free tier for meaningful usage -- requires Claude Pro ($20/mo) minimum
-- Claude models only -- no model flexibility
-- Proprietary -- can't self-host or audit the code
-- Token consumption can be unpredictable (documented 4x increase in v2.1.1 via GitHub issue #16856)
-- Pro plan usage limits frustrate heavy users ("$20 plan that runs out after 12 prompts")
-- Context drift mid-session -- can lose thread of conversation after several prompts
-- Steep learning curve -- CLI-first approach alienates GUI-preferring developers
-- Expensive at high usage (Max+ is $200/mo, API can reach $200/dev/month)
+- No meaningful free tier. $20/mo minimum to do real work
+- Claude models only. No flexibility
+- Proprietary. No self-hosting, no audit
+- Token consumption is unpredictable. GitHub issue #16856 documents a 4x increase in v2.1.1
+- Pro usage limits are brutal for heavy users ("$20 plan that runs out after 12 prompts")
+- Autocompact drops important context mid-session
+- Gets expensive fast. Max+ is $200/mo, API can hit $200/dev/month
+- **Third-party harness ban (April 4, 2026)** -- If you built on OpenClaw-style tools, your subscription no longer covers them. Pay-as-you-go or direct API key only
+- **Silent cache TTL regression** (March 2026) -- Dropped from 1h to 5m with no announcement. Community measured 15-53% cost impact. Env var workaround added in v2.1.108+, but the trust damage is done
+- **KYC requirement** (April 2026) -- Government ID + selfie for select users. Users who picked Claude for privacy reasons are not happy
 
 ## Community Sentiment
 
 ### What People Love
 
-- **Codebase navigation and understanding** -- The standout praise theme. Users say Claude Code's ability to read, trace, and cross-reference an entire codebase is more valuable than its code generation. "Fixed a year-long PR by letting it analyze complex logs across multi-module platforms... all in a few minutes." -- u/SashimiMojo, r/ClaudeAI
-- **1M context window** -- Called a game-changer for onboarding to unfamiliar projects. "I hopped on a project recently that I was unfamiliar with, and got Opus 4.6 to fully map out the existing solution end-to-end that would've taken me days." -- u/Hsoj707, r/ClaudeAI
-- **Complex planning and implementation** -- Multi-file structural changes and complex implementations seen as hard to beat on Max plan. "Claude Code makes complex plans and implements them -- hard to beat." -- u/Okoear, r/ChatGPTCoding
-- **Productivity multiplier** -- Users on r/vibecoding report doing more in a single week than in the entire previous year on personal projects
-- **46% "most loved" rating** in developer surveys (vs Cursor at 19%, GitHub Copilot at 9%)
-- **Pulling users from Cursor** -- "I've almost totally switched over to Claude Code CLI" (60 upvotes, r/cursor); "I dropped Cursor cold turkey when Claude Code 4.6 came out" (27 upvotes, r/cursor)
+- **Codebase navigation** -- The top praise theme. Reading and cross-referencing an entire codebase is where Claude Code actually shines, more than the code generation. "Fixed a year-long PR by letting it analyze complex logs across multi-module platforms... all in a few minutes." -- u/SashimiMojo, r/ClaudeAI
+- **1M context window** -- "I hopped on a project recently that I was unfamiliar with, and got Opus 4.6 to fully map out the existing solution end-to-end that would've taken me days." -- u/Hsoj707, r/ClaudeAI
+- **Planning + implementing multi-file changes** -- "Claude Code makes complex plans and implements them -- hard to beat." -- u/Okoear, r/ChatGPTCoding
+- **46% "most loved"** in developer surveys. Cursor 19%, GitHub Copilot 9%
+- **Pulling users off Cursor** -- "I've almost totally switched over to Claude Code CLI" (60 upvotes, r/cursor); "I dropped Cursor cold turkey when Claude Code 4.6 came out" (27 upvotes)
 
 ### Common Complaints
 
-- **Usage limits (#1 complaint)** -- Appears in nearly every thread. Pro plan users report hitting limits after "3 or 4 requests" or "2 hours of normal work." "I'm trying out Claude Code after using Codex ($20 subscription on both). And I'm surprised by how fast I'm reaching limits." -- u/chuckleplant, r/ClaudeAI
-- **Debugging loops** -- Claude Code tends to "roll out 10 patches to test with little to no progress" when debugging. ChatGPT seen as better at isolating specific bugs.
-- **Autocompact losing context** -- Widely disliked. Drops important decisions, forgets initial instructions. "Too much facts and important decisions are forgotten, Initial claude code instructions are also forgotten." -- u/neoack, r/ClaudeAI
-- **Token usage unpredictability** -- GitHub issue #16856 documents 4x faster consumption in v2.1.1
-- **Framework-specific gaps** -- Lacks LSP support for some frameworks (Svelte specifically), leading to "classic 'no context' mistakes"
+- **Usage limits** -- The #1 complaint, in nearly every thread. "I'm trying out Claude Code after using Codex ($20 subscription on both). And I'm surprised by how fast I'm reaching limits." -- u/chuckleplant, r/ClaudeAI
+- **Debugging loops** -- Rolls out 10 patches with no progress. ChatGPT is reportedly better at isolating specific bugs
+- **Autocompact** -- "Too much facts and important decisions are forgotten, Initial claude code instructions are also forgotten." -- u/neoack, r/ClaudeAI
+- **Token unpredictability** -- Issue #16856 documents 4x consumption in v2.1.1
+- **LSP gaps** -- Missing for some frameworks (Svelte), causing "no context" mistakes
 
 ### Notable Quotes
 
@@ -81,31 +83,42 @@ The ecosystem includes Agent Teams (multi-agent orchestration with worktree isol
 
 ## Performance Notes
 
-**A note on benchmarks:** SWE-bench measures models and their scaffolding, not the CLI tools developers use. Claude Code as a product has never been submitted to SWE-bench. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+**On benchmarks:** SWE-bench measures models plus scaffolding, not the CLI tools developers actually use. Claude Code the product has never been submitted to SWE-bench. There is no widely-adopted benchmark for comparing coding agents head-to-head.
 
-The closest tool-level benchmark data comes from HAL/CORE-Bench, which measures agents (not just models):
-- **77.8%** on CORE-Bench Hard with Claude Opus 4.5
-- **62.2%** on CORE-Bench Hard with Claude Sonnet 4.5
+**Underlying model (Opus 4.7, released April 16, 2026):** Scores 64.3% on SWE-bench Pro via the mini-SWE-agent scaffold (a standardized harness, not Claude Code). That's ~10 points over Opus 4.6 at 53.4%. These are model-through-scaffold numbers, not tool scores. Source: Anthropic Opus 4.7 release materials.
+
+Closest tool-level data is HAL/CORE-Bench:
+- **77.8%** CORE-Bench Hard with Claude Opus 4.5
+- **62.2%** CORE-Bench Hard with Claude Sonnet 4.5
 
 **Product metrics:**
 | Metric | Value | Notes |
 |--------|-------|-------|
-| Blind code quality tests | **67% win rate** vs competitors | -- |
 | GitHub commit share | **4%** of all public commits (~135K/day) | #1 AI tool |
 | Code Review impact | **54%** substantive reviews (up from 16%) | -- |
 
-**Community consensus:** Developers consistently rate Claude Code as the highest-quality CLI agent for production code. 46% "most loved" rating in developer surveys (vs Cursor at 19%, GitHub Copilot at 9%).
+**Community consensus:** Highest-quality CLI agent for production code. 46% "most loved" in developer surveys vs Cursor at 19% and GitHub Copilot at 9%.
 
 ## Recent Changes (2025-2026)
 
-- **Agent Teams** (v2.1.32, Feb 5 2026) -- Research preview. Multi-agent collaboration, worktree isolation, inter-agent messaging. Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` flag.
-- **Code Review** (March 9, 2026) -- Agent team-based PR review. $15-$25/review average. Teams/Enterprise research preview.
-- **MCP Elicitation Support** (March 14, 2026) -- MCP servers can request structured input mid-task via interactive dialogs.
-- **Skills/Commands Merge** (v2.1.3) -- Unified system. Files in `.claude/commands/` or `.claude/skills/` both create `/slash-command` interfaces.
-- **Agent Skills Specification** (Dec 2025) -- Released as open standard; adopted by OpenAI for Codex CLI.
-- **Actionable `/context` command** (March 14, 2026) -- Identifies context-heavy tools, memory bloat, capacity warnings.
-- **Automatic Memories** -- Claude records and recalls memories across sessions.
-- **Built-in Git Worktree Support** -- Each agent gets its own worktree for parallel work.
+### April 2026 (the big ones)
+
+- **Opus 4.7** (April 16) -- New recommended model. xhigh effort level, adaptive thinking (`budget_tokens` removed). Up to 35% more tokens per request at the same per-token price
+- **Claude Managed Agents** (public beta, April 8) -- Hosted agent runtime. Anthropic now sells the harness as infrastructure. Three-tier stack: Messages API -> Agent SDK -> Managed Agents. $0.08/session-hour plus standard tokens
+- **Third-party harness ban** (April 4) -- Subscriptions no longer cover OpenClaw and similar. Pay-as-you-go or API key. Anthropic says cache efficiency. Competitively, it kneecaps rival harnesses
+- **KYC identity verification** (April 14-16) -- Government ID + selfie for select users via Persona. First major AI company to ship this. Big privacy backlash
+- **Cache TTL regression** (regression ~March 8, discovered April) -- Prompt cache silently dropped from 1h to 5m. Community measured 15-53% API cost impact. Env var workaround in v2.1.108+
+- **Auto mode on Max** (April 16) -- Model selects Opus vs Sonnet per request
+- **`/ultrareview`** (GA April 16) -- Parallel multi-agent cloud code review
+
+### Earlier
+
+- **Agent Teams** (v2.1.32, Feb 5 2026) -- Research preview. Multi-agent, worktree isolation, inter-agent messaging. Behind `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
+- **Code Review** (March 9, 2026) -- Agent-team PR review. $15-25/review average
+- **Skills/Commands Merge** (v2.1.3) -- `.claude/commands/` and `.claude/skills/` both produce `/slash-commands`
+- **Agent Skills Specification** (Dec 2025) -- Open standard, adopted by OpenAI for Codex CLI
+- **Automatic Memories** -- Persistent across sessions
+- **Built-in Git Worktree Support** -- One per agent
 
 ## Integration Ecosystem
 
@@ -116,14 +129,14 @@ The closest tool-level benchmark data comes from HAL/CORE-Bench, which measures 
 
 ## CodeMySpec Integration
 
-Claude Code has the deepest integration potential with CodeMySpec of any tool in this roundup.
+Claude Code has the deepest CodeMySpec integration potential of any tool I looked at.
 
-- **Context files:** `CLAUDE.md` is the native project context file. CodeMySpec can generate `CLAUDE.md` files from specs, giving Claude Code full project context including architecture decisions, component boundaries, and coding rules on every session start.
-- **MCP support:** Full MCP client. CodeMySpec can serve specs via an MCP server, making specifications available as tools and resources during coding sessions. Claude Code was the first tool to support MCP natively.
-- **Hooks support:** Claude Code supports pre/post hooks on tool calls. Specs could trigger automated verification after file edits -- run tests, check architecture compliance, validate against acceptance criteria.
-- **Subagent support:** Agent Teams enable multi-agent orchestration with worktree isolation. A spec could drive parallel implementation: one agent per component, each working in its own git worktree, coordinated by a team lead agent.
-- **Skills/commands support:** Specs can become reusable `/slash-commands` in `.claude/commands/`. A CodeMySpec skill could accept a story ID, fetch the spec, and set up the full implementation context automatically.
-- **Memory/persistence:** Automatic memories persist across sessions. Claude Code remembers project patterns, decisions, and preferences. Combined with `CLAUDE.md`, spec context carries forward without re-explanation.
+- **Context files:** `CLAUDE.md` is the native project context file. CodeMySpec can generate it from specs -- architecture decisions, component boundaries, and coding rules load on every session start
+- **MCP support:** Full MCP client (Claude Code shipped it first). CodeMySpec can serve specs as tools and resources during coding
+- **Hooks:** Pre/post hooks on tool calls. Specs can trigger automated verification after edits -- run tests, check architecture, validate acceptance criteria
+- **Subagents:** Agent Teams + worktree isolation. One agent per component, each in its own worktree, coordinated by a team lead
+- **Skills/commands:** Specs become reusable `/slash-commands` in `.claude/commands/`. A CodeMySpec skill could take a story ID, fetch the spec, and set up the full implementation context
+- **Memory:** Automatic memories persist across sessions. Combined with `CLAUDE.md`, spec context carries forward without re-explanation
 
 ## Related Articles
 

@@ -1,0 +1,13 @@
+slug: graph-structured-memory
+type: blog
+title: "Graph and Structured Memory: Most Ambitious, Most Vaporware"
+meta_title: "Graph Memory for AI Agents: When It Actually Works"
+meta_description: "Zep, Graphiti, mem0 graph mode, and the self-evolving knowledge base trap that exploded after Karpathy's LLM-Wiki gist. Real wins for relationship-shaped domains. Mostly hype for coding work."
+tags:
+  - agent-memory
+  - knowledge-graph
+  - graphiti
+  - karpathy-llm-wiki
+  - memory-systems-series
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport

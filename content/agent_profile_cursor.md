@@ -2,21 +2,24 @@
 
 ## Overview
 
-Cursor is the category leader in AI IDEs, surpassing $2B ARR in February 2026 -- doubling in just 3 months. It's the fastest-scaling SaaS company in history by ARR trajectory, valued at $29.3B after a $2.3B raise in November 2025. 60% of revenue now comes from large corporate buyers.
+Cursor is the AI IDE category, full stop. $2B ARR as of February 2026, doubled in 3 months, valued at $29.3B after a $2.3B raise. Fastest-scaling SaaS in history. 60% of revenue now comes from corporate buyers.
 
-Built as a VS Code fork, it replaces your editor entirely with AI woven into every interaction -- tab completion, inline editing, multi-file Composer, Background Agents, and now Automations (event-driven agent triggers from codebase changes, Slack messages, or timers).
+It's a VS Code fork with AI wired into every surface -- tab completion, inline edits, multi-file Composer, Background Agents, and Automations (event-driven triggers from code changes, Slack, or timers). The Supermaven acquisition (Nov 2025) brought autocomplete in-house. The June 2025 switch to credit-based billing aligned pricing with compute and set off a still-burning fire with heavy users.
 
-The acquisition of Supermaven (Nov 2025) brought best-in-class autocomplete in-house. The move to credit-based billing (June 2025) aligned pricing with compute usage but generated significant backlash from heavy users.
+Cursor 3 (April 2, 2026, "Glass") is a bet. The IDE is now secondary to an Agents Window running up to 8 agents in parallel across local worktrees, cloud VMs, and remote SSH. Either this is where the category is going, or Cursor just handed Claude Code and Codex more market share. Cursor 3.1 (April 13) added tiled layout and cut dropped frames ~87%.
 
 ## Key Differentiators
 
-- **Market leader** -- $2B+ ARR, fastest-scaling SaaS ever, defines the AI IDE category
-- **Composer** -- Multi-file editing with natural language, consistently called "the king of multi-file edits"
-- **Background Agents** -- Cloud-based Ubuntu VMs for autonomous work, triggerable from IDE, Slack, web, or mobile
-- **Subagents** (v2.5) -- Async agents that can spawn their own subagents (tree of coordinated work)
-- **MCP Apps** (v2.6) -- Interactive UIs rendered in chat: charts, diagrams, whiteboards from MCP servers
-- **Multi-model** -- Switch between Claude, GPT, Gemini, and Cursor's own Composer model per conversation
-- **30+ partner plugins** -- Atlassian, Datadog, GitLab, Hugging Face, PlanetScale, monday.com, etc.
+- **Market leader** -- $2B+ ARR, fastest-scaling SaaS ever. Defines the category
+- **Composer** -- Multi-file editing in natural language. The king of cross-file edits
+- **Background Agents** -- Cloud Ubuntu VMs, triggerable from IDE, Slack, web, or mobile
+- **Subagents** (v2.5) -- Async, can spawn their own subagents
+- **MCP Apps** (v2.6) -- Interactive UIs (charts, diagrams, whiteboards) in chat from MCP servers
+- **Multi-model** -- Claude, GPT, Gemini, and Cursor's Composer model. Switch per conversation
+- **30+ partner plugins** -- Atlassian, Datadog, GitLab, Hugging Face, PlanetScale, monday.com
+- **Cursor 3 Agents Window** (April 2, 2026) -- Full rebuild around agent management. 8 parallel agents, isolated worktrees, unified sidebar across surfaces. `/worktree`, `/best-of-n` to run the same task across models and compare
+- **Canvas** (April 15, 2026) -- Durable interactive artifacts (dashboards, diagrams, charts) in the Agents Window side panel
+- **BugBot with MCP** (April 8, 2026) -- PR review agent with MCP access and Learned Rules. 78% resolution rate (up from 76%)
 
 ## Pricing
 
@@ -29,45 +32,45 @@ The acquisition of Supermaven (Nov 2025) brought best-in-class autocomplete in-h
 | Teams | $40/user/mo | Team features + shared credit pool |
 | Enterprise | Custom | Custom deployment |
 
+**Note:** Annual billing: 20% off all paid tiers (Pro $16/mo, Pro+ $48/mo, Ultra $160/mo). Auto mode is unlimited and does not consume Pro credits.
+
 ## Strengths
 
-- Largest user base -- most tutorials, community content, and third-party integrations
-- Full VS Code extension compatibility (with growing caveats)
-- Multi-model flexibility within a single IDE
-- Background Agents + Subagents for autonomous parallel work
-- Strong autocomplete (ex-Supermaven)
-- BugBot PR review with 76% resolution rate (35%+ fixes merged unmodified)
-- Automations enable event-driven coding workflows
-- Partner plugin ecosystem growing fast
+- Largest user base means the most tutorials, community content, and integrations
+- VS Code extension compatibility (with growing caveats)
+- Multi-model flexibility in one IDE
+- Background Agents + Subagents for parallel autonomous work
+- Best-in-class autocomplete (Supermaven inside)
+- BugBot PR review at 78% resolution, 35%+ of fixes merged unmodified
+- Automations enable event-driven workflows
 
 ## Weaknesses
 
-- Credit system frustration -- June 2025 switch caused massive backlash, users report credits vanishing in 1-3 days
-- Opaque billing -- "a significant chunk of developers paying for Cursor are frustrated by billing they don't understand"
-- Heavy agentic use is token-inefficient -- iterative vibe coding grows entire context chains, burning credits fast
-- Cursor's own CEO warned vibe coding builds "shaky foundations that eventually crumble"
-- Proprietary -- no source access
-- VS Code fork fragmentation risk -- Microsoft began blocking certain extensions (C/C++) in forks via licensing enforcement late 2025
-- VS Code's native multi-agent support (Feb 2026) closing the feature gap, threatening fork differentiation
-- Bug history -- v2.2 Agent Hang and Zombie Revert bugs required dedicated v2.3 bugfix release
-- Requires switching your entire editor
+- Credits are the #1 complaint. Users report burning a month's allocation in 1-3 days
+- Billing is opaque. "A significant chunk of developers paying for Cursor are frustrated by billing they don't understand"
+- Heavy agentic use is token-inefficient. Iterative vibe coding grows context chains and burns credits
+- Cursor's own CEO warned that vibe coding builds "shaky foundations that eventually crumble"
+- Proprietary. No source access
+- VS Code fork fragmentation -- Microsoft started blocking certain extensions (C/C++) in forks late 2025
+- VS Code shipped native multi-agent support (Feb 2026), eating into Cursor's differentiation
+- Requires switching your whole editor
 
 ## Community Sentiment
 
 ### What People Love
 
-- **Tab autocomplete is best-in-class** -- Multiple users call it "the best in the game" and "unmatched" in latency. Even users who've left Cursor say tab completion is what they miss most. "I've been a Pro user for a while because Cursor's Tab autocomplete is the best in the game." -- u/olucasaguilar, r/cursor (28 upvotes)
-- **Cross-file editing workflow** -- "The AI pair-programming workflow is pretty hard to beat, especially how it understands a codebase and edits across files." -- r/cursor alternatives thread
-- **Model flexibility** -- Switching between Claude, GPT, Gemini within the same session is unique. "Claude opus4.6 max think in cursor feels a lot smarter than opus 4.6 in Claude Code" -- u/teosocrates, r/cursor
-- **VS Code familiarity** -- Existing keybindings, themes, extensions carry over with zero learning curve
+- **Tab autocomplete** -- "The best in the game." Even users who left Cursor say Tab is what they miss. "I've been a Pro user for a while because Cursor's Tab autocomplete is the best in the game." -- u/olucasaguilar, r/cursor (28 upvotes)
+- **Cross-file editing** -- "The AI pair-programming workflow is pretty hard to beat, especially how it understands a codebase and edits across files." -- r/cursor alternatives thread
+- **Model flexibility** -- "Claude opus4.6 max think in cursor feels a lot smarter than opus 4.6 in Claude Code" -- u/teosocrates, r/cursor
+- **VS Code familiarity** -- Keybindings, themes, extensions all carry over
 
 ### Common Complaints
 
-- **Claude Code is pulling users away (dominant theme)** -- The r/cursor "alternatives" thread (84 upvotes, 108 comments) is dominated by Claude Code switches. Top comment (60 upvotes): "I've almost totally switched over to Claude Code CLI." Claude Code's persistent memory, better rate limits on $200 plan, and headless operation cited as advantages.
-- **Pricing traps and opacity** -- Enterprise team discovered "Fast" model was 10x more expensive per request, leading to $1,500/day incident. "yeah that model has 30x cost, it's an insane trap" -- u/ShaiHuludTheMaker, r/ChatGPTCoding
-- **Credit system confusion** -- Effective price for heavy agentic workflows reportedly jumped 20x+. "When Cursor silently raised their price by over 20x... what is the message the users are getting?" -- Medium, Feb 2026
-- **Hidden agent behaviors** -- Cursor silently intercepts git commands and injects trailers at a layer below the agent. "Cursor intercepts git commits and injects trailers at a layer below where the agent operates -- the agent doesn't even know it's happening." -- u/Full_Engineering592, r/cursor (28 upvotes)
-- **Bundling frustration** -- Users want a Tab-only plan at $5-10/mo since they're moving agent/chat to Claude Code or Codex
+- **Claude Code is pulling users away** -- The r/cursor "alternatives" thread (84 upvotes, 108 comments) is a switching party. Top comment (60 upvotes): "I've almost totally switched over to Claude Code CLI." Persistent memory, better Max limits, and headless operation cited
+- **Pricing traps** -- Enterprise team found "Fast" model was 10x per request, hit with a $1,500/day bill. "yeah that model has 30x cost, it's an insane trap" -- u/ShaiHuludTheMaker, r/ChatGPTCoding
+- **Credit confusion** -- Effective price for heavy agentic use reportedly jumped 20x+. "When Cursor silently raised their price by over 20x... what is the message the users are getting?" -- Medium, Feb 2026
+- **Hidden agent behaviors** -- "Cursor intercepts git commits and injects trailers at a layer below where the agent operates -- the agent doesn't even know it's happening." -- u/Full_Engineering592, r/cursor (28 upvotes)
+- **Bundling** -- Users want a Tab-only plan at $5-10/mo since they're moving agent/chat elsewhere
 
 ### Notable Quotes
 
@@ -83,27 +86,29 @@ The acquisition of Supermaven (Nov 2025) brought best-in-class autocomplete in-h
 
 ## Performance Notes
 
-**A note on benchmarks:** SWE-bench measures models and their scaffolding, not IDE-based coding agents. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+**On benchmarks:** SWE-bench measures models plus scaffolding, not IDE-based coding agents. There is no widely-adopted benchmark for comparing coding agents head-to-head.
 
 **Product metrics:**
 | Metric | Value | Notes |
 |--------|-------|-------|
-| BugBot resolution rate | **76%** | Up from 52%. 35%+ fixes merged unmodified. |
-| CursorBench | Proprietary | Uses "Cursor Blame" -- traces committed code back to agent requests |
+| BugBot resolution rate | **78%** | Up from 76%. 35%+ of fixes merged unmodified |
+| CursorBench | Proprietary | Internal metric, not independently verified. Reportedly shows Opus 4.7 at 70% vs 4.6 at 58%. Not comparable to SWE-bench |
 
-**Community consensus:** Cursor's strength is the integrated IDE experience -- tab completion, Composer multi-file editing, and Background Agents. Developers who prioritize autonomous code quality often prefer Claude Code; developers who prioritize workflow integration and UX prefer Cursor.
+**Community consensus:** Cursor wins on integrated IDE experience -- Tab, Composer, Background Agents. Developers who prioritize autonomous code quality skew to Claude Code. Developers who prioritize workflow and UX stay with Cursor.
 
 ## Recent Changes (2025-2026)
 
-- **Cursor 2.0** (late 2025) -- Composer (own fast coding model), agent-centric interface, parallel agent management
-- **Cursor 2.2** -- Background Agents (cloud Ubuntu VMs). Plagued by Agent Hang and Zombie Revert bugs.
-- **Cursor 2.3** -- Bugfix release for 2.2 issues
-- **Cursor 2.5** -- Subagents: async, can spawn own subagents (tree of coordinated work)
-- **Cursor 2.6** (March 3, 2026) -- MCP Apps (interactive UIs in chat), team plugin marketplaces, 30+ partner plugins
-- **BugBot Autofix** (Feb 26, 2026) -- Auto-fixes PR issues via cloud agents
-- **Automations** (March 2026) -- Auto-launch agents from codebase changes, Slack messages, or timers
-- **CLI overhaul** (Jan 2026) -- Agent modes (Plan/Ask), cloud handoff, one-click MCP auth
-- **Credit-based billing** (June 2025) -- Replaced "500 fast requests/month." Heavy user backlash.
+- **Cursor 3.0 / "Glass"** (April 2, 2026) -- Full interface rebuild. Agents Window replaces the IDE as primary surface. 8 parallel agents across local/worktree/cloud/remote SSH. `/worktree`, `/best-of-n`
+- **Cursor 3.1** (April 13, 2026) -- Tiled layout, batch STT voice input, branch selection for cloud agents, 87% drop-frame reduction
+- **Canvas** (April 15, 2026) -- Durable interactive artifacts in the Agents Window side panel
+- **BugBot: Learned Rules + MCP + Fix All** (April 8, 2026) -- 78% resolution rate
+- **Annual 20% discount + Auto mode unlimited** (April 2026)
+- **Cursor 2.6** (March 3, 2026) -- MCP Apps, team plugin marketplaces, 30+ partner plugins
+- **Automations** (March 2026) -- Auto-launch agents from code changes, Slack, or timers
+- **Cursor 2.5** -- Subagents. Async with tree spawning
+- **Cursor 2.2/2.3** -- Background Agents launched, then needed a bugfix release for Agent Hang and Zombie Revert
+- **Cursor 2.0** (late 2025) -- Composer (own fast model), agent-centric interface
+- **Credit-based billing** (June 2025) -- Replaced "500 fast requests/month." Still burning
 
 ### Business Metrics Timeline
 
@@ -124,14 +129,14 @@ The acquisition of Supermaven (Nov 2025) brought best-in-class autocomplete in-h
 
 ## CodeMySpec Integration
 
-Cursor's massive user base makes it a high-value integration target for CodeMySpec.
+The user base makes Cursor a high-value integration target even if it's not the deepest fit.
 
-- **Context files:** `.cursorrules` is the native project context file, directly analogous to `CLAUDE.md`. CodeMySpec can generate `.cursorrules` from specs to give Cursor full project context -- architecture, component boundaries, and coding standards.
-- **MCP support:** Full MCP tools support with per-project or global config. CodeMySpec can serve specs via MCP, and with MCP Apps (v2.6), specs could render as interactive visualizations directly in Cursor's chat panel.
-- **Hooks support:** No native hook system equivalent to Claude Code's pre/post hooks. Automations (event-driven triggers) could partially fill this gap for post-edit verification.
-- **Subagent support:** Subagents (v2.5) enable async parallel work with tree coordination. A spec could decompose into sub-tasks, each assigned to a subagent. Background Agents can work autonomously in cloud VMs.
-- **Skills/commands support:** No native skills/commands system. Custom slash commands are not user-definable in the same way as Claude Code. MCP tools are the closest equivalent.
-- **Memory/persistence:** No persistent memory across sessions. `.cursorrules` and MCP are the primary mechanisms for carrying spec context forward. Each new Composer session starts fresh.
+- **Context files:** `.cursorrules` is the analog to `CLAUDE.md`. CodeMySpec can generate it from specs -- architecture, boundaries, standards
+- **MCP support:** Full tools support, per-project or global. With MCP Apps (v2.6), specs could render as interactive visualizations in the chat panel
+- **Hooks:** No native pre/post hook system like Claude Code. Automations (event-driven triggers) can partially fill the gap
+- **Subagents:** v2.5 subagents enable async tree-coordinated work. A spec decomposes into sub-tasks, each with a subagent. Background Agents run autonomously in cloud VMs
+- **Skills/commands:** No user-definable slash commands. MCP tools are the closest equivalent
+- **Memory:** None across sessions. `.cursorrules` + MCP are the only way to carry spec context forward. Every Composer session starts fresh
 
 ## Related Articles
 
