@@ -2,10 +2,6 @@
 
 MCP tool for linking a story to a component that implements it. This tool allows AI agents to track which components satisfy which user stories, enabling traceability from requirements through implementation.
 
-## Module
-
-CodeMySpec.McpServers.Stories.Tools.SetStoryComponent
-
 ## Type
 
 module
@@ -46,9 +42,3 @@ Executes the tool to link a story to a component.
 - returns tool response with isError true on failure
 - includes story data in successful response
 
-## Schema
-
-The tool defines input parameters using Hermes schema:
-
-- story_id (string, required): Story ID to link. Use list_story_titles tool to find valid IDs.
-- component_id (string, required): Component ID to link to the story.

@@ -4,17 +4,12 @@
 
 context
 
-Simple tagging system for organizing stories. Tags are strings scoped to a project, and stories can have multiple tags.
-
-## Purpose
-
-Enable flexible organization of stories beyond hierarchical structures. Tags allow stories to be grouped by theme (e.g., "fraud-detection", "onboarding"), feature area, or any other user-defined category.
-
-## Key Concepts
-
-- **Tags are strings** - Simple identifiers like `"accounts"`, `"driver-onboarding"`, `"fraud-detection"`
-- **Project-scoped** - Tags are unique by name within a project
-- **Many-to-many** - Stories can have multiple tags, tags can have multiple stories
+Simple tagging system for organizing stories. Tags are strings scoped to a
+project, and stories can have multiple tags. Enables flexible organization
+beyond hierarchical structures: stories can be grouped by theme
+(e.g., `"fraud-detection"`, `"onboarding"`), feature area, or any
+user-defined category. Tags are simple identifiers, project-scoped (unique by
+name within a project), and many-to-many with stories.
 
 ## Delegates
 

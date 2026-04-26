@@ -2,7 +2,7 @@
 
 ## Type
 
-context
+logic
 
 Orchestrates the full lifecycle of a LiveView from specification through implementation. Mirrors DevelopContext's phased approach: spec the LiveView, spec child components, then implement (tests + code) in dependency order — child components first, then the parent LiveView that composes them. Uses LiveViewSpec/LiveViewTest/LiveViewCode for the parent LiveView and ComponentSpec/ComponentTest/ComponentCode for child components.
 

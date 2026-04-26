@@ -1,15 +1,14 @@
 # CodeMySpec.AgentTasks.RefactorModule
 
-Agent task for guiding interactive refactoring sessions with Claude Code. Routes to component or context-specific refactoring based on the component type.
+Agent task for guiding interactive refactoring sessions with Claude Code. Routes
+to component or context-specific refactoring based on the component type.
 
-## Purpose
-
-Provides an open-ended, conversational refactoring workflow where the agent:
-1. Reviews existing spec, tests, and implementation
-2. Asks the user what they want to refactor
-3. Has a conversation with the user to understand requirements
-4. Modifies the spec first, then tests, then implementation
-5. Relies on standard validate_edits hook for validation
+Provides an open-ended, conversational refactoring workflow: the agent reviews
+existing spec/tests/implementation, asks the user what they want to refactor,
+discusses requirements, then modifies spec first, then tests, then
+implementation. The standard `validate_edits` hook handles validation; no
+custom stop-hook check is needed. For context refactors, the agent has access
+to all child component files.
 
 ## Functions
 
@@ -62,12 +61,3 @@ Evaluates the refactoring session after completion.
 - CodeMySpec.Utils - for component file path resolution
 - CodeMySpec.Environments - for file reading
 - CodeMySpec.Components - for listing child components of a context
-
-## Implementation Notes
-
-- This is an open-ended conversational task, not a structured code generation task
-- The agent should be free to have a multi-turn conversation with the user
-- No special stop hook validation is needed
-- The standard validate_edits hook will catch any spec or code issues
-- For context refactoring, the agent should have access to all child component information
-- The prompt should emphasize: spec first, then tests, then code

@@ -2,6 +2,10 @@
 
 Manages component requirement checking, persistence, and workflow queries. Requirements are computed from checker modules and persisted for efficient UI queries.
 
+## Type
+
+context
+
 ## Components
 
 - ./requirements/requirement.spec.md

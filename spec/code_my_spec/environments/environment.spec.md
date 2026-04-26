@@ -2,7 +2,7 @@
 
 ## Type
 
-struct
+schema
 
 Opaque struct representing an execution context. Encapsulates implementation-specific details.
 

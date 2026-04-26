@@ -15,6 +15,10 @@ can be merged into content attributes by the Sync module.
 | parse_status      | atom         | Yes      | Processing result status                         | Values: :success, :error. Enforced key |
 | parse_errors      | map          | No       | Error details when parse_status is :error        | Nil on success                        |
 
+## Dependencies
+
+None.
+
 ## Functions
 
 ### success/2
