@@ -1,0 +1,20 @@
+slug: end-user-license-agreement
+type: page
+title: End User License Agreement
+
+protected: false
+publish_at: 2026-05-03T00:00:00Z
+expires_at: null
+
+meta_title: End User License Agreement - CodeMySpec
+meta_description: License terms for installing and using the CodeMySpec CLI, Claude Code plugin, and other locally-installed software.
+og_title: End User License Agreement - CodeMySpec
+og_description: License terms for the CodeMySpec CLI and locally-installed software.
+og_image: null
+
+metadata:
+
+tags:
+  - legal
+  - eula
+  - license
