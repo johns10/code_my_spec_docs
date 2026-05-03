@@ -14,7 +14,7 @@ The catch nobody talks about enough: from [2,000+ autonomous maintenance cycles]
 
 ## What Is the Garbage Collection Pattern for AI-Generated Code?
 
-The most compelling pattern I've seen in agentic maintenance comes from [OpenAI's harness engineering](/pages/the-harness-layer) article ([original](https://openai.com/index/harness-engineering/)). Their internal team discovered that agents generating code at high throughput were creating drift - inconsistent patterns, hand-rolled helpers that duplicated shared utilities, guessed data shapes instead of typed SDKs. The team was spending 20% of their week manually cleaning up what they called "AI slop."
+The most compelling pattern I've seen in agentic maintenance comes from [OpenAI's harness engineering](/blog/the-harness-layer) article ([original](https://openai.com/index/harness-engineering/)). Their internal team discovered that agents generating code at high throughput were creating drift - inconsistent patterns, hand-rolled helpers that duplicated shared utilities, guessed data shapes instead of typed SDKs. The team was spending 20% of their week manually cleaning up what they called "AI slop."
 
 Their solution: background Codex tasks that run on a regular cadence. Scan for deviations from encoded "golden principles." Update quality grades. Open targeted refactoring PRs that can be reviewed in under a minute and automerged. It functions like garbage collection - automated cleanup that scales proportionally to code generation throughput. The principles exist not just for humans but to make the codebase readable for the next agent run.
 

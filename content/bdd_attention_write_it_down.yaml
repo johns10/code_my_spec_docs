@@ -1,0 +1,35 @@
+# Metadata for bdd_attention_write_it_down.md
+
+# Required fields
+slug: bdd-attention-write-it-down
+type: blog
+title: "Write It Down: The First AI Coding Workflow That Actually Worked"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Write It Down: A Three-File AI Coding Workflow"
+meta_description: Get the rules out of the chat and into files the model re-reads at position zero of every session. The first workflow that held against attention drift.
+og_title: "Write It Down: The First AI Coding Workflow That Actually Worked"
+og_description: Three files (guidelines, todos, memory), one repeated prompt, short chats. Where it worked. Where it broke.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 3
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - claude-md
+  - workflow
+  - context-engineering
+  - claude-code
+  - memory-files

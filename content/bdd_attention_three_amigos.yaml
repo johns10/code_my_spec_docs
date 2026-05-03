@@ -1,0 +1,37 @@
+# Metadata for bdd_attention_three_amigos.md
+
+# Required fields
+slug: bdd-attention-three-amigos
+type: blog
+title: "Three Amigos: The Gate That Was Missing"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Three Amigos for AI Coding: The Gate at the Front"
+meta_description: "BDD's Three Amigos applied to AI coding agents: confirm scenario titles before any code is generated, plus a sealed-boundary spec module that can't cheat."
+og_title: "Three Amigos: The Gate That Was Missing"
+og_description: How Three Amigos plus a compile-time sealed boundary fixes the Potemkin-village failure mode of naive BDD with coding agents.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 6
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - bdd
+  - three-amigos
+  - example-mapping
+  - sealed-boundary
+  - compile-time-checks
+  - elixir
+  - phoenix

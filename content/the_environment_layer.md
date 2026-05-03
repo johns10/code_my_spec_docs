@@ -78,7 +78,7 @@ Git is not just version control in agentic coding. It's environment infrastructu
 
 This is the point most people miss. The environment isn't plumbing. It determines what kinds of work an agent can do.
 
-A CLI agent on your local machine can run your entire build pipeline, access your local database, use your SSH keys. It can do anything you can do. An IDE agent can see your cursor position and show changes inline, ideal for focused editing where visual feedback matters. A cloud agent can run for hours and scale to many parallel instances, ideal for batch work. A sandboxed agent is safer but more limited. An MCP-connected agent (covered in [Part 3](/pages/the-agent-layer)) can interact with GitHub, databases, Slack, and CI pipelines through a standardized protocol.
+A CLI agent on your local machine can run your entire build pipeline, access your local database, use your SSH keys. It can do anything you can do. An IDE agent can see your cursor position and show changes inline, ideal for focused editing where visual feedback matters. A cloud agent can run for hours and scale to many parallel instances, ideal for batch work. A sandboxed agent is safer but more limited. An MCP-connected agent (covered in [Part 3](/blog/the-agent-layer)) can interact with GitHub, databases, Slack, and CI pipelines through a standardized protocol.
 
 The choice of environment is a choice about capability, safety, and workflow. Understanding this layer means understanding why the same model produces different results in different contexts.
 
@@ -86,7 +86,7 @@ Anthropic's research makes this concrete: [infrastructure setup alone swings Ter
 
 ---
 
-*This is Part 5 of "The Anatomy of Agentic Coding Systems." [Part 4 covered the Harness Layer](/pages/the-harness-layer) - constraints, verification, and lifecycle management. Part 6 covers the Orchestration Layer - coordinating multiple agents on shared work.*
+*This is Part 5 of "The Anatomy of Agentic Coding Systems." [Part 4 covered the Harness Layer](/blog/the-harness-layer) - constraints, verification, and lifecycle management. Part 6 covers the Orchestration Layer - coordinating multiple agents on shared work.*
 
 ---
 

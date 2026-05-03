@@ -56,6 +56,6 @@ The model is getting better at being steered. That only helps you if you're stee
 
 I'm working on [MetricFlow](https://github.com/Code-My-Spec/metric_flow) as the test case. It's open source -- specs, generated code, where things break.
 
-The meta thing about building a harness is that the [harness itself needs a harness](/pages/the-harness-layer). My BDD specs for CodeMySpec have to handle the fact that the system under test is a system that writes and tests other systems.
+The meta thing about building a harness is that the [harness itself needs a harness](/blog/the-harness-layer). My BDD specs for CodeMySpec have to handle the fact that the system under test is a system that writes and tests other systems.
 
 It's specs all the way down.

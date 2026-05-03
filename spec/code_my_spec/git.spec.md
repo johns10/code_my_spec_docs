@@ -2,6 +2,10 @@
 
 Context module for Git operations using authenticated credentials. Provides a thin wrapper around Git CLI operations for cloning and pulling repositories using OAuth tokens from the Integrations context.
 
+## Type
+
+context
+
 ## Delegates
 
 - clone/3: CodeMySpec.Git.CLI.clone/3

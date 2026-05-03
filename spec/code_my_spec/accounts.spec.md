@@ -2,6 +2,10 @@
 
 The Accounts context manages multi-tenant account architecture with personal and team accounts, user membership relationships, role-based permissions, and access control throughout the CodeMySpec platform.
 
+## Type
+
+context
+
 ## Dependencies
 
 - CodeMySpec.Accounts.Account

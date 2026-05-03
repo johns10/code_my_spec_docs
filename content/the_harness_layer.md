@@ -112,7 +112,7 @@ If you're using an AI coding tool today and you haven't configured its rules fil
 
 ---
 
-*This is Part 4 of "The Anatomy of Agentic Coding Systems." [Part 3 covered the Agent Layer](/pages/the-agent-layer) - the execution loop, tool use, and context management. Part 5 covers the Environment Layer - where AI code actually runs.*
+*This is Part 4 of "The Anatomy of Agentic Coding Systems." [Part 3 covered the Agent Layer](/blog/the-agent-layer) - the execution loop, tool use, and context management. Part 5 covers the Environment Layer - where AI code actually runs.*
 
 ---
 

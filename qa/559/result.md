@@ -14,7 +14,7 @@ were used so no mutations touched the real story 559 dataset.
 
 ## Status
 
-fail
+pass
 
 ## Scenarios
 
@@ -57,16 +57,16 @@ fail
   `screenshots/566_5179_question_deleted.png`.
 
 - **5177 — wall re-renders when agent calls add_rule mid-session
-  (FAIL).** With the wall loaded and showing 1 rule, called
-  `BddRules.create_rule/3` from a separate `mix run` process. The new
-  rule landed in Postgres (verified via reload — rule count went from
-  1 to 3 and the new statement appeared on the canvas) but the open
-  page did NOT update. Rule count stayed at `1 rules`, the new rule
-  card never appeared on the canvas, and there was no activity-ribbon
-  flash. Page only picked up the change after a manual reload.
-  Evidence: `screenshots/566_5177_realtime_after_reload.png` (post-
-  reload — shows the new rule visible, confirming DB write but UI
-  push failure).
+  (PASS).** Initial attempt failed because `mix run` spawns a separate
+  BEAM and `Phoenix.PubSub` is in-memory per node — the broadcast
+  fired in an isolated BEAM the LiveView couldn't hear. Retested by
+  calling `mcp__plugin_codemyspec_local__add_rule` via curl with
+  `X-Working-Dir: /Users/.../qa_test_project` so the call landed in
+  the running CLI's BEAM (which the recent refactor wired through to
+  the hosted server's Postgres + PubSub). Rule count went from 3 to 4
+  on the open page within ~1 second, the new rule card appeared on
+  the canvas, and an activity-ribbon flash fired — no manual reload
+  needed. Evidence: `screenshots/566_5177_realtime_pass_via_mcp.png`.
 
 ## Evidence
 
@@ -74,21 +74,6 @@ All screenshots in `.code_my_spec/qa/559/screenshots/`. Each is
 prefixed with the story id (`566`) and the spex criterion id.
 
 ## Issues
-
-- **issue/three-amigos-pubsub-no-realtime-rule-create (high)** —
-  `ThreeAmigosLive` does not re-render when `BddRules.create_rule/3`
-  fires its broadcast. Spex 5177 expectation is that the wall updates
-  in real time as the agent populates rules; this is the load-bearing
-  behavior of the V4 cluster wall (the moduledoc explicitly says "all
-  mutations land via MCP from the agent in Claude Code, and PubSub
-  pushes the resulting cards in real time"). Reproduction: load
-  `/app/stories/:id/three-amigos`, separately call
-  `BddRules.create_rule(scope, story_id, %{statement: ...})`, observe
-  no DOM update on the open page. Suspect: the moved LiveView
-  (`CodeMySpecWeb.StoryLive.ThreeAmigos`) may not be subscribing to
-  the same PubSub topic that `BddRules.broadcast/2` publishes on, or
-  the `handle_info` clause for `:bdd_rule_created` is missing. Filing
-  for triage.
 
 - **issue/three-amigos-brief-out-of-date (low)** — The brief at
   `.code_my_spec/qa/559/brief.md` was written when the LiveView was on

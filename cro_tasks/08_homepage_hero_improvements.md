@@ -1,45 +1,79 @@
-# CRO Task 08: Homepage Hero Section Improvements
+# Homepage Hero Improvements
 
 **Priority:** High
 **Area:** Homepage — above the fold
-**Status:** Todo
+**Status:** Partially done. Mockup-code block in hero handles the "no product visual" gap as a placeholder. Demo video embed remains open (gated on CRO Task 13: Demo Video).
 
-## Problem
+## Why This Exists
 
-The homepage hero is solid copy ("Keep your architecture. Let AI do the typing.") but has two issues:
+The homepage is the canonical first impression. Visitors from Reddit who already know the concept convert; visitors from Google or shared links don't, because the hero is text-only and they can't see what CodeMySpec actually is in 5 seconds. The fix is a real product visual in the hero and tighter problem/insight/solution framing in the supporting columns.
 
-1. **No product visual.** The hero is text-only. Visitors can't see what CodeMySpec looks like. For a dev tool, a screenshot or short demo clip of the terminal/workflow in action is expected.
+## Locked Decisions
 
-2. **Three-column value props below the fold are hard to scan.** "LLMs invent architecture", "The manual process works", "CodeMySpec automates the boring parts" — these are good points but the body text is small and dense on the full-page screenshot.
+1. The mockup-code block currently in the hero stays as the static placeholder until the demo video ships.
+2. Demo video lives behind CRO Task 13 — when complete, embed the short hero cut here.
+3. Three-column section reframes to problem/insight/solution per the brand narrative arc in `marketing/05_positioning.md`.
 
-## What to Change
+## User Stories
 
-### Add a product visual to the hero
+### Story 1: First-time visitors see a product visual above the fold
 
-Below the two CTA buttons, add either:
-- A terminal screenshot showing the plugin install + a spec being generated (static image is fine)
-- A short GIF/video of the workflow running (if you have one)
-- Even a styled mockup-code block showing the install command + output
+**As a** first-time visitor landing on codemyspec.com,
+**I want** to see what CodeMySpec actually does without scrolling or reading prose,
+**So that** I can decide in 5 seconds whether this is relevant to me.
 
-This doesn't need to be polished — a real terminal screenshot is more credible than a designed mockup for this audience.
+**Acceptance criteria:**
+- Given a visitor on a desktop browser viewing the homepage
+- When the page loads
+- Then a product visual is rendered above the fold (within the hero section)
+- And the visual shows real terminal output, install command, or workflow run — not abstract design
+- And the visual is positioned below the headline and CTA buttons, visible without scrolling on a 1080p viewport
+- And on mobile, the visual is responsive and visible without horizontal scroll
 
-### Tighten the three-column section
+### Story 2: When the demo video ships, replace the static visual
 
-The three columns work conceptually but could hit harder:
+**As a** visitor who lands on the homepage after the demo video is published,
+**I want** to see the short hero cut auto-playing (muted, looping) in place of the static mockup,
+**So that** I see motion and outcome, not just a frozen terminal.
 
-Current headings:
-- "LLMs invent architecture"
-- "The manual process works"
-- "CodeMySpec automates the boring parts"
+**Acceptance criteria:**
+- Given the demo video short cut (60-90s) is published per CRO Task 13
+- When a visitor loads the homepage
+- Then the hero visual is the demo video, not the mockup-code block
+- And the video autoplays muted with loop enabled
+- And the video does not block page interactivity or layout shift
+- And a fallback static frame renders if video fails to load
 
-Consider reframing as problem/bridge/solution more explicitly:
+### Story 3: Three-column section reframes to problem/insight/solution
 
-- "The problem" — LLMs invent architecture (keep)
-- "The insight" — Engineering discipline didn't stop being valuable (from brand narrative in 05_positioning.md)
-- "The solution" — CodeMySpec is the harness (from positioning)
+**As a** visitor reading past the hero,
+**I want** the three supporting columns to walk me through the narrative arc (problem, insight, solution) explicitly,
+**So that** by the bottom of the section I understand why CodeMySpec exists, not just what it does.
 
-This maps to the brand narrative arc in the strategy docs.
+**Acceptance criteria:**
+- Given a visitor scrolling past the hero
+- When they reach the three-column section
+- Then column 1 is labeled "The problem" and describes LLMs inventing architecture
+- And column 2 is labeled "The insight" and describes engineering discipline still mattering
+- And column 3 is labeled "The solution" and describes CodeMySpec as the harness
+- And the labels are visually distinct (badge, eyebrow text, or color) so the arc reads as one story, not three independent points
+- And copy is sourced from `marketing/05_positioning.md` brand narrative arc
 
-## Why This Matters
+## Non-Functional Requirements
 
-Your best prospects from Reddit spend 7+ minutes reading the methodology page. They're already sold on the concept. But visitors from broader channels (Google, Twitter) need to understand what CodeMySpec IS in 5 seconds. A product visual does that faster than any copy.
+- **Performance:** Hero visual must not regress LCP. Image/video must be optimized (WebP, MP4 with H.264, properly sized).
+- **Accessibility:** Static images need alt text. Videos need captions or a text alternative. Three-column section labels readable by screen readers.
+- **No layout shift:** Reserve space for the visual so CLS stays at zero.
+
+## Open Questions for Three Amigos
+
+1. If the demo video ships in two cuts (60s short, 3-5min medium), does the homepage show the short cut autoplaying, or a poster frame with click-to-play of the medium? Recommendation: short cut autoplaying.
+2. Is there a static screenshot fallback if a visitor blocks autoplay? What does that look like?
+3. Three-column copy: rewrite from scratch, or evolve current copy in place? Recommendation: evolve, since current copy is already close.
+
+## Definition of Done
+
+- All 3 stories pass acceptance criteria.
+- Mobile and desktop both render the visual cleanly above the fold.
+- Three-column section uses the problem/insight/solution framing with the right copy.
+- Performance budget unchanged (LCP, CLS within current thresholds).

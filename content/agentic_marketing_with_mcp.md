@@ -1,6 +1,8 @@
 # How I Do Marketing with Claude Code and MCP Tools
 
-*I'm not a marketing guru. I'm an engineer who hates marketing. Here's what actually worked.*
+*Marketing isn't a content problem. It's a system problem. I'm an engineer who hates marketing. Here's the loop I built.*
+
+> **Recursion note.** I wrote this article using the system it describes. The marketing harness picked the topic, scoped the outline, and pushed it through the publishing pipeline. You're reading the marketing harness marketing itself.
 
 ---
 
@@ -8,9 +10,11 @@ I've been building software for years and I'm terrible at marketing. Not "humble
 
 But I needed to market CodeMySpec. So I did what any engineer would do. I turned it into an engineering problem.
 
+Here's what six months taught me. **Marketing isn't a content problem. It's a system problem.** Throwing things at the wall - Reddit one week, X the next, half-built newsletter, occasional LinkedIn - adds up to busy, not effective. Tactics weren't the missing piece. The missing piece was a strategy → daily plan → cadence → measurement loop. Running on rails, not vibes.
+
 ## How did I get started with AI-powered marketing as a developer?
 
-I sat down with Claude and came up with a strategy based on some theories I had. My users hang out on Reddit. I'm active on r/elixir. I know the AI coding subs. So we started there.
+I sat down with Claude and came up with a strategy based on some theories I had. My users hang out on Reddit. I had a few subs in mind where my experience was relevant. So we started there.
 
 First thing: hook up a Reddit MCP server. Now Claude can scan subreddits and pull thread details. We started commenting, being helpful in threads where my experience was relevant. No grand plan. Just show up and be useful.
 
@@ -26,7 +30,7 @@ The pattern is always the same: strategize, add a tool, execute, review results,
 
 ## What does the daily marketing loop look like with Claude Code and MCP?
 
-I tell Claude to scan Reddit. It uses a Reddit MCP server to pull hot and new posts from r/elixir, r/ChatGPTCoding, r/vibecoding, and r/ClaudeAI. It writes lead files - little markdown docs with the thread title, score, top comment vibe, and an angle for why my experience is relevant. I pick 2-3 threads.
+I tell Claude to scan Reddit. It uses a Reddit MCP server to pull hot and new posts from the subs where my audience hangs out - r/ChatGPTCoding, r/vibecoding, r/ClaudeAI, founder communities. It writes lead files - little markdown docs with the thread title, score, top comment vibe, and an angle for why my experience is relevant. I pick 2-3 threads.
 
 Claude drafts talking points. Not a ready-to-post comment - AI-written comments read like AI-written comments and Reddit can tell. Claude gives me the angle and the key insight to hit. I dictate my actual response. Claude polishes it lightly. I post it.
 
@@ -40,7 +44,7 @@ Four servers, each doing one thing.
 
 **Reddit MCP** ([reddit-mcp-buddy](https://github.com/nicosql/reddit-mcp-buddy)) - Browse subreddits, get post details with comments, search. The workhorse. It lets me read the room before I say anything.
 
-**Google Analytics MCP** ([analytics-mcp](https://github.com/nicosql/analytics-mcp)) - Traffic reports filtered by UTM campaign. Which Reddit threads drove traffic, how long people stayed, how many pages they viewed.
+**Google Analytics MCP** ([analytics-mcp](https://github.com/nicosql/analytics-mcp)) - Traffic reports filtered by UTM campaign. Which threads drove traffic, how long people stayed, how many pages they viewed.
 
 **Google Search Console MCP** ([mcp-gsc](https://github.com/AminForou/mcp-gsc)) - Indexing status, query impressions, canonical issues. I found out Google thought my site's canonical URL was an old ngrok tunnel. Would never have caught that without this.
 
@@ -48,7 +52,7 @@ Four servers, each doing one thing.
 
 **Claude SEO Plugin** ([claude-seo](https://github.com/AgriciDaniel/claude-seo)) - This one changed the game for me. It's a full SEO audit and optimization skill for Claude Code. It runs parallel subagents for technical SEO, content quality, schema markup, sitemaps, performance, and AI search readiness. I ran `/seo audit` on my site and it scored me 56/100, found my canonical URLs were doubling, my schema JSON-LD had broken URLs, and Cloudflare was blocking every AI crawler. Fixed all of it the same day. It also handles Google PageSpeed, CrUX field data, and URL indexing submissions. I submitted 23 URLs for indexing through it in one session.
 
-I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-response`, `/scan-twitter`, `/draft-tweet`, `/news-scan`, `/seo audit`. Each one reads my memory files first so Claude has context about my positioning before it starts.
+I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-response`, `/news-scan`, `/seo audit`. Each one reads my memory files first so Claude has context about my positioning before it starts.
 
 ## What are the biggest mistakes to avoid with AI-assisted marketing?
 
@@ -62,7 +66,7 @@ I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-re
 
 **Let Reddit threads tell you what to write.** My best-performing content series came from reading r/vibecoding threads. Someone posted a list of 15 tools vibe coders should use. The top comment was "Too many words, just prompt." The second comment: "I have no idea what any of that means." So I wrote a series explaining those fundamentals in plain English. The articles get linked in threads that are asking the exact questions they answer. The content writes itself when you listen to what people are confused about.
 
-## What kind of results can a solo developer expect from this approach?
+## What kind of results can a solo founder expect from this approach?
 
 Here's what the numbers actually look like after running this for about six weeks, pulled from my GA4 and Search Console MCP tools:
 
@@ -76,27 +80,48 @@ Here's what the numbers actually look like after running this for about six week
 
 The funnel analysis surprised me. High upvotes don't always mean high click-through. Thread size and comment position matter more than upvote count. And empathy comments in frustration threads produce the deepest readers - the people most likely to sign up. Tool comparison comments produce volume. You need both.
 
-Is this going to make me rich? Not yet. Can a solo developer run this in 30 minutes a day and see real, measurable traction? Yeah.
+Is this going to make me rich? Not yet. Can a solo founder run this in 30 minutes a day and see real, measurable traction? Yeah.
 
 ## Why does storing everything as files make the marketing system work?
 
 The leads, the touchpoints, the content, the strategy docs, the analytics baselines - it's all git-tracked markdown. When I scan Reddit next week, Claude reads the touchpoints and knows what I've already said, which threads I've engaged, and what angles worked. The system remembers what I forget.
 
-Marketing advice for engineers usually falls into "just put yourself out there" (useless) or "hire a marketer" (expensive). What actually works is treating it like engineering. Define inputs. Build a process. Create feedback loops. Iterate on data. You don't need a marketing degree. You need Claude Code, a few MCP servers, and the willingness to show up where your users talk.
+Marketing advice for founders usually falls into "just put yourself out there" (useless) or "hire a marketer" (expensive). What actually works is treating it like engineering. Define inputs. Build a process. Create feedback loops. Iterate on data. You don't need a marketing degree. You need Claude Code, a few MCP servers, and the willingness to show up where your users talk.
+
+## Want this without the six-month buildup?
+
+I packaged the whole loop as a Claude Code plugin: MarketMySpec. Three skills:
+
+- `/marketing-strategy` - Interviews you, runs research agents, produces a real positioning + ICP + channels + 90-day plan. Not a generic template.
+- `/daily-plan` - Reads your strategy and yesterday's log. Picks today's 1-3 activities. No re-deciding from zero each morning.
+- `/marketing-stack` - Installs the MCP recipes your strategy actually calls for. Reddit, GA4, Search Console, the SEO plugin, whichever channels match your audience.
+
+Install:
+
+```
+/plugin marketplace add Code-My-Spec/plugins
+/plugin install marketmyspec@codemyspec
+```
+
+Free during early access. BYOK - it runs on your Claude, your tokens, your environment. Your strategy lives as plain markdown in your repo. No lock-in.
+
+[Run /marketing-strategy →](/products/market-my-spec?utm_source=blog&utm_medium=internal&utm_campaign=agentic-marketing-with-mcp)
 
 ## Frequently Asked Questions
 
-**Can an engineer with no marketing experience use MCP tools for marketing?** Yes. The entire approach is built around engineering principles: define inputs, build a repeatable process, create feedback loops, and iterate on data. You do not need marketing expertise. You need the willingness to show up where your users are and let the data guide your next move.
+**Do I have to build all this myself?** No. The MarketMySpec plugin packages the loop. `/marketing-strategy` runs the strategy interview. `/daily-plan` tells you what to work on today. `/marketing-stack` installs the MCP recipes your strategy needs. Install with `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install marketmyspec@codemyspec`. Free during early access, BYOK.
 
-**How much time does this marketing loop take per day?** About 30 minutes once the MCP servers are configured and the slash commands are set up. The scanning, drafting, and analytics review are fast because Claude handles the data gathering. The human time goes into picking threads, dictating authentic responses, and reviewing analytics.
+**Can a founder with no marketing experience use MCP tools for marketing?** Yes. The entire approach is built around engineering principles: define inputs, build a repeatable process, create feedback loops, and iterate on data. You do not need marketing expertise. You need the willingness to show up where your users are and let the data guide your next move.
+
+**How much time does this loop take per day?** About 30 minutes once the MCP servers are configured and the slash commands are set up. The scanning, drafting, and analytics review are fast because Claude handles the data gathering. The human time goes into picking threads, dictating authentic responses, and reviewing analytics.
 
 **Why not let AI write the full Reddit comment?** Reddit communities can detect AI-written comments quickly, and those comments perform poorly. The comments that drive real engagement are ones where you dictate your genuine thoughts and let Claude polish the phrasing. The natural cadence, tangents, and authentic reactions are what make a comment resonate.
 
 **Do I need a large content library before starting?** Not to start, but the approach works best when you have content to link to. You can begin by being helpful in discussions without linking anything. As you spot content gaps from real conversations, write articles to fill those gaps. Over time, your library grows organically based on actual demand.
 
-**Which MCP servers are essential to get started?** Start with just the Reddit MCP server and Google Analytics MCP server. Reddit lets you find and engage with your audience. Analytics lets you see what is working. Add Search Console and Twitter MCP servers later as your needs grow. The SEO plugin is worth installing early - it catches technical issues that silently kill your search presence.
+**Which MCP servers are essential to get started?** Start with just the Reddit MCP server and Google Analytics MCP server. Reddit lets you find and engage with your audience. Analytics lets you see what is working. Add Search Console and the SEO plugin once your content is shipping consistently. Or install the MarketMySpec plugin and let `/marketing-stack` install the recipes your strategy calls for.
 
-**How do you track which comments actually lead to signups?** Every link carries UTM parameters: source, medium, campaign, and content. The content tag is unique per comment, so I can trace a signup back through the funnel: Reddit thread impressions, comment upvotes, UTM click-through, GA4 session, pages read, registration page view, signup. The data showed me that empathy comments in frustration threads produce the deepest readers, while tool comparison comments produce the most volume. Different strategies for different goals.
+**How do you track which comments actually lead to signups?** Every link carries UTM parameters: source, medium, campaign, and content. The content tag is unique per comment, so I can trace a signup back through the funnel: thread impressions, comment upvotes, UTM click-through, GA4 session, pages read, registration page view, signup. The data showed me that empathy comments in frustration threads produce the deepest readers, while tool comparison comments produce the most volume. Different strategies for different goals.
 
 ---
 
@@ -109,4 +134,4 @@ Marketing advice for engineers usually falls into "just put yourself out there" 
 
 ---
 
-*This is how I market CodeMySpec. It's a feedback loop with MCP tools. If you're an engineer struggling with marketing, skip the guru advice and just build a loop.*
+*This is how I market CodeMySpec. It's a feedback loop, codified as MCP tools and slash commands. If you're a founder struggling with marketing, skip the guru advice. Build the loop. Or [install the one I built](/products/market-my-spec?utm_source=blog&utm_medium=internal&utm_campaign=agentic-marketing-with-mcp).*

@@ -1,0 +1,36 @@
+# Metadata for bdd_attention_naive_bdd.md
+
+# Required fields
+slug: bdd-attention-naive-bdd
+type: blog
+title: "Naive BDD: The Tests Ran, the Tests Passed, the App Didn't Work"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Naive BDD: When Green Tests Cover a Broken App"
+meta_description: 13 days, 51 stories, 50+ BDD specs. Most passed. The integrations didn't work. A Potemkin village of green tests over broken functionality.
+og_title: "Naive BDD: The Tests Ran, the Tests Passed, the App Didn't Work"
+og_description: How letting an AI agent write its own BDD specs builds a Potemkin village of green tests. The MetricFlow case study.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 5
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - bdd
+  - given-when-then
+  - phoenix-liveview
+  - wallaby
+  - metricflow
+  - test-driven-development

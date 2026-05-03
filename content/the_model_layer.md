@@ -152,7 +152,7 @@ If you're choosing an AI coding tool:
 
 The model is just a token predictor. It can't do anything in the real world. So how does "predict the next token" turn into "read a file, run a test, fix a bug, commit the change"?
 
-That's the agent layer. The execution loop, tool use, and context management that turn a stateless text generator into something that can actually write software. That's [Article 3: The Agent Layer](/pages/the-agent-layer).
+That's the agent layer. The execution loop, tool use, and context management that turn a stateless text generator into something that can actually write software. That's [Article 3: The Agent Layer](/blog/the-agent-layer).
 
 ---
 

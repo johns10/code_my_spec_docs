@@ -26,9 +26,9 @@ Vibe coding is fine for learning, prototyping, and internal tools where the blas
 
 ## What Skill Matters Most for AI-Assisted Code Implementation?
 
-The [agent loop](/pages/the-agent-layer) is commodity. Claude Code, Cursor, Codex, Gemini CLI, Aider all run the same ReAct pattern. What separates a productive session from a nightmare is what wraps around that loop: convention files, test commands, linting, type checking, pre-commit hooks. The stuff that constrains what the agent can do and verifies what it did. I broke down all [five layers](/pages/five-layers-of-agentic-coding) in a separate series.
+The [agent loop](/blog/the-agent-layer) is commodity. Claude Code, Cursor, Codex, Gemini CLI, Aider all run the same ReAct pattern. What separates a productive session from a nightmare is what wraps around that loop: convention files, test commands, linting, type checking, pre-commit hooks. The stuff that constrains what the agent can do and verifies what it did. I broke down all [five layers](/blog/five-layers-of-agentic-coding) in a separate series.
 
-OpenAI's Codex team built a [million-line production app with zero human-written lines](https://openai.com/index/introducing-codex/). The engineers didn't write code. They designed the [harness](/pages/the-harness-layer).
+OpenAI's Codex team built a [million-line production app with zero human-written lines](https://openai.com/index/introducing-codex/). The engineers didn't write code. They designed the [harness](/blog/the-harness-layer).
 
 Three eras:
 

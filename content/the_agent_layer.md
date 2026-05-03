@@ -161,4 +161,4 @@ The next article covers the harness layer, the constraints, verification loops, 
 
 ---
 
-*This is Part 3 of "The Anatomy of Agentic Coding Systems." [Part 2 covered the Model Layer](/pages/the-model-layer) - what the LLM actually is and isn't. Part 4 covers the Harness Layer - why the wrapper matters more than the model.*
+*This is Part 3 of "The Anatomy of Agentic Coding Systems." [Part 2 covered the Model Layer](/blog/the-model-layer) - what the LLM actually is and isn't. Part 4 covers the Harness Layer - why the wrapper matters more than the model.*

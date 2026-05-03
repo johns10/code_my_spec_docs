@@ -1,0 +1,35 @@
+# Metadata for bdd_attention_prompt_and_pray.md
+
+# Required fields
+slug: bdd-attention-prompt-and-pray
+type: blog
+title: "Prompt and Pray: How I Started With AI Agents, and Why It Broke"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Prompt and Pray: Why Long AI Coding Sessions Collapse"
+meta_description: AI coding agents contradict themselves on long tasks for a mechanical reason. Every new instruction deprioritizes every prior one. Here's the math.
+og_title: "Prompt and Pray: How I Started With AI Agents, and Why It Broke"
+og_description: After 8 months and hundreds of sessions, I stopped blaming the model. The bug is in expecting a chat log to function as memory.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 2
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - attention-mechanism
+  - context-window
+  - claude-code
+  - prompt-engineering
+  - workflow

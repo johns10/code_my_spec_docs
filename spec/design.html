@@ -1,327 +1,251 @@
-<!DOCTYPE html>
-<html data-theme="corporate">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Design System</title>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4/dist/full.min.css" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { max-width: 960px; margin: 0 auto; padding: 2rem; }
-    section { margin-bottom: 3rem; }
-    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-    .swatch { padding: 20px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
-    .swatch code { font-size: 11px; opacity: 0.8; display: block; margin-top: 4px; }
-    .wireframe { font-family: monospace; font-size: 13px; line-height: 1.5; background: var(--fallback-b2,oklch(var(--b2))); padding: 24px; border-radius: 8px; white-space: pre; overflow-x: auto; }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CODEMYSPEC · Design Tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000; --void:#030304; --ink-1:#0a0a0c; --ink-2:#121215; --ink-3:#1a1a1f;
+    --text:#d4d4d8; --text-dim:#8a8a93; --text-mute:#53535a;
+    --red:#ff3838; --red-dim:#8a1515; --red-deep:#2a0808;
+    --white:#f5f5f7; --hair:rgba(255,56,56,0.10); --hair-r:rgba(255,56,56,0.22);
+    --a-pm:#a78bfa; --a-arch:#60a5fa; --a-bdd:#f472b6; --a-spec:#22d3ee; --a-code:#fde047; --a-qa:#ff3838;
+    --f-display:"Space Mono",ui-monospace,monospace;
+    --f-mono:"JetBrains Mono",ui-monospace,monospace;
+    --f-body:"Inter",system-ui,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;background:var(--black);color:var(--text);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.015) 0 1px,transparent 1px 3px);mix-blend-mode:overlay;}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;background:linear-gradient(var(--hair) 1px,transparent 1px) 0 0/80px 80px,linear-gradient(90deg,var(--hair) 1px,transparent 1px) 0 0/80px 80px;mask-image:radial-gradient(ellipse at center,black 0%,transparent 80%);opacity:.5;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 36px;position:relative;z-index:5;}
+  h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--white);text-transform:uppercase;}
+  code{font-family:var(--f-mono);font-size:13px;color:var(--red);background:rgba(255,56,56,0.06);padding:1px 6px;border:1px solid var(--hair-r);}
 
-    /* ── Custom Theme ─────────────────────────────────────────────
-       Define a custom DaisyUI theme entirely in CSS.
-       Colors use oklch(lightness chroma hue) format.
-       This is what would normally go in tailwind.config.js:
-         daisyui: { themes: [{ "my-brand": { ... } }] }
-       But works identically as pure CSS.
-    */
-    [data-theme="my-brand"] {
-      color-scheme: light;
+  header{padding:72px 0 48px;border-bottom:1px solid var(--hair-r);position:relative;}
+  header::before{content:"";position:absolute;top:0;left:0;width:80px;height:2px;background:var(--red);box-shadow:0 0 12px var(--red);}
+  .eyebrow{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:var(--red);margin-bottom:22px;display:flex;align-items:center;gap:12px;}
+  .eyebrow .idx{color:var(--text-mute);} .eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--red),transparent);max-width:200px;}
+  h1.title{font-size:clamp(40px,5vw,64px);line-height:1.02;}
+  h1.title .r{color:var(--red);}
+  .lede{color:var(--text-dim);max-width:62ch;margin-top:20px;font-size:17px;}
 
-      --p:  55% 0.22 250;          /* primary — deep blue */
-      --pf: 45% 0.22 250;          /* primary focus */
-      --pc: 98% 0.01 250;          /* primary content (text on primary) */
+  section.band{padding:80px 0;border-bottom:1px solid var(--hair);position:relative;}
+  section.band::before{content:"";position:absolute;top:0;left:0;width:80px;height:2px;background:var(--red);box-shadow:0 0 12px var(--red);}
+  h2.h-section{font-size:clamp(26px,3vw,38px);margin-bottom:8px;}
+  .sect-sub{color:var(--text-dim);max-width:70ch;margin-bottom:40px;}
 
-      --s:  65% 0.15 165;          /* secondary — teal */
-      --sf: 55% 0.15 165;          /* secondary focus */
-      --sc: 98% 0.01 165;          /* secondary content */
+  /* color grid */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .sw{background:var(--ink-1);border:1px solid var(--hair-r);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);overflow:hidden;}
+  .sw .chip{height:110px;border-bottom:1px solid var(--hair-r);position:relative;}
+  .sw .chip .corner{position:absolute;top:10px;right:12px;font-family:var(--f-mono);font-size:10px;letter-spacing:.2em;color:#000;text-transform:uppercase;mix-blend-mode:difference;opacity:.7;}
+  .sw .meta{padding:14px 16px;font-family:var(--f-mono);font-size:12px;}
+  .sw .meta .name{color:var(--white);text-transform:uppercase;letter-spacing:.12em;font-size:11px;}
+  .sw .meta .hex{color:var(--text-dim);margin-top:6px;}
+  .sw .meta .use{color:var(--text-mute);margin-top:8px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;}
 
-      --a:  70% 0.18 50;           /* accent — warm amber */
-      --af: 60% 0.18 50;           /* accent focus */
-      --ac: 20% 0.02 50;           /* accent content */
+  /* agent row */
+  .agent-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+  @media (max-width:860px){.agent-row{grid-template-columns:repeat(2,1fr);}}
+  .agent-card{background:var(--ink-1);border:1px solid var(--hair-r);padding:22px 18px;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);}
+  .agent-card .node{width:56px;height:56px;border:1.5px solid var(--ac);background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:0 0 12px color-mix(in oklab,var(--ac) 24%,transparent);}
+  .agent-card .node .num{color:var(--ac);font-size:15px;font-weight:700;font-family:var(--f-display);}
+  .agent-card .node .tag{color:var(--text-mute);font-size:8px;margin-top:1px;}
+  .agent-card .h{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:6px;}
+  .agent-card .hex{font-family:var(--f-mono);font-size:11px;color:var(--ac);}
 
-      --n:  30% 0.02 250;          /* neutral — dark slate */
-      --nf: 22% 0.02 250;          /* neutral focus */
-      --nc: 92% 0.01 250;          /* neutral content */
+  /* type specimens */
+  .type-specimen{display:grid;grid-template-columns:120px 1fr;gap:28px;padding:28px 0;border-top:1px solid var(--hair);align-items:baseline;}
+  .type-specimen:first-child{border-top:none;}
+  .type-specimen .label{font-family:var(--f-mono);font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.18em;padding-top:8px;}
+  .type-specimen .label b{display:block;color:var(--red);font-weight:400;margin-top:4px;}
+  .ts-display{font-family:var(--f-display);font-weight:700;font-size:52px;line-height:1;letter-spacing:-0.03em;text-transform:uppercase;color:var(--white);}
+  .ts-h{font-family:var(--f-display);font-weight:700;font-size:32px;line-height:1.1;letter-spacing:-0.02em;text-transform:uppercase;color:var(--white);}
+  .ts-mono{font-family:var(--f-mono);font-size:16px;color:var(--text);}
+  .ts-body{font-family:var(--f-body);font-size:17px;color:var(--text);max-width:56ch;}
+  .ts-caps{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--red);}
 
-      --b1: 98% 0.005 250;         /* base-100 — near white, slight blue tint */
-      --b2: 95% 0.008 250;         /* base-200 */
-      --b3: 90% 0.012 250;         /* base-300 */
-      --bc: 25% 0.02 250;          /* base content (main text) */
+  /* components grid */
+  .comps{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:760px){.comps{grid-template-columns:1fr;}}
+  .cmp{background:var(--ink-1);border:1px solid var(--hair-r);padding:28px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
+  .cmp .cmp-label{font-family:var(--f-mono);font-size:10px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.22em;margin-bottom:20px;}
 
-      --in: 65% 0.19 240;          /* info */
-      --inc: 98% 0.01 240;
-      --su: 65% 0.19 150;          /* success */
-      --suc: 98% 0.01 150;
-      --wa: 75% 0.15 75;           /* warning */
-      --wac: 20% 0.02 75;
-      --er: 60% 0.22 25;           /* error */
-      --erc: 98% 0.01 25;
+  /* buttons preview */
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;padding:14px 22px;border:1.5px solid transparent;cursor:pointer;text-decoration:none;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);}
+  .btn-primary{background:var(--red);color:#000;border-color:var(--red);}
+  .btn-primary:hover{background:#fff;}
+  .btn-ghost{background:transparent;color:var(--red);border-color:var(--red);}
+  .btn-ghost:hover{background:rgba(255,56,56,0.1);}
 
-      --rounded-box: 0.75rem;      /* border-radius for cards */
-      --rounded-btn: 0.5rem;       /* border-radius for buttons */
-      --rounded-badge: 1.9rem;     /* border-radius for badges */
-      --animation-btn: 0.25s;      /* button click animation */
-      --animation-input: 0.2s;     /* input animation */
-      --btn-focus-scale: 0.97;     /* button scale on focus */
-      --border-btn: 1px;           /* button border width */
-      --tab-border: 1px;
-      --tab-radius: 0.5rem;
-    }
-  </style>
+  /* hairline card */
+  .hairline-card{padding:18px;border:1px solid var(--hair-r);background:var(--void);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);font-family:var(--f-mono);font-size:13px;color:var(--text-dim);}
+  .hairline-card .k{color:var(--red);}
+
+  /* zone table */
+  .zone-table{border:1px solid var(--hair-r);margin-top:32px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
+  .zone-row{display:grid;grid-template-columns:180px 1fr 1fr 1fr;padding:20px 22px;border-bottom:1px solid var(--hair);font-family:var(--f-mono);font-size:13px;gap:18px;}
+  .zone-row:last-child{border-bottom:none;}
+  .zone-row.head{background:rgba(255,56,56,0.04);color:var(--red);font-size:10px;text-transform:uppercase;letter-spacing:.2em;padding:14px 22px;}
+  .zone-row .z{color:var(--white);font-weight:700;}
+  .zone-row .d{color:var(--text-dim);}
+  @media (max-width:760px){.zone-row{grid-template-columns:1fr;gap:6px;}.zone-row.head{display:none;}}
+
+  /* scanline + grid demo */
+  .texture-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:760px){.texture-grid{grid-template-columns:1fr;}}
+  .tex{aspect-ratio:16/9;border:1px solid var(--hair-r);background:var(--void);position:relative;overflow:hidden;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);display:flex;align-items:end;padding:16px;font-family:var(--f-mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.2em;}
+  .tex.scan::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.04) 0 1px,transparent 1px 3px);mix-blend-mode:overlay;pointer-events:none;}
+  .tex.grid::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--hair) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,var(--hair) 1px,transparent 1px) 0 0/40px 40px;pointer-events:none;}
+
+  footer{padding:60px 0;border-top:1px solid var(--hair-r);font-family:var(--f-mono);font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.14em;}
+</style>
 </head>
-<body class="bg-base-100 text-base-content">
+<body>
 
-  <!-- Theme Switcher -->
-  <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-bold">Design System</h1>
-    <select id="theme-switcher" class="select select-bordered select-sm"
-            onchange="document.documentElement.setAttribute('data-theme', this.value)">
-      <option value="my-brand">★ My Brand (custom)</option>
-      <option value="corporate">Corporate</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="nord">Nord</option>
-      <option value="dracula">Dracula</option>
-      <option value="business">Business</option>
-      <option value="lofi">Lofi</option>
-      <option value="winter">Winter</option>
-      <option value="cupcake">Cupcake</option>
-      <option value="retro">Retro</option>
-    </select>
+<div class="wrap">
+<header>
+  <div class="eyebrow"><span class="idx">00</span>// design_tokens</div>
+  <h1 class="title">CodeMySpec <span class="r">brand_system.</span></h1>
+  <p class="lede">One theme, three intensity zones. Brand surfaces go loud, product surfaces sit restrained, app surfaces get out of the way. The tokens below are the shared language across all of it.</p>
+</header>
+</div>
+
+<!-- ZONES -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">01</span>// intensity_zones</div>
+  <h2 class="h-section">One theme. Three dials.</h2>
+  <p class="sect-sub">Consistency isn't uniformity. Each surface inherits the same palette, type, and geometry — and tunes texture, red-ratio, and density to its job.</p>
+
+  <div class="zone-table">
+    <div class="zone-row head"><div>zone</div><div>job</div><div>red_ratio</div><div>texture</div></div>
+    <div class="zone-row"><div class="z">brand</div><div class="d">/, /manifesto, launch</div><div class="d">40 / 60</div><div class="d">scanlines · grid · chamfer · glow</div></div>
+    <div class="zone-row"><div class="z">product</div><div class="d">/product, /docs, /pricing</div><div class="d">15 / 85</div><div class="d">scanlines on moments only</div></div>
+    <div class="zone-row"><div class="z">app</div><div class="d">dashboards, LiveView</div><div class="d">5 / 95</div><div class="d">red = state only (error/active/rec)</div></div>
   </div>
+</div>
+</section>
 
-  <!-- ============================================================ -->
-  <section id="theme">
-    <h2 class="text-2xl font-semibold mb-4">Theme</h2>
-    <p class="mb-2">DaisyUI <code class="badge badge-ghost">corporate</code> theme. Toggle the dropdown above to preview alternatives.</p>
-    <div class="mockup-code mt-4">
-      <pre><code>&lt;html data-theme="corporate"&gt;</code></pre>
+<!-- COLOR -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">02</span>// color</div>
+  <h2 class="h-section">Signal red on black.</h2>
+  <p class="sect-sub">Red is used as <em style="color:var(--red);font-style:normal;">punctuation</em>, not dominance. White is the "success" color. Neutrals do the heavy lifting.</p>
+
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:#000;border-bottom-color:var(--hair-r);"><span class="corner">base</span></div><div class="meta"><div class="name">black</div><div class="hex">#000000</div><div class="use">page ground</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--ink-1);"><span class="corner">surface</span></div><div class="meta"><div class="name">ink-1</div><div class="hex">#0a0a0c</div><div class="use">cards, panels</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--ink-2);"><span class="corner">surface</span></div><div class="meta"><div class="name">ink-2</div><div class="hex">#121215</div><div class="use">nested surfaces</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--red);box-shadow:inset 0 0 40px rgba(0,0,0,0.3);"><span class="corner" style="color:#000;mix-blend-mode:normal;opacity:.8;">signal</span></div><div class="meta"><div class="name">red</div><div class="hex">#ff3838</div><div class="use">primary accent · cta</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--red-dim);"><span class="corner">muted</span></div><div class="meta"><div class="name">red-dim</div><div class="hex">#8a1515</div><div class="use">borders, subdued</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--red-deep);"><span class="corner">wash</span></div><div class="meta"><div class="name">red-deep</div><div class="hex">#2a0808</div><div class="use">background wash</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--white);"><span class="corner" style="color:#000;mix-blend-mode:normal;opacity:.7;">success</span></div><div class="meta"><div class="name">white</div><div class="hex">#f5f5f7</div><div class="use">success · ✓ · headings</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--text-dim);"><span class="corner">text</span></div><div class="meta"><div class="name">text-dim</div><div class="hex">#8a8a93</div><div class="use">body secondary</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- AGENT PALETTE -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">03</span>// agent_palette</div>
+  <h2 class="h-section">Six agents. Six colors.</h2>
+  <p class="sect-sub">Only surfaces inside How It Works — CLI, docs, graph visuals. Agents keep a consistent hue so a user who learns the cyan spec-writer on /product recognizes it in the terminal. Never leaks into marketing chrome.</p>
+
+  <div class="agent-row">
+    <div class="agent-card" style="--ac:var(--a-pm);"><div class="node"><span class="num">01</span><span class="tag">pm</span></div><div class="h">Product</div><div class="hex">#a78bfa</div></div>
+    <div class="agent-card" style="--ac:var(--a-arch);"><div class="node"><span class="num">02</span><span class="tag">arch</span></div><div class="h">Architecture</div><div class="hex">#60a5fa</div></div>
+    <div class="agent-card" style="--ac:var(--a-bdd);"><div class="node"><span class="num">03</span><span class="tag">bdd</span></div><div class="h">BDD Specs</div><div class="hex">#f472b6</div></div>
+    <div class="agent-card" style="--ac:var(--a-spec);"><div class="node"><span class="num">04</span><span class="tag">spec</span></div><div class="h">Spec &amp; Test</div><div class="hex">#22d3ee</div></div>
+    <div class="agent-card" style="--ac:var(--a-code);"><div class="node"><span class="num">05</span><span class="tag">impl</span></div><div class="h">Implement</div><div class="hex">#fde047</div></div>
+    <div class="agent-card" style="--ac:var(--a-qa);"><div class="node"><span class="num">06</span><span class="tag">qa</span></div><div class="h">Verify</div><div class="hex">#ff3838</div></div>
+  </div>
+</div>
+</section>
+
+<!-- TYPE -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">04</span>// type</div>
+  <h2 class="h-section">Three families. Zero exceptions.</h2>
+  <p class="sect-sub">Space Mono Bold for all display. JetBrains Mono for code and structural labels. Inter for body copy only.</p>
+
+  <div>
+    <div class="type-specimen">
+      <div class="label">Display<b>Space Mono 700</b></div>
+      <div><div class="ts-display">THE HARNESS.</div></div>
     </div>
-  </section>
-
-  <!-- ============================================================ -->
-  <section id="colors">
-    <h2 class="text-2xl font-semibold mb-4">Colors</h2>
-
-    <h3 class="text-lg font-medium mb-3">Primary Palette</h3>
-    <div class="swatch-grid mb-6">
-      <div class="swatch bg-primary text-primary-content">Primary<code>bg-primary</code></div>
-      <div class="swatch bg-secondary text-secondary-content">Secondary<code>bg-secondary</code></div>
-      <div class="swatch bg-accent text-accent-content">Accent<code>bg-accent</code></div>
-      <div class="swatch bg-neutral text-neutral-content">Neutral<code>bg-neutral</code></div>
+    <div class="type-specimen">
+      <div class="label">Section<b>Space Mono 700</b></div>
+      <div><div class="ts-h">One requirement graph.</div></div>
     </div>
-
-    <h3 class="text-lg font-medium mb-3">Base Surfaces</h3>
-    <div class="swatch-grid mb-6">
-      <div class="swatch bg-base-100 border border-base-300">Base 100<code>bg-base-100</code></div>
-      <div class="swatch bg-base-200 border border-base-300">Base 200<code>bg-base-200</code></div>
-      <div class="swatch bg-base-300">Base 300<code>bg-base-300</code></div>
+    <div class="type-specimen">
+      <div class="label">Mono<b>JetBrains Mono 500</b></div>
+      <div><div class="ts-mono">▸ mix spex --continuous</div></div>
     </div>
-
-    <h3 class="text-lg font-medium mb-3">Semantic</h3>
-    <div class="swatch-grid mb-6">
-      <div class="swatch bg-info text-info-content">Info<code>bg-info</code></div>
-      <div class="swatch bg-success text-success-content">Success<code>bg-success</code></div>
-      <div class="swatch bg-warning text-warning-content">Warning<code>bg-warning</code></div>
-      <div class="swatch bg-error text-error-content">Error<code>bg-error</code></div>
+    <div class="type-specimen">
+      <div class="label">Body<b>Inter 400</b></div>
+      <div><div class="ts-body">The hard part is what happens next. Codebases built with AI assistance are showing 60% less refactoring, 48% more duplication, a three-month wall where velocity drops off a cliff.</div></div>
     </div>
-
-    <h3 class="text-lg font-medium mb-3">Usage Guide</h3>
-    <table class="table table-zebra w-full">
-      <thead><tr><th>Role</th><th>Use for</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge badge-primary">Primary</span></td><td>Main actions, active navigation, links</td></tr>
-        <tr><td><span class="badge badge-secondary">Secondary</span></td><td>Supporting actions, secondary buttons</td></tr>
-        <tr><td><span class="badge badge-accent">Accent</span></td><td>Highlights, badges, status indicators</td></tr>
-        <tr><td><span class="badge badge-neutral">Neutral</span></td><td>Borders, muted text, dividers</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ============================================================ -->
-  <section id="typography">
-    <h2 class="text-2xl font-semibold mb-4">Typography</h2>
-
-    <div class="card card-bordered bg-base-100">
-      <div class="card-body gap-6">
-        <div>
-          <div class="text-3xl font-bold">Page Title (h1)</div>
-          <div class="text-sm text-base-content/60 mt-1">text-3xl font-bold — one per page</div>
-        </div>
-        <div class="divider my-0"></div>
-        <div>
-          <div class="text-2xl font-semibold">Section Heading (h2)</div>
-          <div class="text-sm text-base-content/60 mt-1">text-2xl font-semibold — major sections</div>
-        </div>
-        <div class="divider my-0"></div>
-        <div>
-          <div class="text-xl font-medium">Card Title (h3)</div>
-          <div class="text-sm text-base-content/60 mt-1">text-xl font-medium — cards, subsections</div>
-        </div>
-        <div class="divider my-0"></div>
-        <div>
-          <div class="text-base">Body text at default size. Descriptions, form labels, and general content.</div>
-          <div class="text-sm text-base-content/60 mt-1">text-base — default body</div>
-        </div>
-        <div class="divider my-0"></div>
-        <div>
-          <div class="text-sm text-base-content/60">Secondary text, timestamps, metadata, and helper text.</div>
-          <div class="text-sm text-base-content/60 mt-1">text-sm text-base-content/60 — secondary</div>
-        </div>
-        <div class="divider my-0"></div>
-        <div>
-          <code class="bg-base-200 px-3 py-1.5 rounded text-sm">module_name.ex</code>
-          <div class="text-sm text-base-content/60 mt-2">font-mono text-sm — code, filenames</div>
-        </div>
-      </div>
+    <div class="type-specimen">
+      <div class="label">Eyebrow<b>JetBrains Mono 500</b></div>
+      <div><div class="ts-caps">// section_label</div></div>
     </div>
-  </section>
+  </div>
+</div>
+</section>
 
-  <!-- ============================================================ -->
-  <section id="layout">
-    <h2 class="text-2xl font-semibold mb-4">Layout</h2>
+<!-- COMPONENTS -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">05</span>// components</div>
+  <h2 class="h-section">Shared primitives.</h2>
+  <p class="sect-sub">Chamfered corners on primary CTAs and feature cards. Hairline red borders. Index numbers on sections.</p>
 
-    <h3 class="text-lg font-medium mb-3">Page Structure</h3>
-    <div class="wireframe mb-6">┌──────────────────────────────────────────────────────┐
-│  Top Nav Bar                              [User ▾]   │
-├────────────┬─────────────────────────────────────────┤
-│            │                                         │
-│  Sidebar   │  Breadcrumb / Page Title                │
-│            │                                         │
-│  • Nav 1   │  Content Area                           │
-│  • Nav 2   │  max-w-7xl mx-auto                      │
-│  • Nav 3   │                                         │
-│            │  ┌─ Card ──────────┐ ┌─ Card ─────────┐│
-│            │  │                 │ │                 ││
-│            │  └─────────────────┘ └─────────────────┘│
-│            │                                         │
-└────────────┴─────────────────────────────────────────┘</div>
-
-    <h3 class="text-lg font-medium mb-3">List Page</h3>
-    <div class="card card-bordered bg-base-100 mb-6">
-      <div class="card-body p-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-medium">Items</h3>
-          <button class="btn btn-primary btn-sm">+ New Item</button>
-        </div>
-        <div class="flex gap-2 mb-4">
-          <input type="text" placeholder="Search..." class="input input-bordered input-sm flex-1" />
-          <select class="select select-bordered select-sm"><option>Filter</option></select>
-        </div>
-        <table class="table table-zebra">
-          <thead><tr><th>Name</th><th>Status</th><th>Updated</th></tr></thead>
-          <tbody>
-            <tr><td>Item One</td><td><span class="badge badge-success badge-sm">Active</span></td><td class="text-sm text-base-content/60">2 hours ago</td></tr>
-            <tr><td>Item Two</td><td><span class="badge badge-ghost badge-sm">Draft</span></td><td class="text-sm text-base-content/60">Yesterday</td></tr>
-            <tr><td>Item Three</td><td><span class="badge badge-success badge-sm">Active</span></td><td class="text-sm text-base-content/60">3 days ago</td></tr>
-          </tbody>
-        </table>
-        <div class="flex justify-center mt-4">
-          <div class="join">
-            <button class="join-item btn btn-sm">«</button>
-            <button class="join-item btn btn-sm btn-active">1</button>
-            <button class="join-item btn btn-sm">2</button>
-            <button class="join-item btn btn-sm">3</button>
-            <button class="join-item btn btn-sm">»</button>
-          </div>
-        </div>
-      </div>
+  <div class="comps">
+    <div class="cmp">
+      <div class="cmp-label">button · primary</div>
+      <a class="btn btn-primary"><span>▸ Install plugin</span></a>
     </div>
-
-    <h3 class="text-lg font-medium mb-3">Form Page</h3>
-    <div class="flex justify-center mb-6">
-      <div class="card card-bordered bg-base-100 w-full max-w-lg">
-        <div class="card-body">
-          <h3 class="card-title">New Item</h3>
-          <div class="form-control w-full">
-            <label class="label"><span class="label-text">Name</span></label>
-            <input type="text" placeholder="Enter name" class="input input-bordered w-full" />
-          </div>
-          <div class="form-control w-full">
-            <label class="label"><span class="label-text">Description</span></label>
-            <textarea class="textarea textarea-bordered w-full" placeholder="Enter description"></textarea>
-          </div>
-          <div class="form-control w-full">
-            <label class="label"><span class="label-text">Status</span></label>
-            <select class="select select-bordered w-full">
-              <option>Active</option>
-              <option>Draft</option>
-            </select>
-          </div>
-          <div class="card-actions justify-end mt-4">
-            <button class="btn btn-ghost">Cancel</button>
-            <button class="btn btn-primary">Save</button>
-          </div>
-        </div>
-      </div>
+    <div class="cmp">
+      <div class="cmp-label">button · ghost</div>
+      <a class="btn btn-ghost"><span>▸ Read methodology</span></a>
     </div>
-
-    <h3 class="text-lg font-medium mb-3">Navigation</h3>
-    <ul class="list-disc list-inside space-y-1 text-sm">
-      <li>Fixed sidebar, collapsible on mobile</li>
-      <li>Top bar with breadcrumb and user menu</li>
-      <li>Active nav item: <code class="bg-base-200 px-1.5 py-0.5 rounded text-xs">bg-primary text-primary-content</code></li>
-    </ul>
-  </section>
-
-  <!-- ============================================================ -->
-  <section id="tone">
-    <h2 class="text-2xl font-semibold mb-4">Tone</h2>
-    <p class="mb-4">
-      Clean and professional. Rounded corners, generous whitespace, minimal shadows.
-      Data-dense tables but spacious forms. No decorative elements — every visual
-      element serves a functional purpose. Primary color reserved for actions and
-      active states, not decoration.
-    </p>
-
-    <div class="flex gap-6 items-end">
-      <div class="text-center">
-        <div class="w-16 h-16 bg-base-200 rounded-lg mb-2"></div>
-        <div class="text-xs text-base-content/60">rounded-lg</div>
-      </div>
-      <div class="text-center">
-        <div class="w-16 h-16 bg-base-200 rounded-lg shadow-sm mb-2"></div>
-        <div class="text-xs text-base-content/60">shadow-sm</div>
-      </div>
-      <div class="text-center">
-        <div class="w-16 h-16 bg-base-100 border border-base-300 rounded-lg mb-2"></div>
-        <div class="text-xs text-base-content/60">bordered</div>
-      </div>
-      <div class="text-center">
-        <div class="flex flex-col gap-1.5 w-16 mb-2">
-          <div class="h-3 bg-base-300 rounded"></div>
-          <div class="h-3 bg-base-300 rounded w-3/4"></div>
-          <div class="h-3 bg-base-300 rounded w-5/6"></div>
-          <div class="h-3 bg-base-300 rounded w-2/3"></div>
-        </div>
-        <div class="text-xs text-base-content/60">airy spacing</div>
-      </div>
+    <div class="cmp">
+      <div class="cmp-label">code inline</div>
+      <p style="margin:0;">Call <code>get_next_requirement</code>. Do one thing. The graph moves forward.</p>
     </div>
-
-    <h3 class="text-lg font-medium mt-6 mb-3">Button Hierarchy</h3>
-    <div class="flex flex-wrap gap-3 items-center">
-      <button class="btn btn-primary">Primary Action</button>
-      <button class="btn btn-secondary">Secondary</button>
-      <button class="btn btn-ghost">Ghost / Cancel</button>
-      <button class="btn btn-sm btn-outline">Small Outline</button>
-      <button class="btn btn-sm btn-error btn-outline">Destructive</button>
+    <div class="cmp">
+      <div class="cmp-label">hairline panel</div>
+      <div class="hairline-card"><span class="k">▸</span> spec-writer drafted 7 assertions · <span class="k">✓</span> passing</div>
     </div>
+  </div>
+</div>
+</section>
 
-    <h3 class="text-lg font-medium mt-6 mb-3">Feedback States</h3>
-    <div class="flex flex-col gap-3">
-      <div class="alert alert-info"><span>Info: Something informational.</span></div>
-      <div class="alert alert-success"><span>Success: Operation completed.</span></div>
-      <div class="alert alert-warning"><span>Warning: Check this first.</span></div>
-      <div class="alert alert-error"><span>Error: Something went wrong.</span></div>
-    </div>
+<!-- TEXTURE -->
+<section class="band">
+<div class="wrap">
+  <div class="eyebrow"><span class="idx">06</span>// texture</div>
+  <h2 class="h-section">Scanlines and hairline grid.</h2>
+  <p class="sect-sub">Scanlines reserved for brand moments and money shots. Hairline grid is a global pressure — soft enough to ignore, hard enough to feel.</p>
 
-    <h3 class="text-lg font-medium mt-6 mb-3">Empty State</h3>
-    <div class="flex flex-col items-center justify-center py-12 text-base-content/40">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-      </svg>
-      <p class="text-lg font-medium mb-1">No items yet</p>
-      <p class="text-sm mb-4">Get started by creating your first item.</p>
-      <button class="btn btn-primary btn-sm">+ New Item</button>
-    </div>
-  </section>
+  <div class="texture-grid">
+    <div class="tex scan">scanline overlay</div>
+    <div class="tex grid">red hairline grid</div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="wrap">© 2026 codemyspec · brand_system v0.9</div></footer>
 
 </body>
 </html>

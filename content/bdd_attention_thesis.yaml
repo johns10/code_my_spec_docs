@@ -1,0 +1,36 @@
+# Metadata for bdd_attention_thesis.md
+
+# Required fields
+slug: bdd-attention-thesis
+type: blog
+title: "BDD Attention Thesis: A Five-Step Workflow for AI Coding That Doesn't Drift"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "BDD Attention Thesis: A Workflow That Holds Against Drift"
+meta_description: Every long AI coding session collapses for the same mechanical reason. Here's the five-step workflow that holds against it.
+og_title: "BDD Attention Thesis: A Five-Step Workflow for AI Coding That Doesn't Drift"
+og_description: Why AI coding agents contradict you, and the five-step evolution from prompt-and-pray to a workflow that ships.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 1
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - bdd
+  - spec-driven-development
+  - attention-mechanism
+  - three-amigos
+  - claude-code
+  - workflow

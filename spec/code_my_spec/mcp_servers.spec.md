@@ -4,6 +4,10 @@ MCP (Model Context Protocol) servers context providing AI agent interfaces to do
 
 This context serves as the namespace for MCP server implementations that expose CodeMySpec functionality to AI agents (Claude Code, Claude Desktop) via the Hermes MCP library. The actual protocol handling is delegated to Hermes.Server - this context organizes the server definitions, tools, and shared infrastructure.
 
+## Type
+
+context
+
 ## Dependencies
 
 - CodeMySpec.Stories

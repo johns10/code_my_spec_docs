@@ -45,7 +45,7 @@ Here's my take: a better model raises the ceiling. It does not change the proces
 
 If Mythos delivers on the SWE-bench claims, every tool that uses Claude as a backbone (Claude Code, Cursor, Augment) gets a capability bump. Code generation quality improves. Reasoning over complex codebases improves. That's genuinely exciting.
 
-But the lessons from the last year still apply. The [harness matters more than the model](/pages/the-harness-layer). On SWE-bench Verified, the same model swings nearly 5 points depending on the scaffold wrapping it. A 93.9% model with a bad harness will still produce unmaintainable code. A good harness with Opus 4.6 already ships production software.
+But the lessons from the last year still apply. The [harness matters more than the model](/blog/the-harness-layer). On SWE-bench Verified, the same model swings nearly 5 points depending on the scaffold wrapping it. A 93.9% model with a bad harness will still produce unmaintainable code. A good harness with Opus 4.6 already ships production software.
 
 The teams that invested in specs, architecture, verification, and harness engineering won't need to change anything when Mythos ships. Their harnesses will just produce better output. That's the whole point.
 

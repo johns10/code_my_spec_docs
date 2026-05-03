@@ -42,7 +42,7 @@ Everyone's talking about AI code generation like it's solved. [Copilot has 20M u
 
 The paradox: METR ran a rigorous study and found experienced developers are [19% slower with AI tools](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) - but they perceive themselves as 20% faster. Vibe coding produces [2.74x more security vulnerabilities](https://thenewstack.io/vibe-coding-could-cause-catastrophic-explosions-in-2026/). Gartner predicts [2500% defect increase by 2028](https://www.armorcode.com/report/gartner-predicts-2026-ai-potential-and-risks-emerge-in-software-engineering-technologies) from prompt-to-app approaches. One CTO: [93% of developers use AI, real productivity gain is about 10%](https://shiftmag.dev/this-cto-says-93-of-developers-use-ai-but-productivity-is-still-10-8013/).
 
-The skill that matters isn't prompting. It's [harness engineering](/pages/the-harness-layer): convention files, test commands, hooks, verification pipelines. The [agent loop](/pages/the-agent-layer) is commodity. What wraps around it is the differentiator.
+The skill that matters isn't prompting. It's [harness engineering](/blog/the-harness-layer): convention files, test commands, hooks, verification pipelines. The [agent loop](/blog/the-agent-layer) is commodity. What wraps around it is the differentiator.
 
 **[Full article: The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)**
 

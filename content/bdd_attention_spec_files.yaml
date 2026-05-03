@@ -1,0 +1,36 @@
+# Metadata for bdd_attention_spec_files.md
+
+# Required fields
+slug: bdd-attention-spec-files
+type: blog
+title: "Spec-Driven Development: Finally Useful, Still Not Executable"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-03T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec-Driven Development for AI Coding: Useful, Not Enough"
+meta_description: Module spec files gave me and the model the same definition of done. The unit tests passed. The features were still broken. Why.
+og_title: "Spec-Driven Development: Finally Useful, Still Not Executable"
+og_description: The shape Kiro, Tessl, and Spec Kit converged on. Where it works, where it fails.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: BDD Attention Thesis
+  series_part: 4
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - kiro
+  - tessl
+  - spec-kit
+  - unit-tests
+  - claude-code
