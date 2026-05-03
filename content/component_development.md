@@ -1,6 +1,6 @@
 # Component Development: One File at a Time
 
-> **Part of the [Five Levels of AI-Assisted Development](/pages/five-levels-of-ai-coding)** -- Level 2: Pair Programming.
+> **Part of the [Five Levels of AI-Assisted Development](/blog/five-levels-of-ai-coding)** -- Level 2: Pair Programming.
 
 You've got your architecture. You've got your stories mapped to bounded contexts. Now you need to turn those into working code.
 

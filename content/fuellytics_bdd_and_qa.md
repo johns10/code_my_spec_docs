@@ -31,7 +31,7 @@ In the age of AI, development is about managing the velocity of the agent. Befor
 
 ## How Do BDD Specs Verify That AI Code Does What Users Want?
 
-Every acceptance criterion on every user story became an executable [BDD spec](/pages/bdd-specs-for-ai-generated-code). The SMS notification story alone had 8 criteria — SMS sent on swipe, contains the right content, includes a verification link, tracks delivery status, flags unresponsive drivers, clears flags on late verification.
+Every acceptance criterion on every user story became an executable [BDD spec](/blog/bdd-specs-for-ai-generated-code). The SMS notification story alone had 8 criteria — SMS sent on swipe, contains the right content, includes a verification link, tracks delivery status, flags unresponsive drivers, clears flags on late verification.
 
 Each criterion became its own spec file:
 
@@ -50,7 +50,7 @@ When specs failed, a different agent got structured feedback — which scenario,
 
 BDD specs caught requirement misunderstandings. But they test through APIs and interfaces. They don't open a browser and use the app like a human would.
 
-So we ran [agentic QA](/pages/agentic-qa) — an AI agent that tests every story against the running application. It writes a brief, executes the plan, records results with evidence, and files issues for anything that fails.
+So we ran [agentic QA](/blog/agentic-qa) — an AI agent that tests every story against the running application. It writes a brief, executes the plan, records results with evidence, and files issues for anything that fails.
 
 This is where things got interesting.
 

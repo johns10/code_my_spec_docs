@@ -3,7 +3,7 @@
 
 # Required fields
 slug: agentic-qa
-type: page  # Options: blog, page, landing
+type: blog  # Options: blog, page, landing
 title: Agentic QA
 
 # Publishing control

@@ -3,7 +3,7 @@
 
 # Required fields
 slug: bdd-specs-for-ai-generated-code
-type: page  # Options: blog, page, landing
+type: blog  # Options: blog, page, landing
 title: BDD Specs for AI-Generated Code
 
 # Publishing control

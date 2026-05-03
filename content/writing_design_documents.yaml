@@ -3,7 +3,7 @@
 
 # Required fields
 slug: writing-design-documents
-type: page  # Options: blog, page, landing
+type: blog  # Options: blog, page, landing
 title: How to write design documents that keep AI from going off the rails
 
 # Publishing control

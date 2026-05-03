@@ -160,7 +160,7 @@ The three amigos process (product owner, developer, tester) produces these bound
 
 BDD specs catch requirement misunderstandings and regressions. They catch the case where the AI built something that technically works but doesn't match the user story. Boundary specs specifically catch integration failures that unit tests miss.
 
-They don't catch everything. They don't catch UX issues, performance problems, or edge cases you didn't think to specify. That's [agentic QA](/pages/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
+They don't catch everything. They don't catch UX issues, performance problems, or edge cases you didn't think to specify. That's [agentic QA](/blog/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
 
 ## What to Tell Your AI
 

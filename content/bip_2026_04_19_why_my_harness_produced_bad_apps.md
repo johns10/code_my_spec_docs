@@ -16,7 +16,7 @@ I was specifying the solution instead of the problem.
 
 ## Phase 2: BDD Specs
 
-I wrote about this shift in [BDD Specs for AI-Generated Code](/pages/bdd-specs-for-ai-generated-code). Moving from "describe the code" to "describe what the app does" was a real improvement. Given/When/Then. User stories with acceptance criteria.
+I wrote about this shift in [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code). Moving from "describe the code" to "describe what the app does" was a real improvement. Given/When/Then. User stories with acceptance criteria.
 
 Better. Not good enough.
 

@@ -4,7 +4,7 @@ Unit tests and BDD specs verify pieces. QA verifies the running application — 
 
 ## Tests Aren't Enough
 
-Unit tests check logic. [BDD specs](/pages/bdd-specs-for-ai-generated-code) check behavior against acceptance criteria. Neither opens a browser, hits your API, and clicks through the app like a user would.
+Unit tests check logic. [BDD specs](/blog/bdd-specs-for-ai-generated-code) check behavior against acceptance criteria. Neither opens a browser, hits your API, and clicks through the app like a user would.
 
 That's a whole category of bugs that nobody catches until production. The kind where individual components work fine in isolation but break when the full system runs together. The kind where the API response shape is technically correct but the data inside it is wrong.
 

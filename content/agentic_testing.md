@@ -50,7 +50,7 @@ After digging through 35+ sources on this, here's the stack that works:
 2. **Write acceptance criteria before the agent touches code.** Turn them into BDD specs. This breaks the self-confirming loop because the tests come from what you intended, not what the agent built.
 3. **Use separate agents for generation and review.** Addy Osmani from Google Chrome [describes "quality guardian" agents](https://addyosmani.com/blog/self-improving-agents/) that audit generated code. Different prompt, different context, different incentives than the generating agent.
 4. **Use the cassette pattern for LLM-powered features.** Record once, replay forever. Test structure, not content.
-5. **Test the running application, not just the components.** BDD specs passing doesn't mean the app works. [QA against the actual running system](/pages/agentic-qa) catches what unit tests miss at integration boundaries.
+5. **Test the running application, not just the components.** BDD specs passing doesn't mean the app works. [QA against the actual running system](/blog/agentic-qa) catches what unit tests miss at integration boundaries.
 6. **Don't trust coverage numbers.** An agent can inflate coverage in an afternoon with assertion-free tests. High coverage with AI-generated tests can be worse than low coverage with thoughtful tests because it creates false confidence.
 
 The reality is that AI makes testing simultaneously easier and more dangerous. Easier because the overhead argument for TDD is gone - agents will happily write tests all day. More dangerous because the tests might be confirming exactly the wrong thing. The discipline isn't in writing tests. It's in making sure the tests come from the right source.

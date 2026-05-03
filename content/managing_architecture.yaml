@@ -3,7 +3,7 @@
 
 # Required fields
 slug: managing-architecture
-type: page  # Options: blog, page, landing
+type: blog  # Options: blog, page, landing
 title: How to design architecture that keeps AI on track
 
 # Publishing control
