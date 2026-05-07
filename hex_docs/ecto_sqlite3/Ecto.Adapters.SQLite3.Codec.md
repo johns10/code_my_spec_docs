@@ -1,0 +1,1 @@
+# Ecto.Adapters.SQLite3.Codec

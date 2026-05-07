@@ -1,0 +1,1 @@
+# Mix.Tasks.Phx.Gen.Auth.Migration

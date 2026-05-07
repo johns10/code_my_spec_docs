@@ -1,0 +1,1 @@
+# Swoosh.Adapters.SMTP.Helpers

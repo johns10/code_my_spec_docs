@@ -1,0 +1,1 @@
+# Collectable.Ecto.Adapters.SQL.Stream

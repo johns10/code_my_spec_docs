@@ -1,0 +1,1 @@
+# Plug.Exception.Ecto.StaleEntryError

@@ -1,0 +1,4112 @@
+# GoogleApi.AnalyticsAdmin.V1alpha.Api.Properties
+
+API calls for all endpoints tagged `Properties`.
+
+## analyticsadmin_properties_access_bindings_batch_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates information about multiple access bindings to an account or property. This method is transactional. If any AccessBinding cannot be created, none of the AccessBindings will be created.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The account or property that owns the access bindings. The parent field in the CreateAccessBindingRequest messages must either be empty or match this field. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchCreateAccessBindingsRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchCreateAccessBindingsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_batch_delete(connection, parent, optional_params \\ [], opts \\ [])
+
+Deletes information about multiple users' links to an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The account or property that owns the access bindings. The parent of all provided values for the 'names' field in DeleteAccessBindingRequest messages must match this field. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchDeleteAccessBindingsRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_batch_get(connection, parent, optional_params \\ [], opts \\ [])
+
+Gets information about multiple access bindings to an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The account or property that owns the access bindings. The parent of all provided values for the 'names' field must match this field. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:names` (*type:* `list(String.t)`) - Required. The names of the access bindings to retrieve. A maximum of 1000 access bindings can be retrieved in a batch. Formats: - accounts/{account}/accessBindings/{accessBinding} - properties/{property}/accessBindings/{accessBinding}
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchGetAccessBindingsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_batch_update(connection, parent, optional_params \\ [], opts \\ [])
+
+Updates information about multiple access bindings to an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The account or property that owns the access bindings. The parent of all provided AccessBinding in UpdateAccessBindingRequest messages must match this field. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchUpdateAccessBindingsRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBatchUpdateAccessBindingsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates an access binding on an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessBinding.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessBinding{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes an access binding on an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Formats: - accounts/{account}/accessBindings/{accessBinding} - properties/{property}/accessBindings/{accessBinding}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_get(connection, name, optional_params \\ [], opts \\ [])
+
+Gets information about an access binding.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the access binding to retrieve. Formats: - accounts/{account}/accessBindings/{accessBinding} - properties/{property}/accessBindings/{accessBinding}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessBinding{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists all access bindings on an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Formats: - accounts/{account} - properties/{property}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of access bindings to return. The service may return fewer than this value. If unspecified, at most 200 access bindings will be returned. The maximum value is 500; values above 500 will be coerced to 500.
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListAccessBindings` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListAccessBindings` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListAccessBindingsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_access_bindings_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates an access binding on an account or property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this binding. Format: accounts/{account}/accessBindings/{access_binding} or properties/{property}/accessBindings/{access_binding} Example: "accounts/100/accessBindings/200"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessBinding.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessBinding{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_acknowledge_user_data_collection(connection, property, optional_params \\ [], opts \\ [])
+
+Acknowledges the terms of user data collection for the specified property. This acknowledgement must be completed (either in the Google Analytics UI or through this API) before MeasurementProtocolSecret resources may be created.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `property` (*type:* `String.t`) - Required. The property for which to acknowledge user data collection.
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAcknowledgeUserDataCollectionRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAcknowledgeUserDataCollectionResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_ad_sense_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates an AdSenseLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The property for which to create an AdSense Link. Format: properties/{propertyId} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAdSenseLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAdSenseLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_ad_sense_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes an AdSenseLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Unique identifier for the AdSense Link to be deleted. Format: properties/{propertyId}/adSenseLinks/{linkId} Example: properties/1234/adSenseLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_ad_sense_links_get(connection, name, optional_params \\ [], opts \\ [])
+
+Looks up a single AdSenseLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Unique identifier for the AdSense Link requested. Format: properties/{propertyId}/adSenseLinks/{linkId} Example: properties/1234/adSenseLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAdSenseLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_ad_sense_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists AdSenseLinks on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Resource name of the parent property. Format: properties/{propertyId} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token received from a previous `ListAdSenseLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListAdSenseLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListAdSenseLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_audiences_archive(connection, name, optional_params \\ [], opts \\ [])
+
+Archives an Audience on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Example format: properties/1234/audiences/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaArchiveAudienceRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_audiences_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates an Audience.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudience.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudience{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_audiences_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single Audience. Audiences created before 2020 may not be supported. Default audiences will not show filter definitions.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the Audience to get. Example format: properties/1234/audiences/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudience{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_audiences_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists Audiences on a property. Audiences created before 2020 may not be supported. Default audiences will not show filter definitions.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListAudiences` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListAudiences` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListAudiencesResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_audiences_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates an Audience on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. The resource name for this Audience resource. Format: properties/{propertyId}/audiences/{audienceId}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudience.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudience{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_big_query_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a BigQueryLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBigQueryLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBigQueryLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_big_query_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a BigQueryLink on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The BigQueryLink to delete. Example format: properties/1234/bigQueryLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_big_query_links_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single BigQuery Link.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the BigQuery link to lookup. Format: properties/{property_id}/bigQueryLinks/{bigquery_link_id} Example: properties/123/bigQueryLinks/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBigQueryLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_big_query_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists BigQuery Links on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The name of the property to list BigQuery links under. Format: properties/{property_id} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListBigQueryLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListBigQueryLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListBigQueryLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_big_query_links_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a BigQueryLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this BigQuery link. Format: 'properties/{property_id}/bigQueryLinks/{bigquery_link_id}' Format: 'properties/1234/bigQueryLinks/abc567'
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBigQueryLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaBigQueryLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_calculated_metrics_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a CalculatedMetric.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Format: properties/{property_id} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:calculatedMetricId` (*type:* `String.t`) - Required. The ID to use for the calculated metric which will become the final component of the calculated metric's resource name. This value should be 1-80 characters and valid characters are /[a-zA-Z0-9_]/, no spaces allowed. calculated_metric_id must be unique between all calculated metrics under a property. The calculated_metric_id is used when referencing this calculated metric from external APIs, for example, "calcMetric:{calculated_metric_id}".
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCalculatedMetric.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCalculatedMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_calculated_metrics_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a CalculatedMetric on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CalculatedMetric to delete. Format: properties/{property_id}/calculatedMetrics/{calculated_metric_id} Example: properties/1234/calculatedMetrics/Metric01
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_calculated_metrics_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single CalculatedMetric.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CalculatedMetric to get. Format: properties/{property_id}/calculatedMetrics/{calculated_metric_id} Example: properties/1234/calculatedMetrics/Metric01
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCalculatedMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_calculated_metrics_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists CalculatedMetrics on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - Optional. The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - Optional. A page token, received from a previous `ListCalculatedMetrics` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListCalculatedMetrics` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListCalculatedMetricsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_calculated_metrics_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a CalculatedMetric on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name for this CalculatedMetric. Format: 'properties/{property_id}/calculatedMetrics/{calculated_metric_id}'
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCalculatedMetric.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCalculatedMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_channel_groups_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a ChannelGroup.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The property for which to create a ChannelGroup. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaChannelGroup.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaChannelGroup{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_channel_groups_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a ChannelGroup on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The ChannelGroup to delete. Example format: properties/1234/channelGroups/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_channel_groups_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single ChannelGroup.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The ChannelGroup to get. Example format: properties/1234/channelGroups/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaChannelGroup{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_channel_groups_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists ChannelGroups on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The property for which to list ChannelGroups. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListChannelGroups` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListChannelGroups` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListChannelGroupsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_channel_groups_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a ChannelGroup.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. The resource name for this Channel Group resource. Format: properties/{property}/channelGroups/{channel_group}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaChannelGroup.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaChannelGroup{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_conversion_events_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Deprecated: Use `CreateKeyEvent` instead. Creates a conversion event with the specified attributes.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The resource name of the parent property where this conversion event will be created. Format: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaConversionEvent.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaConversionEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_conversion_events_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deprecated: Use `DeleteKeyEvent` instead. Deletes a conversion event in a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The resource name of the conversion event to delete. Format: properties/{property}/conversionEvents/{conversion_event} Example: "properties/123/conversionEvents/456"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_conversion_events_get(connection, name, optional_params \\ [], opts \\ [])
+
+Deprecated: Use `GetKeyEvent` instead. Retrieve a single conversion event.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The resource name of the conversion event to retrieve. Format: properties/{property}/conversionEvents/{conversion_event} Example: "properties/123/conversionEvents/456"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaConversionEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_conversion_events_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Deprecated: Use `ListKeyEvents` instead. Returns a list of conversion events in the specified parent property. Returns an empty list if no conversion events are found.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The resource name of the parent property. Example: 'properties/123'
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListConversionEvents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListConversionEvents` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListConversionEventsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_conversion_events_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Deprecated: Use `UpdateKeyEvent` instead. Updates a conversion event with the specified attributes.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this conversion event. Format: properties/{property}/conversionEvents/{conversion_event}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaConversionEvent.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaConversionEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_create(connection, optional_params \\ [], opts \\ [])
+
+Creates a Google Analytics property with the specified location and attributes.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_create_connected_site_tag(connection, optional_params \\ [], opts \\ [])
+
+Creates a connected site tag for a Universal Analytics property. You can create a maximum of 20 connected site tags per property. Note: This API cannot be used on GA4 properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCreateConnectedSiteTagRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCreateConnectedSiteTagResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_create_rollup_property(connection, optional_params \\ [], opts \\ [])
+
+Create a roll-up property and all roll-up property source links.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCreateRollupPropertyRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCreateRollupPropertyResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_dimensions_archive(connection, name, optional_params \\ [], opts \\ [])
+
+Archives a CustomDimension on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CustomDimension to archive. Example format: properties/1234/customDimensions/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaArchiveCustomDimensionRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_dimensions_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a CustomDimension.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomDimension.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomDimension{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_dimensions_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single CustomDimension.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CustomDimension to get. Example format: properties/1234/customDimensions/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomDimension{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_dimensions_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists CustomDimensions on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListCustomDimensions` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListCustomDimensions` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListCustomDimensionsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_dimensions_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a CustomDimension on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name for this CustomDimension resource. Format: properties/{property}/customDimensions/{customDimension}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomDimension.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomDimension{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_metrics_archive(connection, name, optional_params \\ [], opts \\ [])
+
+Archives a CustomMetric on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CustomMetric to archive. Example format: properties/1234/customMetrics/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaArchiveCustomMetricRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_metrics_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a CustomMetric.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomMetric.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_metrics_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single CustomMetric.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the CustomMetric to get. Example format: properties/1234/customMetrics/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_metrics_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists CustomMetrics on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListCustomMetrics` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListCustomMetrics` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListCustomMetricsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_custom_metrics_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a CustomMetric on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name for this CustomMetric resource. Format: properties/{property}/customMetrics/{customMetric}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomMetric.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCustomMetric{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a DataStream.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStream.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStream{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a DataStream on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DataStream to delete. Example format: properties/1234/dataStreams/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_create_rules_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates an EventCreateRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventCreateRule.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventCreateRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_create_rules_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes an EventCreateRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456/eventCreateRules/789
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_create_rules_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single EventCreateRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the EventCreateRule to get. Example format: properties/123/dataStreams/456/eventCreateRules/789
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventCreateRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_create_rules_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists EventCreateRules on a web data stream.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListEventCreateRules` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListEventCreateRules` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListEventCreateRulesResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_create_rules_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates an EventCreateRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name for this EventCreateRule resource. Format: properties/{property}/dataStreams/{data_stream}/eventCreateRules/{event_create_rule}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventCreateRule.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventCreateRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates an EventEditRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventEditRule.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventEditRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes an EventEditRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456/eventEditRules/789
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single EventEditRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the EventEditRule to get. Example format: properties/123/dataStreams/456/eventEditRules/789
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventEditRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists EventEditRules on a web data stream.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - Optional. The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - Optional. A page token, received from a previous `ListEventEditRules` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListEventEditRules` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListEventEditRulesResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates an EventEditRule.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Identifier. Resource name for this EventEditRule resource. Format: properties/{property}/dataStreams/{data_stream}/eventEditRules/{event_edit_rule}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventEditRule.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEventEditRule{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_event_edit_rules_reorder(connection, parent, optional_params \\ [], opts \\ [])
+
+Changes the processing order of event edit rules on the specified stream.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/123/dataStreams/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReorderEventEditRulesRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single DataStream.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DataStream to get. Example format: properties/1234/dataStreams/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStream{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_get_data_redaction_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single DataRedactionSettings.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the settings to lookup. Format: properties/{property}/dataStreams/{data_stream}/dataRedactionSettings Example: "properties/1000/dataStreams/2000/dataRedactionSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRedactionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_get_enhanced_measurement_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Returns the enhanced measurement settings for this data stream. Note that the stream must enable enhanced measurement for these settings to take effect.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the settings to lookup. Format: properties/{property}/dataStreams/{data_stream}/enhancedMeasurementSettings Example: "properties/1000/dataStreams/2000/enhancedMeasurementSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEnhancedMeasurementSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_get_global_site_tag(connection, name, optional_params \\ [], opts \\ [])
+
+Returns the Site Tag for the specified web stream. Site Tags are immutable singletons.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the site tag to lookup. Note that site tags are singletons and do not have unique IDs. Format: properties/{property_id}/dataStreams/{stream_id}/globalSiteTag Example: `properties/123/dataStreams/456/globalSiteTag`
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGlobalSiteTag{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists DataStreams on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListDataStreams` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListDataStreams` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListDataStreamsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_measurement_protocol_secrets_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a measurement protocol secret.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The parent resource where this secret will be created. Format: properties/{property}/dataStreams/{dataStream}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaMeasurementProtocolSecret.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaMeasurementProtocolSecret{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_measurement_protocol_secrets_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes target MeasurementProtocolSecret.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the MeasurementProtocolSecret to delete. Format: properties/{property}/dataStreams/{dataStream}/measurementProtocolSecrets/{measurementProtocolSecret}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_measurement_protocol_secrets_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single MeasurementProtocolSecret.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the measurement protocol secret to lookup. Format: properties/{property}/dataStreams/{dataStream}/measurementProtocolSecrets/{measurementProtocolSecret}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaMeasurementProtocolSecret{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_measurement_protocol_secrets_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Returns child MeasurementProtocolSecrets under the specified parent Property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The resource name of the parent stream. Format: properties/{property}/dataStreams/{dataStream}/measurementProtocolSecrets
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 10 resources will be returned. The maximum value is 10. Higher values will be coerced to the maximum.
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListMeasurementProtocolSecrets` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListMeasurementProtocolSecrets` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListMeasurementProtocolSecretsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_measurement_protocol_secrets_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a measurement protocol secret.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this secret. This secret may be a child of any type of stream. Format: properties/{property}/dataStreams/{dataStream}/measurementProtocolSecrets/{measurementProtocolSecret}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaMeasurementProtocolSecret.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaMeasurementProtocolSecret{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a DataStream on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this Data Stream. Format: properties/{property_id}/dataStreams/{stream_id} Example: "properties/1000/dataStreams/2000"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStream.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStream{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_s_k_ad_network_conversion_value_schema_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a SKAdNetworkConversionValueSchema.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The parent resource where this schema will be created. Format: properties/{property}/dataStreams/{dataStream}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_s_k_ad_network_conversion_value_schema_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes target SKAdNetworkConversionValueSchema.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the SKAdNetworkConversionValueSchema to delete. Format: properties/{property}/dataStreams/{dataStream}/sKAdNetworkConversionValueSchema/{skadnetwork_conversion_value_schema}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_s_k_ad_network_conversion_value_schema_get(connection, name, optional_params \\ [], opts \\ [])
+
+Looks up a single SKAdNetworkConversionValueSchema.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The resource name of SKAdNetwork conversion value schema to look up. Format: properties/{property}/dataStreams/{dataStream}/sKAdNetworkConversionValueSchema/{skadnetwork_conversion_value_schema}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_s_k_ad_network_conversion_value_schema_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists SKAdNetworkConversionValueSchema on a stream. Properties can have at most one SKAdNetworkConversionValueSchema.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The DataStream resource to list schemas for. Format: properties/{property_id}/dataStreams/{dataStream} Example: properties/1234/dataStreams/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListSKAdNetworkConversionValueSchemas` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListSKAdNetworkConversionValueSchema` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListSKAdNetworkConversionValueSchemasResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_s_k_ad_network_conversion_value_schema_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a SKAdNetworkConversionValueSchema.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of the schema. This will be child of ONLY an iOS stream, and there can be at most one such child under an iOS stream. Format: properties/{property}/dataStreams/{dataStream}/sKAdNetworkConversionValueSchema
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_update_data_redaction_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a DataRedactionSettings on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Name of this Data Redaction Settings resource. Format: properties/{property_id}/dataStreams/{data_stream}/dataRedactionSettings Example: "properties/1000/dataStreams/2000/dataRedactionSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRedactionSettings.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRedactionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_data_streams_update_enhanced_measurement_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Updates the enhanced measurement settings for this data stream. Note that the stream must enable enhanced measurement for these settings to take effect.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of the Enhanced Measurement Settings. Format: properties/{property_id}/dataStreams/{data_stream}/enhancedMeasurementSettings Example: "properties/1000/dataStreams/2000/enhancedMeasurementSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEnhancedMeasurementSettings.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaEnhancedMeasurementSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Marks target Property as soft-deleted (ie: "trashed") and returns it. This API does not have a method to restore soft-deleted properties. However, they can be restored using the Trash Can UI. If the properties are not restored before the expiration time, the Property and all child resources (eg: GoogleAdsLinks, Streams, AccessBindings) will be permanently purged. https://support.google.com/analytics/answer/6154772 Returns an error if the target is not found.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the Property to soft-delete. Format: properties/{property_id} Example: "properties/1000"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_delete_connected_site_tag(connection, optional_params \\ [], opts \\ [])
+
+Deletes a connected site tag for a Universal Analytics property. Note: this has no effect on GA4 properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDeleteConnectedSiteTagRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_approve(connection, name, optional_params \\ [], opts \\ [])
+
+Approves a DisplayVideo360AdvertiserLinkProposal. The DisplayVideo360AdvertiserLinkProposal will be deleted and a new DisplayVideo360AdvertiserLink will be created.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLinkProposal to approve. Example format: properties/1234/displayVideo360AdvertiserLinkProposals/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaApproveDisplayVideo360AdvertiserLinkProposalRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaApproveDisplayVideo360AdvertiserLinkProposalResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_cancel(connection, name, optional_params \\ [], opts \\ [])
+
+Cancels a DisplayVideo360AdvertiserLinkProposal. Cancelling can mean either: - Declining a proposal initiated from Display & Video 360 - Withdrawing a proposal initiated from Google Analytics After being cancelled, a proposal will eventually be deleted automatically.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLinkProposal to cancel. Example format: properties/1234/displayVideo360AdvertiserLinkProposals/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaCancelDisplayVideo360AdvertiserLinkProposalRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLinkProposal{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a DisplayVideo360AdvertiserLinkProposal.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLinkProposal.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLinkProposal{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a DisplayVideo360AdvertiserLinkProposal on a property. This can only be used on cancelled proposals.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLinkProposal to delete. Example format: properties/1234/displayVideo360AdvertiserLinkProposals/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single DisplayVideo360AdvertiserLinkProposal.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLinkProposal to get. Example format: properties/1234/displayVideo360AdvertiserLinkProposals/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLinkProposal{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_link_proposals_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists DisplayVideo360AdvertiserLinkProposals on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListDisplayVideo360AdvertiserLinkProposals` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListDisplayVideo360AdvertiserLinkProposals` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListDisplayVideo360AdvertiserLinkProposalsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a DisplayVideo360AdvertiserLink. This can only be utilized by users who have proper authorization both on the Google Analytics property and on the Display & Video 360 advertiser. Users who do not have access to the Display & Video 360 advertiser should instead seek to create a DisplayVideo360LinkProposal.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a DisplayVideo360AdvertiserLink on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLink to delete. Example format: properties/1234/displayVideo360AdvertiserLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_links_get(connection, name, optional_params \\ [], opts \\ [])
+
+Look up a single DisplayVideo360AdvertiserLink
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the DisplayVideo360AdvertiserLink to get. Example format: properties/1234/displayVideo360AdvertiserLink/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists all DisplayVideo360AdvertiserLinks on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListDisplayVideo360AdvertiserLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListDisplayVideo360AdvertiserLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListDisplayVideo360AdvertiserLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_display_video360_advertiser_links_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a DisplayVideo360AdvertiserLink on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. The resource name for this DisplayVideo360AdvertiserLink resource. Format: properties/{propertyId}/displayVideo360AdvertiserLinks/{linkId} Note: linkId is not the Display & Video 360 Advertiser ID
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDisplayVideo360AdvertiserLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_expanded_data_sets_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a ExpandedDataSet.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaExpandedDataSet.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaExpandedDataSet{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_expanded_data_sets_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a ExpandedDataSet on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Example format: properties/1234/expandedDataSets/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_expanded_data_sets_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single ExpandedDataSet.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the ExpandedDataSet to get. Example format: properties/1234/expandedDataSets/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaExpandedDataSet{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_expanded_data_sets_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists ExpandedDataSets on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListExpandedDataSets` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListExpandedDataSet` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListExpandedDataSetsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_expanded_data_sets_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a ExpandedDataSet on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. The resource name for this ExpandedDataSet resource. Format: properties/{property_id}/expandedDataSets/{expanded_data_set}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaExpandedDataSet.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaExpandedDataSet{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_fetch_automated_ga4_configuration_opt_out(connection, optional_params \\ [], opts \\ [])
+
+Fetches the opt out status for the automated GA4 setup process for a UA property. Note: this has no effect on GA4 property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaFetchAutomatedGa4ConfigurationOptOutRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaFetchAutomatedGa4ConfigurationOptOutResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_fetch_connected_ga4_property(connection, optional_params \\ [], opts \\ [])
+
+Given a specified UA property, looks up the GA4 property connected to it. Note: this cannot be used with GA4 properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:property` (*type:* `String.t`) - Required. The UA property for which to look up the connected GA4 property. Note this request uses the internal property ID, not the tracking ID of the form UA-XXXXXX-YY. Format: properties/{internal_web_property_id} Example: properties/1234
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaFetchConnectedGa4PropertyResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_firebase_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a FirebaseLink. Properties can have at most one FirebaseLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Format: properties/{property_id} Example: `properties/1234`
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaFirebaseLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaFirebaseLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_firebase_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a FirebaseLink on a property
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Format: properties/{property_id}/firebaseLinks/{firebase_link_id} Example: `properties/1234/firebaseLinks/5678`
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_firebase_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists FirebaseLinks on a property. Properties can have at most one FirebaseLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Format: properties/{property_id} Example: `properties/1234`
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListFirebaseLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListFirebaseLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListFirebaseLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single GA Property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the property to lookup. Format: properties/{property_id} Example: "properties/1000"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_get_attribution_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a AttributionSettings singleton.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the attribution settings to retrieve. Format: properties/{property}/attributionSettings
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAttributionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_get_data_retention_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Returns the singleton data retention settings for this property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the settings to lookup. Format: properties/{property}/dataRetentionSettings Example: "properties/1000/dataRetentionSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRetentionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_get_google_signals_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for Google Signals settings for a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the google signals settings to retrieve. Format: properties/{property}/googleSignalsSettings
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleSignalsSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_google_ads_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a GoogleAdsLink.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleAdsLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleAdsLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_google_ads_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a GoogleAdsLink on a property
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Example format: properties/1234/googleAdsLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_google_ads_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists GoogleAdsLinks on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListGoogleAdsLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListGoogleAdsLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListGoogleAdsLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_google_ads_links_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a GoogleAdsLink on a property
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Format: properties/{propertyId}/googleAdsLinks/{googleAdsLinkId} Note: googleAdsLinkId is not the Google Ads customer ID.
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleAdsLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleAdsLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_key_events_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a Key Event.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The resource name of the parent property where this Key Event will be created. Format: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaKeyEvent.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaKeyEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_key_events_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a Key Event.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The resource name of the Key Event to delete. Format: properties/{property}/keyEvents/{key_event} Example: "properties/123/keyEvents/456"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_key_events_get(connection, name, optional_params \\ [], opts \\ [])
+
+Retrieve a single Key Event.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The resource name of the Key Event to retrieve. Format: properties/{property}/keyEvents/{key_event} Example: "properties/123/keyEvents/456"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaKeyEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_key_events_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Returns a list of Key Events in the specified parent property. Returns an empty list if no Key Events are found.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The resource name of the parent property. Example: 'properties/123'
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListKeyEvents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListKeyEvents` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListKeyEventsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_key_events_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a Key Event.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this key event. Format: properties/{property}/keyEvents/{key_event}
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaKeyEvent.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaKeyEvent{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_list(connection, optional_params \\ [], opts \\ [])
+
+Returns child Properties under the specified parent Account. Properties will be excluded if the caller does not have access. Soft-deleted (ie: "trashed") properties are excluded by default. Returns an empty list if no relevant properties are found.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:filter` (*type:* `String.t`) - Required. An expression for filtering the results of the request. Fields eligible for filtering are: `parent:`(The resource name of the parent account/property) or `ancestor:`(The resource name of the parent account) or `firebase_project:`(The id or number of the linked firebase project). Some examples of filters: ``` | Filter | Description | |-----------------------------|-------------------------------------------| | parent:accounts/123 | The account with account id: 123. | | parent:properties/123 | The property with property id: 123. | | ancestor:accounts/123 | The account with account id: 123. | | firebase_project:project-id | The firebase project with id: project-id. | | firebase_project:123 | The firebase project with number: 123. | ```
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListProperties` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListProperties` must match the call that provided the page token.
+    *   `:showDeleted` (*type:* `boolean()`) - Whether to include soft-deleted (ie: "trashed") Properties in the results. Properties can be inspected to determine whether they are deleted or not.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListPropertiesResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_list_connected_site_tags(connection, optional_params \\ [], opts \\ [])
+
+Lists the connected site tags for a Universal Analytics property. A maximum of 20 connected site tags will be returned. Note: this has no effect on GA4 property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListConnectedSiteTagsRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListConnectedSiteTagsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this property. Format: properties/{property_id} Example: "properties/1000"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProperty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_provision_subproperty(connection, optional_params \\ [], opts \\ [])
+
+Create a subproperty and a subproperty event filter that applies to the created subproperty.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProvisionSubpropertyRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaProvisionSubpropertyResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_reporting_data_annotations_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a Reporting Data Annotation.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The property for which to create a Reporting Data Annotation. Format: properties/property_id Example: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_reporting_data_annotations_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a Reporting Data Annotation.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Resource name of the Reporting Data Annotation to delete. Format: properties/property_id/reportingDataAnnotations/reporting_data_annotation Example: properties/123/reportingDataAnnotations/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_reporting_data_annotations_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup a single Reporting Data Annotation.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Resource name of the Reporting Data Annotation to lookup. Format: properties/property_id/reportingDataAnnotations/reportingDataAnnotation Example: properties/123/reportingDataAnnotations/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_reporting_data_annotations_list(connection, parent, optional_params \\ [], opts \\ [])
+
+List all Reporting Data Annotations on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Resource name of the property. Format: properties/property_id Example: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:filter` (*type:* `String.t`) - Optional. Filter that restricts which reporting data annotations under the parent property are listed. Supported fields are: * 'name' * `title` * `description` * `annotation_date` * `annotation_date_range` * `color` Additionally, this API provides the following helper functions: * annotation_duration() : the duration that this annotation marks, [durations](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/duration.proto). expect a numeric representation of seconds followed by an `s` suffix. * is_annotation_in_range(start_date, end_date) : if the annotation is in the range specified by the `start_date` and `end_date`. The dates are in ISO-8601 format, for example `2031-06-28`. Supported operations: * `=` : equals * `!=` : not equals * `<` : less than * `>` : greater than * `<=` : less than or equals * `>=` : greater than or equals * `:` : has operator * `=~` : [regular expression](https://github.com/google/re2/wiki/Syntax) match * `!~` : [regular expression](https://github.com/google/re2/wiki/Syntax) does not match * `NOT` : Logical not * `AND` : Logical and * `OR` : Logical or Examples: 1. `title="Holiday Sale"` 2. `description=~"[Bb]ig [Gg]ame.*[Ss]ale"` 3. `is_annotation_in_range("2025-12-25", "2026-01-16") = true` 4. `annotation_duration() >= 172800s AND title:BOGO`
+    *   `:pageSize` (*type:* `integer()`) - Optional. The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - Optional. A page token, received from a previous `ListReportingDataAnnotations` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListReportingDataAnnotations` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListReportingDataAnnotationsResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_reporting_data_annotations_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a Reporting Data Annotation.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Identifier. Resource name of this Reporting Data Annotation. Format: 'properties/{property_id}/reportingDataAnnotations/{reporting_data_annotation}' Format: 'properties/123/reportingDataAnnotations/456'
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Optional. The list of fields to update. Field names must be in snake case (for example, "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_rollup_property_source_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a roll-up property source link. Only roll-up properties can have source links, so this method will throw an error if used on other types of properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Format: properties/{property_id} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaRollupPropertySourceLink.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaRollupPropertySourceLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_rollup_property_source_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a roll-up property source link. Only roll-up properties can have source links, so this method will throw an error if used on other types of properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Format: properties/{property_id}/rollupPropertySourceLinks/{rollup_property_source_link_id} Example: properties/1234/rollupPropertySourceLinks/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_rollup_property_source_links_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single roll-up property source Link. Only roll-up properties can have source links, so this method will throw an error if used on other types of properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the roll-up property source link to lookup. Format: properties/{property_id}/rollupPropertySourceLinks/{rollup_property_source_link_id} Example: properties/123/rollupPropertySourceLinks/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaRollupPropertySourceLink{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_rollup_property_source_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists roll-up property source Links on a property. Only roll-up properties can have source links, so this method will throw an error if used on other types of properties.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The name of the roll-up property to list roll-up property source links under. Format: properties/{property_id} Example: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - Optional. The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - Optional. A page token, received from a previous `ListRollupPropertySourceLinks` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListRollupPropertySourceLinks` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListRollupPropertySourceLinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_run_access_report(connection, entity, optional_params \\ [], opts \\ [])
+
+Returns a customized report of data access records. The report provides records of each time a user reads Google Analytics reporting data. Access records are retained for up to 2 years. Data Access Reports can be requested for a property. Reports may be requested for any property, but dimensions that aren't related to quota can only be requested on Google Analytics 360 properties. This method is only available to Administrators. These data access records include GA UI Reporting, GA UI Explorations, GA Data API, and other products like Firebase & Admob that can retrieve data from Google Analytics through a linkage. These records don't include property configuration changes like adding a stream or changing a property's time zone. For configuration change history, see [searchChangeHistoryEvents](https://developers.google.com/analytics/devguides/config/admin/v1/rest/v1alpha/accounts/searchChangeHistoryEvents). To give your feedback on this API, complete the [Google Analytics Access Reports feedback](https://docs.google.com/forms/d/e/1FAIpQLSdmEBUrMzAEdiEKk5TV5dEHvDUZDRlgWYdQdAeSdtR4hVjEhw/viewform) form.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `entity` (*type:* `String.t`) - The Data Access Report supports requesting at the property level or account level. If requested at the account level, Data Access Reports include all access for all properties under that account. To request at the property level, entity should be for example 'properties/123' if "123" is your Google Analytics property ID. To request at the account level, entity should be for example 'accounts/1234' if "1234" is your Google Analytics Account ID.
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaRunAccessReportRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaRunAccessReportResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_search_ads360_links_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a SearchAds360Link.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_search_ads360_links_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a SearchAds360Link on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the SearchAds360Link to delete. Example format: properties/1234/SearchAds360Links/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_search_ads360_links_get(connection, name, optional_params \\ [], opts \\ [])
+
+Look up a single SearchAds360Link
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. The name of the SearchAds360Link to get. Example format: properties/1234/SearchAds360Link/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_search_ads360_links_list(connection, parent, optional_params \\ [], opts \\ [])
+
+Lists all SearchAds360Links on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Example format: properties/1234
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - The maximum number of resources to return. If unspecified, at most 50 resources will be returned. The maximum value is 200 (higher values will be coerced to the maximum).
+    *   `:pageToken` (*type:* `String.t`) - A page token, received from a previous `ListSearchAds360Links` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListSearchAds360Links` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListSearchAds360LinksResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_search_ads360_links_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a SearchAds360Link on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. The resource name for this SearchAds360Link resource. Format: properties/{propertyId}/searchAds360Links/{linkId} Note: linkId is not the Search Ads 360 advertiser ID
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_set_automated_ga4_configuration_opt_out(connection, optional_params \\ [], opts \\ [])
+
+Sets the opt out status for the automated GA4 setup process for a UA property. Note: this has no effect on GA4 property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSetAutomatedGa4ConfigurationOptOutRequest.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSetAutomatedGa4ConfigurationOptOutResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_subproperty_event_filters_create(connection, parent, optional_params \\ [], opts \\ [])
+
+Creates a subproperty Event Filter.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. The ordinary property for which to create a subproperty event filter. Format: properties/property_id Example: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSubpropertyEventFilter.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSubpropertyEventFilter{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_subproperty_event_filters_delete(connection, name, optional_params \\ [], opts \\ [])
+
+Deletes a subproperty event filter.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Resource name of the subproperty event filter to delete. Format: properties/property_id/subpropertyEventFilters/subproperty_event_filter Example: properties/123/subpropertyEventFilters/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleProtobufEmpty{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_subproperty_event_filters_get(connection, name, optional_params \\ [], opts \\ [])
+
+Lookup for a single subproperty Event Filter.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Required. Resource name of the subproperty event filter to lookup. Format: properties/property_id/subpropertyEventFilters/subproperty_event_filter Example: properties/123/subpropertyEventFilters/456
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSubpropertyEventFilter{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_subproperty_event_filters_list(connection, parent, optional_params \\ [], opts \\ [])
+
+List all subproperty Event Filters on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `parent` (*type:* `String.t`) - Required. Resource name of the ordinary property. Format: properties/property_id Example: properties/123
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:pageSize` (*type:* `integer()`) - Optional. The maximum number of resources to return. The service may return fewer than this value, even if there are additional pages. If unspecified, at most 50 resources will be returned. The maximum value is 200; (higher values will be coerced to the maximum)
+    *   `:pageToken` (*type:* `String.t`) - Optional. A page token, received from a previous `ListSubpropertyEventFilters` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListSubpropertyEventFilters` must match the call that provided the page token.
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaListSubpropertyEventFiltersResponse{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_subproperty_event_filters_patch(connection, name, optional_params \\ [], opts \\ [])
+
+Updates a subproperty Event Filter.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Format: properties/{ordinary_property_id}/subpropertyEventFilters/{sub_property_event_filter} Example: properties/1234/subpropertyEventFilters/5678
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to update. Field names must be in snake case (for example, "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSubpropertyEventFilter.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSubpropertyEventFilter{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_update_attribution_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Updates attribution settings on a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this attribution settings resource. Format: properties/{property_id}/attributionSettings Example: "properties/1000/attributionSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAttributionSettings.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAttributionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_update_data_retention_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Updates the singleton data retention settings for this property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name for this DataRetentionSetting resource. Format: properties/{property}/dataRetentionSettings
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRetentionSettings.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataRetentionSettings{}}` on success
+*   `{:error, info}` on failure
+
+## analyticsadmin_properties_update_google_signals_settings(connection, name, optional_params \\ [], opts \\ [])
+
+Updates Google Signals settings for a property.
+
+## Parameters
+
+*   `connection` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Connection.t`) - Connection to server
+*   `name` (*type:* `String.t`) - Output only. Resource name of this setting. Format: properties/{property_id}/googleSignalsSettings Example: "properties/1000/googleSignalsSettings"
+*   `optional_params` (*type:* `keyword()`) - Optional parameters
+    *   `:"$.xgafv"` (*type:* `String.t`) - V1 error format.
+    *   `:access_token` (*type:* `String.t`) - OAuth access token.
+    *   `:alt` (*type:* `String.t`) - Data format for response.
+    *   `:callback` (*type:* `String.t`) - JSONP
+    *   `:fields` (*type:* `String.t`) - Selector specifying which fields to include in a partial response.
+    *   `:key` (*type:* `String.t`) - API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    *   `:oauth_token` (*type:* `String.t`) - OAuth 2.0 token for the current user.
+    *   `:prettyPrint` (*type:* `boolean()`) - Returns response with indentations and line breaks.
+    *   `:quotaUser` (*type:* `String.t`) - Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.
+    *   `:uploadType` (*type:* `String.t`) - Legacy upload protocol for media (e.g. "media", "multipart").
+    *   `:upload_protocol` (*type:* `String.t`) - Upload protocol for media (e.g. "raw", "multipart").
+    *   `:updateMask` (*type:* `String.t`) - Required. The list of fields to be updated. Field names must be in snake case (e.g., "field_to_update"). Omitted fields will not be updated. To replace the entire entity, use one path with the string "*" to match all fields.
+    *   `:body` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleSignalsSettings.t`) - 
+*   `opts` (*type:* `keyword()`) - Call options
+
+## Returns
+
+*   `{:ok, %GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaGoogleSignalsSettings{}}` on success
+*   `{:error, info}` on failure

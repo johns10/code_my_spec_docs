@@ -1,0 +1,3 @@
+# GitHub.Check.SuitePreferencePreferencesAutoTriggerChecks
+
+Provides struct and type for a Check.SuitePreferencePreferencesAutoTriggerChecks

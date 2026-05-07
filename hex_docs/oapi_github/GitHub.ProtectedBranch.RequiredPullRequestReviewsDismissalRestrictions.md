@@ -1,0 +1,3 @@
+# GitHub.ProtectedBranch.RequiredPullRequestReviewsDismissalRestrictions
+
+Provides struct and type for a ProtectedBranch.RequiredPullRequestReviewsDismissalRestrictions

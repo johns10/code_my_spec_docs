@@ -1,0 +1,3 @@
+# GitHub.Organization.ProgrammaticAccessGrant.PermissionsOrganization
+
+Provides struct and type for a Organization.ProgrammaticAccessGrant.PermissionsOrganization

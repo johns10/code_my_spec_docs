@@ -1,0 +1,1 @@
+# JSON.Encoder.Anubis.Server.Component.Resource

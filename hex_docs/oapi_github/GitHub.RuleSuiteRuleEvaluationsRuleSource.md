@@ -1,0 +1,3 @@
+# GitHub.RuleSuiteRuleEvaluationsRuleSource
+
+Provides struct and type for a RuleSuiteRuleEvaluationsRuleSource

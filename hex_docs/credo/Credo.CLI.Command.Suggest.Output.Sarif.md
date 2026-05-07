@@ -1,0 +1,1 @@
+# Credo.CLI.Command.Suggest.Output.Sarif

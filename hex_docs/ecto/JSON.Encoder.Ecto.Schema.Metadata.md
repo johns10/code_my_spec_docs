@@ -1,0 +1,1 @@
+# JSON.Encoder.Ecto.Schema.Metadata

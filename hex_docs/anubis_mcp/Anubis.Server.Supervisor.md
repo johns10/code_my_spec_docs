@@ -1,0 +1,31 @@
+# Anubis.Server.Supervisor
+
+
+
+## child_spec(init_arg)
+
+Returns a specification to start this module under a supervisor.
+
+See `Supervisor`.
+
+## start_link(server, opts)
+
+Starts the server supervisor.
+
+## Parameters
+
+  * `server` - The module implementing `Anubis.Server`
+  * `opts` - Options including:
+    * `:transport` - Transport configuration (required)
+    * `:name` - Supervisor name (optional, defaults to atom name)
+    * `:registry` - `{module, opts}` for custom registry (auto-selected by default)
+    * `:session_idle_timeout` - Time in milliseconds before idle sessions expire (default: 30 minutes)
+    * `:request_timeout` - Time limit in milliseconds for server requests (defaults to 30s)
+
+## start_session(server, opts)
+
+Starts a new session under the DynamicSupervisor.
+
+## stop_session(server, registry_mod, session_id)
+
+Terminates a session.

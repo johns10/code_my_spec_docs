@@ -1,0 +1,3 @@
+# GitHub.ProtectedBranch.RequiredConversationResolution
+
+Provides struct and type for a ProtectedBranch.RequiredConversationResolution

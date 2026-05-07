@@ -1,0 +1,3 @@
+# MDEx.Superscript
+
+Superscript.

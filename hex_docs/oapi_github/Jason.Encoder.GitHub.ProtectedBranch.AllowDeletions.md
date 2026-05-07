@@ -1,0 +1,1 @@
+# Jason.Encoder.GitHub.ProtectedBranch.AllowDeletions

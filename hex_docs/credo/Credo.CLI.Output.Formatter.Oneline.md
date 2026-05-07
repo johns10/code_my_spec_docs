@@ -1,0 +1,1 @@
+# Credo.CLI.Output.Formatter.Oneline

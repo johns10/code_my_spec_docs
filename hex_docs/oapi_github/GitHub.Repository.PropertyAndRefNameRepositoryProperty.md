@@ -1,0 +1,3 @@
+# GitHub.Repository.PropertyAndRefNameRepositoryProperty
+
+Provides struct and type for a Repository.PropertyAndRefNameRepositoryProperty

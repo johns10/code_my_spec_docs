@@ -1,0 +1,1 @@
+# Credo.Check.Refactor.EnumHelpers

@@ -1,0 +1,1 @@
+# ExOauth2Provider.Mixin.Scopes

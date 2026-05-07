@@ -1,0 +1,3 @@
+# MDEx.EscapedTag
+
+Escaped tag.

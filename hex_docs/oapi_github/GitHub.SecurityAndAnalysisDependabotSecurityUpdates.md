@@ -1,0 +1,3 @@
+# GitHub.SecurityAndAnalysisDependabotSecurityUpdates
+
+Provides struct and type for a SecurityAndAnalysisDependabotSecurityUpdates

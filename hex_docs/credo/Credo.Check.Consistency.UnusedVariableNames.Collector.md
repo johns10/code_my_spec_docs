@@ -1,0 +1,1 @@
+# Credo.Check.Consistency.UnusedVariableNames.Collector

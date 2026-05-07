@@ -22,9 +22,12 @@ Extracted from official documentation — each file lists source URLs at the top
 | Cloudflare DNS, tunnels, SSL       | `devops/cloudflare-dns-tunnels.md`        |
 | Hetzner server, Docker, Caddy      | `devops/hetzner-docker-deploy.md`         |
 | Deployment scripts, secrets, envs  | `devops/hetzner-docker-deploy.md`         |
+| Static images via S3 + Cloudflare CDN | `devops/s3-cloudflare-image-host.md`   |
+| URL migrations / 301 redirects (Phoenix plug) | `devops/url-migration-redirects.md`  |
 | HTTP client for an API integration | `req/clients.md`                          |
 | Recording HTTP calls in tests      | `req/cassettes.md`                        |
 | Env vars, secrets, .env files      | `dotenvy.md`                              |
+| Persona research (PM intake + online mining) | `persona_research/README.md`    |
 
 ## Target stack
 
@@ -57,8 +60,20 @@ knowledge/
 │   ├── clients.md             # Minimal Req client modules, new/1 pattern, plug injection for tests
 │   └── cassettes.md           # ReqCassette record/replay, with_cassette, filtering, CI modes
 ├── web-cli.md                # chrismccord/web CLI — shell browser for LLM agents, flags, LiveView support
+├── persona_research/
+│   ├── README.md             # Index: when to read what, agent workflow
+│   ├── overview.md           # Definitions, persona types, critique, when to use what
+│   ├── pm_intake.md          # Internal artifact checklist + 15 PM interview questions
+│   ├── primary_research.md   # User interviews: sample size, screener, question discipline
+│   ├── secondary_research.md # Online mining: Reddit, G2, HN, LinkedIn, VoC, operators
+│   ├── jtbd.md               # Jobs-to-be-Done framework, Switch Interview, four forces, VPC
+│   ├── templates.md          # Persona fields, one-page layout, deliverable set
+│   ├── synthesis.md          # Raw data → personas: affinity, Cooper 7-step, validation
+│   └── pitfalls.md           # Anti-patterns, bias countermeasures, ship checklist
 └── devops/
     ├── aws-s3-iam.md          # S3 buckets, IAM users/policies, ExAws config, CLI commands
     ├── cloudflare-dns-tunnels.md # DNS records, tunnels, SSL/TLS, multi-env routing, Caddy integration
-    └── hetzner-docker-deploy.md # Hetzner provisioning, Docker Compose, Caddy, db backups, secrets, hardening
+    ├── hetzner-docker-deploy.md # Hetzner provisioning, Docker Compose, Caddy, db backups, secrets, hardening
+    ├── s3-cloudflare-image-host.md # Decoupled image CDN: S3 (bucket=host) + Cloudflare proxy + IMAGES_HOST env
+    └── url-migration-redirects.md  # 301-redirect plug for URL migrations, query-string preservation, scaling
 ```

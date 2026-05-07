@@ -1,0 +1,1 @@
+# Credo.CLI.Command.Explain.ExplainCommand.ExplainCheck

@@ -1,0 +1,3 @@
+# MDEx.SpoileredText
+
+Spoilered text.

@@ -1,0 +1,1 @@
+# Credo.CLI.Command.Diff.Output.FlyCheck

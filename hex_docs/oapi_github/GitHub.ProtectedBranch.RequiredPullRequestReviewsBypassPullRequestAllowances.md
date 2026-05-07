@@ -1,0 +1,3 @@
+# GitHub.ProtectedBranch.RequiredPullRequestReviewsBypassPullRequestAllowances
+
+Provides struct and type for a ProtectedBranch.RequiredPullRequestReviewsBypassPullRequestAllowances
