@@ -19,6 +19,7 @@ og_image: null
 
 metadata:
   template: article
+  hero_disabled: true
   author: John Davenport
   category: AI Development
   series: The Anatomy of Agentic Coding Systems

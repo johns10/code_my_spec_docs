@@ -20,10 +20,15 @@
   /* Locally re-declare the brand tokens this article needs, in case the
      content renders in any context where they aren't already present.
      They mirror values in assets/css/app.css :root / @theme. */
-  .cro-hero, .cro-evo, .cro-mid, .cro-pq, .cro-stack, .cro-tail {
+  .cro-hero,
+  .cro-evo,
+  .cro-mid,
+  .cro-pq,
+  .cro-stack,
+  .cro-tail {
     --cro-red: #ff3838;
     --cro-red-dim: rgba(255, 56, 56, 0.22);
-    --cro-red-soft: rgba(255, 56, 56, 0.10);
+    --cro-red-soft: rgba(255, 56, 56, 0.1);
     --cro-white: #f5f5f7;
     --cro-text: #d4d4d8;
     --cro-text-dim: #8a8a93;
@@ -38,381 +43,778 @@
 
   /* Shared chamfer + signal-top + scanline (mirror app.css; these utilities
      also exist globally but we redeclare so the article is portable). */
-  .cro-chamfer-md { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
-  .cro-chamfer-lg { clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px); }
-  .cro-signal-top { position: relative; }
+  .cro-chamfer-md {
+    clip-path: polygon(
+      10px 0,
+      100% 0,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      0 100%,
+      0 10px
+    );
+  }
+  .cro-chamfer-lg {
+    clip-path: polygon(
+      14px 0,
+      100% 0,
+      100% calc(100% - 14px),
+      calc(100% - 14px) 100%,
+      0 100%,
+      0 14px
+    );
+  }
+  .cro-signal-top {
+    position: relative;
+  }
   .cro-signal-top::before {
-    content: ""; position: absolute; top: 0; left: 0;
-    width: 80px; height: 2px; background: var(--cro-red);
-    box-shadow: 0 0 12px var(--cro-red); z-index: 2;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--cro-red);
+    box-shadow: 0 0 12px var(--cro-red);
+    z-index: 2;
   }
 
   /* ─── HERO ─────────────────────────────────────────────────────────── */
   .cro-hero {
-    position: relative; overflow: hidden;
-    border: 1px solid var(--cro-base-300); background: var(--cro-ink-1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--cro-base-300);
+    background: var(--cro-ink-1);
     margin-bottom: 48px;
   }
   .cro-hero::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px);
-    mix-blend-mode: overlay; z-index: 1;
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.04) 0 1px,
+      transparent 1px 3px
+    );
+    mix-blend-mode: overlay;
+    z-index: 1;
   }
-  .cro-hero > * { position: relative; z-index: 2; }
+  .cro-hero > * {
+    position: relative;
+    z-index: 2;
+  }
   .cro-hero .cro-hero-strip {
-    display: flex; align-items: center; gap: 14px;
-    font-family: var(--cro-fmono); font-size: 11px;
-    letter-spacing: 0.18em; text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--cro-text-mute);
-    padding: 14px 24px; border-bottom: 1px solid var(--cro-base-300);
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--cro-base-300);
   }
   .cro-hero .cro-hero-strip .cro-dot {
-    width: 8px; height: 8px; background: var(--cro-red);
-    box-shadow: 0 0 10px var(--cro-red); flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--cro-red);
+    box-shadow: 0 0 10px var(--cro-red);
+    flex-shrink: 0;
   }
   .cro-hero .cro-hero-strip .cro-spacer {
-    flex: 1; height: 1px;
+    flex: 1;
+    height: 1px;
     background: linear-gradient(90deg, transparent, var(--cro-base-300));
   }
-  .cro-hero .cro-hero-body { padding: 36px 28px 30px; }
+  .cro-hero .cro-hero-body {
+    padding: 36px 28px 30px;
+  }
   .cro-hero .cro-stat {
-    font-family: var(--cro-fdisplay); font-weight: 700;
-    color: var(--cro-white); display: grid; gap: 18px;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    color: var(--cro-white);
+    display: grid;
+    gap: 18px;
   }
   .cro-hero .cro-stat-row {
-    display: grid; grid-template-columns: auto 1fr;
-    align-items: baseline; gap: 18px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 18px;
   }
   .cro-hero .cro-stat-row + .cro-stat-row {
-    padding-top: 18px; border-top: 1px dashed rgba(255, 56, 56, 0.22);
+    padding-top: 18px;
+    border-top: 1px dashed rgba(255, 56, 56, 0.22);
   }
   .cro-hero .cro-stat-num {
-    color: var(--cro-red); text-shadow: 0 0 26px rgba(255, 56, 56, 0.45);
-    font-size: clamp(56px, 9.5vw, 108px); line-height: 0.92;
-    letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+    color: var(--cro-red);
+    text-shadow: 0 0 26px rgba(255, 56, 56, 0.45);
+    font-size: clamp(56px, 9.5vw, 108px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
   }
   .cro-hero .cro-stat-label {
-    font-family: var(--cro-fmono); font-size: 12px; font-weight: 500;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cro-text-dim); max-width: 16ch;
-    line-height: 1.4; align-self: end; padding-bottom: 6px;
+    font-family: var(--cro-fmono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cro-text-dim);
+    max-width: 16ch;
+    line-height: 1.4;
+    align-self: end;
+    padding-bottom: 6px;
   }
   @media (max-width: 520px) {
-    .cro-hero .cro-stat-row { grid-template-columns: 1fr; gap: 6px; }
-    .cro-hero .cro-stat-label { padding-bottom: 0; }
+    .cro-hero .cro-stat-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .cro-hero .cro-stat-label {
+      padding-bottom: 0;
+    }
   }
   .cro-hero .cro-hero-lede {
-    color: rgba(212, 212, 216, 0.78); font-size: 17px;
-    line-height: 1.55; max-width: 54ch; margin: 24px 0 0;
+    color: rgba(212, 212, 216, 0.78);
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 54ch;
+    margin: 24px 0 0;
     font-family: var(--cro-fbody);
   }
   .cro-hero .cro-hero-ctas {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 18px;
-    margin-top: 28px; padding-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    margin-top: 28px;
+    padding-top: 24px;
     border-top: 1px solid var(--cro-base-300);
   }
   .cro-hero .cro-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 13px 22px; border: 1.5px solid var(--cro-red);
-    background: var(--cro-red); color: #000;
-    font-family: var(--cro-fmono); font-weight: 600; font-size: 13px;
-    text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    border: 1.5px solid var(--cro-red);
+    background: var(--cro-red);
+    color: #000;
+    font-family: var(--cro-fmono);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+    clip-path: polygon(
+      8px 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%,
+      0 8px
+    );
   }
-  .cro-hero .cro-btn:hover { background: var(--cro-white); border-color: var(--cro-white); }
+  .cro-hero .cro-btn:hover {
+    background: var(--cro-white);
+    border-color: var(--cro-white);
+  }
   .cro-hero .cro-secondary {
-    font-family: var(--cro-fmono); font-size: 13px;
-    color: rgba(212, 212, 216, 0.7); text-decoration: none;
+    font-family: var(--cro-fmono);
+    font-size: 13px;
+    color: rgba(212, 212, 216, 0.7);
+    text-decoration: none;
     border-bottom: 1px dashed rgba(212, 212, 216, 0.3);
-    padding-bottom: 2px; letter-spacing: 0.04em;
-    transition: color 0.15s, border-color 0.15s;
+    padding-bottom: 2px;
+    letter-spacing: 0.04em;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .cro-hero .cro-secondary:hover { color: var(--cro-red); border-bottom-color: var(--cro-red); }
+  .cro-hero .cro-secondary:hover {
+    color: var(--cro-red);
+    border-bottom-color: var(--cro-red);
+  }
   .cro-hero .cro-stat-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-    background: var(--cro-base-300); border-top: 1px solid var(--cro-base-300);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--cro-base-300);
+    border-top: 1px solid var(--cro-base-300);
   }
   .cro-hero .cro-stat-cell {
-    background: var(--cro-ink-1); padding: 18px 20px;
-    display: flex; flex-direction: column; gap: 6px;
+    background: var(--cro-ink-1);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
   .cro-hero .cro-stat-cell .cro-cell-num {
-    font-family: var(--cro-fdisplay); font-weight: 700; font-size: 22px;
-    color: var(--cro-white); letter-spacing: -0.02em;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--cro-white);
+    letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
   }
-  .cro-hero .cro-stat-cell .cro-cell-num.cro-r { color: var(--cro-red); }
+  .cro-hero .cro-stat-cell .cro-cell-num.cro-r {
+    color: var(--cro-red);
+  }
   .cro-hero .cro-stat-cell .cro-cell-lbl {
-    font-family: var(--cro-fmono); font-size: 10px;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--cro-text-mute);
+    font-family: var(--cro-fmono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
   }
   @media (max-width: 640px) {
-    .cro-hero .cro-stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .cro-hero .cro-stat-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   /* ─── EVOLUTIONS — three columns, escalating ───────────────────────── */
   .cro-evo {
-    display: grid; grid-template-columns: 0.85fr 1fr 1.25fr; gap: 1px;
-    background: var(--cro-base-300); border: 1px solid var(--cro-base-300);
+    display: grid;
+    grid-template-columns: 0.85fr 1fr 1.25fr;
+    gap: 1px;
+    background: var(--cro-base-300);
+    border: 1px solid var(--cro-base-300);
     margin: 48px 0;
   }
-  @media (max-width: 760px) { .cro-evo { grid-template-columns: 1fr; } }
-  .cro-evo .cro-evo-col {
-    background: var(--cro-ink-1); padding: 24px 22px;
-    display: flex; flex-direction: column; min-height: 280px; position: relative;
+  @media (max-width: 760px) {
+    .cro-evo {
+      grid-template-columns: 1fr;
+    }
   }
-  .cro-evo .cro-evo-col-3 { background: linear-gradient(180deg, var(--cro-ink-1), #120809); }
+  .cro-evo .cro-evo-col {
+    background: var(--cro-ink-1);
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+    position: relative;
+  }
+  .cro-evo .cro-evo-col-3 {
+    background: linear-gradient(180deg, var(--cro-ink-1), #120809);
+  }
   .cro-evo .cro-evo-col-3::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--cro-red); box-shadow: 0 0 14px var(--cro-red);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--cro-red);
+    box-shadow: 0 0 14px var(--cro-red);
   }
   .cro-evo .cro-evo-yr {
-    font-family: var(--cro-fmono); font-size: 10px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--cro-text-mute); margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
+    font-family: var(--cro-fmono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  .cro-evo .cro-evo-col-3 .cro-evo-yr { color: var(--cro-red); }
-  .cro-evo .cro-evo-yr::before { content: ""; width: 24px; height: 1px; background: currentColor; opacity: 0.5; }
+  .cro-evo .cro-evo-col-3 .cro-evo-yr {
+    color: var(--cro-red);
+  }
+  .cro-evo .cro-evo-yr::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
   .cro-evo .cro-evo-name {
-    font-family: var(--cro-fdisplay); font-weight: 700;
-    text-transform: uppercase; letter-spacing: -0.02em;
-    color: var(--cro-white); line-height: 1.05; margin: 0;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--cro-white);
+    line-height: 1.05;
+    margin: 0;
   }
-  .cro-evo .cro-evo-col-1 .cro-evo-name { font-size: 18px; }
-  .cro-evo .cro-evo-col-2 .cro-evo-name { font-size: 22px; }
-  .cro-evo .cro-evo-col-3 .cro-evo-name { font-size: 30px; }
-  .cro-evo .cro-evo-col-3 .cro-evo-name span { color: var(--cro-red); }
+  .cro-evo .cro-evo-col-1 .cro-evo-name {
+    font-size: 18px;
+  }
+  .cro-evo .cro-evo-col-2 .cro-evo-name {
+    font-size: 22px;
+  }
+  .cro-evo .cro-evo-col-3 .cro-evo-name {
+    font-size: 30px;
+  }
+  .cro-evo .cro-evo-col-3 .cro-evo-name span {
+    color: var(--cro-red);
+  }
   .cro-evo .cro-evo-verb {
-    font-family: var(--cro-fmono); font-size: 11px;
-    letter-spacing: 0.22em; text-transform: uppercase;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     margin: 14px 0 12px;
   }
-  .cro-evo .cro-evo-col-1 .cro-evo-verb { color: var(--cro-text-mute); }
-  .cro-evo .cro-evo-col-2 .cro-evo-verb { color: var(--cro-text-dim); }
-  .cro-evo .cro-evo-col-3 .cro-evo-verb { color: var(--cro-red); }
-  .cro-evo .cro-evo-verb::before { content: "// "; opacity: 0.6; }
+  .cro-evo .cro-evo-col-1 .cro-evo-verb {
+    color: var(--cro-text-mute);
+  }
+  .cro-evo .cro-evo-col-2 .cro-evo-verb {
+    color: var(--cro-text-dim);
+  }
+  .cro-evo .cro-evo-col-3 .cro-evo-verb {
+    color: var(--cro-red);
+  }
+  .cro-evo .cro-evo-verb::before {
+    content: "// ";
+    opacity: 0.6;
+  }
   .cro-evo .cro-evo-body {
-    font-family: var(--cro-fbody); font-size: 14px; line-height: 1.6;
-    color: rgba(212, 212, 216, 0.72); margin: 0; flex: 1;
+    font-family: var(--cro-fbody);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(212, 212, 216, 0.72);
+    margin: 0;
+    flex: 1;
   }
-  .cro-evo .cro-evo-col-3 .cro-evo-body { color: rgba(212, 212, 216, 0.85); font-size: 15px; }
+  .cro-evo .cro-evo-col-3 .cro-evo-body {
+    color: rgba(212, 212, 216, 0.85);
+    font-size: 15px;
+  }
   .cro-evo .cro-evo-foot {
-    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--cro-base-300);
-    font-family: var(--cro-fmono); font-size: 10px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cro-text-mute); display: flex; justify-content: space-between;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--cro-base-300);
+    font-family: var(--cro-fmono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
+    display: flex;
+    justify-content: space-between;
   }
-  .cro-evo .cro-evo-col-3 .cro-evo-foot { border-top-color: rgba(255, 56, 56, 0.25); }
-  .cro-evo .cro-evo-col-3 .cro-evo-foot .cro-x { color: var(--cro-red); }
+  .cro-evo .cro-evo-col-3 .cro-evo-foot {
+    border-top-color: rgba(255, 56, 56, 0.25);
+  }
+  .cro-evo .cro-evo-col-3 .cro-evo-foot .cro-x {
+    color: var(--cro-red);
+  }
 
   /* ─── CTA-MID ─────────────────────────────────────────────────────── */
   .cro-mid {
-    position: relative; padding: 36px 32px;
-    border-top: 1px solid rgba(255, 56, 56, 0.30);
-    border-bottom: 1px solid rgba(255, 56, 56, 0.30);
-    background: linear-gradient(180deg, transparent, rgba(255, 56, 56, 0.04), transparent);
+    position: relative;
+    padding: 36px 32px;
+    border-top: 1px solid rgba(255, 56, 56, 0.3);
+    border-bottom: 1px solid rgba(255, 56, 56, 0.3);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(255, 56, 56, 0.04),
+      transparent
+    );
     margin: 48px 0;
   }
-  .cro-mid::before, .cro-mid::after {
-    content: ""; position: absolute; left: 0;
-    width: 80px; height: 2px; background: var(--cro-red);
+  .cro-mid::before,
+  .cro-mid::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--cro-red);
     box-shadow: 0 0 12px var(--cro-red);
   }
-  .cro-mid::before { top: -1px; }
-  .cro-mid::after { bottom: -1px; }
+  .cro-mid::before {
+    top: -1px;
+  }
+  .cro-mid::after {
+    bottom: -1px;
+  }
   .cro-mid .cro-mid-term {
-    font-family: var(--cro-fmono); font-size: 12px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cro-text-mute); margin-bottom: 18px;
-    display: flex; align-items: center; gap: 10px;
+    font-family: var(--cro-fmono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .cro-mid .cro-mid-term .cro-p { color: var(--cro-red); }
+  .cro-mid .cro-mid-term .cro-p {
+    color: var(--cro-red);
+  }
   .cro-mid .cro-mid-h {
-    font-family: var(--cro-fdisplay); font-weight: 700;
-    font-size: 30px; line-height: 1.1; letter-spacing: -0.02em;
-    color: var(--cro-white); text-transform: uppercase; margin: 0;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--cro-white);
+    text-transform: uppercase;
+    margin: 0;
   }
-  .cro-mid .cro-mid-h .cro-r { color: var(--cro-red); }
+  .cro-mid .cro-mid-h .cro-r {
+    color: var(--cro-red);
+  }
   .cro-mid .cro-mid-sub {
     font-family: var(--cro-fbody);
-    margin: 14px 0 0; color: rgba(212, 212, 216, 0.7); font-size: 15px;
+    margin: 14px 0 0;
+    color: rgba(212, 212, 216, 0.7);
+    font-size: 15px;
   }
   .cro-mid .cro-mid-cta {
-    margin-top: 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
   }
   .cro-mid .cro-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 13px 22px; border: 1.5px solid var(--cro-red);
-    background: var(--cro-red); color: #000;
-    font-family: var(--cro-fmono); font-weight: 600; font-size: 13px;
-    text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    border: 1.5px solid var(--cro-red);
+    background: var(--cro-red);
+    color: #000;
+    font-family: var(--cro-fmono);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+    clip-path: polygon(
+      8px 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%,
+      0 8px
+    );
   }
-  .cro-mid .cro-btn:hover { background: var(--cro-white); border-color: var(--cro-white); }
+  .cro-mid .cro-btn:hover {
+    background: var(--cro-white);
+    border-color: var(--cro-white);
+  }
 
   /* ─── PULL QUOTE ──────────────────────────────────────────────────── */
   .cro-pq {
-    padding: 24px 0 8px 28px; border-left: 2px solid var(--cro-red);
-    position: relative; margin: 40px 0;
+    padding: 24px 0 8px 28px;
+    border-left: 2px solid var(--cro-red);
+    position: relative;
+    margin: 40px 0;
   }
   .cro-pq::before {
-    content: "\201C"; position: absolute; left: 14px; top: -8px;
-    font-family: var(--cro-fdisplay); font-size: 48px;
-    color: var(--cro-red); opacity: 0.35; line-height: 1;
+    content: "\201C";
+    position: absolute;
+    left: 14px;
+    top: -8px;
+    font-family: var(--cro-fdisplay);
+    font-size: 48px;
+    color: var(--cro-red);
+    opacity: 0.35;
+    line-height: 1;
   }
   .cro-pq .cro-pq-q {
-    font-family: var(--cro-fdisplay); font-weight: 700;
-    font-size: 26px; line-height: 1.2; letter-spacing: -0.02em;
-    color: var(--cro-white); margin: 0;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--cro-white);
+    margin: 0;
   }
-  .cro-pq .cro-pq-q .cro-r { color: var(--cro-red); }
+  .cro-pq .cro-pq-q .cro-r {
+    color: var(--cro-red);
+  }
   .cro-pq .cro-pq-a {
-    font-family: var(--cro-fmono); font-size: 11px;
-    letter-spacing: 0.20em; text-transform: uppercase;
-    color: var(--cro-text-mute); margin-top: 18px;
-    display: flex; align-items: center; gap: 10px;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .cro-pq .cro-pq-a::before {
-    content: ""; width: 20px; height: 1px; background: var(--cro-red);
+    content: "";
+    width: 20px;
+    height: 1px;
+    background: var(--cro-red);
   }
 
   /* ─── HARNESS STACK — fractal nested levels ──────────────────────── */
   .cro-stack {
-    display: flex; flex-direction: column; gap: 8px; margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 40px 0;
   }
   .cro-stack .cro-lvl {
-    position: relative; background: var(--cro-ink-1);
+    position: relative;
+    background: var(--cro-ink-1);
     border: 1px solid var(--cro-base-300);
     border-left: 2px solid var(--cro-lvl-c, var(--cro-red));
-    padding: 18px 22px; margin-left: var(--cro-lvl-i, 0);
+    padding: 18px 22px;
+    margin-left: var(--cro-lvl-i, 0);
   }
-  .cro-stack .cro-lvl-0 { --cro-lvl-c: #3a3a42; --cro-lvl-i: 0; }
-  .cro-stack .cro-lvl-1 { --cro-lvl-c: #5a5a64; --cro-lvl-i: 14px; }
-  .cro-stack .cro-lvl-2 { --cro-lvl-c: #8a1515; --cro-lvl-i: 28px; }
-  .cro-stack .cro-lvl-3 { --cro-lvl-c: #cc2a2a; --cro-lvl-i: 42px; }
+  .cro-stack .cro-lvl-0 {
+    --cro-lvl-c: #3a3a42;
+    --cro-lvl-i: 0;
+  }
+  .cro-stack .cro-lvl-1 {
+    --cro-lvl-c: #5a5a64;
+    --cro-lvl-i: 14px;
+  }
+  .cro-stack .cro-lvl-2 {
+    --cro-lvl-c: #8a1515;
+    --cro-lvl-i: 28px;
+  }
+  .cro-stack .cro-lvl-3 {
+    --cro-lvl-c: #cc2a2a;
+    --cro-lvl-i: 42px;
+  }
   .cro-stack .cro-lvl-4 {
-    --cro-lvl-c: #ff3838; --cro-lvl-i: 56px;
-    background: linear-gradient(90deg, rgba(255,56,56,0.04), transparent 60%), var(--cro-ink-1);
-    box-shadow: 0 0 24px rgba(255, 56, 56, 0.10);
+    --cro-lvl-c: #ff3838;
+    --cro-lvl-i: 56px;
+    background:
+      linear-gradient(90deg, rgba(255, 56, 56, 0.04), transparent 60%),
+      var(--cro-ink-1);
+    box-shadow: 0 0 24px rgba(255, 56, 56, 0.1);
   }
   .cro-stack .cro-lvl-head {
-    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
   }
   .cro-stack .cro-lvl-num {
-    font-family: var(--cro-fmono); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cro-lvl-c); min-width: 64px;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cro-lvl-c);
+    min-width: 64px;
   }
   .cro-stack .cro-lvl-ttl {
-    font-family: var(--cro-fdisplay); font-weight: 700; font-size: 16px;
-    letter-spacing: -0.01em; color: var(--cro-white); text-transform: uppercase;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--cro-white);
+    text-transform: uppercase;
   }
-  .cro-stack .cro-lvl-ttl em { color: var(--cro-lvl-c); font-style: normal; }
-  .cro-stack .cro-lvl-4 .cro-lvl-ttl em { color: var(--cro-red); }
+  .cro-stack .cro-lvl-ttl em {
+    color: var(--cro-lvl-c);
+    font-style: normal;
+  }
+  .cro-stack .cro-lvl-4 .cro-lvl-ttl em {
+    color: var(--cro-red);
+  }
   .cro-stack .cro-lvl-desc {
-    font-family: var(--cro-fmono); font-size: 12px; letter-spacing: 0.02em;
-    color: rgba(212, 212, 216, 0.6); margin-top: 8px; line-height: 1.55;
+    font-family: var(--cro-fmono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: rgba(212, 212, 216, 0.6);
+    margin-top: 8px;
+    line-height: 1.55;
   }
   .cro-stack .cro-lvl-ribbon {
-    position: absolute; right: 14px; top: 18px;
-    font-family: var(--cro-fmono); font-size: 9px;
-    letter-spacing: 0.20em; text-transform: uppercase;
-    color: var(--cro-lvl-c); opacity: 0.7;
+    position: absolute;
+    right: 14px;
+    top: 18px;
+    font-family: var(--cro-fmono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cro-lvl-c);
+    opacity: 0.7;
   }
   @media (max-width: 560px) {
-    .cro-stack .cro-lvl { margin-left: 0; }
-    .cro-stack .cro-lvl-ribbon { display: none; }
+    .cro-stack .cro-lvl {
+      margin-left: 0;
+    }
+    .cro-stack .cro-lvl-ribbon {
+      display: none;
+    }
   }
 
   /* ─── CTA-TAIL — full brand-zone treatment ─────────────────────── */
   .cro-tail {
-    position: relative; overflow: hidden;
-    background: radial-gradient(circle at 75% 30%, rgba(255, 56, 56, 0.12), transparent 60%), var(--cro-ink-1);
-    border: 1px solid rgba(255, 56, 56, 0.22); margin: 48px 0;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 75% 30%,
+        rgba(255, 56, 56, 0.12),
+        transparent 60%
+      ),
+      var(--cro-ink-1);
+    border: 1px solid rgba(255, 56, 56, 0.22);
+    margin: 48px 0;
   }
   .cro-tail::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 3px);
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.035) 0 1px,
+      transparent 1px 3px
+    );
     mix-blend-mode: overlay;
   }
   .cro-tail .cro-tail-grid {
-    position: absolute; inset: 0; pointer-events: none;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
     background:
-      linear-gradient(rgba(255, 56, 56, 0.07) 1px, transparent 1px) 0 0 / 40px 40px,
-      linear-gradient(90deg, rgba(255, 56, 56, 0.07) 1px, transparent 1px) 0 0 / 40px 40px;
-    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+      linear-gradient(rgba(255, 56, 56, 0.07) 1px, transparent 1px) 0 0 / 40px
+        40px,
+      linear-gradient(90deg, rgba(255, 56, 56, 0.07) 1px, transparent 1px) 0 0 /
+        40px 40px;
+    -webkit-mask-image: radial-gradient(
+      ellipse at center,
+      black 0%,
+      transparent 70%
+    );
     mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
     opacity: 0.6;
   }
-  .cro-tail .cro-tail-inner { position: relative; z-index: 2; padding: 36px 32px 32px; }
+  .cro-tail .cro-tail-inner {
+    position: relative;
+    z-index: 2;
+    padding: 36px 32px 32px;
+  }
   .cro-tail .cro-tail-eyebrow {
-    font-family: var(--cro-fmono); font-size: 11px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--cro-red); margin-bottom: 18px;
-    display: flex; align-items: center; gap: 12px;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cro-red);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
   .cro-tail .cro-tail-eyebrow::after {
-    content: ""; flex: 1; height: 1px;
+    content: "";
+    flex: 1;
+    height: 1px;
     background: linear-gradient(90deg, var(--cro-red), transparent);
     max-width: 200px;
   }
   .cro-tail .cro-tail-h {
-    font-family: var(--cro-fdisplay); font-weight: 700;
-    font-size: 34px; line-height: 1.04; letter-spacing: -0.02em;
-    text-transform: uppercase; color: var(--cro-white);
-    margin: 0 0 18px; max-width: 18ch;
+    font-family: var(--cro-fdisplay);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--cro-white);
+    margin: 0 0 18px;
+    max-width: 18ch;
   }
-  .cro-tail .cro-tail-h .cro-r { color: var(--cro-red); }
+  .cro-tail .cro-tail-h .cro-r {
+    color: var(--cro-red);
+  }
   .cro-tail .cro-tail-lede {
     font-family: var(--cro-fbody);
-    color: rgba(212, 212, 216, 0.75); max-width: 54ch;
-    font-size: 15px; line-height: 1.6; margin: 0 0 24px;
+    color: rgba(212, 212, 216, 0.75);
+    max-width: 54ch;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 24px;
   }
   .cro-tail .cro-install {
-    background: rgba(0, 0, 0, 0.55); border: 1px solid var(--cro-base-300);
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--cro-base-300);
     margin-bottom: 22px;
   }
   .cro-tail .cro-install-strip {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 11px 18px; border-bottom: 1px solid var(--cro-base-300);
-    font-family: var(--cro-fmono); font-size: 11px;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--cro-text-mute);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--cro-base-300);
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cro-text-mute);
   }
   .cro-tail .cro-install-copy {
-    font-family: var(--cro-fmono); font-size: 11px;
-    color: var(--cro-text-mute); border: 1px solid var(--cro-base-300);
-    padding: 3px 10px; letter-spacing: 0.04em;
+    font-family: var(--cro-fmono);
+    font-size: 11px;
+    color: var(--cro-text-mute);
+    border: 1px solid var(--cro-base-300);
+    padding: 3px 10px;
+    letter-spacing: 0.04em;
   }
   .cro-tail .cro-install-lines {
-    padding: 14px 18px 16px; font-family: var(--cro-fmono);
-    font-size: 13px; line-height: 1.85;
+    padding: 14px 18px 16px;
+    font-family: var(--cro-fmono);
+    font-size: 13px;
+    line-height: 1.85;
   }
-  .cro-tail .cro-install-ln { display: flex; gap: 10px; padding: 1px 0; }
+  .cro-tail .cro-install-ln {
+    display: flex;
+    gap: 10px;
+    padding: 1px 0;
+  }
   .cro-tail .cro-install-ln .cro-p {
-    color: var(--cro-red); user-select: none; flex-shrink: 0;
+    color: var(--cro-red);
+    user-select: none;
+    flex-shrink: 0;
   }
   .cro-tail .cro-install-ln .cro-c {
-    color: var(--cro-text); overflow-wrap: anywhere;
-    word-break: break-word; min-width: 0; flex: 1;
+    color: var(--cro-text);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
+    flex: 1;
   }
   .cro-tail .cro-tail-links {
-    display: flex; flex-wrap: wrap; gap: 22px;
-    font-family: var(--cro-fmono); font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    font-family: var(--cro-fmono);
+    font-size: 13px;
   }
   .cro-tail .cro-tail-links a {
-    color: var(--cro-text); text-decoration: none;
+    color: var(--cro-text);
+    text-decoration: none;
     border-bottom: 1px dashed rgba(212, 212, 216, 0.3);
-    padding-bottom: 2px; transition: color 0.15s, border-color 0.15s;
+    padding-bottom: 2px;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
   .cro-tail .cro-tail-links a:hover {
-    color: var(--cro-red); border-bottom-color: var(--cro-red);
+    color: var(--cro-red);
+    border-bottom-color: var(--cro-red);
   }
-  @media (max-width: 640px) { .cro-tail .cro-tail-h { font-size: 26px; } }
+  @media (max-width: 640px) {
+    .cro-tail .cro-tail-h {
+      font-size: 26px;
+    }
+  }
 </style>
-
 
 <!-- ─────────────────────────── HERO STAT ─────────────────────────── -->
 <aside
@@ -431,54 +833,117 @@
       <div class="cro-stat">
         <div class="cro-stat-row">
           <span class="cro-stat-num">1,000,000</span>
-          <span class="cro-stat-label">lines<br>of production code</span>
+          <span class="cro-stat-label">lines<br />of production code</span>
         </div>
         <div class="cro-stat-row">
           <span class="cro-stat-num">0</span>
-          <span class="cro-stat-label">written<br>by hand</span>
+          <span class="cro-stat-label">written<br />by hand</span>
         </div>
       </div>
-      <p class="cro-hero-lede">Three engineers. Five months. The model wasn't the unlock — the harness was. This is what the wrapper around the model can do when you treat it as the product.</p>
+      <p class="cro-hero-lede">
+        Three engineers. Five months. The model wasn't the unlock — the harness
+        was. This is what the wrapper around the model can do when you treat it
+        as the product.
+      </p>
       <div class="cro-hero-ctas">
-        <a href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-cta" class="cro-btn">
+        <a
+          href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-cta"
+          class="cro-btn"
+        >
           ▸ Install the plugin
         </a>
-        <a href="/methodology?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-secondary" class="cro-secondary">
+        <a
+          href="/methodology?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-secondary"
+          class="cro-secondary"
+        >
           Read the methodology →
         </a>
       </div>
     </div>
     <div class="cro-stat-grid">
-      <div class="cro-stat-cell"><span class="cro-cell-num cro-r">3</span><span class="cro-cell-lbl">engineers</span></div>
-      <div class="cro-stat-cell"><span class="cro-cell-num">5</span><span class="cro-cell-lbl">months</span></div>
-      <div class="cro-stat-cell"><span class="cro-cell-num">3.5</span><span class="cro-cell-lbl">prs / day</span></div>
-      <div class="cro-stat-cell"><span class="cro-cell-num">↑</span><span class="cro-cell-lbl">on team scale</span></div>
+      <div class="cro-stat-cell">
+        <span class="cro-cell-num cro-r">3</span
+        ><span class="cro-cell-lbl">engineers</span>
+      </div>
+      <div class="cro-stat-cell">
+        <span class="cro-cell-num">5</span
+        ><span class="cro-cell-lbl">months</span>
+      </div>
+      <div class="cro-stat-cell">
+        <span class="cro-cell-num">3.5</span
+        ><span class="cro-cell-lbl">prs / day</span>
+      </div>
+      <div class="cro-stat-cell">
+        <span class="cro-cell-num">↑</span
+        ><span class="cro-cell-lbl">on team scale</span>
+      </div>
     </div>
   </div>
 </aside>
 
 <!-- ─────────────────────────── LEDE ─────────────────────────── -->
-<p><em>Part 4 of "The Anatomy of Agentic Coding Systems," a series breaking down how AI coding tools actually work.</em></p>
+<p>
+  <em
+    >Part 4 of "The Anatomy of Agentic Coding Systems," a series breaking down
+    how AI coding tools actually work.</em
+  >
+</p>
 
-<hr>
+<hr />
 
-<p>Three engineers. Five months. Zero manually written lines of source code. Roughly <a href="https://openai.com/index/harness-engineering/">one million lines of production code shipped</a>.</p>
+<p>
+  Three engineers. Five months. Zero manually written lines of source code.
+  Roughly
+  <a href="https://openai.com/index/harness-engineering/"
+    >one million lines of production code shipped</a
+  >.
+</p>
 
-<p>That's the headline from OpenAI's internal Codex experiment. But the interesting part isn't the output. It's what those engineers were actually doing. They weren't writing code. They weren't even reviewing most of it. They were building the <em>harness</em>, the constraints, verification loops, and architectural enforcement that allowed agents to produce reliable code at scale.</p>
+<p>
+  That's the headline from OpenAI's internal Codex experiment. But the
+  interesting part isn't the output. It's what those engineers were actually
+  doing. They weren't writing code. They weren't even reviewing most of it. They
+  were building the <em>harness</em>, the constraints, verification loops, and
+  architectural enforcement that allowed agents to produce reliable code at
+  scale.
+</p>
 
-<p>The team averaged <a href="https://alexlavaee.me/blog/openai-agent-first-codebase-learnings/">3.5 merged PRs per engineer per day</a>. When they expanded to seven engineers, throughput <em>increased</em>. Not because they had more hands on keyboards, but because each new engineer added more constraints, better linting rules, tighter feedback loops. More harness meant more reliable output.</p>
+<p>
+  The team averaged
+  <a href="https://alexlavaee.me/blog/openai-agent-first-codebase-learnings/"
+    >3.5 merged PRs per engineer per day</a
+  >. When they expanded to seven engineers, throughput <em>increased</em>. Not
+  because they had more hands on keyboards, but because each new engineer added
+  more constraints, better linting rules, tighter feedback loops. More harness
+  meant more reliable output.
+</p>
 
 <p>Most developers are optimizing the wrong layer.</p>
 
 <h2>The wrong layer</h2>
 
-<p>When AI coding tools produce bad output, the instinct is to blame the model. "Claude hallucinated." "GPT made a mistake." So you switch models. You upgrade. You wait for the next benchmark winner.</p>
+<p>
+  When AI coding tools produce bad output, the instinct is to blame the model.
+  "Claude hallucinated." "GPT made a mistake." So you switch models. You
+  upgrade. You wait for the next benchmark winner.
+</p>
 
-<p>But the model is rarely the bottleneck. The same model that produces garbage in a bare chat window can produce reliable, architecturally consistent code when wrapped in the right harness. The difference isn't intelligence. It's structure.</p>
+<p>
+  But the model is rarely the bottleneck. The same model that produces garbage
+  in a bare chat window can produce reliable, architecturally consistent code
+  when wrapped in the right harness. The difference isn't intelligence. It's
+  structure.
+</p>
 
 <h2>Three evolutions</h2>
 
-<p>The industry figured this out in three phases, each <a href="https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents">building on the last</a>:</p>
+<p>
+  The industry figured this out in three phases, each
+  <a
+    href="https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents"
+    >building on the last</a
+  >:
+</p>
 
 <!-- ─────────────────────── 3-EVOLUTIONS VISUAL ─────────────────────── -->
 <aside
@@ -489,80 +954,185 @@
   <div class="cro-evo cro-chamfer-md">
     <div class="cro-evo-col cro-evo-col-1">
       <div class="cro-evo-yr">2022 – 2024</div>
-      <h3 class="cro-evo-name">Prompt<br>engineering</h3>
+      <h3 class="cro-evo-name">Prompt<br />engineering</h3>
       <div class="cro-evo-verb">communicates</div>
-      <p class="cro-evo-body">Models can ignore prompts. There's no enforcement, just hope.</p>
+      <p class="cro-evo-body">
+        Models can ignore prompts. There's no enforcement, just hope.
+      </p>
       <div class="cro-evo-foot"><span>01</span><span>suggestion</span></div>
     </div>
     <div class="cro-evo-col cro-evo-col-2">
       <div class="cro-evo-yr">2025</div>
-      <h3 class="cro-evo-name">Context<br>engineering</h3>
+      <h3 class="cro-evo-name">Context<br />engineering</h3>
       <div class="cro-evo-verb">informs</div>
-      <p class="cro-evo-body">What the model sees beats how you ask. But the model can still ignore what you show it.</p>
+      <p class="cro-evo-body">
+        What the model sees beats how you ask. But the model can still ignore
+        what you show it.
+      </p>
       <div class="cro-evo-foot"><span>02</span><span>injection</span></div>
     </div>
     <div class="cro-evo-col cro-evo-col-3">
       <div class="cro-evo-yr">2026</div>
-      <h3 class="cro-evo-name">Harness<br><span>engineering.</span></h3>
+      <h3 class="cro-evo-name">Harness<br /><span>engineering.</span></h3>
       <div class="cro-evo-verb">constrains</div>
-      <p class="cro-evo-body">A linter doesn't ask the agent to follow architecture. It rejects code that violates it. Deterministic.</p>
-      <div class="cro-evo-foot"><span>03</span><span class="cro-x">enforced</span></div>
+      <p class="cro-evo-body">
+        A linter doesn't ask the agent to follow architecture. It rejects code
+        that violates it. Deterministic.
+      </p>
+      <div class="cro-evo-foot">
+        <span>03</span><span class="cro-x">enforced</span>
+      </div>
     </div>
   </div>
 </aside>
 
-<p><strong>Prompt engineering (2022-2024)</strong> taught us to communicate with models. Craft better instructions, get better output. But prompts are <em>suggestions</em>. The model can ignore them. There's no enforcement, just hope.</p>
+<p>
+  <strong>Prompt engineering (2022-2024)</strong> taught us to communicate with
+  models. Craft better instructions, get better output. But prompts are
+  <em>suggestions</em>. The model can ignore them. There's no enforcement, just
+  hope.
+</p>
 
-<p><strong>Context engineering (2025)</strong> taught us to inform models. <a href="https://simonwillison.net/2025/Jun/27/context-engineering/">Andrej Karpathy</a> championed this: what the model sees matters more than how you ask. Instead of hoping it remembers your coding standards, inject them into context. Real step forward, but the model can still ignore what you show it.</p>
+<p>
+  <strong>Context engineering (2025)</strong> taught us to inform models.
+  <a href="https://simonwillison.net/2025/Jun/27/context-engineering/"
+    >Andrej Karpathy</a
+  >
+  championed this: what the model sees matters more than how you ask. Instead of
+  hoping it remembers your coding standards, inject them into context. Real step
+  forward, but the model can still ignore what you show it.
+</p>
 
-<p><strong>Harness engineering (2026)</strong> teaches us to <em>constrain</em> models. A custom linter doesn't ask the model to follow the architecture, it rejects code that violates it. A test suite doesn't hope for correct logic, it verifies it. As <a href="https://openai.com/index/unlocking-the-codex-harness/">OpenAI's Codex team</a> put it: "Not documented. <strong>Enforced.</strong>"</p>
+<p>
+  <strong>Harness engineering (2026)</strong> teaches us to
+  <em>constrain</em> models. A custom linter doesn't ask the model to follow the
+  architecture, it rejects code that violates it. A test suite doesn't hope for
+  correct logic, it verifies it. As
+  <a href="https://openai.com/index/unlocking-the-codex-harness/"
+    >OpenAI's Codex team</a
+  >
+  put it: "Not documented. <strong>Enforced.</strong>"
+</p>
 
-<p>Each evolution subsumed the previous one. A good harness includes good context engineering, which includes good prompting. But the harness adds what prompting and context never could: deterministic enforcement.</p>
+<p>
+  Each evolution subsumed the previous one. A good harness includes good context
+  engineering, which includes good prompting. But the harness adds what
+  prompting and context never could: deterministic enforcement.
+</p>
 
 <!-- ─────────────────────────── MID CTA ─────────────────────────── -->
 <aside
   class="not-prose"
   data-cro="cta-mid"
-  data-design-needed="Inline mid-article CTA. Frame: brand-adjacent (some red, scanlines OK). Copy: 'Prompting is hoping. Verification is a guarantee.' CTA: 'See how CodeMySpec enforces the harness for Phoenix' → /products/code-my-spec?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=cta-mid. Visual hook: terminal-style line + button, or just a strong typographic statement with a single-line CTA. Don't make it a full-bleed hero — it's mid-article punctuation, not interruption."
+  data-design-needed="Inline mid-article CTA. Frame: brand-adjacent (some red, scanlines OK). Copy: 'Prompting is praying. Verification is a guarantee.' CTA: 'See how CodeMySpec enforces the harness for Phoenix' → /products/code-my-spec?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=cta-mid. Visual hook: terminal-style line + button, or just a strong typographic statement with a single-line CTA. Don't make it a full-bleed hero — it's mid-article punctuation, not interruption."
 >
   <div class="cro-mid">
-    <div class="cro-mid-term"><span class="cro-p">▸</span><span>cta · mid_article</span></div>
-    <p class="cro-mid-h">Prompting is hoping.<br><span class="cro-r">Verification is a guarantee.</span></p>
-    <p class="cro-mid-sub">CodeMySpec is the harness — productized, for Phoenix.</p>
+    <div class="cro-mid-term">
+      <span class="cro-p">▸</span><span>cta · mid_article</span>
+    </div>
+    <p class="cro-mid-h">
+      Prompting is praying.<br /><span class="cro-r"
+        >Verification is a guarantee.</span
+      >
+    </p>
+    <p class="cro-mid-sub">
+      CodeMySpec is the harness — productized, for Phoenix.
+    </p>
     <div class="cro-mid-cta">
-      <a href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-mid" class="cro-btn">▸ See it on Phoenix</a>
+      <a
+        href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
+        class="cro-btn"
+        >▸ See it on Phoenix</a
+      >
     </div>
   </div>
 </aside>
 
 <h2>Rules and constraints</h2>
 
-<p>Every major AI coding tool now supports project-level rules: <a href="https://code.claude.com/docs/en/memory">CLAUDE.md</a> for Claude Code, <a href="https://cursor.com/docs/context/rules">.cursor/rules/</a> for Cursor, <a href="https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot">AGENTS.md</a> for GitHub Copilot. These files inject instructions into the model's context. But the best teams treat them as the <em>starting point</em>, not the whole harness.</p>
+<p>
+  Every major AI coding tool now supports project-level rules:
+  <a href="https://code.claude.com/docs/en/memory">CLAUDE.md</a> for Claude
+  Code, <a href="https://cursor.com/docs/context/rules">.cursor/rules/</a> for
+  Cursor,
+  <a
+    href="https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot"
+    >AGENTS.md</a
+  >
+  for GitHub Copilot. These files inject instructions into the model's context.
+  But the best teams treat them as the <em>starting point</em>, not the whole
+  harness.
+</p>
 
-<p>OpenAI's Codex team went far beyond config files. They implemented a <a href="https://openai.com/index/unlocking-the-codex-harness/">strict layered architecture</a> with a directional dependency chain:</p>
+<p>
+  OpenAI's Codex team went far beyond config files. They implemented a
+  <a href="https://openai.com/index/unlocking-the-codex-harness/"
+    >strict layered architecture</a
+  >
+  with a directional dependency chain:
+</p>
 
 <pre><code>Types -&gt; Config -&gt; Repo -&gt; Service -&gt; Runtime -&gt; UI</code></pre>
 
-<p>Code could only depend "forward." A Service could import from Repo, but Repo could never import from Service. And these constraints weren't documented in a README the agent might not read. They were enforced mechanically:</p>
+<p>
+  Code could only depend "forward." A Service could import from Repo, but Repo
+  could never import from Service. And these constraints weren't documented in a
+  README the agent might not read. They were enforced mechanically:
+</p>
 
 <ul>
-  <li>Custom linters (themselves generated by agents) that flagged violations</li>
+  <li>
+    Custom linters (themselves generated by agents) that flagged violations
+  </li>
   <li>Structural tests validating dependency directions at build time</li>
   <li>CI jobs blocking PRs that violated layer boundaries</li>
   <li>Error messages with remediation guidance baked in</li>
 </ul>
 
-<p>The agents couldn't violate the architecture even if they wanted to. That's the philosophical core of harness engineering: <strong>models are probabilistic, rules are deterministic. Use deterministic constraints to bound the probabilistic output.</strong></p>
+<p>
+  The agents couldn't violate the architecture even if they wanted to. That's
+  the philosophical core of harness engineering:
+  <strong
+    >models are probabilistic, rules are deterministic. Use deterministic
+    constraints to bound the probabilistic output.</strong
+  >
+</p>
 
 <h2>Verification: the missing piece</h2>
 
-<p>When OpenAI published their harness engineering article, <a href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html">Birgitta Böckeler</a>, writing on Martin Fowler's site, offered a pointed response. She praised the framing but identified something missing: the write-up focused on internal code quality and maintainability but lacked "verification of functionality and behaviour."</p>
+<p>
+  When OpenAI published their harness engineering article,
+  <a
+    href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html"
+    >Birgitta Böckeler</a
+  >, writing on Martin Fowler's site, offered a pointed response. She praised
+  the framing but identified something missing: the write-up focused on internal
+  code quality and maintainability but lacked "verification of functionality and
+  behaviour."
+</p>
 
-<p>The code was architecturally clean, well-documented, structurally sound. But did it actually <em>work</em>?</p>
+<p>
+  The code was architecturally clean, well-documented, structurally sound. But
+  did it actually <em>work</em>?
+</p>
 
-<p>This is the gap that matters most. An agent can produce beautifully structured code that compiles, passes linting, follows the dependency chain, and is completely wrong about what it's supposed to do.</p>
+<p>
+  This is the gap that matters most. An agent can produce beautifully structured
+  code that compiles, passes linting, follows the dependency chain, and is
+  completely wrong about what it's supposed to do.
+</p>
 
-<p><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic's research on long-running agents</a> tackled this directly. They discovered that Claude would mark features as "complete" without verifying they actually worked, unless the harness explicitly required browser-based end-to-end testing. Once they added browser automation tools, "the agent was able to identify and fix bugs that weren't obvious from the code alone."</p>
+<p>
+  <a
+    href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+    >Anthropic's research on long-running agents</a
+  >
+  tackled this directly. They discovered that Claude would mark features as
+  "complete" without verifying they actually worked, unless the harness
+  explicitly required browser-based end-to-end testing. Once they added browser
+  automation tools, "the agent was able to identify and fix bugs that weren't
+  obvious from the code alone."
+</p>
 
 <!-- ─────────────────────────── PULL QUOTE ─────────────────────────── -->
 <aside
@@ -573,7 +1143,10 @@
   <blockquote class="cro-pq">
     <p class="cro-pq-q">
       Agents take the path of least resistance.
-      <span class="cro-r">The verification standard you set is the verification standard you get.</span>
+      <span class="cro-r"
+        >The verification standard you set is the verification standard you
+        get.</span
+      >
     </p>
     <footer class="cro-pq-a">
       <span>anthropic · effective harnesses for long-running agents</span>
@@ -581,25 +1154,82 @@
   </blockquote>
 </aside>
 
-<p>The key finding: agents take the path of least resistance. If your harness only requires unit tests, that's what you get. If it requires end-to-end browser verification, the agent actually opens a browser and checks. The verification standard you set is the verification standard you get.</p>
+<p>
+  The key finding: agents take the path of least resistance. If your harness
+  only requires unit tests, that's what you get. If it requires end-to-end
+  browser verification, the agent actually opens a browser and checks. The
+  verification standard you set is the verification standard you get.
+</p>
 
-<p>They also had to add <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">"strongly-worded instructions"</a> like "It is unacceptable to remove or edit tests" to prevent agents from weakening the test suite to make their code pass. Without this, agents would modify tests to match buggy implementations rather than fixing the implementation.</p>
+<p>
+  They also had to add
+  <a
+    href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+    >"strongly-worded instructions"</a
+  >
+  like "It is unacceptable to remove or edit tests" to prevent agents from
+  weakening the test suite to make their code pass. Without this, agents would
+  modify tests to match buggy implementations rather than fixing the
+  implementation.
+</p>
 
-<p>In practice, this means tools like Claude Code's <a href="https://code.claude.com/docs/en/hooks">hooks system</a> matter a lot. Hooks fire at lifecycle points (before tool use, after tool use, on stop) and can run linters, test suites, security scans, even spawn sub-agents for verification, all automatically, before the agent moves on.</p>
+<p>
+  In practice, this means tools like Claude Code's
+  <a href="https://code.claude.com/docs/en/hooks">hooks system</a> matter a lot.
+  Hooks fire at lifecycle points (before tool use, after tool use, on stop) and
+  can run linters, test suites, security scans, even spawn sub-agents for
+  verification, all automatically, before the agent moves on.
+</p>
 
 <h2>Lifecycle: working across sessions</h2>
 
-<p>Every AI coding tool has a context window limit. When a task exceeds it, information is lost. The harness is what survives these transitions.</p>
+<p>
+  Every AI coding tool has a context window limit. When a task exceeds it,
+  information is lost. The harness is what survives these transitions.
+</p>
 
-<p>Anthropic formalized this with a <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">two-agent architecture</a>. An initializer agent sets up the project: environment scripts, progress tracking files, a comprehensive feature list (200+ features, all initially marked "failing"). Then a coding agent runs in subsequent sessions, reading the progress file and git history to understand current state, picking up the next feature, implementing it, testing it, and updating the progress file before exiting.</p>
+<p>
+  Anthropic formalized this with a
+  <a
+    href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+    >two-agent architecture</a
+  >. An initializer agent sets up the project: environment scripts, progress
+  tracking files, a comprehensive feature list (200+ features, all initially
+  marked "failing"). Then a coding agent runs in subsequent sessions, reading
+  the progress file and git history to understand current state, picking up the
+  next feature, implementing it, testing it, and updating the progress file
+  before exiting.
+</p>
 
-<p>The inspiration was the <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">"shift handoff" model</a> from engineering teams. Each new session arrives to organized, well-documented code rather than chaos.</p>
+<p>
+  The inspiration was the
+  <a
+    href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+    >"shift handoff" model</a
+  >
+  from engineering teams. Each new session arrives to organized, well-documented
+  code rather than chaos.
+</p>
 
-<p>Git serves double duty here: version control for the code and checkpoint/recovery for the agent. Agents commit when a step succeeds, not when a feature is complete. The harness uses git as an undo mechanism. Progress files, feature lists, and architecture docs create a layer of state that sits alongside the code but serves the agent. As LangChain puts it, the filesystem is <a href="https://blog.langchain.com/the-anatomy-of-an-agent-harness/">"arguably the most foundational harness primitive"</a> because it lets agents maintain state that outlasts a single session.</p>
+<p>
+  Git serves double duty here: version control for the code and
+  checkpoint/recovery for the agent. Agents commit when a step succeeds, not
+  when a feature is complete. The harness uses git as an undo mechanism.
+  Progress files, feature lists, and architecture docs create a layer of state
+  that sits alongside the code but serves the agent. As LangChain puts it, the
+  filesystem is
+  <a href="https://blog.langchain.com/the-anatomy-of-an-agent-harness/"
+    >"arguably the most foundational harness primitive"</a
+  >
+  because it lets agents maintain state that outlasts a single session.
+</p>
 
 <h2>Harnesses are fractal</h2>
 
-<p>Here's the insight that ties everything together: harnesses compose. They stack.</p>
+<p>
+  Here's the insight that ties everything together: harnesses compose. They
+  stack.
+</p>
 
 <!-- ─────────────────────────── HARNESS STACK ─────────────────────────── -->
 <aside
@@ -609,46 +1239,110 @@
 >
   <div class="cro-stack">
     <div class="cro-lvl cro-lvl-0">
-      <div class="cro-lvl-head"><span class="cro-lvl-num">level_00</span><span class="cro-lvl-ttl"><em>Claude</em> · the raw model</span></div>
-      <div class="cro-lvl-desc">Stateless. No tools. No memory. Pure text generation.</div>
+      <div class="cro-lvl-head">
+        <span class="cro-lvl-num">level_00</span
+        ><span class="cro-lvl-ttl"><em>Claude</em> · the raw model</span>
+      </div>
+      <div class="cro-lvl-desc">
+        Stateless. No tools. No memory. Pure text generation.
+      </div>
       <span class="cro-lvl-ribbon">model</span>
     </div>
     <div class="cro-lvl cro-lvl-1">
-      <div class="cro-lvl-head"><span class="cro-lvl-num">level_01</span><span class="cro-lvl-ttl"><em>Claude Code</em> wraps Claude</span></div>
-      <div class="cro-lvl-desc">Adds agent loop, tool use, context management.</div>
+      <div class="cro-lvl-head">
+        <span class="cro-lvl-num">level_01</span
+        ><span class="cro-lvl-ttl"><em>Claude Code</em> wraps Claude</span>
+      </div>
+      <div class="cro-lvl-desc">
+        Adds agent loop, tool use, context management.
+      </div>
       <span class="cro-lvl-ribbon">agent</span>
     </div>
     <div class="cro-lvl cro-lvl-2">
-      <div class="cro-lvl-head"><span class="cro-lvl-num">level_02</span><span class="cro-lvl-ttl"><em>CLAUDE.md + hooks + MCP</em> wrap Claude Code</span></div>
-      <div class="cro-lvl-desc">Adds project rules, verification, external integrations.</div>
+      <div class="cro-lvl-head">
+        <span class="cro-lvl-num">level_02</span
+        ><span class="cro-lvl-ttl"
+          ><em>CLAUDE.md + hooks + MCP</em> wrap Claude Code</span
+        >
+      </div>
+      <div class="cro-lvl-desc">
+        Adds project rules, verification, external integrations.
+      </div>
       <span class="cro-lvl-ribbon">project</span>
     </div>
     <div class="cro-lvl cro-lvl-3">
-      <div class="cro-lvl-head"><span class="cro-lvl-num">level_03</span><span class="cro-lvl-ttl"><em>A platform</em> wraps the configured agent</span></div>
-      <div class="cro-lvl-desc">Adds specs, lifecycle orchestration, multi-phase verification.</div>
+      <div class="cro-lvl-head">
+        <span class="cro-lvl-num">level_03</span
+        ><span class="cro-lvl-ttl"
+          ><em>A platform</em> wraps the configured agent</span
+        >
+      </div>
+      <div class="cro-lvl-desc">
+        Adds specs, lifecycle orchestration, multi-phase verification.
+      </div>
       <span class="cro-lvl-ribbon">platform</span>
     </div>
     <div class="cro-lvl cro-lvl-4">
-      <div class="cro-lvl-head"><span class="cro-lvl-num">level_04</span><span class="cro-lvl-ttl"><em>CI/CD</em> wraps the platform</span></div>
-      <div class="cro-lvl-desc">Adds deployment gates, integration tests, production monitoring.</div>
+      <div class="cro-lvl-head">
+        <span class="cro-lvl-num">level_04</span
+        ><span class="cro-lvl-ttl"><em>CI/CD</em> wraps the platform</span>
+      </div>
+      <div class="cro-lvl-desc">
+        Adds deployment gates, integration tests, production monitoring.
+      </div>
       <span class="cro-lvl-ribbon">production</span>
     </div>
   </div>
 </aside>
 
-<p>Each level adds constraints and verification. A developer using Claude Code with no CLAUDE.md is operating at Level 1. A team with a complete harness stack is at Level 3 or 4. Both are "using Claude," but they're using fundamentally different systems.</p>
+<p>
+  Each level adds constraints and verification. A developer using Claude Code
+  with no CLAUDE.md is operating at Level 1. A team with a complete harness
+  stack is at Level 3 or 4. Both are "using Claude," but they're using
+  fundamentally different systems.
+</p>
 
 <h2>The legacy codebase problem</h2>
 
-<p><a href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html">Böckeler raised</a> an important caveat: everything OpenAI described was greenfield. The constraints were there from day one. What about a ten-year-old codebase with no architectural rules, inconsistent testing, and patchy docs? She compared it to running a static analysis tool on a codebase that's never had one, and drowning in alerts.</p>
+<p>
+  <a
+    href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html"
+    >Böckeler raised</a
+  >
+  an important caveat: everything OpenAI described was greenfield. The
+  constraints were there from day one. What about a ten-year-old codebase with
+  no architectural rules, inconsistent testing, and patchy docs? She compared it
+  to running a static analysis tool on a codebase that's never had one, and
+  drowning in alerts.
+</p>
 
-<p>This is real. But the approach is incremental: start with what you have (pre-commit hooks, existing linters, whatever CI checks already run). Pick one boundary that matters and enforce it. Use the agent to build the harness, the meta-move of generating linters and structural tests that will constrain the agent in future sessions. And accept that it's iterative. OpenAI spent five months building their harness.</p>
+<p>
+  This is real. But the approach is incremental: start with what you have
+  (pre-commit hooks, existing linters, whatever CI checks already run). Pick one
+  boundary that matters and enforce it. Use the agent to build the harness, the
+  meta-move of generating linters and structural tests that will constrain the
+  agent in future sessions. And accept that it's iterative. OpenAI spent five
+  months building their harness.
+</p>
 
 <h2>Why this layer matters most</h2>
 
-<p><a href="https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents">HumanLayer</a> put it simply: "Agents aren't hard; the harness is hard." The model intelligence is a commodity. The harness is the differentiator. It's the difference between a demo that impresses and a system that ships.</p>
+<p>
+  <a
+    href="https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents"
+    >HumanLayer</a
+  >
+  put it simply: "Agents aren't hard; the harness is hard." The model
+  intelligence is a commodity. The harness is the differentiator. It's the
+  difference between a demo that impresses and a system that ships.
+</p>
 
-<p>If you're using an AI coding tool today and you haven't configured its rules file, set up verification hooks, or structured your project for agent-friendly navigation, you're operating at Level 1 in a world where Level 3 is available. The model isn't your bottleneck. The harness is.</p>
+<p>
+  If you're using an AI coding tool today and you haven't configured its rules
+  file, set up verification hooks, or structured your project for agent-friendly
+  navigation, you're operating at Level 1 in a world where Level 3 is available.
+  The model isn't your bottleneck. The harness is.
+</p>
 
 <!-- ─────────────────────────── FINAL CTA ─────────────────────────── -->
 <aside
@@ -660,46 +1354,131 @@
     <div class="cro-tail-grid" aria-hidden="true"></div>
     <div class="cro-tail-inner">
       <div class="cro-tail-eyebrow"><span>// install · level_03</span></div>
-      <h2 class="cro-tail-h">Operate at Level 3.<br><span class="cro-r">Install the harness.</span></h2>
-      <p class="cro-tail-lede">CodeMySpec runs inside Claude Code as a plugin. Specs, tests, BDD, and browser verification on a single requirement graph. Free during early access. No token markup.</p>
+      <h2 class="cro-tail-h">
+        Operate at Level 3.<br /><span class="cro-r">Install the harness.</span>
+      </h2>
+      <p class="cro-tail-lede">
+        CodeMySpec runs inside Claude Code as a plugin. Specs, tests, BDD, and
+        browser verification on a single requirement graph. Free during early
+        access. No token markup.
+      </p>
       <div class="cro-install">
         <div class="cro-install-strip">
           <span>install · 2 commands</span>
           <span class="cro-install-copy">[ copy ]</span>
         </div>
         <div class="cro-install-lines">
-          <div class="cro-install-ln"><span class="cro-p">$</span><span class="cro-c">/plugin marketplace add Code-My-Spec/plugins</span></div>
-          <div class="cro-install-ln"><span class="cro-p">$</span><span class="cro-c">/plugin install codemyspec@codemyspec</span></div>
+          <div class="cro-install-ln">
+            <span class="cro-p">$</span
+            ><span class="cro-c"
+              >/plugin marketplace add Code-My-Spec/plugins</span
+            >
+          </div>
+          <div class="cro-install-ln">
+            <span class="cro-p">$</span
+            ><span class="cro-c">/plugin install codemyspec@codemyspec</span>
+          </div>
         </div>
       </div>
       <div class="cro-tail-links">
-        <a href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail">See the product page →</a>
-        <a href="/methodology?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail-methodology">Read the methodology →</a>
+        <a
+          href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail"
+          >See the product page →</a
+        >
+        <a
+          href="/methodology?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail-methodology"
+          >Read the methodology →</a
+        >
         <a href="/blog/the-agent-layer">← Back to the series</a>
       </div>
     </div>
   </div>
 </aside>
 
-<hr>
+<hr />
 
-<p><em>This is Part 4 of "The Anatomy of Agentic Coding Systems." <a href="/blog/the-agent-layer">Part 3 covered the Agent Layer</a> - the execution loop, tool use, and context management. Part 5 covers the Environment Layer - where AI code actually runs.</em></p>
+<p>
+  <em
+    >This is Part 4 of "The Anatomy of Agentic Coding Systems."
+    <a href="/blog/the-agent-layer">Part 3 covered the Agent Layer</a> - the
+    execution loop, tool use, and context management. Part 5 covers the
+    Environment Layer - where AI code actually runs.</em
+  >
+</p>
 
-<hr>
+<hr />
 
 <h2>Sources</h2>
 
 <ol>
-  <li><a href="https://openai.com/index/harness-engineering/">Harness Engineering</a> - OpenAI</li>
-  <li><a href="https://openai.com/index/unlocking-the-codex-harness/">Unlocking the Codex Harness</a> - OpenAI</li>
-  <li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective Harnesses for Long-Running Agents</a> - Anthropic</li>
-  <li><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Harness Design for Long-Running Application Development</a> - Anthropic</li>
-  <li><a href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html">Harness Engineering</a> - Birgitta Böckeler, Martin Fowler's site</li>
-  <li><a href="https://blog.langchain.com/the-anatomy-of-an-agent-harness/">The Anatomy of an Agent Harness</a> - LangChain</li>
-  <li><a href="https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents">Skill Issue: Harness Engineering for Coding Agents</a> - HumanLayer</li>
-  <li><a href="https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents">The Third Evolution</a> - Epsilla</li>
-  <li><a href="https://alexlavaee.me/blog/openai-agent-first-codebase-learnings/">OpenAI's Agent-First Codebase Learnings</a> - Alex Lavaee</li>
-  <li><a href="https://code.claude.com/docs/en/hooks">Hooks Reference</a> - Claude Code</li>
+  <li>
+    <a href="https://openai.com/index/harness-engineering/"
+      >Harness Engineering</a
+    >
+    - OpenAI
+  </li>
+  <li>
+    <a href="https://openai.com/index/unlocking-the-codex-harness/"
+      >Unlocking the Codex Harness</a
+    >
+    - OpenAI
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+      >Effective Harnesses for Long-Running Agents</a
+    >
+    - Anthropic
+  </li>
+  <li>
+    <a
+      href="https://www.anthropic.com/engineering/harness-design-long-running-apps"
+      >Harness Design for Long-Running Application Development</a
+    >
+    - Anthropic
+  </li>
+  <li>
+    <a
+      href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html"
+      >Harness Engineering</a
+    >
+    - Birgitta Böckeler, Martin Fowler's site
+  </li>
+  <li>
+    <a href="https://blog.langchain.com/the-anatomy-of-an-agent-harness/"
+      >The Anatomy of an Agent Harness</a
+    >
+    - LangChain
+  </li>
+  <li>
+    <a
+      href="https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents"
+      >Skill Issue: Harness Engineering for Coding Agents</a
+    >
+    - HumanLayer
+  </li>
+  <li>
+    <a
+      href="https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents"
+      >The Third Evolution</a
+    >
+    - Epsilla
+  </li>
+  <li>
+    <a href="https://alexlavaee.me/blog/openai-agent-first-codebase-learnings/"
+      >OpenAI's Agent-First Codebase Learnings</a
+    >
+    - Alex Lavaee
+  </li>
+  <li>
+    <a href="https://code.claude.com/docs/en/hooks">Hooks Reference</a> - Claude
+    Code
+  </li>
   <li><a href="https://cursor.com/docs/context/rules">Rules</a> - Cursor</li>
-  <li><a href="https://simonwillison.net/2025/Jun/27/context-engineering/">Context Engineering</a> - Simon Willison (on Karpathy)</li>
+  <li>
+    <a href="https://simonwillison.net/2025/Jun/27/context-engineering/"
+      >Context Engineering</a
+    >
+    - Simon Willison (on Karpathy)
+  </li>
 </ol>
