@@ -48,6 +48,25 @@ across turns, so "always block on every matching problem in the DB" punishes
 the engineer for prior stubs and unrelated work. `block_changed` scopes the
 block to files the agent actually touched this turn.
 
+## Rule: Credo's `:block_all` scans the whole project, not just changed files
+
+In `:block_all`, the stop hook runs `mix credo` against the entire project
+so the block decision reflects every file's current state. In `:block_changed`
+and `:dont_block`, credo runs only on the files the agent touched this turn —
+fast and scoped. `:off` skips credo entirely.
+
+This rule is specific to credo because `lib/` and `test/` are large surface
+areas where the per-file accumulation model takes too many turns to converge,
+and silent gaps (an analyzer crash on one turn) can leave real violations
+unblocked indefinitely. Spec and QA validation operate on tightly bounded
+directories (`.code_my_spec/spec/**`, `.code_my_spec/qa/**`) where the per-file
+model converges quickly enough, so they keep the changed-files-only scan in
+every mode.
+
+When credo runs project-wide, the pipeline clears all credo problems before
+persisting the new scan results. When credo runs scoped, problems are cleared
+per-file (the existing pattern).
+
 ## Rule: ProjectConfiguration is created with defaults on first use
 
 When config is read for a project that doesn't have a ProjectConfiguration

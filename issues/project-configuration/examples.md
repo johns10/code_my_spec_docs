@@ -32,6 +32,13 @@
 - Engineer sets qa_validation to dont_block, broken QA briefs are persisted but don't block the stop
 - Engineer resets everything to defaults after a refactor is done
 
+## Rule: Credo's `:block_all` scans the whole project, not just changed files
+
+- Engineer sets credo to block_all, mix credo runs against the whole project on every stop and any violation blocks
+- Engineer sets credo to block_changed, mix credo runs only on files the agent touched and only those violations block
+- Engineer sets credo to dont_block, credo runs on changed files and persists violations but the stop is allowed
+- Engineer flips credo from block_changed to block_all and the next stop catches an old violation in a file the agent never touched
+
 ## Rule: ProjectConfiguration is created with defaults on first use
 
 - First stop hook on a new project, ProjectConfiguration is created with defaults, pipeline works normally

@@ -78,6 +78,34 @@ Scenario: Engineer enables spex
   Then mix spex --stale runs on every stop hook
   And any spex failure blocks the stop
 
+Scenario: Engineer sets credo to block_all
+  Given a project with credo set to block_changed
+  And an existing credo violation in lib/legacy_module.ex that the agent did not touch this turn
+  When the engineer sets credo to block_all
+  And the agent edits an unrelated clean file
+  And the stop hook fires
+  Then mix credo runs against the whole project (no file path arguments)
+  And the credo violation in lib/legacy_module.ex is persisted as a problem
+  And the stop is blocked with a reason that references lib/legacy_module.ex
+
+Scenario: Engineer sets credo to block_changed
+  Given a project with credo set to block_changed
+  And an existing credo violation in lib/legacy_module.ex that the agent did not touch this turn
+  When the agent edits a clean file (lib/clean_module.ex) with no violations
+  And the stop hook fires
+  Then mix credo runs only on lib/clean_module.ex (file path argument present)
+  And no credo violations are found on the changed file
+  And the violation in lib/legacy_module.ex is not surfaced as blocking
+  And the stop is allowed
+
+Scenario: Engineer sets credo to dont_block
+  Given a project with credo set to dont_block
+  When the agent edits a file containing credo violations
+  And the stop hook fires
+  Then mix credo runs on the changed file
+  And the violations are persisted as problems
+  But the stop is allowed regardless
+
 Scenario: Engineer turns off compile warning blocking
   Given a project with compile_warnings set to block
   When the engineer sets compile_warnings to dont_block
