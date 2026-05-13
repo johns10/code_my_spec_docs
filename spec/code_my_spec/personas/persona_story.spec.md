@@ -1,6 +1,6 @@
 # CodeMySpec.Personas.PersonaStory
 
-Join schema linking personas to stories. Enforces account scoping — cross-account links are rejected at the changeset level.
+Join schema linking personas to stories. Both sides are project-scoped — cross-project links are rejected at the repository level by checking `persona.project_id == story.project_id`.
 
 ## Type
 

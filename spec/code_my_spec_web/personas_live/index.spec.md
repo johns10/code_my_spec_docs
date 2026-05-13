@@ -1,6 +1,6 @@
 # CodeMySpecWeb.PersonasLive.Index
 
-Lists every persona in the active account. Each row shows name, slug, headline, and a "View" link. A prominent "New persona" action opens the FormComponent.
+Lists every persona on the active project. Each row shows name, slug, headline, and a "View" link. A prominent "New persona" action opens the FormComponent.
 
 ## Type
 

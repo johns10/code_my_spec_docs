@@ -1,6 +1,6 @@
 # CodeMySpecWeb.PersonasLive
 
-Live context grouping the server-side LiveViews and LiveComponents for the account persona library. PMs browse, create, view, and link personas here.
+Live context grouping the server-side LiveViews and LiveComponents for the active project's persona library. PMs browse, create, view, and link personas here.
 
 ## Type
 
@@ -11,7 +11,7 @@ live_context
 ### CodeMySpecWeb.PersonasLive.Index
 
 - **Route:** `/personas`
-- **Description:** Lists every persona in the active account with a link to create a new one. Each card shows name, headline, and a count of linked stories.
+- **Description:** Lists every persona on the active project with a link to create a new one. Each card shows name, headline, and a count of linked stories.
 
 ### CodeMySpecWeb.PersonasLive.Show
 

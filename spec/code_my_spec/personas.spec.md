@@ -1,6 +1,6 @@
 # CodeMySpec.Personas
 
-Account-scoped persona library. Personas represent product users — role, goals, pain points, context, decision drivers — with identity + metadata in the DB and research text on disk under `.code_my_spec/personas/<slug>/`.
+Project-scoped personas. Personas represent product users — role, goals, pain points, context, decision drivers — with identity + metadata in the DB and research text on disk under `.code_my_spec/personas/<slug>/`. Each persona belongs to exactly one project; the same role researched for two products is two separate records.
 
 ## Type
 
@@ -29,12 +29,12 @@ context
 
 ### CodeMySpec.Personas.Persona
 
-Ecto schema for account-scoped personas.
+Ecto schema for project-scoped personas.
 
 ### CodeMySpec.Personas.PersonaStory
 
-Join schema linking personas to stories (many-to-many, account-scoped).
+Join schema linking personas to stories (many-to-many, project-scoped).
 
 ### CodeMySpec.Personas.PersonasRepository
 
-Ecto queries for personas and persona_stories. All queries filter by `scope.active_account_id`.
+Ecto queries for personas and persona_stories. All queries filter by `scope.active_project_id`.

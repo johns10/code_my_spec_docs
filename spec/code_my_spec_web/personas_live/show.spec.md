@@ -12,12 +12,12 @@ liveview
 
 ## Params
 
-- `slug` - string, persona slug within the active account
+- `slug` - string, persona slug within the active project
 
 ## User Interactions
 
 - **phx-click="edit"**: Opens the FormComponent in `:edit` mode pre-filled with this persona's fields.
-- **phx-click="link_to_story"**: Opens the link-to-story modal with a searchable list of account stories; selecting one calls `Personas.link_persona_to_story/3`.
+- **phx-click="link_to_story"**: Opens the link-to-story modal with a searchable list of stories on the active project; selecting one calls `Personas.link_persona_to_story/3`.
 - **phx-click="unlink_story"**: Unlinks the given story from this persona after a confirmation.
 
 ## Components

@@ -20,12 +20,12 @@ Creates a text response for a successful persona-to-story link.
 @spec persona_link_response(PersonaStory.t()) :: map()
 ```
 
-### cross_account_error_response/0
+### cross_project_error_response/0
 
-Creates a text response explaining a cross-account link rejection.
+Creates a text response explaining a cross-project link rejection.
 
 ```elixir
-@spec cross_account_error_response() :: map()
+@spec cross_project_error_response() :: map()
 ```
 
 ### changeset_error_response/1

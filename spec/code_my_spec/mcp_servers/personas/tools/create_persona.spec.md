@@ -1,6 +1,6 @@
 # CodeMySpec.McpServers.Personas.Tools.CreatePersona
 
-MCP tool that creates an account-scoped persona. Invoked by the agent during persona research or by an engineer action through the persona library surface.
+MCP tool that creates a project-scoped persona. Invoked by the agent during persona research or by an engineer action through the persona library surface on the active project.
 
 ## Type
 
@@ -10,7 +10,7 @@ module
 
 ### execute/2
 
-Creates a persona in the active account using the provided attrs.
+Creates a persona on the active project using the provided attrs.
 
 ```elixir
 @spec execute(map(), Anubis.Server.Frame.t()) ::
