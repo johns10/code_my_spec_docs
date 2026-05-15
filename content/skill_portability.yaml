@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Cross-Platform Agent Skills: Claude Code, OpenCode, Codex"
-meta_description: "How to write a single SKILL.md that works on Claude Code, OpenCode, and Codex. The compatibility matrix, the portable subset of frontmatter, and the recommended file layout."
+meta_description: "Write one SKILL.md that works on Claude Code, OpenCode, and Codex. Compatibility matrix, portable frontmatter subset, recommended layout."
 og_title: "One Skill, Three Platforms"
 og_description: "The three biggest CLI agents converged on the same skill convention. Here's the compatibility matrix, what's portable, and the template I use."
 og_image: null

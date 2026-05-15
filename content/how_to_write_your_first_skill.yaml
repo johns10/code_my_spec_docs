@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "How to Write Your First Agent Skill (2026 Guide)"
-meta_description: "A practical, step-by-step guide to writing agent skills that trigger reliably. The 11-step authoring workflow, the description rubric that matters most, and the lessons from refactoring 30 agent tasks."
+meta_description: "Step-by-step guide to writing agent skills that trigger reliably. 11-step workflow, the description rubric, and lessons from refactoring 30 agent tasks."
 og_title: "How to Write Your First Agent Skill"
 og_description: "I wrote 30 agent tasks before I realized they were all skills. Here's the practical guide I would have read first: mental model, workflow, real example."
 og_image: null

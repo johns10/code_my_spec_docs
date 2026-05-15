@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Why Your Skill Isn't Triggering: The Description Rubric"
-meta_description: "The skill description is the only routing signal. If your skill isn't triggering, the description is why. Seven self-check questions, five bad-to-good transformations, and the anti-patterns to recognize."
+meta_description: "The description is the only routing signal. If your skill isn't triggering, this is why. Failure modes, self-check questions, and anti-patterns to recognize."
 og_title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
 og_description: "I had seven agent tasks with the same orchestrate string. The agent picked them at random. Here's the rubric I rewrote them with."
 og_image: null
