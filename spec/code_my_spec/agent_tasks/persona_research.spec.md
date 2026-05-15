@@ -1,40 +1,103 @@
 # CodeMySpec.AgentTasks.PersonaResearch
 
-Agent task for running the persona research process. `command/2` builds a prompt referencing the knowledge playbook and expected output paths. `evaluate/2` delegates to `PersonasChecker.complete?/1`.
-
 ## Type
 
-module
+skill
 
-## Functions
+## Intent
 
-### command/2
+Run a persona research session with the Product Manager. Produce
+one persona on the active project: a DB record (via `create_persona`)
+plus two markdown artifacts at `.code_my_spec/personas/<slug>/`
+(`summary.md` with required H2 sections, `sources.md` as a link list),
+linked to at least one story via `link_persona_to_story`.
 
-Builds the task prompt for the agent. Names the playbook files under `priv/knowledge/persona_research/` (overview.md, pm_intake.md, primary_research.md, README.md) and the expected output paths `.code_my_spec/personas/<slug>/summary.md` + `sources.md`. Instructs the agent to run the PM intake conversation first, then research via web + knowledge MCP, then write artifacts.
+Triangulation is the evidence bar: ≥3 independent sources per claim,
+verbatim quotes over paraphrase. The session is multi-turn —
+intake conversation, then research, then artifacts.
 
-```elixir
-@spec command(Scope.t(), map()) :: {:ok, String.t()} | {:error, term()}
-```
+## Done signal
 
-### evaluate/2
+`Requirements.PersonasChecker.complete?/2` returns success. The check
+requires:
 
-Evaluates the persona research task by delegating to `PersonasChecker.complete?/1` and formatting the result as the standard task evaluation tuple.
+- ≥1 persona linked to this project via `persona_stories`.
+- Every linked persona has a DB row.
+- `.code_my_spec/personas/<slug>/summary.md` exists and validates
+  against the persona document type (required H2 sections present).
+- `.code_my_spec/personas/<slug>/sources.md` exists and is non-empty.
 
-```elixir
-@spec evaluate(Scope.t(), map()) ::
-        {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
-```
+## Dispatch shape
 
-### analyzers/0
+`componentless_task` — project-scoped. Surfaces from the requirement
+graph as `personas_complete` (id 13, `validation_type: :manual`),
+gated by `project_setup` (id 1). The story-graph `three_amigos_complete`
+node depends on personas existing for the story.
 
-Returns the list of analyzers to run on the task (none for persona research — the checker is authoritative).
+## Out of scope
 
-```elixir
-@spec analyzers() :: [atom()]
-```
+- The task does not write user stories. Stories come from
+  `story_interview`; this task links existing personas to them.
+- The task does not implement personas in code. The output is research
+  artifacts (markdown + DB record), not application code.
+- The task does not invent sources. If web search returns no useful
+  data, the agent asks the PM for source leads — never fabricates.
+
+## Failure modes the agent should avoid
+
+- Producing a low-evidence persona when the PM gives a one-liner.
+  Push back with targeted follow-up questions; end the session if
+  refused.
+- Inventing claims, sources, or quotes to fill required sections.
+- Skipping `link_persona_to_story` — a research artifact without
+  story linkage doesn't satisfy the requirement.
+- Reusing a name/slug that already exists on the project without
+  checking — `list_personas` first.
+- Calling `evaluate_task` before all five artifacts (DB record,
+  summary.md, sources.md, link) exist.
+
+## Resources
+
+Required input:
+- The active project — needs `active_project_id` on the scope.
+- At least one story on the project — needed for
+  `link_persona_to_story`.
+- The PM in conversation. This is a human-in-the-loop task.
+
+Required reading (framework persona knowledge — `priv/knowledge/persona_research/`):
+- `workflow.md` — the five-step session sequencer pointing at the
+  topic files below.
+- `README.md` — workflow order, guardrails, evidence footer.
+- `overview.md` — persona types, Cooper roles, Goodwin goal types.
+- `pm_intake.md` — 15-question intake bank + artifact checklist.
+- `primary_research.md` — fresh user interview planning.
+- `secondary_research.md` — online mining (Reddit, G2, HN, LinkedIn).
+- `jtbd.md` — Jobs-to-Be-Done framework.
+- `synthesis.md` — raw data → persona transform.
+- `templates.md` — persona fields, one-page layout, deliverable set.
+- `pitfalls.md` — anti-patterns, bias countermeasures.
+
+Produced:
+- DB persona record via `create_persona`.
+- `.code_my_spec/personas/<slug>/summary.md` — structured markdown.
+- `.code_my_spec/personas/<slug>/sources.md` — citation list.
+- Persona ↔ story link via `link_persona_to_story`.
+
+## Tools
+
+Task-specific MCP tools:
+
+- **`list_personas`** — enumerate existing project personas (check for
+  reuse before researching duplicates).
+- **`get_persona`** by `slug` or `id` — fetch a full record.
+- **`add_persona` / `create_persona`** — write the DB record.
+- **`link_persona_to_story`** — required for the done signal.
+- **`evaluate_task`** — manual validation trigger when conditions met.
+
+Built-ins (Read, Write, WebSearch / WebFetch) handle the research and
+file writes.
 
 ## Dependencies
 
-- CodeMySpec.Personas
+- CodeMySpec.Requirements.CheckerResult
 - CodeMySpec.Requirements.PersonasChecker
-- CodeMySpec.Users.Scope

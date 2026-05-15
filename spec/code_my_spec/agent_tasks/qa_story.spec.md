@@ -2,94 +2,103 @@
 
 ## Type
 
-module
+skill
 
-Per-story agent task for QA-testing a single user story. Takes a story ID, loads the story (title, description, acceptance criteria) and its BDD specs, projects specs via SpecProjector, and builds a prompt pointing the agent at the story context, specs, and router. The agent decides how to authenticate, navigate, and verify. Defines a structured output format so the evaluate function can validate results.
+## Intent
 
-## Functions
+QA-test a single user story end-to-end. The agent works through two phases —
+write a testing brief, then execute it — producing inspectable markdown
+artifacts at each stage. The project-wide QA plan (`.code_my_spec/qa/plan.md`)
+is a prerequisite, produced upstream by the `qa_setup` task. The agent
+authenticates against the running app, walks the story's acceptance criteria,
+captures screenshots as evidence, files issues for any defects found, and
+writes a structured result document. The task is re-runnable — a failed
+result is archived so the next run starts Phase 2 fresh.
 
-### load_specs/2
+## Done signal
 
-Load and project BDD specs for a story.
+`.code_my_spec/qa/<story_id>/result_complete.md` exists. The evaluator
+promotes `result.md` → `result_complete.md` when the result document
+validates against the `qa_result` spec AND has `status: pass`. On
+`fail`/`partial`, the result is archived as
+`result_failed_<timestamp>.md`, issues are filed regardless, and the
+requirement stays unsatisfied for the next QA cycle.
 
-```elixir
-@spec load_specs(Environment.t(), integer()) :: {[String.t()], [String.t()]}
-```
+The role-tag pattern in `FileSync.match_qa_result?/1` only assigns the
+`:qa_result` role to `result_complete.md`, so the requirement graph's
+`:file_exists` check on `:qa_result` resolves correctly.
 
-**Process**:
-1. Call `BddSpecs.list_specs_for_story(env, story_id)`
-2. If empty, return `{[], []}`
-3. Project each spec via `SpecProjector.project_full/1`
-4. Collect file paths from each spec struct
-5. Return `{projections, file_paths}`
+## Dispatch shape
 
-**Test Assertions**:
-- returns empty tuples when no specs exist
-- returns projections and file paths when specs exist
+`topic_task` — takes a story_id as the topic, bypassing the component-graph
+dispatch. Also surfaces from the story graph as `qa_complete` (id 4) once
+`bdd_specs_passing` is satisfied.
 
-### command/3
+## Out of scope
 
-Generate the QA prompt for a single story.
+- The task does not write or modify the project-wide QA plan
+  (`plan.md`). That artifact is owned by `qa_setup` — if it's missing or
+  incomplete, the evaluator returns invalid pointing at that task.
+- The task does not write or modify BDD specs. Fix specs upstream
+  (`write_bdd_specs`, `fix_bdd_specs`).
+- The task does not fix application bugs. It identifies defects via
+  testing and files issues; `triage_issues` and `fix_issues` handle
+  resolution.
 
-```elixir
-@spec command(Scope.t(), map(), keyword()) :: {:ok, String.t()}
-```
+## Failure modes the agent should avoid
 
-**Process**:
-1. Get story ID from `session.state["topic"]` (integer or string)
-2. Load the story via `Stories.get_story!/2` to get title, description, and acceptance criteria
-3. Derive app name from mix.exs and build router path
-4. Load and project BDD specs via `load_specs/2`
-5. Read existing QA result and list existing issues
-6. Assemble prompt sections:
-    - Header with story ID and reference to `web-cli` knowledge article
-    - Story section with full title, description, and acceptance criteria
-    - BDD specs section with projected specs and file paths (or "no specs" fallback)
-    - Router section with path to router file
-    - Existing result section (if re-running)
-    - Existing issues section (if any)
-    - Instructions: read specs, read router, test the app, file issues
-    - Required output format defining the structured QA result document
+- Skipping reading `plan.md` and inventing auth/seed strategy ad-hoc.
+- Using curl with session cookies for browser-authenticated routes —
+  UI routes must be tested with MCP browser tools.
+- Writing results without capturing screenshots (evidence is required).
+- Skipping issue filing when the result lists issues. Issues filed to
+  the DB are what `triage_issues` works against.
+- Treating Phase 2 as scripted-only — exploratory testing of unexpected
+  inputs and edge cases is required.
 
-**Test Assertions**:
-- returns ok tuple with prompt containing story ID
-- includes story title and description in prompt
-- includes acceptance criteria in prompt
-- references web-cli knowledge article
-- includes router path reference
-- includes BDD specs when they exist
-- handles missing specs gracefully
-- includes existing result when present
-- references existing issues when present
-- includes structured output format with Status, Scenarios Tested, Issues Found sections
-- instructs agent to write QA result to docs/qa/{story_id}.md
-- includes issue filing instructions
-- accepts string story ID
+## Resources
 
-### evaluate/3
+Required input:
+- `task.story_id` — passed via topic-task dispatch or story-graph entity_id.
+- The story record (loaded from `Stories.get_story!/2`).
+- `.code_my_spec/qa/plan.md` — produced by `qa_setup`. Read first.
 
-Validate the story's QA result is complete.
+Optional input:
+- BDD spec files for the story — `BddSpecs.list_specs_for_story/2`.
+- Linked component (`story.component_id`) — source/spec/test paths for
+  feature context.
+- Existing scripts in `.code_my_spec/qa/scripts/`.
 
-```elixir
-@spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()}
-```
+Produced:
+- `.code_my_spec/qa/<id>/brief.md` — Phase 1, per-story testing plan.
+- `.code_my_spec/qa/<id>/result.md` — Phase 2 transient artifact.
+- `.code_my_spec/qa/<id>/result_complete.md` — pass terminal state
+  (renamed from `result.md` by the evaluator).
+- `.code_my_spec/qa/<id>/result_failed_<ts>.md` — fail terminal state
+  (archived from `result.md` by the evaluator).
+- `.code_my_spec/qa/<id>/screenshots/*` — evidence.
+- Issues filed to the DB via `Issues.create_from_qa_result/3`.
 
-**Process**:
-1. Get story ID from `session.state["topic"]`
-2. Check QA result exists at `docs/qa/{story_id}.md`
-3. Check result is non-empty
-4. Check result contains `## Status:` line
-5. Return `{:ok, :valid}` or `{:ok, :invalid, feedback}`
+## Tools
 
-**Test Assertions**:
-- returns {:ok, :valid} when QA result exists with status line
-- returns {:ok, :invalid, feedback} when QA result is missing
-- returns {:ok, :invalid, feedback} when QA result is empty
-- returns {:ok, :invalid, feedback} when QA result missing status line
+- **MCP browser tools** (Vibium) — required for UI testing. Any route
+  behind the `:browser` Phoenix pipeline.
+- `curl` via Bash — for `:api`-pipeline routes only. Use
+  `.code_my_spec/qa/scripts/authenticated_curl.sh` for API-key auth.
+  NEVER for browser-authenticated routes.
+
+Built-ins (Read, Write, Bash, Glob) handle the rest. The playbook lives at
+`priv/knowledge/qa_story/workflow.md`; supporting cheat sheets at
+`priv/knowledge/qa-tooling.md` and `priv/knowledge/qa-tooling/`.
 
 ## Dependencies
 
 - CodeMySpec.BddSpecs
-- CodeMySpec.BddSpecs.SpecProjector
+- CodeMySpec.Components
+- CodeMySpec.Documents
+- CodeMySpec.Documents.DocumentSpecProjector
 - CodeMySpec.Environments
+- CodeMySpec.Issues
+- CodeMySpec.Paths
 - CodeMySpec.Stories
+- CodeMySpec.Utils

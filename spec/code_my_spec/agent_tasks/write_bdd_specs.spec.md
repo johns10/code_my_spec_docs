@@ -2,103 +2,120 @@
 
 ## Type
 
-agent_task
+skill
 
-Agent task module for generating BDD specification files for a single story at a time. Writes specs for all acceptance criteria of one story. Auto-selects the top-priority incomplete story if none specified in the session. Generates a comprehensive prompt, writes it to a subagent prompt file, and returns a short orchestration prompt instructing the agent to invoke the bdd-spec-writer subagent.
+## Intent
 
-## Delegates
+Generate BDD specification files for a story whose three-amigos session is
+complete (rules + scenarios on the story) but whose specs haven't been
+written yet. Produces one `*_spex.exs` file per acceptance criterion, each
+under the project's `<App>Spex` namespace, driving the real interaction
+surface from `given_` / `when_` / `then_` steps.
 
-None
+The agent reads **both** the framework BDD knowledge (Spex DSL, philosophy,
+boundaries, environment, cassettes, shared givens — applies to any project
+using CodeMySpec) and the **project** BDD knowledge (this codebase's four
+interaction surfaces, canonical skeletons, cassette conventions). Project
+rules override framework rules where they conflict.
 
-## Functions
+## Done signal
 
-### command/3
+For every acceptance criterion on the story:
 
-Generate the prompt for Claude to create BDD specification files for a story.
+- A spec file exists at the path returned by `BddSpecs.spec_file_path/2`
+  (which encodes story_id and criterion_id).
+- The file is parseable Elixir (passes `Code.string_to_quoted/2`).
+- It `use`s a module ending in `Spex.Case` (the project's case template,
+  not `<App>Web.ConnCase`).
+- It parses as a valid Spex via `BddSpecs.Parser.parse/2`.
+- It contains at least one scenario, and every scenario has at least one
+  Given/When/Then step.
 
-```elixir
-@spec command(term(), map(), keyword()) :: {:ok, String.t()} | {:error, term()}
-```
+The evaluator returns `:invalid` with per-criterion feedback if any spec
+fails these checks.
 
-**Process**:
-1. Extract environment from scope and external_conversation_id from session
-2. Resolve story: use session.story_id if provided, otherwise auto-select via BddSpecs.get_next_incomplete_story/2
-3. Return {:error, :all_stories_complete} if no incomplete stories exist
-4. Get the linked component for the story
-5. Return {:error, :component_not_linked} if story has no component
-6. Ensure app_spex.ex and shared givens file exist, scaffolding if missing
-7. Check story coverage via BddSpecs.check_story_coverage/2
-8. Build comprehensive prompt including:
-   - Story context (id, title, description, priority)
-   - Component under test (module, type)
-   - All acceptance criteria with status (covered/missing) and expected file paths
-   - Component-specific testing guide (LiveView, Controller, or generic)
-   - Current shared givens content
-   - Shared givens usage instructions
-   - Spex DSL syntax guide
-9. Write prompt to subagent prompt file at `.code_my_spec/internal/sessions/{external_id}/subagent_prompts/bdd_specs_story_{story_id}.md`
-10. Return short orchestration prompt referencing the file path and bdd-spec-writer subagent
+## Dispatch shape
 
-**Test Assertions**:
-- writes prompt file to disk and returns orchestration prompt
-- orchestration prompt references the prompt file path
-- orchestration prompt references bdd-spec-writer subagent
-- prompt file includes all acceptance criteria
-- prompt file includes expected file paths for each criterion
-- prompt file includes Spex DSL syntax guide
-- prompt file includes LiveView testing guide for liveview components
-- prompt file includes Controller testing guide for controller components
-- prompt file marks covered criteria
-- prompt file includes current shared givens content
-- scaffolds app_spex.ex and shared_givens.ex if they do not exist
-- returns {:error, :all_stories_complete} when all stories have complete coverage
-- returns {:error, :component_not_linked} when story has no component_id
-- auto-selects top-priority incomplete story when no story_id in session
-- skips fully covered story and selects next incomplete story
+`component_task` via the story graph — story_graph node `bdd_specs_exist`
+(id 2) is satisfied by this task. The task takes a story_id (via the
+component-dispatch routing through the requirement graph).
 
-### evaluate/3
+## Out of scope
 
-Validate all BDD specs for the current story.
+- The task does not invent rules or scenarios. Three-amigos is the
+  prerequisite (`three_amigos_complete`, story_graph id 5) — if rules or
+  scenarios are missing, fix them upstream.
+- The task does not fix failing specs. If specs exist but fail to pass,
+  that's `fix_bdd_specs`'s job (story_graph id 3).
+- The task does not write code to make specs pass. Specs are
+  failure-first; the implementation flow handles the code.
+- The task does not modify the framework knowledge or project knowledge
+  at any path — it reads both.
 
-```elixir
-@spec evaluate(term(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()} | {:error, term()}
-```
+## Failure modes the agent should avoid
 
-**Process**:
-1. Extract environment from scope and external_conversation_id from session
-2. Resolve story (same logic as command/3)
-3. For each acceptance criterion in the story:
-   - Check spec file exists at expected path
-   - Parse using BddSpecs.Parser.parse_file/1
-   - Verify spec contains at least one scenario
-   - Verify scenarios contain Given/When/Then steps
-4. If any specs are missing or invalid:
-   - Build feedback with specific errors per criterion
-   - Return {:ok, :invalid, feedback}
-5. If all specs valid, run `mix compile --warnings-as-errors` in working directory
-6. If compilation fails:
-   - Return {:ok, :invalid, feedback} with compile output
-7. If all valid and compiles:
-   - Clean up the prompt file for this story
-   - Attempt to remove the prompt directory if empty
-   - Return {:ok, :valid}
+- Calling context functions directly from `when_` / `then_` steps. The
+  step blocks must drive the real interaction surface (LiveView, HTTP
+  hook, MCP tool, filesystem). See project knowledge for the four
+  surfaces.
+- Reading the DB from `then_`. Outcomes must be observable through the
+  same surface the action drove.
+- Writing a spec that `use`s `<App>Web.ConnCase` directly. The project
+  case template `<App>Spex.Case` wires up the SexySpex DSL, ConnTest,
+  LiveViewTest, and the DB sandbox in one place.
+- Returning a bare context map from a step. Wrap in `{:ok, map}` or use
+  `:ok` for no-update.
+- Inventing failure-path scenarios to satisfy a coverage template. If a
+  rule's failure mode lives at a different layer, leave it out.
+- Skipping the framework or project knowledge layer. Both are required
+  reading.
 
-**Test Assertions**:
-- returns {:ok, :valid} when all specs exist, parse correctly, and compile
-- returns {:ok, :invalid, feedback} when spec file is missing
-- returns {:ok, :invalid, feedback} when spec has syntax errors
-- returns {:ok, :invalid, feedback} when spec has no scenarios
-- returns {:ok, :invalid, feedback} when scenarios have no steps
-- returns {:ok, :invalid, feedback} when mix compile fails
-- includes criterion id and description in error feedback
-- includes parse error details in feedback
-- returns error when story cannot be resolved
-- cleans up prompt file on valid result
+## Resources
+
+Required input:
+- `task.story_id` (or `story_id` on the dispatched component task) — the
+  story whose specs to write.
+- The story record with acceptance criteria — `Stories.get_story/2`.
+- The story's linked component — read from `story.component_id`;
+  source file, moduledoc, and component type drive the prompt.
+- Three-amigos artifacts on the story (rules, scenarios) — implicit
+  prerequisite; the criteria carry the scenario data.
+
+Required reading (framework BDD knowledge — `priv/knowledge/bdd/spex/`):
+- `writing_a_spex.md` — file layout, module template, DSL syntax,
+  step return-value conventions. Essential.
+- `philosophy.md` — what Spex is for, how it differs from regular tests.
+- `environment.md` — environment abstraction in steps.
+- `boundaries.md` — what you can and can't do in `given_` / `when_` / `then_`.
+- `shared_givens.md` — importing shared given blocks.
+- `recording_cassettes.md` — when and how to record HTTP cassettes.
+
+Required reading (project BDD knowledge — `.code_my_spec/knowledge/bdd/spex/`):
+- `four_surfaces_quick_reference.md` — surface decision table + 30-second
+  skeletons (MCP tool, HTTP, LiveView, filesystem).
+- `surfaces.md` — canonical skeletons per surface.
+- `cassettes.md` — project-specific cassette conventions.
+
+Project rules override framework rules where they conflict.
+
+Optional input:
+- Sibling specs in the same story directory — read at least one
+  end-to-end as a copy template (shared setup, fixture paths, case
+  template, given usage).
+
+Produced:
+- `test/spex/<story_id>/<criterion_id>_spex.exs` — one per acceptance
+  criterion.
+
+## Tools
+
+No task-specific tools required. Built-ins (Read, Write, Bash, Glob)
+handle everything. Reading both knowledge layers via direct path Read.
 
 ## Dependencies
 
-- CodeMySpec.Stories
 - CodeMySpec.BddSpecs
 - CodeMySpec.BddSpecs.Parser
 - CodeMySpec.Components
 - CodeMySpec.Environments
+- CodeMySpec.Stories

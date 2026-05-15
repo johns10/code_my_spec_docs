@@ -2,122 +2,86 @@
 
 ## Type
 
-module
+skill
 
-Orchestrator task for identifying and resolving technology decisions. Analyzes the project's architecture, stories, and dependencies to identify topics needing technology decisions, then auto-writes pre-made ADRs for standard stack choices and guides the agent through cursory research and ADR creation for remaining topics. Focused purely on decisions — deep research is handled by ResearchTopics, bootstrap/implementation by ProjectBootstrap.
+## Intent
 
-Two phases:
-1. **Pre-made decisions** — auto-writes ADRs for standard stack choices before prompting
-2. **Decision-making** — identifies new topics, does cursory research, writes ADRs, updates the decisions index
+Identify the technology decisions a project needs to make, document
+each one as an ADR, and produce an index of all decisions. The task
+auto-writes ADRs for the standard CodeMySpec stack (Elixir, Phoenix,
+LiveView, Tailwind, DaisyUI, etc.) before prompting, so the agent
+focuses on project-specific topics that the pre-made set doesn't
+cover.
 
-Artifacts produced:
-- `.code_my_spec/architecture/decisions.md` — index of all decisions
-- `.code_my_spec/architecture/decisions/{topic}.md` — individual decision records
+The output (`decisions/{topic}.md` files + a `decisions.md` index) is
+the input for downstream `code_generation` (knows which generators to
+run) and `architecture_designed` (uses the decisions when proposing
+components).
 
-## Functions
+## Done signal
 
-### premade_decisions/0
+`.code_my_spec/architecture/decisions.md` exists. The evaluator's
+check is existence-only — the quality of individual ADRs is verified
+downstream when consuming tasks act on them.
 
-Returns the list of pre-made technology decisions that are part of the standard CodeMySpec stack.
+## Dispatch shape
 
-```elixir
-@spec premade_decisions() :: [%{topic: String.t(), title: String.t(), context: String.t(), decision: String.t()}]
-```
+`componentless_task` — project-scoped. Surfaces from the requirement
+graph as `technical_strategy` (id 2), gated by `stories_exist`
+(id 15). The chain `code_generation` (id 3) → `qa_integration_plan`
+(id 4) → `architecture_designed` (id 5) all depend on the decisions
+this task produces.
 
-**Process**:
-1. Return the module attribute `@premade_decisions` containing standard stack decisions (elixir, phoenix, liveview, tailwind, daisyui, phx-gen-auth, exvcr, wallaby, bdd-testing, dotenvy)
+## Out of scope
 
-**Test Assertions**:
-- returns a non-empty list of decisions
-- each decision has required fields (topic, title, context, decision)
-- includes core stack decisions (elixir, phoenix, liveview, tailwind, daisyui, phx-gen-auth, exvcr, bdd-testing, dotenvy)
-- does not include ngrok as a pre-made decision
-- returns exactly 10 decisions
+- The task does not do deep research. Use `research_topic` when a
+  decision needs more than cursory investigation.
+- The task does not install libraries or bootstrap the project.
+  `code_generation` runs the generators; `start_implementation`
+  drives component code.
+- The task does not write component-level implementation choices
+  (algorithm selection, data structures). Those live in component
+  specs.
+- The task does not validate ADR content quality. The index existing
+  is the only gate.
 
-### command/3
+## Failure modes the agent should avoid
 
-Generate the orchestration prompt for the technical strategy session. Writes any missing pre-made decision ADRs directly to the environment, then reads architecture overview, project deps, existing decisions, and story titles to build a prompt for decision-making.
+- Re-deciding pre-made stack topics. The pre-made ADRs are written
+  before the agent sees the prompt; revising them is only correct
+  when the project genuinely needs to supersede a default.
+- Writing ADRs without reading the project's stories and current
+  dependencies. The decision context comes from the project, not
+  generic best practices.
+- Over-researching. Cursory hex.pm search + README skim is the bar;
+  deep investigation belongs in `research_topic`.
+- Forgetting to write the `decisions.md` index. Without it, the
+  evaluator fails and downstream tasks can't enumerate decisions.
 
-```elixir
-@spec command(Scope.t(), map(), keyword()) :: {:ok, String.t()}
-```
+## Resources
 
-**Process**:
-1. Write any missing pre-made decision ADR files via `ensure_premade_decisions/1`
-2. Count components via `Components.count_components/1`
-3. Read `mix.exs` from the environment (nil if not found)
-4. List existing decision filenames from `decisions/` directory
-5. List story titles via `Stories.list_story_titles/1`
-6. Assemble prompt sections:
-   - Header with project name and goal description
-   - Architecture section with component count and file references (omitted if 0 components)
-   - Dependencies section with mix.exs content (omitted if no mix.exs)
-   - Existing decisions section listing already-decided topics (omitted if none)
-   - Stories section listing story titles (omitted if none)
-   - Instructions:
-     1. **Identify topics** — analyze architecture, stories, and current deps for technology decisions needed; skip topics covered by existing decisions; common categories: testing, deployment, infrastructure, integrations
-     2. **Research and decide each topic** — for each identified topic, do cursory research (search hex.pm, check docs), evaluate against project needs, write an ADR to `.code_my_spec/architecture/decisions/{topic}.md` with sections: Title, Status, Context, Options Considered (with pros/cons), Decision, Consequences
-     3. **Update the index** — ensure `.code_my_spec/architecture/decisions.md` lists all decision records (pre-made and new) with status
-     4. **Stop** — stop the session so validation can check the work
+Required input:
+- The project record (`scope.active_project`) for the project name.
+- `mix.exs` — embedded in the prompt's Current Dependencies section.
+- Project stories — listed in the prompt's User Stories section.
+- Component count — informs the Architecture Overview section.
 
-**Test Assertions**:
-- returns ok tuple with non-empty prompt string
-- includes project name in prompt
-- includes deps context when mix.exs exists
-- lists existing decisions in prompt
-- instructs to research and write ADRs for identified topics
-- writes missing pre-made decision ADR files to the environment
-- does not overwrite pre-existing decision files
-- does not include a "Pre-made Decisions to Write" section in prompt
-- lists pre-made decisions as existing decisions after writing them
-- does NOT include knowledge base building steps (handled by ResearchTopics)
-- does NOT include bootstrap/library installation steps (handled by ProjectBootstrap)
-- does NOT reference a specific subagent by name
-- instructs to update the decisions index
-- instructs to stop after completing the work
-- omits architecture section when project has no components
-- omits deps section when mix.exs is absent
+Required reading:
+- `priv/knowledge/technical_strategy/workflow.md` — the full
+  procedure (pre-made decisions, identification, research, ADR
+  format, index update).
 
-### evaluate/3
+Produced:
+- `.code_my_spec/architecture/decisions/{topic}.md` — one ADR per
+  decision, both pre-made (auto-written by the task) and
+  project-specific (written by the agent).
+- `.code_my_spec/architecture/decisions.md` — index of all
+  decisions with status.
 
-Validate all pre-made decisions exist and the decisions index is complete.
+## Tools
 
-```elixir
-@spec evaluate(Scope.t(), map(), keyword()) :: {:ok, :valid} | {:ok, :invalid, String.t()}
-```
-
-**Process**:
-1. Check if decisions index file exists
-2. List existing decision filenames
-3. Compute missing pre-made decisions (pre-made topics without ADR files)
-4. If index exists and no missing pre-made decisions -> `{:ok, :valid}`
-5. Otherwise build feedback listing missing items
-
-**Test Assertions**:
-- returns `{:ok, :valid}` when all pre-made decisions and index exist
-- returns `{:ok, :invalid, feedback}` when pre-made decisions are missing
-- returns `{:ok, :invalid, feedback}` when decisions index is missing
-- feedback names the missing pre-made topic
-- feedback references the expected index path when index is missing
-- returns `{:ok, :invalid, feedback}` when both index and pre-made decisions are missing
-- does NOT check for knowledge entries (handled by ResearchTopics)
-- does NOT check for research prompt files
-
-### ensure_premade_decisions/1
-
-Write all missing pre-made decision ADR files to the environment.
-
-```elixir
-@spec ensure_premade_decisions(Environment.t()) :: non_neg_integer()
-```
-
-**Process**:
-1. List existing decision filenames from the environment
-2. Filter pre-made decisions to those whose topic is not in existing decisions
-3. Write each missing decision as a markdown ADR file with Status (Accepted, pre-made), Context, Decision, and Consequences sections
-4. Return the count of decisions written
-
-*No direct tests — covered by command/3 test assertions: "writes missing pre-made decision ADR files to the environment" and "does not overwrite pre-existing decision files".*
+No task-specific tools required. Built-ins (Read, Write, Bash,
+WebSearch / WebFetch for hex.pm + library docs) handle the work.
 
 ## Dependencies
 
@@ -125,3 +89,14 @@ Write all missing pre-made decision ADR files to the environment.
 - CodeMySpec.Environments
 - CodeMySpec.Paths
 - CodeMySpec.Stories
+
+## Public functions worth knowing
+
+- `premade_decisions/0` — returns the list of standard-stack
+  decisions auto-written before prompting. Treated as data; revise
+  here if a topic should be added to or dropped from the pre-made
+  set across all CodeMySpec projects.
+- `ensure_premade_decisions/1` — writes any missing pre-made ADRs
+  to the environment. Called by `command/2` before rendering the
+  prompt so the "Existing Decisions" section reflects post-write
+  state.
