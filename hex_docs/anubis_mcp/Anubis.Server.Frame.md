@@ -52,10 +52,10 @@ Clears all runtime-registered components
 
 Reconstructs Frame from a previously saved map.
 
-Only `assigns` and `pagination_limit` are restored. Runtime-only fields (`tools`,
-`resources`, `prompts`, `resource_templates`) are initialized empty — their validator
-functions are not serializable. `context` is left as the default struct and will be
-set by Session before each callback invocation.
+Restored: `assigns`, `pagination_limit`, `resource_subscriptions`. Runtime-only fields
+(`tools`, `resources`, `prompts`, `resource_templates`) are initialized empty — their
+validator functions are not serializable. `context` is left as the default struct and
+will be set by Session before each callback invocation.
 
 ## get_components(frame)
 
@@ -109,6 +109,18 @@ Registers a resource template definition using a URI template (RFC 6570).
 
 Registers a tool definition at runtime.
 
+## resource_subscribed?(frame, uri)
+
+Returns whether this session has an active subscription for the given URI.
+
+## subscribe_resource(frame, uri)
+
+Records that this session has subscribed to updates for the given resource
+URI.
+
+Idempotent — subscribing twice to the same URI is a no-op. Per the MCP spec,
+the URI does not need to refer to a currently-registered resource.
+
 ## to_saved(frame)
 
 Serializes Frame for persistent storage.
@@ -124,3 +136,7 @@ Only `assigns` and `pagination_limit` are persisted. The following fields are
 
 Compile-time components (registered via the `component` macro) are always
 available from the server module and do not need persistence.
+
+## unsubscribe_resource(frame, uri)
+
+Removes a previously-recorded subscription for the given URI.

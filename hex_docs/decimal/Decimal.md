@@ -35,11 +35,69 @@ and 0 for a positive number. Internally this implementation models the sign as
 10 ^ exponent` and will refer to the sign in documentation as either *positive*
 or *negative*.
 
-There is currently no maximum or minimum values for the exponent. Because of
-that all numbers are "normal". This means that when an operation should,
-according to the specification, return a number that "underflows" 0 is returned
-instead of Etiny. This may happen when dividing a number with infinity.
-Additionally, overflow, underflow and clamped may never be signalled.
+By default there is no maximum or minimum value for the exponent because
+`Decimal.Context` defaults `emax` and `emin` to `:infinity`. Because of that
+all numbers are "normal". This means that when an operation should, according
+to the specification, return a number that "underflows" 0 is returned instead
+of Etiny. This may happen when dividing a number with infinity. When `emax`
+or `emin` are finite, overflow and underflow may be signalled. Clamped is
+still not signalled.
+
+## Large exponents and untrusted input
+
+Decimal can represent compact values with very large exponents, such as
+`1e1000000`. These values are valid decimals, but some APIs may need memory
+or CPU proportional to the expanded size of the number. This is especially
+important for decimals parsed from user input, JSON payloads, form fields,
+database fields, or other external data.
+
+Use `parse/2` or `cast/2` with `:max_digits` and `:max_exponent` when parsing
+untrusted input. Use `to_string/3` with `:max_digits` when rendering output
+formats that may expand the exponent, such as `:normal` or `:xsd`.
+Finite `Decimal.Context` `emax` and `emin` values can limit operation
+results, but they do not validate already-created decimals and should not
+replace parse/cast limits for untrusted input.
+
+## Protocol Implementations
+
+`Decimal` implements the following protocols:
+
+### `Inspect`
+
+    iex> inspect(Decimal.new("1.00"))
+    "Decimal.new(\"1.00\")"
+
+### `String.Chars`
+
+    iex> to_string(Decimal.new("1.00"))
+    "1.00"
+
+### `JSON.Encoder`
+
+_(If running Elixir 1.18+.)_
+
+By default, decimals are encoded as strings to preserve precision:
+
+    iex> JSON.encode!(Decimal.new("1.00"))
+    "\"1.00\""
+
+To change that, pass a custom encoder to `JSON.encode!/2`. The following encodes
+decimals as floats:
+
+    iex> encoder = fn
+    ...>   %Decimal{} = decimal, _encoder ->
+    ...>     if Decimal.inf?(decimal) or Decimal.nan?(decimal) do
+    ...>       raise ArgumentError, "#{inspect(decimal)} cannot be encoded to JSON"
+    ...>     end
+    ...>
+    ...>     Decimal.to_string(decimal)
+    ...>
+    ...>   other, encoder ->
+    ...>     JSON.protocol_encode(other, encoder)
+    ...> end
+    ...>
+    iex> JSON.encode!(%{x: Decimal.new("1.00")}, encoder)
+    "{\"x\":1.00}"
 
 ## abs(num)
 
@@ -93,6 +151,13 @@ See `from_float/1`.
 
     iex> Decimal.cast("bad")
     :error
+
+## cast(term, opts)
+
+Creates a new decimal number from an integer, string, float, or existing decimal
+number with parsing limits.
+
+Options are the same as `parse/2`.
 
 ## compare(num1, num2)
 
@@ -195,7 +260,7 @@ will always return `false`.
     iex> Decimal.eq?(1, -1)
     false
 
-## eq?(num1, num2, thresrold)
+## eq?(num1, num2, threshold)
 
 It compares the equality of two numbers. If the second number is within
 the range of first - threshold and first + threshold, it returns true;
@@ -474,6 +539,12 @@ See also `from_float/1`.
     iex> Decimal.new("3.14")
     Decimal.new("3.14")
 
+    iex> Decimal.new("1.79769313486231581e308")
+    Decimal.new("1.79769313486231581e308")
+
+    iex> Decimal.new("2.22507385850720139e-308")
+    Decimal.new("2.22507385850720139e-308")
+
 ## new(sign, coef, exp)
 
 Creates a new decimal number from the sign, coefficient and exponent such that
@@ -520,6 +591,23 @@ otherwise `:error`.
 
     iex> Decimal.parse("bad")
     :error
+
+## parse(binary, opts)
+
+Parses a binary into a decimal with optional limits.
+
+Use this function instead of `parse/1` for untrusted input. Without explicit
+limits, decimal parsing accepts any exponent and digit count for backwards
+compatibility.
+
+The following options are supported:
+
+  * `:max_digits` - maximum number of decimal digits consumed from the input,
+    including leading and trailing zeros.
+  * `:max_exponent` - maximum absolute value of the parsed decimal exponent,
+    after fractional digits are accounted for.
+
+Returns `:error` when a parsed number exceeds the configured limits.
 
 ## positive?(decimal)
 
@@ -623,19 +711,35 @@ second number's sign is negated.
 
 Returns the decimal converted to a float.
 
-The returned float may have lower precision than the decimal. Fails if
-the decimal cannot be converted to a float.
+The returned float may have lower precision than the decimal.
+
+Raises if the decimal cannot be converted to a float.
 
 ## Examples
 
     iex> Decimal.to_float(Decimal.new("1.5"))
     1.5
 
+    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
+    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
+
+    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
+    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
+
+    iex> Decimal.to_float(Decimal.new("2.22507385850720139e-308"))
+    ** (Decimal.Error) : number smaller than DBL_MIN: Decimal.new("2.22507385850720139E-308")
+
+    iex> Decimal.to_float(Decimal.new("-2.22507385850720139e-308"))
+    ** (Decimal.Error): negative number bigger than DBL_MIN: Decimal.new("-2.22507385850720139E-308")
+
+    iex> Decimal.to_float(Decimal.new("inf"))
+    ** (ArgumentError) Decimal.new("Infinity") cannot be converted to float
+
 ## to_integer(decimal)
 
 Returns the decimal represented as an integer.
 
-Fails when loss of precision will occur.
+Raises when loss of precision will occur.
 
 ## Examples
 
@@ -651,6 +755,11 @@ Fails when loss of precision will occur.
 ## to_string(num, type \\ :scientific)
 
 Converts given number to its string representation.
+
+The default `:scientific` format is compact for large positive exponents.
+The `:normal` and `:xsd` formats may allocate output proportional to the
+expanded size of the decimal. Use `to_string/3` with `:max_digits` when
+rendering decimals from untrusted input.
 
 ## Options
 
@@ -675,6 +784,21 @@ Converts given number to its string representation.
 
     iex> Decimal.to_string(Decimal.new("4321.768"), :raw)
     "4321768E-3"
+
+## to_string(num, type, opts)
+
+Converts given number to its string representation with optional limits.
+
+Use this function when rendering decimals from untrusted input, especially
+with `:normal` or `:xsd`, because those formats may otherwise allocate output
+proportional to the expanded size of the decimal.
+
+The following options are supported:
+
+  * `:max_digits` - maximum number of digit characters in the output. Sign,
+    decimal point, and exponent markers are not counted.
+
+Raises `ArgumentError` when the configured limit would be exceeded.
 
 ## is_decimal(term)
 

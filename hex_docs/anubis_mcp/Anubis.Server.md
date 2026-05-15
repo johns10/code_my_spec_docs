@@ -37,7 +37,7 @@ Create a server in three steps:
     end
 
     # In your supervision tree
-    children = [Anubis.Server.Registry, {MyServer, transport: :stdio}]
+    children = [{MyServer, transport: :stdio}]
     Supervisor.start_link(children, strategy: :one_for_one)
 
 Your server is now a living process that AI assistants can connect to, discover available
@@ -95,6 +95,53 @@ use `send/2` with the session PID directly.
       {:noreply, frame}
     end
 
+## send_elicitation_request(message, requested_schema, opts \\ [])
+
+Sends an `elicitation/create` request to the client.
+
+Per the MCP 2025-06-18 specification, the server provides a human-readable
+`message` and a restricted-subset JSON `requested_schema` describing the
+expected user input. The client presents this to the user and returns one of
+three actions: `accept` (with content matching the schema), `decline`, or
+`cancel`.
+
+This is an asynchronous operation. The response will be delivered to your
+`handle_elicitation/3` callback.
+
+The `requested_schema` is validated synchronously before any wire I/O. The
+client must advertise the `elicitation` capability or the call returns
+`{:error, :capability_not_supported}` after enqueueing.
+
+## Schema Subset
+
+  * Top level must be `%{"type" => "object", "properties" => %{...}}`
+  * Properties may declare `"type"` of `"string"`, `"number"`, `"integer"`,
+    `"boolean"`, or use `"enum"` (string-only)
+  * String properties may set `"format"` of `"email"`, `"uri"`, `"date"`,
+    or `"date-time"`
+
+Per the spec, **servers MUST NOT request sensitive information** through
+elicitation.
+
+## Example
+
+    defmodule MyServer.Tools.Greet do
+      use Anubis.Server.Component, type: :tool
+
+      @impl true
+      def execute(_args, frame) do
+        Anubis.Server.send_elicitation_request("What's your name?", %{
+          "type" => "object",
+          "properties" => %{
+            "name" => %{"type" => "string", "minLength" => 1}
+          },
+          "required" => ["name"]
+        })
+
+        {:reply, "asked for name", frame}
+      end
+    end
+
 ## send_log_message(level, message, data \\ nil)
 
 Sends a log message to the client.
@@ -114,6 +161,10 @@ Sends a prompts list changed notification.
 ## send_resource_updated(uri, timestamp \\ nil)
 
 Sends a resource updated notification for a specific resource.
+
+Subscription-gated: only emits if the current session has previously
+received a `resources/subscribe` request for this URI. Calls for
+unsubscribed URIs are silently dropped.
 
 **Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
 
@@ -136,6 +187,19 @@ Sends a sampling/createMessage request to the client.
 
 This is an asynchronous operation. The response will be delivered to your
 `handle_sampling/3` callback.
+
+## send_task_status(task_id)
+
+Sends a `notifications/tasks/status` notification with the current state of
+the given task.
+
+**Must be called from within a Session callback** — see
+`send_resources_list_changed/0` for details.
+
+Per spec (2025-11-25), receivers MAY send these notifications when a task's
+status changes; they are optional and requestors MUST NOT rely on them. This
+helper looks up the task in the configured task store and emits the full
+`Task` projection.
 
 ## send_tools_list_changed()
 
@@ -165,6 +229,22 @@ When implemented, it bypasses automatic routing to specific handlers.
 
 Handles a resource read request.
 
+## handle_session_expired/2
+
+Called when a session is being auto-recovered after expiry.
+
+Invoked during `auto_initialize/1` instead of the normal client handshake.
+Receives the session ID and the current frame (pre-populated from the session
+store if one is configured).
+
+Return values:
+- `{:ok, frame}` — accept recovery using synthetic client info
+- `{:ok, client_info, frame}` — accept recovery and supply real client info
+- `{:error, reason}` — reject recovery; the client receives an internal error
+
+If this callback is not implemented, the default behavior is unchanged:
+synthetic client info is used and `init/2` is called normally.
+
 ## handle_tool_call/3
 
 Handles a tool call request.
@@ -184,3 +264,13 @@ in the frame.
 It receives the client's information and
 the current frame, allowing you to perform client-specific setup, validate capabilities,
 or prepare resources based on the connected client.
+
+## server_instructions/0
+
+Returns optional instructions describing how to use the server and its features.
+
+This can be used by clients to improve the LLM's understanding of available tools,
+resources, etc. It can be thought of like a "hint" to the model. For example, this
+information MAY be added to the system prompt.
+
+Return `nil` to omit the instructions field from the initialize response.

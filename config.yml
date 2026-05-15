@@ -66,7 +66,7 @@ docs_repo: "https://github.com/johns10/code_my_spec_docs"
 module_name: CodeMySpec
 name: Code My Spec
 project_id: 708492f9-454e-482f-a2eb-be64f0356b87
-ignored_paths:
+infrastructure_paths:
   # Standard Phoenix-generated infrastructure
   - lib/code_my_spec.ex
   - lib/code_my_spec/repo.ex

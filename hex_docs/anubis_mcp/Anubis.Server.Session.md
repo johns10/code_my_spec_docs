@@ -9,6 +9,18 @@ server-initiated requests (sampling, roots), and session persistence.
 Sessions are created by the transport layer (STDIO creates one at startup,
 HTTP transports create them dynamically via `Anubis.Server.Supervisor`).
 
+## auto_initialize(session)
+
+Auto-initializes a session without a client initialize handshake.
+
+This is used when a client sends a non-initialize request to an expired or
+unknown session. Instead of returning 404, the server can create a new session
+and auto-initialize it so the request can be processed transparently.
+
+Uses the server's latest supported protocol version and synthetic client info
+(`%{"name" => "auto-recovered", "version" => "unknown"}`). Server implementations
+should not rely on this identity for client-specific decisions.
+
 ## child_spec(init_arg)
 
 Returns a specification to start this module under a supervisor.

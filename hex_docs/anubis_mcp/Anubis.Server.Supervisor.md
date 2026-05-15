@@ -19,12 +19,13 @@ Starts the server supervisor.
     * `:transport` - Transport configuration (required)
     * `:name` - Supervisor name (optional, defaults to atom name)
     * `:registry` - `{module, opts}` for custom registry (auto-selected by default)
+    * `:supervisor` - `{module, opts}` for custom session supervisor (defaults to `{DynamicSupervisor, []}`)
     * `:session_idle_timeout` - Time in milliseconds before idle sessions expire (default: 30 minutes)
     * `:request_timeout` - Time limit in milliseconds for server requests (defaults to 30s)
 
 ## start_session(server, opts)
 
-Starts a new session under the DynamicSupervisor.
+Starts a new session under the configured session supervisor.
 
 ## stop_session(server, registry_mod, session_id)
 

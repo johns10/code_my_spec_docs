@@ -142,6 +142,20 @@ This schema defines the expected structure of the tool's output in the
 structuredContent field. The schema should follow the JSON Schema specification.
 This is an optional callback.
 
+## task_support/0
+
+Returns the task-augmentation policy for this tool.
+
+See the MCP Tasks specification (2025-11-25) — `execution.taskSupport`.
+
+- `:forbidden` (default) — clients MUST NOT invoke this tool as a task
+- `:optional` — clients MAY invoke this tool as a task or normally
+- `:required` — clients MUST invoke this tool as a task
+
+Only honoured when the server declares the `tasks.requests.tools.call`
+capability; otherwise the value is ignored and the tool is treated as
+`:forbidden`.
+
 ## title/0
 
 Returns the title that identifies this resource.

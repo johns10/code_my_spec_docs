@@ -4,7 +4,7 @@
 
 ## to_peri(json_schema)
 
-Converts a JSON Schema to a Peri schema.
+Converts a JSON Schema (Draft 7) into a Peri schema.
 
 ## validator(json_schema)
 

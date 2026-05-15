@@ -26,6 +26,11 @@ Adds an error to the parser state's list of errors.
     iex> Peri.Parser.add_error(state, error)
     %Peri.Parser{data: %{name: "Alice"}, errors: [%Peri.Error{path: [:name], message: "is required", content: []}], path: []}
 
+## bump_ref_depth(state)
+
+Increments the ref-resolution depth counter. Used by `{:ref, _}`
+directive resolution to bound recursion on cyclic data.
+
 ## for_list_element(element_data, parent_parser, index)
 
 Creates a new parser for a list element, preserving the root data.

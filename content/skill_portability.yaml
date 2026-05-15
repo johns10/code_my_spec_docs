@@ -1,0 +1,38 @@
+# Metadata for skill_portability.md
+
+# Required fields
+slug: skill-portability
+type: blog
+title: "One Skill, Three Platforms"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-17T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Cross-Platform Agent Skills: Claude Code, OpenCode, Codex"
+meta_description: "How to write a single SKILL.md that works on Claude Code, OpenCode, and Codex. The compatibility matrix, the portable subset of frontmatter, and the recommended file layout."
+og_title: "One Skill, Three Platforms"
+og_description: "The three biggest CLI agents converged on the same skill convention. Here's the compatibility matrix, what's portable, and the template I use."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - agent-skills
+  - claude-code
+  - opencode
+  - codex
+  - skills
+  - skill-md
+  - skill-portability
+  - cross-platform
+  - mcp
+  - claude-skills
+  - agentic-coding
+  - tutorial

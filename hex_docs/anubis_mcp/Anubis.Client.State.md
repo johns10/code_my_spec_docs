@@ -22,6 +22,10 @@ Adds a root directory to the state.
     iex> updated_state.roots
     [%{uri: "file:///home/user/project", name: "My Project"}]
 
+## clear_elicitation_callback(state)
+
+Clears the elicitation callback function.
+
 ## clear_log_callback(state)
 
 Clears the log callback.
@@ -63,6 +67,10 @@ Clears the sampling callback function.
     iex> updated_state = Anubis.Client.State.clear_sampling_callback(state)
     iex> updated_state.sampling_callback
     nil
+
+## get_elicitation_callback(state)
+
+Gets the elicitation callback function.
 
 ## get_log_callback(state)
 
@@ -269,6 +277,13 @@ Removes a root directory from the state.
     iex> updated_state = Anubis.Client.State.remove_root(state, "file:///home/user/project")
     iex> updated_state.roots
     []
+
+## set_elicitation_callback(state, callback)
+
+Sets the elicitation callback function.
+
+Callback receives `(message, requested_schema)` and returns one of
+`{:accept, content}`, `:decline`, `:cancel`, or `{:error, reason}`.
 
 ## set_log_callback(state, callback)
 

@@ -4,8 +4,13 @@ The context is kept in the process dictionary. It can be accessed with
 `get/0` and `set/1`.
 
 The default context has a precision of 28, the rounding algorithm is
-`:half_up`. The set trap enablers are `:invalid_operation` and
-`:division_by_zero`.
+`:half_up`, and unbounded `emax` and `emin`. The set trap enablers are
+`:invalid_operation` and `:division_by_zero`.
+
+Finite `emax` and `emin` values limit operation results. They do not validate
+values that have already been created, so applications that parse untrusted
+input should still use `Decimal.parse/2` or `Decimal.cast/2` with
+`:max_digits` and `:max_exponent`.
 
 ## Fields
 
@@ -14,6 +19,12 @@ The default context has a precision of 28, the rounding algorithm is
     digits with the rounding algorithm in `rounding`.
   * `rounding` - the rounding algorithm used when the coefficient's number of
     exceeds `precision`. Strategies explained below.
+  * `emax` - maximum adjusted exponent. If the adjusted exponent of a result
+    is larger than `emax`, overflow is signalled. `:infinity` disables this
+    limit.
+  * `emin` - minimum adjusted exponent. If the adjusted exponent of a result
+    is smaller than `emin`, underflow is signalled. `:infinity` disables this
+    limit.
   * `flags` - a list of signals that for which the flag is sent. When an
     exceptional condition is signalled its flag is set. The flags are sticky
     and will be set until explicitly cleared.

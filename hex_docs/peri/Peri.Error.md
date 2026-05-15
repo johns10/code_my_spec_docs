@@ -147,3 +147,27 @@ Creates a new single error with a formatted message and context.
       message: "Invalid value for age",
       content: %{field: "age"}
     }
+
+## summarize(type)
+
+Produces a compact, human-friendly string for a schema or type definition.
+
+Used in error messages to avoid dumping the entire schema (which can be huge
+for deeply nested or polymorphic schemas). Named schemas
+(`{:schema, _, name: "..."}`) render as their name; raw maps render as a
+truncated key list (`%{a, b, c, +N more}`).
+
+## traverse_errors(errors, fun)
+
+Recursively walks an error or list of errors, applying the callback to each
+leaf and replacing its message with the callback's return value.
+
+Mirrors `Ecto.Changeset.traverse_errors/2`. Useful for translating template
+strings into user-facing locale messages, e.g.
+
+    Peri.Error.traverse_errors(errors, fn err ->
+      Gettext.dgettext(MyAppWeb.Gettext, "errors", err.message, err.content || %{})
+    end)
+
+Returns the same error shape with translated messages. Non-string callback
+results are coerced via `to_string/1`.

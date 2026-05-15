@@ -7,11 +7,11 @@ and provides the central dispatch point for version-specific protocol logic.
 
 ## Usage
 
-    iex> Anubis.Protocol.Registry.get("2025-06-18")
-    {:ok, Anubis.Protocol.V2025_06_18}
+    iex> Anubis.Protocol.Registry.get("2025-11-25")
+    {:ok, Anubis.Protocol.V2025_11_25}
 
     iex> Anubis.Protocol.Registry.supported_versions()
-    ["2025-06-18", "2025-03-26", "2024-11-05"]
+    ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]
 
     iex> Anubis.Protocol.Registry.negotiate("2025-03-26")
     {:ok, "2025-03-26", Anubis.Protocol.V2025_03_26}
@@ -56,11 +56,11 @@ with the list of supported versions.
 
 ## Examples
 
-    iex> Anubis.Protocol.Registry.negotiate("2025-06-18")
-    {:ok, "2025-06-18", Anubis.Protocol.V2025_06_18}
+    iex> Anubis.Protocol.Registry.negotiate("2025-11-25")
+    {:ok, "2025-11-25", Anubis.Protocol.V2025_11_25}
 
     iex> Anubis.Protocol.Registry.negotiate("9999-01-01")
-    {:error, :unsupported_version, ["2025-06-18", "2025-03-26", "2024-11-05"]}
+    {:error, :unsupported_version, ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]}
 
 ## negotiate(client_version, server_versions)
 
@@ -72,11 +72,11 @@ otherwise server's latest).
 
 ## Examples
 
-    iex> Anubis.Protocol.Registry.negotiate("2025-03-26", ["2025-06-18", "2025-03-26"])
+    iex> Anubis.Protocol.Registry.negotiate("2025-03-26", ["2025-11-25", "2025-03-26"])
     {:ok, "2025-03-26", Anubis.Protocol.V2025_03_26}
 
-    iex> Anubis.Protocol.Registry.negotiate("2024-11-05", ["2025-06-18", "2025-03-26"])
-    {:ok, "2025-06-18", Anubis.Protocol.V2025_06_18}
+    iex> Anubis.Protocol.Registry.negotiate("2024-11-05", ["2025-11-25", "2025-03-26"])
+    {:ok, "2025-11-25", Anubis.Protocol.V2025_11_25}
 
 ## progress_params_schema(version)
 

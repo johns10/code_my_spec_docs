@@ -79,12 +79,52 @@ Peri supports the following schema types:
 - `{:schema, map_schema, {:additional_keys, type}}` - Nested schema map, with extra entries validated using another type
 - `{:tuple, [type1, type2, ...]}` - Tuple with elements of specified types
 - `{:enum, [value1, value2, ...]}` - One of the specified values
+- `{:enum, [value1, value2, ...], opts}` - Enum with opts (`:type`, `:error`, `:gen`); `:type` constrains members to a base type and surfaces it in JSON Schema output
 - `{:literal, value}` - Exactly matches the specified value
 - `{:either, {type1, type2}}` - Either type1 or type2
 - `{:oneof, [type1, type2, ...]}` - One of the specified types
 - `{:cond, condition, true_type, false_type}` - Conditional validation based on callback
 - `{:dependent, callback}` - Dynamic type based on callback result
+- `{:meta, type, opts}` - Attach documentation/example/description to a field; passthrough at validation
 - Nested maps for complex structures
+
+## Custom Error Messages
+
+Override the default validation message per field via the `error:` opt in the
+type's options list. Accepts either a static string or an MFA tuple
+`{module, function, args}`. The MFA receives the `%Peri.Error{}` (with its
+`content`) prepended to `args` and must return a string.
+
+```elixir
+%{
+  age:   {:integer, gte: 18, error: "must be adult"},
+  email: {:required, :string, [error: {MyApp.Errors, :email_msg, []}]}
+}
+```
+
+For i18n / Gettext, walk the resulting errors with
+`Peri.Error.traverse_errors/2` and translate each leaf message — see that
+function's docs for an example.
+
+## Schema Metadata
+
+Fields can carry metadata via the `{:meta, type, opts}` wrapper. Metadata is
+ignored at validation time but available for documentation, JSON Schema
+export, and tooling. The JSON Schema encoder recognises the standard
+Draft-7 annotation/format vocabulary (`:title`, `:description`, `:example`,
+`:examples`, `:deprecated`, `:default`, `:format`, `:pattern`, `:read_only`,
+`:write_only`, `:content_encoding`, `:content_media_type`); other keys
+(e.g. `:doc`) are preserved opaquely for non-encoder tooling.
+
+```elixir
+defschema :user, %{
+  email: {:meta, {:required, :string}, doc: "Login email", example: "a@b.io"},
+  age: {:meta, {:integer, gte: 0}, description: "Years"}
+}, title: "User", description: "Account holder"
+```
+
+Schema-level meta opts are exposed via the generated `__schema_meta__/1`
+function. Validation opts (e.g. `:mode`) are split out, not surfaced as meta.
 
 ## Callback Functions for :cond and :dependent
 
@@ -112,12 +152,41 @@ defschema :parent, %{
 }
 ```
 
+## Custom Generators
+
+When data generation matters (`Peri.generate/1`), constrained types like
+`{:integer, gt: 1_000_000}` or `{:string, {:regex, …}}` fall back to
+rejection sampling, which can be slow on tight domains. Provide a `gen:`
+opt with an MFA, `{mod, fun}`, or 0-arity function returning
+`%StreamData{}` to skip rejection entirely. Accepted in multi-options,
+`{:required, type, opts}`, and `{:meta, type, opts}` positions.
+
+    %{
+      age:   {:integer, gte: 18, gen: {MyApp.Gens, :age, []}},
+      email: {:meta, :string, doc: "Login", gen: {MyApp.Gens, :email}}
+    }
+
+## Schema Transformation
+
+`Peri.walk/2` runs a depth-first rewrite over a schema, useful for
+derivations like "make every field optional" or "strip private keys from a
+public DTO". The callback receives `{:field, key, value}` for entries
+inside a map/keyword schema and the type expression itself everywhere
+else; return `{:cont, _}` to continue or `:drop` to remove a field. See
+`Peri.Walker` for full semantics.
+
+    Peri.walk(schema, fn
+      {:required, t} -> {:cont, t}
+      other -> {:cont, other}
+    end)
+
 ## Functions
 
 - `validate/2` - Validates data against a schema.
 - `conforms?/2` - Checks if data conforms to a schema.
 - `validate_schema/1` - Validates the schema definition.
 - `generate/1` - Generates sample data based on schema (when StreamData is available).
+- `walk/2` - Depth-first rewrite of a schema tree.
 
 ## Example
 
@@ -170,6 +239,13 @@ Checks if the given data conforms to the specified schema.
     iex> Peri.conforms?(schema, invalid_data)
     false
 
+## from_json_schema(json_schema, opts \\ [])
+
+Decodes a JSON Schema (Draft 7) map into a Peri schema.
+
+Returns `{:ok, schema}` if the resulting Peri schema is valid, otherwise
+`{:error, errors}`.
+
 ## put_in_enum(enum, key, val)
 
 Helper function to put a value into an enum, handling
@@ -185,6 +261,26 @@ not only maps and keyword lists but also structs.
 ## to_changeset!(s, attrs)
 
 Converts a `Peri.schema()` definition to an Ecto [schemaless changesets](https://hexdocs.pm/ecto/Ecto.Changeset.html#module-schemaless-changesets).
+
+## to_json_schema(schema, opts \\ [])
+
+Converts a Peri schema into a JSON Schema (Draft 7) map.
+
+Reads `{:meta, type, opts}` annotations and emits `title`, `description`,
+`examples`, `deprecated`. Dynamic types degrade per `:on_unsupported`
+(`:omit | :true_schema | :raise`, default `:omit`).
+
+Pass `:exclude_meta_keys` to drop annotation keywords from the output —
+commonly `[:default]` when the consumer-facing schema should not surface
+validation defaults.
+
+## Examples
+
+    iex> Peri.to_json_schema(%{name: {:required, :string}})
+    %{"type" => "object", "properties" => %{"name" => %{"type" => "string"}}, "required" => ["name"]}
+
+    iex> Peri.to_json_schema({:integer, {:default, 0}}, exclude_meta_keys: [:default])
+    %{"type" => "integer"}
 
 ## validate(schema, data, opts \\ [])
 
@@ -271,6 +367,26 @@ This function can handle both simple and complex schema definitions, including n
   assert {:error, _errors} = validate_schema(schema)
   ```
 
+## walk(schema, fun)
+
+Depth-first rewrite of a schema tree.
+
+The callback is invoked on every subtree (pre-order). It must return either
+`{:cont, new_node}` to replace the node and continue, or `:drop` to remove it
+(only valid for values inside a map or keyword schema).
+
+Building block for transforms like "make every field optional" or "strip
+internal-only fields from a public DTO". See `Peri.Walker` for details.
+
+## Examples
+
+    iex> schema = %{name: {:required, :string}, age: {:required, :integer}}
+    iex> Peri.walk(schema, fn
+    ...>   {:required, t} -> {:cont, t}
+    ...>   other -> {:cont, other}
+    ...> end)
+    %{name: :string, age: :integer}
+
 ## defschema(name, schema, opts \\ [])
 
 Defines a schema with a given name and schema definition.
@@ -291,7 +407,16 @@ Defines a schema with a given name and schema definition.
         name: :string,
         email: {:required, :string}
       }, mode: :permissive
+
+      # With metadata (field-level and schema-level)
+      defschema :documented_user, %{
+        email: {:meta, {:required, :string}, doc: "Login email", example: "a@b.io"}
+      }, title: "User", description: "Account holder"
     end
+
+    # Schema-level metadata is accessible via __schema_meta__/1:
+    MySchemas.__schema_meta__(:documented_user)
+    # => [title: "User", description: "Account holder"]
 
     user_data = %{name: "John", age: 30, email: "john@example.com"}
     MySchemas.user(user_data)

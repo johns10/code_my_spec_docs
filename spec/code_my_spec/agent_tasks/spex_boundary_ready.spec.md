@@ -16,12 +16,17 @@ wrong reasons.
 Four artifacts must be on disk before any story can write specs:
 
 1. **Framework Credo checks** copied into the project (universal
-   stdlib + send/2 denies).
-2. **A project-local Credo check** denying internal namespaces this
-   project's specs must not reach — derived from the architecture
-   proposal.
+   function-level denies for `System.cmd`/`Code.eval`/`Kernel.apply`/
+   `:os.cmd` and the `send/2` deny). The framework `spex_denied_calls`
+   ships with **empty whole-module deny lists** — those are
+   project-specific and live in artifact #2.
+2. **A project-local Credo check** filling in the whole-module deny
+   list — stdlib bypasses (`File`, `Port`, `:file`) plus internal
+   contexts derived from the architecture proposal.
 3. **A curated fixtures bridge** (`<App>Spex.Fixtures`) — the only
-   sanctioned door from a spec into in-app state.
+   sanctioned door from a spec into in-app state. Declared as its
+   own top-level Boundary so the spec boundary can dep on it
+   without inheriting `<App>`'s deps.
 4. **A project-specific BDD spec plan** complementing the generic
    framework docs.
 
@@ -58,9 +63,9 @@ mining project-specific denies.
 - The task does not write any spex files. That's `write_bdd_specs`.
 - The task does not run the test suite. The Credo checks fire when
   `mix credo` or `mix spex` runs — that's a separate concern.
-- The task does not edit the framework Credo checks. Project-specific
-  denies go in `.code_my_spec/credo_checks/local/`, not the framework
-  dir.
+- The task does not edit the framework Credo checks. All whole-module
+  denies — including stdlib bypasses like `File`/`Port`/`:file` —
+  go in `.code_my_spec/credo_checks/local/`, not the framework dir.
 - The task does not curate the architecture proposal — it consumes
   one. If the proposal is missing or wrong, fix it in
   `architecture_designed` first.

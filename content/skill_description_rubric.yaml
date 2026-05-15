@@ -1,0 +1,38 @@
+# Metadata for skill_description_rubric.md
+
+# Required fields
+slug: skill-description-rubric
+type: blog
+title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-16T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Why Your Skill Isn't Triggering: The Description Rubric"
+meta_description: "The skill description is the only routing signal. If your skill isn't triggering, the description is why. Seven self-check questions, five bad-to-good transformations, and the anti-patterns to recognize."
+og_title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
+og_description: "I had seven agent tasks with the same orchestrate string. The agent picked them at random. Here's the rubric I rewrote them with."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - agent-skills
+  - claude-code
+  - skills
+  - skill-md
+  - skill-descriptions
+  - skill-design
+  - claude-skills
+  - agentic-coding
+  - tutorial
+  - context-engineering
+  - opencode
+  - codex

@@ -91,6 +91,25 @@ Adds a root directory to the client's roots list.
   * `opts` - Additional options
     * `:timeout` - Request timeout in milliseconds
 
+## await_ready(client, opts \\ [])
+
+Blocks until the client has completed the MCP initialization handshake.
+
+Returns `:ok` once the server capabilities have been received.
+If the server has already been initialized, returns immediately.
+Otherwise, the caller is parked until the initialization response arrives
+or the GenServer call times out.
+
+## Options
+
+  * `:timeout` - Maximum time to wait in milliseconds (default: 30s)
+
+## Examples
+
+    {:ok, _supervisor} = Anubis.Client.start_link(opts)
+    :ok = Anubis.Client.await_ready(MyApp.MCPClient, timeout: 10_000)
+    {:ok, tools} = Anubis.Client.list_tools(MyApp.MCPClient)
+
 ## call_tool(client, name, arguments \\ nil, opts \\ [])
 
 Calls a tool on the server.
@@ -298,6 +317,17 @@ Reads a specific resource from the server.
     * `:token` - A unique token to track progress (string or integer)
     * `:callback` - A function to call when progress updates are received
 
+## register_elicitation_callback(client, callback)
+
+Registers a callback function to handle elicitation requests from the server.
+
+The client must advertise the `elicitation` capability during initialization
+for servers to send `elicitation/create` requests.
+
+Per the MCP specification, the client SHOULD present the request to the user
+with clear UI, allow them to review and modify their response, and provide
+decline/cancel options.
+
 ## register_log_callback(client, callback, opts \\ [])
 
 Registers a callback function to be called when log messages are received.
@@ -382,6 +412,22 @@ Starts the client supervision tree (client + transport).
 This is the primary entry point for starting a client. It creates a supervisor
 that manages both the client GenServer and the transport process.
 
+## subscribe_resource(client, uri, opts \\ [])
+
+Subscribes to updates for a specific resource URI.
+
+After a successful subscribe, the server may send `notifications/resources/updated`
+notifications for this URI. The server must declare the `resources.subscribe`
+capability for this method to succeed.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+
+## unregister_elicitation_callback(client)
+
+Unregisters the elicitation callback.
+
 ## unregister_log_callback(client, opts \\ [])
 
 Unregisters a previously registered log callback.
@@ -403,6 +449,14 @@ Unregisters a previously registered progress callback for the specified token.
 ## unregister_sampling_callback(client)
 
 Unregisters the sampling callback.
+
+## unsubscribe_resource(client, uri, opts \\ [])
+
+Unsubscribes from updates for a previously-subscribed resource URI.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
 
 ## is_client_capability(capability)
 
@@ -471,8 +525,9 @@ MCP client capabilities
 - `:roots` - Capabilities related to the roots resource
   - `:listChanged` - Whether the client can handle listChanged notifications
 - `:sampling` - Capabilities related to sampling
+- `:elicitation` - Capabilities related to elicitation (server-initiated user input requests, 2025-06-18)
 
-MCP describes these client capabilities on it [specification](https://spec.modelcontextprotocol.io/specification/2024-11-05/client/)
+MCP describes these client capabilities on its [specification](https://spec.modelcontextprotocol.io/specification/2025-06-18/client/)
 
 ## option/0
 
@@ -485,3 +540,16 @@ MCP client initialization options
 - `:protocol_version` - Protocol version to use (defaults to "2024-11-05")
 
 Any other option support by `GenServer`.
+
+## elicitation_callback/0
+
+Elicitation callback function type.
+
+Called when the server sends an `elicitation/create` request. The callback
+receives the human-readable `message` and the `requestedSchema` (a restricted
+JSON Schema subset). It must return one of:
+
+  * `{:accept, content}` — user submitted `content` (a flat map matching the schema)
+  * `:decline` — user explicitly declined
+  * `:cancel` — user dismissed without an explicit choice
+  * `{:error, reason}` — internal error; sent back as a JSON-RPC error
