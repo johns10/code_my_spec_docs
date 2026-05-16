@@ -93,11 +93,20 @@ infrastructure_paths:
   - lib/code_my_spec_web/live/user_live/settings.ex
   - lib/code_my_spec_web/live/user_live/confirmation.ex
   - lib/code_my_spec_web/live/user_live/check_email.ex
+  - lib/code_my_spec/users/user.ex
+  - lib/code_my_spec/users/user_token.ex
+  - lib/code_my_spec/users/user_notifier.ex
+  # Scope is heavily customized but used as a fixture in every test;
+  # effectively integration-covered everywhere — no dedicated unit tests.
+  - lib/code_my_spec/users/scope.ex
   # Local CLI Phoenix app infrastructure
   - lib/code_my_spec_local_web.ex
   - lib/code_my_spec_local_web/application.ex
   - lib/code_my_spec_local_web/endpoint.ex
   - lib/code_my_spec_local_web/router.ex
+  - lib/code_my_spec_local_web/components/core_components.ex
+  - lib/code_my_spec_local_web/components/layouts.ex
+  - lib/code_my_spec_local_web/controllers/error_*
   - lib/code_my_spec_local_web/migrator.ex
   - lib/code_my_spec_local_web/socket_supervisor.ex
   - lib/code_my_spec_local_web/components/core_components.ex

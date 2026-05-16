@@ -14,14 +14,10 @@ context
 ## Dependencies
 
 - CodeMySpec.Git.CLI
-- CodeMySpec.Git.Behaviour
+- CodeMySpec.Git.URLParser
 - CodeMySpec.Users.Scope
 
 ## Components
-
-### CodeMySpec.Git.Behaviour
-
-Defines the behavior contract for Git operations. Specifies callbacks for clone/3 and pull/2 operations with proper type specifications and error handling patterns.
 
 ### CodeMySpec.Git.CLI
 
