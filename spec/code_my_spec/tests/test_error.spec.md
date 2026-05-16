@@ -10,29 +10,6 @@ Embedded schema representing test failure information from ExUnit test runs. Cap
 | line    | integer | No       | Line number in the file where error occurred   | Non-negative|
 | message | string  | No       | Error message describing the test failure      | None        |
 
-## Functions
-
-### changeset/2
-
-Creates an Ecto changeset for casting TestError attributes.
-
-```elixir
-@spec changeset(t() | %__MODULE__{}, map()) :: Ecto.Changeset.t()
-```
-
-**Process**:
-1. Accept a TestError struct (defaults to new struct) and attributes map
-2. Cast the attributes for :file, :line, and :message fields
-3. Return the changeset (no validations applied)
-
-**Test Assertions**:
-- casts valid attributes successfully
-- handles nil file path
-- handles nil line number
-- casts string message field
-- works with empty attributes map
-- preserves existing struct values when not overridden
-
 ## Dependencies
 
 - Ecto.Schema

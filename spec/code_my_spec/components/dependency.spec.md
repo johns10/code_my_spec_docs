@@ -17,29 +17,3 @@ the target component to function.
 ## Dependencies
 
 - CodeMySpec.Components.Component
-
-## Functions
-
-### changeset/2
-
-Creates a changeset for a dependency with validation rules.
-
-```elixir
-@spec changeset(%Dependency{}, map()) :: Ecto.Changeset.t()
-```
-
-**Process**:
-1. Cast source_component_id and target_component_id from attributes
-2. Validate both fields are required
-3. Validate source and target are not the same component (no self-dependency)
-4. Add unique constraint on source/target pair
-5. Add foreign key constraints for both component references
-
-**Test Assertions**:
-- creates valid changeset with valid source and target component IDs
-- returns error changeset when source_component_id is missing
-- returns error changeset when target_component_id is missing
-- returns error changeset when source and target are the same (self-dependency)
-- returns error changeset for duplicate source/target pair
-- returns error changeset with invalid source_component_id foreign key
-- returns error changeset with invalid target_component_id foreign key

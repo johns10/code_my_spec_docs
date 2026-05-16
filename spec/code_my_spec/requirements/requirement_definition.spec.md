@@ -26,34 +26,6 @@ Immutable template defining what needs to be checked for a component. Maps to ru
 - `:dependencies` - Dependency satisfaction checks
 - `:hierarchy` - Child component checks
 
-## Functions
-
-### new/1
-
-Creates a new requirement definition from attributes map with validation.
-
-```elixir
-@spec new(map()) :: t()
-```
-
-**Process**:
-1. Extract required fields from attrs map
-2. Default threshold to 1.0 if not provided
-3. Validate threshold is between 0.0 and 1.0 if provided
-4. Default config to empty map if not provided
-5. Build and return RequirementDefinition embedded schema
-
-**Test Assertions**:
-- creates definition with all required fields
-- returns error for invalid checker type
-- returns error for invalid session type
-- returns error for invalid artifact type
-- defaults threshold to 1.0
-- accepts valid threshold between 0.0 and 1.0
-- returns error for threshold less than 0.0
-- returns error for threshold greater than 1.0
-- defaults config to empty map
-
 ## Dependencies
 
 - CodeMySpec.Requirements.CheckerBehaviour

@@ -6,35 +6,6 @@ Embedded schema representing a single test execution run with execution metadata
 
 None - this is a data structure module with only changeset functionality.
 
-## Functions
-
-### changeset/2
-
-Creates or updates a TestRun changeset with provided attributes.
-
-```elixir
-@spec changeset(t() | map(), map()) :: Ecto.Changeset.t()
-```
-
-**Process**:
-1. Cast scalar fields (project_path, command, exit_code, execution_status, seed, including, excluding, raw_output, executed_at)
-2. Cast embedded stats association
-3. Cast embedded tests collection with TestResult changeset
-4. Cast embedded failures collection with TestResult changeset
-5. Cast embedded pending collection with TestResult changeset
-6. Return changeset with all validations applied
-
-**Test Assertions**:
-- accepts valid attributes for all scalar fields
-- casts stats as embedded TestStats struct
-- casts tests as collection of TestResult structs
-- casts failures as collection of TestResult structs
-- casts pending as collection of TestResult structs
-- validates execution_status is one of: success, failure, timeout, error
-- handles empty attributes gracefully
-- preserves including/excluding as arrays of strings
-- accepts NaiveDateTime for executed_at field
-
 ## Fields
 
 | Field | Type | Required | Description | Constraints |

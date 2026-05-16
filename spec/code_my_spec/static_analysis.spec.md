@@ -12,8 +12,6 @@ Executes optional code quality and correctness tools against a project codebase.
 - run/3: CodeMySpec.StaticAnalysis.Runner.run/3
 - list_analyzers/0: CodeMySpec.StaticAnalysis.Runner.list_analyzers/0
 
-## Functions
-
 ## Dependencies
 
 - CodeMySpec.Problems

@@ -6,18 +6,6 @@ Live context grouping the server-side LiveViews and LiveComponents for the activ
 
 live_context
 
-## LiveViews
-
-### CodeMySpecWeb.PersonasLive.Index
-
-- **Route:** `/personas`
-- **Description:** Lists every persona on the active project with a link to create a new one. Each card shows name, headline, and a count of linked stories.
-
-### CodeMySpecWeb.PersonasLive.Show
-
-- **Route:** `/personas/:slug`
-- **Description:** Displays a single persona — rendered `summary.md`, `sources.md` list, and linked stories. Offers an Edit action (opens FormComponent) and a Link-to-story action.
-
 ## Components
 
 ### CodeMySpecWeb.PersonasLive.FormComponent

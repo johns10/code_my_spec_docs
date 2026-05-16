@@ -6,31 +6,6 @@ context
 
 Context for managing document parsing, validation, and creation from markdown content. Provides a centralized registry for document type definitions, convention-based section parsers, and validation against structured document schemas. Documents are parsed into structured data with type-specific schemas for functions, fields, and components.
 
-## Functions
-
-### create_dynamic_document/2
-
-Creates and validates a document from markdown content against a document type definition.
-
-```elixir
-@spec create_dynamic_document(String.t(), String.t()) :: {:ok, map()} | {:error, String.t()}
-```
-
-**Process**:
-1. Look up document definition from Registry using document_type
-2. Parse markdown content using MarkdownParser
-3. Validate required sections are present (supports OR logic for alternative sections)
-4. Validate no disallowed additional sections exist (unless wildcard allowed)
-5. Return document map with sections and type, or error on validation failure
-
-**Test Assertions**:
-- returns {:ok, document} with parsed sections for valid markdown
-- returns {:error, reason} when required sections are missing
-- supports OR logic for alternative required sections (e.g., "delegates OR functions")
-- returns {:error, reason} when disallowed sections are present
-- allows any sections when allowed_additional_sections is "*"
-- parses sections using convention-based parsers (functions -> FunctionParser, fields -> FieldParser)
-
 ## Components
 
 ### CodeMySpec.Documents.Registry

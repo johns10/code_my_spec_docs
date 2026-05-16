@@ -17,39 +17,6 @@ Embedded schema for capturing ExUnit test execution statistics and timing inform
 | started_at   | naive_datetime   | No         | Timestamp when test execution started            | ISO8601 format   |
 | finished_at  | naive_datetime   | No         | Timestamp when test execution finished           | ISO8601 format   |
 
-## Functions
-
-### changeset/2
-
-Creates a changeset for TestStats with special handling for JSON field mapping from ExUnit JSON formatter output.
-
-```elixir
-@spec changeset(t() | %__MODULE__{}, map()) :: Ecto.Changeset.t()
-```
-
-**Process**:
-1. Cast standard integer fields (duration_ms, load_time_ms, passes, failures, pending, invalid, tests, suites)
-2. Cast datetime fields (started_at, finished_at)
-3. Apply JSON field mapping transformations to handle ExUnit formatter's JSON keys
-4. Map "duration" JSON key to duration_ms field with rounding
-5. Map "loadTime" JSON key to load_time_ms field with rounding
-6. Map "start" ISO8601 string to started_at NaiveDateTime
-7. Map "end" ISO8601 string to finished_at NaiveDateTime
-
-**Test Assertions**:
-- accepts empty attributes and returns valid changeset
-- casts all standard integer fields correctly
-- casts datetime fields correctly
-- maps JSON "duration" field to duration_ms with rounding
-- maps JSON "loadTime" field to load_time_ms with rounding
-- maps JSON "start" ISO8601 string to started_at NaiveDateTime
-- maps JSON "end" ISO8601 string to finished_at NaiveDateTime
-- handles nil values for optional JSON fields
-- handles invalid ISO8601 datetime strings gracefully
-- handles non-numeric duration values gracefully
-- handles non-numeric loadTime values gracefully
-- sets default values (0) for count fields when not provided
-
 ## Dependencies
 
 - Ecto.Schema

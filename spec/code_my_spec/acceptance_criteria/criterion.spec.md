@@ -16,38 +16,6 @@ Ecto schema representing a single acceptance criterion. Contains the description
 | inserted_at | utc_datetime | Yes (auto) | Timestamp when record was created              | Auto-generated                   |
 | updated_at  | utc_datetime | Yes (auto) | Timestamp when record was last updated         | Auto-generated                   |
 
-## Functions
-
-### changeset/2
-
-Creates a changeset for creating or updating a criterion.
-
-```elixir
-@spec changeset(t(), map()) :: Ecto.Changeset.t()
-```
-
-**Process**:
-1. Cast all permitted attributes (description, verified, verified_at, story_id, project_id, account_id)
-2. Validate required fields (description, story_id, project_id, account_id)
-3. Return changeset
-
-**Test Assertions**:
-- accepts valid attributes with all required fields
-- accepts criterion with verified status
-- accepts criterion with verified_at timestamp
-- accepts criterion with all fields populated
-- defaults verified to false when not provided
-- accepts nil verified_at
-- requires description
-- requires story_id
-- requires project_id
-- requires account_id
-- rejects nil description
-- rejects empty description
-- rejects nil story_id
-- rejects nil project_id
-- rejects nil account_id
-
 ## Dependencies
 
 - Ecto.Schema
