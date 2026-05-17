@@ -935,6 +935,168 @@
   structure.
 </p>
 
+<p>
+  <a href="https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering"
+    >LangChain made the formula explicit</a
+  >
+  in early 2026: <em>Agent = Model + Harness</em>. They demonstrated a 13.7-point
+  Terminal Bench 2.0 jump (52.8 → 66.5) from harness changes alone — same model,
+  same task, different surrounding system. Capability at the 2026 frontier is a
+  substrate question, not a weights question.
+</p>
+
+<h2>What counts as a harness</h2>
+
+<p>
+  Before this becomes a buzzword war, the word has to mean something. A harness
+  is the persistent, deterministic structure around an AI coding agent. Three
+  properties separate it from things adjacent to it:
+</p>
+
+<ol>
+  <li>
+    <strong>It has at least one loop with an oracle.</strong> Something outside
+    the model decides whether the work is done. Tests, specs, linters, a stress
+    tester, a CI gate. No oracle, not a harness.
+  </li>
+  <li>
+    <strong>It persists.</strong> A harness outlives any single prompt. It lives
+    on disk, in the CI config, in the hook scripts, in the spec graph. If it
+    dies when the session ends, it was a prompt.
+  </li>
+  <li>
+    <strong>It enforces rather than suggests.</strong> Hooks block. CI rejects.
+    Linters fail the build. Documents the model can ignore are hints, not
+    enforcement.
+  </li>
+</ol>
+
+<p>
+  This rules out a long list of things that get marketed as harnesses:
+</p>
+
+<ul>
+  <li>
+    <strong>A rules file alone</strong> (CLAUDE.md, AGENTS.md,
+    <code>.cursorrules</code>) — has persistence, no oracle, no enforcement. The
+    model can ignore every word.
+    <a href="https://martinfowler.com/articles/harness-engineering.html"
+      >Birgitta Böckeler</a
+    >
+    classifies these as <em>guides</em> — one component of a harness, not a
+    harness on their own.
+  </li>
+  <li>
+    <strong>A skill</strong> (the Anthropic SKILL.md pattern) — a capability
+    module the agent loads on demand. Composes into a harness; not one alone.
+  </li>
+  <li>
+    <strong>An MCP server</strong> — extends the agent's tool surface. Tools are
+    a layer of a harness, but tools without enforcement or feedback are just a
+    bigger API.
+  </li>
+  <li>
+    <strong>A one-shot generator</strong> that takes a prompt and emits a
+    project. No loop, no persistent oracle, no enforcement. A code generator
+    with a marketing problem.
+  </li>
+</ul>
+
+<p>
+  The boundary test:
+  <em>if the agent ignored the artifact, would anything stop or correct it?</em>
+  If no, it's not a harness — it's a hint.
+</p>
+
+<h2>The shapes a harness comes in</h2>
+
+<p>
+  Once you accept the formal definition, the next observation is that the term
+  covers at least six structurally distinct shapes. They differ on what loop
+  runs, what the oracle is, and how each one fails when it drifts.
+</p>
+
+<ul>
+  <li>
+    <strong>Spec-driven inner loop.</strong> Intent → spec → plan → tasks → code
+    → tests → verification, each gated on the previous. Oracle is the spec
+    plus tests generated from it. Examples:
+    <a href="https://github.com/github/spec-kit">GitHub Spec Kit</a>,
+    <a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a>,
+    <a href="https://kiro.dev/">Kiro</a>,
+    <a href="https://github.com/bmad-code-org/BMAD-METHOD">BMAD-Method</a>,
+    <a href="https://tessl.io/">Tessl</a>, and CodeMySpec. Common failure: the
+    codebase satisfies the spec but does the wrong thing in production —
+    <em>spec-without-signal</em>.
+  </li>
+  <li>
+    <strong>Signal-driven outer loop.</strong> Run the system → capture evidence
+    → diagnose → patch → rerun. Oracle is a runtime signal: stress tester,
+    fuzzer, integration suite, telemetry. Examples: jbc22's stress-test loop
+    from
+    <a href="https://reddit.com/r/ClaudeAI/comments/1teczh1/"
+      >r/ClaudeAI</a
+    >, Karpathy's
+    <a href="https://github.com/karpathy/autoresearch">autoresearch</a> for ML
+    experiments. Common failure: the agent optimises for the signal rather than
+    the goal — Goodhart's law restated for agents.
+  </li>
+  <li>
+    <strong>Hybrid (spec + signal).</strong> Spec-driven inner loop with a
+    signal-driven outer loop on top that can re-enter the spec phase when
+    runtime evidence contradicts it. OpenAI's Codex internal harness sits closest
+    to this shape — architectural enforcement plus production signal. No mature
+    public example of a clean hybrid yet, which is why this is the most
+    interesting empty quadrant in the space.
+  </li>
+  <li>
+    <strong>Hook-based / policy enforcement.</strong> The harness doesn't run
+    its own loop — it intercepts the agent's. Oracle is a deterministic rule
+    (TDD discipline, file ownership, architectural boundary). Example:
+    <a href="https://github.com/nizos/tdd-guard">TDD-Guard</a> blocks
+    Write/Edit on Claude Code if there's no failing test for the change. Common
+    failure: rules ossify, agent learns to route around them.
+  </li>
+  <li>
+    <strong>Evidence / eval harness.</strong> The original sense.
+    <a href="https://github.com/EleutherAI/lm-evaluation-harness"
+      >EleutherAI's lm-evaluation-harness</a
+    >
+    (2020) shipped as "a framework for few-shot evaluation of language models."
+    HumanEval, SWE-bench,
+    <a href="https://www.tbench.ai/news/announcement-2-0">Terminal Bench 2.0</a>
+    inherit the same shape. The model is the subject under test, not the
+    operator. Common failure: benchmark gaming.
+  </li>
+  <li>
+    <strong>Rules-only.</strong> The agent reads a rules file and decides
+    whether to follow it. No oracle, no enforcement. The
+    <a href="https://github.com/forrestchang/andrej-karpathy-skills"
+      >Karpathy CLAUDE.md</a
+    >
+    distillation at 100K+ stars is the most prominent example, and the cleanest
+    illustration of the rules-as-harness trap. The model can ignore every word;
+    nothing detects the lapse. It's a useful <em>guide</em> paired with other
+    layers, not a harness on its own.
+  </li>
+</ul>
+
+<p>
+  The two lineages of the word are visible here too: the eval-harness sense
+  (item 5) is the etymological root, and every codegen harness eventually
+  re-invents a private version of it to validate its own changes. The current
+  agent-scaffolding sense (items 1–4) is what
+  <a href="https://mitchellh.com/writing/my-ai-adoption-journey"
+    >Mitchell Hashimoto</a
+  >
+  named when he wrote "Engineer the Harness" in February 2026:
+  <em
+    >"anytime you find an agent makes a mistake, you take the time to engineer
+    a solution such that the agent never makes that mistake again."</em
+  >
+  That's the discipline definition. The taxonomy above is the architectural one.
+</p>
+
 <h2>Three evolutions</h2>
 
 <p>
@@ -1060,8 +1222,26 @@
     >AGENTS.md</a
   >
   for GitHub Copilot. These files inject instructions into the model's context.
-  But the best teams treat them as the <em>starting point</em>, not the whole
-  harness.
+  Böckeler categorises them as <em>guides</em>: feedforward signal that shapes
+  what the agent intends to do. A guide is one input to a harness, not the
+  harness itself. The complement is what she calls <em>sensors</em>: feedback
+  loops (linters, tests, hooks, browser verification) that catch what actually
+  happened. Guides without sensors are wallpaper.
+</p>
+
+<p>
+  The Karpathy CLAUDE.md at
+  <a href="https://github.com/forrestchang/andrej-karpathy-skills">100K+ stars</a>
+  is the cleanest public example of the rules-as-harness trap. Four good
+  principles, persistent in the repo, ignored by the agent whenever the cost of
+  compliance exceeds the cost of looking compliant. By contrast,
+  <a href="https://mitchellh.com/writing/my-ai-adoption-journey"
+    >Hashimoto's AGENTS.md</a
+  >
+  for the Ghostty project works — but only because he pairs it with custom
+  scripts and the discipline of rerunning the agent against documented failures.
+  His own framing: AGENTS.md alone is not the harness. The practice around it
+  is.
 </p>
 
 <p>
@@ -1344,6 +1524,33 @@
   The model isn't your bottleneck. The harness is.
 </p>
 
+<h2>Where CodeMySpec sits, honestly</h2>
+
+<p>
+  CodeMySpec is a strong spec-driven inner-loop harness with hook-based policy
+  enforcement at the gates. Same family as Spec Kit, OpenSpec, Kiro, BMAD, and
+  Tessl. It differentiates within that family on a single requirement graph
+  (stories, scenarios, architecture, module specs, code, tests, and verification
+  all on one DAG), mandatory BDD scenarios with optional module specs, and
+  Phoenix-specific architectural enforcement via the
+  <a href="https://hex.pm/packages/boundary"><code>boundary</code> library</a>.
+</p>
+
+<p>
+  What it is <em>not</em> yet: a hybrid harness in Böckeler's sense. The loop
+  terminates at "BDD scenarios pass + browser verification passes." Nothing in
+  the current harness uses production signal — telemetry, error rates, stress
+  runs, fuzz output — as an oracle that can re-open completed work. Every
+  spec-driven harness in the field today has the same gap. Whoever lands a
+  clean hybrid first owns the next phase of the category.
+</p>
+
+<p>
+  That's the honest read. The inner loop is real and load-bearing. The outer
+  loop is the place the product is heading. The marketing story shouldn't paper
+  over the gap; naming it is what makes the inner loop defensible.
+</p>
+
 <!-- ─────────────────────────── FINAL CTA ─────────────────────────── -->
 <aside
   class="not-prose"
@@ -1424,6 +1631,12 @@
     - OpenAI
   </li>
   <li>
+    <a href="https://mitchellh.com/writing/my-ai-adoption-journey"
+      >My AI Adoption Journey ("Engineer the Harness")</a
+    >
+    - Mitchell Hashimoto
+  </li>
+  <li>
     <a
       href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
       >Effective Harnesses for Long-Running Agents</a
@@ -1438,11 +1651,17 @@
     - Anthropic
   </li>
   <li>
-    <a
-      href="https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html"
-      >Harness Engineering</a
+    <a href="https://martinfowler.com/articles/harness-engineering.html"
+      >Harness engineering for coding agent users</a
     >
-    - Birgitta Böckeler, Martin Fowler's site
+    - Birgitta Böckeler, Martin Fowler's site (guides/sensors taxonomy)
+  </li>
+  <li>
+    <a
+      href="https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering"
+      >Improving Deep Agents with Harness Engineering</a
+    >
+    - LangChain (Agent = Model + Harness)
   </li>
   <li>
     <a href="https://blog.langchain.com/the-anatomy-of-an-agent-harness/"
@@ -1480,5 +1699,50 @@
       >Context Engineering</a
     >
     - Simon Willison (on Karpathy)
+  </li>
+  <li>
+    <a href="https://github.com/EleutherAI/lm-evaluation-harness"
+      >lm-evaluation-harness</a
+    >
+    - EleutherAI (the etymological root)
+  </li>
+  <li>
+    <a href="https://www.tbench.ai/news/announcement-2-0">Terminal Bench 2.0</a>
+    - the eval substrate behind the LangChain 13.7-point harness jump
+  </li>
+  <li>
+    <a href="https://github.com/github/spec-kit">GitHub Spec Kit</a> -
+    spec-driven inner-loop harness
+  </li>
+  <li>
+    <a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a> - low-ceremony
+    spec-driven inner-loop harness
+  </li>
+  <li><a href="https://kiro.dev/">Kiro</a> - AWS spec-driven IDE harness</li>
+  <li>
+    <a href="https://github.com/bmad-code-org/BMAD-METHOD">BMAD-Method</a> -
+    multi-agent spec-driven workflow
+  </li>
+  <li>
+    <a href="https://tessl.io/">Tessl</a> - spec-as-primary-asset harness
+  </li>
+  <li>
+    <a href="https://github.com/nizos/tdd-guard">TDD-Guard</a> - hook-based
+    policy enforcement on Claude Code
+  </li>
+  <li>
+    <a href="https://github.com/karpathy/autoresearch">autoresearch</a> -
+    Karpathy's signal-driven outer loop for ML experiments
+  </li>
+  <li>
+    <a href="https://reddit.com/r/ClaudeAI/comments/1teczh1/"
+      >Agentic Stress Testing and Code-Fixer Feedback Loop</a
+    >
+    - jbc22 on r/ClaudeAI (the canonical small signal-driven outer loop)
+  </li>
+  <li>
+    <a href="https://github.com/forrestchang/andrej-karpathy-skills"
+      >Karpathy CLAUDE.md (the rules-only anti-example)</a
+    >
   </li>
 </ol>

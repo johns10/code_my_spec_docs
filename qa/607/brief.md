@@ -51,22 +51,22 @@ Exercise each of the eight acceptance criteria. Use `mcp__vibium__browser_*` thr
    Before logging in, visit `http://localhost:4000/app/accounts/picker` (this stashes `user_return_to` in the session for the redirect-after-login). Then go through the magic-link flow as a brand-new user. Assert post-confirm URL is `/app`, NOT the stashed picker path.
 
 3. **5521 — Zero-account user redirected to /app from a guarded route.**
-   While logged in as the zero-account user, visit `http://localhost:4000/projects`. Assert resulting URL is `/app` (not `/app/accounts/picker`, not a crash page).
+   While logged in as the zero-account user, visit `http://localhost:4000/app/projects`. Assert resulting URL is `/app` (not `/app/accounts/picker`, not a crash page).
 
 4. **5522 — Zero-account user on /app sees the create-account form.**
    While logged in as the zero-account user, visit `http://localhost:4000/app`. Assert the page renders the "Name your account" rung in active state (look for `data-test="account-rung"` with `data-state="active"` and an `input[name="account[name]"]`). Assert NO redirect to `/app/accounts/picker`.
 
 5. **5523 — Single-account user reaches /projects without picker.**
-   Log in as the seeded user (`qa@codemyspec.local`). Visit `http://localhost:4000/projects`. Assert URL stays at `/projects` and the project list renders. Assert no intermediate flash of `/app/accounts/picker`.
+   Log in as the seeded user (`qa@codemyspec.local`). Visit `http://localhost:4000/app/projects`. Assert URL stays at `/app/projects` and the project list renders. Assert no intermediate flash of `/app/accounts/picker`.
 
 6. **5524 — Multi-account user with no active selection bypasses picker.**
-   Set up the multi-account user (see Auth). Log in fresh. Visit `http://localhost:4000/projects`. Assert URL is `/projects`, not the picker. The system should auto-pick the first account.
+   Set up the multi-account user (see Auth). Log in fresh. Visit `http://localhost:4000/app/projects`. Assert URL is `/app/projects`, not the picker. The system should auto-pick the first account.
 
 7. **5527 — Direct visit to /app/accounts/picker renders the picker.**
    While logged in (any account state), visit `http://localhost:4000/app/accounts/picker` directly. Assert URL stays at `/app/accounts/picker` and the picker UI renders (look for a list of accounts to select, or a `data-test="picker"` element if present).
 
 8. **5529 — Normal-flow walk through guarded routes never resolves to picker.**
-   As the seeded single-account user, walk from `/app` → click any "Open" project link → navigate `/projects/:id/stories` (or whichever guarded route the UI exposes). At each step capture the URL. Assert NONE of the intermediate URLs is `/app/accounts/picker`.
+   As the seeded single-account user, walk from `/app` → click any "Open" project link → navigate `/app/projects/:id/stories` (or whichever guarded route the UI exposes). At each step capture the URL. Assert NONE of the intermediate URLs is `/app/accounts/picker`.
 
 For each scenario, capture a screenshot at the assertion point and one at any unexpected redirect. If the criterion fails, capture the exact URL the browser landed on and the visible heading text.
 

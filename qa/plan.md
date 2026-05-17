@@ -16,8 +16,10 @@ router, auth model, and audience. QA touches three logical surfaces:
 | **MCP servers** | Both endpoints expose `/mcp/*` forwards into `Anubis.Server.Transport.StreamableHTTP.Plug` | `4000/mcp/*`, `4003/mcp` | Streamable HTTP (SSE) | Agents — both Claude.ai (hosted) and Claude Code (local) |
 
 **Stack:** Phoenix 1.8 + LiveView, Ecto + PostgreSQL (`code_my_spec_dev`), SQLite for
-the CLI's local DB (`priv/repo/cli_dev.db`), Anubis MCP server library, Wallaby for
+the CLI's local DB (`~/.codemyspec/cli.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
 journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
+
+> **Heads up — local app DB:** The local CLI uses SQLite at `~/.codemyspec/cli.db`, NOT a Postgres `cli_dev` database. Plain `mix run` defaults to `MIX_ENV=dev` (Postgres). Always prefix CLI seed scripts with `MIX_ENV=dev_cli`.
 
 **Hosted auth (port 4000):**
 - Browser: `Plug.Session` cookie + CSRF + `CodeMySpecWeb.UserAuth.fetch_current_scope_for_user`

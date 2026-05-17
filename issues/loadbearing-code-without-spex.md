@@ -89,7 +89,7 @@ contract pinned.
 
 | Group | Uncovered tools |
 |---|---|
-| Component management | `update_component`, `delete_component`, `get_component`, `create_components` (bulk), `clear_story_component` |
+| Component management | ~~`update_component`~~, ~~`delete_component`~~, `get_component`, ~~`create_components`~~ (bulk — likely immaterial too), `clear_story_component`. Components are projections of Files; mutating tools are vestigial — change the file, the component follows. |
 | Criterion / rule management | `update_criterion`, `link_criterion_to_rule`, `delete_rule` |
 | Persona management | `update_persona`, `get_persona`, `delete_persona`, `unlink_persona_from_story` |
 | Story bookkeeping | `list_stories` (only `list_story_titles` is covered), `create_stories` (bulk) |

@@ -21,6 +21,8 @@ metadata:
   template: article
   author: John Davenport
   category: AI Development
+  series: Writing Agent Skills
+  series_part: 1
   featured: true
 
 tags:
