@@ -9,11 +9,14 @@ need QA coverage. The plan below covers both, plus the MCP servers each app expo
 CodeMySpec runs **two Phoenix endpoints** from one BEAM node, each with its own
 router, auth model, and audience. QA touches three logical surfaces:
 
-| Surface | Endpoint | Port (dev) | Pipeline | Audience |
+| Surface | Endpoint | Port | Pipeline | Audience |
 |---|---|---|---|---|
 | **Hosted UI / API** | `CodeMySpecWeb.Endpoint` | `4000` (HTTP), `4001` (HTTPS) | `:browser` (session) + `:api`/`:mcp_protected` (OAuth bearer) | Authenticated humans + Claude MCP connector |
-| **Local UI / hooks** | `CodeMySpecLocalWeb.Endpoint` | `4003` | `:browser` (no auth) + `:api`/`:mcp` (working-dir scoped) | The local CLI binary, hooks, and human owner |
-| **MCP servers** | Both endpoints expose `/mcp/*` forwards into `Anubis.Server.Transport.StreamableHTTP.Plug` | `4000/mcp/*`, `4003/mcp` | Streamable HTTP (SSE) | Agents — both Claude.ai (hosted) and Claude Code (local) |
+| **Local UI / hooks (in-repo dev)** | `CodeMySpecLocalWeb.Endpoint` | `4004` (dev / dev_cli via `mix phx.server`) | `:browser` (no auth) + `:api`/`:mcp` (working-dir scoped) | The local CLI binary, hooks, and human owner |
+| **Local UI / hooks (published binary)** | `CodeMySpecLocalWeb.Endpoint` | `4003` (the published `cms` binary) | Same pipelines as 4004 | End users running the `cms` CLI |
+| **MCP servers** | Both endpoints expose `/mcp/*` forwards into `Anubis.Server.Transport.StreamableHTTP.Plug` | `4000/mcp/*`, `4004/mcp` (dev) or `4003/mcp` (published) | Streamable HTTP (SSE) | Agents — both Claude.ai (hosted) and Claude Code (local) |
+
+> **Heads up — local app port:** The in-repo dev server (`mix phx.server` with `MIX_ENV=dev` or `MIX_ENV=dev_cli`) runs the local endpoint on **port 4004** so it can coexist with the published `cms` binary on **4003** (see `config/dev.exs:79` and `config/dev_cli.exs:38`). For QA against a dev checkout, hit `127.0.0.1:4004`. Most QA evidence in this session was captured against the dev port.
 
 **Stack:** Phoenix 1.8 + LiveView, Ecto + PostgreSQL (`code_my_spec_dev`), SQLite for
 the CLI's local DB (`~/.codemyspec/cli.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
@@ -26,7 +29,7 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - API/MCP: `Authorization: Bearer <access_token>` checked by `UserAuth.require_oauth_token` (ExOauth2Provider). Tokens are issued via `/oauth/token` after the OAuth dance at `/oauth/authorize`.
 - LiveView mounts gate on `:require_authenticated`, `:require_active_account`, `:require_active_project` in `live_session` blocks.
 
-**Local auth (port 4003):**
+**Local auth (port 4004 dev / 4003 published):**
 - `Plugs.LocalOnly` rejects non-loopback IPs with `403 {"error": "Localhost only"}`.
 - No user auth — the binary trusts whoever is on the box. Project scope comes from the **`X-Working-Dir` header** via `Plugs.WorkingDir` → `Plugs.WorkingDirScope`, which looks up `Project.local_path` and builds a scope.
 - Hook endpoints (`/api/hooks/*`) and skill endpoints (`/api/agent-tasks/*`, `/api/skills/*`) all use the `:hook` pipeline (`LocalOnly + WorkingDir + WorkingDirScope`).
@@ -37,14 +40,14 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - `4000/api/*` — JSON API (stories, personas, issues, projects, uploads, push notifications) — OAuth bearer
 - `4000/mcp/{stories,components,personas,analytics-admin}` — hosted MCP servers — OAuth bearer + `ProjectScopeOverride`
 - `4000/.well-known/oauth-*` — MCP discovery
-- `4003/projects/:project_name` — project hub (cards for next-task, sync, requirements, components, architecture, stories, issues, sessions, knowledge)
-- `4003/projects/:project_name/{requirements,components,stories,issues,architecture,sessions,knowledge,...}` — local LiveView UI
-- `4003/api/bootstrap/*` — login + project listing for the init flow (`auth/status` returns `{email, authenticated}` without needing a session)
-- `4003/api/hooks/*` — Claude Code lifecycle hooks (session-start, pre/post tool use, stop, subagent-stop, notification)
-- `4003/api/agent-tasks/start`, `4003/api/skills/start` — skill entry points
-- `4003/mcp` — single forward into `LocalServer` (all local MCP tools — `get_next_requirement`, `start_task`, `evaluate_task`, etc.)
-- `4003/health` — unauthenticated readiness probe (`{"status":"ok"}`)
-- `4003/` — projects index (same as `/projects`)
+- `4004/projects/:project_name` — project hub (cards for next-task, sync, requirements, components, architecture, stories, issues, sessions, knowledge)
+- `4004/projects/:project_name/{requirements,components,stories,issues,architecture,sessions,knowledge,...}` — local LiveView UI
+- `4004/api/bootstrap/*` — login + project listing for the init flow (`auth/status` returns `{email, authenticated}` without needing a session)
+- `4004/api/hooks/*` — Claude Code lifecycle hooks (session-start, pre/post tool use, stop, subagent-stop, notification)
+- `4004/api/agent-tasks/start`, `4004/api/skills/start` — skill entry points
+- `4004/mcp` — single forward into `LocalServer` (all local MCP tools — `get_next_requirement`, `start_task`, `evaluate_task`, etc.)
+- `4004/health` — unauthenticated readiness probe (`{"status":"ok"}`)
+- `4004/` — projects index (same as `/projects`)
 
 ## Tools Registry
 
@@ -56,7 +59,7 @@ Use for any route in a `:browser` pipeline on either endpoint — anything that 
 
 ```
 mcp__vibium__browser_launch
-mcp__vibium__browser_navigate { url: "http://127.0.0.1:4003/projects/code-my-spec" }
+mcp__vibium__browser_navigate { url: "http://127.0.0.1:4004/projects/code-my-spec" }
 mcp__vibium__browser_map
 mcp__vibium__browser_click { selector: "@e3" }
 mcp__vibium__browser_screenshot { filename: "4003_requirements.png" }
@@ -71,7 +74,7 @@ mcp__vibium__browser_screenshot { filename: "4003_requirements.png" }
 
 Quick smoke test of auth gating: GET `/app` while unauthenticated → 302 to `/users/log-in`.
 
-**Local login (port 4003):** none — `LocalOnly` accepts the loopback IP directly. Just navigate.
+**Local login (port 4004 dev / 4003 published):** none — `LocalOnly` accepts the loopback IP directly. Just navigate.
 
 **LiveView click reliability:** card-link clicks on `/projects/:project_name` occasionally do not navigate (URL doesn't change). Direct `browser_navigate` to the destination URL is more reliable; reserve clicks for in-page interactions where you're already mounted.
 
@@ -83,7 +86,7 @@ Use for `:api` and `:mcp` pipelines (JSON, SSE). Everything in `.code_my_spec/fr
 
 **Local hooks / skills / API (no auth, working-dir header):**
 ```
-curl -sSf -X POST http://127.0.0.1:4003/api/hooks/session-start -H "Content-Type: application/json" -H "X-Working-Dir: $PWD" -d '{"session_id":"qa-probe","cwd":"'$PWD'"}'
+curl -sSf -X POST http://127.0.0.1:4004/api/hooks/session-start -H "Content-Type: application/json" -H "X-Working-Dir: $PWD" -d '{"session_id":"qa-probe","cwd":"'$PWD'"}'
 ```
 
 **MCP servers — DO NOT curl tool calls.** The local MCP server (Anubis Streamable HTTP) returns `202 Accepted` with empty body for `tools/call` and `tools/list`; the actual JSON-RPC response comes back over the **`initialize` request's open SSE channel**, which a one-shot curl tears down before it can read. Confirmed empirically — `init` returns 200 + inline SSE with the server info, but every subsequent request returns `202` with no body. A correct curl wrapper would have to run the init stream as a background process and tail it; not worth the complexity.
@@ -155,7 +158,7 @@ keyed on the same UUID. Run with:
 # Local app NOT running:
 MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
 
-# Local app already on port 4003:
+# Local app already on port 4004:
 NO_SERVER=true MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
 ```
 
