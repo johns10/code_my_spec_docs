@@ -152,12 +152,54 @@ reports authenticated without an OAuth round-trip) plus the same project row
 keyed on the same UUID. Run with:
 
 ```
+# Local app NOT running:
 MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
+
+# Local app already on port 4003:
+NO_SERVER=true MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
 ```
 
 The local schema has no accounts/members table — `WorkingDirScope` only needs
 the `Project.local_path` to match `PWD` (or the `X-Working-Dir` header) on
 each request to resolve a scope.
+
+### Sandbox project for MCP-surface SC tests — `code_my_spec_test_repos/qa_sandbox/`
+
+QA scenarios that mutate state through the agent surface (`create_story`,
+`create_persona`, `accept_issue`, `dismiss_issue`, `tag_stories`,
+`start_three_amigos_session`, `add_rule`, `add_scenario`, etc.) **MUST**
+target the sandbox project, not the working CodeMySpec checkout. Mutating
+the working project leaves test cruft (orphan stories, test personas,
+placeholder issues) that clamps real graph nodes and forces manual
+cleanup later.
+
+The QA Fixture Project (id `11111111-1111-4111-8111-111111111111`) has its
+`local_path` set to:
+
+```
+/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
+```
+
+To direct MCP calls there, either:
+
+1. **`cd` into the sandbox** before MCP-surface SC steps — the
+   `X-Working-Dir` header (or process cwd) carries that path, and
+   `WorkingDirScope` resolves to the QA Fixture Project.
+
+2. **Pass `X-Working-Dir`** explicitly when curling a local endpoint:
+   `-H "X-Working-Dir: /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox"`
+
+App-surface QA (Vibium against ports 4000 / 4003, exercising live LiveViews
+and controllers) still hits the dev databases — only the agent-surface
+mutation tests need the sandbox swap.
+
+The sandbox project has only the minimal Phoenix shape (`mix.exs`, `lib/`,
+`test/`, `config/`, `.code_my_spec/`) needed for `WorkingDirScope`
+resolution. It is intentionally empty so SC tests can create their own
+stories/personas/issues without colliding with real data.
+
+To reset the sandbox between major QA passes, re-run the cli_qa_seeds
+script with `QA_LOCAL_PATH` pointing at the sandbox dir.
 
 ### Demo content
 
