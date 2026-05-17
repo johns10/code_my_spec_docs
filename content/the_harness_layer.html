@@ -1537,18 +1537,37 @@
 </p>
 
 <p>
-  What it is <em>not</em> yet: a hybrid harness in Böckeler's sense. The loop
-  terminates at "BDD scenarios pass + browser verification passes." Nothing in
-  the current harness uses production signal — telemetry, error rates, stress
-  runs, fuzz output — as an oracle that can re-open completed work. Every
-  spec-driven harness in the field today has the same gap. Whoever lands a
-  clean hybrid first owns the next phase of the category.
+  The outer-loop capture primitive is already in place. Agents call
+  <code>create_issue</code> via an MCP tool when they hit a problem they can't
+  resolve cleanly — undocumented config, looping hooks, contradictory prompts,
+  tool errors. Users file feedback into the same queue from inside their app.
+  Issues carry severity, a status lifecycle (incoming → accepted →
+  resolved / dismissed), and optionally a <code>story_id</code> that pins them
+  to a node in the spec graph. Issues scoped <code>framework</code> route back
+  to CodeMySpec itself, so agents can file bugs against the harness without
+  leaving the loop. The capture surface, the queue, and the triage state machine
+  exist today.
 </p>
 
 <p>
-  That's the honest read. The inner loop is real and load-bearing. The outer
-  loop is the place the product is heading. The marketing story shouldn't paper
-  over the gap; naming it is what makes the inner loop defensible.
+  What's structurally next: the automated detection layer and the formalised
+  closure. The detection layer is an agent that watches prod crashes and error
+  rates and files issues without a human in the middle. The closure is the
+  handoff from a triaged issue back into spec mutation — when the queue says
+  "the deployed system is wrong," the harness re-enters the spec phase, mutates
+  the relevant story or scenario, regenerates the affected tasks, and patches.
+  Both are on the roadmap. Both make the harness genuinely hybrid in Böckeler's
+  sense.
+</p>
+
+<p>
+  The strategic shape is that every report-back surface — agent failure, user
+  feedback, prod incident — routes into the same issues queue, and the spec
+  graph reads from it. Issue-centric by design. The inner loop is real and
+  load-bearing today. The outer-loop capture is in place. The closure is the
+  next horizon. Naming the gap is what makes the inner loop defensible — and
+  the issues pipeline is what makes the hybrid claim a roadmap rather than a
+  wish.
 </p>
 
 <!-- ─────────────────────────── FINAL CTA ─────────────────────────── -->
