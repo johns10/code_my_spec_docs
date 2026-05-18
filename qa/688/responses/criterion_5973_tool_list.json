@@ -1,0 +1,18 @@
+{
+  "criterion": "5973 - embed_docs absent from tool list",
+  "method": "MCP tools/list via HTTP session (port 4004)",
+  "working_dir": "/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox",
+  "result": {
+    "total_tools": 68,
+    "embed_docs_present": false,
+    "semantic_search_present": true,
+    "list_knowledge_present": true,
+    "read_knowledge_present": true,
+    "status": "PASS"
+  },
+  "issue_found": {
+    "tool": "semantic_search",
+    "stale_description": "Requires docs to have been embedded first via `embed_docs` (for knowledge/specs/rules) or `embed_hexdocs` (for hex packages).",
+    "note": "The semantic_search tool description still references the removed embed_docs tool. This is a documentation bug — embed_docs no longer exists."
+  }
+}

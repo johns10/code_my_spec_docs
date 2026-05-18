@@ -1,0 +1,28 @@
+{
+  "criterion": "5975 - Framework knowledge searchable after CMS upgrade",
+  "tests": [
+    {
+      "tool": "semantic_search",
+      "query": "Phoenix LiveView socket assigns mount",
+      "source": "knowledge",
+      "limit": 3,
+      "result": "3 results including liveview/patterns.md, conventions.md, liveview/forms.md",
+      "status": "PASS"
+    },
+    {
+      "tool": "list_knowledge",
+      "library": "knowledge",
+      "path": "liveview",
+      "result": "core_components, forms, patterns, testing",
+      "status": "PASS"
+    }
+  ],
+  "observations": [
+    "Framework knowledge is embedded and searchable (393 embeddings in knowledge source for sandbox project)",
+    "The knowledge corpus includes liveview/, bdd/, conventions.md, boundary.md, etc.",
+    "search_framework_knowledge is called at startup (boot embed pass) via FileWatcherServer",
+    "The dev_cli runtime has the SqliteVecBackend configured so framework knowledge IS embedded",
+    "Note: The 'upgrade simulation' (writing new priv/knowledge files) cannot be directly tested from QA agent - that's an internal test-environment setup",
+    "What IS observable: the knowledge source returns correct results after the boot embed pass"
+  ]
+}

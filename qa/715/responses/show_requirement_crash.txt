@@ -1,0 +1,6 @@
+CRASH: ERROR 42703 (undefined_column) column f0.story_id does not exist
+    query: SELECT f0."id", f0."path", f0."role", f0."mtime", f0."size", f0."fingerprint", f0."valid", f0."validation_errors", f0."component_id", f0."story_id", f0."project_id", f0."inserted_at", f0."updated_at" FROM "files" AS f0 WHERE (f0."project_id" = $1)
+
+Root cause: Files schema includes story_id field but the column is missing from the files DB table.
+The create_files migration (20260328193741) was run before story_id was added to the migration file.
+No separate migration was created to add this column.

@@ -1,0 +1,74 @@
+[info] Migrations already up
+Project: QA Fixture Project (11111111-1111-4111-8111-111111111111)
+Scope account_id: "0f27281c-240b-4d6d-8e52-9c5972329522"
+Cleaning up any leftover QA-686 test personas...
+
+=== SC-1: Agent creates a story ===
+PASS: Created story id=755
+PASS: Story appears in list_story_titles
+
+=== SC-2: Agent updates a story ===
+Created story id=756
+PASS: update_story returned, title=QA-686-SC2 Updated Title
+PASS: Updated title confirmed on re-read
+PASS: Updated description confirmed on re-read
+PASS: Old title absent from fetched record
+
+=== SC-3: Agent deletes a story with cascade ===
+Created story id=757
+Linked persona 87062f14-6797-4594-be3d-075b1dc5e4fd
+Created rule 9313d726-d711-4dda-a019-5ce155e186b8
+Created issue 42d45e4c-50c3-411f-b444-1db16ead7c37 linked to story 757
+PASS: Story 757 deleted
+PASS: Story no longer fetchable (nil)
+PASS: Rules cascaded (0 remaining)
+INFO: Issue survives, story_id=757 (not cleared by delete — schema has no ON DELETE SET NULL)
+
+=== SC-4: Agent adds a criterion ===
+Created story id=758
+PASS: Created criterion id=6478
+PASS: Criterion appears in list_story_criteria
+
+=== SC-5: Agent creates and applies a tag ===
+Created story id=759
+Existing tag count: 1
+PASS: Tag 'qa-686-sc5-test-tag' added to story
+PASS: Tag 'qa-686-sc5-test-tag' appears on story
+PASS: Tag appears in project taxonomy
+
+=== SC-6: Agent starts a story interview session ===
+Created story for SC6
+PASS: Prompt contains 'Product Manager'
+PASS: Prompt contains 'bare user stories'
+Prompt length: 1380 chars
+
+=== SC-7: Agent starts a Three Amigos session ===
+Created story id=761
+PASS: Prompt contains 'Three Amigos'
+PASS: Prompt contains story title 'QA-686-SC7 Three Amigos Session'
+FAIL: Prompt missing tool references
+
+=== SC-8: Agent runs full Three Amigos workflow ===
+Created story id=762
+PASS: Persona linked
+PASS: Rule created id=9a407030-821c-4144-8bf4-c9b07eafd151
+PASS: Scenario/criterion created id=6479
+PASS: Question created id=d22384b1-5d08-4594-a69c-87cf53023ab4
+Rules: 1 | Questions: 1 | Criteria: 1 | Persona links: 1
+PASS: All Three Amigos records present on story
+
+=== SC-9: Accept issue as requirements change ===
+Created story id=763
+Created issue id=eb177309-0a73-4310-89ac-86575cf69c28
+PASS: Issue status=accepted, category=requirements_change, story_id=763
+
+=== SC-10: Accept issue as bug without story link ===
+Created issue id=8cbd7d35-d0b3-4f19-bfed-eae0879082d3
+PASS: Issue accepted, status=accepted, story_id=nil
+
+=== SC-11: Dismiss an issue with reason ===
+Created issue id=49372959-de05-4484-8a86-9ce25e50d494
+PASS: Issue dismissed, status=dismissed
+PASS: Resolution recorded: Not a real issue — confirmed working as designed
+
+=== All scenarios complete ===

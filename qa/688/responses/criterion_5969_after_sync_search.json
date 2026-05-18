@@ -1,0 +1,13 @@
+{
+  "criterion": "5969 - New file becomes searchable after sync",
+  "step": "search after sync_project",
+  "query": "create_widget function",
+  "source": "spec",
+  "response": "# Search: \"create_widget function\"\n\n**1 results**\n\n**spec/.code_my_spec/spec/widget.spec.md** (chunk 0)\n\n# Widget Context\n\nThe Widget context exposes `create_widget/2` which inserts a new\nwidget for the given scope and returns `{:ok, widget}`.",
+  "status": "PASS",
+  "observations": [
+    "widget.spec.md appears in search results after sync",
+    "Search header 'Search:' is present",
+    "Result cites widget.spec.md as expected"
+  ]
+}

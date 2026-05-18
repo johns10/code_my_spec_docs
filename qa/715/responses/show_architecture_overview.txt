@@ -1,0 +1,37 @@
+# Architecture Overview
+
+## Root Components
+
+### CodeMySpec
+**module**
+
+### AcceptanceCriteria
+**context**
+
+Dependencies:
+- CodeMySpec.AcceptanceCriteria.AcceptanceCriteriaRepository
+- CodeMySpec.Users.Scope
+- CodeMySpec.Stories.Story
+- CodeMySpec.AcceptanceCriteria.Criterion
+
+### AccessGrant
+**module**
+
+### AccessToken
+**module**
+
+### Accounts
+**module**
+
+The Accounts context manages multi-tenant account architecture...
+
+Dependencies:
+- CodeMySpec.Users.Scope
+- CodeMySpec.Accounts.Member
+- ...
+
+### AgentTasks
+**module**
+
+... (continues for all 466 components)
+isError: false

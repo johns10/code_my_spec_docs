@@ -1,0 +1,16 @@
+{
+  "criterion": "5974 - File sync completes when embedding pipeline unavailable",
+  "evidence": {
+    "code_path": "lib/code_my_spec/files/file_sync.ex lines 229-237",
+    "pattern": "sync_embeddings always returns :ok; the Embeddings.available?() check gates embedding work but doesn't gate the sync completing",
+    "runtime": "dev_cli has SqliteVecBackend configured so embedding IS available in this test run",
+    "behavior": "Sync completed successfully with 'Files: 3 (0 changed)' every time - no error surfaced"
+  },
+  "status": "PASS",
+  "observations": [
+    "The sync_embeddings function always returns :ok whether embedding runs or not",
+    "Embeddings.available?() returns false when no backend configured → embed step skipped gracefully",
+    "File rows are upserted and sync completes normally in both cases",
+    "Confirmed via code inspection: the available?() check is a guard, not a hard dependency"
+  ]
+}

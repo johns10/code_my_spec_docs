@@ -1,0 +1,17 @@
+Tools registered on LocalServer (port 4004/mcp):
+- validate_dependency_graph: YES (registered, works)
+- show_architecture_overview: NOT REGISTERED on LocalServer or any running MCP endpoint
+- architecture_health_summary: NOT REGISTERED on LocalServer (only on ComponentsServer at 4000/mcp/components, OAuth-protected)
+- context_statistics: NOT REGISTERED on LocalServer
+- show_requirement: NOT REGISTERED on any MCP server
+- show_component_requirements: NOT REGISTERED on any MCP server
+- show_story_requirements: NOT REGISTERED on any MCP server
+- orphaned_contexts: NOT REGISTERED on LocalServer
+- start_context_design: NOT REGISTERED on LocalServer
+- show_architecture: NOT REGISTERED on LocalServer
+
+ComponentsServer tools (4000/mcp/components, OAuth-protected):
+- show_architecture, architecture_health_summary, context_statistics, orphaned_contexts, start_context_design, review_context_design: YES
+
+Requirements tools (show_requirement, show_component_requirements, show_story_requirements):
+- Defined as modules but NOT registered on any MCP server endpoint

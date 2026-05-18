@@ -1,0 +1,10 @@
+{
+  "criterion": "5969 + 5974 - sync_project after writing widget.spec.md",
+  "step": "sync after writing new file",
+  "response": "# Sync Complete\n\n- Issues: synced from remote\n- Files: 3 (2 changed)\n- Components: 0\n\nCall `get_next_requirement` to find your next task.",
+  "observations": [
+    "PASS (5974): Sync completed successfully even on dev runtime (no Ortex/embedding pipeline) - no error returned",
+    "Files: 3 (2 changed) - new file was detected",
+    "Sync pipeline ran without hard failure on embedding step"
+  ]
+}

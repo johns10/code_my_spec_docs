@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"# Knowledge Base\n\n- architecture_design/\n- bdd/\n- cms_generators/\n- design_ui/\n- devops/\n- fix_issues/\n- heex/\n- liveview/\n- persona_research/\n- qa-tooling/\n- qa_integration_plan/\n- qa_journey/\n- qa_setup/\n- qa_story/\n- req/\n- resend/\n- spex_boundary_ready/\n- story_interview/\n- technical_strategy/\n- three_amigos/\n- ui/\n- README\n- boundary\n- conventions\n- dotenvy\n- qa-tooling\n- web-cli\n","type":"text"}],"isError":false}}
+

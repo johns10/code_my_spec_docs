@@ -1,0 +1,14 @@
+flowchart TD
+codemyspec_testcontext[CodeMySpec.TestContext]
+codemyspec_staticanalysis[CodeMySpec.StaticAnalysis]
+testappweb_dashboardlive[TestAppWeb.DashboardLive]
+codemyspec_code[CodeMySpec.Code]
+codemyspec_quality[CodeMySpec.Quality]
+codemyspec_bddspecs[CodeMySpec.BddSpecs]
+codemyspec_validation[CodeMySpec.Validation]
+codemyspec_tags[CodeMySpec.Tags]
+codemyspec_issues[CodeMySpec.Issues]
+codemyspec_problems[CodeMySpec.Problems]
+codemyspec_stories[CodeMySpec.Stories]
+... (466 components total, tested on Code My Spec project)
+isError: false

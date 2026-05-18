@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"# Project Knowledge\n\nTest fixture for QA story 690 — verifies read_knowledge returns\nthe actual markdown content of a known file path.\n","type":"text"}],"isError":false}}
+

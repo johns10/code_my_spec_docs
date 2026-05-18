@@ -1,0 +1,5 @@
+Testing with component: CodeMySpec.Requirements.ComponentCompleteChecker
+CRASH: ERROR 42703 (undefined_column) column f0.story_id does not exist
+    query: SELECT f0."id", f0."path", f0."role", ... f0."story_id" FROM "files" AS f0 WHERE (f0."project_id" = $1)
+
+Same root cause as show_requirement: Preloader.load/1 queries files.story_id which doesn't exist.

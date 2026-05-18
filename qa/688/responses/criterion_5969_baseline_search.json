@@ -1,0 +1,12 @@
+{
+  "criterion": "5969 - New file becomes searchable after sync (baseline)",
+  "step": "before writing widget.spec.md",
+  "query": "create_widget function",
+  "source": "spec",
+  "response": "# Search: \"create_widget function\"\n\n**0 results**\n\nNo matches found. Run `embed_docs` or `embed_hexdocs` to generate embeddings.",
+  "observations": [
+    "PASS: 0 results before file exists - correct baseline",
+    "ISSUE: 'No matches found. Run `embed_docs`...' - embed_docs is removed but the no-results message still references it",
+    "The embeddings pipeline may not be active on this dev runtime (Ortex not available)"
+  ]
+}

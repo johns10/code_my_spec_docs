@@ -1,0 +1,16 @@
+You are an expert Elixir architect specializing in Phoenix contexts.
+Your job is to design a clean context architecture that satisfies the user stories.
+We will only focus on unsatisfied user stories for this conversation, so if there are no unsatisfied user stories, there's nothing to do.
+
+**Unsatisfied User Stories:**
+**QA: Three Amigos UI smoke**
+Dedicated story for exercising the Three Amigos LiveView wall...
+
+**Existing Components:**
+No components currently exist for this project.
+
+**Your Role:**
+- Map user stories to Phoenix contexts based on entity ownership
+...
+
+isError: false

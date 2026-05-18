@@ -51,6 +51,34 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 
 ## Tools Registry
 
+### Picking the tool — start from the surface, not the test framework
+
+QA exercises the **agent's actual surface** from outside the BEAM. The spex
+suite (`mix spex`) is the BDD layer — it drives the same surface in-process
+to assert behavior at the contract level. **It is not a QA tool.** A clean
+`mix spex` run tells you the contract is implemented; it does not tell you
+the running app honors it under real network conditions, real payloads, or
+real failure modes. QA's job is the latter.
+
+**There is no such thing as a "spex-only" story.** Every story has at least
+one of the surfaces below as its agent-facing entry point. Pick the tool
+that matches the surface, then probe it from outside:
+
+| Surface | Tool | Example |
+|---|---|---|
+| LiveView page (`:browser` pipeline) | **Vibium MCP** | `/projects/:project_name`, `/app/*` |
+| Controller endpoint returning JSON / 2xx no-body (`:api`, `:hook`, `:mcp_protected`) | **curl** | `POST /api/hooks/stop`, `GET /health`, `POST /api/agent-tasks/start` |
+| MCP tool registered on a server | **`mcp__plugin_codemyspec_local__*`** (or `mcp__plugin_codemyspec__*` for hosted) | `start_task`, `evaluate_task`, `get_next_requirement` |
+| File projection (Files context, hex doc projection, etc.) | Write/read with the fs, then query through one of the above | Touch `mix.lock`, then `curl` the sync hook, then call `semantic_search` MCP tool |
+| GenServer state / process internals | There is no QA surface here. If a story claims this is its surface, the story is wrong — push back. | — |
+
+**If a criterion looks "spex-only":** re-read its `## Surface` (or `##
+Observation surface`) section in the spex moduledoc. Every well-written
+spex states the controller route, MCP tool, or other agent surface it
+drives. That's the QA tool. If the spex truly has no external surface, the
+criterion is probably testing an implementation detail and the story
+should be revised.
+
 Three layers, three tools. Pick by pipeline, not by guess.
 
 ### Vibium MCP (`mcp__vibium__browser_*`)

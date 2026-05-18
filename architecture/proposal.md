@@ -24,7 +24,7 @@
 
 - **Type:** context
 - **Description:** Generator-output rendering surface dropped into deployed client apps. Receives content pushes from ContentAdmin, persists locally, renders `/blog/:slug`, `/pages/:slug`, `/landing/:slug`, `/documentation/:slug` honoring publish_at/expires_at and tag filters.
-- **Stories:** 703
+- **Stories:** 703, 713
 
 ### CodeMySpec.ContentAdmin
 
@@ -52,13 +52,13 @@
 
 - **Type:** context
 - **Description:** Project issues — automated QA failures, user-reported bugs, requirements-change feedback, framework-scoped agent friction. Triage moves bug+QA items into the work queue; requirements-change items trigger story review.
-- **Stories:** 599, 600, 709
+- **Stories:** 599, 600, 709, 728
 
 ### CodeMySpec.McpServers
 
 - **Type:** context
 - **Description:** MCP tool surfaces — Stories, Components, Architecture, Issues, Tasks, Personas, Requirements, BddRules, Knowledge, Bootstrap. Each sub-namespace exposes Anubis tools that the agent calls from Claude Code.
-- **Stories:** 682, 690
+- **Stories:** 682, 690, 711, 715
 
 ### CodeMySpec.Personas
 
@@ -72,16 +72,11 @@
 - **Description:** Per-project records (id, name, local_path, docs_repo, account_id). Project creation from /app's wizard sets the new project active; the local app resolves scope from `local_path` against the current working directory.
 - **Stories:** 62, 604, 701
 
-### CodeMySpec.Quality
-
-- **Type:** context
-- **Description:** Quality-gate evaluation surface consulted by Configurations. Aggregates pass/fail signals from validation and static analysis into a single per-project quality posture.
-
 ### CodeMySpec.Requirements
 
 - **Type:** context
 - **Description:** Requirement graph — dependency-aware definitions linking stories, components, and tasks. Computes satisfaction from Files + Problems. `next_actionable_project` returns the highest-priority unsatisfied node whose prerequisites are met. Priority propagates transitively down the component tree.
-- **Stories:** 561, 562, 563
+- **Stories:** 561, 562, 563, 717
 
 ### CodeMySpec.Sessions
 
@@ -122,6 +117,12 @@
 - **Description:** Stop-hook validation pipeline — compile → test → Credo → Sobelow → Spex → spec/QA documents — chained on file edits during agent sessions. Surfaces problems back to the agent for fix-in-place.
 - **Stories:** 554, 555
 
+### CodeMySpec.Qa
+
+- **Type:** context
+- **Description:** Per-story QA attempts with audit-grade event trail. Typed `submit_qa_result` / `list_qa_attempts` / `invalidate_qa_attempt` MCP tools replace file-parsing of result.md; status flips drive `qa_complete` directly from the DB.
+- **Stories:** 726, 727
+
 ## Surface Components
 
 ### CodeMySpecWeb.AppLive
@@ -138,7 +139,7 @@
 
 - **Type:** live_context
 - **Description:** Editorial admin UI for the ContentAdmin context — list and inspect synced content, parse status, schedule pushes.
-- **Stories:** 702
+- **Stories:** 702, 712
 
 ### CodeMySpecWeb.IssuesLive
 
@@ -175,5 +176,4 @@
 - CodeMySpec.ContentAdmin -> CodeMySpec.Git
 - CodeMySpec.ContentAdmin -> CodeMySpec.Content
 - CodeMySpec.Stories -> CodeMySpec.Tags
-- CodeMySpec.Configurations -> CodeMySpec.Quality
 - CodeMySpec.Requirements -> CodeMySpec.Files

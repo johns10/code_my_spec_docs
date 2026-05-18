@@ -1,0 +1,11 @@
+{
+  "criterion": "5972 - Repeat sync with unchanged files does no embedding work",
+  "response": "# Sync Complete\n\n- Issues: synced from remote\n- Files: 3 (0 changed)\n- Components: 0\n\nCall `get_next_requirement` to find your next task.",
+  "status": "PASS",
+  "observations": [
+    "Repeat sync correctly reports '0 changed' when nothing on disk has changed",
+    "Files fingerprint deduplication works: same fingerprint → not counted as changed",
+    "The file_hash_matches? check in EmbeddingService also provides idempotency for embedding",
+    "No redundant embedding work is performed"
+  ]
+}

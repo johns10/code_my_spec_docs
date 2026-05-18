@@ -1,0 +1,30 @@
+{
+  "criterion": "5970 + 5971 - Modified/deleted file embedding behavior",
+  "bug_found": true,
+  "severity": "HIGH",
+  "bug_title": "ON CONFLICT DO NOTHING on chunk_index causes re-embedding to silently delete all chunks",
+  "root_cause": {
+    "file": "lib/code_my_spec/embeddings/embedding_service.ex",
+    "line": 254,
+    "sql": "INSERT INTO doc_embeddings ... ON CONFLICT DO NOTHING",
+    "unique_constraint": "(project_id, source, path, chunk_index)",
+    "sequence": [
+      "1. v1 content embedded: chunk (project_id, source, path, chunk_index=0) → v1 content_hash",
+      "2. v2 write: file_hash_matches? returns false (different hash) → proceed to do_embed_file",
+      "3. existing_hashes = [v1_content_hash] (the existing chunks' content hashes)",
+      "4. v2 chunk generated with v2_content_hash (different from v1)",
+      "5. insert v2 chunk: ON CONFLICT DO NOTHING → INSERT IGNORED because chunk_index=0 already exists",
+      "6. delete_old_chunks: current_hashes = [v2_content_hash], but stored row has v1_content_hash → ROW DELETED",
+      "7. backfill_file_hash: no rows remain → no-op",
+      "8. Result: spec embedding completely wiped, search returns 0 results"
+    ]
+  },
+  "evidence": {
+    "log_line_insert": "Line 78576 in mix_phx_4004.log shows v2 embedding INSERT being called",
+    "log_line_delete": "Line 78578 shows DELETE removing v1 content_hash (which is what's stored)",
+    "search_before_v2_sync": "1 result for 'create_widget function'",
+    "search_after_v2_sync": "0 results for any widget-related query with source:spec",
+    "db_check": "SELECT on doc_embeddings for sandbox project with source=spec returns 0 rows"
+  },
+  "fix": "Change ON CONFLICT DO NOTHING to ON CONFLICT (project_id, source, path, chunk_index) DO UPDATE SET content=EXCLUDED.content, content_hash=EXCLUDED.content_hash, file_hash=EXCLUDED.file_hash, embedding=EXCLUDED.embedding, updated_at=EXCLUDED.updated_at"
+}

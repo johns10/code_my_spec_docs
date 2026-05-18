@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"# liveview\n\n- core_components\n- forms\n- patterns\n- testing\n","type":"text"}],"isError":false}}
+

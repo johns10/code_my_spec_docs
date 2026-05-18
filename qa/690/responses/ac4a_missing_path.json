@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"Knowledge entry not found: does_not_exist.md","type":"text"}],"isError":true}}
+

@@ -1,0 +1,4 @@
+# Registered Sub-agents (2)
+
+- **@qa-idle** `agent_id=qa-idle` registered=2026-05-18 02:20:24 UTC — assigned to task `a5628453-d5fb-4be9-a9e7-dfe8111381c6` (spec_file)
+- **@qa-worker** `agent_id=qa-worker` registered=2026-05-18 02:20:24 UTC — idle

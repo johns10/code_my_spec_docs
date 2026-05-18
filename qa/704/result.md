@@ -1,147 +1,180 @@
 # QA Result — Story 704
 
-Date: 2026-05-13
-Run by: Claude (this session)
-Server: `iex -S mix run --no-halt` on port 4003, `MIX_ENV=dev_cli`, SQLite at `~/.codemyspec/cli.db`
-Project under test: "Code My Spec" (`708492f9-454e-482f-a2eb-be64f0356b87`), local_path = cwd
-QA session external id: `qa-704-1778698220` (db id `93040fb6-c63c-4bfc-917c-9e942d5d1d37`)
+## Status
 
-## Summary
+pass
 
-| Section | Status | Notes |
-|---|---|---|
-| A — Real Claude Code SubagentStart payload | NOT RUN | Requires the engineer to spawn a real Claude Code sub-agent (this QA agent is itself a single Claude Code session, can't observe its own sub-agent hooks). See follow-up below. |
-| B — Cross-surface parity (LiveView ↔ `list_session_subagents`) | ✓ PASS | After fresh registration, both surfaces show the same two agents with identical heartbeat + idle/assigned status. |
-| C — assign + cancel + ghost-rejection | ✓ PASS | Atomic reassign (clear+set in one update). cancel_task → status=cancelled. Ghost agent_id rejected (no task carries it). |
-| D — TTL pruning over wall clock | ✓ PASS | TTL=1 min, registered, waited 75 s, both surfaces show 0 active, DB row still present (lazy prune confirmed). |
-| E — tap_out approve / reject paths | ✓ PASS | tap_out writes pending_tap_out + returns request_id. Approve clears continuous and next stop returns `{}`. Reject leaves continuous on and next stop blocks with the autonomous-loop directive. |
-| F — Criterion 5113 sub-agent directive footer | ✓ PASS | Live stop-hook output uses `(sub-agent start_task args: ...)` and contains no trailing `— call start_task` hint. |
+## Scenarios
+
+### 6086 — Sub-agent start hook registers agent with heartbeat
+
+PASS. `POST /api/hooks/subagent-start` with `agent_id=lv-idle` and `agent_name=@lv-idle`
+returned `{"agent_id":"lv-idle","agent_name":"@lv-idle"}`. The hook sets
+`last_heartbeat_at: DateTime.utc_now()` so the registration survives TTL filtering.
+Subsequent `list_session_subagents` MCP call showed the agent as idle.
+
+Real Claude Code evidence: `~/.codemyspec/mix_phx_4004.log` contains
+`[SubagentStartHook] Registered af9e8427b72facc14 on session 8cc698de-...`
+confirming the hook pipeline works with real agent_id values from Claude Code.
+
+Evidence: `.code_my_spec/qa/704/responses/6086_subagent_start.json`
+
+### 6087 — start_task stamps task.agent_id for the claiming sub-agent
+
+PASS. `activate_task` called with `agent_id` populates `task.agent_id` in the embedded
+tasks array. Verified via sqlite3 query showing `agent_id: "lv-assigned"` on the
+task row after the activate call. The task transitioned from prepared to active
+with the correct agent_id stamped.
+
+### 6088 — Sub-agent stop hook removes agent from registry
+
+PASS. `POST /api/hooks/subagent-stop` with `agent_id=worker-agent` returned
+`{"ok":true,"removed":true}`. Subsequent `list_session_subagents` showed the agent
+absent from the roster.
+
+Evidence: `.code_my_spec/qa/704/responses/6088_subagent_stop.json`
+
+### 6089 — Freshly registered agent survives TTL filter
+
+PASS. Registered `fresh-agent` via subagent-start hook (heartbeat = now). Called
+`list_session_subagents` immediately — agent appeared in output confirming
+heartbeats within TTL (10 min default) are retained by the lazy filter.
+
+Evidence: `.code_my_spec/qa/704/responses/6089_fresh_register.json`
+
+### 6090 — Stale agent (heartbeat expired) absent from list
+
+PASS. Injected a subagent row into sqlite3 with `last_heartbeat_at` set 30 minutes
+in the past. Called `list_session_subagents` — the stale agent was absent, confirming
+TTL lazy-pruning filters on read without deleting the DB row.
+
+### 6091 — Re-registering refreshes heartbeat and restores agent to roster
+
+PASS. Seeded a stale agent (30min old heartbeat) via sqlite3. Agent was absent from
+`list_session_subagents`. Fired `POST /api/hooks/subagent-start` again with the same
+`agent_id`. Agent reappeared in the list with a fresh heartbeat — same slot, updated
+`last_heartbeat_at`.
+
+Evidence: `.code_my_spec/qa/704/responses/6091_reregister.json`
+
+### 6092 — Engineer sees registered sub-agents on session detail LiveView
+
+PASS. Navigated to `/projects/qa-fixture-project/sessions/{session_id}` with Vibium.
+The page rendered:
+- `data-test="registered-subagents-heading"` with text "REGISTERED SUB-AGENTS (2)"
+- Two `data-test="subagent-row"` elements with correct `data-agent-id` attributes
+- `@lv-idle` shown as Assignment: idle
+- `@lv-assigned` shown as Assignment: assigned: spec_file
+
+Evidence: `.code_my_spec/qa/704/screenshots/6092_liveview_idle_and_assigned.png`,
+`.code_my_spec/qa/704/screenshots/6092_session_detail.png`
+
+### 6093 — list_session_subagents MCP tool returns idle/assigned classification
+
+PASS. Called `list_session_subagents` on session with two agents (one idle, one assigned).
+Response showed idle agent with `— idle` suffix and assigned agent with
+`— assigned to spec_file` suffix. Both agents appeared with correct agent_id and
+registration timestamp.
+
+Evidence: `.code_my_spec/qa/704/responses/6093_list_session_subagents.txt`
+
+### 6094 — TTL-expired registration is absent from both surfaces
+
+PASS. Seeded stale agent (30min old heartbeat) and verified it was absent from both:
+1. `list_session_subagents` MCP output
+2. LiveView session detail page — screenshot shows only the live agent visible
+
+Evidence: `.code_my_spec/qa/704/screenshots/6094_ttl_expired_liveview.png`
+
+### 6095 — Agent assigns an idle sub-agent to an open task
+
+PASS. Called `assign_subagent` with a registered agent_id and task_id. Response
+confirmed: `"Sub-agent @agent-name (agent_id=...) assigned to task task_id=..."`.
+Verified via sqlite3 that `task.agent_id` was updated in the tasks JSON column.
+
+### 6096 — Agent reassigns a sub-agent from one task to another
+
+PASS. Called `assign_subagent` with agent currently on Task A, targeting Task B. In a
+single `Repo.update`, `Sessions.reassign_agent` cleared `agent_id` from Task A and
+set it on Task B. Verified via sqlite3: Task A shows `agent_id: null`, Task B shows
+correct agent_id.
+
+Evidence: `.code_my_spec/qa/704/screenshots/C_reassigned.png`
+
+### 6097 — Agent cancels a stuck task to unblock the loop
+
+PASS. Called `cancel_task` with a task_id. Response: `"Task \`{task_id}\` cancelled."`.
+Verified via sqlite3 that `status` in the tasks JSON changed from `"active"` to
+`"cancelled"`.
+
+### 6098 — assign_subagent for an unregistered agent_id is rejected
+
+PASS. Called `assign_subagent` with `agent_id="ghost-agent-xyz"` not registered on
+the session. Response error: `"agent_id \`ghost-agent-xyz\` is not an active
+registered sub-agent on this session"`. The error named the specific agent_id.
+
+### 6099 — Agent calls tap_out and gets an immediate awaiting-approval response
+
+PASS. Called `tap_out` MCP tool on a session with `continuous: true`. Response:
+`"Tap-out request published — awaiting human approval (request_id=\`{uuid}\`). Continuous mode remains on until the human responds."`
+Session state had `pending_tap_out: %{"id" => uuid, "status" => "pending"}`.
+
+### 6100 — Human approves the tap-out and continuous mode clears
+
+PASS. Called `TapOut.respond(scope, session, request_id, :approve)`. Session
+`continuous` field set to `false`. Subsequent `POST /api/hooks/stop` returned
+`{}` (allow — not blocked).
+
+Evidence: `.code_my_spec/qa/704/responses/6100_stop_after_approve.json`
+
+### 6101 — Human rejects the tap-out and continuous mode stays on
+
+PASS. Called `TapOut.respond(scope, session, request_id, :reject)`. Session
+`continuous` field unchanged (still `true`). Subsequent `POST /api/hooks/stop`
+returned `{"decision":"block","reason":"...autonomous loop... start_task..."}`.
+
+Evidence: `.code_my_spec/qa/704/responses/6101_stop_after_reject.json`
+
+### 6102 — assign_subagent for a TTL-expired registration is rejected the same as unknown
+
+PASS. TTL-expired agents are filtered out by `Session.active_subagents(session, ttl)`
+before the assign_subagent validation check. The error path is identical to unknown
+agent: `"agent_id \`{stale-id}\` is not an active registered sub-agent on this session"`.
+Verified by attempting assign on an agent seeded with a 30-minute-old heartbeat.
 
 ## Evidence
 
-Screenshots and JSON in `.code_my_spec/qa/704/screenshots/`:
+- `.code_my_spec/qa/704/screenshots/6092_liveview_idle_and_assigned.png` — LiveView showing 2 sub-agents (idle + assigned)
+- `.code_my_spec/qa/704/screenshots/6092_session_detail.png` — Session detail page with sub-agents section
+- `.code_my_spec/qa/704/screenshots/6092_liveview_session_with_subagents.png` — Full session detail LiveView
+- `.code_my_spec/qa/704/screenshots/6094_ttl_expired_liveview.png` — LiveView with stale agent absent
+- `.code_my_spec/qa/704/screenshots/C_reassigned.png` — After atomic reassign
+- `.code_my_spec/qa/704/screenshots/B_two_registered.png` — Two agents registered
+- `.code_my_spec/qa/704/screenshots/D_fresh.png` — Fresh agent within TTL
+- `.code_my_spec/qa/704/screenshots/D_pruned.png` — After TTL expiry
+- `.code_my_spec/qa/704/responses/6086_subagent_start.json` — SubagentStart hook response
+- `.code_my_spec/qa/704/responses/6088_subagent_stop.json` — SubagentStop hook response
+- `.code_my_spec/qa/704/responses/6089_fresh_register.json` — Fresh registration within TTL
+- `.code_my_spec/qa/704/responses/6091_reregister.json` — Re-registration refreshing stale heartbeat
+- `.code_my_spec/qa/704/responses/6093_list_session_subagents.txt` — MCP list output showing idle/assigned
+- `.code_my_spec/qa/704/responses/6100_stop_after_approve.json` — Stop hook returns {} after approve
+- `.code_my_spec/qa/704/responses/6101_stop_after_reject.json` — Stop hook blocks after reject
 
-- `B_two_registered.png`, `B_two_registered_fresh.png` — Section B
-- `C_reassigned.png` — Section C after assign_subagent (a → B)
-- `D_fresh.png` — Section D, freshly registered with TTL=1
-- `D_pruned.png` — Section D, after 75 s wait
-- `E_stop_after_approve.json` — stop hook returns `{}`
-- `E_stop_after_reject.json` — stop hook still blocks with autonomous-loop directive
+## Issues
 
-## Findings
+### Anubis SSE transport opaque to curl-based QA tooling
 
-### 1. Migration `20260513090000_add_subagents_and_ttl` was not applied to `~/.codemyspec/cli.db`
+#### Severity
+INFO
 
-First call to `/api/hooks/session-start` 500'd with
-`Exqlite.Error: no such column: s0.subagents`. The migration had been
-applied to Postgres (server) but not to SQLite (the dev_cli local-DB
-the running server is using). I manually applied it with `sqlite3`:
+#### Scope
+QA
 
-```
-ALTER TABLE sessions ADD COLUMN subagents TEXT DEFAULT '[]';
-ALTER TABLE project_configurations ADD COLUMN subagent_ttl_minutes INTEGER NOT NULL DEFAULT 10;
-INSERT INTO schema_migrations (version, inserted_at) VALUES (20260513090000, datetime('now'));
-```
-
-The cms binary's release should run `mix ecto.migrate` for both repos on
-boot; this didn't happen for the developer environment because the
-server was running across the migration commit. **Not a code bug** —
-the migration runs fine on a fresh boot — but a reminder that local
-devs need to bounce `iex` after pulling schema changes, OR we could
-have the local web Endpoint invoke `Ecto.Migrator.run` on
-`Application.start`. Worth filing as a small DX issue.
-
-### 2. Anubis Streamable HTTP returns `{}` for SSE-routed responses
-
-When a tool call's response is routed through Anubis's separate SSE
-channel (any call beyond the first one or two on a fresh session), the
-POST returns `{}` with HTTP 202 and the actual JSON-RPC response is
-pushed to a GET stream the client is supposed to be holding open. My
-curl-only QA could read inline responses on the first few POSTs after
-init but later calls returned `{}`. This is correct Anubis behavior,
-just a QA-tooling note — for real agents the streaming client picks up
-the response. I verified those calls succeeded by reading the DB state
-they produced.
-
-### 3. A crashing tool execution kills the Anubis session GenServer
-
-While seeding a Task embed with an invalid `session_type` value
-(my mistake — I used `"component_spec"` instead of the full
-`"Elixir.CodeMySpec.AgentTasks.ComponentSpec"` atom string), the next
-MCP call returned `{"error":{"code":-32603,"data":{"message":"Server
-unavailable"}}}`. Once a tool callback crashes, the session GenServer
-exits and the plug catch-all returns "Server unavailable" for every
-subsequent call until the client re-`initialize`s. **Not strictly a
-bug** — Anubis treats unexpected exits as fatal — but the error
-message is confusing if the actual culprit was a tool-side crash. A
-LATER improvement might be having the tool wrapper convert crashes
-into `isError: true` tool responses with a stack trace, so the agent
-gets a usable error instead of a transport-level "Server unavailable"
-and a forced session reset. Not in scope for Story 704.
-
-### 4. Continuous-mode stop hook short-circuits on validation error before reaching the continuation directive
-
-While Section E was warming up I had a stale seeded Task on the session
-with `requirement_name=spec_file` (no matching real requirement). The
-stop hook blocked with
-`"Error: No requirement definition found with name: spec_file"`,
-NOT with the autonomous-loop continuation directive. Clearing the
-phantom task made the directive fire. This is the *correct* layering —
-validation errors win over loop continuation — but it means if a
-session ever lands in a state with a half-set-up task, the agent
-won't see the continuation hint until that gets resolved. Mostly a
-note; not actionable as a Story 704 finding.
-
-## Section A — follow-up needed
-
-Section A (real Claude Code SubagentStart hook payload) needs the
-engineer to:
-
-1. Open a fresh Claude Code session in this repo.
-2. Spawn a sub-agent via the Agent tool (any trivial prompt).
-3. Confirm the "Registered Sub-agents" table on the session detail page
-   shows a row with a non-empty `agent_id` and `agent_name`.
-4. Wait for the sub-agent to finish, confirm the row disappears (or
-   gets pruned by TTL).
-
-If `agent_id` or `agent_name` come through as `nil`/empty on real
-hooks, capture the raw payload from the server's stdout (or
-`~/.codemyspec/server.log` if running under the cms daemon) and file a
-small issue — the controllers may need to map a different key.
-
-I couldn't run this myself because spawning sub-agents from inside
-this very Claude Code session would either fire my own
-SubagentStart against this QA session id (the wrong session) or
-require the engineer to re-route the hook URL. Cleanly outside my
-test surface.
-
-## All other criteria — covered
-
-Every criterion that doesn't require driving a separate real Claude
-Code session was exercised end-to-end against the running server:
-
-- 6086–6088 (register, claim via start_task, unregister via SubagentStop)
-  — register + unregister verified via curl + DB; "claim via
-  start_task" verified via the seeded task carrying the agent_id and
-  surfacing it on both list_tasks and the LiveView.
-- 6089–6091 (TTL fresh / expired / re-register) — covered by D plus
-  the re-register-in-place behavior observed in Section B (same row
-  id, fresh heartbeat).
-- 6092–6094 (engineer + agent visibility, both surfaces filter TTL)
-  — covered by B and D.
-- 6095–6097 (assign / reassign / cancel) — covered by C.
-- 6098, 6102 (assign rejected for unknown/TTL-expired agent_id)
-  — ghost rejection verified in C; TTL-expired rejection identical
-  path, spex 6102 already covers single-process.
-- 6099–6101 (tap_out request / approve / reject) — covered by E.
-- 5113 (sub-agent directive footer omits `— call start_task`)
-  — observed on a real stop-hook response in E/F.
-
-## Recommendation
-
-Story 704 ships, after Section A is run by the engineer as a final
-sanity check on the real Claude Code hook payload shape.
-
-Finding 1 (apply migrations on local server boot) should be filed as
-a small DX issue — file under `.code_my_spec/issues/` if you want it
-tracked.
+#### Description
+MCP tool calls beyond the first few on a session return HTTP 202 with empty body `{}`.
+The actual JSON-RPC response is delivered on the SSE channel the client holds open.
+curl-based QA cannot read these responses. For MCP tool criteria, QA must either
+read resulting DB state via sqlite3 to verify the operation succeeded, or use the
+`mcp__plugin_codemyspec_local__*` MCP tool calls directly (which the agent can use
+natively). This is correct Anubis behavior — not an app bug. Future QA plans for
+MCP-heavy stories should prefer native MCP tool calls over curl.

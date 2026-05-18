@@ -1,0 +1,5 @@
+CRASH: ERROR 42P01 (undefined_table) relation "story_tags" does not exist
+    query: SELECT c0."id", c0."name", c0."project_id", c0."inserted_at", c0."updated_at", s1."story_id"::bigint FROM "component_tags" AS c0 INNER JOIN "story_tags" AS s1 ON c0."id" = s1."tag_id" WHERE (s1."story_id" = ANY($1))
+
+Root cause: story_tags join table doesn't exist in the DB. The Stories.Story preload
+tries to join component_tags with story_tags which is a missing migration.
