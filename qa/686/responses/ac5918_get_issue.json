@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"## AC5918 Cosmetic typo in welcome screen (ID: cfac77dc-b8f0-4212-bbd0-e1efa584a6cd)\n\n**Severity:** low | **Scope:** app | Status: dismissed\n\nTrivial duplicate of an earlier report.\n\nResolution: Duplicate of the earlier welcome-screen report.","type":"text"}],"isError":false}}

@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Scenario added: \"Driver finishes verification, account is activated\" (id: `6481`, story_id: `775`, kind: `happy_path`)\n\nLinked to rule_id: `03d27c94-ff3f-4986-879e-33dae8ec4458`.","type":"text"}],"isError":false}}

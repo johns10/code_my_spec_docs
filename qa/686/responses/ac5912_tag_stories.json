@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Tagged 1 stories with 'epic:onboarding-qa-71595'.","type":"text"}],"isError":false}}

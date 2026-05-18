@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Rules on this story (1):\n\n- (id: `03d27c94-ff3f-4986-879e-33dae8ec4458`) Drivers must have a verified phone number.","type":"text"}],"isError":false}}

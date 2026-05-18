@@ -1,0 +1,23 @@
+{
+  "scenario": "Requirements missing any of the three conditions are excluded (criterion 5614)",
+  "project": "QA Fixture Project",
+  "project_id": "11111111-1111-4111-8111-111111111111",
+  "method": "RequirementGraph.next_actionable/1 vs compute_all/1",
+  "total_requirements": 55,
+  "satisfied_requirements": 0,
+  "nil_satisfied_by_requirements": 0,
+  "actionable_requirements": 1,
+  "verification": {
+    "no_satisfied_in_actionable": true,
+    "no_nil_satisfied_by_in_actionable": true,
+    "project_setup_is_the_lone_actionable": true,
+    "personas_complete_not_in_actionable": "CORRECT - blocked by unmet prereqs",
+    "tests_passing_not_in_actionable": "CORRECT - deeply blocked (prereq chain unmet)"
+  },
+  "assertions": {
+    "actionable_items_are_all_unsatisfied": true,
+    "actionable_items_all_have_satisfied_by": true,
+    "blocked_requirements_excluded": true,
+    "result": "PASS"
+  }
+}

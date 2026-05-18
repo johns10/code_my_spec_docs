@@ -1,0 +1,19 @@
+{
+  "scenario": "Every returned requirement carries orchestration metadata (criterion 5627)",
+  "project": "QA Fixture Project",
+  "project_id": "11111111-1111-4111-8111-111111111111",
+  "method": "Inspect all start_task lines in mapper response",
+  "start_task_lines_analyzed": [
+    {
+      "line": "- Call `start_task` with requirement `project_setup` for project `11111111-1111-4111-8111-111111111111` (QA Fixture Project) — call `start_task` with requirement_name=`project_setup`, entity_type=`project`, entity_id=`11111111-1111-4111-8111-111111111111`.",
+      "has_requirement_reference": true,
+      "has_entity_reference": true,
+      "passes_criterion": true
+    }
+  ],
+  "assertions": {
+    "all_start_task_lines_have_requirement_ref": true,
+    "all_start_task_lines_have_entity_ref": true,
+    "result": "PASS"
+  }
+}

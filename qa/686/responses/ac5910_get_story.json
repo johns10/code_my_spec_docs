@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"## AC5910 Story for Criteria (ID: 772)\n\nWill receive an acceptance criterion.\n\n**Acceptance Criteria:** 1 total, 0 verified\n\n- [ ] Driver completes the welcome screen (criterion 6480)","type":"text"}],"isError":false}}

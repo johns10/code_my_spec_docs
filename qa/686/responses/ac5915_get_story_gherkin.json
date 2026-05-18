@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Feature: AC5915 Workshop Story\n  Hosts the full Three Amigos sequence.\n  Rule: Drivers must have a verified phone number.\n    Scenario: Driver finishes verification, account is activated\n      Given a driver has entered a phone number\n      When the driver enters the SMS code\n      Then the account is marked verified\n","type":"text"}],"isError":false}}

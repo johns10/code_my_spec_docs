@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"## AC5912 Story to Tag (ID: 773)\n\nReceives a brand-new tag.\n\n**Acceptance Criteria:** 0 total, 0 verified\n**Tags:** epic:onboarding-qa-71595\n\n_No criteria defined._","type":"text"}],"isError":false}}

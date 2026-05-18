@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"1 tags in project:\n- qa-686-sc5-test-tag","type":"text"}],"isError":false}}

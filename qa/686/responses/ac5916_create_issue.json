@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Issue created: \"Welcome step omits a confirmation\" [high] (ID: a15fd4ea-c83d-43c9-9cd6-5ca5df3b1501)","type":"text"}],"isError":false}}

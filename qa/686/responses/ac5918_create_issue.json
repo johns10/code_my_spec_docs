@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Issue created: \"AC5918 Cosmetic typo in welcome screen\" [low] (ID: cfac77dc-b8f0-4212-bbd0-e1efa584a6cd)","type":"text"}],"isError":false}}

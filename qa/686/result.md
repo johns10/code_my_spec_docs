@@ -2,11 +2,11 @@
 
 **Story:** 686 — AI-Assisted Story Management
 **Date:** 2026-05-18
-**Tester:** Claude Code QA Agent
+**Tester:** Claude Code QA Agent (MCP surface, via real local server on port 4004)
 
 ## Status
 
-partial
+fail
 
 ## Scenarios
 
@@ -14,120 +14,117 @@ partial
 
 pass
 
-Executed `Stories.create_story/2` via the domain layer (same code path as the `create_story` MCP tool). Story id=746 created with title "QA-686-SC1 Agent Creates Story" in the QA Fixture Project. Verified via `Stories.list_story_titles/1` — story appears in the list. Browser navigation to `/projects/qa-fixture-project/stories/746` confirms the title and description are rendered.
+Called `create_story` MCP tool with title "QA5907 Driver Onboarding" and description. Story ID 769 returned. Called `list_story_titles` — confirmed "QA5907 Driver Onboarding" appears in the list.
 
-Screenshot: `.code_my_spec/qa/686/screenshots/sc1_story_created.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5907_create_story.json`, `.code_my_spec/qa/686/responses/ac5907_list_story_titles.json`
 
 ### SC-2: Agent updates a story (criterion 5908)
 
 pass
 
-Created story id=747 "QA-686-SC2 Original Title". Called `Stories.update_story/3` with new title "QA-686-SC2 Updated Title" and description "Updated description SC2". Re-fetched via `Stories.get_story/2` — updated values confirmed. Old title "QA-686-SC2 Original Title" absent from the fetched record. Browser shows "QA-686-SC2 Updated Title" and "Updated description SC2".
+Called `create_story` (story ID 778), then `update_story` with title "Renamed title" and description "Revised description." Confirmed in SQLite: `stories` table row 778 has `title = "Renamed title"`. MCP `get_story` response shows updated title and description; old title absent.
 
-Screenshot: `.code_my_spec/qa/686/screenshots/sc2_story_updated.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5908_create.json`, `.code_my_spec/qa/686/responses/ac5908_update_story.json`, `.code_my_spec/qa/686/responses/ac5908_get_story.json`
 
 ### SC-3: Agent deletes a story with cascade (criterion 5909)
 
 fail
 
-Created story id=748 with a linked persona, a BDD rule (via `BddRules.create_rule/3`), and a linked issue. Deleted via `Stories.delete_story/2`.
+Created sibling story (ID 770), doomed story (ID 771), persona (id `17fa26b4`), linked persona to story 771, added rule, created issue (ID `745fae09`) linked to story 771. Called `delete_story` on story 771.
 
 Results:
-- Story 748: no longer fetchable (nil) — PASS
-- BDD rules: 0 remaining after delete (cascade worked) — PASS
-- Issue `c54ab8ff-fe00-4124-a52a-a5036e985113`: survives with `story_id=748` (NOT cleared) — FAIL
+- `list_story_titles`: sibling story present (pass), doomed story absent (pass)
+- `list_rules` for story 771: returns "No rules on this story yet" (cascade pass)
+- `get_issue` for `745fae09`: issue still exists (pass) BUT still shows `**Story:** 771` (fail)
 
-The acceptance criterion states "issues remain with story_id cleared". The `issues` migration defines `story_id` as a plain integer with no `ON DELETE SET NULL` behavior. The `delete_story` domain function does not explicitly clear `issue.story_id` before or after deleting the story. The issue survives (correct) but retains the deleted story's id (incorrect per AC).
+Direct SQLite query confirms: `issues` row `745fae09` has `story_id = 771` — not cleared. The `delete_story` implementation does not nilify `story_id` on linked issues and the FK column has no `ON DELETE SET NULL` constraint.
+
+Evidence: `.code_my_spec/qa/686/responses/ac5909_create_doomed.json`, `.code_my_spec/qa/686/responses/ac5909_delete_story.json`, `.code_my_spec/qa/686/responses/ac5909_list_after_delete.json`, `.code_my_spec/qa/686/responses/ac5909_list_rules_after_delete.json`, `.code_my_spec/qa/686/responses/ac5909_get_issue_after_delete.json`
 
 ### SC-4: Agent adds a criterion (criterion 5910)
 
 pass
 
-Created story id=749. Called `AcceptanceCriteria.create_criterion/3` with description "Given the agent adds a criterion, when I read the story, then the criterion is visible". Criterion id=6476 created successfully. `AcceptanceCriteria.list_story_criteria/2` returns the criterion. Browser at `/projects/qa-fixture-project/stories/749` shows criterion in the Acceptance criteria section.
+Called `create_story` (ID 772), then `add_criterion` with "Driver completes the welcome screen". `get_story` response for story 772 contains the criterion text.
 
-Screenshot: `.code_my_spec/qa/686/screenshots/sc4_criterion.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5910_add_criterion.json`, `.code_my_spec/qa/686/responses/ac5910_get_story.json`
 
 ### SC-5: Agent creates and applies a tag (criterion 5912)
 
 pass
 
-Created story id=750. Called `Tags.add_tag/3` with tag name "qa-686-sc5-test-tag" (creates if missing). Tag applied successfully. Re-fetched story — tag appears in `story.tags`. `Tags.list_project_tags/1` includes "qa-686-sc5-test-tag". Browser at `/projects/qa-fixture-project/stories/750` shows tag badge.
+Called `create_story` (ID 773), `list_project_tags` (1 pre-existing tag), `tag_stories` with unique tag `epic:onboarding-qa-71595`. `list_project_tags` now includes the new tag. `get_story` response for story 773 contains the tag.
 
-Screenshot: `.code_my_spec/qa/686/screenshots/sc5_tagging.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5912_list_tags_before.json`, `.code_my_spec/qa/686/responses/ac5912_tag_stories.json`, `.code_my_spec/qa/686/responses/ac5912_list_tags_after.json`, `.code_my_spec/qa/686/responses/ac5912_get_story.json`
 
 ### SC-6: Agent starts a story interview session (criterion 5913)
 
 pass
 
-Called `StoryInterview.command/2` with scope set to QA sandbox project. Returns `{:ok, prompt}` with 1286 chars. Prompt contains:
-- "Product Manager" — PASS
-- "bare user stories" — PASS
+Called `start_story_interview`. Response contains "Product Manager" and matches `produce a set of bare user stories` instruction.
 
-The prompt instructs the agent to act as an expert Product Manager and develop acceptance criteria from bare user stories. Session is created and ready for PM to join.
+Evidence: `.code_my_spec/qa/686/responses/ac5913_start_story_interview.json`
 
 ### SC-7: Agent starts a Three Amigos session (criterion 5914)
 
 pass
 
-Created story id=752 "QA-686-SC7 Three Amigos Session". Called `ThreeAmigos.command/2` with `%{entity_id: to_string(story.id)}`. Returns `{:ok, prompt}` containing:
-- "Three Amigos" — PASS
-- Story title "QA-686-SC7 Three Amigos Session" — PASS
-- Reference to `story_id: 752` and MCP tool context — PASS
+Called `create_story` (ID 774, title "AC5914 Three Amigos Story"), then `start_three_amigos_session` with `story_id: "774"`. Response contains "Three Amigos", references "AC5914 Three Amigos Story", and mentions `add_rule`/`add_scenario`/`persona`.
 
-Note: The prompt references the playbook (`priv/knowledge/three_amigos/workflow.md`) for specific tool names rather than listing `add_rule`/`add_scenario` inline. This is intentional design — the session is ready for rule and scenario capture per the acceptance criterion.
+Evidence: `.code_my_spec/qa/686/responses/ac5914_start_three_amigos.json`
 
 ### SC-8: Agent runs full Three Amigos workflow (criterion 5915)
 
 pass
 
-Created story id=753. Executed complete workflow:
-1. `Personas.create_persona/2` — persona "QA SC8 Product Owner" (slug: qa-686-sc8-product-owner)
-2. `Personas.link_persona_to_story/3` — persona linked to story 753
-3. `BddRules.create_rule/3` — rule id=`c2a4f5e3-bac4-4e43-a997-2540e76ab139` "System enforces auth on story creation"
-4. `AcceptanceCriteria.create_criterion/3` — criterion id=6477 linked to rule via rule_id
-5. `Questions.create_question/3` — question id=`5022b198-76f0-4dd7-99f4-44f0a3f2543d` "What happens when the agent auth token expires mid-session?"
+Created story (ID 775), persona (`47842feb`), linked persona, added rule "Drivers must have a verified phone number.", added scenario (happy_path), parked question "Does verification time out after 24 hours?"
 
-Verification via list functions: Rules=1, Questions=1, Criteria=1, Persona links=1 — all records present.
+- `list_rules` for story 775: returns the rule statement (pass)
+- `list_questions` for story 775: returns the parked question (pass)
+- `get_story_gherkin` for story 775: contains rule statement and "the account is marked verified" scenario body (pass)
 
-Browser at `/projects/qa-fixture-project/stories/753/three-amigos` shows: "1 rules · 0 scenarios · 1 open · IN SESSION" with rule card and question card visible.
-
-Note: The Three Amigos view header shows "0 scenarios" even though criterion 6477 with `rule_id` exists. The criteria count in the Three Amigos header does not count criteria linked via `rule_id` as "scenarios". The data is correct in the DB; only the header display aggregation differs.
-
-Screenshot: `.code_my_spec/qa/686/screenshots/sc8_three_amigos.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5915_add_rule.json`, `.code_my_spec/qa/686/responses/ac5915_add_scenario.json`, `.code_my_spec/qa/686/responses/ac5915_add_question.json`, `.code_my_spec/qa/686/responses/ac5915_list_rules.json`, `.code_my_spec/qa/686/responses/ac5915_list_questions.json`, `.code_my_spec/qa/686/responses/ac5915_get_story_gherkin.json`
 
 ### SC-9: Accept issue as requirements change (criterion 5916)
 
 pass
 
-Created story id=754 and issue `1c86a48f-65e9-4e74-b968-c8f546f0bc83` "QA-686-SC9 Requirements Change Issue" linked to story 754. Called `Issues.accept_issue/3` with `[category: :requirements_change, story_id: 754]`. Issue status became `accepted`, `story_id=754` confirmed.
+Created story (ID 776) and issue (`a15fd4ea`, no story link). Called `accept_issue` with `category: requirements_change` and `story_id: 776`. Response: "Issue accepted: 'Welcome step omits a confirmation' (ID: a15fd4ea) [requirements_change] → Story 776". `get_issue` shows `Status: accepted | **Category:** requirements_change | **Story:** 776`.
 
-Issues list shows "QA-686-SC9 Requirements Change Issue" as accepted/medium.
+Evidence: `.code_my_spec/qa/686/responses/ac5916_create_issue.json`, `.code_my_spec/qa/686/responses/ac5916_accept_issue.json`, `.code_my_spec/qa/686/responses/ac5916_get_issue.json`
 
 ### SC-10: Accept issue as bug without story link (criterion 5917)
 
 pass
 
-Created issue `6b5bee35-c4ba-416d-8a11-61519ef1a277` "QA-686-SC10 Bug Without Story Link" with no story_id. Called `Issues.accept_issue/3` with `[category: :bug]`. Issue status became `accepted`, `story_id=nil` confirmed (no story reference).
+Created issue (`86a12d5d`). Called `accept_issue` with `category: bug`, no `story_id`. Response: "Issue accepted: 'Stop hook stalls on retry' (ID: 86a12d5d) [bug]". `get_issue` shows accepted status, bug category, no story reference.
 
-Issues list shows "QA-686-SC10 Bug Without Story Link" as accepted/high.
+Evidence: `.code_my_spec/qa/686/responses/ac5917_create_issue.json`, `.code_my_spec/qa/686/responses/ac5917_accept_issue.json`, `.code_my_spec/qa/686/responses/ac5917_get_issue.json`
 
 ### SC-11: Dismiss an issue with reason (criterion 5918)
 
 pass
 
-Created issue `f42ef4be-d733-4edc-80b3-33bbc432ff23` "QA-686-SC11 Dismiss With Reason". Called `Issues.dismiss_issue/3` with resolution "Not a real issue — confirmed working as designed". Issue status became `dismissed`, resolution recorded. Issues list shows dismissed status.
+Created story (ID 777) and issue (`cfac77dc`). Called `dismiss_issue` with reason "Duplicate of the earlier welcome-screen report." Response confirms dismissal. `get_issue` shows dismissed status and the exact reason text. `list_story_titles` confirms story 777 still exists unchanged.
 
-Screenshot: `.code_my_spec/qa/686/screenshots/issues_list.png`
+Evidence: `.code_my_spec/qa/686/responses/ac5918_create_issue.json`, `.code_my_spec/qa/686/responses/ac5918_dismiss_issue.json`, `.code_my_spec/qa/686/responses/ac5918_get_issue.json`, `.code_my_spec/qa/686/responses/ac5918_list_story_titles.json`
 
 ## Evidence
 
-- `.code_my_spec/qa/686/screenshots/sc1_story_created.png` — Story 746 visible in browser
-- `.code_my_spec/qa/686/screenshots/sc2_story_updated.png` — Story 747 with updated title/description
-- `.code_my_spec/qa/686/screenshots/sc4_criterion.png` — Story 749 with criterion in acceptance criteria section
-- `.code_my_spec/qa/686/screenshots/sc5_tagging.png` — Story 750 with "qa-686-sc5-test-tag" applied
-- `.code_my_spec/qa/686/screenshots/sc8_three_amigos.png` — Story 753 Three Amigos view with rule and question
-- `.code_my_spec/qa/686/screenshots/issues_list.png` — Issues list showing accepted/dismissed QA issues
-- `.code_my_spec/qa/686/responses/test_run_output.txt` — Full domain-layer test script output
+- `.code_my_spec/qa/686/responses/ac5907_create_story.json` — create_story MCP response (ID: 769)
+- `.code_my_spec/qa/686/responses/ac5907_list_story_titles.json` — list showing new story
+- `.code_my_spec/qa/686/responses/ac5908_update_story.json` — update_story MCP response
+- `.code_my_spec/qa/686/responses/ac5908_get_story.json` — get_story showing renamed title
+- `.code_my_spec/qa/686/responses/ac5909_delete_story.json` — delete_story MCP response
+- `.code_my_spec/qa/686/responses/ac5909_get_issue_after_delete.json` — issue still has story_id set (bug evidence)
+- `.code_my_spec/qa/686/responses/ac5910_add_criterion.json` — criterion added successfully
+- `.code_my_spec/qa/686/responses/ac5912_tag_stories.json` — tag applied to story
+- `.code_my_spec/qa/686/responses/ac5913_start_story_interview.json` — interview prompt response
+- `.code_my_spec/qa/686/responses/ac5914_start_three_amigos.json` — Three Amigos prompt response
+- `.code_my_spec/qa/686/responses/ac5915_get_story_gherkin.json` — Gherkin with rule and scenario
+- `.code_my_spec/qa/686/responses/ac5916_accept_issue.json` — requirements_change acceptance
+- `.code_my_spec/qa/686/responses/ac5917_accept_issue.json` — bug acceptance without story link
+- `.code_my_spec/qa/686/responses/ac5918_dismiss_issue.json` — dismissal with reason
 
 ## Issues
 
@@ -137,27 +134,20 @@ Screenshot: `.code_my_spec/qa/686/screenshots/issues_list.png`
 HIGH
 
 #### Description
-When an agent deletes a story via `delete_story`, any issues previously linked to that story retain the deleted story's id in `issue.story_id`. The acceptance criterion for story 686 states: "rules are removed but issues remain with story_id cleared."
+When `delete_story` is called, linked issues retain the deleted story's `story_id` instead of having it set to nil. The acceptance criterion for story 686 states: "rules are removed but issues remain with story_id cleared."
 
-The `issues` table migration (20260306200000_create_issues.exs) defines `story_id` as a plain integer (`add :story_id, :integer`) with no `ON DELETE SET NULL` or `ON DELETE CASCADE`. The `delete_story` function in `Stories` and `StoriesRepository` does not explicitly null out `story_id` on related issues before or after deletion.
+Reproduction (confirmed via MCP tools against local server + SQLite direct query):
+1. Create story (ID 771)
+2. Create issue linked to story 771 (`create_issue` with `story_id: 771`)
+3. Call `delete_story` with `story_id: 771`
+4. Call `get_issue` — response shows `**Story:** 771` (not cleared)
+5. Direct SQLite query confirms: `issues.story_id = 771` (not nil)
 
-Reproduction steps:
-1. Create a story (e.g., via `Stories.create_story`)
-2. Create an issue linked to that story (`Issues.create_issue` with `story_id: story.id`)
-3. Delete the story (`Stories.delete_story`)
-4. Fetch the issue — `issue.story_id` still contains the deleted story's integer id
+Root cause: `issues.story_id` is defined as a plain integer column with no FK `ON DELETE SET NULL`. The `StoriesRepository.delete_story/2` calls `PaperTrail.delete/2` with no pre/post nilification of linked issues.
 
-Expected: `issue.story_id = nil` after story delete
-Actual: `issue.story_id = <deleted story's id>`
+Expected: `issue.story_id = nil` after story deletion
+Actual: `issue.story_id` retains the deleted story's integer ID
 
-Fix: Either add `ON DELETE SET NULL` to the `story_id` FK in a migration, or explicitly update all linked issues in `StoriesRepository.delete_story` before deleting the story.
-
-### Three Amigos view shows 0 scenarios despite criterion with rule_id existing
-
-#### Severity
-LOW
-
-#### Description
-The Three Amigos view header shows "0 scenarios" for story 753 even though a criterion (id=6477) exists with `rule_id` set to a valid BDD rule. The domain layer confirms the criterion exists via `AcceptanceCriteria.list_story_criteria`. The Three Amigos UI aggregation for the "scenarios" count does not count criteria linked via `rule_id`.
-
-This is a display inconsistency — the data is correct in the DB, but the count displayed in the Three Amigos header may mislead agents reviewing session completeness.
+Fix options:
+- Add a migration to convert `issues.story_id` to a proper `references(:stories, on_delete: :nilify_all)` FK (requires schema type change from `:integer` to `:id`)
+- Alternatively, explicitly update all linked issues in `StoriesRepository.delete_story/2` before deleting the story

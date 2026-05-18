@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Story not found. Verify the story ID exists using list_stories.","type":"text"}],"isError":true}}

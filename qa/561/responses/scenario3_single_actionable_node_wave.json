@@ -1,0 +1,15 @@
+{
+  "scenario": "Single actionable node returns a one-element wave (criterion 5813)",
+  "project": "QA Fixture Project",
+  "project_id": "11111111-1111-4111-8111-111111111111",
+  "method": "RequirementsMapper.format_next_requirements/1 on sandbox with no content",
+  "response_text": "### ProjectSetup\n\n- Call `start_task` with requirement `project_setup` for project `11111111-1111-4111-8111-111111111111` (QA Fixture Project) — call `start_task` with requirement_name=`project_setup`, entity_type=`project`, entity_id=`11111111-1111-4111-8111-111111111111`.",
+  "start_task_lines_in_response": 1,
+  "start_task_signature_matches": 1,
+  "named_requirement": "project_setup",
+  "assertions": {
+    "exactly_one_start_task_signature": true,
+    "names_project_setup": true,
+    "result": "PASS"
+  }
+}

@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Questions on this story (1):\n\n- (id: `749f8950-3cdd-4f67-960a-4760ad7bf8d9`, status: `open`) Does verification time out after 24 hours?","type":"text"}],"isError":false}}

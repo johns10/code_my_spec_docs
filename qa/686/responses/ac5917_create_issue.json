@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Issue created: \"Stop hook stalls on retry\" [high] (ID: 86a12d5d-0b8a-4a70-871b-9656a4e65760)","type":"text"}],"isError":false}}

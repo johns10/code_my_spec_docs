@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Story created: \"AC5909 Doomed Story\" (ID: 771)","type":"text"}],"isError":false}}

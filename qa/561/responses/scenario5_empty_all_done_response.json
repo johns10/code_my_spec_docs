@@ -1,0 +1,26 @@
+{
+  "scenario": "Empty/all-done response format (criteria 5616, 5817)",
+  "method": "Verify RequirementsMapper static response functions",
+  "sync_required_response": {
+    "description": "Returned when compute_all returns [] (no requirements at all)",
+    "contains_sync_project": true,
+    "sample_text": "# Project Needs Sync\n\nThe project is linked but has no requirements yet.\n\nCall `sync_project` to sync components and requirements, then `get_next_requirement` again."
+  },
+  "all_satisfied_response": {
+    "description": "Returned when compute_all > 0 but next_actionable returns []",
+    "type": "Anubis.Server.Response",
+    "documented_marker": "All requirements satisfied",
+    "sample_text": "# All requirements satisfied\n\nNo actionable requirements remain."
+  },
+  "coherence_checks": {
+    "sync_required_is_non_nil": true,
+    "sync_required_is_non_empty": true,
+    "all_satisfied_is_non_nil": true,
+    "all_satisfied_is_non_empty": true,
+    "all_satisfied_matches_regex_all_requirements_satisfied": true,
+    "all_satisfied_has_no_start_task": true
+  },
+  "assertions": {
+    "result": "PASS"
+  }
+}

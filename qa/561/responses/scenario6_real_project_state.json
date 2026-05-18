@@ -1,0 +1,24 @@
+{
+  "scenario": "Real-world verification against live CodeMySpec project (criteria 5613, 5614, 5617)",
+  "project": "Code My Spec",
+  "method": "GET /api/projects/code-my-spec/requirements via running CMS binary (port 4003)",
+  "total_requirements": 15,
+  "satisfied_count": 6,
+  "unsatisfied_count": 9,
+  "satisfied_requirements": [
+    "project_setup",
+    "personas_complete",
+    "stories_exist",
+    "technical_strategy",
+    "code_generation",
+    "qa_integration_plan"
+  ],
+  "next_actionable_marked": "architecture_designed",
+  "raw_response_excerpt": "# Code My Spec — Requirements (6/15)\n\n- [x] project_setup\n- [x] personas_complete\n...\n- [ ] architecture_designed (actionable)",
+  "assertions": {
+    "satisfied_requirements_not_in_actionable": "VERIFIED - 6 satisfied items show [x] not returned as start_task",
+    "unsatisfied_actionable_item_appears": "VERIFIED - architecture_designed is marked actionable",
+    "blocked_items_excluded": "VERIFIED - spex_boundary_ready, issues_triaged etc. not marked actionable despite unsatisfied",
+    "result": "PASS"
+  }
+}

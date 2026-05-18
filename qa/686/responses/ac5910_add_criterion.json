@@ -1,0 +1,3 @@
+id: 0
+event: message
+data: {"id":99,"jsonrpc":"2.0","result":{"content":[{"text":"Criterion added to \"AC5910 Story for Criteria\" (ID: 6480): Driver completes the welcome screen","type":"text"}],"isError":false}}
