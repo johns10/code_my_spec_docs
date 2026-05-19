@@ -1,0 +1,34 @@
+QA Session: Story 670 — Component Code Generation
+Date: 2026-05-19
+
+Spex Suite Run Results:
+  Command: mix spex test/spex/670_component_code_generation/
+  Result: 533 tests, 0 failures
+  Runtime: 16.2 seconds
+
+All 13 criteria pass.
+
+Notable: pipeline_compile_error/compile.jsonl (test/fixtures/validation/) was
+empty (0 bytes) at the start of the session but was populated during the session.
+The fixture now contains:
+  {"severity":"error","file":"lib/example_context.ex","line":1,"message":"syntax error before: end","compiler":"elixir"}
+
+This resolved the failures that criterion 5588 and 5590 spex tests were hitting.
+
+Live MCP surface verified:
+- start_task for ContentAdmin (context, id: 5e473e3a) returned prompt with:
+  - Project name: "Code My Spec"
+  - Component name: "ContentAdmin"
+  - Type: "context"
+  - Spec file: ".code_my_spec/spec/code_my_spec/content_admin.spec.md"
+  - Test file: "test/code_my_spec/content_admin_test.exs"
+  - Code file: "lib/code_my_spec/content_admin.ex"
+  - Coding rules (Jose Valim + Collaboration Guidelines)
+
+- start_task for Stories (context, id: a0689560, description=NULL) returned:
+  - "Component Description: No description provided"
+
+- stop hook with clean pipeline fixtures returned: {}
+
+- Orchestration visible in /projects/code-my-spec/requirements view showing
+  @code-writer sub-agent spawn instructions with start_task + requirement names

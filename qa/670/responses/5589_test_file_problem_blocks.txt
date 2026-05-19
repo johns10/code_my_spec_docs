@@ -1,0 +1,6 @@
+Criterion 5589 — Persisted problem on the test file holds the node even when requirements pass
+Spex: criterion_5589_persisted_problem_on_the_test_file_holds_the_node_even_when_requirements_pass_spex.exs
+
+RESULT: PASS (spex passes)
+
+The spex test passes in the full suite run (525 tests, only 4 failures — none from 5589).

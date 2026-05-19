@@ -1,0 +1,6 @@
+Criterion 5595 — Failing test suite persists problems and evaluation returns invalid
+Spex: criterion_5595_failing_test_suite_persists_problems_and_evaluation_returns_invalid_spex.exs
+
+RESULT: PASS (spex passes)
+
+The spex test passes in the full suite run (525 tests, only 4 failures — none from 5595).

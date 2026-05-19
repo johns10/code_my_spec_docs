@@ -7,4 +7,4 @@ MCP tool for listing stories in a project with pagination and optional search fi
 - CodeMySpec.Stories
 - CodeMySpec.McpServers.Stories.StoriesMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
+- Anubis.Server.Component

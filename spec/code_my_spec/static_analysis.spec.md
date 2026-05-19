@@ -14,8 +14,15 @@ Executes optional code quality and correctness tools against a project codebase.
 
 ## Dependencies
 
+- CodeMySpec.Code
+- CodeMySpec.Compile
+- CodeMySpec.Components
+- CodeMySpec.Configurations
+- CodeMySpec.Documents
+- CodeMySpec.Environments
+- CodeMySpec.Files
+- CodeMySpec.Paths
 - CodeMySpec.Problems
-- CodeMySpec.Projects
 - CodeMySpec.Users.Scope
 
 ## Components

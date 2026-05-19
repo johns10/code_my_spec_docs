@@ -1,0 +1,1 @@
+{"decision":"block","reason":"QA plan not found at `.code_my_spec/qa/plan.md`. Run the `qa_setup` task first — that task owns the project-wide plan.\n\nIf this looks like harness friction (looping hook, contradictory prompt, tool error), call `create_issue` with `scope: framework`."}

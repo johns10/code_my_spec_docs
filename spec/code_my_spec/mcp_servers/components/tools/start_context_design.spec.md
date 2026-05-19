@@ -8,6 +8,6 @@ MCP tool that initiates guided context design sessions for AI agents. Generates 
 - CodeMySpec.Components
 - CodeMySpec.McpServers.Components.ComponentsMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Frame
-- Hermes.Server.Response
+- Anubis.Server.Component
+- Anubis.Server.Frame
+- Anubis.Server.Response

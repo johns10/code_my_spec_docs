@@ -1,0 +1,6 @@
+# CodeMySpec.Requirements
+
+**Type:** module
+**Requirements:** 0/1 satisfied
+
+- [ ] **implementation_file** — Component implementation file exists

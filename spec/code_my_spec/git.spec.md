@@ -15,6 +15,7 @@ context
 
 - CodeMySpec.Git.CLI
 - CodeMySpec.Git.URLParser
+- CodeMySpec.Integrations
 - CodeMySpec.Users.Scope
 
 ## Components

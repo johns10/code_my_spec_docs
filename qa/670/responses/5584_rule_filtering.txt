@@ -1,0 +1,11 @@
+Criterion 5584 — Only the matching component-type code rules appear
+Component: ContentAdmin (5e473e3a-77d0-5db1-b976-c71a362f1fb0) - type: context
+Requirement: implementation_file
+
+OBSERVATION from start_task prompt:
+- Rules section contains content from elixir.md (component_type: "*", session_type: "code") ✓
+- Rules section contains collaboration_guidelines.md (component_type: "context", session_type: "code") ✓
+- Rules section does NOT contain context_design.md (component_type: "context", session_type: "design") ✓
+- Rules section does NOT contain liveview.md/liveview_design.md (component_type: "liveview") ✓
+
+RESULT: PASS — only matching component_type + session_type rules appear

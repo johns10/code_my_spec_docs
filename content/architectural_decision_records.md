@@ -1,6 +1,6 @@
-# ADRs Are the Guardrails Your AI Agent Actually Reads
+# ADRs Are the Best Thing You Can Give Your AI Agent
 
-Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. But here's the thing: when an AI coding agent is generating your code, ADRs stop being documentation and start being the only thing standing between a coherent codebase and architectural chaos.
+Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. But here's the thing: when an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent — the durable memory of why your codebase looks the way it does.
 
 ## What ADRs Are (30-Second Version)
 

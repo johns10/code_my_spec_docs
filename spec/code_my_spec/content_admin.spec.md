@@ -8,5 +8,10 @@ context
 
 ## Dependencies
 
-- CodeMySpec.Content
-- CodeMySpec.Git
+- CodeMySpec.Accounts
+- CodeMySpec.Projects
+- CodeMySpec.Repo
+- CodeMySpec.Users
+- CodeMySpec.Utils
+- Phoenix.PubSub
+

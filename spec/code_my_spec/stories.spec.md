@@ -19,8 +19,13 @@ Phoenix context for managing user stories within projects. Provides the public A
 ## Dependencies
 
 - CodeMySpec.AcceptanceCriteria
-- CodeMySpec.Stories.Story
+- CodeMySpec.Accounts
+- CodeMySpec.Components
+- CodeMySpec.Issues
+- CodeMySpec.Projects
+- CodeMySpec.Repo
 - CodeMySpec.Stories.StoriesRepository
+- CodeMySpec.Stories.Story
 - CodeMySpec.Tags
 - CodeMySpec.Users.Scope
 - Phoenix.PubSub

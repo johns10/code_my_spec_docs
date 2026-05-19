@@ -1,0 +1,28 @@
+Story 70 — Architecture Design Spex Test Run Summary
+====================================================
+Date: 2026-05-18
+Command: mix spex test/spex/70_architecture_design/
+
+All 16 story 70 criteria passed:
+- criterion_5289: PASS (all stories linked — evaluate_task accepts)
+- criterion_5290: PASS (story left unlinked — evaluate_task rejects, names story)
+- criterion_5291: PASS (link to surface component — no warning)
+- criterion_5292: PASS (link to non-surface component — accepts with warning)
+- criterion_5307: PASS (remove component from proposal — passes with warning)
+- criterion_5308: PASS (schema-only cycle — accepted without cycle error)
+- criterion_5309: PASS (non-schema cycle — rejected with cycle path named)
+- criterion_5310: PASS (new component no spec — stub written at conventional path)
+- criterion_5311: PASS (existing spec — not overwritten)
+- criterion_5312: PASS (all deps resolve — no dangling reference errors)
+- criterion_5313: PASS (dangling dep — rejects, names Stroies and source)
+- criterion_5657: PASS (infrastructure_paths classification clears orphan)
+- criterion_5658: PASS (transitive dep edge resolves orphan)
+- criterion_5659: PASS (orphan blocks execution — LeftoverKit named, no stubs)
+- criterion_5871: PASS (orphan unsatisfies architecture_designed gate)
+- criterion_5873: PASS (task prompt names orphan and resolution menu)
+
+Unrelated failure in same test run:
+- criterion_6425 (story 717): FAIL — DAG node position collisions in large project layout
+  (pre-existing bug, unrelated to story 70)
+
+Total: 525 tests, 1 failure (the failure is story 717, not story 70)

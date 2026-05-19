@@ -50,6 +50,11 @@ Parses Dependencies section AST into a list of module name strings. Extracts ite
 
 ## Dependencies
 
+- CodeMySpec.Accounts
+- CodeMySpec.Components
+- CodeMySpec.Paths
+- CodeMySpec.Utils
 - Earmark
-- Inflex
 - Ecto
+- Inflex
+

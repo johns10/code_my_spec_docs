@@ -1,0 +1,10 @@
+Criterion 5583 — Component without description still produces a labeled prompt
+Component: Stories (a0689560-6ce1-5bb5-bd36-f903a9c1c0e4) - description IS NULL in DB
+Requirement: implementation_file
+
+RESULT: PASS
+
+Observed in prompt:
+- "Component Description: No description provided" ✓
+
+Task ID: 27c87836-290f-43f6-8d7b-db7d222e221b

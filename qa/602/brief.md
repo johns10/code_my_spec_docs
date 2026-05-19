@@ -2,32 +2,25 @@
 
 ## Tool
 
-mix spex (internal controller surface — no browser or HTTP API needed)
+web (Vibium MCP browser) for UI surface — register and login pages showing OAuth buttons. curl for controller surface — OAuth initiation routes (302 redirect verification) and error-path callback behavior. mix spex for the full callback contract — real provider token exchange cannot be replayed against the running app via browser; cassette-based spex is the accepted verification mechanism.
 
 ## Auth
 
-No authentication required. All spex scenarios use `build_conn()` and `OAuthHelpers` cassettes to simulate OAuth callbacks directly against the test endpoint. No browser session or seed user needed.
+No authentication required. The pages under test (`/users/register`, `/users/log-in`, `/auth/:provider/login`, `/auth/:provider/callback` error path) are all publicly accessible. Session cookies for error-path callback tests are captured from the initiation redirect response mid-test.
 
 ## Seeds
 
-No seed scripts required. Each spex scenario generates unique user identities via `System.unique_integer/1` and builds its own OAuth cassettes via `OAuthHelpers.build_google_cassette!/2` and `OAuthHelpers.build_github_cassette!/3`.
+No seed scripts required. The OAuth flow creates new users on each callback. Error-path tests do not create users. Spex scenarios generate unique user identities via `System.unique_integer/1` and build their own cassettes.
 
 ## What To Test
 
-Run all six spex files for story 602:
-
-```
-mix spex test/spex/602_oauth_registration_logs_the_user_in_via_the_callback/
-```
-
-Scenarios covered:
-
-- Criterion 5493: First Google signup creates a user with `confirmed_at` set — verifies redirect lands on `/app` (not a confirmation step) and session resolves to the new user's email on `/app/users/settings`
-- Criterion 5494: First Google signup persists the integration row — verifies settings page shows "Disconnect" (not "Connect Google") after OAuth signup
-- Criterion 5495: Second Google sign-in is idempotent — same provider sub completes the callback twice; both sessions surface the same email on settings
-- Criterion 5496: Same email from a different OAuth provider links to the existing user — Google then GitHub with matching email; both sessions land on the same user
-- Criterion 5497: Provider response without an email aborts registration — GitHub callback with empty emails list; no session token set, redirect to `/users/log-in`
-- Criterion 5498: Integration save failure does not gate login — Google callback with empty `access_token`; user is still logged in and settings page renders their email
+- Navigate to `http://127.0.0.1:4000/users/register` — verify both "Continue with GitHub" (href `/auth/github/login`) and "Continue with Google" (href `/auth/google/login`) buttons render. Screenshot for evidence.
+- Navigate to `http://127.0.0.1:4000/users/log-in` — verify both OAuth buttons render on the login page. Screenshot for evidence.
+- `GET /auth/github/login` via curl — verify HTTP 302 and Location header points to `https://github.com/login/oauth/authorize` with correct client_id and scope `user:email`.
+- `GET /auth/google/login` via curl — verify HTTP 302 and Location header points to `https://accounts.google.com/o/oauth2/v2/auth` with correct client_id and scope `openid email profile`.
+- `GET /auth/google/callback?error=access_denied` via curl with a login-flow session cookie — verify HTTP 302 redirect to `/users/log-in` (error path aborts to login, not settings).
+- `GET /auth/github/callback?error=access_denied` via curl with a login-flow session cookie — verify HTTP 302 redirect to `/users/log-in`.
+- Run `mix spex test/spex/602_oauth_registration_logs_the_user_in_via_the_callback/` — verify all 6 criteria pass: confirmed_at set, integration row persisted, repeat sign-in idempotent, same-email cross-provider linking, missing-email abort, integration-save-failure does not gate login.
 
 ## Result Path
 

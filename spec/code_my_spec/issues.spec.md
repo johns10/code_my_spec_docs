@@ -8,12 +8,18 @@ Bounded context for managing QA issues and braindump items. Database is the sour
 
 ## Dependencies
 
+- CodeMySpec.Accounts
+- CodeMySpec.Auth
+- CodeMySpec.Documents
+- CodeMySpec.Environments
 - CodeMySpec.Issues.Issue
 - CodeMySpec.Issues.IssuesRepository
 - CodeMySpec.Issues.Projector
-- CodeMySpec.Documents
-- CodeMySpec.Environments
+- CodeMySpec.Paths
+- CodeMySpec.Projects
+- CodeMySpec.Repo
 - CodeMySpec.Users.Scope
+- Phoenix.PubSub
 
 ## Components
 

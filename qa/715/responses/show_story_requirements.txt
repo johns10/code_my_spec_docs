@@ -1,0 +1,10 @@
+# QA: Three Amigos UI smoke
+
+**Status:** in_progress
+**Requirements:** 0/5 satisfied
+
+- [ ] **component_linked** — Story has a linked surface component
+- [ ] **three_amigos_complete** — Three Amigos session complete — persona linked, rules and scenarios populated
+- [ ] **bdd_specs_exist** — BDD spec files exist for story
+- [ ] **bdd_specs_passing** — BDD specs pass
+- [ ] **qa_complete** — QA complete: at least one valid DB-backed pass attempt exists

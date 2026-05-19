@@ -7,7 +7,7 @@ MCP tool for creating user stories with title, description, and acceptance crite
 - CodeMySpec.McpServers.Stories.StoriesMapper
 - CodeMySpec.McpServers.Validators
 - CodeMySpec.Stories
-- Hermes.Server.Component
-- Hermes.Server.Frame
-- Hermes.Server.Response
+- Anubis.Server.Component
+- Anubis.Server.Frame
+- Anubis.Server.Response
 - Ecto.Changeset

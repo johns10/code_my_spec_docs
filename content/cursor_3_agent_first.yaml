@@ -11,10 +11,10 @@ publish_at: "2026-04-08T00:00:00Z"
 expires_at: null
 
 # SEO Metadata
-meta_title: "Cursor 3 Killed the IDE. Here's What Replaced It."
-meta_description: "Cursor 3 demoted the IDE for an agent switchboard with 8 parallel workers, mobile control, and Pro at $20/mo. What works and what's marketing."
-og_title: "Cursor 3 Killed the IDE. Here's What Replaced It."
-og_description: "Cursor 3 rebuilt around managing 8 parallel agents instead of writing code. A developer's honest take after a week of real use."
+meta_title: "Cursor 3.0 Review: Agents Window, 8 Parallel Agents, $20/mo"
+meta_description: "Cursor 3.0 shipped April 2 with an Agents Window running 8 parallel workers across local, worktree, cloud, and SSH. Pro stays $20/mo. A week of real use."
+og_title: "Cursor 3.0: Agents Window, 8 Parallel Agents, Pro $20/mo"
+og_description: "Cursor 3.0 rebuilt the interface around managing 8 parallel agents instead of writing code. Release date, pricing, and what worked after a week."
 og_image: null
 
 metadata:

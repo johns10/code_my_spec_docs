@@ -36,8 +36,10 @@ Renders Spec structs into formatted output. Provides coverage reports and summar
 
 ## Dependencies
 
-- CodeMySpec.Stories
-- CodeMySpec.Stories.Story
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.AcceptanceCriteria.Criterion
+- CodeMySpec.Environments
+- CodeMySpec.Stories
+- CodeMySpec.Stories.Story
 - CodeMySpec.Users.Scope
+

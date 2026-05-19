@@ -19,10 +19,10 @@ router, auth model, and audience. QA touches three logical surfaces:
 > **Heads up — local app port:** The in-repo dev server (`mix phx.server` with `MIX_ENV=dev` or `MIX_ENV=dev_cli`) runs the local endpoint on **port 4004** so it can coexist with the published `cms` binary on **4003** (see `config/dev.exs:79` and `config/dev_cli.exs:38`). For QA against a dev checkout, hit `127.0.0.1:4004`. Most QA evidence in this session was captured against the dev port.
 
 **Stack:** Phoenix 1.8 + LiveView, Ecto + PostgreSQL (`code_my_spec_dev`), SQLite for
-the CLI's local DB (`~/.codemyspec/cli.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
+the CLI's local DB (`~/.codemyspec/cli_dev.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
 journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 
-> **Heads up — local app DB:** The local CLI uses SQLite at `~/.codemyspec/cli.db`, NOT a Postgres `cli_dev` database. Plain `mix run` defaults to `MIX_ENV=dev` (Postgres). Always prefix CLI seed scripts with `MIX_ENV=dev_cli`.
+> **Heads up — local app DB:** The local CLI uses SQLite at `~/.codemyspec/cli_dev.db`, NOT a Postgres `cli_dev` database. Plain `mix run` defaults to `MIX_ENV=dev` (Postgres). Always prefix CLI seed scripts with `MIX_ENV=dev_cli`.
 
 **Hosted auth (port 4000):**
 - Browser: `Plug.Session` cookie + CSRF + `CodeMySpecWeb.UserAuth.fetch_current_scope_for_user`

@@ -1,0 +1,14 @@
+{
+  "tool": "semantic_search",
+  "params": {
+    "query": "fire-and-forget asynchronous dispatch",
+    "source": "hexdocs:phoenix",
+    "limit": 5
+  },
+  "result": {
+    "error": "embeddings_unavailable",
+    "message": "Embeddings are unavailable in this runtime. The embed pipeline (Ortex + sqlite_vec) ships only with the CodeMySpec CLI binary.",
+    "embeddings_available": false
+  },
+  "criterion_5978": "PARTIAL — semantic_search correctly handles the request with proper source filter (hexdocs:phoenix). Cannot verify content replacement as embeddings pipeline unavailable in dev."
+}

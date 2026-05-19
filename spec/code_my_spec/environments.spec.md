@@ -8,5 +8,4 @@ Provides execution primitives for running commands and file system operations ac
 
 ## Dependencies
 
-- Environments.Cli
-- Environments.Vscode
+- CodeMySpec.Environments.Cli

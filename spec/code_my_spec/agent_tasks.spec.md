@@ -8,11 +8,26 @@ context
 
 ## Dependencies
 
+- CodeMySpec.Architecture
+- CodeMySpec.Auth
+- CodeMySpec.BddSpecs
+- CodeMySpec.Components
+- CodeMySpec.Configurations
 - CodeMySpec.Documents
+- CodeMySpec.Environments
 - CodeMySpec.Files
-- CodeMySpec.Personas
 - CodeMySpec.Issues
-- CodeMySpec.Stories
+- CodeMySpec.Paths
+- CodeMySpec.Problems
+- CodeMySpec.ProjectSync
+- CodeMySpec.Projects
+- CodeMySpec.PublicUrl
+- CodeMySpec.Qa
+- CodeMySpec.Repo
 - CodeMySpec.Requirements
+- CodeMySpec.Rules
 - CodeMySpec.Sessions
-- CodeMySpec.Validation
+- CodeMySpec.Stories
+- CodeMySpec.Users
+- CodeMySpec.Utils
+

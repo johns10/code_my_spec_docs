@@ -7,5 +7,5 @@ Lists all contexts with no user story and no dependencies. This MCP tool identif
 - CodeMySpec.Components
 - CodeMySpec.McpServers.Components.ComponentsMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Frame
+- Anubis.Server.Component
+- Anubis.Server.Frame

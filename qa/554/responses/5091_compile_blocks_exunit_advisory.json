@@ -1,0 +1,1 @@
+{"decision":"block","reason":"Fix these problems before stopping:\n\ncompiler (1):\n  - lib/example_context.ex:2 — variable \"unused\" is unused\n\nAdditional problems (not blocking):\n  - exunit: 1 error (advisory)\n\nIf this looks like harness friction (looping hook, contradictory prompt, tool error), call `create_issue` with `scope: framework`."}

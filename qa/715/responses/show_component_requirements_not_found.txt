@@ -1,2 +1,1 @@
 Component 'DoesNotExist.Module' not found
-isError: true

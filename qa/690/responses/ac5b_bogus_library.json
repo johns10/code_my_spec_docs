@@ -1,4 +1,3 @@
 id: 0
 event: message
-data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"Invalid library \"bogus_library\". Use 'knowledge' or 'project_knowledge'.","type":"text"}],"isError":true}}
-
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Invalid library \"bogus_library\". Use 'knowledge' or 'project_knowledge'.","type":"text"}],"isError":true}}

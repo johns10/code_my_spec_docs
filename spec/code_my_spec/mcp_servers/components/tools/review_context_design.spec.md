@@ -9,5 +9,5 @@ MCP tool that reviews the current context design against best practices and prov
 - CodeMySpec.McpServers.Components.ComponentsMapper
 - CodeMySpec.McpServers.Components.Tools.ShowArchitecture
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Frame
+- Anubis.Server.Component
+- Anubis.Server.Frame

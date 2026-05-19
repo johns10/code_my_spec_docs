@@ -1,0 +1,8 @@
+# spec_file
+
+Context specification file exists
+
+**Status:** Not satisfied
+**Entity:** Component: MathTestProject.Calculations
+**Execution:** Delegate to a sub-agent
+**Validation:** Automatic — the stop hook will evaluate

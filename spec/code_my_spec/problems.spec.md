@@ -18,10 +18,13 @@ The Problems context provides a unified abstraction for problems, warnings, and 
 
 ## Dependencies
 
+- CodeMySpec.Components
 - CodeMySpec.Projects
 - CodeMySpec.Repo
-- Ecto.Schema
+- CodeMySpec.Tests
+- CodeMySpec.Users
 - Ecto.Changeset
+- Ecto.Schema
 
 ## Components
 

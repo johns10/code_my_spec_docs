@@ -1,4 +1,3 @@
 id: 0
 event: message
-data: {"id":2,"jsonrpc":"2.0","result":{"content":[{"text":"# Project Knowledge\n\n- README\n","type":"text"}],"isError":false}}
-
+data: {"id":11,"jsonrpc":"2.0","result":{"content":[{"text":"# Project Knowledge\n\n- README\n","type":"text"}],"isError":false}}

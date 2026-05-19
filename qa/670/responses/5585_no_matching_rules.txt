@@ -1,0 +1,18 @@
+Criterion 5585 — No matching rules leaves the rules section empty rather than padded
+Component: QaLive (ed04e425-0848-568d-a2e3-e5939d1f72e7) - type: module
+Task ID: 7f99797e-0a78-4ce3-9259-218257633172
+
+OBSERVATION from start_task prompt for QaLive:
+The prompt includes coding rules from elixir.md (component_type: "*", session_type: "code").
+This is the wildcard rule and does match even for module type.
+No liveview-only or context-only rules appear.
+
+ANALYSIS:
+The "no matching rules" case would require a component type that has no "*" or type-specific
+code rules. Since the project has elixir.md with component_type: "*", code session_type,
+all components will always have at least those rules. The criterion is satisfied by the
+spex tests which plant specific non-matching rules without the wildcard.
+
+RESULT: DEFERRED TO SPEX — The live project always has wildcard rules; the spex tests
+set up isolated environments where ONLY non-matching rules exist. The criterion is covered
+by the spex suite which plants controlled rule files.

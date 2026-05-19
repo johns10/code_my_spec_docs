@@ -7,5 +7,5 @@ MCP tool that provides statistical overview of component contexts including stor
 - CodeMySpec.Components
 - CodeMySpec.McpServers.Components.ComponentsMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Response
+- Anubis.Server.Component
+- Anubis.Server.Response

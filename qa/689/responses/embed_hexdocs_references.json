@@ -1,0 +1,26 @@
+{
+  "issue": "stale_embed_hexdocs_references",
+  "files_affected": [
+    "lib/code_my_spec/mcp_servers/knowledge/tools/semantic_search.ex"
+  ],
+  "references": [
+    {
+      "file": "lib/code_my_spec/mcp_servers/knowledge/tools/semantic_search.ex",
+      "line": 22,
+      "text": "Hex package embeddings are still managed via `embed_hexdocs`.",
+      "location": "@moduledoc",
+      "severity": "MEDIUM",
+      "scope": "DOCS"
+    },
+    {
+      "file": "lib/code_my_spec/mcp_servers/knowledge/tools/semantic_search.ex",
+      "line": 91,
+      "text": "No matches found. Run `sync_project` to refresh project/knowledge/spec/rule embeddings, or `embed_hexdocs` for hex package embeddings.",
+      "location": "format_body/1 no-matches message",
+      "severity": "MEDIUM",
+      "scope": "APP"
+    }
+  ],
+  "expected": "Both references should say sync_project handles hex doc embeddings automatically (no embed_hexdocs needed)",
+  "criterion_5981": "PASS (tool is absent from registration) but stale references remain in the tool's own documentation and no-matches message — user-facing bug"
+}

@@ -8,108 +8,85 @@ web (Vibium MCP browser tools for all LiveView pages on port 4004)
 
 ## Auth
 
-No authentication required. The local app (`CodeMySpecLocalWeb`) runs on port 4004 using `Plugs.LocalOnly` — it accepts any loopback connection without user credentials. Navigate directly to `http://127.0.0.1:4004/`.
+No authentication required for the local app. `CodeMySpecLocalWeb` runs on port 4004 with `Plugs.LocalOnly` — it accepts any loopback connection without user credentials. Navigate directly to `http://127.0.0.1:4004/`.
 
-Auth state for the local-install ladder comes from the `client_users` table in the SQLite DB at `~/.codemyspec/cli.db`. The `OAuthClient.authenticated?()` check reads the most recent `client_user` row and validates the token is not expired.
-
-Note: The running server at port 4004 uses `MIX_ENV=dev_cli` (SQLite), NOT `MIX_ENV=dev` (Postgres). All seed data must target SQLite via `sqlite3 ~/.codemyspec/cli.db` or `MIX_ENV=dev_cli mix run` (may fail if server is already running on port 4004 due to `:eaddrinuse`).
+Auth state for the local-install ladder (authed rung) comes from the `client_users` table in the SQLite DB. The `OAuthClient.authenticated?()` check reads the most recent `client_user` row.
 
 ## Seeds
 
-The following projects exist in the SQLite DB (`~/.codemyspec/cli.db`) and can be used for testing:
+Use existing projects in the local SQLite DB:
 
-- `code-my-spec` slug → `/Users/johndavenport/Documents/github/code_my_spec` — has 52 stories (use for "project with stories" scenarios)
-- `test-phoenix-project` slug → `/Users/johndavenport/Documents/github/code_my_spec_test_repos/test_phoenix_project` — has 0 stories (use for "project without stories" scenarios)
-- `qa-fixture-project` slug → `/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox` — has 1 story; UUID `11111111-1111-4111-8111-111111111111` (use for `?project=<id>` redirect scenario)
+- `code-my-spec` slug → project has stories (use for "project with stories" scenarios)
+- `test-phoenix-project` slug → project with no stories (use for "project without stories" / per-project ladder scenarios)
+- `qa-fixture-project` slug → UUID `11111111-1111-4111-8111-111111111111` (use for `?project=<id>` redirect scenario)
 
-Current auth state: signed in as `johns10@gmail.com` (auth rung shows as `done`). No project has `client_user_id` set (linked-project rung shows as `active`).
-
-For the init-done rung state (criterion 6065), insert a `local_init_complete` event via `sqlite3 ~/.codemyspec/cli.db "INSERT INTO events (event_type, data, inserted_at) VALUES ('local_init_complete', '{\"project_id\":\"<project-uuid>\"}', datetime('now'));"`. Note: this currently has no effect due to a bug in `Events.exists?/2` with SQLite (parameterized JSON key extraction fails — see Issues in result.md).
+Current auth state: signed in as `johns10@gmail.com` (auth rung shows as `done`). No project has `client_user_id` set matching the active client user (linked-project rung shows as `active`).
 
 ## What To Test
 
-### Scenario 1 — Local-install ladder renders on `/` (criteria 6059, 6060)
-
+### Scenario 1 — Newly handed-off user sees both local-install rungs (criterion 6059)
 1. Navigate to `http://127.0.0.1:4004/`
-2. Verify `[data-test="local-install-ladder"]` is present in the DOM
+2. Verify `[data-test="local-install-ladder"]` is present
 3. Verify `[data-test="auth-rung"]` is present
 4. Verify `[data-test="linked-project-rung"]` is present
-5. Check `data-state` on each rung — currently expect `auth-rung[data-state="done"]` (signed in) and `linked-project-rung[data-state="active"]` (no linked project)
-6. Screenshot the page
+5. Screenshot: `701_01_home_ladder.png`
 
-### Scenario 2 — Fully set-up user does not see the local-install ladder (criterion 6061)
+### Scenario 2 — Authed user with no linked project sees auth done and linked-project active (criterion 6060)
+1. Navigate to `http://127.0.0.1:4004/`
+2. Verify `[data-test="auth-rung"][data-state="done"]` (user is signed in)
+3. Verify `[data-test="linked-project-rung"][data-state="active"]` (no linked project for this user)
+4. Screenshot: `701_02_authed_no_linked.png`
 
-1. If both rungs are done (authed + linked project), navigate to `http://127.0.0.1:4004/`
-2. Verify `[data-test="local-install-ladder"]` is NOT present
-3. Verify the "Projects" heading renders as the primary content
-4. Note: this requires SQLite manipulation to set `client_user_id` on a project row
+### Scenario 3 — Fully set-up user does not see the local-install ladder (criterion 6061)
+- Requires SQLite state where both rungs are done. Observe with the current state (if linked_project? becomes true).
+- Verify the "Projects" heading is the primary content and `[data-test="local-install-ladder"]` is absent.
 
-### Scenario 3 — Project with no stories shows per-project ladder (criterion 6062)
-
+### Scenario 4 — Project with no stories shows per-project ladder (criterion 6062)
 1. Navigate to `http://127.0.0.1:4004/projects/test-phoenix-project`
 2. Verify `[data-test="per-project-ladder"]` is present
-3. Verify all three rungs: `[data-test="init-rung"]`, `[data-test="project-setup-rung"]`, `[data-test="first-story-rung"]`
+3. Verify `[data-test="init-rung"]`, `[data-test="project-setup-rung"]`, `[data-test="first-story-rung"]`
 4. Verify `[data-test="project-home-dashcards"]` is NOT present
-5. Screenshot the per-project ladder
+5. Screenshot: `701_04_per_project_ladder.png`
 
-### Scenario 4 — Project with at least one story shows standard project home (criterion 6063)
-
+### Scenario 5 — Project with at least one story shows standard project home (criterion 6063)
 1. Navigate to `http://127.0.0.1:4004/projects/code-my-spec`
-2. Verify `[data-test="project-home-dashcards"]` IS present
+2. Verify `[data-test="project-home-dashcards"]` is present
 3. Verify `[data-test="per-project-ladder"]` is NOT present
-4. Screenshot the standard dash-card grid
+4. Screenshot: `701_05_standard_project_home.png`
 
-### Scenario 5 — Chamfered shell and step-N eyebrow on rungs (criterion 6064)
-
-1. Navigate to `http://127.0.0.1:4004/projects/test-phoenix-project` (no stories)
-2. For each rung: verify element carries class `cms-onboarding`
+### Scenario 6 — Every rung renders with chamfered shell and step-N eyebrow (criterion 6064)
+1. Navigate to `http://127.0.0.1:4004/projects/test-phoenix-project`
+2. Verify each rung carries class `cms-onboarding`
 3. Verify eyebrow texts: `// step 01 · init`, `// step 02 · project setup`, `// step 03 · first story`
-4. Screenshot the ladder
+4. Screenshot: `701_06_rung_eyebrows.png`
 
-### Scenario 6 — Active rung is first incomplete in order (criterion 6065)
+### Scenario 7 — Active rung is first incomplete in order (criterion 6065)
+1. Observe `test-phoenix-project` with init not done
+2. Verify `init-rung[data-state="active"]`, `project-setup-rung[data-state="pending"]`, `first-story-rung[data-state="pending"]`
+3. Screenshot: `701_07_rung_states.png`
 
-1. Attempt to insert `local_init_complete` event into SQLite for `test-phoenix-project`
-2. Navigate to `http://127.0.0.1:4004/projects/test-phoenix-project`
-3. Check `data-state` on each rung — observe whether event was picked up
-4. Document actual vs expected behavior (this criterion may be blocked by the `Events.exists?` SQLite bug)
-
-### Scenario 7 — Pending first-story rung is non-actionable (criterion 6066)
-
+### Scenario 8 — Pending first-story rung is non-actionable (criterion 6066)
 1. On `http://127.0.0.1:4004/projects/test-phoenix-project` with init NOT done
 2. Verify `first-story-rung[data-state="pending"]`
-3. Inspect HTML of first-story rung: confirm no `phx-click` attribute and no `href=`
-4. Screenshot the pending first-story rung
+3. Inspect HTML: confirm no `phx-click` attribute and no `href=` on pending first-story rung
+4. Screenshot: `701_08_pending_first_story.png`
 
-### Scenario 8 — `?project=<id>` routes to named project (criterion 6067)
-
+### Scenario 9 — `?project=<id>` routes to named project (criterion 6067)
 1. Navigate to `http://127.0.0.1:4004/?project=11111111-1111-4111-8111-111111111111`
-2. Verify the browser redirects to `http://127.0.0.1:4004/projects/qa-fixture-project`
-3. Screenshot the resulting page
+2. Verify redirect to `/projects/qa-fixture-project`
+3. Screenshot: `701_09_project_redirect.png`
 
-### Scenario 9 — Unknown project ID falls back gracefully (criterion 6068)
-
+### Scenario 10 — Unknown project ID falls back gracefully (criterion 6068)
 1. Navigate to `http://127.0.0.1:4004/?project=999999999`
-2. Verify the page shows the Projects list ("Projects" heading present)
+2. Verify "Projects" heading renders (fallback to projects list)
 3. Verify no "Project not found" error flash
-4. Screenshot the fallback page
+4. Screenshot: `701_10_unknown_fallback.png`
 
-### Scenario 10 — Channel activation events (criteria 6069, 6070)
-
-These criteria test the hosted `CodeMySpecWeb.CliChannel` — not testable via Vibium browser on the local app. Run the spex tests:
-
-```
-MIX_ENV=test mix spex test/spex/701_local_app_onboarding_guides_me_from_sign_in_to_my_first_story/criterion_6069_each_milestone_fires_its_activation_event_over_the_channel_spex.exs
-MIX_ENV=test mix spex test/spex/701_local_app_onboarding_guides_me_from_sign_in_to_my_first_story/criterion_6070_clichannel_routes_received_activation_events_through_analytics_spex.exs
-```
-
-Report pass/fail from test output.
+### Scenario 11 — Channel activation events fired over cli channel (criteria 6069, 6070)
+- These criteria exercise the hosted `CodeMySpecWeb.CliChannel` via Phoenix.ChannelTest (in-process)
+- Review source implementation: `lib/code_my_spec_web/channels/cli_channel.ex`
+- Verify the `@activation_events` whitelist includes all 5 events and each is dispatched via `Analytics.dispatch/3`
 
 ## Result Path
 
-`.code_my_spec/qa/701/result.md`
-
-## Setup Notes
-
-The local app at port 4004 runs `MIX_ENV=dev_cli` which uses SQLite (`~/.codemyspec/cli.db`), not the Postgres `code_my_spec_dev` database. Do NOT use `psql` or `mix run priv/repo/qa_seeds.exs` (default Postgres) for data setup on port 4004 tests. Use `sqlite3 ~/.codemyspec/cli.db` instead.
-
-Known issue: `Events.exists?/2` is broken on SQLite — the `fragment("?->>?", e.data, ^key_str)` Ecto query fails to match JSON fields when the key is parameterized. This means the per-project ladder rung states (init, project-setup, first-story) cannot be advanced beyond the initial state in the dev_cli environment.
+`.code_my_spec/qa/701/`

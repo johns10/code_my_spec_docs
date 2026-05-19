@@ -14,8 +14,9 @@ Phoenix context for managing acceptance criteria as first-class entities. Accept
 
 ## Dependencies
 
-- CodeMySpec.AcceptanceCriteria.Criterion
 - CodeMySpec.AcceptanceCriteria.AcceptanceCriteriaRepository
+- CodeMySpec.AcceptanceCriteria.Criterion
+- CodeMySpec.Repo
 - CodeMySpec.Stories.Story
 - CodeMySpec.Users.Scope
 - Phoenix.PubSub

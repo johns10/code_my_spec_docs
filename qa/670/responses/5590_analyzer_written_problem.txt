@@ -1,0 +1,20 @@
+Criterion 5590 — Analyzer-written problem after command fired surfaces in evaluation
+Spex: criterion_5590_analyzer-written_problem_after_command_fired_surfaces_in_evaluation_spex.exs
+
+RESULT: FAIL
+
+Spex test fails with: "expected the analyzer-written problem to block the stop, got: %{}"
+
+Same root cause as 5588: the pipeline_compile_error cassette + empty JSONL fixture.
+
+The test writes a malformed code file then fires the stop hook with the compile error
+cassette. The cassette records mix compile returning exit_code=1, but the JSONL file
+is empty (0 bytes), so StaticAnalysis.compile sees no error problems and returns :ok.
+The pipeline continues without blocking.
+
+The criterion spec's intent is: after the agent writes a malformed file, the compile
+analyzer persists a problem, and evaluate/2 reloads and reads that fresh problem. This
+temporal sequence cannot be proven via the stop hook because the compile step doesn't
+detect the error when the JSONL fixture is empty.
+
+Spex error: "expected the analyzer-written problem to block the stop, got: %{}"

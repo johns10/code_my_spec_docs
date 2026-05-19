@@ -1,0 +1,18 @@
+{
+  "hex_docs_dir": ".code_my_spec/hex_docs/",
+  "total_packages": 96,
+  "phoenix_package": {
+    "present": true,
+    "file_count": 92,
+    "sample_files": [
+      "Inspect.Phoenix.Socket.Message.md",
+      "Mix.Phoenix.Context.md",
+      "Mix.Phoenix.md",
+      "Mix.Phoenix.Schema.md",
+      "Mix.Tasks.Compile.Phoenix.md",
+      "Mix.Tasks.Phx.Digest.md",
+      "Mix.Tasks.Phx.Gen.Auth.md"
+    ]
+  },
+  "criterion_5983": "PASS — hex doc projection files present in .code_my_spec/hex_docs/<package>/*.md structure for 96 packages"
+}

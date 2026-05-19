@@ -1,0 +1,15 @@
+{
+  "tool": "semantic_search",
+  "params": {
+    "query": "Phoenix Endpoint HTTP entry point",
+    "source": "hexdocs",
+    "limit": 10
+  },
+  "result": {
+    "error": "embeddings_unavailable",
+    "message": "Embeddings are unavailable in this runtime. The embed pipeline (Ortex + sqlite_vec) ships only with the CodeMySpec CLI binary.",
+    "embeddings_available": false
+  },
+  "source_handling": "Bare 'hexdocs' correctly maps to source_prefix 'hexdocs:' via put_source/2 in semantic_search.ex line 79",
+  "criterion_5979": "PARTIAL — source prefix routing is correctly implemented; uninstall behavior (removing file + re-sync drops embedding) is tested by BDD spex suite with test embeddings backend."
+}

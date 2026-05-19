@@ -1,0 +1,6 @@
+Criterion 5591 — Stale in-memory component state never gates evaluation
+Spex: criterion_5591_stale_in-memory_component_state_never_gates_evaluation_spex.exs
+
+RESULT: PASS (spex passes)
+
+The spex test passes in the full suite run (525 tests, only 4 failures — none from 5591).

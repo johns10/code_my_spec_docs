@@ -1,0 +1,22 @@
+Criterion 5587 — Unsatisfied code requirement holds the node with requirement feedback
+Component: QaLive (ed04e425-0848-568d-a2e3-e5939d1f72e7) - type: module
+Task ID: 7f99797e-0a78-4ce3-9259-218257633172
+
+ANALYSIS:
+Physical file lib/code_my_spec_local_web/qa_live.ex is MISSING from disk.
+However, a File record exists in SQLite: "lib/code_my_spec_local_web/live/qa_live.ex"
+with role=implementation, valid=1.
+
+The evaluate/2 function calls Files.list_component_files (DB lookup, not filesystem).
+Because the File record exists, has_role? returns {true, ...} → satisfied: true.
+Result: evaluate returns :valid → "ComponentCode: Passed"
+
+FINDING: For the "unsatisfied requirement" case, the criterion is designed to work with
+synced environments where the File record accurately reflects disk state. In production
+use (hook-driven validation), the Files table is kept in sync with disk. The spex tests
+use Briefly tmp dirs with fresh File state. The live project's QaLive component has a
+stale File record that doesn't match disk reality.
+
+RESULT: CANNOT REPRODUCE via MCP tools against the live project — the live project's
+File records may be out of sync with the filesystem. The criterion is correctly tested
+via the spex suite's isolated environments.

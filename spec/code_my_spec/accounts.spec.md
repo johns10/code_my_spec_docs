@@ -13,6 +13,7 @@ context
 - CodeMySpec.Accounts.Member
 - CodeMySpec.Accounts.MembersRepository
 - CodeMySpec.Authorization
+- CodeMySpec.Repo
 - CodeMySpec.Users.Scope
 - Phoenix.PubSub
 

@@ -7,6 +7,6 @@ MCP tool that provides comprehensive system architecture visualization including
 - CodeMySpec.Components
 - CodeMySpec.McpServers.Components.ComponentsMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Response
-- Hermes.Server.Frame
+- Anubis.Server.Component
+- Anubis.Server.Response
+- Anubis.Server.Frame

@@ -7,6 +7,6 @@ MCP tool for updating the description of existing acceptance criteria. Protects 
 - CodeMySpec.AcceptanceCriteria
 - CodeMySpec.McpServers.Stories.StoriesMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Response
-- Hermes.Server.Frame
+- Anubis.Server.Component
+- Anubis.Server.Response
+- Anubis.Server.Frame

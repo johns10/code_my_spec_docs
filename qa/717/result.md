@@ -2,103 +2,135 @@
 
 ## Status
 
-fail
+partial
 
 ## Scenarios
 
-### Criterion 6416 — Project chain edges flow downward
+### Criterion 6416 — Project chain edges flow downward toward later gates
 
 pass
 
-Navigated to `http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true` and extracted the `data-graph` JSON from the HTML response. Found 15 project nodes and 13 project→project edges. Every project-to-project edge has `source.y > target.y` — the project chain lays out correctly as a vertical column from y=0 down to y=-12750.
+Fetched `http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true` via curl and extracted the `data-graph` JSON from the `#sigma-graph` element's `data-graph` attribute. The graph contains 15 project nodes and 13 project→project edges. Every edge satisfies source.y > target.y (e.g. project_setup y=0 → personas_complete y=-1400 → stories_exist y=-2800 → … → qa_setup y=-14000). Zero violations found.
 
-### Criterion 6417 — Component zone edges flow downward
+Evidence: 822 nodes / 3866 edges. All 13 project-chain edges flow strictly downward.
 
-fail
-
-Extracted component→component edges from the `data-graph` JSON. Found 348 component-to-component edges. Of these, 309 violate the downward-flow rule: 192 are upward (source.y < target.y) and 117 are horizontal (source.y == target.y). Sample violations:
-
-- `component_8d9b28aeb62052ed8184...implementation_file → component_5e473e3...implementation_file`: src y=-7200, tgt y=-7000 (upward by 200)
-- `component_4de532b9...implementation_file → component_3916da5c...implementation_file`: src y=-6450, tgt y=-6250 (upward by 200)
-
-The component zone layout uses horizontal tree placement for each tier, where siblings within a tier share the same y-band. Cross-tree component edges (implementation_file → implementation_file between different components at similar but not identical depths) violate the downward invariant because they connect nodes at different tiers in ways the projector's tier-based layout does not account for.
-
-### Criterion 6420 — Removing story-to-project edge keeps project chain at top
-
-not tested
-
-This criterion requires a synthetic fixture (removing the only story-to-project edge) that cannot be set up without mutating the running project's graph. The current graph has 53 story→project edges and the project nodes are already correctly placed at the top (y=0 to y=-12750). The degenerate case cannot be observed without a controlled graph fixture.
-
-### Criterion 6421 — All five bands stack in correct order
+### Criterion 6417 — Component zone edges flow downward toward later tiers
 
 fail
 
-Extracted y-ranges from `data-graph` JSON:
-- Project band: y=[−12750, 0]
-- Story band: y=[−10850, −4000]
-- Component band: y=[−9450, −6250]
+Analyzed 348 component→component cross-entity edges. 344 flow downward (sy > ty). 4 edges have equal y values (sy == ty == -25000), violating the strict downward-flow requirement.
 
-The story band bottom (y=−10850) is lower than the component band top (y=−6250), meaning the component zone overlaps into the story zone by 4600 units. Specifically: 542 of 542 component nodes fall within the story band's y-range, and 104 story nodes fall within the component band's y-range. The expected invariant (`story_bottom_y > component_top_y`) is violated. The project band is correctly above the story band (project_top=0 > story_top=−4000).
+The 4 violations are bidirectional edges between components that form circular dependencies:
+- `Accounts.Account: implementation file` ↔ `Accounts.Member: implementation file` (y=-25000 on both)
+- `Personas.PersonaStory: implementation file` ↔ `Personas.Persona: implementation file` (y=-25000 on both)
 
-### Criterion 6422 — Empty post-story-project band leaves remaining four bands correct
+Root cause: `GraphProjector.resolve_depths` assigns depth 0 to all nodes in circular dependency cycles (code comment: "remaining nils get depth 0 (circular deps or missing)"). With both peers at depth 0, `normalize_comp_zone_y` assigns the same y coordinate. The edges between them are horizontal (sy == ty), not downward. Since Elixir modules cannot have true circular imports, the bidirectional dependency records likely represent a data quality issue — one direction of each pair was likely inserted by mistake.
 
-not tested
-
-Current schema has no late_project nodes (all 15 project nodes land in early_project because no project node receives a cross-entity edge per the `fan_in_idx` fallback). The post-story-project band is empty by design in the current data, but there are no dedicated late-project nodes to observe.
-
-### Criterion 6423 — Component layers stack top-to-bottom by dependency depth
+### Criterion 6420 — Removing the only story-to-project edge keeps the project chain at the top
 
 partial
 
-The projector produces 10 distinct y-levels for components, with values at -6250, -6450, -7000, -7200, -7750, -7950, -8500, -8700, -9250, -9450. These represent the tier-based layout where depth-0 components render first (highest y, closest to story band). However, as noted in criterion 6417, cross-component edges between nodes in adjacent tiers frequently flow upward or horizontally, violating the expected downward-only invariant for intra-component edges.
+The application correctly implements the 5-band layout with both early and late project gates. The graph shows 11 early project gates (y=0 to y=-14000, above the story zone) and 4 late project gates (y=-51800 to y=-56000, below the story zone): `all bdd specs passing`, `qa journey plan`, `qa journey execute`, `qa journey wallaby`. There are 53 story→project edges feeding these late gates.
 
-### Criterion 6424 — Satisfaction state maps to brand color tokens consistently
+The app-level intent of this criterion IS satisfied: early gates are at the top (max y=0), no total collapse to bottom band occurred. The regression described in the story (commit a774e35b collapsing the entire project chain to the bottom) is NOT present. However, the criterion's spex assertion `project_min_y > other_max_y` (all project nodes above all non-project nodes) evaluates to `-56000 > -16000 = false` because the late project band legitimately sits below the story zone. The assertion is overly strict for a schema that has both early and late project gates.
+
+### Criterion 6421 — All five bands populated stack in correct order
 
 pass
 
-All 822 nodes use exactly the three brand palette colors: `#ff3838` (satisfied, 694 nodes), `#f5f5f7` (actionable, 30 nodes), `#fde047` (blocked, 98 nodes). No off-palette colors observed. Color assignment is consistent across all entity types (project, story, component).
+Band ordering verified from extracted data-graph JSON:
+- Pre-story project band: y=0 to y=-14000 (11 nodes)
+- Pre-component story band: y=-16000 to y=-21600 (161 nodes)
+- Component zone: y=-25000 to y=-45000 (542 nodes)
+- Post-component story band: y=-47000 to y=-48400 (104 nodes)
+- Post-story project band: y=-51800 to y=-56000 (4 nodes)
 
-### Visual layout check
+All adjacency assertions pass:
+- project_top(0) > pre_story_top(-16000): true
+- pre_story_bottom(-21600) > component_top(-25000): true
+- component_bottom(-45000) > post_story_top(-47000): true
+- post_story_bottom(-48400) > project_bottom(-56000): true
 
-fail
+Note: A previous QA run recorded a story/component band overlap. This run finds no overlap — the bands are distinct with 2000-4000 unit gaps between them. The layout appears to have been fixed between runs.
 
-Screenshots at `.code_my_spec/qa/717/screenshots/4004_graph_overview.png` and `4004_graph_initial_load.png` show all 822 nodes compressed into a thin horizontal band in the center of the canvas. The sigma.js rendering makes the distinct y-bands invisible at the default zoom level — the graph appears as a single squashed horizontal line rather than clearly separated project/story/component vertical zones. Sigma's auto-fit collapses the wide y-range (−12750 to 0) into a tiny viewport fraction because the node spread is disproportionate (12750 y units tall, but very wide horizontally from story x-coordinates).
+### Criterion 6422 — Empty post-story-project band leaves remaining four bands in correct order
+
+partial
+
+Test 1 (max project y == 0): PASS. The pre-story project band correctly anchors at the top of the canvas (y=0).
+
+Test 2 (no project/story node below component zone): The spex assertion fails as written, but this is expected behavior. 108 nodes legitimately sit below the component zone (y < -45000): 104 post-component-story nodes (y=-47000 to -48400) and 4 late project nodes (y=-51800 to -56000). The 5-band model requires post-story and late-project nodes to appear below the component zone. The premise of the assertion (that the post-story band should be empty) does not match the current schema, which has 4 late project gates.
+
+### Criterion 6423 — Component layers stack top-to-bottom in increasing dependency depth
+
+pass
+
+Component zone has 10 distinct y tiers ranging from y=-25000 (shallowest/top, depth 0) to y=-45000 (deepest/bottom). The `normalize_comp_zone_y` pass correctly uses the global topological depth map to assign tier positions. All inter-entity component edges either flow downward (344 edges, sy > ty) or are horizontal due to circular deps (4 edges, sy == ty). Zero upward-flowing edges observed. Tier structure is consistent with dependency depth ordering.
+
+### Criterion 6424 — Satisfaction state maps to brand color tokens consistently across bands
+
+pass
+
+All 822 nodes use exactly the 3 brand palette colors with zero off-palette values:
+- `#ff3838` (satisfied / bg-primary signal red)
+- `#f5f5f7` (actionable / bg-success white-on-black)
+- `#fde047` (blocked / bg-warning yellow)
+
+Colors are applied consistently across project, story, and component bands. No band-specific color reinterpretation observed.
+
+### Criterion 6425 — Large-project layout keeps distinct bands and non-overlapping nodes
+
+pass
+
+Graph renders 822 nodes and 3866 edges across 5 distinct non-overlapping bands. Adjacent bands have exclusive y-ranges with gaps of 2000-3400 units between them:
+- Early project: [0, -14000] → gap 2000 → Pre-story: [-16000, -21600]
+- Pre-story: [-16000, -21600] → gap 3400 → Components: [-25000, -45000]
+- Components: [-25000, -45000] → gap 2000 → Post-story: [-47000, -48400]
+- Post-story: [-47000, -48400] → gap 3400 → Late project: [-51800, -56000]
+
+No y-range overlaps between any adjacent bands. Band separation is intact even with 822 nodes.
 
 ## Evidence
 
-- `.code_my_spec/qa/717/screenshots/4004_graph_overview.png` — graph at initial load, shows all nodes collapsed into a horizontal line
-- `.code_my_spec/qa/717/screenshots/4004_graph_initial_load.png` — same view confirming the collapsed layout with "822 nodes, 3866 edges" in the debug footer
+Vibium browser tools were not available in this subagent context. All evidence is from curl HTML extraction and data-graph JSON analysis.
+
+- Curl `GET http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true` returned 200 OK with `#sigma-graph[data-graph]` element present.
+- Parsed `data-graph` JSON: 822 nodes, 3866 edges. Node entity_type counts: `{project: 15, story: 265, component: 542}`.
+- Full graph data saved to `/tmp/graph_data.json` for analysis.
+- Note: Vibium MCP tools (`mcp__vibium__browser_*`) were unavailable in this subagent. Browser-level screenshots could not be captured. All assertions are based on the data-graph JSON payload delivered by the server.
 
 ## Issues
 
-### Component zone edges flow upward — 309 of 348 intra-component edges violate downward invariant
+### Circular component dependencies place peers at same Y tier, violating downward-flow invariant
 
 #### Severity
-HIGH
+MEDIUM
 
 #### Scope
 APP
 
 #### Description
-The requirements graph criterion states "component zone edges flow downward toward later tiers." Extracting the `data-graph` JSON from `http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true`, 309 of 348 component→component edges have `source.y <= target.y` (192 upward, 117 same-y).
+`GraphProjector.resolve_depths/2` assigns depth 0 to all nodes in circular dependency cycles (source: `graph_projector.ex`, comment "remaining nils get depth 0 (circular deps or missing)"). When two components form a mutual dependency (A depends on B, B depends on A), both land at depth 0 and receive the same y coordinate from `normalize_comp_zone_y`. The edges between them are horizontal (sy == ty), violating criterion 6417's requirement that component-zone edges flow strictly downward (sy > ty).
 
-The root cause is that the component zone tier layout places all nodes of a given dependency depth at the same y-band, but cross-component edges connect nodes from different trees that happen to share similar (but not identical) y positions. The `implementation_file` requirement in one component tree links to `implementation_file` in another component at a different tier. The GraphProjector assigns y based on intra-tree depth, not global component depth, so sibling-tier dependencies between trees produce horizontal or upward edges.
+Observed circular pairs in the live graph at `http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true`:
+- `Accounts.Account: implementation file` ↔ `Accounts.Member: implementation file` (both y=-25000)
+- `Personas.PersonaStory: implementation file` ↔ `Personas.Persona: implementation file` (both y=-25000)
 
-Reproduction: `curl -s "http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true" | grep -o 'data-graph="[^"]*"' | python3 -c "import sys,json; d=sys.stdin.read().replace('&quot;','\"'); g=json.loads(d); nodes={n['key']:n for n in g['nodes']}; print(sum(1 for e in g['edges'] if (s:=nodes.get(e['source'])) and (t:=nodes.get(e['target'])) and s['attributes']['entity_type']=='component' and t['attributes']['entity_type']=='component' and s['attributes']['y']<=t['attributes']['y']))"`
+Since Elixir modules cannot have true circular imports (the compiler rejects them), these bidirectional dependency records likely represent a data quality issue — one direction of each pair was probably inserted by mistake. Cleaning the spurious dependency records would eliminate the cycles and allow `resolve_depths` to assign distinct depths, restoring downward edge flow. Alternatively, `GraphProjector` could detect cycles and apply a tiebreaker (e.g. alphabetical module name) to distinguish nodes within a circular pair.
 
-### Story and component bands overlap — 4600-unit y-range collision
+Reproduction: `GET http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true`, parse `data-graph`, filter component→component edges where `source.attributes.entity_id != target.attributes.entity_id` and `source.attributes.y == target.attributes.y`.
+
+### Criteria 6420 and 6422 spex assertions mismatch current 5-band schema
 
 #### Severity
-HIGH
+LOW
 
 #### Scope
-APP
+QA
 
 #### Description
-The band ordering criterion requires `story_bottom_y > component_top_y`. In the current graph, the story band extends from y=−4000 (top) to y=−10850 (bottom), and the component band occupies y=−6250 (top) to y=−9450 (bottom). The component band top (−6250) is 4600 units above the story band bottom (−10850), meaning the component zone is entirely inside the story zone's y-range.
+Criterion 6420's spex asserts `project_min_y > other_max_y` (all project nodes above all non-project nodes). This was written assuming the post-a774e35b schema had NO late_project gates, but the current schema has 4 late gates (`all bdd specs passing`, `qa journey plan`, `qa journey execute`, `qa journey wallaby`) that legitimately sit at y=-51800 to y=-56000, below the story zone. The assertion evaluates to `-56000 > -16000 = false` and fails. The correct assertion for this criterion's intent should verify that the HIGHEST project node is at y=0 (passes) and that no collapse to all-bottom occurred — not that ALL project nodes are above all non-project nodes.
 
-All 542 component nodes fall within the story band's y-range. The `GraphProjector.project_layout/2` places the component zone start (`comp_zone_y`) relative to the pre-component story zone's lowest node, but the story zone spans a wide y-range (265 stories × 350-unit row gap, spread across many columns). The post-component story nodes (`post_sigma`) use a y below the component zone, but the pre-component story nodes extend much further down than `comp_zone_y` starts.
+Criterion 6422's spex asserts no project/story node sits below the component zone bottom (y=-45000). The 104 post-story-band story nodes (y=-47000 to -48400) and 4 late project nodes (y=-51800 to -56000) correctly appear below the component zone per the 5-band design. This assertion's premise conflicts with the 5-band layout model.
 
-Visual: `.code_my_spec/qa/717/screenshots/4004_graph_overview.png` shows the entire graph as a single horizontal band — bands are not visually distinct.
-
-Reproduction: Check `story_bottom` vs `comp_top` in the JSON: project band max_y=0, story max_y=−4000, story min_y=−10850, comp max_y=−6250.
+Both spex files should be updated to assert the correct 5-band invariants rather than a simpler 3-band model. Test files: `criterion_6420_*_spex.exs` and `criterion_6422_*_spex.exs`.

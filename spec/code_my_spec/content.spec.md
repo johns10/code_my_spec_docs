@@ -5,3 +5,10 @@ Generator-output rendering surface dropped into deployed client apps. Receives c
 ## Type
 
 context
+
+## Dependencies
+
+- CodeMySpec.Repo
+- CodeMySpec.Users
+- CodeMySpec.Utils
+

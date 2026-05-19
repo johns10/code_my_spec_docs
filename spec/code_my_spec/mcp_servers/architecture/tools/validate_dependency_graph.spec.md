@@ -7,6 +7,6 @@ MCP tool that validates the component dependency graph for circular dependencies
 - CodeMySpec.Components
 - CodeMySpec.McpServers.Architecture.ArchitectureMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Frame
-- Hermes.Server.Response
+- Anubis.Server.Component
+- Anubis.Server.Frame
+- Anubis.Server.Response

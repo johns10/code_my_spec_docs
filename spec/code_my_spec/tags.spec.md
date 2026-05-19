@@ -20,10 +20,12 @@ name within a project), and many-to-many with stories.
 
 ## Dependencies
 
-- CodeMySpec.Tags.Tag
-- CodeMySpec.Tags.StoryTag
-- CodeMySpec.Tags.TagRepository
+- CodeMySpec.Projects
+- CodeMySpec.Repo
 - CodeMySpec.Stories.Story
+- CodeMySpec.Tags.StoryTag
+- CodeMySpec.Tags.Tag
+- CodeMySpec.Tags.TagRepository
 - CodeMySpec.Users.Scope
 
 ## Components

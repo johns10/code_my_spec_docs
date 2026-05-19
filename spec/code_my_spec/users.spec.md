@@ -5,3 +5,15 @@ Email + OAuth identity. Magic-link registration delivers a login link that drops
 ## Type
 
 context
+
+## Dependencies
+
+- CodeMySpec.Accounts
+- CodeMySpec.ClientUsers
+- CodeMySpec.Environments
+- CodeMySpec.Integrations
+- CodeMySpec.Mailer
+- CodeMySpec.Projects
+- CodeMySpec.Repo
+- CodeMySpec.UserPreferences
+

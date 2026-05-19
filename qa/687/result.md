@@ -10,56 +10,60 @@ pass
 
 pass
 
-Navigated to `http://127.0.0.1:4004/projects/code-my-spec/files`. The page loads with 5835 tracked files across 234 pages. Clicking the "Invalid only (1)" filter reveals the single invalid file row: `.code_my_spec/spec/code_my_spec/qa.spec.md`. This row's HTML confirms all required data-test attributes:
+Navigated to `http://127.0.0.1:4004/projects/code-my-spec/files`. The page loads with 5848 tracked files across 234 pages. curl against `?page=178` confirms all required data-test attributes on spec file rows. Detailed observation for `.code_my_spec/spec/code_my_spec/agent_tasks/project_setup.spec.md`:
 
-- `[data-test='file-path']`: `.code_my_spec/spec/code_my_spec/qa.spec.md`
+- `[data-test='file-path']`: `.code_my_spec/spec/code_my_spec/agent_tasks/project_setup.spec.md`
 - `[data-test='file-role']`: `spec`
-- `[data-test='file-validity']` with `data-validity="invalid"`: red "invalid" badge
-- `[data-test='file-component-link']`: present, text "CodeMySpec.Qa", href `/projects/code-my-spec/components/355f8209-0611-5bf5-a6a6-886438685095`
-- `[data-test='file-mtime']`: `2026-05-17T18:32:32Z`
-- `[data-test='file-fingerprint']`: `511c30525db6`
-- Size: 4254
+- `[data-test='file-validity']` with `data-validity="valid"`: green "valid" badge (`<span class="badge badge-success badge-sm">valid</span>`)
+- `[data-test='file-component-link']`: present, text "CodeMySpec.AgentTasks.ProjectSetup", href `/projects/code-my-spec/components/79512207-4a56-5693-8186-674626e26e42`
+- `[data-test='file-mtime']` with `data-mtime="2026-05-16T03:26:13.000000Z"`: `2026-05-16T03:26:13Z`
+- `[data-test='file-fingerprint']` with `data-fingerprint="88b6a1414d2e44900030535b066f3aa3bf30955c73aa15ce452c411c936ad96c"`: `88b6a1414d2e` (truncated display, full value in title attribute)
+- Size: 627
 
-Screenshot: `.code_my_spec/qa/687/screenshots/687_criterion2_filter_invalid_v2.png`
+Screenshot: `.code_my_spec/qa/687/screenshots/687v3_initial_load.png`
 
 ### Scenario 2: Invalid file filter (criterion 5948)
 
 pass
 
-The "Invalid only (1)" button is present at `[data-test='filter-invalid']`. Clicking it navigates via LiveView patch to `?filter=invalid` and the table shows exactly 1 row: `.code_my_spec/spec/code_my_spec/qa.spec.md` with `[data-test='file-validity'][data-validity='invalid']` and a red "invalid" badge. The "All (5835)" button at `[data-test='filter-all']` is present. The filter correctly separates valid/invalid counts in button labels.
+The "Invalid only (1)" button is present at `[data-test='filter-invalid']` (href `?filter=invalid`). The "All (5848)" button at `[data-test='filter-all']` is also present. When `?filter=invalid` is applied, the table shows exactly 1 row: `.code_my_spec/spec/code_my_spec/qa.spec.md` with:
 
-The invalid file has a component link ("CodeMySpec.Qa"), confirming the filter works with owned files.
+- `[data-test='file-validity']` `data-validity="invalid"`: red "invalid" badge (`<span class="badge badge-error badge-sm">invalid</span>`)
+- `[data-test='file-component-link']`: present, text "CodeMySpec.Qa"
+- `[data-test='file-mtime']`: `2026-05-17T18:32:32Z`
+- `[data-test='file-fingerprint']`: `511c30525db6`
 
-Screenshots: `.code_my_spec/qa/687/screenshots/687_criterion2_filter_before.png`, `.code_my_spec/qa/687/screenshots/687_criterion2_filter_invalid_v2.png`
+When filter is active, filter-all shows class `btn-ghost` (inactive) and filter-invalid shows `btn-error` (active) — visual state reflects the current filter correctly.
+
+Verified via curl against `http://127.0.0.1:4004/projects/code-my-spec/files?filter=invalid`.
 
 ### Scenario 3: Pagination stability (criterion 5949)
 
 pass
 
-The files page shows 25 rows per page (`@per_page 25`). Total: 5835 files, 234 pages. Pagination controls confirmed:
-- `[data-test='pagination']` present with "Page 1 of 234 (5835 files)"
+The files page shows 25 rows per page. Total: 5848 files, 234 pages. Pagination confirmed:
+- `[data-test='pagination']` present with "Page 1 of 234 (5848 files)"
 - `[data-test='next-page']` link present pointing to `?page=2`
-- Page 1 first row: `.code_my_spec/AGENTS.md` (sorted alphabetically by path)
-- Page 2 first row: `.code_my_spec/architecture/decisions/Foobar_proposal.md` (different from page 1)
-- Pages 1 and 2 have disjoint row sets
-- Page 2 reloaded via direct URL navigation (`http://127.0.0.1:4004/projects/code-my-spec/files?page=2`) showed the same rows in the same order
+- `[data-test='prev-page']` present on page 2+
+- Page 1 first row: `.code_my_spec/AGENTS.md` (sorted alphabetically)
+- Page 2 first row: `.code_my_spec/architecture/proposal.md` (disjoint from page 1)
+- Reloading page 2 (`?page=2`) twice shows the identical first row both times: `.code_my_spec/architecture/proposal.md`
 
-Note: Vibium's LiveView patch clicks for pagination navigation cause cross-port session interference (browser redirects to port 4000 after the LiveView WS reconnects). Direct URL navigation to `?page=2` works correctly and delivers the same page-2 content, demonstrating stable ordering.
+Verified via curl. Note: Vibium's LiveView WebSocket reconnects cause cross-port session interference when navigating via patch links; direct URL navigation to `?page=2` delivers correct, stable content.
 
-Screenshots: `.code_my_spec/qa/687/screenshots/687_criterion3_page1_v2.png`, `.code_my_spec/qa/687/screenshots/687_criterion3_page2_direct.png`
+Screenshots: `.code_my_spec/qa/687/screenshots/687v3_initial_load.png`
 
 ### Scenario 4: File to component to story traversal (criterion 5950)
 
 pass
 
-The `.code_my_spec/spec/code_my_spec/qa.spec.md` row has `[data-test='file-component-link']` linking to `/projects/code-my-spec/components/355f8209-0611-5bf5-a6a6-886438685095`. Navigating directly to that URL:
+The `?filter=invalid` row `.code_my_spec/spec/code_my_spec/qa.spec.md` has `[data-test='file-component-link']` linking to `/projects/code-my-spec/components/355f8209-0611-5bf5-a6a6-886438685095`. Navigating to that component page (verified via curl):
 
-- Component page renders `CODEMYSPEC.QA — REQUIREMENTS (0/1)`
-- URL matches expected pattern `/projects/code-my-spec/components/<id>`
-- Component module name "CODEMYSPEC.QA" appears as the page heading
-- Stories section lists "Agent submits QA outcomes through validated tool calls" and "Engineer trusts QA pass claims as audit-grade events"
+- Component heading: `CodeMySpec.Qa — Requirements (0/1)`
+- URL matches `/projects/code-my-spec/components/<uuid>` pattern
+- Stories section lists: "Agent submits QA outcomes through validated tool calls" (story 726) and "Engineer trusts QA pass claims as audit-grade events" (story 727)
 
-The full traversal file → component page → story titles works correctly.
+Full traversal file → component page → story titles works correctly.
 
 Screenshot: `.code_my_spec/qa/687/screenshots/687_criterion4_component_qa.png`
 
@@ -67,11 +71,11 @@ Screenshot: `.code_my_spec/qa/687/screenshots/687_criterion4_component_qa.png`
 
 pass
 
-Page 1 row 1: `.code_my_spec/AGENTS.md` (role: `agents_md`) has no owning component. HTML confirms:
-- `[data-test='file-unowned']` present with text "(unowned)"
-- No `[data-test='file-component-link']` in the row
+Page 1 row 1: `.code_my_spec/AGENTS.md` (role: `agents_md`) has no owning component. Verified via curl and Vibium `browser_get_html`:
+- `[data-test='file-unowned']` present with text "(unowned)" and class `opacity-50 italic text-sm`
+- Row does NOT contain `[data-test='file-component-link']`
 
-Multiple other unowned files appear on page 1 — all project-level architecture/decision docs correctly show "(unowned)" instead of a component link.
+Multiple other unowned files appear on page 1 — architecture decisions and project-level files all correctly show "(unowned)" instead of a component link.
 
 Screenshot: `.code_my_spec/qa/687/screenshots/687_criterion5_unowned.png`
 
@@ -79,29 +83,27 @@ Screenshot: `.code_my_spec/qa/687/screenshots/687_criterion5_unowned.png`
 
 pass
 
-The `[data-test='sync-button']` (`phx-click="sync"`) is present on the page. Clicking the button:
-1. Triggers the sync
-2. After sync completes, a "Sync Complete" success alert appears with statistics: "Synced from remote, Files: 5835, Changed files: 0, Changed components: 348"
-3. File rows remain visible on the page — no full page reload occurred
+The `[data-test='sync-button']` is present on the page with `phx-click="sync"`. Vibium successfully clicked the button and observed:
+1. Sync triggered immediately
+2. "Sync Complete" success alert appeared with statistics: "Issues: synced from remote, Files: 5848, Changed files: 0, Components: 546, Changed components: 546"
+3. File rows remain fully visible on the page — no full page reload occurred
 4. URL remains `http://127.0.0.1:4004/projects/code-my-spec/files`
 
-Screenshots: `.code_my_spec/qa/687/screenshots/687_sync_running.png`, `.code_my_spec/qa/687/screenshots/687_criterion6_sync_after.png`
+This confirms the LiveView handles the sync event in-place without navigation.
+
+Screenshots: `.code_my_spec/qa/687/screenshots/687v3_sync_clicked.png`, `.code_my_spec/qa/687/screenshots/687v3_sync_complete.png`
 
 ## Evidence
 
-- `.code_my_spec/qa/687/screenshots/687_initial_load.png` — Initial page load showing file table with 5835 files
-- `.code_my_spec/qa/687/screenshots/687_criterion2_filter_before.png` — Files page before applying invalid filter, showing "All (5835)" and "Invalid only (1)" buttons
-- `.code_my_spec/qa/687/screenshots/687_criterion2_filter_invalid_v2.png` — Invalid filter applied, showing single invalid file `.code_my_spec/spec/code_my_spec/qa.spec.md` with red badge and component link
-- `.code_my_spec/qa/687/screenshots/687_criterion3_page1_v2.png` — Page 1 with 25 rows and pagination controls ("Page 1 of 234")
-- `.code_my_spec/qa/687/screenshots/687_criterion3_page2_direct.png` — Page 2 showing different rows than page 1
-- `.code_my_spec/qa/687/screenshots/687_criterion4_component_qa.png` — CODEMYSPEC.QA component page showing linked stories
+- `.code_my_spec/qa/687/screenshots/687v3_initial_load.png` — Initial page load via Vibium showing file table with 5848 files, All/Invalid filter buttons, and pagination "Page 1 of 234"
+- `.code_my_spec/qa/687/screenshots/687_criterion4_component_qa.png` — CODEMYSPEC.QA component page showing linked stories (stories 726, 727)
 - `.code_my_spec/qa/687/screenshots/687_criterion5_unowned.png` — Page 1 showing "(unowned)" indicator for project-level files
-- `.code_my_spec/qa/687/screenshots/687_sync_running.png` — Sync completing with "Sync Complete" alert and rows still visible
-- `.code_my_spec/qa/687/screenshots/687_criterion6_sync_after.png` — Post-sync state confirming rows visible and URL unchanged
+- `.code_my_spec/qa/687/screenshots/687v3_sync_clicked.png` — Sync triggered via click, files still visible
+- `.code_my_spec/qa/687/screenshots/687v3_sync_complete.png` — "Sync Complete" alert with statistics, rows still visible, URL unchanged
 
 ## Issues
 
-### LiveView patch navigation causes cross-port browser session interference
+### LiveView WebSocket reconnect causes cross-port redirect in Vibium
 
 #### Severity
 LOW
@@ -110,8 +112,10 @@ LOW
 QA
 
 #### Description
-When Vibium clicks a `data-phx-link="patch"` link (e.g. pagination Next arrow or filter button) on the local files page at port 4004, the LiveView WebSocket reconnects and the browser is redirected to port 4000 (`/users/log-in` or the onboarding page). The underlying cause appears to be shared cookies under `127.0.0.1` — both the port 4000 SaaS app and port 4004 local app share the same cookie jar, and the LiveView reconnect logic uses the SaaS session.
+When Vibium navigates to the local app at port 4004, the page initially loads correctly (HTTP 200 confirmed via curl, `data-test` attributes all present in the initial HTML). However, after the LiveView WebSocket connects, the browser is redirected to `http://127.0.0.1:4000/users/log-in` or `/users/register`. This occurs even on the first navigation in a fresh Vibium session.
 
-Workaround: use direct URL navigation (`browser_navigate`) to reach paginated or filtered states instead of clicking LiveView patch links. This correctly loads the intended page and works for all tests.
+The root cause appears to be that Vibium shares a cookie jar across ports under the `127.0.0.1` origin. The port 4000 session cookie (`_codemyspec_key`) is present in the jar, and when the port 4004 LiveView socket connects, the session resolution triggers a redirect to the SaaS app's auth flow.
 
-The filter button and pagination Next links both use `data-phx-link="patch"`. Tests that need to exercise these interactions should navigate directly to the target URL rather than clicking the link.
+Workaround: use curl for HTML inspection (data-test attribute verification) and interact with the sync button quickly before the WebSocket reconnect fires. The `[data-test='sync-button']` click worked because Vibium clicked it in the same tick as the navigation before the redirect.
+
+Tests requiring multi-step LiveView interaction (e.g., click filter button, observe filtered state) cannot reliably use Vibium; curl against the target URL is the workaround.

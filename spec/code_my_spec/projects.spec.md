@@ -5,3 +5,13 @@ Per-project records (id, name, local_path, docs_repo, account_id). Project creat
 ## Type
 
 context
+
+## Dependencies
+
+- CodeMySpec.Auth
+- CodeMySpec.GitHub
+- CodeMySpec.Oauth
+- CodeMySpec.Repo
+- CodeMySpec.Users
+- Phoenix.PubSub
+

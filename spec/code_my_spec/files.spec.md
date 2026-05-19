@@ -5,3 +5,20 @@ Filesystem-to-DB projection of tracked project files. Stores path, role, mtime, 
 ## Type
 
 context
+
+## Dependencies
+
+- CodeMySpec.Components
+- CodeMySpec.Configurations
+- CodeMySpec.Documents
+- CodeMySpec.Embeddings
+- CodeMySpec.Environments
+- CodeMySpec.Git
+- CodeMySpec.Paths
+- CodeMySpec.Problems
+- CodeMySpec.Projects
+- CodeMySpec.Repo
+- CodeMySpec.StaticAnalysis
+- CodeMySpec.Stories
+- CodeMySpec.Users
+

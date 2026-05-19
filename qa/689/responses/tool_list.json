@@ -1,0 +1,29 @@
+{
+  "source": "CodeMySpec.McpServers.LocalServer.__components__(:tool)",
+  "method": "mix run --no-start",
+  "tools": [
+    "accept_issue", "add_criterion", "add_question", "add_rule", "add_scenario",
+    "analyze_stories", "analyze_story_linkage", "assign_subagent", "assign_task",
+    "cancel_task", "create_component", "create_issue", "create_persona", "create_story",
+    "delete_criterion", "delete_persona", "delete_rule", "delete_story", "dismiss_issue",
+    "evaluate_task", "execute_proposal", "get_issue", "get_next_requirement", "get_persona",
+    "get_story", "get_story_gherkin", "init_project", "install_agents_md", "install_claude_md",
+    "install_credo_checks", "install_rules", "invalidate_qa_attempt", "link_criterion_to_rule",
+    "link_persona_to_story", "list_issues", "list_knowledge", "list_personas",
+    "list_project_tags", "list_projects", "list_qa_attempts", "list_questions",
+    "list_requirements", "list_rules", "list_session_subagents", "list_stories",
+    "list_story_titles", "list_tasks", "read_knowledge", "resolve_issue", "resolve_question",
+    "semantic_search", "set_story_component", "show_architecture_overview",
+    "show_component_requirements", "show_requirement", "show_story_requirements",
+    "start_story_interview", "start_story_review", "start_task", "start_three_amigos_session",
+    "submit_qa_result", "sync_project", "tag_stories", "tap_out", "triage_issues",
+    "unlink_persona_from_story", "update_component", "update_criterion", "update_persona",
+    "update_scenario", "update_story", "validate_dependency_graph"
+  ],
+  "embed_hexdocs_present": false,
+  "embed_docs_present": false,
+  "semantic_search_present": true,
+  "list_knowledge_present": true,
+  "read_knowledge_present": true,
+  "criterion_5981": "PASS — embed_hexdocs is absent; semantic_search, list_knowledge, read_knowledge are present"
+}

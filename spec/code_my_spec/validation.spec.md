@@ -8,14 +8,17 @@ Validates files edited during Claude Code sessions. Parses transcripts to extrac
 
 ## Dependencies
 
+- CodeMySpec.AgentTasks
 - CodeMySpec.BddSpecs
+- CodeMySpec.Configurations
+- CodeMySpec.FileEdits
+- CodeMySpec.Files
 - CodeMySpec.Problems
 - CodeMySpec.Problems.ProblemRenderer
-- CodeMySpec.ProjectSync.Sync
+- CodeMySpec.Sessions
 - CodeMySpec.StaticAnalysis
 - CodeMySpec.Tests
-- CodeMySpec.Transcripts.ClaudeCode.FileExtractor
-- CodeMySpec.Transcripts.ClaudeCode.Transcript
+- CodeMySpec.Users
 - CodeMySpec.Validation.TaskEvaluator
 
 ## Components

@@ -9,6 +9,15 @@ through dedicated MCP tools.
 
 context
 
+## Dependencies
+
+- CodeMySpec.AgentTasks
+- CodeMySpec.Issues
+- CodeMySpec.Repo
+- CodeMySpec.Sessions
+- CodeMySpec.Stories
+- CodeMySpec.Users
+
 ## Stories
 
 - **726** — *Agent submits QA outcomes through validated tool calls* (agent-surface lens)

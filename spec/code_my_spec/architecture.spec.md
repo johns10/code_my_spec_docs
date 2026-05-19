@@ -10,4 +10,11 @@ A coordination context that generates and maintains text-based architectural vie
 ## Dependencies
 
 - CodeMySpec.Components
+- CodeMySpec.Documents
+- CodeMySpec.Environments
+- CodeMySpec.McpServers
+- CodeMySpec.Paths
+- CodeMySpec.Repo
+- CodeMySpec.Stories
 - CodeMySpec.Users.Scope
+

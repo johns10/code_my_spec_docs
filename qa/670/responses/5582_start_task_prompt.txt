@@ -1,0 +1,15 @@
+Criterion 5582 — Prompt names every artifact path and project anchor
+Component: ContentAdmin (5e473e3a-77d0-5db1-b976-c71a362f1fb0)
+Requirement: implementation_file
+
+RESULT: PASS
+
+Observed in prompt:
+- Spec file path: .code_my_spec/spec/code_my_spec/content_admin.spec.md ✓
+- Code file path: lib/code_my_spec/content_admin.ex ✓
+- Test file path: test/code_my_spec/content_admin_test.exs ✓
+- Project name: Code My Spec ✓
+- Component name: ContentAdmin ✓
+- Component type: context ✓
+
+Task ID: 9b80d026-e3dd-49f5-b7a5-65e8edd20015

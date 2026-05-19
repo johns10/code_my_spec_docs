@@ -11,5 +11,5 @@ module
 - CodeMySpec.Stories
 - CodeMySpec.McpServers.Stories.StoriesMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
-- Hermes.Server.Frame
+- Anubis.Server.Component
+- Anubis.Server.Frame

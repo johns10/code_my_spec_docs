@@ -5,6 +5,6 @@ Maps story data to MCP responses using a hybrid format that combines human-reada
 ## Dependencies
 
 - CodeMySpec.McpServers.Formatters
-- Hermes.Server.Response
+- Anubis.Server.Response
 - Jason
 - Ecto

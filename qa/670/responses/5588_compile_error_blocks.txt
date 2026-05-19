@@ -1,0 +1,30 @@
+Criterion 5588 — Persisted problem on the code file holds the node even when requirements pass
+Spex: criterion_5588_persisted_problem_on_the_code_file_holds_the_node_even_when_requirements_pass_spex.exs
+
+RESULT: FAIL
+
+Spex test fails with: "compile error on the code file must block, got: %{}"
+
+Root cause identified:
+The cassette `pipeline_compile_error.json` records `mix compile` returning exit_code=1,
+but the JSONL fixture file `test/fixtures/validation/pipeline_compile_error/compile.jsonl`
+is 0 bytes (empty).
+
+In Compile.execute:
+- When output_file has 0 bytes → returns compiler_results: []
+- StaticAnalysis.compile only blocks when errors != [] (from JSONL content)
+- With empty JSONL → no errors → returns :ok → pipeline continues
+- mix test --stale has no cassette recording → "No recording found for..."
+- Stop hook returns {} (allow) instead of blocking
+
+The pipeline SHOULD block because exit_code=1 indicates compile failure. But the app
+only blocks based on JSONL content (compile error messages from diagnostics compiler),
+not the exit code itself. The JSONL fixture is empty, so no blocking occurs.
+
+This is a dual issue:
+1. Test infrastructure: compile.jsonl fixture needs content for the cassette to work
+2. Possibly a production issue: if the diagnostics compiler fails to write the JSONL
+   file (e.g., no :diagnostics compiler in project), the fallback uses raw output text,
+   but with output_file provided, it reads from that file which may be empty
+
+Spex error: "compile error on the code file must block, got: %{}"

@@ -1,0 +1,12 @@
+{
+  "tool": "sync_project",
+  "implementation_verified": true,
+  "file_sync_handles_hex_docs": true,
+  "hex_doc_role": ":hex_doc",
+  "hex_doc_source": "hexdocs:<package> (derived from path segment under .code_my_spec/hex_docs/<package>/)",
+  "sync_flow": "FileSync.sync/2 → classifies .code_my_spec/hex_docs/<package>/*.md as :hex_doc role → embeds via Embeddings pipeline if available",
+  "idempotency": "FileSync uses changed_paths fingerprint-diff — unchanged files are skipped",
+  "criterion_5980": "PASS — FileSync changed_paths diffing skips unchanged hex doc files on re-sync",
+  "criterion_5982": "PASS — Embeddings.available?/0 returns false in dev, FileSync still completes file classification without crashing",
+  "notes": "sync_project calls FileSync.sync then FileComponentSync.sync_from_files — neither crashes when embeddings are unavailable"
+}

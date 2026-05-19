@@ -8,4 +8,6 @@ context
 
 ## Dependencies
 
-- CodeMySpec.Quality
+- CodeMySpec.Repo
+- CodeMySpec.Users
+

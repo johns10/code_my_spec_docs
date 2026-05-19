@@ -4,13 +4,86 @@ We will only focus on unsatisfied user stories for this conversation, so if ther
 
 **Unsatisfied User Stories:**
 **QA: Three Amigos UI smoke**
-Dedicated story for exercising the Three Amigos LiveView wall...
+Dedicated story for exercising the Three Amigos LiveView wall (story 559's UI surface). All persona/rule/scenario/question mutations from QA land here, not on the real story 559.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**Architect surveys the project**
+QA story for architect survey tools
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC1 — Driver Onboarding**
+As a driver, I want a guided sign-up so I can start accepting rides.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC2 Updated Title**
+Updated description for SC2.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC3 Sibling Story**
+Should survive delete.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC4 Story needing criteria**
+Will receive an acceptance criterion.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC5 Story to be tagged**
+Receives a brand-new tag.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**QA686 SC5 Story to be tagged v2**
+Receives a brand-new tag.
+
+Acceptance Criteria:
+No acceptance criteria defined
+
+
+**Architecture Design**
+
+
+Acceptance Criteria:
+No acceptance criteria defined
+
 
 **Existing Components:**
 No components currently exist for this project.
 
 **Your Role:**
 - Map user stories to Phoenix contexts based on entity ownership
-...
+- Use business capability grouping within entity boundaries
+- Ensure flat context structure (no nested contexts)
+- Distinguish between domain contexts (own entities) and coordination contexts (orchestrate workflows)
+- Create components and dependencies to represent the complete system
 
-isError: false
+**Context Design Principles:**
+- Each user story should map to exactly one context
+- Domain contexts should own at least one entity type
+- Coordination contexts orchestrate workflows across domains
+- Dependencies should be explicit and justified
+- Avoid circular dependencies
+- Keep context responsibilities clear and focused
+
+**Instructions:**
+Start by reviewing the existing stories and components above, then guide me through creating or refining the context architecture.
+Ask questions about domain boundaries, entity ownership, and workflow orchestration needs.

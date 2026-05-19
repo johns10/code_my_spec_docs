@@ -1,0 +1,20 @@
+{
+  "tool": "semantic_search",
+  "params": {
+    "query": "Phoenix.Endpoint broadcast topic",
+    "source": "hexdocs:phoenix",
+    "limit": 5
+  },
+  "result": {
+    "error": "embeddings_unavailable",
+    "message": "Embeddings are unavailable in this runtime. The embed pipeline (Ortex + sqlite_vec) ships only with the CodeMySpec CLI binary.",
+    "embeddings_available": false,
+    "embeddings_backend": null
+  },
+  "context": "Dev server (port 4004) running via mix phx.server — embeddings pipeline not loaded. This is expected per QA plan.",
+  "hex_doc_files_present": true,
+  "hex_doc_packages": 96,
+  "phoenix_doc_files": 92,
+  "criterion_5977": "PARTIAL — hex doc projection files exist on disk (96 packages, 92 for phoenix). Embedding pipeline unavailable in dev runtime; semantic_search returns structured error. Criterion is about sync-triggered searchability, which requires CLI runtime.",
+  "criterion_5982": "PASS — sync completes and semantic_search returns structured error (not crash) when pipeline unavailable"
+}

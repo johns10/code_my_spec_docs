@@ -2,7 +2,7 @@
 
 MCP (Model Context Protocol) servers context providing AI agent interfaces to domain functionality.
 
-This context serves as the namespace for MCP server implementations that expose CodeMySpec functionality to AI agents (Claude Code, Claude Desktop) via the Hermes MCP library. The actual protocol handling is delegated to Hermes.Server - this context organizes the server definitions, tools, and shared infrastructure.
+This context serves as the namespace for MCP server implementations that expose CodeMySpec functionality to AI agents (Claude Code, Claude Desktop) via the Anubis MCP library. The actual protocol handling is delegated to Anubis.Server - this context organizes the server definitions, tools, and shared infrastructure.
 
 ## Type
 
@@ -10,10 +10,32 @@ context
 
 ## Dependencies
 
-- CodeMySpec.Stories
+- CodeMySpec.AcceptanceCriteria
+- CodeMySpec.AgentTasks
+- CodeMySpec.Architecture
+- CodeMySpec.Auth
+- CodeMySpec.BddRules
 - CodeMySpec.Components
+- CodeMySpec.Configurations
+- CodeMySpec.Embeddings
+- CodeMySpec.Files
+- CodeMySpec.Issues
+- CodeMySpec.Knowledge
+- CodeMySpec.Paths
+- CodeMySpec.Permissions
+- CodeMySpec.Personas
+- CodeMySpec.Projects
+- CodeMySpec.PublicUrl
+- CodeMySpec.Qa
+- CodeMySpec.Questions
+- CodeMySpec.Repo
+- CodeMySpec.Requirements
+- CodeMySpec.Rules
 - CodeMySpec.Sessions
-- Hermes.Server
+- CodeMySpec.Stories
+- CodeMySpec.Tags
+- CodeMySpec.Users
+- Anubis.Server
 - Ecto.Changeset
 - Jason
 
@@ -21,19 +43,19 @@ context
 
 ### StoriesServer
 
-Hermes MCP server exposing user story management tools to AI agents. Registers 13 tools for CRUD operations on stories and acceptance criteria, plus workflow tools for story interviews and reviews.
+Anubis MCP server exposing user story management tools to AI agents. Registers 13 tools for CRUD operations on stories and acceptance criteria, plus workflow tools for story interviews and reviews.
 
 ### ComponentsServer
 
-Hermes MCP server exposing component architecture tools to AI agents. Registers 16 tools for component CRUD, dependency management, similar component tracking, and architecture analysis/design workflows.
+Anubis MCP server exposing component architecture tools to AI agents. Registers 16 tools for component CRUD, dependency management, similar component tracking, and architecture analysis/design workflows.
 
 ### ArchitectureServer
 
-Hermes MCP server exposing specification file management and architecture design tools to AI agents. Registers 9 tools for spec file CRUD, design workflow initiation, and dependency graph validation.
+Anubis MCP server exposing specification file management and architecture design tools to AI agents. Registers 9 tools for spec file CRUD, design workflow initiation, and dependency graph validation.
 
 ### AnalyticsAdminServer
 
-Hermes MCP server exposing Google Analytics 4 administrative tools to AI agents. Registers 14 tools for managing custom dimensions, custom metrics, and key events.
+Anubis MCP server exposing Google Analytics 4 administrative tools to AI agents. Registers 14 tools for managing custom dimensions, custom metrics, and key events.
 
 ### Validators
 

@@ -22,4 +22,24 @@ context
 
 ## Dependencies
 
-- Components
+- CodeMySpec.AcceptanceCriteria
+- CodeMySpec.AgentTasks
+- CodeMySpec.BddRules
+- CodeMySpec.Components
+- CodeMySpec.Configurations
+- CodeMySpec.Documents
+- CodeMySpec.Environments
+- CodeMySpec.Files
+- CodeMySpec.Issues
+- CodeMySpec.Paths
+- CodeMySpec.Personas
+- CodeMySpec.Problems
+- CodeMySpec.Projects
+- CodeMySpec.Qa
+- CodeMySpec.Questions
+- CodeMySpec.Repo
+- CodeMySpec.Sessions
+- CodeMySpec.Stories
+- CodeMySpec.Users
+- CodeMySpec.Utils
+

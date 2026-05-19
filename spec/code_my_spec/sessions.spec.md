@@ -17,9 +17,14 @@ Manages agent task sessions backed by the filesystem. Each session is a director
 
 ## Dependencies
 
-- CodeMySpec.Environments
-- CodeMySpec.Sessions.SessionsRepository
+- CodeMySpec.Accounts
+- CodeMySpec.AgentTasks
+- CodeMySpec.Components
+- CodeMySpec.Projects
+- CodeMySpec.Repo
 - CodeMySpec.Sessions.SessionStack
+- CodeMySpec.Sessions.SessionsRepository
+- CodeMySpec.Users
 
 ## Components
 

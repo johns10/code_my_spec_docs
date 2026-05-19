@@ -1,0 +1,1 @@
+{"decision":"block","reason":"Fix these problems before stopping:\n\nexunit (1):\n  - test/example_context_test.exs:4 — exunit failure fixture\n\nIf this looks like harness friction (looping hook, contradictory prompt, tool error), call `create_issue` with `scope: framework`."}

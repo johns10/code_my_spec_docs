@@ -23,7 +23,11 @@ context
 - CodeMySpec.Personas.Persona
 - CodeMySpec.Personas.PersonaStory
 - CodeMySpec.Personas.PersonasRepository
+- CodeMySpec.Projects
+- CodeMySpec.Repo
+- CodeMySpec.Stories
 - CodeMySpec.Users.Scope
+- Phoenix.PubSub
 
 ## Components
 

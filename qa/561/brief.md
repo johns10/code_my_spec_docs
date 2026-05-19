@@ -2,66 +2,70 @@
 
 ## Tool
 
-MCP — `mcp__plugin_codemyspec_local__get_next_requirement`
-
-All scenarios exercise the `get_next_requirement` MCP tool directly. No browser or curl needed; the tool is callable from the agent session.
+`mcp__plugin_codemyspec_local__get_next_requirement` for MCP surface scenarios; `mcp__vibium__browser_*` for the `/next-task` LiveView at port 4004.
 
 ## Auth
 
-Local MCP (port 4004) — no user auth required. The tool is scoped by `X-Working-Dir` to whichever project the agent is currently working in. For scenarios targeting the sandbox project, the MCP tool will be called while the session's working directory resolves to `qa_sandbox`.
+Local app (port 4004): no auth required — `LocalOnly` plug accepts loopback connections automatically.
 
-The QA Fixture Project (id `11111111-1111-4111-8111-111111111111`) has `local_path` set to `/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox`.
+MCP tool (`mcp__plugin_codemyspec_local__*`): available to the agent directly without additional auth setup. The tool is pre-scoped to `/Users/johndavenport/Documents/github/code_my_spec` via the working directory.
 
 ## Seeds
 
-Run both seed scripts before testing:
+No seeds required. The live CodeMySpec project (at the current working directory) provides a real requirements graph with satisfied and unsatisfied requirements.
+
+Verify app health before testing:
 
 ```
-mix run priv/repo/qa_seeds.exs
+curl -s http://127.0.0.1:4004/health
 ```
-
-The sandbox project must be registered and its `local_path` pointing to the qa_sandbox directory. Verify with:
-
-```
-MIX_ENV=dev_cli mix run -e 'IO.inspect(CodeMySpec.Repo.all(CodeMySpec.Projects.Project))'
-```
-
-The sandbox at `/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox` should have minimal structure (no `.code_my_spec/` content), allowing `get_next_requirement` to respond with a sync-required or init-required state.
 
 ## What To Test
 
-The tool is called via `mcp__plugin_codemyspec_local__get_next_requirement`. The session is scoped to the CodeMySpec project (working directory: `/Users/johndavenport/Documents/github/code_my_spec`), which has a rich real-world requirements graph. All scenarios probe the live graph.
+### Scenario 1 — MCP tool returns actionable requirement with dispatch signature
+- Call `mcp__plugin_codemyspec_local__get_next_requirement` directly (no parameters)
+- Assert: response text is non-empty
+- Assert: response includes "start_task" keyword
+- Assert: response includes `requirement_name=` parameter
+- Assert: response includes `entity_id=` parameter
+- Maps to AC: "A requirement with all three conditions met appears in the actionable list" and "Every returned requirement has execution_type, orchestrated_by, and validation_type populated"
 
-### Scenario 1 — Actionable requirement appears (criterion 5613)
-- Call `get_next_requirement` against the real CodeMySpec project.
-- Expected: response includes `start_task` with `requirement_name=`, `entity_type=`, and `entity_id=` fields. Proves an actionable requirement is returned.
+### Scenario 2 — MCP tool — orchestration metadata on every advertised line
+- Call `mcp__plugin_codemyspec_local__get_next_requirement`
+- Filter lines in the response containing "start_task"
+- Assert: each such line has a requirement reference (`requirement_name=` or `requirement \``)
+- Assert: each such line has an entity reference (`entity_id=` or `component \``, `story \``, `project \``)
+- Maps to AC: criterion 5627 — every advertised item carries dispatch metadata
 
-### Scenario 2 — Missing-condition requirements excluded (criterion 5614)
-- Call `get_next_requirement` against the real CodeMySpec project.
-- Expected: response does NOT include `start_task` for requirements that are already satisfied or deeply blocked. The head requirement must be genuinely unblocked.
+### Scenario 3 — MCP tool — satisfied requirement does not appear
+- Call `mcp__plugin_codemyspec_local__get_next_requirement`
+- Inspect returned requirement IDs
+- Confirm none of the returned items is a requirement already known to be satisfied (cross-check against the requirements graph if needed)
+- Maps to AC: "A requirement that has been satisfied no longer appears in subsequent calls"
 
-### Scenario 3 — Empty list when nothing actionable (criterion 5616)
-- Call `get_next_requirement` against the qa_sandbox project (which has no `.code_my_spec/` content, so all requirements are blocked or the graph is uninitialized).
-- Expected: response is coherent text (not nil, not empty string), and does not include a `start_task` signature for actionable work — instead shows sync-required or init-required message.
+### Scenario 4 — LiveView `/next-task` renders actionable task
+- Launch Vibium; navigate to `http://127.0.0.1:4004/projects/code-my-spec/next-task`
+- Screenshot the page at initial load (save as `4004_next_task_initial.png`)
+- Assert: page title is "Next Task"
+- Assert: the markdown content area contains either a `start_task` signature or "All requirements satisfied"
+- Assert: "Sync" button is present on the page (`data-test="sync-button"`)
+- Maps to AC: visual rendering of what the agent sees from `get_next_requirement`
 
-### Scenario 4 — Orchestration metadata present (criterion 5627)
-- Call `get_next_requirement` against the real project.
-- Expected: every line containing `start_task` also carries `requirement_name=` and `entity_id=` (or equivalent entity reference).
+### Scenario 5 — LiveView Sync button triggers recompute
+- On the `/next-task` page, click the "Sync" button
+- Screenshot immediately after click to capture the loading state (save as `4004_next_task_syncing.png`)
+- Wait for sync to complete; screenshot the final state (save as `4004_next_task_after_sync.png`)
+- Assert: content re-renders after sync (still shows tasks or "all done")
+- Maps to AC: liveness of the "next task" display
 
-### Scenario 5 — Single actionable node returns one-element wave (criterion 5813)
-- On a freshly initialized project (or qa_sandbox after sync), exactly one requirement should be actionable: `project_setup`.
-- Call `get_next_requirement` against the sandbox.
-- Expected: response contains exactly one `start_task` signature for `requirement_name=\`project_setup\``.
-
-### Scenario 6 — All done when every requirement satisfied (criterion 5817)
-- The real CodeMySpec project currently has ongoing work, so this is verified negatively: confirm the response includes `start_task` calls (not the all-done message), meaning the project is not yet complete.
-- Save response as evidence.
-
-### Scenario 7 — Response structure validation
-- Inspect the raw response text from `get_next_requirement` against the real project.
-- Verify: response is non-nil, non-empty, and follows the documented format.
-- Save full response to `.code_my_spec/qa/561/responses/` as JSON.
+### Scenario 6 — MCP tool response shape when project is live (non-empty state)
+- Call `mcp__plugin_codemyspec_local__get_next_requirement`
+- Assert: response is text, not nil
+- Assert: if requirements remain, the response is not a bare empty string
+- Maps to AC: "The function returns an empty list when no requirement is actionable, never nil or a singleton"
 
 ## Result Path
 
-`.code_my_spec/qa/561/result.md`
+`.code_my_spec/qa/561/`
+
+Screenshots saved to `~/Pictures/Vibium/` with port-prefix filenames, then copied to `.code_my_spec/qa/561/screenshots/`.

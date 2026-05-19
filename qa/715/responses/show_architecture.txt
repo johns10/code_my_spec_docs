@@ -10,5 +10,23 @@ codemyspec_tags[CodeMySpec.Tags]
 codemyspec_issues[CodeMySpec.Issues]
 codemyspec_problems[CodeMySpec.Problems]
 codemyspec_stories[CodeMySpec.Stories]
-... (466 components total, tested on Code My Spec project)
-isError: false
+codemyspec_sessions[CodeMySpec.Sessions]
+codemyspec_documents[CodeMySpec.Documents]
+codemyspec_acceptancecriteria[CodeMySpec.AcceptanceCriteria]
+codemyspec_agenttasks_developliveview[CodeMySpec.AgentTasks.DevelopLiveView]
+codemyspec_staticanalysis --> codemyspec_problems
+codemyspec_quality --> codemyspec_code
+codemyspec_bddspecs --> codemyspec_stories
+codemyspec_bddspecs --> codemyspec_acceptancecriteria
+codemyspec_validation --> codemyspec_problems
+codemyspec_acceptancecriteria --> codemyspec_stories
+codemyspec_tags --> codemyspec_stories
+codemyspec_issues --> codemyspec_documents
+codemyspec_bddspecs --> codemyspec_code
+codemyspec_stories --> codemyspec_acceptancecriteria
+codemyspec_validation --> codemyspec_sessions
+codemyspec_staticanalysis --> codemyspec_code
+codemyspec_staticanalysis --> codemyspec_documents
+codemyspec_validation --> codemyspec_documents
+codemyspec_validation --> codemyspec_staticanalysis
+codemyspec_validation --> codemyspec_bddspecs

@@ -7,4 +7,4 @@ MCP tool for batch creation of user stories. Processes multiple story creation r
 - CodeMySpec.Stories
 - CodeMySpec.McpServers.Stories.StoriesMapper
 - CodeMySpec.McpServers.Validators
-- Hermes.Server.Component
+- Anubis.Server.Component

@@ -1,0 +1,30 @@
+Criterion 5592 — Orchestrate prompt names the requirement and the entity
+Spex: criterion_5592_orchestrate_prompt_names_the_requirement_and_the_entity_spex.exs
+
+RESULT: PASS (spex passes + code inspection confirms)
+
+Code inspection of ComponentCode.orchestrate/1 (lib/code_my_spec/agent_tasks/component_code.ex line 71-82):
+
+  def orchestrate(node) do
+    case node do
+      %{name: name, entity_type: entity_type, entity_id: entity_id, entity_name: entity_name}
+      when is_binary(name) and not is_nil(entity_type) and not is_nil(entity_id) and
+             not is_nil(entity_name) ->
+        {:ok,
+         "Spawn a @code-writer sub-agent to call `start_task` with requirement `#{name}` for #{entity_type} `#{entity_id}` (#{entity_name})"}
+
+      _ ->
+        {:error, :invalid_node}
+    end
+  end
+
+This template satisfies all assertions:
+- "@code-writer" ✓
+- "start_task" ✓
+- requirement name (e.g., "implementation_file") ✓
+- entity_id (component UUID) ✓
+- entity_name (component module name) ✓
+
+Live project get_next_requirement returned "issues_triaged" (TriageIssues), not
+implementation_file — no pending code tasks in the live project at this time.
+Spex test passes via isolated environment with a pending implementation_file.

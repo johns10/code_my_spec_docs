@@ -5,5 +5,5 @@ Maps component data to MCP responses in JSON format for programmatic access. Thi
 ## Dependencies
 
 - CodeMySpec.McpServers.Formatters
-- Hermes.Server.Response
+- Anubis.Server.Response
 - Ecto.Association
