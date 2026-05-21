@@ -47,7 +47,7 @@ So picture what's actually happening in a long prompt-and-pray session. Turn 1: 
 
 Liu et al.'s "Lost in the Middle"[^2] puts numbers on this. Performance is highest at the start and end of the context. Information in the middle gets retrieved worst. Chroma published research in 2025[^3] testing 18 frontier models, including Claude 4, GPT-4.1, and Gemini 2.5, and every single one of them degraded as input grew. No model is immune. The shape of the problem is universal.
 
-What this means in practice: the rules I set early in a session are exactly the rules most likely to be ignored by turn 30. The architectural decisions, the constraints, the "don't do this" instructions. All of it slides toward the middle of the context, where the model's ability to act on it goes to zero.
+What this means in practice: the rules I set early in a session are exactly the rules most likely to be ignored by turn 30. The architectural decisions, the constraints, the "don't do this" instructions. All slides toward the middle of the context, where the model's ability to act on it goes to zero.
 
 The model isn't forgetting. It's doing precisely what it was trained to do. It's allocating finite attention to what looks most relevant right now. The bug is not in the model. The bug is in me, expecting the chat log to function as memory.
 
@@ -63,7 +63,7 @@ That was the first time I started writing things down outside the chat.
 
 ## Coming next
 
-I started writing things down outside the chat — a development guidelines file, a todo list, a memory file. A prompt that loaded all three at the start of every session. That helped. Until it didn't, in two specific ways I didn't see coming.
+I started writing things down outside the chat (a development guidelines file, a todo list, a memory file). A prompt that loaded all three at the start of every session. That helped. Until it didn't, in two specific ways I didn't see coming.
 
 **Continue to [Part 3: Write it down](/blog/bdd-attention-write-it-down).**
 

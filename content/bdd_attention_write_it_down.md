@@ -16,7 +16,7 @@ It wasn't one file. It was three.
 
 **Todo list.** A markdown file with checkboxes, generated from the implementation plan. What needs to be built, in dependency order. The model would check items off as it worked and add notes on blockers.
 
-**Memory file.** An empty `memory.md` to start. The model would update it after each task — what's done, what's in progress, anything it needed to carry into the next session.
+**Memory file.** An empty `memory.md` to start. The model would update it after each task (what's done, what's in progress, anything it needed to carry into the next session).
 
 And one more piece: the same prompt, repeated at the start of every chat.
 
@@ -45,9 +45,9 @@ After a few months I started noticing a pattern: the model would check a task of
 
 "Implement the user authentication flow." Checked. I looked at what it had built. Login worked. Registration didn't handle duplicate emails. Password reset was a stub. Session expiration wasn't implemented. From my perspective the task was 40% complete. From the model's perspective it was done because it had written code that matched the phrase "implement the user authentication flow."
 
-The todo list described tasks — directions to travel, not destinations you could verify. "Implement X" is a direction. "A user who submits the registration form with a duplicate email sees an error message" is a behavior. You can either observe it or you can't. There's no judgment involved.
+The todo list described tasks: directions to travel, not destinations you could verify. "Implement X" is a direction. "A user who submits the registration form with a duplicate email sees an error message" is a behavior. You can either observe it or you can't. There's no judgment involved.
 
-I had been writing tasks. I hadn't been writing behaviors. The model and I were using the same word — "done" — to mean completely different things.
+I had been writing tasks. I hadn't been writing behaviors. The model and I were using the same word ("done") to mean completely different things.
 
 ## The second failure mode
 
@@ -65,12 +65,12 @@ Looking back, this three-file workflow solved one problem cleanly and missed a d
 
 The problem it solved was attention drift on architectural constraints. The development guidelines were now at the front of context at session start, not buried in a chat from three days ago. The "forgot we don't use changesets" failures almost disappeared. Short chats kept the context budget from compounding into noise. That was real, and it was a big improvement over prompt-and-pray.
 
-The problem it didn't solve was verification. "Done" in a task list is a judgment call, and the model and I were making different judgments from the same imprecise description. I needed to describe what done looked like in terms precise enough that neither of us had to judge it — something you could check, not just estimate.
+The problem it didn't solve was verification. "Done" in a task list is a judgment call, and the model and I were making different judgments from the same imprecise description. I needed to describe what done looked like in terms precise enough that neither of us had to judge it: something you could check, not just estimate.
 
 That's a different kind of artifact.
 
 ## Coming next
 
-I stopped writing tasks and started writing specs — one per module, with function signatures, step-by-step process, and test assertions co-located in the same document. That was closer to what I needed. Then the unit tests passed and the features were still broken.
+I stopped writing tasks and started writing specs: one per module, with function signatures, step-by-step process, and test assertions co-located in the same document. That was closer to what I needed. Then the unit tests passed and the features were still broken.
 
 **Continue to [Part 4: Spec files](/blog/bdd-attention-spec-files).**
