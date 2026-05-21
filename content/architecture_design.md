@@ -2,7 +2,7 @@
 
 Most AI coding workflows put the human in the review seat. The AI writes code, you read it, you approve or reject. That works until the AI is producing code faster than you can read.
 
-Level 4 flips the relationship. You stop reviewing code and start defining what correct looks like. On the architecture side, that means defining the system's structure -- contexts, components, dependencies, technology decisions -- before any implementation begins.
+Level 4 flips the relationship. You stop reviewing code and start defining what correct looks like. On the architecture side, that means defining the system's structure: contexts, components, dependencies, technology decisions, before any implementation begins.
 
 This is where procedural code matters most. The AI proposes. Deterministic validation checks the proposal. The human approves structure, not code.
 
@@ -10,29 +10,29 @@ This is where procedural code matters most. The AI proposes. Deterministic valid
 
 The `/architecture-design` command starts a guided session that turns user stories into a component graph.
 
-The agent receives every unsatisfied user story, the current component count, and generated architecture views -- an overview, a Mermaid dependency graph, and a namespace hierarchy. Its job is to analyze the stories, identify bounded contexts, and map each story to surface components (the LiveView or controller the user interacts with). Domain context involvement is derived through the dependency graph -- if a surface component depends on a context, stories on that surface automatically flow to the context.
+The agent receives every unsatisfied user story, the current component count, and generated architecture views: an overview, a Mermaid dependency graph, and a namespace hierarchy. Its job is to analyze the stories, identify bounded contexts, and map each story to surface components (the LiveView or controller the user interacts with). The dependency graph determines domain context involvement. If a surface component depends on a context, stories on that surface automatically flow to the context.
 
-Story mapping is enforced by procedural validation, not AI judgment. Every story must appear on a surface component. The system checks real story IDs, not AI-generated ones. If the mapping is incomplete or invalid, the agent gets specific feedback about exactly what's wrong.
+Procedural validation enforces story mapping, not AI judgment. Every story must appear on a surface component. The system checks real story IDs, not AI-generated ones. If the mapping is incomplete or invalid, the agent gets specific feedback about exactly what's wrong.
 
-The agent writes a proposal to a markdown file following a strict document schema. When the session stops, procedural code parses the proposal, validates it, and executes it -- creating spec files for every component, linking stories to components in the database, and building out the component tree. No human reads the proposal line by line. The validation catches structural problems. The human reviews the architecture at the level of "does this decomposition make sense for the product?"
+The agent writes a proposal to a markdown file following a strict document schema. When the session stops, procedural code parses the proposal, validates it, and executes it: creating spec files for every component, linking stories to components in the database, and building out the component tree. No human reads the proposal line by line. The validation catches structural problems. The human reviews the architecture at the level of "does this decomposition make sense for the product?"
 
 ## Technical Strategy
 
 Before any code gets written, technology decisions need to happen. `/technical-strategy` handles this through Architecture Decision Records.
 
-The system auto-writes ADRs for the standard stack -- Elixir, Phoenix, LiveView, Tailwind, DaisyUI, phx.gen.auth, Wallaby, BDD testing, Dotenvy, Resend. These are pre-made decisions baked into procedural code. They get committed as accepted records without discussion because they're not decisions anymore -- they're the platform.
+The system auto-writes ADRs for the standard stack: Elixir, Phoenix, LiveView, Tailwind, DaisyUI, phx.gen.auth, Wallaby, BDD testing, Dotenvy, Resend. These are pre-made decisions baked into procedural code. They get committed as accepted records without discussion because they're not decisions anymore. They're the platform.
 
-Then the agent looks at the project's architecture, stories, and dependencies to identify decisions that still need to be made. Testing strategy. Deployment approach. Third-party integrations. Background job infrastructure. For each topic, it does cursory research, evaluates options against project needs, and writes a decision record with context, options considered, and consequences.
+Then the agent looks at the project's architecture, stories, and dependencies to identify open decisions. Testing strategy. Deployment approach. Third-party integrations. Background job infrastructure. For each topic, it does cursory research, evaluates options against project needs, and writes a decision record with context, options considered, and consequences.
 
-The evaluate step is deterministic: check that all pre-made decisions have ADR files and that the decisions index exists. Technology choices are captured as documents before the first line of implementation code. This matters because it means the AI has explicit constraints to work within, not implicit assumptions to guess at.
+The evaluate step is deterministic: check that all pre-made decisions have ADR files and that the decisions index exists. The system captures technology choices as documents before the first line of implementation code. This matters because it means the AI has explicit constraints to work within, not implicit assumptions to guess at.
 
 ## Architecture Review
 
-`/architecture-review` reviews the health of the existing architecture. Procedural code calculates metrics -- total components, surface-to-domain ratio, context count, circular dependencies, orphaned components -- and generates fresh architecture views.
+`/architecture-review` reviews the health of the existing architecture. Procedural code calculates metrics (total components, surface-to-domain ratio, context count, circular dependencies, orphaned components) and generates fresh architecture views.
 
 The agent reviews surface-to-domain separation, dependency flow direction, component responsibilities, story coverage, and architectural issues. It uses tools to investigate and make changes directly: linking stories to components, checking for cycles, browsing spec files.
 
-This is a conversational session. There's no strict validation gate. The value is in catching drift -- components that lost focus, dependencies that flow the wrong direction, stories that fell through the cracks. You run this periodically, not as part of every build.
+This is a conversational session. There's no strict validation gate. The value is in catching drift: components that lost focus, dependencies that flow the wrong direction, stories that fell through the cracks. You run this periodically, not as part of every build.
 
 ## Context Design Review
 
@@ -40,16 +40,16 @@ This is a conversational session. There's no strict validation gate. The value i
 
 Then it cross-checks: do the type signatures match the descriptions? Does every function belong in its component? Do test assertions contradict each other? Do dependencies reference real components? Do context delegates match child APIs? Does every acceptance criterion map to at least one function?
 
-If it finds problems, it fixes the specs directly before writing the review. The evaluate step checks artifact requirements -- a requirements system that tracks whether the review document exists and is valid. The design review has to pass before implementation can proceed.
+If it finds problems, it fixes the specs directly before writing the review. The evaluate step checks artifact requirements: a requirements system that tracks whether the review document exists and is valid. The design review has to pass before implementation can proceed.
 
-This is the gate between "we designed this" and "we're building this." No code gets generated for a context that hasn't been reviewed. That gate is enforced by procedural code, not by hoping someone remembers to check.
+This is the gate between "we designed this" and "we're building this." No code gets generated for a context that lacks a passing review. Procedural code enforces that gate, not someone remembering to check.
 
 ## The Pattern
 
-Across all of these commands, the human works at the level of "what should this system do and why." You define stories. You approve architecture. You make technology decisions.
+Across all these commands, the human works at the level of "what should this system do and why." You define stories. You approve architecture. You make technology decisions.
 
-Everything below that -- mapping stories to components, generating specs, validating proposals, writing ADRs for standard decisions, calculating architecture health metrics -- is handled by a combination of AI doing the creative work and procedural code validating the output. The AI proposes. The code checks. The human approves at the structural level.
+Everything below that (mapping stories to components, generating specs, validating proposals, writing ADRs for standard decisions, calculating architecture health metrics) runs as a combination of AI doing the creative work and procedural code validating the output. The AI proposes. The code checks. The human approves at the structural level.
 
-This is what makes Level 4 architecture different from "ask the AI to design your system." The AI's proposals are validated against real data -- actual story IDs, actual component graphs, actual dependency chains. When it gets something wrong, the feedback is specific and mechanical, not a vague "try again."
+This is what makes Level 4 architecture different from "ask the AI to design your system." Procedural code validates the AI's proposals against real data: actual story IDs, actual component graphs, actual dependency chains. When it gets something wrong, the feedback is specific and mechanical, not a vague "try again."
 
 The architecture side defines what should exist. The QA side verifies that what exists is correct. Together, they close the loop.

@@ -2,7 +2,7 @@
 
 The bottleneck moved and most people haven't noticed.
 
-A year ago, the hard part of building software was writing the code. Now the hard part is knowing what to build. AI coding agents have gotten shockingly good at implementation. They'll generate a working feature in minutes. But if you told them to build the wrong thing, you just got the wrong thing faster.
+A year ago, the hard part of building software was writing the code. Now the hard part is knowing what to build. AI coding agents have gotten fast and consistent at implementation. They'll generate a working feature in minutes. But if you told them to build the wrong thing, you just got the wrong thing faster.
 
 Atlassian put it bluntly: ["Shipping the wrong feature quickly is worse than shipping the right feature slowly."](https://www.atlassian.com/blog/artificial-intelligence/how-ai-turns-software-engineers-into-product-engineers) When implementation is cheap, building the wrong thing is the most expensive mistake you can make.
 
@@ -12,13 +12,13 @@ I've watched this play out in my own work. The times my agents went off the rail
 
 The old way of doing requirements was painful. Someone writes a 40-page PRD, throws it over the wall, developers misinterpret half of it, and three months later you have something nobody wanted.
 
-AI didn't fix that process. It replaced it with something fundamentally different.
+AI didn't fix that process. It replaced it with something categorically different.
 
 Now you can have a conversation with an AI agent about what you want to build. The agent asks clarifying questions, identifies edge cases you missed, and generates structured requirements you can actually hand to a coding agent. [ChatPRD](https://www.chatprd.ai/) pioneered this and now has over 100,000 PMs using it. The idea-to-PRD pipeline that used to take days takes minutes.
 
 But ChatPRD is just the beginning. [Kiro from AWS](https://kiro.dev/) built an entire IDE around a three-phase spec workflow: Requirements, Design, Tasks. You tell the agent what you want, it structures it, you refine it together, and then it generates implementation tasks. [GitHub's spec-kit](https://github.com/github/spec-kit) does something similar with an open source CLI that works across agents. Their vision is that "intent is the source of truth," not code.
 
-This is what Deepak Singh, AWS VP of Developer Agents, [told Stack Overflow](https://stackoverflow.blog/2025/10/31/vibe-coding-needs-a-spec-too/): senior engineers at Amazon - 80% of whom are using AI agents - naturally gravitated to writing specs first. They didn't need to be told. They figured out that "vibe coding needs a spec, too."
+This is what Deepak Singh, AWS VP of Developer Agents, [told Stack Overflow](https://stackoverflow.blog/2025/10/31/vibe-coding-needs-a-spec-too/): senior engineers at Amazon (80% of whom use AI agents) gravitated to writing specs first. Nobody pushed them to. They figured out that "vibe coding needs a spec, too."
 
 ## What Tools Enable Spec-Driven AI Development?
 
@@ -62,21 +62,21 @@ After doing this for a while, here's what I've learned about requirements for AI
 
 [Thoughtworks called](https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices) spec-driven development "one of the most important practices to emerge in 2025." I think they're right, but with a caveat: the practice matters more than any specific tool. Whether you use Kiro, spec-kit, BMAD-METHOD, or just a well-structured markdown file, the point is the same. Think before you build. Be specific. Let the agent do what it's good at. Then [write the spec](/blog/agentic-specifications) and [verify the output](/blog/agentic-qa).
 
-The reality is that requirements have always been the hardest part of software. AI just made it impossible to ignore.
+Requirements have always been the hardest part of software. AI just made it impossible to ignore.
 
 ## Frequently Asked Questions
 
 **Why do AI agents write bad code even with good models?**
-The quality of AI-generated code is determined primarily by the quality of the input specification, not the model capability. BSWEN measured a 26-point quality gap between AI-only code and human-guided architecture, with the entire gap coming from architectural dimensions. When you give an agent a vague brief, every gap in your requirements is an invitation for the agent to guess — and the probability of all guesses being correct approaches zero in production systems.
+The quality of AI-generated code is determined primarily by the quality of the input specification, not the model capability. BSWEN measured a 26-point quality gap between AI-only code and human-guided architecture, with the entire gap coming from architectural dimensions. When you give an agent a vague brief, every gap in your requirements is an invitation for the agent to guess, and the probability of all guesses being correct approaches zero in production systems.
 
 **What format should requirements be in for AI agents?**
 Structured Given-When-Then acceptance criteria work best. "As a user, I want to log in" gives the agent nothing to verify against. "Given a user with valid credentials, when they submit the login form, then they should be redirected to their dashboard and see a welcome message" is specific enough to implement and test. Keep scope atomic: one story, one behavior, one verifiable outcome.
 
 **Should I fix bad AI output by editing the code or the spec?**
-Fix the spec and regenerate. This is counterintuitive — it feels faster to manually patch the code — but adjusting specs and re-running produces better results because the fix propagates to all generated artifacts (code, tests, documentation). Manual code patches create divergence between spec and implementation that compounds with every iteration.
+Fix the spec and regenerate. This is counterintuitive (it feels faster to manually patch the code), but adjusting specs and re-running produces better results because the fix propagates to all generated artifacts (code, tests, documentation). Manual code patches create divergence between spec and implementation that compounds with every iteration.
 
 **What is the 70% problem in AI-assisted development?**
-Addy Osmani described the 70% problem: AI tools get non-engineers to a functional prototype, but the last 30% — error handling, edge cases, accessibility, performance — becomes an exercise in diminishing returns. This isn't an AI capability problem; it's a requirements problem. The AI doesn't build what you don't ask for. Being explicit about normally-assumed requirements closes this gap.
+Addy Osmani described the 70% problem: AI tools get non-engineers to a functional prototype, but the last 30% (error handling, edge cases, accessibility, performance) becomes an exercise in diminishing returns. This isn't an AI capability problem; it's a requirements problem. The AI doesn't build what you don't ask for. Being explicit about normally-assumed requirements closes this gap.
 
 **How do MCP servers improve requirements handling?**
 MCP (Model Context Protocol) servers connect your AI coding agent directly to your project management tools. Instead of copy-pasting requirements from Jira or Linear into prompts, the agent reads tickets, acceptance criteria, and documentation in real time. Atlassian, Linear, and GitHub all offer MCP integrations. This eliminates context loss between tools and keeps the agent working from the source of truth.

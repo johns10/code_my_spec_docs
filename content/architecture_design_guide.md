@@ -8,7 +8,7 @@ Write an architecture document. Map your stories to components. The architecture
 
 ## What an Architecture Document Is
 
-An architecture document maps what your app needs to do (user stories) to what your app is made of (components). For every feature, you define which parts of the system are involved.
+An architecture document maps what your app needs to do (user stories) to the components that make up your app. For every feature, you define which parts of the system play a role.
 
 Here's what a simple mapping looks like:
 
@@ -58,7 +58,7 @@ Each component in the document gets:
 - **Type:** Page, API endpoint, domain module, model, service
 - **Description:** One sentence on what it's responsible for
 - **Stories:** Which user stories this component serves
-- **Dependencies:** What other components it depends on
+- **Dependencies:** Other components this one relies on
 
 Keep it simple. The point isn't a UML diagram. It's a map the agent can read.
 

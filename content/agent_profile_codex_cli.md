@@ -2,7 +2,7 @@
 
 ## Overview
 
-Codex CLI is OpenAI's CLI agent, and it's the one I'd hand a cost-conscious developer doing terminal-heavy work. Unlike Claude Code, it's open source -- Apache 2.0, written in Rust, 62K+ GitHub stars, 365 contributors. Ships with GPT-5.3-Codex, codex-mini, and now GPT-5.4.
+Codex CLI is OpenAI's CLI agent, and it's the one I'd hand a cost-conscious developer doing terminal-heavy work. Unlike Claude Code, it's open source: Apache 2.0, written in Rust, 62K+ GitHub stars, 365 contributors. Ships with GPT-5.3-Codex, codex-mini, and now GPT-5.4.
 
 $20/mo via ChatGPT Plus with generous limits. Users consistently report 2-3x token efficiency over Claude Code. Community consensus: go-to for DevOps, infra, and CI/CD. The Codex App (macOS + Windows) runs parallel agent threads across projects.
 
@@ -10,15 +10,15 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ## Key Differentiators
 
-- **Open source in Rust** -- Apache 2.0, 365 contributors. You can audit it
-- **Token efficiency** -- 2-3x fewer tokens than Claude Code for comparable work
-- **DevOps/infra** -- Community-consensus leader for terminal-heavy workflows
-- **GitHub code review** -- Auto-reviews on PRs. Entrenched enough that Codex flagged a Claude-generated PR (609 upvotes, r/OpenAI)
-- **Codex Desktop** -- macOS + Windows app for parallel agent threads. Now with background computer use (v26.415, April 2026) and integrated browser
-- **90+ proprietary plugins** -- Atlassian Rovo, CircleCI, GitLab, Figma, Notion (separate from the 9,000+ open MCP ecosystem)
-- **Voice transcription** -- Hold spacebar to dictate in the TUI
-- **9,000+ MCP plugins** -- Largest plugin ecosystem in the category
-- **Tiered plans up to $200** -- $20 Plus, $100 Pro (5x, April 2026), $200 Pro (~20x). Direct Claude Max competitor
+- **Open source in Rust**: Apache 2.0, 365 contributors. You can audit it
+- **Token efficiency**: 2-3x fewer tokens than Claude Code for comparable work
+- **DevOps/infra**: Community-consensus leader for terminal-heavy workflows
+- **GitHub code review**: Auto-reviews on PRs. Entrenched enough that Codex flagged a Claude-generated PR (609 upvotes, r/OpenAI)
+- **Codex Desktop**: macOS + Windows app for parallel agent threads. Now with background computer use (v26.415, April 2026) and integrated browser
+- **90+ proprietary plugins**: Atlassian Rovo, CircleCI, GitLab, Figma, Notion (separate from the 9,000+ open MCP ecosystem)
+- **Voice transcription**: Hold spacebar to dictate in the TUI
+- **9,000+ MCP plugins**: Largest plugin ecosystem in the category
+- **Tiered plans up to $200**: $20 Plus, $100 Pro (5x, April 2026), $200 Pro (~20x). Direct Claude Max competitor
 
 ## Pricing
 
@@ -48,7 +48,7 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 - OpenAI models only
 - Frontend/UI work is the consistent weakness. April 2026 additions (integrated browser, gpt-image-1.5) target it but community verdict is pending
-- Doesn't follow instructions literally -- "writes what it thinks you meant, not what you actually said"
+- Doesn't follow instructions literally: "writes what it thinks you meant, not what you actually said"
 - Rate limits still frustrating for heavy GPT-5.4 users even on the new $100 tier
 - April 2026 rebalance pushes Plus power users toward the $100 tier
 - API vs subscription billing confusion
@@ -60,18 +60,18 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ### What People Love
 
-- **Cost + token efficiency** -- 2-3x fewer tokens than Claude Code. Users rarely hit limits even with heavy worktree use -- u/Jippylong12, r/ChatGPTCoding
-- **Terminal workflows** -- DevOps/infra/CI-CD devs consistently pick Codex
-- **Code review** -- GitHub auto-review on PRs. Entrenched enough that a Claude Code PR got flagged by Codex (609 upvotes, r/OpenAI)
-- **Open source ecosystem** -- 365 contributors, 553 releases, community-built best-practice repos
-- **Voice transcription** -- Hold spacebar to dictate
+- **Cost + token efficiency**: 2-3x fewer tokens than Claude Code. Users rarely hit limits even with heavy worktree use (u/Jippylong12, r/ChatGPTCoding)
+- **Terminal workflows**: DevOps/infra/CI-CD devs consistently pick Codex
+- **Code review**: GitHub auto-review on PRs. Entrenched enough that a Claude Code PR got flagged by Codex (609 upvotes, r/OpenAI)
+- **Open source ecosystem**: 365 contributors, 553 releases, community-built best-practice repos
+- **Voice transcription**: Hold spacebar to dictate
 
 ### Common Complaints
 
-- **Frontend/UI is the #1 weakness** -- "GPT-5.4 really struggles a lot with UI and frontend optimization... With Opus 4.6, you could one-shot the frontend with backend integration and it will work out of the box." -- u/Creepy-Row970, r/OpenAI
-- **Doesn't follow instructions literally** -- "codex writes what it thinks you meant, not what you actually said" -- u/GPThought, r/ChatGPTCoding (48 comments)
-- **Pro rate limits** -- Even $200/mo users hit weekly limits with GPT-5.4
-- **Billing confusion** -- API vs subscription separation trips people up
+- **Frontend/UI is the #1 weakness**: "GPT-5.4 really struggles a lot with UI and frontend optimization... With Opus 4.6, you could one-shot the frontend with backend integration and it will work out of the box." (u/Creepy-Row970, r/OpenAI)
+- **Doesn't follow instructions literally**: "codex writes what it thinks you meant, not what you actually said" (u/GPThought, r/ChatGPTCoding, 48 comments)
+- **Pro rate limits**: Even $200/mo users hit weekly limits with GPT-5.4
+- **Billing confusion**: API vs subscription separation trips people up
 
 ### Notable Quotes
 
@@ -85,7 +85,7 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ## Performance Notes
 
-**On benchmarks:** SWE-bench measures models plus scaffolding, not the CLI tools developers use. Neither Codex CLI nor Claude Code has been submitted. Terminal-Bench scores are also model-level, not tool-level. There is no widely-adopted benchmark for comparing coding agents head-to-head.
+**On benchmarks:** SWE-bench measures models plus scaffolding, not the CLI tools developers use. Neither OpenAI nor Anthropic submits Codex CLI or Claude Code. Terminal-Bench scores are also model-level, not tool-level. No widely-adopted benchmark exists for comparing coding agents head-to-head.
 
 **Community consensus:** Codex wins on DevOps, infrastructure, and terminal-heavy work. 2-3x token efficiency vs Claude Code. Claude wins on complex multi-file architecture and frontend. Different tools, different jobs.
 
@@ -93,22 +93,22 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ### April 2026
 
-- **Codex Desktop background computer use** (April 16, v26.415) -- Agents interact with macOS apps (browser, Figma, Notion) while you work. Integrated browser, `gpt-image-1.5`, multiple terminal tabs, remote devbox via SSH (alpha)
-- **90+ proprietary Codex plugins** -- Atlassian Rovo, CircleCI, GitLab, Figma, Notion, GitHub. Separate from the 9,000+ open MCP ecosystem
-- **Memory + persistent threads** (gradual rollout) -- Preferences and edit history across sessions. Enterprise and EU first
-- **$100 Pro tier** (April 9) -- 5x Plus usage (10x promo through May 31). Direct Claude Max competitor. Plus plan rebalanced to spread sessions across the week
-- **Codex-Spark** (April 7) -- Research preview for Pro. Cerebras WSE-3 at ~1,000 TPS, 128K context
+- **Codex Desktop background computer use** (April 16, v26.415): Agents interact with macOS apps (browser, Figma, Notion) while you work. Integrated browser, `gpt-image-1.5`, multiple terminal tabs, remote devbox via SSH (alpha)
+- **90+ proprietary Codex plugins**: Atlassian Rovo, CircleCI, GitLab, Figma, Notion, GitHub. Separate from the 9,000+ open MCP ecosystem
+- **Memory + persistent threads** (gradual rollout): Preferences and edit history across sessions. Enterprise and EU first
+- **$100 Pro tier** (April 9): 5x Plus usage (10x promo through May 31). Direct Claude Max competitor. Plus plan rebalanced to spread sessions across the week
+- **Codex-Spark** (April 7): Research preview for Pro. Cerebras WSE-3 at ~1,000 TPS, 128K context
 
 ### Earlier
 
-- **GPT-5.4** (March 2026) -- Latest model
-- **GPT-5.3-Codex** (Feb 5, 2026) -- 25% faster, coding-optimized (superseded by Spark for Pro)
+- **GPT-5.4** (March 2026): Latest model
+- **GPT-5.3-Codex** (Feb 5, 2026): 25% faster, coding-optimized (superseded by Spark for Pro)
 - **Codex App for macOS** (Feb 2, 2026)
-- **Codex App for Windows** (March 4, 2026) -- Native PowerShell + Windows sandbox
-- **Rust rewrite (codex-rs)** -- Alpha. Replaces Node/TS for zero-dep install
-- **Multi-agent** -- `spawn_agents_on_csv`, sub-agent nicknames
-- **`@plugin` mentions** -- Auto-include MCP/app/skill context in chat
-- **553 releases in 10 months** -- Fastest cadence in the category
+- **Codex App for Windows** (March 4, 2026): Native PowerShell + Windows sandbox
+- **Rust rewrite (codex-rs)**: Alpha. Replaces Node/TS for zero-dep install
+- **Multi-agent**: `spawn_agents_on_csv`, sub-agent nicknames
+- **`@plugin` mentions**: Auto-include MCP/app/skill context in chat
+- **553 releases in 10 months**: Fastest cadence in the category
 
 ## Integration Ecosystem
 
@@ -124,7 +124,7 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 Open source and the biggest plugin ecosystem make Codex a natural target for spec consumption.
 
 - **Context files:** Codex adopted the Agent Skills spec from Claude Code (Dec 2025) and reads `AGENTS.md`. CodeMySpec can generate these from specs
-- **MCP support:** Full support, 9,000+ plugins, `codex mcp add` to wire up. Specs can be served via MCP and referenced inline with `@plugin` mentions
+- **MCP support:** Full support, 9,000+ plugins, `codex mcp add` to wire up. Serve specs via MCP and reference them inline with `@plugin` mentions
 - **Hooks:** No documented pre/post hook system. Custom verification means external scripting
 - **Subagents:** `spawn_agents_on_csv` enables multi-agent workflows. Decompose a spec into a CSV of tasks, each a parallel agent. Sub-agent nicknames help track which component each is implementing
 - **Skills/commands:** Agent Skills spec support means skills files can define reusable workflows that consume specs

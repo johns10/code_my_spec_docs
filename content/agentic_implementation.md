@@ -2,7 +2,7 @@
 
 Everyone's talking about AI code generation like it's a solved problem. Copilot has [20 million users](https://www.getpanto.ai/blog/github-copilot-statistics). Cursor hit [$2B in annualized revenue](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/) and doubled it in three months. Claude Code reached [$1B ARR faster than ChatGPT did](https://www.uncoveralpha.com/p/anthropics-claude-code-is-having). The tools are generating [41% of all code](https://www.netcorpsoftwaredevelopment.com/blog/ai-generated-code-statistics) and Gartner thinks that number hits [60% by end of 2026](https://www.armorcode.com/report/gartner-predicts-2026-ai-potential-and-risks-emerge-in-software-engineering-technologies). Microsoft says [20-30% of their internal code](https://www.tomshardware.com/tech-industry/artificial-intelligence/microsofts-ceo-reveals-that-ai-writes-up-to-30-percent-of-its-code-some-projects-may-have-all-of-its-code-written-by-ai) is now AI-written. Google's at [25%+](https://www.entrepreneur.com/business-news/ai-is-taking-over-coding-at-microsoft-google-and-meta/490896).
 
-The adoption question is settled. The reality is the interesting part.
+Adoption is settled. The interesting question is what happens next.
 
 ## What Do the Actual Productivity Studies Say About AI Coding Tools?
 
@@ -10,7 +10,7 @@ Here's the stat that should be tattooed on every AI hype article: METR ran a rig
 
 But here's what makes it wild. Before the study, those developers predicted they'd be 24% faster. After the study, having been measured as 19% slower, they still believed they'd been 20% faster.
 
-I've been building with AI agents for over two years now. I believe the METR finding because I've felt it. There are sessions where I'm clearly moving faster - boilerplate, scaffolding, translating a clear idea into code. And there are sessions where I burn an hour wrestling the agent back on track, fixing hallucinated APIs, and cleaning up code I wouldn't have written that way. The second type of session happens more than I'd like to admit.
+I've been building with AI agents for over two years now. I believe the METR finding because I've felt it. Some sessions I move faster: boilerplate, scaffolding, translating a clear idea into code. Other sessions I burn an hour wrestling the agent back on track, fixing hallucinated APIs, and cleaning up code I wouldn't have written that way. The second type of session happens more than I'd like to admit.
 
 The productivity gains are real in specific contexts. But the blanket "AI makes developers X% faster" claims? Those are vibes, not data.
 
@@ -46,7 +46,7 @@ This is the part that doesn't get enough attention. AI can generate code faster 
 
 GitHub says Copilot users went from [9.6-day PR cycle times down to 2.4 days](https://www.getpanto.ai/blog/github-copilot-statistics). That's a 75% reduction. Sounds great until you ask: are reviewers actually reviewing those PRs in 2.4 days, or are they rubber-stamping them because the volume is too high?
 
-Gartner predicts [40% of agentic AI projects will be canceled by 2027](https://www.armorcode.com/report/gartner-predicts-2026-ai-potential-and-risks-emerge-in-software-engineering-technologies). I think a lot of those cancellations will trace back to this exact problem. Teams that scaled code generation without scaling review and verification. The code worked on day one. Six months later, nobody can maintain it.
+Gartner predicts [40% of agentic AI projects will be canceled by 2027](https://www.armorcode.com/report/gartner-predicts-2026-ai-potential-and-risks-emerge-in-software-engineering-technologies). I think many of those cancellations will trace back to this exact problem. Teams that scaled code generation without scaling review and verification. The code worked on day one. Six months later, nobody can maintain it.
 
 ## How Do You Manage Context Effectively When Coding With AI Agents?
 
@@ -81,7 +81,7 @@ Are you actually faster with AI tools, or does it just feel that way?
 
 **What is vibe coding and why is it risky for production software?** Vibe coding is the practice of describing what you want in natural language, accepting whatever AI output you get, and not reading the generated code. While it works for prototypes and throwaway tools, AI-generated code contains 2.74x more security vulnerabilities and 75% more misconfigurations than human-written code. Gartner predicts prompt-to-app approaches will increase software defects by 2500% by 2028.
 
-**What is harness engineering and why does it matter more than prompt engineering?** Harness engineering is the practice of building the verification and constraint layer around an AI coding agent -- convention files, test suites, linting, type checking, and pre-commit hooks. The agent loop itself is commodity technology shared across all tools. What separates productive sessions from failures is the harness that constrains what the agent can do and verifies what it did.
+**What is harness engineering and why does it matter more than prompt engineering?** Harness engineering is the practice of building the verification and constraint layer around an AI coding agent: convention files, test suites, linting, type checking, and pre-commit hooks. The agent loop itself is commodity technology shared across all tools. What separates productive sessions from failures is the harness that constrains what the agent can do and verifies what it did.
 
 **How do you prevent AI agents from generating low-quality code at scale?** The key is building feedback loops: hook up compilation, type checking, linting, and test execution so the agent self-corrects. Break work into small, verifiable steps rather than marathon sessions. Commit working state frequently so you have checkpoints. Convention files act as persistent memory, ensuring the agent follows your patterns on every run.
 

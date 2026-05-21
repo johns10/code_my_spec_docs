@@ -1,4 +1,4 @@
-# Architecture MCP Server - Technical Reference
+# Architecture MCP Server: Technical Reference
 
 ## Overview
 

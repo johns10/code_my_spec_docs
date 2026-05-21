@@ -49,7 +49,7 @@ Nobody does this anymore. Prompt engineering was figuring out what to say to a r
 
 That world is gone. Even the chat UIs are agentic now. Your IDE has an agent inside it. Claude, ChatGPT, Cursor all run agent loops under the hood, reading your project, fetching from the web, using tools. You haven't talked to a raw model in a long time.
 
-But a lot of people still think at this level. "If I just write a better prompt, the output will be better." That's level 0 thinking in a level 1+ world.
+But many people still think at this level. "If I just write a better prompt, the output will be better." That's level 0 thinking in a level 1+ world.
 
 ### Level 1: Agent Interaction
 

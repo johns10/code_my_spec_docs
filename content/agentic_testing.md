@@ -14,7 +14,7 @@ So what actually works?
 
 ## Does Test-Driven Development Actually Work Better With AI Agents?
 
-Here's the irony. Human teams always said they'd do TDD and almost never actually did. Too slow, too much overhead. With agents, that argument disappears. Simon Willison nails it - ["use red/green TDD" is a four-word prompt](https://simonwillison.net/guides/agentic-engineering-patterns/red-green-tdd/) that unlocks engineering discipline already baked into the models. He starts every coding session by telling the agent how to run tests and saying "use red-green TDD."
+Here's the irony. Human teams always said they'd do TDD and almost never actually did. Too slow, too much overhead. With agents, that argument disappears. Simon Willison nails it. ["Use red/green TDD" is a four-word prompt](https://simonwillison.net/guides/agentic-engineering-patterns/red-green-tdd/) that unlocks engineering discipline already baked into the models. He starts every coding session by telling the agent how to run tests and saying "use red-green TDD."
 
 The [Superpowers framework](https://github.com/obra/superpowers) takes this further. It enforces RED-GREEN-REFACTOR without negotiation. If code gets written before a failing test exists, the framework deletes it. 99K+ GitHub stars in three months tells you something about demand.
 
@@ -22,7 +22,7 @@ But here's where it gets counterintuitive. The [TDAD research](https://arxiv.org
 
 ## How Do BDD Specs From Acceptance Criteria Break the Self-Confirming Loop?
 
-The self-confirming loop breaks when tests come from a different source than the implementation. BDD does this naturally. Every acceptance criterion on every [user story](/pages/stories-feature) becomes an executable scenario. The tests come from what you told the system to build, not from what it decided to build.
+The self-confirming loop breaks when tests come from a different source than the implementation. BDD does this by construction. Every acceptance criterion on every [user story](/pages/stories-feature) becomes an executable scenario. The tests come from what you told the system to build, not from what it decided to build.
 
 AI makes BDD cheap enough to actually do consistently. Product managers write scenarios in natural language, and AI translates them into executable tests. [Thoughtworks calls spec-driven development](https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices) "one of the most important practices to emerge in 2025."
 
@@ -32,28 +32,28 @@ The counter-thesis is real though. BDD specs test components through their APIs 
 
 If you're building features that call LLMs, you have a different problem. LLM output is non-deterministic even with temperature=0. Hardware differences and floating-point ordering [introduce variation that makes assertEquals useless](https://arxiv.org/html/2408.04667v5).
 
-The cassette/recorder pattern solves this. Adapted from [Ruby's VCR library](https://anaynayak.medium.com/eliminating-flaky-tests-using-vcr-tests-for-llms-a3feabf90bc5), the idea is simple: first test run makes live LLM API calls and records responses. Subsequent runs replay recorded responses. Tests are fast, deterministic, and cheap. If the request payload changes, the cassette doesn't match and the test fails - surfacing regressions in your application behavior, not in the model's randomness.
+The cassette/recorder pattern solves this. Adapted from [Ruby's VCR library](https://anaynayak.medium.com/eliminating-flaky-tests-using-vcr-tests-for-llms-a3feabf90bc5), the idea is simple: first test run makes live LLM API calls and records responses. Subsequent runs replay recorded responses. Tests are fast, deterministic, and cheap. If the request payload changes, the cassette doesn't match and the test fails, surfacing regressions in your application behavior, not in the model's randomness.
 
 The practical approach is to separate deterministic code (your harness, data flow, schema validation) from non-deterministic LLM output. Test the deterministic parts aggressively with traditional tests. For LLM output, test structure and schema rather than content. "Response contains required fields" instead of "response equals this exact string."
 
 ## What Are Meta's Ephemeral Just-in-Time Tests and How Do They Work?
 
-The most radical idea I've seen comes from Meta. [Just-in-Time Tests](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/) are generated per PR and then discarded. When a pull request is submitted, an LLM reads the diff, infers developer intent, and generates a test designed to catch regressions introduced by that exact change. The test runs once. If it passes, it's thrown away. If it fails, a human reviews it.
+Meta is taking a different approach. [Just-in-Time Tests](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/) are generated per PR and then discarded. When a pull request is submitted, an LLM reads the diff, infers developer intent, and generates a test designed to catch regressions introduced by that exact change. The test runs once. If it passes, it's thrown away. If it fails, a human reviews it.
 
-This eliminates the mounting costs of traditional test suites - maintenance burden, false positives, flaky tests, slow CI. JiTTests reduced human review load by [70%](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/). They don't replace regression suites for critical paths, but they catch change-specific regressions without adding permanent maintenance burden.
+This eliminates the mounting costs of traditional test suites: maintenance burden, false positives, flaky tests, slow CI. JiTTests reduced human review load by [70%](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/). They don't replace regression suites for critical paths, but they catch change-specific regressions without adding permanent maintenance burden.
 
 ## What Is the Best Testing Strategy for AI-Generated Code?
 
 After digging through 35+ sources on this, here's the stack that works:
 
-1. **Enforce TDD with structure, not instructions.** Use Superpowers, custom slash commands, or explicit phase separation. Don't just say "do TDD" - that makes things worse per the TDAD research. Tell the agent which tests to check.
+1. **Enforce TDD with structure, not instructions.** Use Superpowers, custom slash commands, or explicit phase separation. Don't just say "do TDD." That makes things worse per the TDAD research. Tell the agent which tests to check.
 2. **Write acceptance criteria before the agent touches code.** Turn them into BDD specs. This breaks the self-confirming loop because the tests come from what you intended, not what the agent built.
 3. **Use separate agents for generation and review.** Addy Osmani from Google Chrome [describes "quality guardian" agents](https://addyosmani.com/blog/self-improving-agents/) that audit generated code. Different prompt, different context, different incentives than the generating agent.
 4. **Use the cassette pattern for LLM-powered features.** Record once, replay forever. Test structure, not content.
 5. **Test the running application, not just the components.** BDD specs passing doesn't mean the app works. [QA against the actual running system](/blog/agentic-qa) catches what unit tests miss at integration boundaries.
 6. **Don't trust coverage numbers.** An agent can inflate coverage in an afternoon with assertion-free tests. High coverage with AI-generated tests can be worse than low coverage with thoughtful tests because it creates false confidence.
 
-The reality is that AI makes testing simultaneously easier and more dangerous. Easier because the overhead argument for TDD is gone - agents will happily write tests all day. More dangerous because the tests might be confirming exactly the wrong thing. The discipline isn't in writing tests. It's in making sure the tests come from the right source.
+AI makes testing simultaneously easier and more dangerous. Easier because the overhead argument for TDD is gone, agents will happily write tests all day. More dangerous because the tests might be confirming exactly the wrong thing. The discipline isn't in writing tests. It's in making sure the tests come from the right source.
 
 What's your testing workflow look like with AI agents? Are you enforcing TDD, or still doing implementation-first and hoping the tests catch something?
 

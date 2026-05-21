@@ -4,7 +4,7 @@
 
 I've lived in terminal-native coding agents for two years now, and 2026 is the first time I have six serious tools to pick from. Anthropic, OpenAI, and Google all shipped CLI agents in the last 12 months. Aider, OpenCode, and Goose were there before them.
 
-There is no "best one." There's the best one for what you're doing this afternoon. Each tool trades off code quality, cost, model flexibility, and autonomy differently, and most power users I know run two. This is the breakdown I wish I'd had when I was picking.
+No "best one" exists. There's the best one for what you're doing this afternoon. Each tool trades off code quality, cost, model flexibility, and autonomy differently, and most power users I know run two. This is the breakdown I wish I'd had when I was picking.
 
 April 2026 shook the category up. Anthropic shipped Opus 4.7 and locked third-party harnesses out of subscription coverage. OpenAI added a $100 Codex Pro tier aimed directly at Claude Max. Codex Desktop got background computer use on macOS. Google pushed Gemini CLI Pro models behind a paywall and left free-tier users on Flash. Aider crossed 43K stars. That's what's reflected here.
 
@@ -17,14 +17,14 @@ April 2026 shook the category up. Anthropic shipped Opus 4.7 and locked third-pa
 | **GitHub Stars** | ~71K | ~65K | ~102K | ~44K | ~117K | ~29K |
 | **Free Tier** | Limited | With ChatGPT+ | Yes (1,000 req/day, Flash only) | Yes (BYOK) | Yes (BYOK) | Yes (BYOK) |
 | **Entry Price** | $20/mo (Pro) | $20/mo (Plus) | Free (Flash) / pay-as-you-go (Pro models) | API costs only | API costs only | API costs only |
-| **Mid Tier** | $100/mo (Max 5x) | **$100/mo (Pro, new Apr 9 2026)** | -- | -- | -- | -- |
-| **Heavy Tier** | $200/mo (Max 20x) | $200/mo (Pro) | -- | -- | -- | -- |
+| **Mid Tier** | $100/mo (Max 5x) | **$100/mo (Pro, new Apr 9 2026)** | N/A | N/A | N/A | N/A |
+| **Heavy Tier** | $200/mo (Max 20x) | $200/mo (Pro) | N/A | N/A | N/A | N/A |
 | **Default Model** | Opus 4.7 (Apr 16 2026) | GPT-5.3-Codex-Spark (Cerebras, ~1,000 TPS) | Gemini 3 Flash (free) / 3.1 Pro (paid) | Any (BYOK) | Any (BYOK) | Any (BYOK) |
 | **LLM Backends** | Claude only | OpenAI only | Gemini only | 50+ models | 75+ models | Any LLM |
 | **Quality Tier** | Highest (community consensus) | Strong for DevOps + background compute | Competitive, inconsistent | Depends on model | Depends on model | Depends on model |
-| **Context Window** | 1M (Opus) | -- | 1M | Varies by model | Varies by model | Varies by model |
+| **Context Window** | 1M (Opus) | N/A | 1M | Varies by model | Varies by model | Varies by model |
 | **MCP Support** | Yes | Yes (9,000+ plugins + 90 proprietary) | Yes | No (third-party) | No | Yes |
-| **Key Strength** | Code quality | Token efficiency + background compute | Free tier (Flash) | Model freedom | Fastest growing | Extensibility |
+| **Key Strength** | Code quality | Token efficiency + background compute | Free tier (Flash) | Model freedom | Growing by GitHub stars | Extensibility |
 
 ## Detailed Comparison
 
@@ -41,19 +41,19 @@ Independent testing is the best signal we have:
 Community consensus tracks roughly the same way:
 
 - Claude Code wins for complex architecture, multi-file refactoring, and getting it right on the first shot. Opus 4.7 (April 16) is now the default and early reports suggest fewer tool calls per task and better multi-step reliability.
-- Codex CLI is the DevOps and infra workhorse. Token-efficient. Historically weak on frontend, though the April Codex Desktop update (integrated browser, gpt-image-1.5 for UI generation) is trying to fix that -- too early to say if it worked.
+- Codex CLI is the DevOps and infra workhorse. Token-efficient. Historically weak on frontend, though the April Codex Desktop update (integrated browser, gpt-image-1.5 for UI generation) is trying to fix that (too early to say if it worked).
 - Gemini CLI is "either great or garbage and it's a coin toss," though Gemini 3.1 Pro is improving that. Since March 25, Pro models are paid-only. The free tier is Flash now.
 - Aider with the right model matches Claude quality at roughly 1/4 the token cost, but you babysit it more. On the Aider Polyglot leaderboard (April 2026), GPT-5 (high) leads at 88%, GPT-5 (medium) at 86.7%, o3-pro (high) at 84.9%, Gemini 2.5 Pro (32K thinking) at 83.1%.
 
-The harness matters more than the model. LangChain proved this on Terminal-Bench 2.0 -- 13.7 points of improvement by changing only the scaffold. Same model. That's why Anthropic's April 4 ban on third-party harnesses is a bigger deal than it looks: the harness is now IP worth defending, not a commodity wrapper.
+The harness matters more than the model. LangChain proved this on Terminal-Bench 2.0: 13.7 points of improvement by changing only the scaffold. Same model. That's why Anthropic's April 4 ban on third-party harnesses is a bigger deal than it looks: the harness is now IP worth defending, not a commodity wrapper.
 
-Aider doesn't compete on benchmarks, it runs them. The Polyglot leaderboard is the de facto standard for evaluating coding models (not tools) and it's what Unsloth, Qwen, and the r/LocalLLaMA community use. Your results depend entirely on the model you bring. Same story for OpenCode and Goose -- the tool gets out of the way, the model does the work.
+Aider doesn't compete on benchmarks, it runs them. The Polyglot leaderboard is the de facto standard for evaluating coding models (not tools) and it's what Unsloth, Qwen, and the r/LocalLLaMA community use. Your results depend entirely on the model you bring. Same story for OpenCode and Goose: the tool gets out of the way, the model does the work.
 
 ### 2. Model Flexibility: Locked vs. Free
 
 This is the real fork in the road.
 
-Claude Code, Codex CLI, and Gemini CLI are vendor-locked. Tight integration with one model family means better optimization and model-specific features (extended thinking, voice). It also means you eat whatever that provider ships -- their quality, their pricing, their rate limits.
+Claude Code, Codex CLI, and Gemini CLI are vendor-locked. Tight integration with one model family means better optimization and model-specific features (extended thinking, voice). It also means you eat whatever that provider ships: their quality, their pricing, their rate limits.
 
 Aider, OpenCode, and Goose are model-agnostic. Bring any provider, including local models via Ollama. Switch between Claude, GPT, Gemini, and DeepSeek per task. You give up tool-specific polish and your experience is capped by your model pick.
 
@@ -67,10 +67,10 @@ List prices lie. Here's what you actually pay.
 |---|---|---|---|---|
 | Claude Code | $20 (Pro, often hits limits) | **$100 (Max 5x)** | $200 (Max 20x) | Baseline |
 | Codex CLI | $20 (Plus, rebalanced weekly Apr 2026) | **$100 (Pro, new Apr 9, 10x promo through May 31)** | $200 (Pro, ~20x Plus) | 2-3x better than Claude |
-| Gemini CLI | Free (Flash only since Mar 25) | Pay-as-you-go (Pro paid) | -- | Good |
-| Aider | ~$15-30 (BYOK Sonnet) | -- | ~$60 (BYOK heavy) | 4.2x better than Claude |
-| OpenCode | $0 + API | -- | ~$30-60 | Depends on model |
-| Goose | $0 + API | -- | ~$30-60 | Depends on model |
+| Gemini CLI | Free (Flash only since Mar 25) | Pay-as-you-go (Pro paid) | N/A | Good |
+| Aider | ~$15-30 (BYOK Sonnet) | N/A | ~$60 (BYOK heavy) | 4.2x better than Claude |
+| OpenCode | $0 + API | N/A | ~$30-60 | Depends on model |
+| Goose | $0 + API | N/A | ~$30-60 | Depends on model |
 
 At $20/mo, Codex Plus still beats Claude Code Pro as a daily driver, but the gap narrowed in April. Codex users historically didn't hit limits. Claude Pro users report running out "after 3 or 4 requests." OpenAI's April rebalance spreads Plus usage across the week instead of letting you dump it in one day, which nudges heavy users toward the new $100 Pro tier.
 
@@ -84,21 +84,21 @@ If you're budget-conscious and willing to do the work, Aider with a Gemini, Deep
 
 ### 4. Ecosystem and Integrations
 
-Claude Code has 1,000+ MCP servers, a unified skills/commands system, Agent Teams for multi-agent orchestration, `/ultrareview` for parallel multi-agent PR review (GA April 16), and Code Review for PRs. Anthropic also shipped Managed Agents in public beta April 8 -- a hosted runtime that lets third parties run Claude agents on Anthropic infrastructure. And that April 4 third-party harness ban? It means only first-party tools and direct API keys get subscription billing. The ecosystem is deep, Claude-only, and walling up faster every month.
+Claude Code has 1,000+ MCP servers, a unified skills/commands system, Agent Teams for multi-agent orchestration, `/ultrareview` for parallel multi-agent PR review (GA April 16), and Code Review for PRs. Anthropic also shipped Managed Agents in public beta April 8: a hosted runtime that lets third parties run Claude agents on Anthropic infrastructure. And that April 4 third-party harness ban? It means only first-party tools and direct API keys get subscription billing. The ecosystem is deep, Claude-only, and walling up faster every month.
 
-Codex CLI has the biggest open MCP plugin ecosystem at 9,000+ servers, plus 90+ proprietary Codex plugins (Atlassian Rovo, CircleCI, GitLab, Figma, Notion) shipping with Codex Desktop. The Desktop app (v26.415, April 16) now does background computer use on macOS -- agents operate other apps while you work on something else. Memory and persistent threads are rolling out gradually. Codex Desktop is becoming an agent-orchestration platform that happens to code.
+Codex CLI has the biggest open MCP plugin ecosystem at 9,000+ servers, plus 90+ proprietary Codex plugins (Atlassian Rovo, CircleCI, GitLab, Figma, Notion) shipping with Codex Desktop. The Desktop app (v26.415, April 16) now does background computer use on macOS: agents operate other apps while you work on something else. Memory and persistent threads are rolling out gradually. Codex Desktop is becoming an agent-orchestration platform that happens to code.
 
-Gemini CLI has Conductor (project management with automated reviews), Jules (async agent delegation), Google Workspace integration, Plan Mode, and a steady release cadence -- v0.35 through v0.38 shipped March 24 through April 17 with SandboxManager, native git worktree support, persistent browser agent sessions, context compression, and session grouping. The ecosystem is growing but young. The March 25 move to push Pro models behind a paywall generated serious community friction.
+Gemini CLI has Conductor (project management with automated reviews), Jules (async agent delegation), Google Workspace integration, Plan Mode, and a steady release cadence: v0.35 through v0.38 shipped March 24 through April 17 with SandboxManager, native git worktree support, persistent browser agent sessions, context compression, and session grouping. The ecosystem is growing but young. The March 25 move to push Pro models behind a paywall generated serious community friction.
 
-Aider has the best git integration of any tool in this list. Auto-commits, descriptive messages, clean undo. No native MCP support though -- only third-party servers.
+Aider has the best git integration of any tool in this list. Auto-commits, descriptive messages, clean undo. No native MCP support though: only third-party servers.
 
 OpenCode is the GitHub star leader (117K) with a desktop app and VS Code extension, but lighter on ecosystem features.
 
-Goose is Block's bet on extensibility -- custom extensions and MCP support, Apache 2.0.
+Goose is Block's bet on extensibility: custom extensions and MCP support, Apache 2.0.
 
 ### 5. Autonomy and Agent Capabilities
 
-Claude Code and Codex CLI are the most autonomous tools in the category now. Claude Code has Agent Teams with worktree isolation, the new `xhigh` effort level for coding tasks, and Auto mode on Max (the model picks Opus vs Sonnet per-request). Codex CLI has `spawn_agents_on_csv` for multi-agent workflows and Desktop's background computer use -- agents driving macOS apps while you work on something else. Both have crossed the line from "CLI agent" into "autonomous desktop platform."
+Claude Code and Codex CLI are the most autonomous tools in the category now. Claude Code has Agent Teams with worktree isolation, the new `xhigh` effort level for coding tasks, and Auto mode on Max (the model picks Opus vs Sonnet per-request). Codex CLI has `spawn_agents_on_csv` for multi-agent workflows and Desktop's background computer use: agents driving macOS apps while you work on something else. Both have crossed the line from "CLI agent" into "autonomous desktop platform."
 
 Gemini CLI and Goose are semi-autonomous. Gemini has Plan Mode (analyzes before acting) and Jules for async delegation. Goose runs commands and edits files.
 
@@ -120,16 +120,16 @@ Here's how I'd actually pick:
 - **Codex CLI** if you want the best $20/mo daily driver, or you need background computer use. The new $100 Pro tier matches Claude Max on usage. Codex is still the strongest pick for DevOps, infra, and token efficiency, and the 9,000+ MCP plus 90 proprietary plugins is the largest ecosystem overall.
 - **Gemini CLI** if you want to start free on Flash-class tasks or you want the most generous free quota in the category (1,000 req/day). The "free high-quality tier" value prop took a hit on March 25 when Pro went paid-only, but it's still the best entry point for evaluation and prototyping.
 - **Aider** if you want model freedom and cost control. Local models, frequent provider switching, or if git workflow quality matters to you. GPT-5 leads the Aider Polyglot leaderboard at 88%. Quasar-alpha on OpenRouter gives you a real zero-API-cost option right now.
-- **OpenCode** if you want the fastest-growing open-source option, with a desktop app and model flexibility.
+- **OpenCode** if you want a fast-growing open-source option, with a desktop app and model flexibility.
 - **Goose** if you're building custom workflows and care about extensibility. Block's engineering pedigree and Apache 2.0 licensing are the draw.
 
 ## The CodeMySpec Angle
 
-All six tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality -- true whether you're on Opus 4.7 or a local model through Aider.
+All six tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality. True whether you're on Opus 4.7 or a local model through Aider.
 
 CodeMySpec sits at the layer above. It generates specifications any of these agents can consume, through MCP (Claude Code, Codex, Gemini CLI, Goose all support it) or context files (CLAUDE.md, .cursorrules, GEMINI.md). Whichever agent your team already uses, CodeMySpec feeds it better input.
 
-Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding) -- where CLI agents fit in the progression from autocomplete to autonomous development.
+Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding), where CLI agents fit in the progression from autocomplete to autonomous development.
 
 ## Sources
 

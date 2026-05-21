@@ -1,6 +1,6 @@
 # ADRs Are the Best Thing You Can Give Your AI Agent
 
-Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. But here's the thing: when an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent — the durable memory of why your codebase looks the way it does.
+Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. When an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent. They become the durable memory of why your codebase looks the way it does.
 
 ## What ADRs Are (30-Second Version)
 
@@ -12,7 +12,7 @@ An AI agent doesn't have institutional memory. It doesn't remember that your tea
 
 Without ADRs, you get drift. The agent picks Express when you standardized on Phoenix. It reaches for React when you committed to LiveView. It adds a new ORM when you already have Ecto. Research from [ArXiv shows coding agents will increasingly violate constraints](https://arxiv.org/html/2603.03456v1) over time, especially under ambiguity. ADRs eliminate that ambiguity.
 
-An agent that reads "Use Phoenix LiveView for interactive UI" with context explaining why - no separate frontend build pipeline, server-rendered reactivity over WebSockets - makes fundamentally different choices than one flying blind.
+An agent that reads "Use Phoenix LiveView for interactive UI" with context explaining why (no separate frontend build pipeline, server-rendered reactivity over WebSockets) makes categorically different choices than one flying blind.
 
 ## The Pre-Made Decisions Pattern
 
@@ -20,7 +20,7 @@ Here's my favorite approach: write your standard stack decisions before any codi
 
 In CodeMySpec, the TechnicalStrategy module ships with [pre-made ADRs](https://codemyspec.com) for every standard stack choice. When a project kicks off, decisions like "Use Elixir as the primary language" and "Use Tailwind CSS for styling" get written automatically with full context. The agent reads them and follows them. No discussion needed.
 
-Then for anything outside the standard stack - maybe you need a payment processor or a specific caching strategy - the agent does cursory research, evaluates options against project needs, and writes a new ADR for human review. Two phases: auto-write the obvious stuff, deliberate on the rest.
+Then for anything outside the standard stack (maybe you need a payment processor or a specific caching strategy), the agent does cursory research, evaluates options against project needs, and writes a new ADR for human review. Two phases: auto-write the obvious stuff, deliberate on the rest.
 
 This is not a path for the lazy. You still need to think through your stack. But you only think through it once, and every agent on every project inherits those decisions.
 

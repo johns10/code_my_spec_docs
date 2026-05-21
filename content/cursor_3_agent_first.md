@@ -6,15 +6,15 @@ Here's what actually changed and what it means for the rest of us.
 
 ## They Ditched the IDE Layout
 
-The old Cursor was VS Code with a really good AI chat panel bolted on. Cursor 3 flips that. The primary interface is now an "Agents Window" - a full-screen workspace for running and managing multiple AI agents simultaneously. The traditional editor? Still there, but it's the secondary surface. You switch *into* the IDE when you need it, not the other way around.
+The old Cursor was VS Code with a really good AI chat panel bolted on. Cursor 3 flips that. The primary interface is now an "Agents Window": a full-screen workspace for running and managing multiple AI agents simultaneously. The traditional editor? Still there, but it's the secondary surface. You switch *into* the IDE when you need it, not the other way around.
 
 This is a philosophical shift. The team [said explicitly](https://cursor.com/blog/cursor-3) they rebuilt the interface "from scratch, centered around agents." They're positioning this as the "third era of software development" where agent fleets ship code autonomously.
 
 ## Parallel Agent Fleets
 
-The headline feature is running [up to 8 agents in parallel](https://devtoolpicks.com/blog/cursor-3-agents-window-review-2026) across isolated Git worktrees. You can have Agent A refactoring your auth module, Agent B writing tests, and Agent C fixing CSS - all at the same time, all visible in one sidebar.
+The headline feature is running [up to 8 agents in parallel](https://devtoolpicks.com/blog/cursor-3-agents-window-review-2026) across isolated Git worktrees. You can have Agent A refactoring your auth module, Agent B writing tests, and Agent C fixing CSS, all at the same time, all visible in one sidebar.
 
-These agents run locally, in worktrees, in the cloud, or on remote SSH. And there's a seamless handoff between environments - start a task locally, push it to the cloud when you close your laptop, pull it back when you're ready to test. That's genuinely useful for longer-running tasks.
+These agents run locally, in worktrees, in the cloud, or on remote SSH. And there's a seamless handoff between environments: start a task locally, push it to the cloud when you close your laptop, pull it back when you're ready to test. That's genuinely useful for longer-running tasks.
 
 There's also a `/best-of-n` command that [runs the same task across multiple models in parallel](https://cursor.com/changelog/3-0), each in its own worktree, then compares outcomes. That's clever. Let Claude and GPT race on the same problem, pick the winner.
 
@@ -26,15 +26,15 @@ This is Cursor saying: we're not just where you write code. We're the dashboard 
 
 ## How This Compares to Claude Code Agent Teams
 
-Anthropic shipped [Agent Teams in February 2026](https://code.claude.com/docs/en/agent-teams) as a research preview. The concept is similar - multiple agents working in parallel on shared tasks, communicating with each other, picking work off a shared list.
+Anthropic shipped [Agent Teams in February 2026](https://code.claude.com/docs/en/agent-teams) as a research preview. The concept is similar: multiple agents working in parallel on shared tasks, communicating with each other, picking work off a shared list.
 
-The difference is the surface. Claude Code Agent Teams are terminal-native. One session leads, teammates work independently in their own context windows, and they coordinate through a shared task list. Anthropic stress-tested this by having [16 agents build a C compiler](https://www.anthropic.com/engineering/building-c-compiler) - 100,000 lines of Rust across nearly 2,000 sessions.
+The difference is the surface. Claude Code Agent Teams are terminal-native. One session leads, teammates work independently in their own context windows, and they coordinate through a shared task list. Anthropic stress-tested this by having [16 agents build a C compiler](https://www.anthropic.com/engineering/building-c-compiler), 100,000 lines of Rust across nearly 2,000 sessions.
 
 Cursor wraps the same parallel-agent concept in a visual interface with a unified sidebar. Claude Code gives you raw power and flexibility. Cursor gives you a dashboard. The tradeoff is the usual one: visual control vs. composability.
 
 ## Design Mode
 
-Cursor 3 also ships Design Mode, which lets you [annotate UI elements directly in a built-in browser](https://cursor.com/blog/cursor-3) and point agents at specific parts of your interface. It's targeted at frontend iteration - click the thing that's wrong, tell the agent to fix it. Not groundbreaking, but it reduces the friction of describing UI problems in text.
+Cursor 3 also ships Design Mode, which lets you [annotate UI elements directly in a built-in browser](https://cursor.com/blog/cursor-3) and point agents at specific parts of your interface. It's targeted at frontend iteration: click the thing that's wrong, tell the agent to fix it. Not new, but it reduces the friction of describing UI problems in text.
 
 ## Pricing: No Change (Sort Of)
 
@@ -50,9 +50,9 @@ The three lanes of agentic coding are now locked in:
 2. **Agent-first IDEs**: Cursor 3, potentially Windsurf
 3. **Multi-editor extensions**: GitHub Copilot
 
-Cursor at [$2B ARR](https://thenewstack.io/cursor-3-demotes-ide/) is the fastest-growing tool in this space, and this release widens the gap. [One reviewer scored it 92/100](https://devtoolpicks.com/blog/cursor-3-agents-window-review-2026). The IDE-as-agent-orchestration-surface is now a real product category, not just a concept.
+Cursor at [$2B ARR](https://thenewstack.io/cursor-3-demotes-ide/) is a fast-growing tool in this space, and this release widens the gap. [One reviewer scored it 92/100](https://devtoolpicks.com/blog/cursor-3-agents-window-review-2026). The IDE-as-agent-orchestration-surface is now a real product category, not just a concept.
 
-The reality is that "where do you manage your agents?" is becoming the key question in developer tooling. Cursor is betting it's a visual dashboard. Anthropic is betting it's the terminal. Both are betting it's not a traditional code editor.
+"Where do you manage your agents?" is becoming the key question in developer tooling. Cursor is betting it's a visual dashboard. Anthropic is betting it's the terminal. Both are betting it's not a traditional code editor.
 
 What are you using to manage your agent fleet?
 
