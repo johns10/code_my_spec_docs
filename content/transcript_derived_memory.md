@@ -72,29 +72,9 @@ Transcript-derived is great as a *feeder* into other categories:
 - **Pair with retrieval/RAG when summaries pile up.** Once you have 100+ session summaries, a vector index becomes useful. The summarizer fills the corpus; retrieval finds what's relevant later.
 - **Skip pairing with dedicated memory stores.** Two curators (the in-session model and the post-session summarizer) produce memory that disagrees.
 
-<aside class="not-prose" data-cro="cta-mid">
-  <div class="cro-mid">
-    <div class="cro-mid-term">
-      <span class="cro-p">▸</span><span>cta · mid_article</span>
-    </div>
-    <p class="cro-mid-h">
-      Your transcripts are your memory until they aren't.<br /><span class="cro-r">For software engineering, structured artifacts get there first.</span>
-    </p>
-    <p class="cro-mid-sub">
-      CodeMySpec uses BDD spex, bounded contexts, and persisted decision records.
-    </p>
-    <div class="cro-mid-cta">
-      <a
-        href="/products/code-my-spec?utm_source=transcript-derived-memory&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
-        class="cro-btn"
-      >▸ See the alternative</a>
-    </div>
-  </div>
-</aside>
-
 ## The honest verdict
 
-Transcript-derived is the most under-rated category. The implementations are real (claude-mem, claude-memory-compiler, session-kit, Anthropic's own autoDream). The pattern is well-supported by Anthropic's hook infrastructure. The failure modes are gentler than dedicated memory stores. The main reason it's under-discussed is that it doesn't have "memory product" branding the curated stores have. It's plumbing. Plumbing isn't sexy.
+Transcript-derived is the most under-rated category. The implementations are real (claude-mem, claude-memory-compiler, session-kit, Anthropic's own autoDream). The pattern is well-supported by Anthropic's hook infrastructure. The failure modes are gentler than dedicated memory stores. For software engineering specifically I went a different direction — [CodeMySpec is built around structured artifacts](/products/code-my-spec?utm_source=transcript-derived-memory&utm_medium=internal&utm_campaign=cta-mid) — but the transcript pattern is the right call for general workflows. The main reason it's under-discussed is that it doesn't have "memory product" branding the curated stores have. It's plumbing. Plumbing isn't sexy.
 
 If you're a heavy Claude Code user with sessions that routinely hit compaction, set up a `PreCompact` hook that dumps the transcript and runs a summarizer that writes to a markdown file in your repo. Total setup: an afternoon. Total upside: your next session starts with real context from the previous one, every time, without you having to remember to write anything down.
 

@@ -69,29 +69,9 @@ I learned this the hard way. I kept shoving rules into my CLAUDE.md until it was
 
 Managing state across sessions is also context engineering. When you hit the window limit, do you compact, reset, or hand off? Soto calls these "save points," serialized snapshots that let you resume without losing critical state.
 
-<aside class="not-prose" data-cro="cta-mid">
-  <div class="cro-mid">
-    <div class="cro-mid-term">
-      <span class="cro-p">▸</span><span>cta · mid_article</span>
-    </div>
-    <p class="cro-mid-h">
-      Context engineering is the last optimization that lives in your prompt.<br /><span class="cro-r">Harness engineering is the first one that doesn't.</span>
-    </p>
-    <p class="cro-mid-sub">
-      CodeMySpec is a Level 3 harness, productized for Phoenix.
-    </p>
-    <div class="cro-mid-cta">
-      <a
-        href="/products/code-my-spec?utm_source=ai-agent-skill-trajectory&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
-        class="cro-btn"
-      >▸ See the harness</a>
-    </div>
-  </div>
-</aside>
-
 ### Level 3: Harness Engineering
 
-You stop curating what the agent knows and start designing the constraints, guardrails, and feedback loops it operates within.
+You stop curating what the agent knows and start designing the constraints, guardrails, and feedback loops it operates within. [My Phoenix-specific take is CodeMySpec](/products/code-my-spec?utm_source=ai-agent-skill-trajectory&utm_medium=internal&utm_campaign=cta-mid).
 
 Soto's definition: "the discipline of designing the systems, architectural constraints, execution environments, and automated feedback loops that wrap around AI agents to make them reliable in production."
 
