@@ -1,0 +1,1 @@
+{"note":"Pipeline validated clean (compile fixture empty, exunit fixture 0 failures). Block came from task evaluator (QaStory requires qa_complete to be submitted), not from pipeline. This confirms the pipeline passes when compile+exunit are clean.","pipeline_result":"pass","task_eval_result":"block (qa_complete not filed yet)"}

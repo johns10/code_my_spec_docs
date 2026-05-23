@@ -4,7 +4,7 @@ Context for managing push notification subscriptions and sending Web Push notifi
 
 ## Type
 
-context
+infrastructure
 
 ## Dependencies
 

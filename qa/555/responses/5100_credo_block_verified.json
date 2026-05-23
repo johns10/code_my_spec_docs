@@ -1,0 +1,1 @@
+{"decision":"block","reason":"Fix these problems before stopping:\n\ncredo (1):\n  - lib/example_context.ex:1 — Modules should have a @moduledoc tag.\n\nIf this looks like harness friction (looping hook, contradictory prompt, tool error), call `create_issue` with `scope: framework`."}

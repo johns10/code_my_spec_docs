@@ -113,3 +113,9 @@ infrastructure_paths:
   - lib/code_my_spec_local_web/components/layouts.ex
   - lib/code_my_spec_local_web/controllers/error_*
   - lib/code_my_spec_local_web/controllers/health_controller.ex
+  # Platform support contexts — no user story today; classified as
+  # infrastructure until promoted with a story.
+  - lib/code_my_spec/content_sync
+  - lib/code_my_spec/events
+  - lib/code_my_spec/invitations
+  - lib/code_my_spec/notifications

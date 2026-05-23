@@ -62,13 +62,3 @@ All sources accessed 2026-04-25. Grouped by evidence cluster.
 - https://medium.com/@writertripathi/claude-code-vs-cursor-vs-openai-codex-which-ai-coding-tool-should-you-use-in-2026-8f124e43c6fd — "Claude Code vs Cursor vs OpenAI Codex" (Ankita Tripathi, Medium) — accessed 2026-04-25
 - https://thoughts.jock.pl/p/ai-coding-harness-agents-2026 — "Claude Code vs Codex CLI vs Aider vs OpenCode vs Pi vs Cursor: Which AI Coding Harness Actually Works Without You?" (jock.pl) — accessed 2026-04-25
 
-## E8 — Adjacent segment research (sibling repo)
-
-Background segment intel that informed framing but did not produce its own persona record. Lives in the `code_my_spec_marketing` repo, kept there to avoid duplication.
-
-- `code_my_spec_marketing/.code_my_spec/personas/solo_developer.md` — "Solo Developer Market Research: Building Complex SaaS Alone" — broad solo-developer market analysis used to triangulate E2/E3 claims.
-- `code_my_spec_marketing/.code_my_spec/personas/elixir_developers.md` — "Elixir developers and AI coding tools frustrations" — Elixir-community-specific framing for AI tool failure modes (Phoenix context violations, LiveView, OTP pattern misses).
-- `code_my_spec_marketing/.code_my_spec/personas/elixir_agencies.md` — "Elixir Consulting Agency Landscape and AI Tool Challenges" — agency-side go-to-market intel; informs anti-persona scoping (Sam is not an agency buyer).
-- `code_my_spec_marketing/.code_my_spec/personas/elixir_agencies/dashbit.md` — Dashbit (José Valim's consultancy) intelligence report.
-- `code_my_spec_marketing/.code_my_spec/personas/elixir_agencies/dockyard.md` — DockYard intelligence report.
-- `code_my_spec_marketing/.code_my_spec/personas/elixir_agencies/erlang_solutions.md` — Erlang Solutions intelligence report.

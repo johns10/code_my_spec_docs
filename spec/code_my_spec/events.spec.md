@@ -4,7 +4,7 @@ Generic event log. One table (`events`) with two columns of interest: `event_typ
 
 ## Type
 
-context
+infrastructure
 
 ## Dependencies
 

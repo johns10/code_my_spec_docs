@@ -48,8 +48,12 @@ Requires credentials and DNS configured in Cloudflare dashboard.
 
 ## Optional opts
 
+  * `:enabled` — `true` (default) or `false`; when `false`, the tunnel is not started
   * `:mode` — `:quick` (default) or `:named`
   * `:name` — GenServer name registration (default: `__MODULE__`)
+  * `:additional_hostnames` — list of extra hostnames to route through the tunnel
+    (named mode only). Each hostname is added as an ingress rule pointing to
+    the same `:origin_url`. Useful for white-label custom domains in dev.
 
 ## child_spec(init_arg)
 

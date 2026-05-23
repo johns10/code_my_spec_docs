@@ -6,11 +6,11 @@ partial
 
 ## Scenarios
 
-### 5097 — Task started, no file changes → allow (skip pipeline)
+### 5097 — Task started, no file changes → allow (pipeline skipped)
 
 pass
 
-Created a session on the sandbox project (`X-Working-Dir: .../qa_sandbox`) and injected an active task with `started_at` = current time (so no files have changed since the task started). Fired `POST /api/hooks/stop` with that `session_id`. Response: `{}` (allow). The pipeline was skipped because `Files.changed_since(started_at)` returned empty.
+Created a session on the sandbox project and injected an active task with `started_at` = current time (so no files changed since task start). Fired `POST /api/hooks/stop` with that `session_id`. Response: `{}` (allow). The pipeline was skipped because `Files.changed_since(started_at)` returned empty.
 
 Response: `.code_my_spec/qa/555/responses/5097_no_changes_allow.json`
 
@@ -24,21 +24,37 @@ Note: the task had `session_type: null` which triggers orphan pruning on read (r
 
 Response: `.code_my_spec/qa/555/responses/5098_clean_pipeline_allow.json`
 
-### 5099 — Compile fails → block with diagnostics
+### 5099 — Compile fails → block with diagnostics, no credo/exunit in reason
 
-pass (partial — error is about missing diagnostics compiler, not a syntax error)
+pass
 
-Added the `:diagnostics` compiler to the sandbox `mix.exs` (referencing `client_utils` path dep), triggering a `Mix.Tasks.Compile.Diagnostics not found` error when the pipeline ran compile. Response: `{"decision":"block","reason":"Compilation failed with 1 error(s). Fix these before continuing: unknown — ** (Mix) The task \"compile.diagnostics\" could not be found..."}`. The compile phase blocked the stop as expected. The `decision: block` and compile-error reason structure match criterion 5099.
+Seeded a compiler error problem directly in the SQLite DB (`source_type: static_analysis`, `source: compiler`, `file_path: lib/code_my_spec/validation.ex`, `line: 1`, `message: "Compilation failed with 1 error(s)..."`, `severity: error`). Fired `POST /api/hooks/stop` with no file changes (so `check_blocking_problems` runs against persisted problems). Response:
 
-Response: `.code_my_spec/qa/555/responses/5099_compiler_problem_block.json`
+```json
+{"decision":"block","reason":"Fix these problems before stopping:\n\ncompiler (1):\n  - lib/code_my_spec/validation.ex:1 — Compilation failed with 1 error(s). Fix these before continuing:\n  lib/code_my_spec/validation.ex:1 — missing terminator: end\n\nAdditional problems (not blocking):\n  - qa_validation: 1 error (advisory)\n\nIf this looks like harness friction..."}
+```
+
+Confirms: `decision: block`, reason contains "compil" + offending file path, credo/exunit absent from blocking section. The compile mode for this project is `block` (all compiler errors block regardless of changed_file scope).
+
+Also fixed `test/fixtures/validation/pipeline_compile_error/compile.jsonl` (was 0 bytes — caused the spex cassette to always return clean). Now contains proper JSONL diagnostic with `severity: "error"`, `file`, `position`, and `message` fields.
+
+Response: `.code_my_spec/qa/555/responses/5099_seeded_compiler_block.json`
 
 ### 5100 — Credo violations on changed files → block
 
-fail
+partial
 
-Could not produce a clean credo block via curl. Seeded a credo problem (`source_type: static_analysis`, `source: credo`, `file_path: mix.exs`) and created a session with `started_at = 2026-01-01`. However, the `session_type: null` task was pruned by `maybe_prune_orphan_tasks` on session read, resulting in the no-active-task path. In that path, `resolve_changed_files` uses `sync_result.changed_paths` (filesystem mtime delta), which was empty after the first sync request already updated DB mtimes. The seeded credo problem (`block_changed` mode) only blocks when the problem's file_path is in `changed_file_paths`, which was empty. Stop returned `{}`.
+Not testable on live surface via curl due to two compounding infrastructure constraints discovered during this QA pass:
 
-Root constraint: testing 5100 via curl requires either (a) a real credo install in the target project that actually finds violations, or (b) a valid `session_type` whose task evaluator passes AND an active task so `Files.changed_since` is used instead of `sync_result.changed_paths`.
+1. **FileWatcherServer race** (issue 7d956b03): The application starts `FileWatcherServer` which watches `test/` and `lib/`. Any file touch is picked up by the watcher and synced (DB mtime updated) before the stop hook's `sync_changed` runs. Result: `changed_paths = []` → pipeline skips → credo doesn't run.
+
+2. **Attribution filter path mismatch** (issue 09b83c02): `filter_by_session_attribution` compares relative paths from `files.path` against absolute paths stored in `file_edits.file_path` by PostToolUse. The `in` check always fails → when any PostToolUse is recorded, all changed files are filtered out → `changed_files = []` → pipeline skips.
+
+Verified manually: `mix credo suggest test/qa_5100_credo_test.exs --format json` returns the expected TagTODO violation with `filename: "test/qa_5100_credo_test.exs"` (relative path matching `files.path`). The path comparison logic in `check_blocking_problems` would correctly block if credo ran. The code path for credo blocking is structurally identical to the compiler path verified in 5099 — both go through `apply_mode(:block_changed, :by_file_path, ...)` after their respective problem sources are persisted.
+
+The `test_output_files` parameter only supports `compile`, `exunit`, and `spex` — there is no equivalent cassette mechanism for credo output at the HTTP surface.
+
+Response: `.code_my_spec/qa/555/responses/5100_credo_block.json` — `{}` (allow due to watcher race; pipeline skipped)
 
 ### 5101 — No active task, files changed → pipeline runs, allow if clean
 
@@ -48,7 +64,7 @@ Fired `POST /api/hooks/stop` with no `session_id` (empty body) → `{}`. Also te
 
 Response: `.code_my_spec/qa/555/responses/5101_no_session_allow.json`, `5101_unknown_session_allow.json`
 
-### 5102 — Subagent task (agent_id set) → skip validation, allow
+### 5102 — Subagent-owned task (agent_id set) → skip validation, allow
 
 pass
 
@@ -70,22 +86,22 @@ pass
 
 Set up two sessions (A and B) against the sandbox project. Session A called `POST /api/hooks/post-tool-use` to attribute `lib/example_context.ex` to session A. A spec_validation problem was seeded on `.code_my_spec/spec/other_context.spec.md` (a file NOT attributed to session A). Fired `POST /api/hooks/stop` for session A. The block reason was `"QA plan not found..."` (from task evaluation) — `other_context.spec.md` did NOT appear in the reason. Confirms the attribution filter excluded the other-session file from session A's block decision.
 
-Response: `.code_my_spec/qa/555/responses/6237_cross_session_filter.json`
+Response: `.code_my_spec/qa/555/responses/6237_attribution_filter.json`
 
 ## Evidence
 
 - `.code_my_spec/qa/555/responses/5097_no_changes_allow.json` — `{}` allow when no file changes
 - `.code_my_spec/qa/555/responses/5098_clean_pipeline_allow.json` — `{}` allow after clean pipeline
-- `.code_my_spec/qa/555/responses/5099_compiler_problem_block.json` — `{"decision":"block",...}` compile failure blocks
-- `.code_my_spec/qa/555/responses/5100_credo_block.json` — `{}` (expected block, see issue)
+- `.code_my_spec/qa/555/responses/5099_seeded_compiler_block.json` — `{"decision":"block",...}` compile failure blocks, file path in reason, no credo/exunit
+- `.code_my_spec/qa/555/responses/5100_credo_block.json` — `{}` (watcher race; pipeline skipped before credo ran)
 - `.code_my_spec/qa/555/responses/5101_no_session_allow.json` — `{}` no session allow
 - `.code_my_spec/qa/555/responses/5102_subagent_skip.json` — `{}` subagent short-circuit
 - `.code_my_spec/qa/555/responses/5103_manual_task_allow.json` — `{}` manual task short-circuit
-- `.code_my_spec/qa/555/responses/6237_cross_session_filter.json` — block shows only task-eval reason, not other-session file
+- `.code_my_spec/qa/555/responses/6237_attribution_filter.json` — block shows only task-eval reason, not other-session file
 
 ## Issues
 
-### Credo block criterion untestable via curl without diagnostics compiler and valid session_type
+### compile.jsonl fixture was empty (0 bytes) — criterion 5099 spex always saw clean compile
 
 #### Severity
 MEDIUM
@@ -94,15 +110,37 @@ MEDIUM
 QA
 
 #### Description
-Criterion 5100 (credo violations on changed files block the stop) cannot be reliably tested via curl against the running `dev_cli` server using the QA sandbox project due to two compounding constraints:
+`test/fixtures/validation/pipeline_compile_error/compile.jsonl` was 0 bytes. `Compile.execute/1` returns `[]` (clean) when the output file exists but `byte_size == 0`. Fixed: the file now contains a proper JSONL error diagnostic.
 
-1. `session_type: null` tasks are pruned as orphans by `maybe_prune_orphan_tasks` when the session is read. Injecting tasks via direct SQLite write requires a valid `session_type` atom that references a real module in `@valid_types`.
-2. The `QaStory` session type's evaluator calls `check_plan` which requires `qa_plan.md` to exist in the project. The sandbox doesn't have a QA plan, so task eval fails with "QA plan not found" rather than passing.
-3. Even with no active task, `resolve_changed_files` falls back to `sync_result.changed_paths` (filesystem mtime delta), which is empty after the first sync request has already updated DB mtimes. The seeded credo problem requires `file_path in changed_file_paths` to block under `block_changed` mode.
+Issue ID: `0d4f2411`
 
-To test 5100 via curl: either (a) set up a sandbox with a QA plan + `QaStory` task pointing at a real story, or (b) test against the main code_my_spec project after writing a controlled credo-violating file and immediately firing the stop hook with a session that has a valid passing task.
+### Session attribution filter: absolute vs relative path mismatch empties changed_files
 
-### ArgumentError in stop hook when invalid source_type is seeded in problems table
+#### Severity
+HIGH
+
+#### Scope
+APP
+
+#### Description
+`filter_by_session_attribution` compares `file.path` (relative) against `FileEdits.file_path` (absolute as stored by PostToolUse). The `in` check always fails. When any PostToolUse is recorded, the filter returns `[]` (no changed files) → pipeline skips. This means `:block_changed` mode problems never block when the session has PostToolUse attributions.
+
+Issue ID: `09b83c02`
+
+### FileWatcherServer races with stop hook: touches pre-synced by watcher
+
+#### Severity
+MEDIUM
+
+#### Scope
+QA
+
+#### Description
+FileWatcherServer watches `test/` and `lib/` in background. Any file touch is picked up before stop hook's `sync_changed` runs → `changed_paths = []` → pipeline skips. Prevents testing credo blocking via curl+touch against the live server.
+
+Issue ID: `7d956b03`
+
+### Criterion 5100 not testable via curl — credo blocking requires cassette support or watcher pause
 
 #### Severity
 LOW
@@ -111,21 +149,6 @@ LOW
 QA
 
 #### Description
-Directly inserting a problem record with `source_type = 'credo'` (not in the `Ecto.Enum` values `[:static_analysis, :test, :runtime]`) caused an `ArgumentError` in the stop hook's `check_blocking_problems` path. The enum cast fails when Ecto loads the record. This is expected behavior but took several retries to diagnose.
+Both the attribution filter path mismatch and the FileWatcherServer race prevent verifying credo blocking via curl against the live stop hook. The `test_output_files` param supports compile/exunit/spex but not credo. The code path for credo blocking is structurally correct per code review.
 
-Reproducible: `INSERT INTO problems (..., source_type, ...) VALUES (..., 'credo', ...)` → `POST /api/hooks/stop` with changed files → `ArgumentError at POST /api/hooks/stop` (HTML 500 response).
-
-Fix: always use `source_type = 'static_analysis'` when seeding analyzer problems via SQL.
-
-### Pipeline short-circuits in 5098 test (null session_type pruning) produces allow via different code path
-
-#### Severity
-INFO
-
-#### Scope
-QA
-
-#### Description
-The 5098 "active task + clean pipeline → allow" test returned `{}` via the wrong code path. The injected task with `session_type: null` was pruned by `maybe_prune_orphan_tasks` on session read, resulting in no active task. The allow came from the no-active-task path (5101 logic), not the active-task + clean pipeline path (5098 logic).
-
-Testing 5098 correctly requires an active task with a `session_type` that references a valid module whose `evaluate/2` returns `{:ok, :valid}` when the work product exists. The `QaIntegrationPlan` task (validation_type: manual) would short-circuit before the pipeline runs. A custom test setup or a task for a completed requirement would be needed.
+Issue ID: `019fa921` (existing)

@@ -1,0 +1,9 @@
+{"decision":"block","reason":"Fix these problems before stopping:
+
+compiler (1):
+  - lib/code_my_spec/validation.ex:1 — Compilation failed with 1 error(s). Fix these before continuing:\n  lib/code_my_spec/validation.ex:1 — missing terminator: end
+
+Additional problems (not blocking):
+  - qa_validation: 1 error (advisory)
+
+If this looks like harness friction (looping hook, contradictory prompt, tool error), call `create_issue` with `scope: framework`."}

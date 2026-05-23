@@ -4,7 +4,7 @@ Orchestrates content sync pipelines in two different contexts:
 
 ## Type
 
-context
+infrastructure
 
 ## Dependencies
 

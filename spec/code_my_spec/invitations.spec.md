@@ -4,7 +4,7 @@ The Invitations context.
 
 ## Type
 
-context
+infrastructure
 
 ## Dependencies
 
