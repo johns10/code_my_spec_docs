@@ -112,6 +112,26 @@ Most serious developers I know run two tools. A few patterns I see constantly on
 - Claude Code for production, Gemini for prototyping. Free tier for the messy experimentation, paid tier for the work that ships.
 - Aider for token-efficient iteration, Claude Code for complex planning. "Honestly, Codex is like a Surgeon and Claude is more like a Surgical Resident."
 
+<aside class="not-prose" data-cro="cta-mid">
+  <div class="cro-mid">
+    <div class="cro-mid-term">
+      <span class="cro-p">▸</span><span>cta · mid_article</span>
+    </div>
+    <p class="cro-mid-h">
+      All six tools sharpen the session.<br /><span class="cro-r">Harnesses compound across sessions.</span>
+    </p>
+    <p class="cro-mid-sub">
+      CodeMySpec sits one layer above whichever CLI you pick.
+    </p>
+    <div class="cro-mid-cta">
+      <a
+        href="/products/code-my-spec?utm_source=cli-agents-compared-2026&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
+        class="cro-btn"
+      >▸ See the harness layer</a>
+    </div>
+  </div>
+</aside>
+
 ## Who Should Use What
 
 Here's how I'd actually pick:
