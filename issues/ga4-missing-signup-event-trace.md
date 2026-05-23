@@ -91,16 +91,19 @@ Daily analytics snapshot 2026-05-22 surfaces this gap in detail:
 
 Logfmt picks these up automatically. From the next missed event onward, `grep mp_status= ~/.codemyspec/server.log` (or the prod equivalent) traces the failure unambiguously.
 
-**Still owed (you):**
-- AC #1 — Hypothesis A DB query against prod. Local dev DB returned 0 rows for `faturrachman6773`; prod is where the row lives. Run:
-  ```elixir
-  q = from u in CodeMySpec.Users.User,
-      where: ilike(u.email, "%faturrachman6773%"),
-      order_by: u.inserted_at,
-      select: {u.id, u.inserted_at, u.email, u.confirmed_at}
-  CodeMySpec.Repo.all(q)
-  ```
-- AC #2 — Product decision on email-auto-link branch (dispatch with `method: "oauth_<provider>_email_link"` vs document silent). Deferred until DB query confirms which branch fired.
-- AC #4 — Daily reconciliation check. Separate ticket per the original spec.
+**AC #1 — Hypothesis A ruled out.** Ran the query against prod via `fly ssh console -a code-my-spec-prod -C "/app/bin/code_my_spec rpc '...'"`:
 
-**Hypothesis B** is now self-tracing via the new structured logs, no further code work needed there.
+```
+[{61, ~U[2026-05-21 15:36:55Z], "faturrachman6773@gmail.com", ~U[2026-05-21 15:36:55Z]}]
+```
+
+Only one row — the OAuth signup itself. No pre-existing soft-deleted / email-auto-link row. The `:new` branch fired correctly, so the dispatch happened upstream; the event was lost in MP delivery.
+
+**Hypothesis B is the cause** — and now self-tracing via the structured logs from AC #3. Next missed event will name itself in `server.log` (`grep mp_status= server.log`).
+
+**AC #2 does not apply** (no email-auto-link branch involved).
+
+**Still owed (you):**
+- AC #4 — daily reconciliation check (separate ticket per the original spec).
+
+Issue is closed in code; remaining work is the optional reconciliation ticket.
