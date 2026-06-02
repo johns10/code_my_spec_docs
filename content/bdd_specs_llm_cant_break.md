@@ -1,5 +1,9 @@
 # How to write BDD specs the LLM can't break
 
+_Part 2 of ["Preventing AI Slop in Elixir"](/blog/prevent-slop-elixir-codebases)._
+
+---
+
 Good requirements close the front gate. A sealed compile-time boundary closes the back gate. The engineering between them is the part nobody writes down.
 
 ## The validation problem

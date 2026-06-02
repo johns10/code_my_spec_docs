@@ -21,6 +21,8 @@ metadata:
   template: article
   author: John Davenport
   category: AI Development
+  series: Preventing AI Slop in Elixir
+  series_part: 1
   featured: true
 
 tags:

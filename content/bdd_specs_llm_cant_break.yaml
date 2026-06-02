@@ -12,7 +12,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "How to write BDD specs the LLM can't break"
-meta_description: "Elixir BDD specs that survive contact with an LLM. Compile-time Boundary on the spec namespace, a designed application surface, and Credo rules that close the model's escape routes."
+meta_description: "Phoenix BDD specs the LLM can't cheat past. Compile-time Boundary on the spec namespace plus Credo rules that close every shortcut."
 og_title: "How to write BDD specs the LLM can't break"
 og_description: "The engineering process for sealed BDD specs in Phoenix: design the boundary, enforce it with Boundary and Credo, drive every spec through the real user surface."
 og_image: null
@@ -21,6 +21,8 @@ metadata:
   template: article
   author: John Davenport
   category: AI Development
+  series: Preventing AI Slop in Elixir
+  series_part: 2
   featured: true
 
 tags:

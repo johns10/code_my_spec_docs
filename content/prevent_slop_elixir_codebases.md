@@ -1,5 +1,9 @@
 # How to Prevent Slop in AI-Generated Elixir Codebases
 
+_Part 1 of "Preventing AI Slop in Elixir," a series on the verification priority order that keeps Phoenix codebases maintainable when an LLM writes most of the code._
+
+---
+
 If you're building production Phoenix apps with AI agents, you know the failure mode. The agent writes code fast. The tests pass. Three weeks later your contexts have bled into each other, a LiveView is calling `Repo` directly, and changing one feature breaks three others. The codebase has turned to slop.
 
 It's measured, not anecdotal. [GitClear's analysis of 211 million lines of code](https://www.gitclear.com/ai_assistant_code_quality_2025_research) found that in 2024 copy-pasted code outpaced refactored code for the first time, and the share of code discarded within two weeks keeps climbing. AI raises output and lowers reuse at the same time.
@@ -43,6 +47,8 @@ end
 ```
 
 It reads as intent and exercises the real surface, the LiveView and its rendered DOM, not internal functions. In review, this is where most of your attention belongs. Two checks: do the specs express what the feature should do, and do they exercise it through the surface without reaching into the domain to fix test data or force a pass? That second one is the tell. A test that mutates internal state to go green is the model gaming your verification, not satisfying it.
+
+The full mechanics of designing the spec boundary, sealing the namespace at compile time, and the Credo rules that backstop both live in Part 2: [How to write BDD specs the LLM can't break](/blog/bdd-specs-llm-cant-break).
 
 ## Priority 2: Performance
 
