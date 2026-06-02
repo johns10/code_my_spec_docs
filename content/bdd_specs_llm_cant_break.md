@@ -30,7 +30,7 @@ A BDD spec is only as good as the requirement it encodes. Ambiguous requirements
 I use Three Amigos. It's one structured way to do good requirements collection. The principle matters more than the protocol:
 
 - **Persona linkage.** The story attaches to a specific persona. "The driver" and "the fleet manager" generate different specs for the same feature.
-- **Business rules and invariants.** One declarative sentence each.
+- **Business rules and invariants.** One declarative sentence stating the rules the code must implement.
 - **Scenarios.** Concrete examples per rule. Given-When-Then, one behaviour per scenario.
 - **Open questions.** The things the conversation surfaced that nobody can answer in the room. Park them. Send them back to the user.
 
@@ -134,7 +134,7 @@ defmodule MyAppSpex do
 end
 ```
 
-Each entry maps to one row of the design table. `Environments` and `McpServers` are the agent surfaces. `MyAppWeb` is the human-engineer surface plus the HTTP hook endpoint. `MyAppFixtures` is the curated escape hatch for server-side state that has to exist before any user can act. It gets its own top-level Boundary:
+Each entry maps to an inbound or outbound surface. `Environments` and `McpServers` are the agent surfaces. `MyAppWeb` is the human-engineer surface plus the HTTP hook endpoint. `MyAppFixtures` is the curated escape hatch for server-side state that has to exist before any user can act. It gets its own top-level Boundary:
 
 ```elixir
 defmodule MyAppFixtures do
@@ -152,7 +152,7 @@ defmodule MyAppFixtures do
 end
 ```
 
-`MyAppFixtures`, not `MyAppSpex.Fixtures`. The flat name signals it's a peer top-level Boundary, not namespaced inside the spec boundary. An engineer can open this file and eyeball the entire surface specs can reach for state. No hidden inheritance. No scattered helpers. One module, one list of `defdelegate` lines.
+`MyAppFixtures` are a top-level Boundary that defines your spec's interface into your domain. An engineer can open this file and eyeball the entire surface specs can reach for state in minutes.
 
 Three properties make it practical to keep tight:
 
@@ -168,6 +168,7 @@ Boundary controls which modules a spec can call. Credo controls which patterns t
 
 The custom Credo rules I apply inside the spec namespace:
 
+- **Ban control flow** No `if`, `case`, `try` or `cond` in tests, ANYWHERE.
 - **Ban `File`.** Forces filesystem access through the in memory file system. 
 - **Ban `Phoenix.PubSub.broadcast` and bare `send/2` inside spec setup.** Otherwise the model fakes state changes by broadcasting directly to a LiveView from a given step, skipping the real producer.
 - **Ban `Mox`, `Mock`, and the literal string `mock`.** Mocks are a fresh cheating surface. If a spec needs an outbound boundary controlled, it uses a recording.
@@ -181,83 +182,77 @@ Recordings drift when the third-party service changes its response shape, or whe
 
 ## Step 5: writing specs through the boundary
 
-Design and mechanical protection are in place. A spec drops in at `test/spex/<story_id>/<criterion_id>_spex.exs`:
+Design and mechanical protection are in place. Here's an actual spec from the CodeMySpec test suite. Story 127 covers filesystem-to-DB projection: the agent writes a file into the project's working directory, sync flips a DB row, and the file shows up in the engineer's Files page. Criterion 5926 says: a spec file missing its required H1 title parses as invalid and renders an `invalid` badge on the matching row.
 
 ```elixir
-defmodule MyAppSpex.Story42.Criterion101Spex do
+defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
   @moduledoc """
-  Story 42: User connects Google Analytics
-  Criterion 101: Connection shows as active after OAuth completes
+  Story 127 — Filesystem-to-DB Projection
+  Criterion 5926 — Spec file with malformed structure is marked invalid
+  with the parser error.
   """
 
-  use MyAppSpex.Case
+  use CodeMySpecSpex.Case
 
-  import_givens MyAppSpex.SharedGivens
+  alias CodeMySpec.Environments
+
+  @broken_spec_path ".code_my_spec/spec/broken_context.spec.md"
 
   setup :register_log_in_setup_account
+  setup :setup_active_project
 
-  spex "user connects Google Analytics" do
-    scenario "post-authorize the integration card shows the property name" do
-      given_ "the user is on the integrations page", context do
-        {:ok, view, _html} = live(context.conn, ~p"/integrations")
-        {:ok, Map.put(context, :view, view)}
+  spex "Engineer sees malformed specs flagged invalid in the projection" do
+    scenario "spec missing the H1 title is marked invalid after sync" do
+      given_ "the agent has written a spec file missing the required H1 title",
+             context do
+        :ok = Environments.write_file(context.environment, @broken_spec_path, broken_spec())
+        {:ok, context}
       end
 
-      when_ "the OAuth callback completes for property MyAccount.com", context do
-        conn = OAuthHelpers.do_google_callback(context.conn, "ga_success")
-        {:ok, view, _html} = live(conn, ~p"/integrations")
-        {:ok, Map.put(context, :view, view)}
+      when_ "the engineer triggers a sync from the Files page", context do
+        {:ok, files_live, _html} =
+          live(context.conn, "/projects/#{context.project.name}/files")
+
+        files_live
+        |> element("[data-test='sync-button']")
+        |> render_click()
+
+        {:ok, Map.put(context, :files_live, files_live)}
       end
 
-      then_ "the integration card renders as connected with the property name",
-            context do
+      then_ "the broken spec row shows the invalid badge", context do
         assert has_element?(
-                 context.view,
-                 "[data-test='integration-card-google-analytics']"
+                 context.files_live,
+                 "[data-file-path=\"#{@broken_spec_path}\"] [data-validity='invalid']"
                )
 
-        assert render(context.view) =~ "MyAccount.com"
-
-        refute has_element?(
-                 context.view,
-                 "[data-test='integration-card-google-analytics'][data-status='disconnected']"
-               )
-
-        :ok
+        {:ok, context}
       end
     end
   end
+
+  defp broken_spec, do: "## Type\n\ncontext\n\nA spec missing its H1 title.\n"
 end
 ```
 
-Three things to notice. The `when_` step drives `do_google_callback`, which routes through the recorded `ReqCassette` for the OAuth provider's response. The `then_` step reads what the user sees: `has_element?/2` against the rendered DOM, `render(view) =~ "MyAccount.com"` against rendered text. No DB read. No context-function call. And the positive `assert` is an anchor that proves the page rendered at all, so the `refute` actually means something. Without an anchor, an empty response would pass every refute.
+The spec exercises both users in one scenario. The `given_` step drives the **agent** surface: `Environments.write_file/3` writes a file into the in-memory environment, exactly the way the production agent would write into a real working directory. The `when_` step drives the **engineer** surface: mount the Files LiveView with `live/2`, click the sync button with `element/2 |> render_click/1`. The `then_` step reads what the engineer sees on the page after sync runs: `has_element?/2` against the rendered DOM with a `data-file-path` selector that points at the broken spec's row.
 
-Cross-spec setup that recurs goes into `MyAppSpex.SharedGivens`:
+No DB read. No context-function call. No fixture lookup. The whole spec routes through `Environments`, the LiveView, and the rendered HTML. If the production sync pipeline reaches `File.read!` directly or skips the projection step, this spec fails immediately because nothing downstream answers honestly.
+
+The `defp broken_spec` is a plain string helper. It lives inside the spec module because it isn't reusable state, just the test data for one criterion. Helpers like this are fine inside a spec; the boundary is about reaching into the application, not about expressing test inputs.
+
+Setup that recurs across specs gets lifted into `MyAppSpex.SharedGivens`. CodeMySpec has one that mounts the configuration LiveView, used everywhere a spec needs to act as the engineer on the configuration page:
 
 ```elixir
-defmodule MyAppSpex.SharedGivens do
-  use SexySpex.SharedGivens
+register_given :on_configuration_page, context do
+  {:ok, config_live, _html} =
+    live(context.conn, "/projects/#{context.project.name}/configuration")
 
-  given :synced_context_component do
-    env = context.environment
-
-    :ok =
-      Environments.write_file(env, "lib/example_context.ex", impl_file_content())
-
-    {:ok, sync_live, _html} =
-      live(context.conn, "/projects/#{context.project.name}/sync")
-
-    sync_live |> element("button[phx-click='sync']") |> render_click()
-
-    component =
-      Fixtures.get_component_by_module_name(context.scope, "ExampleContext")
-
-    {:ok, %{component: component}}
-  end
+  {:ok, Map.put(context, :config_live, config_live)}
 end
 ```
 
-Specs reach it as `given_ :synced_context_component`. The given establishes state by driving the real surface (a file write through the in-memory environment, a sync click against the real LiveView). Pattern-match failures blow up at the point of failure. The given itself never asserts. Assertions live in `then_`.
+Specs reach it as `given_ :on_configuration_page` and pick up `context.config_live` for use in their `when_` step. The given establishes state by driving the real surface, returns a key the rest of the scenario uses, and never asserts. Pattern-match failures blow up at the point of failure. Assertions live in `then_`.
 
 ## What still leaks past the gate
 
