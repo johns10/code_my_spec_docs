@@ -4,21 +4,21 @@ _Part 2 of ["Preventing AI Slop in Elixir"](/blog/prevent-slop-elixir-codebases)
 
 ---
 
-Good requirements close the front gate. A sealed compile-time boundary closes the back gate. The engineering between them is the part nobody writes down.
-
 ## The validation problem
 
-I've been wiring LLM agents into Phoenix apps for about a year. Generating code is the easy part. Validating the application does what you want is the hard part.
+I've been wiring LLM agents into Phoenix apps for about a year. Agents generate code so fast that the bottleneck has become validation.
 
-The easy answer is the verifications you already had: lint clean, types check, unit tests green, coverage up. None of that tells you whether the application does what it should.
+The only thing that makes sense is to procedurally validate as much as you can. Procedural validation is an engineering problem, and like all engineering problems, we must prioritize what to work on.
 
-That's the only question that matters. If your password reset flow worked yesterday and doesn't today, every other check can be green and you've still shipped a regression. Procedural validation has to anchor on behaviour through the user's surface, not on properties of the code itself. A bag of passing unit tests does not make a working application.
+The top priority in software engineering is that the application works, and it does what the user wanted.
 
-That's the job BDD specs do. They describe what the app should do in plain language, then exercise it through the actual surface of the application. The LLM ships a change, the specs run, and you find out within seconds whether the existing behaviour held.
+If your password reset flow worked yesterday and doesn't today, every other check can be green and you've still shipped a regression. Procedural validation has to anchor on behaviour from the users perspective, not on properties of the code itself. A bag of passing unit tests does not make a working application.
+
+That's what BDD specs do. They describe what the app should do in plain language, then exercise it through the actual surface of the application. The LLM ships a change, the specs run, and you find out within seconds whether the existing behaviour held.
 
 For BDD specs to survive contact with an LLM, two things have to be true:
 
-1. The specs encode the right behaviour. That means good requirements before any code or spec gets written.
+1. The specs encode the right behaviour. That means having good requirements and designs before any code or spec gets written. Good luck if you're in corporate.
 2. The model cannot satisfy the specs dishonestly. That means designing the application's boundary deliberately and protecting it at compile time.
 
 The rest of this article is the engineering process I use: requirements, boundary design, mechanical protection, writing specs against what you built.
@@ -107,11 +107,9 @@ Here's how it plays out on CodeMySpec:
 | Third-party HTTP (OAuth providers, etc.) | `Req` HTTP client | Record via `ReqCassette` |
 | Production filesystem reads/writes | Reads/writes working directory | In-memory filesystem implementation |
 
-In-memory filesystem on both sides because the abstraction is load-bearing in both directions. Production code writes through `Environments.write_file/3`; the in-memory implementation answers those calls in test. A code path that reaches `File.read!` directly fails the spec immediately because the in-memory environment has no answer for that call. The mock isn't a shortcut. It's the only way tests can honour the abstraction, which forces production code to use it consistently.
+In-memory filesystem on both sides because the abstraction is load-bearing in both directions. Production code writes through `Environments.write_file/3`; the in-memory implementation answers those calls in test. A code path that reaches `File.read!` directly fails the spec immediately because the in-memory environment has no answer for that call. The mock isn't a shortcut. It's the only way tests can honour the abstraction realistically, which forces production code to use it consistently.
 
 `ReqCassette` is a recording, not a mock. The cassette captures what the real OAuth provider returned the first time. On replay, the cassette fails if the production code makes a call that wasn't recorded, in the wrong order, or with different parameters. The model can't write a `Mox.expect` that quietly accepts any input. It makes the recorded calls or the spec fails.
-
-Whatever your application looks like, the design output is a table like this one. Every inbound surface paired with a test DSL. Every outbound surface paired with a recording or behaviour-shaped fake. Once you have the table, the next step is to make it structural.
 
 ## Step 4: mechanical protection
 
@@ -152,13 +150,13 @@ defmodule MyAppFixtures do
 end
 ```
 
-`MyAppFixtures` are a top-level Boundary that defines your spec's interface into your domain. An engineer can open this file and eyeball the entire surface specs can reach for state in minutes.
+`MyAppFixtures` are a top-level Boundary that defines your spec's interface into your domain. An engineer can open this file and eyeball the entire surface specs can reach for in minutes.
 
 Three properties make it practical to keep tight:
 
 **Driving the UI in shared setup is cheap.** A LiveView interaction in a spec is a function call against `Phoenix.LiveViewTest`, not browser automation. Replacing a fixture shortcut with a "register through the LiveView" shared given costs milliseconds.
 
-**Paring fixtures down is free now.** Remove a function from `MyAppFixtures`. The next compile fails on the specs that used it. The model fixes those specs to drive the real surface instead. Labour is cheap with an LLM. The bottleneck was always reviewer attention. Cutting a fixture and letting compile errors fall out is a 30-second action that reshapes the spec boundary.
+**Paring fixtures down is free now.** Remove a function from `MyAppFixtures`. The next compile fails on the specs that used it. The model fixes those specs to drive the real surface instead. Labour is cheap with an LLM. 
 
 **The compiler tells you when a fixture is fighting the design.** If you're tempted to add a function that creates state the user should create through the UI, the rule says don't. Do it anyway, and the next time you delete it, the build will tell you exactly which specs were taking the shortcut.
 
@@ -166,7 +164,7 @@ Three properties make it practical to keep tight:
 
 Boundary controls which modules a spec can call. Credo controls which patterns the model can reach for inside the modules it's allowed to call.
 
-The custom Credo rules I apply inside the spec namespace:
+The custom Credo rules I apply to CodeMySpec:
 
 - **Ban control flow** No `if`, `case`, `try` or `cond` in tests, ANYWHERE.
 - **Ban `File`.** Forces filesystem access through the in memory file system. 
@@ -235,9 +233,9 @@ defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
 end
 ```
 
-The spec exercises both users in one scenario. The `given_` step drives the **agent** surface: `Environments.write_file/3` writes a file into the in-memory environment, exactly the way the production agent would write into a real working directory. The `when_` step drives the **engineer** surface: mount the Files LiveView with `live/2`, click the sync button with `element/2 |> render_click/1`. The `then_` step reads what the engineer sees on the page after sync runs: `has_element?/2` against the rendered DOM with a `data-file-path` selector that points at the broken spec's row.
+The spec exercises both users in one scenario. The `given_` step drives the **agent** surface: `Environments.write_file/3` writes a file into the in-memory environment. The `when_` step drives the **engineer** surface: mount the Files LiveView with `live/2`, click the sync button with `element/2 |> render_click/1`. The `then_` step reads what the engineer sees on the page after sync runs: `has_element?/2` against the rendered DOM with a `data-file-path` selector that points at the broken spec's row.
 
-No DB read. No context-function call. No fixture lookup. The whole spec routes through `Environments`, the LiveView, and the rendered HTML. If the production sync pipeline reaches `File.read!` directly or skips the projection step, this spec fails immediately because nothing downstream answers honestly.
+The whole spec routes through `Environments`, the LiveView, and the rendered HTML. If the production sync pipeline reaches `File.read!` directly or skips the projection step, this spec fails immediately
 
 The `defp broken_spec` is a plain string helper. It lives inside the spec module because it isn't reusable state, just the test data for one criterion. Helpers like this are fine inside a spec; the boundary is about reaching into the application, not about expressing test inputs.
 
