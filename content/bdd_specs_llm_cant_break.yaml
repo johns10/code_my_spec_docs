@@ -1,0 +1,36 @@
+# Metadata for bdd_specs_llm_cant_break.md
+
+# Required fields
+slug: bdd-specs-llm-cant-break
+type: blog
+title: "How to write BDD specs the LLM can't break"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-01T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "How to write BDD specs the LLM can't break"
+meta_description: "Elixir BDD specs that survive contact with an LLM. Compile-time Boundary on the spec namespace, a designed application surface, and Credo rules that close the model's escape routes."
+og_title: "How to write BDD specs the LLM can't break"
+og_description: "The engineering process for sealed BDD specs in Phoenix: design the boundary, enforce it with Boundary and Credo, drive every spec through the real user surface."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - elixir
+  - phoenix
+  - ai-coding
+  - bdd
+  - sealed-boundary
+  - compile-time-checks
+  - boundary
+  - spex
+  - verification
+  - three-amigos
