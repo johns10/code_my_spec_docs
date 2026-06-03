@@ -114,3 +114,9 @@ Every other spec type in the taxonomy has its place. Standards specs define prot
 But if you're doing spec-driven development and you want to know which spec to write first, write the BDD spec. It's the only one that simultaneously tells the agent what to build, verifies it built it correctly, and documents what it built for the next developer -- or the next agent -- who comes along.
 
 The spec you want is the one that fails when the code is wrong. Everything else is just asking nicely.
+
+## Related Articles
+
+- [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
+- [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code)
+- [Spec-Driven Development vs Vibe Coding](/blog/spec-driven-development-vs-vibe-coding)

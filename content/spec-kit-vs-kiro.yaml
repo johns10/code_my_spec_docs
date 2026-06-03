@@ -1,0 +1,34 @@
+# Metadata for spec-kit-vs-kiro.md
+
+# Required fields
+slug: spec-kit-vs-kiro
+type: blog
+title: "Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec Kit vs Kiro: Which Spec-Driven Tool (2026)"
+meta_description: "Spec Kit vs Kiro: open agent-agnostic CLI toolkit vs AWS's integrated spec-first IDE with EARS. Side-by-side table, strengths, pricing, and which to choose."
+og_title: "Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?"
+og_description: "GitHub Spec Kit is an open, portable CLI you bolt onto any agent. Kiro is AWS's integrated spec-first IDE with EARS and credit metering. Here's the honest comparison."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - github-spec-kit
+  - kiro
+  - aws
+  - comparison
+  - tools
