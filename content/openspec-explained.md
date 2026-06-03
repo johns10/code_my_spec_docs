@@ -6,7 +6,7 @@ I have spent the last year building real Phoenix apps with spec-driven tooling, 
 
 ## What OpenSpec is
 
-OpenSpec is built by [Fission AI](https://github.com/Fission-AI/OpenSpec) and shipped as the npm package `@fission-ai/openspec` (Node 20.19+). It is MIT-licensed and open source. The repo has a large and steadily growing community [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec), and it is under active iteration: v1.4.1 shipped June 3, 2026, the same day I pulled these facts.
+OpenSpec is built by [Fission AI](https://github.com/Fission-AI/OpenSpec) and shipped as the npm package `@fission-ai/openspec` (Node 20.19+). It is MIT-licensed and open source. The repo has a large and steadily growing community, and it is under active iteration: v1.4.1 shipped June 3, 2026, the same day I pulled these facts. [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec)
 
 The core promise is portability. OpenSpec is a local file and CLI workflow that layers on top of whatever agent you already run. It does not call an LLM itself; it generates and manages spec files, and your existing agent does the generation. The homepage leads with "No API Keys" and "No MCP," and that is the honest selling point: zero added inference cost, no lock-in, specs you can read in a text editor.
 

@@ -68,7 +68,7 @@ CodeMySpec inverts that. The behavior spec is the gate, and a live-app QA pass o
 | **Agent lock-in** | None (20+ agents, no API key, no MCP) | None (any agent, BYO model/keys, via MCP or context files) |
 | **Stack awareness** | Stack-neutral, structurally generic | Phoenix/Elixir-native |
 | **Primary job** | Brownfield change tracking (delta-led) | Spec-quality-led build across the lifecycle |
-| **Pricing** | Free, MIT ([![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec), v1.4.1 Jun 2026) | Free during early access |
+| **Pricing** | Free, MIT, v1.4.1 (Jun 2026) [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec) | Free during early access |
 
 ## Where Each Wins
 
