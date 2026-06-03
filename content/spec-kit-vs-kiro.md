@@ -19,7 +19,7 @@ Spec Kit is a methodology plus scaffolding: a Python CLI (`specify`) drops Markd
 | Agent / IDE lock-in | None; ~30 agents, BYO editor | Kiro IDE/CLI; models via Bedrock |
 | Pricing | Free, MIT (you pay your own agent/model) | Metered credits ($0/$20/$40/$200), $0.04/credit overage, no rollover |
 | Verification | None built in | Agent Hooks can run tests; no live-app proof |
-| Maturity | Self-described experiment, [![GitHub stars](https://img.shields.io/github/stars/github/spec-kit?style=flat&label=stars&color=e25515)](https://github.com/github/spec-kit) | AWS GA tiers; named successor to Amazon Q Developer |
+| Maturity | Self-described experiment [![GitHub stars](https://img.shields.io/github/stars/github/spec-kit?style=flat&label=stars&color=e25515)](https://github.com/github/spec-kit) | AWS GA tiers; named successor to Amazon Q Developer |
 | Best for | Multi-agent, free, repo-portable workflows | AWS-native / enterprise shops wanting one integrated tool |
 
 (Pricing moves; re-check before you commit.)

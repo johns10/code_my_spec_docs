@@ -10,7 +10,7 @@ Spec Kit is a project from GitHub (owned by Microsoft), shipped under the offici
 
 The framing GitHub itself uses is important: Spec Kit is "an experiment designed to test how well the methodologies behind Spec-Driven Development actually work." It is not pitched as a finished product. It ships frequent releases and leans heavily on community input.
 
-Adoption has been extraordinary. The repo has one of the largest GitHub followings in the whole category, and it keeps climbing month over month. [![GitHub stars](https://img.shields.io/github/stars/github/spec-kit?style=flat&label=stars&color=e25515)](https://github.com/github/spec-kit) The point is that Spec Kit has default-tool gravity in the SDD conversation, and GitHub's brand is a big part of why. That matters when you read the criticisms later: many people are running this because it's from GitHub, not because they benchmarked it against alternatives.
+Adoption has been extraordinary. The repo has one of the largest GitHub followings in the whole category, and it keeps climbing month over month. The point is that Spec Kit has default-tool gravity in the SDD conversation, and GitHub's brand is a big part of why. That matters when you read the criticisms later: many people are running this because it's from GitHub, not because they benchmarked it against alternatives. [![GitHub stars](https://img.shields.io/github/stars/github/spec-kit?style=flat&label=stars&color=e25515)](https://github.com/github/spec-kit)
 
 The core philosophy, from the repo's `spec-driven.md`, is a deliberate "power inversion":
 
