@@ -117,6 +117,8 @@ The honest one-line summary of the whole category: most SDD tools generate a spe
 - [Spec-Driven Development for Elixir and Phoenix](/blog/spec-driven-development-elixir)
 - [Spec-Driven Development vs Vibe Coding](/blog/spec-driven-development-vs-vibe-coding)
 - [Spec-Driven Development with Claude Code](/blog/spec-driven-development-with-claude-code)
+- [Best Spec-Driven Development Tools (2026)](/blog/best-spec-driven-development-tools)
+- [EARS Notation Explained](/blog/ears-notation)
 - [CodeMySpec](/products/code-my-spec)
 - [Our methodology](/methodology)
 
