@@ -1,0 +1,85 @@
+@page {
+  size: letter;
+  margin: 1in 1in 0.9in 1in;
+  @bottom-center {
+    content: counter(page) " of " counter(pages);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8pt;
+    color: #888;
+  }
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+  max-width: 100%;
+}
+
+h1 {
+  font-size: 20pt;
+  margin: 0 0 0.2em 0;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+h2 {
+  font-size: 13pt;
+  margin-top: 1.4em;
+  margin-bottom: 0.4em;
+  color: #111;
+}
+
+p { margin: 0.5em 0; }
+
+strong { color: #000; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.8em 0;
+  font-size: 10pt;
+}
+
+th, td {
+  border: 1px solid #d0d0d0;
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #f2f2f2;
+  font-weight: 600;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 1.4em 0;
+}
+
+code {
+  background: #f4f4f4;
+  padding: 0.5px 4px;
+  border-radius: 3px;
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 9pt;
+  color: #444;
+}
+
+blockquote {
+  margin: 0.8em 0;
+  padding: 0.4em 1em;
+  border-left: 3px solid #bbb;
+  color: #555;
+}
+
+h2 { break-after: avoid; }
+table, blockquote { break-inside: avoid; }
+
+/* Keep the closing rule + "Agreed:" + both signature lines on one page */
+hr:last-of-type { break-before: auto; }
+hr:last-of-type ~ p { break-inside: avoid; }
+hr:last-of-type + p { break-before: avoid; }
