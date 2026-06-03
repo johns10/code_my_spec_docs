@@ -202,6 +202,13 @@ Integration paths:
 
 BYOK developers already bring their own API key. They tend to want to bring their own specs, their own workflow, their own standards too. That's what CodeMySpec is built for.
 
+## Related Articles
+
+- [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
+- [Aider in 2026: Polyglot Leaderboard, Pricing, and Review](/blog/aider-review-2026)
+- [Open Source vs Vendor-Locked AI Coding Tools](/blog/open-source-vs-vendor-locked-ai-coding-tools)
+- [AI IDEs Compared in 2026: Kiro vs Cursor vs Windsurf vs Zed](/blog/ai-ides-compared-2026)
+
 ## Sources
 
 - [Aider LLM Leaderboards](https://aider.chat/docs/leaderboards/)

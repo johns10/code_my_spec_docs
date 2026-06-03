@@ -144,6 +144,14 @@ The tool that becomes the canonical spec format -- the way OpenAPI became the st
 
 Cross-reference: ["Design-Driven Code Generation"](/blog/design-driven-code-generation) -- how structured design docs improve AI coding output.
 
+## Related Articles
+
+- [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
+- [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
+- [EARS Notation Explained](/blog/ears-notation)
+- [What Is a Spec?](/blog/what-is-a-spec)
+- [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code)
+
 ## Sources
 
 - [Kiro Feature Specs](https://kiro.dev/docs/specs/feature-specs/)

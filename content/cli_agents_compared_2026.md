@@ -131,6 +131,17 @@ CodeMySpec sits at the layer above. It generates specifications any of these age
 
 Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding), where CLI agents fit in the progression from autocomplete to autonomous development.
 
+## Related Articles
+
+- [Aider in 2026: Polyglot Leaderboard, Pricing, and Review](/blog/aider-review-2026)
+- [Claude Code Review 2026](/blog/claude-code-review-2026)
+- [Codex CLI Review 2026](/blog/codex-cli-review-2026)
+- [Gemini CLI Review 2026](/blog/gemini-cli-review-2026)
+- [Best Free and Open-Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)
+- [AI IDEs Compared in 2026: Kiro vs Cursor vs Windsurf vs Zed](/blog/ai-ides-compared-2026)
+- [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)
+- [Best Spec-Driven Development Tools (2026)](/blog/best-spec-driven-development-tools)
+
 ## Sources
 
 - [SWE-bench Leaderboard](https://www.swebench.com/)

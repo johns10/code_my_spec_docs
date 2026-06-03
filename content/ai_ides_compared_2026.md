@@ -137,6 +137,14 @@ Cursor 3 reinforces the broader point: as agents move from "autocomplete on ster
 
 Cross-reference: ["BDD Specs for AI-Generated Code"](/blog/bdd-specs-for-ai-generated-code), how structured specs improve AI output quality.
 
+## Related Articles
+
+- [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
+- [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
+- [Kiro Specs vs CodeMySpec: EARS Notation vs BDD](/blog/codemyspec-vs-kiro-specs)
+- [Cursor 3: Agent-First](/blog/cursor-3-agent-first)
+- [Best Free and Open-Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)
+
 ## Sources
 
 - [Cursor $2B ARR -- TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
