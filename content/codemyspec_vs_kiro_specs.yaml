@@ -11,8 +11,8 @@ publish_at: 2026-03-22T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "CodeMySpec vs Kiro EARS: Which Specs Work Better?"
-meta_description: "Amazon's Kiro uses EARS notation. CodeMySpec uses BDD. Both bet that specs before code = better AI output. We tested both approaches."
+meta_title: "Kiro Specs vs CodeMySpec: EARS Notation vs BDD"
+meta_description: "Kiro specs use EARS notation; CodeMySpec uses BDD. How Amazon's spec-driven approach compares to BDD specs for AI-generated code, tested side by side."
 og_title: "CodeMySpec Specs vs Kiro EARS"
 og_description: "Both tools bet that better specifications produce better AI-generated code. They just disagree about where specs should live and who should own them."
 og_image: null
