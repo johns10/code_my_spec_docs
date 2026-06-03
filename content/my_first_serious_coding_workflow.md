@@ -95,3 +95,11 @@ Not even good engineers get good at coding with AI overnight. A good plan and a 
 **What is the most common mistake people make when coding with AI?** Skipping the planning phase. People jump straight to prompting without a technical implementation plan, a defined architecture, or a todo list. The model then makes ad hoc decisions about structure, dependencies, and patterns that compound into architectural chaos over time.
 
 **How does CodeMySpec improve on this manual workflow?** CodeMySpec automates the manual parts -- context injection, task sequencing, memory management, and validation enforcement. Instead of copy-pasting guidelines into every chat, MCP servers provide direct access to architecture and stories. Instead of hoping the model ran tests, a validation pipeline enforces it automatically after every task.
+
+## Related Articles
+
+- [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
+- [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)
+- [Build In Public: The Three Amigos Problem](/blog/bip-three-amigos)
+- [Spec Driven Development in Elixir](/blog/spec-driven-development-elixir)

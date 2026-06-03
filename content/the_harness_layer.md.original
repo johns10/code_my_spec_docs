@@ -116,6 +116,17 @@ If you're using an AI coding tool today and you haven't configured its rules fil
 
 ---
 
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)](/blog/the-model-layer)
+- [The Agent Layer: How AI Coding Tools Actually Work](/blog/the-agent-layer)
+- [The Orchestration Layer: Coordinating Multiple Agents](/blog/the-orchestration-layer)
+- [The Environment Layer: Where AI Code Actually Runs](/blog/the-environment-layer)
+- [Why My Harness Produced Incomplete Apps (and What I Changed)](/blog/why-my-harness-produced-incomplete-apps)
+
+---
+
 ## Sources
 
 1. [Harness Engineering](https://openai.com/index/harness-engineering/) - OpenAI

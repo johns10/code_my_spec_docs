@@ -86,3 +86,10 @@ Your AI defaults to a browser app. That might be right. But if your users need o
 > "What work is happening on the client vs the server? Could we move more to the client to make it faster?"
 
 If every button click calls the server, your app feels slow. A lot of that work can run on the client. Your AI won't optimize for this unless you ask.
+
+## Related Articles
+
+- [What Is a Server and Why Are You Paying For One?](/blog/what-is-a-server)
+- [Your App Has Two Halves and You Need to Know Which Is Which](/blog/your-app-has-two-halves)
+- [What Is It and Where Does It Belong?](/blog/where-does-it-belong)
+- [What Is Code, Actually?](/blog/what-is-code)

@@ -226,3 +226,11 @@ The cost of going portable is mostly the loss of `allowed-tools`. Everything els
 ## Where to go next
 
 That's the cross-platform layer. Open three sessions, one on each platform, and confirm the skill triggers on each. Then forget you wrote it. The shape is what scales.
+
+## Related Articles
+
+- [Claude Code Skills: Writing Apps for Agents](/blog/claude-code-skills-guide)
+- [How to Write Your First Agent Skill](/blog/how-to-write-your-first-skill)
+- [Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)](/blog/skill-description-rubric)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [What Happened to Supermaven, Aide, and Void: AI Coding Tools That Didn't Make It](/blog/dead-ai-coding-tools-supermaven-aide-void)

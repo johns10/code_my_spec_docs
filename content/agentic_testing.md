@@ -68,3 +68,11 @@ What's your testing workflow look like with AI agents? Are you enforcing TDD, or
 **Can you trust test coverage numbers when tests are AI-generated?** No. An agent can inflate coverage in an afternoon with assertion-free tests that run code paths without verifying anything. High coverage with AI-generated tests can be worse than low coverage with thoughtful tests because it creates false confidence. Always audit what AI-generated tests actually assert, not just the coverage percentage they produce.
 
 **What is the difference between BDD testing and QA testing for AI-generated code?** BDD specs test components through their APIs and interfaces based on acceptance criteria from requirements. QA testing validates the running application as a user would experience it. Both are necessary because BDD scenarios can all pass while a QA agent testing the actual running app still finds bugs at integration boundaries, including security vulnerabilities.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [Agentic QA](/blog/agentic-qa)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [The Part Nobody Talks About: Verifying AI-Generated Code](/blog/verification-pipeline)

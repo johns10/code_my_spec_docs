@@ -123,6 +123,15 @@ Or just start building. You'll discover each level as you hit the limits of the 
 
 ---
 
+## Related Articles
+
+- [The Five Levels of AI-Assisted Development](/blog/five-levels-of-ai-coding)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [Why My Harness Produced Incomplete Apps (and What I Changed)](/blog/why-my-harness-produced-incomplete-apps)
+
+---
+
 ## Sources
 
 - [Fran Soto - Harness Engineering: AI Agents into Reliable Engineers](https://strategizeyourcareer.com/p/harness-engineering-ai-agents)

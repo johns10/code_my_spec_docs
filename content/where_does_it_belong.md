@@ -109,3 +109,11 @@ Reading this diagram:
 The dotted lines are the exceptions. The client can download images directly from S3 (that's fine, images are public). The client can talk to Stripe's public-facing JavaScript for payment forms (Stripe designed it that way). But the actual charges, the database queries, the email sends - those all go through your server.
 
 If your AI set something up and you're not sure where it belongs, find it on this diagram. If it's crossing a line that isn't drawn here, ask your AI why.
+
+## Related Articles
+
+- [Your App Has Two Halves and You Need to Know Which Is Which](/blog/your-app-has-two-halves)
+- [What Is a Server and Why Are You Paying For One?](/blog/what-is-a-server)
+- [What Is the Client? (It's More Powerful Than You Think)](/blog/what-is-the-client)
+- [What Is Code, Actually?](/blog/what-is-code)
+- [What Is a Spec? The Most Overloaded Word in Software](/blog/what-is-a-spec)

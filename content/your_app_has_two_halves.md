@@ -138,3 +138,10 @@ Step by step:
 This is why your app sometimes shows a blank page or a loading spinner for a second before content appears. Steps 1-4 are the app loading. Steps 5-6 are the data loading. They're separate trips to the server.
 
 It's also why your app can feel broken even when the code is fine - if step 5 fails (bad API call, server down, wrong permissions), the page loads but the data never shows up. The client half works. The server half didn't.
+
+## Related Articles
+
+- [What Is a Server and Why Are You Paying For One?](/blog/what-is-a-server)
+- [What Is the Client? (It's More Powerful Than You Think)](/blog/what-is-the-client)
+- [What Is It and Where Does It Belong?](/blog/where-does-it-belong)
+- [What Is Code, Actually?](/blog/what-is-code)

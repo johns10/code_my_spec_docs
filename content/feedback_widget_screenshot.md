@@ -155,3 +155,10 @@ Drop the component in your root layout, install `html-to-image`, configure OAuth
 I've spent years reading bug reports that say "the button doesn't work." Now they say "the button doesn't work" plus a picture of exactly what the user was looking at. Gets you 80% of the way to reproducing the issue before you even open the code.
 
 The colocated hook is what makes it feel clean. Before Phoenix 1.8, you'd have a JS file in app.js conceptually tied to a LiveView but physically somewhere else. Now I read the widget code and the hook is right there.
+
+## Related Articles
+
+- [Building a Markdown API for LLM Collaboration](/blog/markdown-api-for-llms)
+- [Remote Permission Approval: Building Trust Boundaries for Autonomous AI Agents](/blog/remote-permission-requests)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)

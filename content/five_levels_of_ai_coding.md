@@ -81,3 +81,13 @@ But you're not stuck there. The gap between what you're building now and product
 Most conversations about AI coding are Level 1-2 advice: "learn to code review," "write unit tests." Not wrong, but it's asking you to be the quality gate. The real unlock is Level 4 -- define correctness upfront and let automated systems verify it. You don't need to understand every line of code. You need to understand what the code is supposed to do.
 
 That's what YouTube proved about video. The bottleneck was never operating a camera. It was knowing what to point it at. The people who figured that out -- educators, creators, domain experts -- built empires. The same thing is about to happen with software.
+
+---
+
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Skill Trajectory for Working with AI Agents](/blog/ai-agent-skill-trajectory)
+- [Why My Harness Produced Incomplete Apps (and What I Changed)](/blog/why-my-harness-produced-incomplete-apps)
+- [Spec-Driven Development](/blog/spec-driven-development)

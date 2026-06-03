@@ -49,6 +49,13 @@ But the lessons from the last year still apply. The [harness matters more than t
 
 The teams that invested in specs, architecture, verification, and harness engineering won't need to change anything when Mythos ships. Their harnesses will just produce better output. That's the whole point.
 
+## Related Articles
+
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+- [Opus 4.7 Migration Guide: What Breaks, What's Better, What to Watch](/blog/opus-4-7-migration-guide)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+
 ---
 
 ## Sources

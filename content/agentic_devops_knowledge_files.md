@@ -61,6 +61,14 @@ For now, knowledge files are the pragmatic choice. Free, safe, work with any AI 
 
 **What should a good deployment knowledge file contain?** A good knowledge file includes the CLI commands for each step, the configuration snippets, the naming conventions you follow, the reasoning behind your choices, and troubleshooting steps for common issues. The goal is to give the agent enough context to reproduce your decisions without needing to make its own.
 
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Maintenance: Where Agents Actually Earn Their Keep](/blog/agentic-maintenance)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [How I Do Marketing with Claude Code and MCP Tools](/blog/agentic-marketing-with-mcp)
+
 ---
 
 ## Sources

@@ -123,6 +123,13 @@ Free during early access. BYOK: it runs on your Claude, your tokens, your enviro
 
 **How do you track which comments actually lead to signups?** Every link carries UTM parameters: source, medium, campaign, and content. The content tag is unique per comment, so I can trace a signup back through the funnel: thread impressions, comment upvotes, UTM click-through, GA4 session, pages read, registration page view, signup. The data showed me that empathy comments in frustration threads produce the deepest readers, while tool comparison comments produce the most volume. Different strategies for different goals.
 
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Teaching AI Agents to Deploy: Knowledge Files vs. Direct Access](/blog/agentic-devops-knowledge-files)
+- [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)
+- [The Part Nobody Talks About: Verifying AI-Generated Code](/blog/verification-pipeline)
+
 ---
 
 ## Sources

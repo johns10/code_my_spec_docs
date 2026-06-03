@@ -115,3 +115,11 @@ This happens automatically. You don't control it. Your AI doesn't think about it
 The same idea applies to other languages, just with different steps. Python compiles to `.pyc` bytecode files. Java compiles to bytecode that runs on the JVM. Rust and C compile directly to machine code (no bytecode step). Different paths, same destination: binary instructions running on a processor.
 
 That's it. Code goes in, binary comes out, the CPU does what you asked. Everything else is just layers of translation.
+
+## Related Articles
+
+- [Your App Has Two Halves and You Need to Know Which Is Which](/blog/your-app-has-two-halves)
+- [What Is a Server and Why Are You Paying For One?](/blog/what-is-a-server)
+- [What Is the Client? (It's More Powerful Than You Think)](/blog/what-is-the-client)
+- [What Is It and Where Does It Belong?](/blog/where-does-it-belong)
+- [What Is a Spec? The Most Overloaded Word in Software](/blog/what-is-a-spec)

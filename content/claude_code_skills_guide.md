@@ -219,3 +219,11 @@ Invoke it: `/my-skill`
 Start simple. A skill that runs your test suite and explains failures. A skill that reviews a PR against your team's conventions. A skill that generates a changelog from recent commits.
 
 The best skills emerge from repetition. If you find yourself giving Claude the same instructions across multiple sessions, that's a skill waiting to be extracted. Do it manually first. Notice the pattern. Package it.
+
+## Related Articles
+
+- [How to Write Your First Agent Skill](/blog/how-to-write-your-first-skill)
+- [Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)](/blog/skill-description-rubric)
+- [One Skill, Three Platforms](/blog/skill-portability)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [Spec-Driven Development](/blog/spec-driven-development)

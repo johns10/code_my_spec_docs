@@ -149,3 +149,10 @@ The AI generates code. The pipeline tells you whether it's right. Your job is ma
 **Can this verification approach work with languages other than Elixir?** The pipeline architecture -- dirty tracking, structured problems, requirement graphs, and hook-based enforcement -- is language-agnostic in concept. The specific tools (ExUnit, Credo, Sobelow) are Elixir-specific, but each could be swapped for equivalents in other ecosystems like ESLint, Jest, or Bandit for their respective languages.
 
 **What is the difference between BDD specs and QA journeys?** BDD specs verify individual acceptance criteria from user stories through API and interface calls in isolation. QA journeys test end-to-end flows across multiple stories and contexts against the live running application, catching seam bugs that only surface when features interact in the real environment.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [Agentic QA](/blog/agentic-qa)
+- [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)

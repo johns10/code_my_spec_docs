@@ -116,6 +116,13 @@ MCP is firmly in stage 3, and the AAIF donation pushes it toward stage 4. By the
 4. **Enterprise controls maturing.** Copilot and Cursor offer org-level MCP policy controls. Every enterprise tool will follow.
 5. **Spec servers.** MCP servers that serve development specifications to any supporting agent -- this is the CodeMySpec integration path.
 
+## Related Articles
+
+- [Building a Markdown API for LLM Collaboration](/blog/markdown-api-for-llms)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+- [Remote Permission Approval: Building Trust Boundaries for Autonomous AI Agents](/blog/remote-permission-requests)
+
 ## Sources
 
 - [MCP Specification -- modelcontextprotocol.io](https://modelcontextprotocol.io/)

@@ -86,3 +86,11 @@ If you're tempted by graph-based memory, ask yourself: is your domain genuinely 
 This is the last category post. The next post is the flagship — a synthesis that makes the case for one of these categories as the boring, durable, winning answer for coding specifically. If you've been reading along, you can probably guess which one. The argument is sharper than the guess implies.
 
 If you're using a graph-based memory system in production for coding work specifically and it's actually paying back the maintenance cost, I want to hear it. The case has to be made; the data hasn't made it on its own.
+
+## Related Articles
+
+- [It's Not Memory If You Wrote It: The CLAUDE.md Confusion](/blog/its-not-memory-if-you-wrote-it)
+- [Repo-Native Memory: The Boring Answer That Wins](/blog/repo-native-memory)
+- [Retrieval and RAG: The Category Everyone Reaches for First](/blog/retrieval-rag-memory)
+- [Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs](/blog/dedicated-memory-stores)
+- [Transcript-Derived Memory: The Category Nobody's Writing About](/blog/transcript-derived-memory)

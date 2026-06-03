@@ -86,3 +86,11 @@ Are you actually faster with AI tools, or does it just feel that way?
 **How do you prevent AI agents from generating low-quality code at scale?** The key is building feedback loops: hook up compilation, type checking, linting, and test execution so the agent self-corrects. Break work into small, verifiable steps rather than marathon sessions. Commit working state frequently so you have checkpoints. Convention files act as persistent memory, ensuring the agent follows your patterns on every run.
 
 **Why is code review becoming a bottleneck with AI-generated code?** AI can generate code faster than humans can review it. Nearly 40% of committed code is now AI-generated, which exceeds what review pipelines were designed to handle. Teams that scale code generation without scaling review and verification risk rubber-stamping PRs, accumulating hidden defects, and eventually drowning in code they cannot maintain.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)
+- [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)

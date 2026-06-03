@@ -97,3 +97,12 @@ The tools change every month. The process doesn't. Define what to build, design 
 **How do you prevent AI agents from shipping broken code?** Build verification into every phase. Write specifications before generating code so you have something to validate against. Use TDD with explicit test targets rather than generic instructions. Run QA against the actual running application, not just unit tests. Use separate agents for code generation and code review to avoid the self-confirming loop where the same agent writes code and validates its own work.
 
 **What is harness engineering and why is it replacing prompt engineering?** Harness engineering is the practice of building constraint and verification layers around AI coding agents: convention files, test commands, linting, type checking, and pre-commit hooks. The agent loop itself is commodity technology shared across all tools. The harness is what separates productive sessions from failures, and it represents the primary skill shift for developers working with AI in 2026.
+
+## Related Articles
+
+- [Bad Requirements Are Why Your AI Agent Writes Bad Code](/blog/agentic-requirements)
+- [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)
+- [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)
+- [Maintenance: Where Agents Actually Earn Their Keep](/blog/agentic-maintenance)

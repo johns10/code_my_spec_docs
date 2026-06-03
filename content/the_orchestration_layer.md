@@ -97,6 +97,16 @@ The orchestration layer is where the biggest unsolved problems live. The teams t
 
 ---
 
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Environment Layer: Where AI Code Actually Runs](/blog/the-environment-layer)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Agent Layer: How AI Coding Tools Actually Work](/blog/the-agent-layer)
+- [The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)](/blog/the-model-layer)
+
+---
+
 ## Sources
 
 1. [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic

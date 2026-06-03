@@ -94,6 +94,13 @@ Right now, the ecosystem gives you the building blocks. CLAUDE.md files, skills,
 
 In the meantime, treat what you're building around the agent with the same rigor you'd treat any software project. Version control it. Test it. Iterate on it. Because that's what it is.
 
+## Related Articles
+
+- [Code Generation is About Control, Not Prompts](/blog/control-over-prompts)
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [ADRs Are the Best Thing You Can Give Your AI Agent](/blog/architectural-decision-records)
+
 ## Sources
 
 - [Anthropic: Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)

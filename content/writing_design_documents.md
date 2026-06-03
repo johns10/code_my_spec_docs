@@ -148,3 +148,10 @@ You now have Phase 1 (Stories), Phase 2 (Architecture), and Phase 3 (Design Docu
 Next: write tests from design docs before generating code. Tests verify the public API, edge cases, and error scenarios. Then generate code that makes tests pass.
 
 See [The CodeMySpec Method](/methodology) for the complete methodology.
+
+## Related Articles
+
+- [How to design architecture that keeps AI on track](/blog/managing-architecture)
+- [How to manage user stories to get the most out of AI](/blog/managing-user-stories)
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)
+- [Code Generation is About Control, Not Prompts](/blog/control-over-prompts)

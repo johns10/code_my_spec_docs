@@ -139,3 +139,11 @@ For teams using LLMs in their development process, Phoenix contexts aren't just 
 **Can you use Phoenix contexts without Elixir for AI code generation?** The principles translate to any language -- grouping code by business domain, enforcing boundaries, keeping public APIs explicit. However, Elixir's compile-time boundary checking and Phoenix's built-in context generator make enforcement automatic rather than convention-based, which is particularly valuable when an AI is generating the code.
 
 **How many component types does CodeMySpec support within a context?** CodeMySpec supports 14 component types that live inside a parent context's namespace, including schema, repository, GenServer, task, controller, LiveView, and others. Each type has specific requirements and validation rules. This variety is managed through just two core constructs -- contexts and child components -- keeping the architecture simple for LLMs to navigate.
+
+## Related Articles
+
+- [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
+- [How I Built a Local Embedding Pipeline in Elixir That Searches My Own Docs](/blog/elixir-embedding-pipeline)
+- [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)
+- [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)
+- [Spec Driven Development in Elixir](/blog/spec-driven-development-elixir)

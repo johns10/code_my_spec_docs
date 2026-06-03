@@ -66,3 +66,11 @@ For mechanical checks (style, security patterns, obvious bugs), model-as-judge a
 
 **How do hooks enforce verification in agent workflows?**
 Hooks fire at specific points in the agent's lifecycle. The most important is the Stop hook, which runs when the agent tries to declare it's finished. You attach formatters, linters, type checks, and test runners to the Stop hook. If any check fails, the error is raised back to the agent and it must keep working. The agent cannot mark itself as done until the harness confirms quality gates are met.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Agentic QA](/blog/agentic-qa)
+- [The Part Nobody Talks About: Verifying AI-Generated Code](/blog/verification-pipeline)
+- [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)

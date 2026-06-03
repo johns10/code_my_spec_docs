@@ -83,3 +83,11 @@ If you're not a heavy user — short sessions, throwaway work — skip this cate
 Next post: retrieval / RAG. The category everyone reaches for first, and almost nobody should reach for first. The most discussed memory pattern in AI generally and the most over-applied to coding.
 
 If you've built a session-end summarizer or `PreCompact` hook for your own workflow, what's in the prompt? The extraction prompt is where these systems live or die, and there's almost no public writing on what works.
+
+## Related Articles
+
+- [It's Not Memory If You Wrote It: The CLAUDE.md Confusion](/blog/its-not-memory-if-you-wrote-it)
+- [Repo-Native Memory: The Boring Answer That Wins](/blog/repo-native-memory)
+- [Retrieval and RAG: The Category Everyone Reaches for First](/blog/retrieval-rag-memory)
+- [Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs](/blog/dedicated-memory-stores)
+- [Graph and Structured Memory: Most Ambitious, Most Vaporware](/blog/graph-structured-memory)

@@ -181,6 +181,14 @@ Progressive disclosure is not a new idea. Jakob Nielsen wrote about it before mo
 
 Audit your /context. You might be surprised what's eating your tokens.
 
+## Related Articles
+
+- [Claude Code Skills: Writing Apps for Agents](/blog/claude-code-skills-guide)
+- [How to Write Your First Agent Skill](/blog/how-to-write-your-first-skill)
+- [Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)](/blog/skill-description-rubric)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+
 ---
 
 ## Sources

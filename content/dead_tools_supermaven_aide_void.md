@@ -82,6 +82,13 @@ Either massive corporate backing, pioneer advantage with community, or genuinely
 3. **Is the code open?** If a proprietary tool dies, your workflow dies with it. Open source -- even abandoned like Void -- can be forked.
 4. **What's the migration path?** CLAUDE.md, AGENTS.md, .cursorrules, MCP servers -- portable context means you can switch without starting over. Proprietary lock-in increases your risk.
 
+## Related Articles
+
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [One Skill, Three Platforms](/blog/skill-portability)
+- [Opus 4.7 Migration Guide: What Breaks, What's Better, What to Watch](/blog/opus-4-7-migration-guide)
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+
 ## Sources
 
 - [Cursor Acquires Supermaven -- TechCrunch](https://techcrunch.com/2025/11/cursor-supermaven-acquisition/)

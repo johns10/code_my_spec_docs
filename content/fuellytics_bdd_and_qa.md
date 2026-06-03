@@ -95,3 +95,11 @@ Five days of generation. Verification is what made it real.
 **Why do you need multiple layers of testing for AI-generated code?** Each testing layer catches a different category of bug. Unit tests catch implementation errors. BDD specs catch requirement misunderstandings. Story QA catches bugs in the running application. Journey QA catches seam bugs between features. Skip any one layer and that entire category of bug ships to production.
 
 **How does CodeMySpec manage the velocity of AI code generation?** CodeMySpec enforces a stop-and-validate loop after every task. The agent generates code, a validation hook fires automatically, and structured feedback is returned for any failures. The agent must address the feedback before moving on. This turns uncontrolled velocity into a disciplined build-verify-fix cycle.
+
+## Related Articles
+
+- [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
+- [Build In Public: The Three Amigos Problem](/blog/bip-three-amigos)
+- [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
+- [Spec Driven Development in Elixir](/blog/spec-driven-development-elixir)

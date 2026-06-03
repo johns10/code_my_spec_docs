@@ -50,3 +50,11 @@ Open source, warts and all.
 https://github.com/Code-My-Spec/metric_flow
 
 The goal isn't to show a perfect system. It's to show the real process of getting from "specs that sort of work" to "specs that actually produce complete applications."
+
+## Related Articles
+
+- [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)
+- [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
+- [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
+- [Spec Driven Development in Elixir](/blog/spec-driven-development-elixir)

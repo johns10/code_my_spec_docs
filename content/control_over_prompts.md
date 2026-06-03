@@ -103,3 +103,10 @@ The future of AI-assisted development isn't smarter agents. It's better engineer
 **What is the stop-and-validate pattern?** The stop-and-validate pattern means the agent writes one artifact, stops, and a validation pipeline runs automatically before the next step begins. The pipeline can include compiler checks, tests, static analysis, and structural validation. The LLM does not decide whether validation passed -- the pipeline does.
 
 **How does boundary enforcement prevent architectural drift?** Boundary enforcement uses compile-time dependency checking to prevent modules from importing code they should not access. In Elixir, `use Boundary` enforces this at the compiler level. The LLM cannot introduce cross-boundary dependencies because the code will not compile, regardless of what the prompt says.
+
+## Related Articles
+
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)
+- [Writing Applications for LLMs](/blog/writing-applications-for-llms)
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [ADRs Are the Best Thing You Can Give Your AI Agent](/blog/architectural-decision-records)

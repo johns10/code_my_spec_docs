@@ -92,3 +92,11 @@ The reason coders keep returning to repo-native isn't that they're afraid of inf
 Next post: transcript-derived. The under-discussed category. Decouples writing from chatting and avoids the contamination problem dedicated stores have.
 
 If you've used MemPalace, mem0, or Letta in production for coding specifically, what did you learn? I want to be wrong about this category for coding workflows; the data hasn't convinced me yet.
+
+## Related Articles
+
+- [It's Not Memory If You Wrote It: The CLAUDE.md Confusion](/blog/its-not-memory-if-you-wrote-it)
+- [Repo-Native Memory: The Boring Answer That Wins](/blog/repo-native-memory)
+- [Transcript-Derived Memory: The Category Nobody's Writing About](/blog/transcript-derived-memory)
+- [Retrieval and RAG: The Category Everyone Reaches for First](/blog/retrieval-rag-memory)
+- [Graph and Structured Memory: Most Ambitious, Most Vaporware](/blog/graph-structured-memory)

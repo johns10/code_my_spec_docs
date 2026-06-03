@@ -137,6 +137,8 @@ Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding), w
 - [Claude Code Review 2026](/blog/claude-code-review-2026)
 - [Codex CLI Review 2026](/blog/codex-cli-review-2026)
 - [Gemini CLI Review 2026](/blog/gemini-cli-review-2026)
+- [Cursor Review 2026](/blog/cursor-review-2026)
+- [GitHub Copilot Review 2026](/blog/github-copilot-review-2026)
 - [Best Free and Open-Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)
 - [AI IDEs Compared in 2026: Kiro vs Cursor vs Windsurf vs Zed](/blog/ai-ides-compared-2026)
 - [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)

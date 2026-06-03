@@ -264,3 +264,10 @@ You've now got a working skill. The two posts that pick up from here:
 - **[One skill, three platforms: portability across Claude Code, OpenCode, and Codex](/blog/skill-portability)** -- when you want a single `SKILL.md` to work everywhere. Discovery path matrix, frontmatter compatibility, what's portable and what isn't.
 
 Most of the leverage is in the description. Most of the maintenance is in iteration. Most of the failure modes are progressive disclosure misses. The first skill you write won't be great. The fifth one will be. Start small, ship, iterate.
+
+## Related Articles
+
+- [Claude Code Skills: Writing Apps for Agents](/blog/claude-code-skills-guide)
+- [Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)](/blog/skill-description-rubric)
+- [One Skill, Three Platforms](/blog/skill-portability)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)

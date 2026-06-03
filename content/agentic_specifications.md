@@ -81,3 +81,11 @@ What's your experience been? Are you writing specs before you prompt, or are you
 **How do tools like Kiro, spec-kit, and Tessl compare for spec-driven development?** Kiro (AWS) uses EARS notation to force requirement precision across three phases. GitHub spec-kit is open source and works across multiple AI tools with a constitution.md for project principles. Tessl takes the most radical approach where specs are the maintained artifact and code is regenerated from them. All converge on the same core workflow: define requirements, design architecture, decompose into tasks, generate, and validate.
 
 **Should you fix AI-generated code or fix the specification and regenerate?** Fix the specification and regenerate. Augment Code's key insight is to debug specifications, not code. When AI output is wrong, patching the generated code creates a divergence between your spec and your implementation that compounds over time. Fixing the spec and regenerating keeps the specification as the single source of truth.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Bad Requirements Are Why Your AI Agent Writes Bad Code](/blog/agentic-requirements)
+- [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [Spec-Driven Development](/blog/spec-driven-development)

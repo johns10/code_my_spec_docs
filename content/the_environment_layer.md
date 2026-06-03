@@ -90,6 +90,16 @@ Anthropic's research makes this concrete: [infrastructure setup alone swings Ter
 
 ---
 
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Orchestration Layer: Coordinating Multiple Agents](/blog/the-orchestration-layer)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Agent Layer: How AI Coding Tools Actually Work](/blog/the-agent-layer)
+- [The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)](/blog/the-model-layer)
+
+---
+
 ## Sources
 
 1. [Claude Code Security](https://code.claude.com/docs/en/security) - Anthropic

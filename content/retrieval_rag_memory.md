@@ -92,3 +92,11 @@ The reason RAG keeps getting recommended is that it's the most academically resp
 Next post: graph and structured memory. The category with the most architectural ambition, the most novel academic work, and the highest hype-to-traction ratio. If RAG is over-applied, graph memory is over-aspired-to.
 
 If you've replaced a RAG setup with something simpler and gotten better results, what worked? I keep finding teams who deleted their vector DB and felt instant relief; the writeups never seem to make it online.
+
+## Related Articles
+
+- [It's Not Memory If You Wrote It: The CLAUDE.md Confusion](/blog/its-not-memory-if-you-wrote-it)
+- [Repo-Native Memory: The Boring Answer That Wins](/blog/repo-native-memory)
+- [Transcript-Derived Memory: The Category Nobody's Writing About](/blog/transcript-derived-memory)
+- [Graph and Structured Memory: Most Ambitious, Most Vaporware](/blog/graph-structured-memory)
+- [Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs](/blog/dedicated-memory-stores)

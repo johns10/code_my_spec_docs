@@ -43,3 +43,10 @@ Early tests show this being very effective. The agent navigates the project the 
 **Does the human see the same data as the LLM?** Yes. Because every endpoint returns markdown, you can render the same content as HTML for a browser dashboard. The human and the agent are looking at identical real-time data, which eliminates synchronization issues and makes collaboration straightforward.
 
 **What role does CLAUDE.md play if the web server handles everything?** CLAUDE.md still matters as the entry point. It should explain the system context, point the agent to the web server, and describe how to get started. It just does not need to contain all the project state and tooling information itself. It becomes a launcher, not a monolith.
+
+## Related Articles
+
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [Remote Permission Approval: Building Trust Boundaries for Autonomous AI Agents](/blog/remote-permission-requests)
+- [How the CodeMySpec Feedback Widget Captures Screenshots in LiveView](/blog/feedback-widget-screenshot)

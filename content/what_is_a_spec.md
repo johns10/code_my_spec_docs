@@ -120,3 +120,6 @@ The spec you want is the one that fails when the code is wrong. Everything else 
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code)
 - [Spec-Driven Development vs Vibe Coding](/blog/spec-driven-development-vs-vibe-coding)
+- [What Is Code, Actually?](/blog/what-is-code)
+- [What Is It and Where Does It Belong?](/blog/where-does-it-belong)
+- [Your App Has Two Halves and You Need to Know Which Is Which](/blog/your-app-has-two-halves)

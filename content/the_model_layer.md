@@ -156,6 +156,16 @@ That's the agent layer. The execution loop, tool use, and context management tha
 
 ---
 
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Agent Layer: How AI Coding Tools Actually Work](/blog/the-agent-layer)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Orchestration Layer: Coordinating Multiple Agents](/blog/the-orchestration-layer)
+- [The Environment Layer: Where AI Code Actually Runs](/blog/the-environment-layer)
+
+---
+
 ## Sources
 
 **Vendor Documentation & Pricing:**

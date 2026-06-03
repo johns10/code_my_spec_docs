@@ -139,3 +139,10 @@ If your description passes the seven self-check questions, the rest is body shap
 The next post picks up at the cross-platform layer:
 
 **[One skill, three platforms: portability across Claude Code, OpenCode, and Codex](/blog/skill-portability)** -- the compatibility matrix, the portable subset of frontmatter, the discovery path differences. The rubric in this post works across all three platforms. The differences are everywhere else.
+
+## Related Articles
+
+- [Claude Code Skills: Writing Apps for Agents](/blog/claude-code-skills-guide)
+- [How to Write Your First Agent Skill](/blog/how-to-write-your-first-skill)
+- [One Skill, Three Platforms](/blog/skill-portability)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)

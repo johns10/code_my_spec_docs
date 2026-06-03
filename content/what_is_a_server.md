@@ -108,3 +108,10 @@ block-beta
 So it's computers inside computers inside computers. Three levels deep, all on one physical machine, for $4/month. This is what Vercel and Supabase are doing too - they're just hiding the layers from you and charging more for the convenience.
 
 When someone says "deploy to the cloud," this is what they mean. Your code ends up in a container, on a virtual machine, on a physical server, in a data center somewhere. The "cloud" is just other people's computers stacked three levels deep.
+
+## Related Articles
+
+- [What Is the Client? (It's More Powerful Than You Think)](/blog/what-is-the-client)
+- [Your App Has Two Halves and You Need to Know Which Is Which](/blog/your-app-has-two-halves)
+- [What Is It and Where Does It Belong?](/blog/where-does-it-belong)
+- [What Is Code, Actually?](/blog/what-is-code)

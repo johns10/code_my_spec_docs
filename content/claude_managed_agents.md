@@ -55,6 +55,14 @@ The beta header is `managed-agents-2026-04-01`. It's enabled by default for all 
 
 What's your take - does it make sense to use Anthropic's harness, or does the lock-in scare you?
 
+## Related Articles
+
+- [Claude Mythos: What We Know, What We Don't, and Why the Harness Still Matters](/blog/claude-mythos-preview)
+- [Opus 4.7 Migration Guide: What Breaks, What's Better, What to Watch](/blog/opus-4-7-migration-guide)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [Remote Permission Approval: Building Trust Boundaries for Autonomous AI Agents](/blog/remote-permission-requests)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+
 ---
 
 ## Sources

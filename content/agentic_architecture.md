@@ -64,3 +64,10 @@ Bounded contexts group code by domain ownership (Users, Billing, Notifications) 
 
 **Can I retrofit architecture onto an existing AI-generated codebase?**
 Yes, but incrementally. Start by identifying the two domains with the most cross-cutting changes and add an enforced boundary between them. Measure the agent's output quality before and after. The 26-point quality gap from the BSWEN study suggests even partial architectural guidance produces measurable improvements.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [Bad Requirements Are Why Your AI Agent Writes Bad Code](/blog/agentic-requirements)

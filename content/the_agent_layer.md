@@ -133,6 +133,16 @@ The next article covers the harness layer, the constraints, verification loops, 
 
 ---
 
+## Related Articles
+
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)](/blog/the-model-layer)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Orchestration Layer: Coordinating Multiple Agents](/blog/the-orchestration-layer)
+- [The Environment Layer: Where AI Code Actually Runs](/blog/the-environment-layer)
+
+---
+
 ## Sources
 
 1. [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) - Yao et al., ICLR 2023

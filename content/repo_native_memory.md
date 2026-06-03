@@ -90,3 +90,12 @@ The reason this pattern keeps winning, despite being unglamorous, is that the al
 Next post: dedicated memory stores. The category that gets the most marketing and has the messiest tradeoffs. Spoiler — I tried four of them and went back to markdown.
 
 What's your stack? Repo-native already, or are you still chasing infrastructure?
+
+## Related Articles
+
+- [It's Not Memory If You Wrote It: The CLAUDE.md Confusion](/blog/its-not-memory-if-you-wrote-it)
+- [Transcript-Derived Memory: The Category Nobody's Writing About](/blog/transcript-derived-memory)
+- [Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs](/blog/dedicated-memory-stores)
+- [Retrieval and RAG: The Category Everyone Reaches for First](/blog/retrieval-rag-memory)
+- [Graph and Structured Memory: Most Ambitious, Most Vaporware](/blog/graph-structured-memory)
+- [Spec-Driven Development](/blog/spec-driven-development)

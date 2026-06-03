@@ -59,3 +59,12 @@ I'm working on [MetricFlow](https://github.com/Code-My-Spec/metric_flow) as the 
 The meta thing about building a harness is that the [harness itself needs a harness](/blog/the-harness-layer). My BDD specs for CodeMySpec have to handle the fact that the system under test is a system that writes and tests other systems.
 
 It's specs all the way down.
+
+---
+
+## Related Articles
+
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
+- [The Skill Trajectory for Working with AI Agents](/blog/ai-agent-skill-trajectory)
+- [The Five Levels of AI-Assisted Development](/blog/five-levels-of-ai-coding)

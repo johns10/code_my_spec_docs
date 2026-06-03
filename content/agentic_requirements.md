@@ -80,3 +80,11 @@ Addy Osmani described the 70% problem: AI tools get non-engineers to a functiona
 
 **How do MCP servers improve requirements handling?**
 MCP (Model Context Protocol) servers connect your AI coding agent directly to your project management tools. Instead of copy-pasting requirements from Jira or Linear into prompts, the agent reads tickets, acceptance criteria, and documentation in real time. Atlassian, Linear, and GitHub all offer MCP integrations. This eliminates context loss between tools and keeps the agent working from the source of truth.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)
+- [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [What Is a Spec?](/blog/what-is-a-spec)

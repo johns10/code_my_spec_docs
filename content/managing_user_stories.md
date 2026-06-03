@@ -95,3 +95,9 @@ This is not about speed. It's about having a tool that makes it *feasible* to do
 Writing stories and keeping them updated used to be aspirational. Most teams started with good intentions, then let documentation rot. The overhead was too high.
 
 With AI, stories become your primary interface. They're not documentation maintained *after* writing code -- they're the input you use *to write* code. Keeping them accurate isn't overhead. It's how you work.
+
+## Related Articles
+
+- [How to design architecture that keeps AI on track](/blog/managing-architecture)
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)

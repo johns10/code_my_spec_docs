@@ -93,3 +93,11 @@ The agent provides intent. The harness provides the guarantee. The model is free
 This priority order is the spine of [CodeMySpec](https://codemyspec.com/products/code-my-spec?utm_source=blog&utm_medium=inline&utm_campaign=prevent-slop-elixir), the Phoenix-native harness I build with. But the order stands on its own whether you adopt the harness or assemble the pieces yourself. Rank your outcomes and verify them mechanically, instead of prompting harder and hoping.
 
 What's your verification priority order? If you're shipping Phoenix with agents, I'd bet it looks similar. If it doesn't, I want to know why.
+
+## Related Articles
+
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
+- [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)
+- [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)
+- [How I Built a Local Embedding Pipeline in Elixir That Searches My Own Docs](/blog/elixir-embedding-pipeline)
+- [Spec Driven Development in Elixir](/blog/spec-driven-development-elixir)

@@ -134,3 +134,10 @@ The chunking is naive - character count with overlap. I'd rather chunk on markdo
 No reranking yet. Cosine distance is good enough for doc search, but a cross-encoder reranker would help for nuanced queries.
 
 And I want automatic re-embedding on file watch. Right now I trigger it manually or through the MCP tool. A file system watcher that re-embeds on save would close the loop.
+
+## Related Articles
+
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
+- [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
+- [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)
+- [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)

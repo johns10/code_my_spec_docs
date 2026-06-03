@@ -71,3 +71,10 @@ If your cleanup agents aren't keeping pace with your generation agents, you're b
 **What tools are best for automated dependency updates and security patching?** The stack is converging on Dependabot or Renovate for routine version bumps, Snyk Agent Fix for security vulnerabilities with AI verification, and general-purpose coding agents for complex migrations requiring actual code changes. Snyk reduces an average 7 hours of manual work per vulnerability to seconds by automatically generating and pre-screening fixes.
 
 **How does multi-agent code review reduce false positives?** Single-agent code review produces too many false positives to be trusted. Anthropic's approach dispatches multiple specialized agents per PR, each targeting a different issue class, then runs a verification step that checks findings against actual code behavior. This achieves less than 1% incorrect findings and generates substantive comments on 54% of PRs.
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [The Implementation Phase: AI Writes the Code, But Who's Actually Driving?](/blog/agentic-implementation)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [Teaching AI Agents to Deploy: Knowledge Files vs. Direct Access](/blog/agentic-devops-knowledge-files)

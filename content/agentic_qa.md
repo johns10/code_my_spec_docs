@@ -67,3 +67,10 @@ We submitted Fuellytics for Stripe Treasury production access. That's a serious 
 We were confident in the submission because QA told us exactly what worked and what didn't. Not "we think the fraud detection works." Not "tests pass." The QA agent tested every story against the running app and filed issues for everything it found. We fixed them. We know what state the application is in because the evidence is sitting in 30+ result documents with screenshots and reproduction steps.
 
 That's the difference between "it should work" and "here's the proof."
+
+## Related Articles
+
+- [The Agentic Software Development Process](/blog/agentic-software-development-process)
+- [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)
+- [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
+- [The Part Nobody Talks About: Verifying AI-Generated Code](/blog/verification-pipeline)

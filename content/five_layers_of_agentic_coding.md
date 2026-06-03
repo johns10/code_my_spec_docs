@@ -112,6 +112,16 @@ _This is Part 1 of "The Anatomy of Agentic Coding Systems." The series continues
 
 ---
 
+## Related Articles
+
+- [The Model Layer: What Your AI Coding Tool Actually Is (and Isn't)](/blog/the-model-layer)
+- [The Agent Layer: How AI Coding Tools Actually Work](/blog/the-agent-layer)
+- [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
+- [The Environment Layer: Where AI Code Actually Runs](/blog/the-environment-layer)
+- [The Orchestration Layer: Coordinating Multiple Agents](/blog/the-orchestration-layer)
+
+---
+
 ## Sources
 
 This article synthesizes from the five layer articles in this series. Each has its own detailed source list:

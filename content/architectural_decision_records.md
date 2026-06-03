@@ -79,3 +79,10 @@ What's your approach to constraining agent behavior? I'd be curious whether anyo
 - [InfoQ, "Architectural Governance at AI Speed" (2026)](https://www.infoq.com/articles/architectural-governance-ai-speed/)
 - [ArXiv, "Asymmetric Goal Drift in Coding Agents Under Value Conflict"](https://arxiv.org/html/2603.03456v1)
 - [AWS Prescriptive Guidance - ADR Process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
+
+## Related Articles
+
+- [How to design architecture that keeps AI on track](/blog/managing-architecture)
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)
+- [Code Generation is About Control, Not Prompts](/blog/control-over-prompts)

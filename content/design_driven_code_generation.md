@@ -123,3 +123,10 @@ Slower initial velocity. Higher architectural integrity. In production, that's t
 **What are human approval gates in an AI code generation pipeline?** Human approval gates are specific points in the pipeline where a human reviews and approves AI-generated decisions before the next phase begins. The three key gates are story-to-architecture, architecture-to-specs, and specs-to-implementation. Humans intervene at architectural decision points rather than at code review, which is where the highest leverage exists.
 
 **How do 41+ specialized agent tasks differ from a single general-purpose code generation agent?** Each specialized task has a narrow scope, clear start and end conditions, specific validation requirements, and explicit success criteria. A general-purpose agent must decide what to do, when to validate, and when it is done. Specialized tasks remove those decisions entirely, making the output predictable and the failure modes diagnosable.
+
+## Related Articles
+
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [Code Generation is About Control, Not Prompts](/blog/control-over-prompts)
+- [How to design architecture that keeps AI on track](/blog/managing-architecture)
+- [ADRs Are the Best Thing You Can Give Your AI Agent](/blog/architectural-decision-records)

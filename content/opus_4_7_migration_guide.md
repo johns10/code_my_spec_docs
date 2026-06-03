@@ -134,3 +134,11 @@ The breaking changes are frustrating. Removing sampling parameters entirely is a
 The tokenizer thing bothers me most. Technically honest, practically misleading.
 
 Upgrade for the performance. Budget time for the migration. This isn't a drop-in replacement.
+
+## Related Articles
+
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+- [Claude Mythos: What We Know, What We Don't, and Why the Harness Still Matters](/blog/claude-mythos-preview)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)
+- [What Happened to Supermaven, Aide, and Void: AI Coding Tools That Didn't Make It](/blog/dead-ai-coding-tools-supermaven-aide-void)

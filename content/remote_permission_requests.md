@@ -113,3 +113,10 @@ If you're building agent infrastructure and wondering which stack to use, the re
 **Can I use this with AI agents other than Claude Code?** The architecture is designed around Claude Code's hook system, which fires shell commands on specific events. Any AI coding agent that supports similar hook or callback mechanisms could integrate with the same permission flow by posting requests to the local server endpoint.
 
 **How does this compare to claude-remote-approver?** claude-remote-approver is a lightweight solution of about 200 lines that sends notifications via ntfy.sh with action buttons. It solves the core notification problem well. This system adds persistence, a full approval UI with complete tool input context, audit history, and authenticated access, at the cost of significantly more code and infrastructure.
+
+## Related Articles
+
+- [Anthropic Just Made the Agent Harness a Product](/blog/claude-managed-agents)
+- [MCP: The Protocol Connecting AI Coding Tools](/blog/mcp-protocol-explained)
+- [Building a Markdown API for LLM Collaboration](/blog/markdown-api-for-llms)
+- [What Is Progressive Disclosure and Why It Matters for AI Agents](/blog/progressive-disclosure)

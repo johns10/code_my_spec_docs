@@ -181,3 +181,10 @@ Your stories define *what*. Your architecture defines *how*. Together, they give
 - [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](#) - Deep dive on contexts and AI
 - [Phoenix Official Documentation](https://hexdocs.pm/phoenix/contexts.html)
 - [Building Beautiful Systems with Phoenix Contexts and DDD](https://speakerdeck.com/andrewhao/building-beautiful-systems-with-phoenix-contexts-and-ddd) - Andrew Hao's talk on contexts and DDD
+
+## Related Articles
+
+- [How to manage user stories to get the most out of AI](/blog/managing-user-stories)
+- [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)
+- [ADRs Are the Best Thing You Can Give Your AI Agent](/blog/architectural-decision-records)
+- [Design-Driven Code Generation](/blog/design-driven-code-generation)
