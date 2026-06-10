@@ -2,15 +2,25 @@
 
 
 
-## default_scope(otp_app)
-
-Returns the default scope.
-
-## new!(name, opts)
+## new!/2
 
 Creates a new scope struct.
 
-## route_prefix(scope_key, schema)
+## scopes_from_config/1
+
+Returns a `%{name: scope}` map of configured scopes.
+
+## default_scope/1
+
+Returns the default scope.
+
+## scope_from_opts/3
+
+Returns the configured scope for the given --scope parameter.
+
+Returns `nil` for `--no-scope` and raises if a specific scope is not configured.
+
+## route_prefix/2
 
 Generates a route prefix string with placeholders for the access path.
 
@@ -28,13 +38,3 @@ Otherwise, it processes the route_prefix, replacing param segments with dynamic 
 
     route_prefix("scope", schema_with_scope)
     # => "/orgs/#{scope.organization.slug}"
-
-## scope_from_opts(otp_app, bin, arg3)
-
-Returns the configured scope for the given --scope parameter.
-
-Returns `nil` for `--no-scope` and raises if a specific scope is not configured.
-
-## scopes_from_config(otp_app)
-
-Returns a `%{name: scope}` map of configured scopes.

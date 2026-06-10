@@ -2,14 +2,14 @@
 
 
 
-## count()
+## count/0
 
 Returns the count of all version records in the database
 
-## first()
+## first/0
 
 Returns the first version record in the database by :inserted_at
 
-## last()
+## last/0
 
 Returns the last version record in the database by :inserted_at

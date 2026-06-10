@@ -79,19 +79,160 @@ For applications that need to manage multiple client connections dynamically
        protocol_version: "2025-06-18"}
     )
 
-## add_root(client, uri, name \\ nil, opts \\ [])
+## parse_capability/2
 
-Adds a root directory to the client's roots list.
+Converts a capability atom or tuple into a map entry.
 
-## Parameters
+Useful for building capability maps from ergonomic shorthand:
 
-  * `client` - The client process
-  * `uri` - The URI of the root directory (must start with "file://")
-  * `name` - Optional human-readable name for the root
-  * `opts` - Additional options
-    * `:timeout` - Request timeout in milliseconds
+    capabilities =
+      [:roots, {:sampling, list_changed?: true}]
+      |> Enum.reduce(%{}, &Anubis.Client.parse_capability/2)
+    # => %{"roots" => %{}, "sampling" => %{}}
 
-## await_ready(client, opts \\ [])
+## child_spec/1
+
+Returns a child specification for starting the client under a supervisor.
+
+This starts a supervision tree containing both the client GenServer and
+the configured transport process, linked with a `:one_for_all` strategy.
+
+## start_link/1
+
+Starts the client supervision tree (client + transport).
+
+This is the primary entry point for starting a client. It creates a supervisor
+that manages both the client GenServer and the transport process.
+
+## ping/2
+
+Sends a ping request to the server to check connection health. Returns `:pong` if successful.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds (default: 30s)
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## list_resources/2
+
+Lists available resources from the server.
+
+## Options
+
+  * `:cursor` - Pagination cursor for continuing a previous request
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## list_resource_templates/2
+
+Lists available resource templates from the server.
+
+## Options
+
+  * `:cursor` - Pagination cursor for continuing a previous request
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## read_resource/3
+
+Reads a specific resource from the server.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## subscribe_resource/3
+
+Subscribes to updates for a specific resource URI.
+
+After a successful subscribe, the server may send `notifications/resources/updated`
+notifications for this URI. The server must declare the `resources.subscribe`
+capability for this method to succeed.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+
+## unsubscribe_resource/3
+
+Unsubscribes from updates for a previously-subscribed resource URI.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+
+## list_prompts/2
+
+Lists available prompts from the server.
+
+## Options
+
+  * `:cursor` - Pagination cursor for continuing a previous request
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## get_prompt/4
+
+Gets a specific prompt from the server.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## list_tools/2
+
+Lists available tools from the server.
+
+## Options
+
+  * `:cursor` - Pagination cursor for continuing a previous request
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## call_tool/4
+
+Calls a tool on the server.
+
+## Options
+
+  * `:timeout` - Request timeout in milliseconds
+  * `:progress` - Progress tracking options
+    * `:token` - A unique token to track progress (string or integer)
+    * `:callback` - A function to call when progress updates are received
+
+## merge_capabilities/3
+
+Merges additional capabilities into the client's capabilities.
+
+## get_server_capabilities/2
+
+Gets the server's capabilities as reported during initialization.
+
+Returns `nil` if the client has not been initialized yet.
+
+## get_server_info/2
+
+Gets the server's information as reported during initialization.
+
+Returns `nil` if the client has not been initialized yet.
+
+## await_ready/2
 
 Blocks until the client has completed the MCP initialization handshake.
 
@@ -110,69 +251,18 @@ or the GenServer call times out.
     :ok = Anubis.Client.await_ready(MyApp.MCPClient, timeout: 10_000)
     {:ok, tools} = Anubis.Client.list_tools(MyApp.MCPClient)
 
-## call_tool(client, name, arguments \\ nil, opts \\ [])
+## set_log_level/2
 
-Calls a tool on the server.
-
-## Options
-
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## cancel_all_requests(client, reason \\ "client_cancelled", opts \\ [])
-
-Cancels all pending requests.
+Sets the minimum log level for the server to send log messages.
 
 ## Parameters
 
   * `client` - The client process
-  * `reason` - Optional reason for cancellation (defaults to "client_cancelled")
+  * `level` - The minimum log level (debug, info, notice, warning, error, critical, alert, emergency)
 
-## Returns
+Returns {:ok, result} if successful, {:error, reason} otherwise.
 
-  * `{:ok, requests}` - A list of the Request structs that were cancelled
-  * `{:error, reason}` - If an error occurred
-
-## cancel_request(client, request_id, reason \\ "client_cancelled", opts \\ [])
-
-Cancels an in-progress request.
-
-## Parameters
-
-  * `client` - The client process
-  * `request_id` - The ID of the request to cancel
-  * `reason` - Optional reason for cancellation
-
-## Returns
-
-  * `:ok` if the cancellation was successful
-  * `{:error, reason}` if an error occurred
-  * `{:not_found, request_id}` if the request ID was not found
-
-## child_spec(init_arg)
-
-Returns a child specification for starting the client under a supervisor.
-
-This starts a supervision tree containing both the client GenServer and
-the configured transport process, linked with a `:one_for_all` strategy.
-
-## clear_roots(client, opts \\ [])
-
-Clears all root directories.
-
-## Parameters
-
-  * `client` - The client process
-  * `opts` - Additional options
-    * `:timeout` - Request timeout in milliseconds
-
-## close(client)
-
-Closes the client connection and terminates the process.
-
-## complete(client, ref, argument, opts \\ [])
+## complete/4
 
 Requests autocompletion suggestions for prompt arguments or resource URIs.
 
@@ -199,136 +289,7 @@ The response result contains a "completion" object with:
 * `total` - Optional total number of matching items
 * `hasMore` - Boolean indicating if more results are available
 
-## get_prompt(client, name, arguments \\ nil, opts \\ [])
-
-Gets a specific prompt from the server.
-
-## Options
-
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## get_server_capabilities(client, opts \\ [])
-
-Gets the server's capabilities as reported during initialization.
-
-Returns `nil` if the client has not been initialized yet.
-
-## get_server_info(client, opts \\ [])
-
-Gets the server's information as reported during initialization.
-
-Returns `nil` if the client has not been initialized yet.
-
-## list_prompts(client, opts \\ [])
-
-Lists available prompts from the server.
-
-## Options
-
-  * `:cursor` - Pagination cursor for continuing a previous request
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## list_resource_templates(client, opts \\ [])
-
-Lists available resource templates from the server.
-
-## Options
-
-  * `:cursor` - Pagination cursor for continuing a previous request
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## list_resources(client, opts \\ [])
-
-Lists available resources from the server.
-
-## Options
-
-  * `:cursor` - Pagination cursor for continuing a previous request
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## list_roots(client, opts \\ [])
-
-Gets a list of all root directories.
-
-## Parameters
-
-  * `client` - The client process
-  * `opts` - Additional options
-    * `:timeout` - Request timeout in milliseconds
-
-## list_tools(client, opts \\ [])
-
-Lists available tools from the server.
-
-## Options
-
-  * `:cursor` - Pagination cursor for continuing a previous request
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## merge_capabilities(client, additional_capabilities, opts \\ [])
-
-Merges additional capabilities into the client's capabilities.
-
-## parse_capability(capability, capabilities)
-
-Converts a capability atom or tuple into a map entry.
-
-Useful for building capability maps from ergonomic shorthand:
-
-    capabilities =
-      [:roots, {:sampling, list_changed?: true}]
-      |> Enum.reduce(%{}, &Anubis.Client.parse_capability/2)
-    # => %{"roots" => %{}, "sampling" => %{}}
-
-## ping(client, opts \\ [])
-
-Sends a ping request to the server to check connection health. Returns `:pong` if successful.
-
-## Options
-
-  * `:timeout` - Request timeout in milliseconds (default: 30s)
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## read_resource(client, uri, opts \\ [])
-
-Reads a specific resource from the server.
-
-## Options
-
-  * `:timeout` - Request timeout in milliseconds
-  * `:progress` - Progress tracking options
-    * `:token` - A unique token to track progress (string or integer)
-    * `:callback` - A function to call when progress updates are received
-
-## register_elicitation_callback(client, callback)
-
-Registers a callback function to handle elicitation requests from the server.
-
-The client must advertise the `elicitation` capability during initialization
-for servers to send `elicitation/create` requests.
-
-Per the MCP specification, the client SHOULD present the request to the user
-with clear UI, allow them to review and modify their response, and provide
-decline/cancel options.
-
-## register_log_callback(client, callback, opts \\ [])
+## register_log_callback/3
 
 Registers a callback function to be called when log messages are received.
 
@@ -339,7 +300,16 @@ Registers a callback function to be called when log messages are received.
 
 The callback function will be called whenever a log message notification is received.
 
-## register_progress_callback(client, progress_token, callback, opts \\ [])
+## unregister_log_callback/2
+
+Unregisters a previously registered log callback.
+
+## Parameters
+
+  * `client` - The client process
+  * `callback` - The callback function to unregister
+
+## register_progress_callback/4
 
 Registers a callback function to be called when progress notifications are received
 for the specified progress token.
@@ -353,7 +323,102 @@ for the specified progress token.
 The callback function will be called whenever a progress notification with the
 matching token is received.
 
-## register_sampling_callback(client, callback)
+## unregister_progress_callback/3
+
+Unregisters a previously registered progress callback for the specified token.
+
+## Parameters
+
+  * `client` - The client process
+  * `progress_token` - The progress token to stop watching (string or integer)
+
+## send_progress/5
+
+Sends a progress notification to the server for a long-running operation.
+
+## Parameters
+
+  * `client` - The client process
+  * `progress_token` - The progress token provided in the original request (string or integer)
+  * `progress` - The current progress value (number)
+  * `total` - The optional total value for the operation (number)
+
+Returns `:ok` if notification was sent successfully, or `{:error, reason}` otherwise.
+
+## cancel_request/4
+
+Cancels an in-progress request.
+
+## Parameters
+
+  * `client` - The client process
+  * `request_id` - The ID of the request to cancel
+  * `reason` - Optional reason for cancellation
+
+## Returns
+
+  * `:ok` if the cancellation was successful
+  * `{:error, reason}` if an error occurred
+  * `{:not_found, request_id}` if the request ID was not found
+
+## cancel_all_requests/3
+
+Cancels all pending requests.
+
+## Parameters
+
+  * `client` - The client process
+  * `reason` - Optional reason for cancellation (defaults to "client_cancelled")
+
+## Returns
+
+  * `{:ok, requests}` - A list of the Request structs that were cancelled
+  * `{:error, reason}` - If an error occurred
+
+## add_root/4
+
+Adds a root directory to the client's roots list.
+
+## Parameters
+
+  * `client` - The client process
+  * `uri` - The URI of the root directory (must start with "file://")
+  * `name` - Optional human-readable name for the root
+  * `opts` - Additional options
+    * `:timeout` - Request timeout in milliseconds
+
+## remove_root/3
+
+Removes a root directory from the client's roots list.
+
+## Parameters
+
+  * `client` - The client process
+  * `uri` - The URI of the root directory to remove
+  * `opts` - Additional options
+    * `:timeout` - Request timeout in milliseconds
+
+## list_roots/2
+
+Gets a list of all root directories.
+
+## Parameters
+
+  * `client` - The client process
+  * `opts` - Additional options
+    * `:timeout` - Request timeout in milliseconds
+
+## clear_roots/2
+
+Clears all root directories.
+
+## Parameters
+
+  * `client` - The client process
+  * `opts` - Additional options
+    * `:timeout` - Request timeout in milliseconds
+
+## register_sampling_callback/2
 
 Registers a callback function to handle sampling requests from the server.
 
@@ -370,186 +435,25 @@ The callback receives the sampling parameters and must return:
   - `"stopReason"` - Why generation stopped (e.g., "endTurn")
 - `{:error, reason}` - If the user rejects or an error occurs
 
-## remove_root(client, uri, opts \\ [])
-
-Removes a root directory from the client's roots list.
-
-## Parameters
-
-  * `client` - The client process
-  * `uri` - The URI of the root directory to remove
-  * `opts` - Additional options
-    * `:timeout` - Request timeout in milliseconds
-
-## send_progress(client, progress_token, progress, total \\ nil, opts \\ [])
-
-Sends a progress notification to the server for a long-running operation.
-
-## Parameters
-
-  * `client` - The client process
-  * `progress_token` - The progress token provided in the original request (string or integer)
-  * `progress` - The current progress value (number)
-  * `total` - The optional total value for the operation (number)
-
-Returns `:ok` if notification was sent successfully, or `{:error, reason}` otherwise.
-
-## set_log_level(client, level)
-
-Sets the minimum log level for the server to send log messages.
-
-## Parameters
-
-  * `client` - The client process
-  * `level` - The minimum log level (debug, info, notice, warning, error, critical, alert, emergency)
-
-Returns {:ok, result} if successful, {:error, reason} otherwise.
-
-## start_link(opts)
-
-Starts the client supervision tree (client + transport).
-
-This is the primary entry point for starting a client. It creates a supervisor
-that manages both the client GenServer and the transport process.
-
-## subscribe_resource(client, uri, opts \\ [])
-
-Subscribes to updates for a specific resource URI.
-
-After a successful subscribe, the server may send `notifications/resources/updated`
-notifications for this URI. The server must declare the `resources.subscribe`
-capability for this method to succeed.
-
-## Options
-
-  * `:timeout` - Request timeout in milliseconds
-
-## unregister_elicitation_callback(client)
-
-Unregisters the elicitation callback.
-
-## unregister_log_callback(client, opts \\ [])
-
-Unregisters a previously registered log callback.
-
-## Parameters
-
-  * `client` - The client process
-  * `callback` - The callback function to unregister
-
-## unregister_progress_callback(client, progress_token, opts \\ [])
-
-Unregisters a previously registered progress callback for the specified token.
-
-## Parameters
-
-  * `client` - The client process
-  * `progress_token` - The progress token to stop watching (string or integer)
-
-## unregister_sampling_callback(client)
+## unregister_sampling_callback/1
 
 Unregisters the sampling callback.
 
-## unsubscribe_resource(client, uri, opts \\ [])
+## register_elicitation_callback/2
 
-Unsubscribes from updates for a previously-subscribed resource URI.
+Registers a callback function to handle elicitation requests from the server.
 
-## Options
+The client must advertise the `elicitation` capability during initialization
+for servers to send `elicitation/create` requests.
 
-  * `:timeout` - Request timeout in milliseconds
+Per the MCP specification, the client SHOULD present the request to the user
+with clear UI, allow them to review and modify their response, and provide
+decline/cancel options.
 
-## is_client_capability(capability)
+## unregister_elicitation_callback/1
 
-Guard to check if an atom is a valid client capability.
+Unregisters the elicitation callback.
 
-## is_supported_capability(capabilities, capability)
+## close/1
 
-Guard to check if a capability is supported by checking map keys.
-
-## progress_callback/0
-
-Progress callback function type.
-
-Called when progress notifications are received for a specific progress token.
-
-## Parameters
-  - `progress_token` - String or integer identifier for the progress operation
-  - `progress` - Current progress value
-  - `total` - Total expected value (nil if unknown)
-
-## Returns
-  - The return value is ignored
-
-## log_callback/0
-
-Log callback function type.
-
-Called when log message notifications are received from the server.
-
-## Parameters
-  - `level` - Log level as a string (e.g., "debug", "info", "warning", "error")
-  - `data` - Log message data, typically a map with message details
-  - `logger` - Optional logger name identifying the source
-
-## Returns
-  - The return value is ignored
-
-## root/0
-
-Root directory specification.
-
-Represents a root directory that the client has access to.
-
-## Fields
-  - `:uri` - File URI for the root directory (e.g., "file:///home/user/project")
-  - `:name` - Optional human-readable name for the root
-
-## transport/0
-
-MCP client transport options
-
-- `:layer` - The transport layer to use, either `Anubis.Transport.STDIO`, `Anubis.Transport.SSE`, `Anubis.Transport.WebSocket`, or `Anubis.Transport.StreamableHTTP` (required)
-- `:name` - The transport optional custom name
-
-## client_info/0
-
-MCP client metadata info
-
-- `:name` - The name of the client (required)
-- `:version` - The version of the client
-
-## capabilities/0
-
-MCP client capabilities
-
-- `:roots` - Capabilities related to the roots resource
-  - `:listChanged` - Whether the client can handle listChanged notifications
-- `:sampling` - Capabilities related to sampling
-- `:elicitation` - Capabilities related to elicitation (server-initiated user input requests, 2025-06-18)
-
-MCP describes these client capabilities on its [specification](https://spec.modelcontextprotocol.io/specification/2025-06-18/client/)
-
-## option/0
-
-MCP client initialization options
-
-- `:name` - Following the `GenServer` patterns described on "Name registration".
-- `:transport` - The MCP transport options
-- `:client_info` - Information about the client
-- `:capabilities` - Client capabilities to advertise to the MCP server
-- `:protocol_version` - Protocol version to use (defaults to "2024-11-05")
-
-Any other option support by `GenServer`.
-
-## elicitation_callback/0
-
-Elicitation callback function type.
-
-Called when the server sends an `elicitation/create` request. The callback
-receives the human-readable `message` and the `requestedSchema` (a restricted
-JSON Schema subset). It must return one of:
-
-  * `{:accept, content}` — user submitted `content` (a flat map matching the schema)
-  * `:decline` — user explicitly declined
-  * `:cancel` — user dismissed without an explicit choice
-  * `{:error, reason}` — internal error; sent back as a JSON-RPC error
+Closes the client connection and terminates the process.

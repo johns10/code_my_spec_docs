@@ -2,7 +2,7 @@
 
 Provides API endpoints related to secret scanning
 
-## get_alert(owner, repo, alert_number, opts \\ [])
+## get_alert/4
 
 Get a secret scanning alert
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
 
   * [API method documentation](https://docs.github.com/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert)
 
-## list_alerts_for_enterprise(enterprise, opts \\ [])
+## list_alerts_for_enterprise/2
 
 List secret scanning alerts for an enterprise
 
@@ -46,7 +46,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope or `
 
   * [API method documentation](https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-enterprise)
 
-## list_alerts_for_org(org, opts \\ [])
+## list_alerts_for_org/2
 
 List secret scanning alerts for an organization
 
@@ -75,7 +75,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
 
   * [API method documentation](https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization)
 
-## list_alerts_for_repo(owner, repo, opts \\ [])
+## list_alerts_for_repo/3
 
 List secret scanning alerts for a repository
 
@@ -104,7 +104,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
 
   * [API method documentation](https://docs.github.com/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository)
 
-## list_locations_for_alert(owner, repo, alert_number, opts \\ [])
+## list_locations_for_alert/4
 
 List locations for a secret scanning alert
 
@@ -123,7 +123,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
 
   * [API method documentation](https://docs.github.com/rest/secret-scanning/secret-scanning#list-locations-for-a-secret-scanning-alert)
 
-## update_alert(owner, repo, alert_number, body, opts \\ [])
+## update_alert/5
 
 Update a secret scanning alert
 

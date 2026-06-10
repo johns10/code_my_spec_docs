@@ -2,7 +2,7 @@
 
 
 
-## encode(event)
+## encode/1
 
 Encodes SSE events into the wire format.
 

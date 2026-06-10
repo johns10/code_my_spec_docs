@@ -40,26 +40,62 @@ New encoders can be added via the format encoder option:
     config :phoenix_template, :format_encoders,
       html: Phoenix.HTML.Engine
 
-## engines()
+## __using__/1
 
-Returns a keyword list with all template engines
-extensions followed by their modules.
+Ensure `__mix_recompile__?/0` will be defined.
 
-## find_all(root, pattern \\ "*", engines \\ engines())
+## embed_templates/2
 
-Returns all template paths in a given template root.
+A convenience macro for embeding templates as functions.
 
-## format_encoder(format)
+This macro is built on top of the more general `compile_all/3`
+functionality.
 
-Returns the format encoder for the given template.
+## Options
 
-## hash(root, pattern \\ "*", engines \\ engines())
+  * `:root` - The root directory to embed files. Defaults to the current
+    module's directory (`__DIR__`)
+  * `:suffix` - The string value to append to embedded function names. By
+    default, function names will be the name of the template file excluding
+    the format and engine.
 
-Returns the hash of all template paths in the given root.
+A wildcard pattern may be used to select all files within a directory tree.
+For example, imagine a directory listing:
 
-Used by Phoenix to check if a given root path requires recompilation.
+    ├── pages
+    │   ├── about.html.heex
+    │   └── sitemap.xml.eex
 
-## render(module, template, format, assigns)
+Then to embed the templates in your module:
+
+    defmodule MyAppWeb.Renderer do
+      import Phoenix.Template, only: [embed_templates: 1]
+      embed_templates "pages/*"
+    end
+
+Now, your module will have a `about/1` and `sitemap/1` functions.
+Note that functions across different formats were embedded. In case
+you want to distinguish between them, you can give a more specific
+pattern:
+
+    defmodule MyAppWeb.Emails do
+      import Phoenix.Template, only: [embed_templates: 2]
+
+      embed_templates "pages/*.html", suffix: "_html"
+      embed_templates "pages/*.xml", suffix: "_xml"
+    end
+
+Now the functions will be `about_html` and `sitemap_xml`.
+
+## render_to_iodata/4
+
+Renders the template and returns iodata.
+
+## render_to_string/4
+
+Renders the template to string.
+
+## render/4
 
 Renders template from module.
 
@@ -104,19 +140,26 @@ assign:
 
     <%= @inner_content %>
 
-## render_to_iodata(module, template, format, assign)
+## format_encoder/1
 
-Renders the template and returns iodata.
+Returns the format encoder for the given template.
 
-## render_to_string(module, template, format, assign)
+## engines/0
 
-Renders the template to string.
+Returns a keyword list with all template engines
+extensions followed by their modules.
 
-## __using__(opts)
+## find_all/3
 
-Ensure `__mix_recompile__?/0` will be defined.
+Returns all template paths in a given template root.
 
-## compile_all(converter, root, pattern \\ "*", engines \\ nil)
+## hash/3
+
+Returns the hash of all template paths in the given root.
+
+Used by Phoenix to check if a given root path requires recompilation.
+
+## compile_all/4
 
 Compiles a function for each template in the given `root`.
 
@@ -140,46 +183,3 @@ You may optionally pass a keyword list of engines. If a list
 is given, we will lookup and compile only this subset of engines.
 If none is passed (`nil`), the default list returned by `engines/0`
 is used.
-
-## embed_templates(pattern, opts \\ [])
-
-A convenience macro for embeding templates as functions.
-
-This macro is built on top of the more general `compile_all/3`
-functionality.
-
-## Options
-
-  * `:root` - The root directory to embed files. Defaults to the current
-    module's directory (`__DIR__`)
-  * `:suffix` - The string value to append to embedded function names. By
-    default, function names will be the name of the template file excluding
-    the format and engine.
-
-A wildcard pattern may be used to select all files within a directory tree.
-For example, imagine a directory listing:
-
-    ├── pages
-    │   ├── about.html.heex
-    │   └── sitemap.xml.eex
-
-Then to embed the templates in your module:
-
-    defmodule MyAppWeb.Renderer do
-      import Phoenix.Template, only: [embed_templates: 1]
-      embed_templates "pages/*"
-    end
-
-Now, your module will have a `about/1` and `sitemap/1` functions.
-Note that functions across different formats were embedded. In case
-you want to distinguish between them, you can give a more specific
-pattern:
-
-    defmodule MyAppWeb.Emails do
-      import Phoenix.Template, only: [embed_templates: 2]
-
-      embed_templates "pages/*.html", suffix: "_html"
-      embed_templates "pages/*.xml", suffix: "_xml"
-    end
-
-Now the functions will be `about_html` and `sitemap_xml`.

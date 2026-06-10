@@ -6,7 +6,7 @@ Handles stepping, manual mode, timing, and execution control across all adapters
 This module provides framework-agnostic step control, allowing manual mode to work
 with any testing scenario (Scenic, Phoenix, libraries, etc.).
 
-## execute_step(step_type, description, step_function)
+## execute_step/3
 
 Executes a step with the configured execution mode.
 
@@ -28,7 +28,7 @@ Reads configuration from application environment:
 - `:sexy_spex, :step_delay` - Integer, delay in ms between steps
 - `:sexy_spex, :speed` - Atom, execution speed (:slow, :normal, :fast, :manual)
 
-## execute_step(step_type, description, context, step_function)
+## execute_step/4
 
 Executes a step with context passed as argument (like ExUnit setup).
 

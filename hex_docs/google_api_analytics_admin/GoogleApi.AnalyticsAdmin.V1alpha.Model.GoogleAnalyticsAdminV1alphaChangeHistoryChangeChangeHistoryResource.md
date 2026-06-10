@@ -31,7 +31,3 @@ A snapshot of a resource as before or after the result of a change in change his
 *   `reportingDataAnnotation` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaReportingDataAnnotation.t`, *default:* `nil`) - A snapshot of a ReportingDataAnnotation resource in change history.
 *   `searchAds360Link` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSearchAds360Link.t`, *default:* `nil`) - A snapshot of a SearchAds360Link resource in change history.
 *   `skadnetworkConversionValueSchema` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaSKAdNetworkConversionValueSchema.t`, *default:* `nil`) - A snapshot of SKAdNetworkConversionValueSchema resource in change history.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

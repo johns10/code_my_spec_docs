@@ -97,11 +97,9 @@ In this example, the phoenix.js client will send the token in the
 `Phoenix.Token` can also be used for validating APIs, handling
 password resets, e-mail confirmation and more.
 
-## decrypt(context, secret, token, opts \\ [])
+## sign/4
 
-Decrypts the original data from the token and verifies its integrity.
-
-Its usage is identical to `verify/4` but for encrypted tokens.
+Encodes and signs data into a token you can send to clients.
 
 ## Options
 
@@ -111,11 +109,12 @@ Its usage is identical to `verify/4` but for encrypted tokens.
     when generating the encryption and signing keys. Defaults to 32
   * `:key_digest` - option passed to `Plug.Crypto.KeyGenerator`
     when generating the encryption and signing keys. Defaults to `:sha256`
-  * `:max_age` - verifies the token only if it has been generated
-    "max age" ago in seconds. Defaults to the max age signed in the
-    token by `encrypt/4`.
+  * `:signed_at` - set the timestamp of the token in *seconds*.
+    If no value is provided, it will be set to the current time in milliseconds.
+  * `:max_age` - the default maximum age in **seconds** of the token. Defaults to
+    86400 seconds (1 day) and it may be overridden on `verify/4`.
 
-## encrypt(context, secret, data, opts \\ [])
+## encrypt/4
 
 Encodes, encrypts, and signs data into a token you can send to
 clients. Its usage is identical to that of `sign/4`, but the data
@@ -134,24 +133,7 @@ is extracted using `decrypt/4`, rather than `verify/4`.
   * `:max_age` - the default maximum age in **seconds** of the token. Defaults to
     86400 seconds (1 day) and it may be overridden on `decrypt/4`.
 
-## sign(context, salt, data, opts \\ [])
-
-Encodes and signs data into a token you can send to clients.
-
-## Options
-
-  * `:key_iterations` - option passed to `Plug.Crypto.KeyGenerator`
-    when generating the encryption and signing keys. Defaults to 1000
-  * `:key_length` - option passed to `Plug.Crypto.KeyGenerator`
-    when generating the encryption and signing keys. Defaults to 32
-  * `:key_digest` - option passed to `Plug.Crypto.KeyGenerator`
-    when generating the encryption and signing keys. Defaults to `:sha256`
-  * `:signed_at` - set the timestamp of the token in *seconds*.
-    If no value is provided, it will be set to the current time in milliseconds.
-  * `:max_age` - the default maximum age in **seconds** of the token. Defaults to
-    86400 seconds (1 day) and it may be overridden on `verify/4`.
-
-## verify(context, salt, token, opts \\ [])
+## verify/4
 
 Decodes the original data from the token and verifies its integrity.
 
@@ -204,3 +186,21 @@ However, if the client had sent an expired token, an invalid token, or `nil`,
   * `:max_age` - verifies the token only if it has been generated
     "max age" ago in seconds. Defaults to the max age signed in the
     token by `sign/4`.
+
+## decrypt/4
+
+Decrypts the original data from the token and verifies its integrity.
+
+Its usage is identical to `verify/4` but for encrypted tokens.
+
+## Options
+
+  * `:key_iterations` - option passed to `Plug.Crypto.KeyGenerator`
+    when generating the encryption and signing keys. Defaults to 1000
+  * `:key_length` - option passed to `Plug.Crypto.KeyGenerator`
+    when generating the encryption and signing keys. Defaults to 32
+  * `:key_digest` - option passed to `Plug.Crypto.KeyGenerator`
+    when generating the encryption and signing keys. Defaults to `:sha256`
+  * `:max_age` - verifies the token only if it has been generated
+    "max age" ago in seconds. Defaults to the max age signed in the
+    token by `encrypt/4`.

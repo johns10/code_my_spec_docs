@@ -2,19 +2,7 @@
 
 
 
-## prepare_connection(conn)
-
-Prepares a connection for SSE streaming.
-
-Sets appropriate headers and starts chunked response.
-
-## send_event(conn, data, event_id)
-
-Sends a single SSE event.
-
-This is useful for sending events outside of the main loop.
-
-## start(conn, transport, session_id, opts \\ [])
+## start/4
 
 Starts the SSE streaming loop for a connection.
 
@@ -32,3 +20,15 @@ streaming messages to the client as they arrive.
 ## Messages handled
   - `{:sse_message, binary}` - Message to send to client
   - `:close_sse` - Close the connection gracefully
+
+## prepare_connection/1
+
+Prepares a connection for SSE streaming.
+
+Sets appropriate headers and starts chunked response.
+
+## send_event/3
+
+Sends a single SSE event.
+
+This is useful for sending events outside of the main loop.

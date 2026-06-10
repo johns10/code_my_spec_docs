@@ -1,1 +1,0 @@
-# Credo.Test.SourceFiles

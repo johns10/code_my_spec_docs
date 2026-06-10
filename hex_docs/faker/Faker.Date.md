@@ -2,11 +2,19 @@
 
 Functions for generating dates
 
-## backward(days)
+## date_of_birth/1
+
+Returns a random date of birth for a person with an age specified by a number or range
+
+## backward/1
 
 Returns a random date in the past up to N days, today not included
 
-## between(from, to)
+## forward/1
+
+Returns a random date in the future up to N days, today not included
+
+## between/2
 
 Returns a random date between two dates
 
@@ -20,11 +28,3 @@ Returns a random date between two dates
     ~D[2014-10-23]
     iex> Faker.Date.between(~D[2010-12-20], ~D[2010-12-25])
     ~D[2010-12-21]
-
-## date_of_birth(age_or_range \\ 18..99)
-
-Returns a random date of birth for a person with an age specified by a number or range
-
-## forward(days)
-
-Returns a random date in the future up to N days, today not included

@@ -2,48 +2,48 @@
 
 
 
-## format_bytes(bytes)
+## format_value/2
 
-Formats bytes.
+Formats any value.
 
-## format_call(arg)
-
-Formats MFAs.
-
-## format_initial_call(call)
+## format_initial_call/1
 
 Formats initial calls.
 
 Same as `format_call` but takes into account Supervisor's special format.
 
-## format_path(path)
+## format_call/1
 
-Formats large paths by removing intermediate parts.
+Formats MFAs.
 
-## format_percent(percent)
-
-Formats percent.
-
-## format_stacktrace(stacktrace)
+## format_stacktrace/1
 
 Formats the stacktrace.
 
-## format_uptime(uptime)
+## format_path/1
+
+Formats large paths by removing intermediate parts.
+
+## format_uptime/1
 
 Formats uptime.
 
-## format_value(info, live_dashboard_path)
+## format_percent/1
 
-Formats any value.
+Formats percent.
 
-## format_words(words)
+## format_words/1
 
 Formats words as bytes.
 
-## nodes()
+## format_bytes/1
 
-All connected nodes (including the current node).
+Formats bytes.
 
-## percentage(value, total, rounds \\ 1)
+## percentage/3
 
 Computes the percentage between `value` and `total`.
+
+## nodes/0
+
+All connected nodes (including the current node).

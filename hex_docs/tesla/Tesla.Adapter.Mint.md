@@ -43,11 +43,7 @@ config :tesla, adapter: {Tesla.Adapter.Mint, cacert: ["path_to_cacert"]}
 - `:proxy` - Proxy settings. E.g.: `{:http, "localhost", 8888, []}`, `{:http, "127.0.0.1", 8888, []}`
 - `:transport_opts` - Keyword list of HTTP or HTTPS options passed into `:gen_tcp` or `:ssl` respectively by mint. See [mint's docs on `transport_opts`](https://hexdocs.pm/mint/Mint.HTTP.html#connect/4-transport-options).
 
-## close(conn)
-
-Closes mint connection.
-
-## read_chunk(conn, ref, opts)
+## read_chunk/3
 
 Reads chunk of the response body.
 Returns `{:fin, HTTP.t(), binary()}` if all body received, otherwise returns `{:nofin, HTTP.t(), binary()}`.

@@ -2,7 +2,7 @@
 
 
 
-## merge(old, new, locale, opts, gettext_config)
+## merge/5
 
 Merges two `Gettext.PO` structs representing a PO file and an updated POT (or
 PO) file into a new `Gettext.PO` struct.
@@ -34,7 +34,7 @@ The following rules are observed:
     * existing references are discarded (as they're now outdated) and replaced
       by the references in the POT file
 
-## new_po_file(po_file, pot_file, locale, opts)
+## new_po_file/4
 
 Returns the contents of a new PO file to be written at `po_file` from the POT
 template in `pot_file`.

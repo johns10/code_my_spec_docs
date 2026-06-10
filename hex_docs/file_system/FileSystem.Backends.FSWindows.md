@@ -31,9 +31,3 @@ Two ways to customize the executable file path:
     ```
     export FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE="YOUR_EXECUTABLE_FILE_PATH"`
     ```
-
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.

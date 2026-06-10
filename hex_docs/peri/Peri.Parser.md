@@ -11,7 +11,34 @@ The `Peri.Parser` struct has the following fields:
 - `:errors` - A list of errors encountered during validation.
 - `:path` - The current path within the data structure being validated.
 
-## add_error(state, err)
+## new/2
+
+Initializes a new `Peri.Parser` struct with the given data.
+
+## Parameters
+- `data` - The initial data to be validated.
+
+## Examples
+
+    iex> Peri.Parser.new(%{name: "Alice"})
+    %Peri.Parser{data: %{name: "Alice"}, errors: [], path: []}
+
+## update_data/3
+
+Updates the data in the parser state at the given key with the specified value.
+
+## Parameters
+- `state` - The current `Peri.Parser` state.
+- `key` - The key to update in the data.
+- `val` - The value to set at the specified key.
+
+## Examples
+
+    iex> state = Peri.Parser.new(%{name: "Alice"})
+    iex> Peri.Parser.update_data(state, :age, 30)
+    %Peri.Parser{data: %{name: "Alice", age: 30}, errors: [], path: []}
+
+## add_error/2
 
 Adds an error to the parser state's list of errors.
 
@@ -26,12 +53,7 @@ Adds an error to the parser state's list of errors.
     iex> Peri.Parser.add_error(state, error)
     %Peri.Parser{data: %{name: "Alice"}, errors: [%Peri.Error{path: [:name], message: "is required", content: []}], path: []}
 
-## bump_ref_depth(state)
-
-Increments the ref-resolution depth counter. Used by `{:ref, _}`
-directive resolution to bound recursion on cyclic data.
-
-## for_list_element(element_data, parent_parser, index)
+## for_list_element/3
 
 Creates a new parser for a list element, preserving the root data.
 
@@ -46,29 +68,7 @@ Creates a new parser for a list element, preserving the root data.
     iex> Peri.Parser.for_list_element(1, parent, 0)
     %Peri.Parser{data: 1, current_data: 1, root_data: %{items: [1, 2, 3]}, errors: [], path: [0]}
 
-## new(data, list)
+## bump_ref_depth/1
 
-Initializes a new `Peri.Parser` struct with the given data.
-
-## Parameters
-- `data` - The initial data to be validated.
-
-## Examples
-
-    iex> Peri.Parser.new(%{name: "Alice"})
-    %Peri.Parser{data: %{name: "Alice"}, errors: [], path: []}
-
-## update_data(state, key, val)
-
-Updates the data in the parser state at the given key with the specified value.
-
-## Parameters
-- `state` - The current `Peri.Parser` state.
-- `key` - The key to update in the data.
-- `val` - The value to set at the specified key.
-
-## Examples
-
-    iex> state = Peri.Parser.new(%{name: "Alice"})
-    iex> Peri.Parser.update_data(state, :age, 30)
-    %Peri.Parser{data: %{name: "Alice", age: 30}, errors: [], path: []}
+Increments the ref-resolution depth counter. Used by `{:ref, _}`
+directive resolution to bound recursion on cyclic data.

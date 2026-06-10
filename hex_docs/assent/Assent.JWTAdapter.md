@@ -30,7 +30,7 @@ You can also set global application config:
       end
     end
 
-## load_private_key(config)
+## load_private_key/1
 
 Loads a private key from the provided configuration.
 
@@ -38,25 +38,3 @@ Loads a private key from the provided configuration.
 
 - `:private_key_path` - The path to the private key file, optional.
 - `:private_key` - The private key, required if `:private_key_path` is not set.
-
-## sign(claims, alg, secret, opts \\ [])
-
-Generates a signed JSON Web Token signature.
-
-## Options
-
-- `:json_library` - The JSON library to use, optional, see
-  `Assent.json_library/1`.
-- `:jwt_adapter` - The JWT adapter module to use, optional, defaults to
-  `Assent.JWTAdapter.AssentJWT`
-
-## verify(token, secret, opts \\ [])
-
-Verifies the JSON Web Token signature.
-
-## Options
-
-- `:json_library` - The JSON library to use, optional, see
-  `Assent.json_library/1`.
-- `:jwt_adapter` - The JWT adapter module to use, optional, defaults to
-  `Assent.JWTAdapter.AssentJWT`

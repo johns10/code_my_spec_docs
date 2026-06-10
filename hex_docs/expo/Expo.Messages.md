@@ -5,37 +5,7 @@ structs for MO and PO files.
 
 All fields in the struct are public. See [`%Expo.Messages{}`](`__struct__/0`).
 
-## %Expo.Messages{}
-
-The struct to represent a list of messages.
-
-For the type of each field, see `t:t/0`.
-
-## find(messages, message_to_find)
-
-Finds a given `message_to_find` in a list of `messages`.
-
-Equality between messages is checked using `Expo.Message.same?/2`.
-
-Returns `nil` if `message_to_find` is not found.
-
-## get_header(messages, header_name)
-
-Gets a header by name.
-
-The name of the header is case-insensitive.
-
-### Examples
-
-    iex> messages = %Expo.Messages{headers: ["Language: en_US\n"], messages: []}
-    iex> Expo.Messages.get_header(messages, "language")
-    ["en_US"]
-
-    iex> messages = %Expo.Messages{headers: ["Language: en_US\n"], messages: []}
-    iex> Expo.Messages.get_header(messages, "invalid")
-    []
-
-## rebalance(messages)
+## rebalance/1
 
 Re-balances all strings.
 
@@ -63,6 +33,26 @@ This function does the following things:
       }]
     }
 
-## t/0
+## get_header/2
 
-The type for this struct.
+Gets a header by name.
+
+The name of the header is case-insensitive.
+
+### Examples
+
+    iex> messages = %Expo.Messages{headers: ["Language: en_US\n"], messages: []}
+    iex> Expo.Messages.get_header(messages, "language")
+    ["en_US"]
+
+    iex> messages = %Expo.Messages{headers: ["Language: en_US\n"], messages: []}
+    iex> Expo.Messages.get_header(messages, "invalid")
+    []
+
+## find/2
+
+Finds a given `message_to_find` in a list of `messages`.
+
+Equality between messages is checked using `Expo.Message.same?/2`.
+
+Returns `nil` if `message_to_find` is not found.

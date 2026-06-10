@@ -214,7 +214,489 @@ access to the user for every action in your controller:
       # ...
     end
 
-## accepts(conn, accepted)
+## action_fallback/1
+
+Registers the plug to call as a fallback to the controller action.
+
+A fallback plug is useful to translate common domain data structures
+into a valid `%Plug.Conn{}` response. If the controller action fails to
+return a `%Plug.Conn{}`, the provided plug will be called and receive
+the controller's `%Plug.Conn{}` as it was before the action was invoked
+along with the value returned from the controller action.
+
+## Examples
+
+    defmodule MyController do
+      use Phoenix.Controller
+
+      action_fallback MyFallbackController
+
+      def show(conn, %{"id" => id}, current_user) do
+        with {:ok, post} <- Blog.fetch_post(id),
+             :ok <- Authorizer.authorize(current_user, :view, post) do
+
+          render(conn, "show.json", post: post)
+        end
+      end
+    end
+
+In the above example, `with` is used to match only a successful
+post fetch, followed by valid authorization for the current user.
+In the event either of those fail to match, `with` will not invoke
+the render block and instead return the unmatched value. In this case,
+imagine `Blog.fetch_post/2` returned `{:error, :not_found}` or
+`Authorizer.authorize/3` returned `{:error, :unauthorized}`. For cases
+where these data structures serve as return values across multiple
+boundaries in our domain, a single fallback module can be used to
+translate the value into a valid response. For example, you could
+write the following fallback controller to handle the above values:
+
+    defmodule MyFallbackController do
+      use Phoenix.Controller
+
+      def call(conn, {:error, :not_found}) do
+        conn
+        |> put_status(:not_found)
+        |> put_view(MyErrorView)
+        |> render(:"404")
+      end
+
+      def call(conn, {:error, :unauthorized}) do
+        conn
+        |> put_status(:forbidden)
+        |> put_view(MyErrorView)
+        |> render(:"403")
+      end
+    end
+
+## action_name/1
+
+Returns the action name as an atom, raises if unavailable.
+
+## controller_module/1
+
+Returns the controller module as an atom, raises if unavailable.
+
+## router_module/1
+
+Returns the router module as an atom, raises if unavailable.
+
+## endpoint_module/1
+
+Returns the endpoint module as an atom, raises if unavailable.
+
+## view_template/1
+
+Returns the template name rendered in the view as a string
+(or nil if no template was rendered).
+
+## json/2
+
+Sends JSON response.
+
+It uses the configured `:json_library` under the `:phoenix`
+application for `:json` to pick up the encoder module.
+
+## Examples
+
+    iex> json(conn, %{id: 123})
+
+## allow_jsonp/2
+
+A plug that may convert a JSON response into a JSONP one.
+
+In case a JSON response is returned, it will be converted
+to a JSONP as long as the callback field is present in
+the query string. The callback field itself defaults to
+"callback", but may be configured with the callback option.
+
+In case there is no callback or the response is not encoded
+in JSON format, it is a no-op.
+
+Only alphanumeric characters and underscore are allowed in the
+callback name. Otherwise an exception is raised.
+
+## Examples
+
+    # Will convert JSON to JSONP if callback=someFunction is given
+    plug :allow_jsonp
+
+    # Will convert JSON to JSONP if cb=someFunction is given
+    plug :allow_jsonp, callback: "cb"
+
+## text/2
+
+Sends text response.
+
+## Examples
+
+    iex> text(conn, "hello")
+
+    iex> text(conn, :implements_to_string)
+
+## html/2
+
+Sends html response.
+
+## Examples
+
+    iex> html(conn, "<html><head>...")
+
+## redirect/2
+
+Sends redirect response to the given url.
+
+For security, `:to` only accepts paths. Use the `:external`
+option to redirect to any URL.
+
+The response will be sent with the status code defined within
+the connection, via `Plug.Conn.put_status/2`. If no status
+code is set, a 302 response is sent.
+
+## Examples
+
+    iex> redirect(conn, to: "/login")
+
+    iex> redirect(conn, external: "https://elixir-lang.org")
+
+## put_view/2
+
+Stores the view for rendering.
+
+Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
+
+## Examples
+
+    iex> put_view(conn, html: AppHTML, json: AppJSON)
+
+## put_new_view/2
+
+Stores the view for rendering if one was not stored yet.
+
+Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
+
+## view_module/2
+
+Retrieves the current view for the given format.
+
+If no format is given, takes the current one from the connection.
+
+## put_layout/2
+
+Stores the layout for rendering.
+
+The layout must be given as keyword list where the key is the request
+format the layout will be applied to (such as `:html`) and the value
+is one of:
+
+  * `{module, layout}` with the `module` the layout is defined and
+    the name of the `layout` as an atom
+
+  * `false` which disables the layout
+
+If `false` is given without a format, all layouts are disabled.
+
+## Examples
+
+    iex> layout(conn)
+    false
+
+    iex> conn = put_layout(conn, html: {AppView, :application})
+    iex> layout(conn)
+    {AppView, :application}
+
+    iex> conn = put_layout(conn, html: {AppView, :print})
+    iex> layout(conn)
+    {AppView, :print}
+
+Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
+
+## put_new_layout/2
+
+Stores the layout for rendering if one was not stored yet.
+
+See `put_layout/2` for more information.
+
+Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
+
+## put_root_layout/2
+
+Stores the root layout for rendering.
+
+The layout must be given as keyword list where the key is the request
+format the layout will be applied to (such as `:html`) and the value
+is one of:
+
+  * `{module, layout}` with the `module` the layout is defined and
+    the name of the `layout` as an atom
+
+  * `layout` when the name of the layout. This requires a layout for
+    the given format in the shape of `{module, layout}` to be previously
+    given
+
+  * `false` which disables the layout
+
+## Examples
+
+    iex> root_layout(conn)
+    false
+
+    iex> conn = put_root_layout(conn, html: {AppView, :root})
+    iex> root_layout(conn)
+    {AppView, :root}
+
+    iex> conn = put_root_layout(conn, html: :bare)
+    iex> root_layout(conn)
+    {AppView, :bare}
+
+Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
+
+## layout/2
+
+Retrieves the current layout for the given format.
+
+If no format is given, takes the current one from the connection.
+
+## root_layout/2
+
+Retrieves the current root layout for the given format.
+
+If no format is given, takes the current one from the connection.
+
+## render/2
+
+Render the given template or the default template
+specified by the current action with the given assigns.
+
+See `render/3` for more information.
+
+## render/3
+
+Renders the given `template` and `assigns` based on the `conn` information.
+
+Once the template is rendered, the template format is set as the response
+content type (for example, an HTML template will set "text/html" as response
+content type) and the data is sent to the client with default status of 200.
+
+## Arguments
+
+  * `conn` - the `Plug.Conn` struct
+
+  * `template` - which may be an atom or a string. If an atom, like `:index`,
+    it will render a template with the same format as the one returned by
+    `get_format/1`. For example, for an HTML request, it will render
+    the "index.html" template. If the template is a string, it must contain
+    the extension too, like "index.json"
+
+  * `assigns` - a dictionary with the assigns to be used in the view. Those
+    assigns are merged and have higher precedence than the connection assigns
+    (`conn.assigns`)
+
+## Examples
+
+To render a template, you must configure your controller with the formats
+to render. You can do so on `use`, which will infer the modules based on
+the controller name:
+
+    defmodule MyAppWeb.UserController do
+      # Will use MyAppWeb.UserHTML and MyAppWeb.UserJSON
+      use Phoenix.Controller, formats: [:html, :json]
+    end
+
+With the formats set, you can render in two ways, either passing a string
+with the template name and explicit format:
+
+    def show(conn, _params) do
+      render(conn, "show.html", message: "Hello")
+    end
+
+The example above renders a template "show.html" from the `MyAppWeb.UserHTML`
+and sets the response content type to "text/html".
+
+Or, if you want the template format to be set dynamically based on the request,
+you can pass an atom instead (without the extension):
+
+    def show(conn, _params) do
+      render(conn, :show, message: "Hello")
+    end
+
+If the formats are not known at compile-time, you can call `put_view/2`
+at runtime:
+
+    defmodule MyAppWeb.UserController do
+      use Phoenix.Controller
+
+      def show(conn, _params) do
+        conn
+        |> put_view(html: MyAppWeb.UserHTML)
+        |> render("show.html", message: "Hello")
+      end
+    end
+
+## put_router_url/2
+
+Puts the url string or `%URI{}` to be used for route generation.
+
+This function overrides the default URL generation pulled
+from the `%Plug.Conn{}`'s endpoint configuration.
+
+## Examples
+
+Imagine your application is configured to run on "example.com"
+but after the user signs in, you want all links to use
+"some_user.example.com". You can do so by setting the proper
+router url configuration:
+
+    def put_router_url_by_user(conn) do
+      put_router_url(conn, get_user_from_conn(conn).account_name <> ".example.com")
+    end
+
+Now when you call `Routes.some_route_url(conn, ...)`, it will use
+the router url set above. Keep in mind that, if you want to generate
+routes to the *current* domain, it is preferred to use
+`Routes.some_route_path` helpers, as those are always relative.
+
+## put_static_url/2
+
+Puts the URL or `%URI{}` to be used for the static url generation.
+
+Using this function on a `%Plug.Conn{}` struct tells `static_url/2` to use
+the given information for URL generation instead of the `%Plug.Conn{}`'s
+endpoint configuration (much like `put_router_url/2` but for static URLs).
+
+## put_format/2
+
+Puts the format in the connection.
+
+This format is used when rendering a template as an atom.
+For example, `render(conn, :foo)` will render `"foo.FORMAT"`
+where the format is the one set here. The default format
+is typically set from the negotiation done in `accepts/2`.
+
+See `get_format/1` for retrieval.
+
+## get_format/1
+
+Returns the request format, such as "json", "html".
+
+This format is used when rendering a template as an atom.
+For example, `render(conn, :foo)` will render `"foo.FORMAT"`
+where the format is the one set here. The default format
+is typically set from the negotiation done in `accepts/2`.
+
+## send_download/3
+
+Sends the given file or binary as a download.
+
+The second argument must be `{:binary, contents}`, where
+`contents` will be sent as download, or`{:file, path}`,
+where `path` is the filesystem location of the file to
+be sent. Be careful to not interpolate the path from
+external parameters, as it could allow traversal of the
+filesystem.
+
+The download is achieved by setting "content-disposition"
+to attachment. The "content-type" will also be set based
+on the extension of the given filename but can be customized
+via the `:content_type` and `:charset` options.
+
+## Options
+
+  * `:filename` - the filename to be presented to the user
+    as download
+  * `:content_type` - the content type of the file or binary
+    sent as download. It is automatically inferred from the
+    filename extension
+  * `:disposition` - specifies disposition type
+    (`:attachment` or `:inline`). If `:attachment` was used,
+    user will be prompted to save the file. If `:inline` was used,
+    the browser will attempt to open the file.
+    Defaults to `:attachment`.
+  * `:charset` - the charset of the file, such as "utf-8".
+    Defaults to none
+  * `:offset` - the bytes to offset when reading. Defaults to `0`
+  * `:length` - the total bytes to read. Defaults to `:all`
+  * `:encode` - encodes the filename using `URI.encode/2`.
+    Defaults to `true`. When `false`, disables encoding. If you
+    disable encoding, you need to guarantee there are no special
+    characters in the filename, such as quotes, newlines, etc.
+    Otherwise you can expose your application to security attacks
+
+## Examples
+
+To send a file that is stored inside your application priv
+directory:
+
+    path = Application.app_dir(:my_app, "priv/prospectus.pdf")
+    send_download(conn, {:file, path})
+
+When using `{:file, path}`, the filename is inferred from the
+given path but may also be set explicitly.
+
+To allow the user to download contents that are in memory as
+a binary or string:
+
+    send_download(conn, {:binary, "world"}, filename: "hello.txt")
+
+See `Plug.Conn.send_file/3` and `Plug.Conn.send_resp/3` if you
+would like to access the low-level functions used to send files
+and responses via Plug.
+
+## scrub_params/2
+
+Scrubs the parameters from the request.
+
+This process is two-fold:
+
+  * Checks to see if the `required_key` is present
+  * Changes empty parameters of `required_key` (recursively) to nils
+
+This function is useful for removing empty strings sent
+via HTML forms. If you are providing an API, there
+is likely no need to invoke `scrub_params/2`.
+
+If the `required_key` is not present, it will
+raise `Phoenix.MissingParamError`.
+
+## Examples
+
+    iex> scrub_params(conn, "user")
+
+## protect_from_forgery/2
+
+Enables CSRF protection.
+
+Currently used as a wrapper function for `Plug.CSRFProtection`
+and mainly serves as a function plug in `YourApp.Router`.
+
+Check `get_csrf_token/0` and `delete_csrf_token/0` for
+retrieving and deleting CSRF tokens.
+
+## put_secure_browser_headers/2
+
+Put headers that improve browser security.
+
+It sets the following headers, if they are not already set:
+
+  * `content-security-policy` - It sets `frame-ancestors` and
+    `base-uri` to `self`, restricting embedding and the use of
+    `<base>` element to same origin respectively. It is equivalent
+    to setting `"base-uri 'self'; frame-ancestors 'self';"`
+
+  * `referrer-policy` - only send origin on cross origin requests
+
+  * `x-content-type-options` - set to nosniff. This requires
+    script and style tags to be sent with proper content type
+
+  * `x-permitted-cross-domain-policies` - set to none to restrict
+    Adobe Flash Player’s access to data
+
+A custom headers map may also be given to be merged with defaults.
+
+It is recommended for custom header keys to be in lowercase, to avoid sending
+duplicate keys or invalid responses.
+
+## accepts/2
 
 Performs content negotiation based on the available formats.
 
@@ -285,60 +767,77 @@ And now you can use it in accepts too:
 
     plug :accepts, ["html", "json-api"]
 
-## action_name(conn)
+## fetch_flash/2
 
-Returns the action name as an atom, raises if unavailable.
+Fetches the flash storage.
 
-## allow_jsonp(conn, opts \\ [])
+## merge_flash/2
 
-A plug that may convert a JSON response into a JSONP one.
+Merges a map into the flash.
 
-In case a JSON response is returned, it will be converted
-to a JSONP as long as the callback field is present in
-the query string. The callback field itself defaults to
-"callback", but may be configured with the callback option.
-
-In case there is no callback or the response is not encoded
-in JSON format, it is a no-op.
-
-Only alphanumeric characters and underscore are allowed in the
-callback name. Otherwise an exception is raised.
+Returns the updated connection.
 
 ## Examples
 
-    # Will convert JSON to JSONP if callback=someFunction is given
-    plug :allow_jsonp
+    iex> conn = merge_flash(conn, info: "Welcome Back!")
+    iex> Phoenix.Flash.get(conn.assigns.flash, :info)
+    "Welcome Back!"
 
-    # Will convert JSON to JSONP if cb=someFunction is given
-    plug :allow_jsonp, callback: "cb"
+## put_flash/3
 
-## assign(conn, keyword_or_map_or_fun)
+Persists a value in flash.
 
-Assigns multiple key-value pairs to the connection.
-Accepts a keyword list, a map, or a single-argument function.
+`key` can be any atom or binary value. Phoenix does not enforce which keys
+are stored in the flash, as long as the values are internally consistent.
+By default, the Phoenix generators use `:info` and `:error` keys.
 
-This function accepts a map or keyword list of assigns and merges them into
-the connection's assigns. It is equivalent to calling `Plug.Conn.assign/3`
-multiple times.
-
-If a function is given, it takes the current assigns as an argument and its return
-value will be merged into the current assigns.
+Returns the updated connection.
 
 ## Examples
 
-    assign(conn, name: "Alice", role: :admin)
-    assign(conn, %{name: "Alice", role: :admin})
-    assign(conn, fn %{name: name, logo: logo} -> %{title: Enum.join([name, logo], " | ")} end)
+    iex> conn = put_flash(conn, :info, "Welcome Back!")
+    iex> Phoenix.Flash.get(conn.assigns.flash, :info)
+    "Welcome Back!"
 
-## clear_flash(conn)
+## get_flash/1
+
+Returns a map of previously set flash messages or an empty map.
+
+## Examples
+
+    iex> get_flash(conn)
+    %{}
+
+    iex> conn = put_flash(conn, :info, "Welcome Back!")
+    iex> get_flash(conn)
+    %{"info" => "Welcome Back!"}
+
+## get_flash/2
+
+Returns a message from flash by `key` (or `nil` if no message is available for `key`).
+
+## Examples
+
+    iex> conn = put_flash(conn, :info, "Welcome Back!")
+    iex> get_flash(conn, :info)
+    "Welcome Back!"
+
+## status_message_from_template/1
+
+Generates a status message from the template name.
+
+## Examples
+
+    iex> status_message_from_template("404.html")
+    "Not Found"
+    iex> status_message_from_template("whatever.html")
+    "Internal Server Error"
+
+## clear_flash/1
 
 Clears all flash messages.
 
-## controller_module(conn)
-
-Returns the controller module as an atom, raises if unavailable.
-
-## current_path(conn)
+## current_path/1
 
 Returns the current request path with its default query parameters:
 
@@ -351,7 +850,7 @@ The path is normalized based on the `conn.script_name` and
 `conn.path_info`. For example, "/foo//bar/" will become "/foo/bar".
 If you want the original path, use `conn.request_path` instead.
 
-## current_path(conn, params)
+## current_path/2
 
 Returns the current path with the given query parameters.
 
@@ -376,7 +875,7 @@ The path is normalized based on the `conn.script_name` and
 `conn.path_info`. For example, "/foo//bar/" will become "/foo/bar".
 If you want the original path, use `conn.request_path` instead.
 
-## current_url(conn)
+## current_url/1
 
 Returns the current request url with its default query parameters:
 
@@ -385,575 +884,20 @@ Returns the current request url with its default query parameters:
 
 See `current_url/2` to override the default parameters.
 
-## current_url(conn, params)
+## assign/2
 
-Returns the current request URL with query params.
+Assigns multiple key-value pairs to the connection.
+Accepts a keyword list, a map, or a single-argument function.
 
-The path will be retrieved from the currently requested path via
-`current_path/1`. The scheme, host and others will be received from
-the URL configuration in your Phoenix endpoint. The reason we don't
-use the host and scheme information in the request is because most
-applications are behind proxies and the host and scheme may not
-actually reflect the host and scheme accessed by the client. If you
-want to access the url precisely as requested by the client, see
-`Plug.Conn.request_url/1`.
+This function accepts a map or keyword list of assigns and merges them into
+the connection's assigns. It is equivalent to calling `Plug.Conn.assign/3`
+multiple times.
 
-## Examples
-
-    iex> current_url(conn)
-    "https://www.example.com/users/123?existing=param"
-
-    iex> current_url(conn, %{new: "param"})
-    "https://www.example.com/users/123?new=param"
-
-    iex> current_url(conn, %{})
-    "https://www.example.com/users/123"
-
-## Custom URL Generation
-
-In some cases, you'll need to generate a request's URL, but using a
-different scheme, different host, etc. This can be accomplished in
-two ways.
-
-If you want to do so in a case-by-case basis, you can define a custom
-function that gets the endpoint URI configuration and changes it accordingly.
-For example, to get the current URL always in HTTPS format:
-
-    def current_secure_url(conn, params \\ %{}) do
-      current_uri = MyAppWeb.Endpoint.struct_url()
-      current_path = Phoenix.Controller.current_path(conn, params)
-      Phoenix.VerifiedRoutes.unverified_url(%URI{current_uri | scheme: "https"}, current_path)
-    end
-
-However, if you want all generated URLs to always have a certain schema,
-host, etc, you may use `put_router_url/2`.
-
-## delete_csrf_token()
-
-Deletes the CSRF token from the process dictionary.
-
-*Note*: The token is deleted only after a response has been sent.
-
-## endpoint_module(conn)
-
-Returns the endpoint module as an atom, raises if unavailable.
-
-## fetch_flash(conn, opts \\ [])
-
-Fetches the flash storage.
-
-## get_csrf_token()
-
-Gets or generates a CSRF token.
-
-If a token exists, it is returned, otherwise it is generated and stored
-in the process dictionary.
-
-## get_flash(conn)
-
-Returns a map of previously set flash messages or an empty map.
+If a function is given, it takes the current assigns as an argument and its return
+value will be merged into the current assigns.
 
 ## Examples
 
-    iex> get_flash(conn)
-    %{}
-
-    iex> conn = put_flash(conn, :info, "Welcome Back!")
-    iex> get_flash(conn)
-    %{"info" => "Welcome Back!"}
-
-## get_flash(conn, key)
-
-Returns a message from flash by `key` (or `nil` if no message is available for `key`).
-
-## Examples
-
-    iex> conn = put_flash(conn, :info, "Welcome Back!")
-    iex> get_flash(conn, :info)
-    "Welcome Back!"
-
-## get_format(conn)
-
-Returns the request format, such as "json", "html".
-
-This format is used when rendering a template as an atom.
-For example, `render(conn, :foo)` will render `"foo.FORMAT"`
-where the format is the one set here. The default format
-is typically set from the negotiation done in `accepts/2`.
-
-## html(conn, data)
-
-Sends html response.
-
-## Examples
-
-    iex> html(conn, "<html><head>...")
-
-## json(conn, data)
-
-Sends JSON response.
-
-It uses the configured `:json_library` under the `:phoenix`
-application for `:json` to pick up the encoder module.
-
-## Examples
-
-    iex> json(conn, %{id: 123})
-
-## layout(conn, format \\ nil)
-
-Retrieves the current layout for the given format.
-
-If no format is given, takes the current one from the connection.
-
-## merge_flash(conn, enumerable)
-
-Merges a map into the flash.
-
-Returns the updated connection.
-
-## Examples
-
-    iex> conn = merge_flash(conn, info: "Welcome Back!")
-    iex> Phoenix.Flash.get(conn.assigns.flash, :info)
-    "Welcome Back!"
-
-## protect_from_forgery(conn, opts \\ [])
-
-Enables CSRF protection.
-
-Currently used as a wrapper function for `Plug.CSRFProtection`
-and mainly serves as a function plug in `YourApp.Router`.
-
-Check `get_csrf_token/0` and `delete_csrf_token/0` for
-retrieving and deleting CSRF tokens.
-
-## put_flash(conn, key, message)
-
-Persists a value in flash.
-
-`key` can be any atom or binary value. Phoenix does not enforce which keys
-are stored in the flash, as long as the values are internally consistent.
-By default, the Phoenix generators use `:info` and `:error` keys.
-
-Returns the updated connection.
-
-## Examples
-
-    iex> conn = put_flash(conn, :info, "Welcome Back!")
-    iex> Phoenix.Flash.get(conn.assigns.flash, :info)
-    "Welcome Back!"
-
-## put_format(conn, format)
-
-Puts the format in the connection.
-
-This format is used when rendering a template as an atom.
-For example, `render(conn, :foo)` will render `"foo.FORMAT"`
-where the format is the one set here. The default format
-is typically set from the negotiation done in `accepts/2`.
-
-See `get_format/1` for retrieval.
-
-## put_layout(conn, layout)
-
-Stores the layout for rendering.
-
-The layout must be given as keyword list where the key is the request
-format the layout will be applied to (such as `:html`) and the value
-is one of:
-
-  * `{module, layout}` with the `module` the layout is defined and
-    the name of the `layout` as an atom
-
-  * `false` which disables the layout
-
-If `false` is given without a format, all layouts are disabled.
-
-## Examples
-
-    iex> layout(conn)
-    false
-
-    iex> conn = put_layout(conn, html: {AppView, :application})
-    iex> layout(conn)
-    {AppView, :application}
-
-    iex> conn = put_layout(conn, html: {AppView, :print})
-    iex> layout(conn)
-    {AppView, :print}
-
-Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
-
-## put_new_layout(conn, layout)
-
-Stores the layout for rendering if one was not stored yet.
-
-See `put_layout/2` for more information.
-
-Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
-
-## put_new_view(conn, formats)
-
-Stores the view for rendering if one was not stored yet.
-
-Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
-
-## put_root_layout(conn, layout)
-
-Stores the root layout for rendering.
-
-The layout must be given as keyword list where the key is the request
-format the layout will be applied to (such as `:html`) and the value
-is one of:
-
-  * `{module, layout}` with the `module` the layout is defined and
-    the name of the `layout` as an atom
-
-  * `layout` when the name of the layout. This requires a layout for
-    the given format in the shape of `{module, layout}` to be previously
-    given
-
-  * `false` which disables the layout
-
-## Examples
-
-    iex> root_layout(conn)
-    false
-
-    iex> conn = put_root_layout(conn, html: {AppView, :root})
-    iex> root_layout(conn)
-    {AppView, :root}
-
-    iex> conn = put_root_layout(conn, html: :bare)
-    iex> root_layout(conn)
-    {AppView, :bare}
-
-Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
-
-## put_router_url(conn, uri)
-
-Puts the url string or `%URI{}` to be used for route generation.
-
-This function overrides the default URL generation pulled
-from the `%Plug.Conn{}`'s endpoint configuration.
-
-## Examples
-
-Imagine your application is configured to run on "example.com"
-but after the user signs in, you want all links to use
-"some_user.example.com". You can do so by setting the proper
-router url configuration:
-
-    def put_router_url_by_user(conn) do
-      put_router_url(conn, get_user_from_conn(conn).account_name <> ".example.com")
-    end
-
-Now when you call `Routes.some_route_url(conn, ...)`, it will use
-the router url set above. Keep in mind that, if you want to generate
-routes to the *current* domain, it is preferred to use
-`Routes.some_route_path` helpers, as those are always relative.
-
-## put_secure_browser_headers(conn, headers \\ %{})
-
-Put headers that improve browser security.
-
-It sets the following headers, if they are not already set:
-
-  * `content-security-policy` - It sets `frame-ancestors` and
-    `base-uri` to `self`, restricting embedding and the use of
-    `<base>` element to same origin respectively. It is equivalent
-    to setting `"base-uri 'self'; frame-ancestors 'self';"`
-
-  * `referrer-policy` - only send origin on cross origin requests
-
-  * `x-content-type-options` - set to nosniff. This requires
-    script and style tags to be sent with proper content type
-
-  * `x-permitted-cross-domain-policies` - set to none to restrict
-    Adobe Flash Player’s access to data
-
-A custom headers map may also be given to be merged with defaults.
-
-It is recommended for custom header keys to be in lowercase, to avoid sending
-duplicate keys or invalid responses.
-
-## put_static_url(conn, uri)
-
-Puts the URL or `%URI{}` to be used for the static url generation.
-
-Using this function on a `%Plug.Conn{}` struct tells `static_url/2` to use
-the given information for URL generation instead of the `%Plug.Conn{}`'s
-endpoint configuration (much like `put_router_url/2` but for static URLs).
-
-## put_view(conn, formats)
-
-Stores the view for rendering.
-
-Raises `Plug.Conn.AlreadySentError` if `conn` is already sent.
-
-## Examples
-
-    iex> put_view(conn, html: AppHTML, json: AppJSON)
-
-## redirect(conn, opts)
-
-Sends redirect response to the given url.
-
-For security, `:to` only accepts paths. Use the `:external`
-option to redirect to any URL.
-
-The response will be sent with the status code defined within
-the connection, via `Plug.Conn.put_status/2`. If no status
-code is set, a 302 response is sent.
-
-## Examples
-
-    iex> redirect(conn, to: "/login")
-
-    iex> redirect(conn, external: "https://elixir-lang.org")
-
-## render(conn, template_or_assigns \\ [])
-
-Render the given template or the default template
-specified by the current action with the given assigns.
-
-See `render/3` for more information.
-
-## render(conn, template, assigns)
-
-Renders the given `template` and `assigns` based on the `conn` information.
-
-Once the template is rendered, the template format is set as the response
-content type (for example, an HTML template will set "text/html" as response
-content type) and the data is sent to the client with default status of 200.
-
-## Arguments
-
-  * `conn` - the `Plug.Conn` struct
-
-  * `template` - which may be an atom or a string. If an atom, like `:index`,
-    it will render a template with the same format as the one returned by
-    `get_format/1`. For example, for an HTML request, it will render
-    the "index.html" template. If the template is a string, it must contain
-    the extension too, like "index.json"
-
-  * `assigns` - a dictionary with the assigns to be used in the view. Those
-    assigns are merged and have higher precedence than the connection assigns
-    (`conn.assigns`)
-
-## Examples
-
-To render a template, you must configure your controller with the formats
-to render. You can do so on `use`, which will infer the modules based on
-the controller name:
-
-    defmodule MyAppWeb.UserController do
-      # Will use MyAppWeb.UserHTML and MyAppWeb.UserJSON
-      use Phoenix.Controller, formats: [:html, :json]
-    end
-
-With the formats set, you can render in two ways, either passing a string
-with the template name and explicit format:
-
-    def show(conn, _params) do
-      render(conn, "show.html", message: "Hello")
-    end
-
-The example above renders a template "show.html" from the `MyAppWeb.UserHTML`
-and sets the response content type to "text/html".
-
-Or, if you want the template format to be set dynamically based on the request,
-you can pass an atom instead (without the extension):
-
-    def show(conn, _params) do
-      render(conn, :show, message: "Hello")
-    end
-
-If the formats are not known at compile-time, you can call `put_view/2`
-at runtime:
-
-    defmodule MyAppWeb.UserController do
-      use Phoenix.Controller
-
-      def show(conn, _params) do
-        conn
-        |> put_view(html: MyAppWeb.UserHTML)
-        |> render("show.html", message: "Hello")
-      end
-    end
-
-## root_layout(conn, format \\ nil)
-
-Retrieves the current root layout for the given format.
-
-If no format is given, takes the current one from the connection.
-
-## router_module(conn)
-
-Returns the router module as an atom, raises if unavailable.
-
-## scrub_params(conn, required_key)
-
-Scrubs the parameters from the request.
-
-This process is two-fold:
-
-  * Checks to see if the `required_key` is present
-  * Changes empty parameters of `required_key` (recursively) to nils
-
-This function is useful for removing empty strings sent
-via HTML forms. If you are providing an API, there
-is likely no need to invoke `scrub_params/2`.
-
-If the `required_key` is not present, it will
-raise `Phoenix.MissingParamError`.
-
-## Examples
-
-    iex> scrub_params(conn, "user")
-
-## send_download(conn, kind, opts \\ [])
-
-Sends the given file or binary as a download.
-
-The second argument must be `{:binary, contents}`, where
-`contents` will be sent as download, or`{:file, path}`,
-where `path` is the filesystem location of the file to
-be sent. Be careful to not interpolate the path from
-external parameters, as it could allow traversal of the
-filesystem.
-
-The download is achieved by setting "content-disposition"
-to attachment. The "content-type" will also be set based
-on the extension of the given filename but can be customized
-via the `:content_type` and `:charset` options.
-
-## Options
-
-  * `:filename` - the filename to be presented to the user
-    as download
-  * `:content_type` - the content type of the file or binary
-    sent as download. It is automatically inferred from the
-    filename extension
-  * `:disposition` - specifies disposition type
-    (`:attachment` or `:inline`). If `:attachment` was used,
-    user will be prompted to save the file. If `:inline` was used,
-    the browser will attempt to open the file.
-    Defaults to `:attachment`.
-  * `:charset` - the charset of the file, such as "utf-8".
-    Defaults to none
-  * `:offset` - the bytes to offset when reading. Defaults to `0`
-  * `:length` - the total bytes to read. Defaults to `:all`
-  * `:encode` - encodes the filename using `URI.encode/2`.
-    Defaults to `true`. When `false`, disables encoding. If you
-    disable encoding, you need to guarantee there are no special
-    characters in the filename, such as quotes, newlines, etc.
-    Otherwise you can expose your application to security attacks
-
-## Examples
-
-To send a file that is stored inside your application priv
-directory:
-
-    path = Application.app_dir(:my_app, "priv/prospectus.pdf")
-    send_download(conn, {:file, path})
-
-When using `{:file, path}`, the filename is inferred from the
-given path but may also be set explicitly.
-
-To allow the user to download contents that are in memory as
-a binary or string:
-
-    send_download(conn, {:binary, "world"}, filename: "hello.txt")
-
-See `Plug.Conn.send_file/3` and `Plug.Conn.send_resp/3` if you
-would like to access the low-level functions used to send files
-and responses via Plug.
-
-## status_message_from_template(template)
-
-Generates a status message from the template name.
-
-## Examples
-
-    iex> status_message_from_template("404.html")
-    "Not Found"
-    iex> status_message_from_template("whatever.html")
-    "Internal Server Error"
-
-## text(conn, data)
-
-Sends text response.
-
-## Examples
-
-    iex> text(conn, "hello")
-
-    iex> text(conn, :implements_to_string)
-
-## view_module(conn, format \\ nil)
-
-Retrieves the current view for the given format.
-
-If no format is given, takes the current one from the connection.
-
-## view_template(conn)
-
-Returns the template name rendered in the view as a string
-(or nil if no template was rendered).
-
-## action_fallback(plug)
-
-Registers the plug to call as a fallback to the controller action.
-
-A fallback plug is useful to translate common domain data structures
-into a valid `%Plug.Conn{}` response. If the controller action fails to
-return a `%Plug.Conn{}`, the provided plug will be called and receive
-the controller's `%Plug.Conn{}` as it was before the action was invoked
-along with the value returned from the controller action.
-
-## Examples
-
-    defmodule MyController do
-      use Phoenix.Controller
-
-      action_fallback MyFallbackController
-
-      def show(conn, %{"id" => id}, current_user) do
-        with {:ok, post} <- Blog.fetch_post(id),
-             :ok <- Authorizer.authorize(current_user, :view, post) do
-
-          render(conn, "show.json", post: post)
-        end
-      end
-    end
-
-In the above example, `with` is used to match only a successful
-post fetch, followed by valid authorization for the current user.
-In the event either of those fail to match, `with` will not invoke
-the render block and instead return the unmatched value. In this case,
-imagine `Blog.fetch_post/2` returned `{:error, :not_found}` or
-`Authorizer.authorize/3` returned `{:error, :unauthorized}`. For cases
-where these data structures serve as return values across multiple
-boundaries in our domain, a single fallback module can be used to
-translate the value into a valid response. For example, you could
-write the following fallback controller to handle the above values:
-
-    defmodule MyFallbackController do
-      use Phoenix.Controller
-
-      def call(conn, {:error, :not_found}) do
-        conn
-        |> put_status(:not_found)
-        |> put_view(MyErrorView)
-        |> render(:"404")
-      end
-
-      def call(conn, {:error, :unauthorized}) do
-        conn
-        |> put_status(:forbidden)
-        |> put_view(MyErrorView)
-        |> render(:"403")
-      end
-    end
+    assign(conn, name: "Alice", role: :admin)
+    assign(conn, %{name: "Alice", role: :admin})
+    assign(conn, fn %{name: name, logo: logo} -> %{title: Enum.join([name, logo], " | ")} end)

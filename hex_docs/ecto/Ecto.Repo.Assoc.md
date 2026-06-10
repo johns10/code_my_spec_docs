@@ -2,7 +2,7 @@
 
 
 
-## query(rows, assocs, sources, fun)
+## query/4
 
 Transforms a result set based on query assocs, loading
 the associations onto their parent schema.

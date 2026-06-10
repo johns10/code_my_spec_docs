@@ -2,7 +2,17 @@
 
 
 
-## jaro_distance(arg1, arg2)
+## matcher/1
+
+Returns a matcher function that takes two message keys and checks if they
+match.
+
+`String.jaro_distance/2` (which calculates the Jaro distance) is used to
+measure the distance between the two messages. `threshold` is the minimum
+distance that means a match. `{:match, distance}` is returned in case of a
+match, `:nomatch` otherwise.
+
+## jaro_distance/2
 
 Finds the Jaro distance between the msgids of two messages.
 
@@ -13,17 +23,7 @@ of them is a plural message.
 As per `msgmerge`, the msgctxt of a message is completely ignored when
 calculating the distance.
 
-## matcher(threshold)
-
-Returns a matcher function that takes two message keys and checks if they
-match.
-
-`String.jaro_distance/2` (which calculates the Jaro distance) is used to
-measure the distance between the two messages. `threshold` is the minimum
-distance that means a match. `{:match, distance}` is returned in case of a
-match, `:nomatch` otherwise.
-
-## merge(new, existing)
+## merge/2
 
 Merges a message with the corresponding fuzzy match.
 

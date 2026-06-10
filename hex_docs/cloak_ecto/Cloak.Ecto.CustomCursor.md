@@ -41,14 +41,3 @@ requirements:
         [:sequential_id, :inserted_at]
       end
     end
-
-## __cloak_cursor_fields__/0
-
-Returns a list of cursor fields.
-
-## Example
-
-    @impl Cloak.Ecto.CustomCursor
-    def __cloak_cursor_fields__ do
-      [:sequential_id, :inserted_at]
-    end

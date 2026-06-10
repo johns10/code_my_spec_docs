@@ -2,7 +2,7 @@
 
 
 
-## run(sse_data)
+## run/1
 
 Parses a string containing one or more SSE events.
 

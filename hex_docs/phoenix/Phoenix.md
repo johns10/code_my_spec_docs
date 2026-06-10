@@ -4,7 +4,7 @@ This is the documentation for the Phoenix project.
 
 To get started, see our [overview guides](overview.html).
 
-## json_library()
+## json_library/0
 
 Returns the configured JSON encoding library for Phoenix.
 
@@ -13,7 +13,7 @@ in your `config/config.exs`:
 
     config :phoenix, :json_library, AlternativeJsonLibrary
 
-## plug_init_mode()
+## plug_init_mode/0
 
 Returns the `:plug_init_mode` that controls when plugs are
 initialized.

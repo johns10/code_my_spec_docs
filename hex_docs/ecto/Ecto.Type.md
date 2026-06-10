@@ -183,7 +183,40 @@ Alternatively, you can set `@foreign_key_type EncodedId`
 after `@primary_key` to automatically configure the type
 of all `belongs_to` fields.
 
-## base?(atom)
+## primitive?/1
+
+Checks if we have a primitive type.
+
+    iex> primitive?(:string)
+    true
+    iex> primitive?(Another)
+    false
+
+    iex> primitive?({:array, :string})
+    true
+    iex> primitive?({:array, Another})
+    true
+
+## parameterized?/2
+
+Checks if the given type is parameterized by the given module.
+
+    iex> type = Ecto.ParameterizedType.init(Ecto.Enum, values: [a: 1])
+    iex> Ecto.Type.parameterized?(type, Ecto.Enum)
+    true
+    iex> Ecto.Type.parameterized?(type, MyEnum)
+    false
+
+## composite?/1
+
+Checks if the given atom can be used as composite type.
+
+    iex> composite?(:array)
+    true
+    iex> composite?(:string)
+    false
+
+## base?/1
 
 Checks if the given atom can be used as base type.
 
@@ -194,7 +227,112 @@ Checks if the given atom can be used as base type.
     iex> base?(Custom)
     false
 
-## cast(type, value)
+## embed_as/2
+
+Gets how the type is treated inside embeds for the given format.
+
+See `c:embed_as/1`.
+
+## embedded_dump/3
+
+Dumps the `value` for `type` considering it will be embedded in `format`.
+
+## Examples
+
+    iex> Ecto.Type.embedded_dump(:decimal, Decimal.new("1"), :json)
+    {:ok, Decimal.new("1")}
+
+## embedded_load/3
+
+Loads the `value` for `type` considering it was embedded in `format`.
+
+## Examples
+
+    iex> Ecto.Type.embedded_load(:decimal, "1", :json)
+    {:ok, Decimal.new("1")}
+
+## type/1
+
+Retrieves the underlying schema type for the given, possibly custom, type.
+
+    iex> type(:string)
+    :string
+    iex> type(Ecto.UUID)
+    :uuid
+
+    iex> type({:array, :string})
+    {:array, :string}
+    iex> type({:array, Ecto.UUID})
+    {:array, :uuid}
+
+    iex> type({:map, Ecto.UUID})
+    {:map, :uuid}
+
+## match?/2
+
+Checks if a given type matches with a primitive type
+that can be found in queries.
+
+    iex> match?(:string, :any)
+    true
+    iex> match?(:any, :string)
+    true
+    iex> match?(:string, :string)
+    true
+
+    iex> match?({:array, :string}, {:array, :any})
+    true
+
+    iex> match?(Ecto.UUID, :uuid)
+    true
+    iex> match?(Ecto.UUID, :string)
+    false
+
+## dump/3
+
+Dumps a value to the given type.
+
+Opposite to casting, dumping requires the returned value
+to be a valid Ecto type, as it will be sent to the
+underlying data store.
+
+    iex> dump(:string, nil)
+    {:ok, nil}
+    iex> dump(:string, "foo")
+    {:ok, "foo"}
+
+    iex> dump(:integer, 1)
+    {:ok, 1}
+    iex> dump(:integer, "10")
+    :error
+
+    iex> dump(:binary, "foo")
+    {:ok, "foo"}
+    iex> dump(:binary, 1)
+    :error
+
+    iex> dump({:array, :integer}, [1, 2, 3])
+    {:ok, [1, 2, 3]}
+    iex> dump({:array, :integer}, [1, "2", 3])
+    :error
+    iex> dump({:array, :binary}, ["1", "2", "3"])
+    {:ok, ["1", "2", "3"]}
+
+## load/3
+
+Loads a value with the given type.
+
+    iex> load(:string, nil)
+    {:ok, nil}
+    iex> load(:string, "foo")
+    {:ok, "foo"}
+
+    iex> load(:integer, 1)
+    {:ok, 1}
+    iex> load(:integer, "10")
+    :error
+
+## cast/2
 
 Casts a value to the given type.
 
@@ -276,7 +414,7 @@ NaN and infinite decimals are not supported, use custom types instead.
     iex> cast(:utc_datetime, "2014-04-17T12:00:00-02:00")
     {:ok, ~U[2014-04-17 14:00:00Z]}
 
-## cast!(type, value)
+## cast!/2
 
 Casts a value to the given type or raises an error.
 
@@ -294,70 +432,7 @@ See `cast/2` for more information.
     iex> Ecto.Type.cast!(:integer, 1.0)
     ** (Ecto.CastError) cannot cast 1.0 to :integer
 
-## composite?(atom)
-
-Checks if the given atom can be used as composite type.
-
-    iex> composite?(:array)
-    true
-    iex> composite?(:string)
-    false
-
-## dump(type, value, dumper \\ &dump/2)
-
-Dumps a value to the given type.
-
-Opposite to casting, dumping requires the returned value
-to be a valid Ecto type, as it will be sent to the
-underlying data store.
-
-    iex> dump(:string, nil)
-    {:ok, nil}
-    iex> dump(:string, "foo")
-    {:ok, "foo"}
-
-    iex> dump(:integer, 1)
-    {:ok, 1}
-    iex> dump(:integer, "10")
-    :error
-
-    iex> dump(:binary, "foo")
-    {:ok, "foo"}
-    iex> dump(:binary, 1)
-    :error
-
-    iex> dump({:array, :integer}, [1, 2, 3])
-    {:ok, [1, 2, 3]}
-    iex> dump({:array, :integer}, [1, "2", 3])
-    :error
-    iex> dump({:array, :binary}, ["1", "2", "3"])
-    {:ok, ["1", "2", "3"]}
-
-## embed_as(base, format)
-
-Gets how the type is treated inside embeds for the given format.
-
-See `c:embed_as/1`.
-
-## embedded_dump(type, value, format)
-
-Dumps the `value` for `type` considering it will be embedded in `format`.
-
-## Examples
-
-    iex> Ecto.Type.embedded_dump(:decimal, Decimal.new("1"), :json)
-    {:ok, Decimal.new("1")}
-
-## embedded_load(type, value, format)
-
-Loads the `value` for `type` considering it was embedded in `format`.
-
-## Examples
-
-    iex> Ecto.Type.embedded_load(:decimal, "1", :json)
-    {:ok, Decimal.new("1")}
-
-## equal?(type, term1, term2)
+## equal?/3
 
 Checks if two terms are equal.
 
@@ -370,11 +445,7 @@ Depending on the given `type` performs a structural or semantical comparison.
     iex> equal?(:decimal, Decimal.new("1"), Decimal.new("1.00"))
     true
 
-## format(type)
-
-Format type for error messaging and logs.
-
-## include?(type, term, collection)
+## include?/3
 
 Checks if `collection` includes a `term`.
 
@@ -387,164 +458,6 @@ Depending on the given `type` performs a structural or semantical comparison.
     iex> include?(:decimal, Decimal.new("1"), [Decimal.new("1.00"), Decimal.new("2.00")])
     true
 
-## load(type, value, loader \\ &load/2)
+## format/1
 
-Loads a value with the given type.
-
-    iex> load(:string, nil)
-    {:ok, nil}
-    iex> load(:string, "foo")
-    {:ok, "foo"}
-
-    iex> load(:integer, 1)
-    {:ok, 1}
-    iex> load(:integer, "10")
-    :error
-
-## match?(schema_type, query_type)
-
-Checks if a given type matches with a primitive type
-that can be found in queries.
-
-    iex> match?(:string, :any)
-    true
-    iex> match?(:any, :string)
-    true
-    iex> match?(:string, :string)
-    true
-
-    iex> match?({:array, :string}, {:array, :any})
-    true
-
-    iex> match?(Ecto.UUID, :uuid)
-    true
-    iex> match?(Ecto.UUID, :string)
-    false
-
-## parameterized?(arg1, module)
-
-Checks if the given type is parameterized by the given module.
-
-    iex> type = Ecto.ParameterizedType.init(Ecto.Enum, values: [a: 1])
-    iex> Ecto.Type.parameterized?(type, Ecto.Enum)
-    true
-    iex> Ecto.Type.parameterized?(type, MyEnum)
-    false
-
-## primitive?(base)
-
-Checks if we have a primitive type.
-
-    iex> primitive?(:string)
-    true
-    iex> primitive?(Another)
-    false
-
-    iex> primitive?({:array, :string})
-    true
-    iex> primitive?({:array, Another})
-    true
-
-## type(type)
-
-Retrieves the underlying schema type for the given, possibly custom, type.
-
-    iex> type(:string)
-    :string
-    iex> type(Ecto.UUID)
-    :uuid
-
-    iex> type({:array, :string})
-    {:array, :string}
-    iex> type({:array, Ecto.UUID})
-    {:array, :uuid}
-
-    iex> type({:map, Ecto.UUID})
-    {:map, :uuid}
-
-## autogenerate/0
-
-Generates a loaded version of the data.
-
-This is callback is invoked when a custom type is given
-to `field` with the `:autogenerate` flag.
-
-## cast/1
-
-Casts the given input to the custom type.
-
-This callback is called on external input and can return any type,
-as long as the `dump/1` function is able to convert the returned
-value into an Ecto native type. There are two situations where
-this callback is called:
-
-  1. When casting values by `Ecto.Changeset`
-  2. When passing arguments to `Ecto.Query`
-
-You can return `:error` if the given term cannot be cast.
-A default error message of "is invalid" will be added to the
-changeset.
-
-You may also return `{:error, keyword()}` to customize the
-changeset error message and its metadata. Passing a `:message`
-key, will override the default message. It is not possible to
-override the `:type` key.
-
-For `{:array, CustomType}` or `{:map, CustomType}` the returned
-keyword list will be erased and the default error will be shown.
-
-## dump/1
-
-Dumps the given term into an Ecto native type.
-
-This callback is called with any term that was stored in the struct
-and it needs to validate them and convert it to an Ecto native type.
-
-## embed_as/1
-
-Dictates how the type should be treated inside embeds.
-
-By default, the type is sent as itself, without calling
-dumping to keep the higher level representation. But
-it can be set to `:dump` so that it is dumped before
-being encoded.
-
-## equal?/2
-
-Checks if two terms are semantically equal.
-
-This callback is used for determining equality of types in
-`Ecto.Changeset`.
-
-By default the terms are compared with the equal operator `==/2`.
-
-## load/1
-
-Loads the given term into a custom type.
-
-This callback is called when loading data from the database and
-receives an Ecto native type. It can return any type, as long as
-the `dump/1` function is able to convert the returned value back
-into an Ecto native type.
-
-## type/0
-
-Returns the underlying schema type for the custom type.
-
-For example, if you want to provide your own date
-structures, the type function should return `:date`.
-
-Note this function is not required to return Ecto primitive
-types, the type is only required to be known by the adapter.
-
-## t/0
-
-An Ecto type, primitive or custom.
-
-## primitive/0
-
-Primitive Ecto types (handled by Ecto).
-
-## custom/0
-
-Custom types are represented by user-defined modules.
+Format type for error messaging and logs.

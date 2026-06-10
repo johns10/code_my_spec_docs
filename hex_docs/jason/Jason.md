@@ -2,7 +2,7 @@
 
 A blazing fast JSON parser and generator in pure Elixir.
 
-## decode(input, opts \\ [])
+## decode/2
 
 Parses a JSON value from `input` iodata.
 
@@ -47,7 +47,7 @@ on user-controlled data.
     iex> Jason.decode("invalid")
     {:error, %Jason.DecodeError{data: "invalid", position: 0, token: nil}}
 
-## decode!(input, opts \\ [])
+## decode!/2
 
 Parses a JSON value from `input` iodata.
 
@@ -62,7 +62,7 @@ in case of errors.
     iex> Jason.decode!("invalid")
     ** (Jason.DecodeError) unexpected byte at position 0: 0x69 ("i")
 
-## encode(input, opts \\ [])
+## encode/2
 
 Generates JSON corresponding to `input`.
 
@@ -102,7 +102,7 @@ for custom data types.
     iex> Jason.encode("\xFF")
     {:error, %Jason.EncodeError{message: "invalid byte 0xFF in <<255>>"}}
 
-## encode!(input, opts \\ [])
+## encode!/2
 
 Generates JSON corresponding to `input`.
 
@@ -117,7 +117,7 @@ in case of errors.
     iex> Jason.encode!("\xFF")
     ** (Jason.EncodeError) invalid byte 0xFF in <<255>>
 
-## encode_to_iodata(input, opts \\ [])
+## encode_to_iodata/2
 
 Generates JSON corresponding to `input` and returns iodata.
 
@@ -136,7 +136,7 @@ resulting string, lowering memory use and increasing performance.
     iex> Jason.encode_to_iodata("\xFF")
     {:error, %Jason.EncodeError{message: "invalid byte 0xFF in <<255>>"}}
 
-## encode_to_iodata!(input, opts \\ [])
+## encode_to_iodata!/2
 
 Generates JSON corresponding to `input` and returns iodata.
 

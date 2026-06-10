@@ -2,7 +2,7 @@
 
 
 
-## opens_inline_code(map)
+## opens_inline_code/1
 
 Indicates if the _numbered_line_ passed in leaves an inline code block open.
 
@@ -11,7 +11,7 @@ and the second the linenumber of the _numbered_line_
 
 Otherwise `{nil, 0}` is returned
 
-## still_inline_code(map, old)
+## still_inline_code/2
 
 returns false if and only if the line closes a pending inline code
 *without* opening a new one.

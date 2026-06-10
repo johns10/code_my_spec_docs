@@ -46,7 +46,7 @@ See `c:Tesla.Adapter.call/2` for details.
       defp normalize_response(env, status, headers, body), do: %Tesla.Env{env | ...}
     end
 
-## opts(defaults \\ [], env, opts)
+## opts/3
 
 Helper function that merges all adapter options.
 
@@ -68,16 +68,3 @@ The options are merged in the following order of precedence (highest to lowest):
 This means that options specified in `env.opts[:adapter]` will override any
 conflicting options from the other sources, allowing for fine-grained control
 on a per-request basis.
-
-## call/2
-
-Invoked when a request runs.
-
-## Arguments
-
-- `env` - `t:Tesla.Env.t/0` struct that stores request/response data.
-- `options` - middleware options provided by user.
-
-## options/0
-
-Unstructured data passed to the adapter using `opts[:adapter]`.

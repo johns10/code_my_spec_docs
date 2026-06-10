@@ -12,7 +12,3 @@ A proposal for a link between a Google Analytics property and a Display & Video 
 *   `linkProposalStatusDetails` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaLinkProposalStatusDetails.t`, *default:* `nil`) - Output only. The status information for this link proposal.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. The resource name for this DisplayVideo360AdvertiserLinkProposal resource. Format: properties/{propertyId}/displayVideo360AdvertiserLinkProposals/{proposalId} Note: proposalId is not the Display & Video 360 Advertiser ID
 *   `validationEmail` (*type:* `String.t`, *default:* `nil`) - Input only. On a proposal being sent to Display & Video 360, this field must be set to the email address of an admin on the target advertiser. This is used to verify that the Google Analytics admin is aware of at least one admin on the Display & Video 360 Advertiser. This does not restrict approval of the proposal to a single user. Any admin on the Display & Video 360 Advertiser may approve the proposal.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

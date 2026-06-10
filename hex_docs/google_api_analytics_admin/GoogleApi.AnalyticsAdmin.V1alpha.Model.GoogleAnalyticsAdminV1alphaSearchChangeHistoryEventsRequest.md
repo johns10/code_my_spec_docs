@@ -12,7 +12,3 @@ Request message for SearchChangeHistoryEvents RPC.
 *   `pageToken` (*type:* `String.t`, *default:* `nil`) - Optional. A page token, received from a previous `SearchChangeHistoryEvents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `SearchChangeHistoryEvents` must match the call that provided the page token.
 *   `property` (*type:* `String.t`, *default:* `nil`) - Optional. Resource name for a child property. If set, only return changes made to this property or its child resources. Format: properties/{propertyId} Example: `properties/100`
 *   `resourceType` (*type:* `list(String.t)`, *default:* `nil`) - Optional. If set, only return changes if they are for a resource that matches at least one of these types.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

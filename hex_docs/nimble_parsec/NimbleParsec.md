@@ -1,599 +1,118 @@
 # NimbleParsec
 
-`NimbleParsec` is a simple and fast library for text-based parser
-combinators.
 
-Combinators are composed programmatically and compiled into multiple
-clauses with binary matching. This provides the following benefits:
 
-  * Performance: since it compiles to binary matching, it leverages
-    many Erlang VM optimizations to generate a fast parser code with
-    low memory usage
+## defparsec/3
 
-  * Composable: this library does not rely on macros for building and
-    composing parsers, therefore they are fully composable. The only
-    macros are `defparsec/3` and `defparsecp/3` which emit the compiled
-    clauses with  binary matching
+Defines a parser (and a combinator) with the given `name` and `opts`.
 
-  * No runtime dependency: after compilation, the generated parser
-    clauses have no runtime dependency on `NimbleParsec`. This opens up
-    the possibility to compile parsers and do not impose a dependency on
-    users of your library
+The parser is a function that receives two arguments, the binary
+to be parsed and a set of options. You can consult the documentation
+of the generated parser function for more information.
 
-  * No footprints: `NimbleParsec` only needs to be imported in your modules.
-    There is no need for `use NimbleParsec`, leaving no footprints on your
-    modules
+This function will also define a combinator that can be used as
+`parsec(name)` when building other parsers. See `parsec/2` for
+more information on invoking compiled combinators.
 
-The goal of this library is to focus on a set of primitives for writing
-efficient parser combinators. The composition aspect means you should be
-able to use those primitives to implement higher level combinators.
+## Beware!
 
-Note this library does not handle low-level binary parsing. In such cases,
-we recommend using [Elixir's bitstring syntax](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1).
-
-## Examples
-
-```elixir
-defmodule MyParser do
-  import NimbleParsec
-
-  date =
-    integer(4)
-    |> ignore(string("-"))
-    |> integer(2)
-    |> ignore(string("-"))
-    |> integer(2)
-
-  time =
-    integer(2)
-    |> ignore(string(":"))
-    |> integer(2)
-    |> ignore(string(":"))
-    |> integer(2)
-    |> optional(string("Z"))
-
-  defparsec :datetime, date |> ignore(string("T")) |> concat(time), debug: true
-end
-
-MyParser.datetime("2010-04-17T14:12:34Z")
-#=> {:ok, [2010, 4, 17, 14, 12, 34, "Z"], "", %{}, {1, 0}, 20}
-```
-
-If you add `debug: true` to `defparsec/3`, it will print the generated
-clauses, which are shown below:
-
-```elixir
-defp datetime__0(<<x0, x1, x2, x3, "-", x4, x5, "-", x6, x7, "T",
-                   x8, x9, ":", x10, x11, ":", x12, x13, rest::binary>>,
-                 acc, stack, comb__context, comb__line, comb__column)
-     when x0 >= 48 and x0 <= 57 and (x1 >= 48 and x1 <= 57) and
-         (x2 >= 48 and x2 <= 57) and (x3 >= 48 and x3 <= 57) and
-         (x4 >= 48 and x4 <= 57) and (x5 >= 48 and x5 <= 57) and
-         (x6 >= 48 and x6 <= 57) and (x7 >= 48 and x7 <= 57) and
-         (x8 >= 48 and x8 <= 57) and (x9 >= 48 and x9 <= 57) and
-         (x10 >= 48 and x10 <= 57) and (x11 >= 48 and x11 <= 57) and
-         (x12 >= 48 and x12 <= 57) and (x13 >= 48 and x13 <= 57) do
-  datetime__1(
-    rest,
-    [(x13 - 48) * 1 + (x12 - 48) * 10, (x11 - 48) * 1 + (x10 - 48) * 10,
-     (x9 - 48) * 1 + (x8 - 48) * 10, (x7 - 48) * 1 + (x6 - 48) * 10, (x5 - 48) * 1 + (x4 - 48) * 10,
-     (x3 - 48) * 1 + (x2 - 48) * 10 + (x1 - 48) * 100 + (x0 - 48) * 1000] ++ acc,
-    stack,
-    comb__context,
-    comb__line,
-    comb__column + 19
-  )
-end
-
-defp datetime__0(rest, acc, _stack, context, line, column) do
-  {:error, "...", rest, context, line, column}
-end
-
-defp datetime__1(<<"Z", rest::binary>>, acc, stack, comb__context, comb__line, comb__column) do
-  datetime__2(rest, ["Z"] ++ acc, stack, comb__context, comb__line, comb__column + 1)
-end
-
-defp datetime__1(rest, acc, stack, context, line, column) do
-  datetime__2(rest, acc, stack, context, line, column)
-end
-
-defp datetime__2(rest, acc, _stack, context, line, column) do
-  {:ok, acc, rest, context, line, column}
-end
-```
-
-As you can see, it generates highly inlined code, comparable to
-hand-written parsers. This gives `NimbleParsec` an order of magnitude
-performance gains compared to other parser combinators. Further performance
-can be gained by giving the `inline: true` option to `defparsec/3`.
-
-## ascii_char(combinator \\ empty(), ranges)
-
-Defines a single ASCII codepoint in the given ranges.
-
-`ranges` is a list containing one of:
-
-  * a `min..max` range expressing supported codepoints
-  * a `codepoint` integer expressing a supported codepoint
-  * `{:not, min..max}` expressing not supported codepoints
-  * `{:not, codepoint}` expressing a not supported codepoint
-
-## Examples
+`defparsec/3` is executed during compilation. This means you can't
+invoke a function defined in the same module. The following will error
+because the `date` function has not yet been defined:
 
     defmodule MyParser do
       import NimbleParsec
 
-      defparsec :digit_and_lowercase,
-                empty()
-                |> ascii_char([?0..?9])
-                |> ascii_char([?a..?z])
-    end
-
-    MyParser.digit_and_lowercase("1a")
-    #=> {:ok, [?1, ?a], "", %{}, {1, 0}, 2}
-
-    MyParser.digit_and_lowercase("a1")
-    #=> {:error, "expected ASCII character in the range '0' to '9', followed by ASCII character in the range 'a' to 'z'", "a1", %{}, {1, 0}, 0}
-
-## ascii_string(combinator \\ empty(), range, count_or_opts)
-
-Defines an ASCII string combinator with an exact length or `min` and `max`
-length.
-
-The `ranges` specify the allowed characters in the ASCII string.
-See `ascii_char/2` for more information.
-
-If you want a string of unknown size, use `ascii_string(ranges, min: 1)`.
-If you want a literal string, use `string/2`.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :two_lowercase_letters, ascii_string([?a..?z], 2)
-    end
-
-    MyParser.two_lowercase_letters("abc")
-    #=> {:ok, ["ab"], "c", %{}, {1, 0}, 2}
-
-## byte_offset(combinator \\ empty(), to_wrap)
-
-Puts the result of the given combinator as the first element
-of a tuple with the `byte_offset` as second element.
-
-`byte_offset` is a non-negative integer.
-
-## bytes(combinator \\ empty(), count)
-
-Defines a combinator to consume the next `n` bytes from the input.
-
-## Examples
-
-      defmodule MyParser do
-        import NimbleParsec
-
-        defparsec :three_bytes, bytes(3)
+      def date do
+        integer(4)
+        |> ignore(string("-"))
+        |> integer(2)
+        |> ignore(string("-"))
+        |> integer(2)
       end
 
-      MyParser.three_bytes("abc")
-      #=> {:ok, ["abc"], "", %{}, {1, 0}, 3}
+      defparsec :date, date()
+    end
 
-      MyParser.three_bytes("ab")
-      #=> {:error, "expected 3 bytes", "ab", %{}, {1, 0}, 0}
-
-## choice(combinator \\ empty(), choices, opts \\ [])
-
-Chooses one of the given combinators.
-
-Expects at least two choices.
-
-## Beware! Char combinators
-
-Note both `utf8_char/2` and `ascii_char/2` allow multiple ranges to
-be given. Therefore, instead this:
-
-    choice([
-      ascii_char([?a..?z]),
-      ascii_char([?A..?Z]),
-    ])
-
-One should simply prefer:
-
-    ascii_char([?a..?z, ?A..?Z])
-
-As the latter is compiled more efficiently by `NimbleParsec`.
-
-## Beware! Always successful combinators
-
-If a combinator that always succeeds is given as a choice, that choice
-will always succeed which may lead to unused function warnings since
-any further choice won't ever be attempted. For example, because `repeat/2`
-always succeeds, the `string/2` combinator below it won't ever run:
-
-    choice([
-      repeat(ascii_char([?0..?9])),
-      string("OK")
-    ])
-
-Instead of `repeat/2`, you may want to use `times/3` with the flags `:min`
-and `:max`.
-
-## Beware! Overlapping choices
-
-In case choices overlap, there is no guarantee which error will be the one
-effectively returned. For example, imagine this choice:
-
-    choice([
-      string("<abc>foo</abc>"),
-      string("<abc>")
-    ]
-
-Since both choices can be activated for an input starting with "abc",
-NimbleParsec guarantees it will return the error from one of them, but
-not which.
-
-## concat(left, right)
-
-Concatenates two combinators.
-
-## Examples
+This can be solved in different ways. You may simply
+compose a long parser using variables. For example:
 
     defmodule MyParser do
       import NimbleParsec
 
-      defparsec :digit_upper_lower_plus,
-                concat(
-                  concat(ascii_char([?0..?9]), ascii_char([?A..?Z])),
-                  concat(ascii_char([?a..?z]), ascii_char([?+..?+]))
-                )
+      date =
+        integer(4)
+        |> ignore(string("-"))
+        |> integer(2)
+        |> ignore(string("-"))
+        |> integer(2)
+
+      defparsec :date, date
     end
 
-    MyParser.digit_upper_lower_plus("1Az+")
-    #=> {:ok, [?1, ?A, ?z, ?+], "", %{}, {1, 0}, 4}
+Alternatively, you may define a `Helpers` module with many
+convenience combinators, and then invoke them in your parser
+module:
 
-## debug(combinator \\ empty(), to_debug)
+    defmodule MyParser.Helpers do
+      import NimbleParsec
 
-Inspects the combinator state given to `to_debug` with the given `opts`.
-
-## duplicate(combinator \\ empty(), to_duplicate, n)
-
-Duplicates the combinator `to_duplicate` `n` times.
-
-## empty()
-
-Returns an empty combinator.
-
-An empty combinator cannot be compiled on its own.
-
-## eos(combinator \\ empty())
-
-Defines an end of string combinator.
-
-The end of string does not produce a token and can be parsed multiple times.
-This function is useful to avoid having to check for an empty remainder after
-a successful parse.
-
-## Examples
+      def date do
+        integer(4)
+        |> ignore(string("-"))
+        |> integer(2)
+        |> ignore(string("-"))
+        |> integer(2)
+      end
+    end
 
     defmodule MyParser do
       import NimbleParsec
+      import MyParser.Helpers
 
-      defparsec :letter_pairs, utf8_string([], 2) |> repeat() |> eos()
+      defparsec :date, date()
     end
 
-    MyParser.letter_pairs("hi")
-    #=> {:ok, ["hi"], "", %{}, {1, 0}, 2}
+The approach of using helper modules is the favorite way
+of composing parsers in `NimbleParsec`.
 
-    MyParser.letter_pairs("hello")
-    #=> {:error, "expected end of string", "o", %{}, {1, 0}, 4}
+## Options
 
-## eventually(combinator \\ empty(), eventually)
+  * `:inline` - when true, inlines clauses that work as redirection for
+    other clauses. Settings this may improve runtime performance at the
+    cost of increased compilation time and bytecode size
 
-Marks the given combinator should appear eventually.
+  * `:debug` - when true, writes generated clauses to `:stderr` for debugging
 
-Any other data before the combinator appears is discarded.
-If the combinator never appears, then it is an error.
+  * `:export_combinator` - make the underlying combinator function public
+    so it can be used as part of `parsec/1` from other modules
 
-**Note:** this can be potentially a very expensive operation
-as it executes the given combinator byte by byte until finding
-an eventual match or ultimately failing. For example, if you
-are looking for an integer, it is preferable to discard
-everything that is not an integer
+  * `:export_metadata` - export metadata necessary to use this parser
+    combinator to generate inputs
 
-    ignore(ascii_string([not: ?0..?9]))
+## defparsecp/3
 
-rather than eventually look for an integer
+Defines a private parser (and a combinator) with the given `name` and `opts`.
 
-    eventually(ascii_string([?0..?9]))
+The same as `defparsec/3` but the parsing function is private.
 
-## Examples
+## defcombinator/3
 
-    defmodule MyParser do
-      import NimbleParsec
+Defines a combinator with the given `name` and `opts`.
 
-      hour = integer(min: 1, max: 2)
-      defparsec :extract_hour, eventually(hour)
-    end
+It is similar to `defparsec/3` except it does not define
+an entry-point parsing function, just the combinator function
+to be used with `parsec/2`.
 
-    MyParser.extract_hour("let's meet at 12?")
-    #=> {:ok, [12], "?", %{}, {1, 0}, 16}
+## defcombinatorp/3
 
-## generate(parsecs)
+Defines a combinator with the given `name` and `opts`.
 
-Generate a random binary from the given parsec.
+It is similar to `defparsecp/3` except it does not define
+an entry-point parsing function, just the combinator function
+to be used with `parsec/2`.
 
-Let's see an example:
-
-    import NimbleParsec
-    generate(choice([string("foo"), string("bar")]))
-
-The command above will return either "foo" or "bar". `generate/1`
-is often used with pre-defined parsecs. In this case, the
-`:export_metadata` flag must be set:
-
-    defmodule SomeModule do
-      import NimbleParsec
-      defparsec :parse,
-                choice([string("foo"), string("bar")]),
-                export_metadata: true
-    end
-
-    # Reference the parsec and generate from it
-    NimbleParsec.parsec({SomeModule, :parse})
-    |> NimbleParsec.generate()
-    |> IO.puts()
-
-`generate/1` can often run forever for recursive algorithms.
-Read the notes below and make use of the `gen_weight` and `gen_times`
-option to certain parsecs to control the recursion depth.
-
-## Notes
-
-Overall, there is no guarantee over the generated output, except
-that it will generate a binary that is parseable by the parsec
-itself, but even this guarantee may be broken by parsers that have
-custom validations. Keep in mind the following:
-
-  * `generate/1` is not compatible with NimbleParsecs dumped via
-    `mix nimble_parsec.compile`;
-
-  * `parsec/2` requires the referenced parsec to set `export_metadata: true`
-    on its definition;
-
-  * `choice/2` will be generated evenly. You can pass `:gen_weights`
-    as a list of positive integer weights to balance your choices.
-    This is particularly important for recursive algorithms;
-
-  * `repeat/2` and `repeat_while/3` will repeat between 0 and 3 times unless
-    a `:gen_times` option is given to these operations. `times/3` without a `:max`
-    will also additionally repeat between 0 and 3 times unless `:gen_times` is given.
-    The `:gen_times` option can either be an integer as the number of times to
-    repeat or a range where a random value in the range will be picked;
-
-  * `eventually/2` always generates the eventually parsec immediately;
-
-  * `lookahead/2` and `lookahead_not/2` are simply discarded;
-
-  * Validations done in any of the traverse definitions are not taken into account
-    by the generator. Therefore, if a parsec does validations, the generator may
-    generate binaries invalid to said parsec;
-
-## ignore(combinator \\ empty(), to_ignore)
-
-Ignores the output of combinator given in `to_ignore`.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :ignorable, string("T") |> ignore() |> integer(2)
-    end
-
-    MyParser.ignorable("T12")
-    #=> {:ok, [12], "", %{}, {1, 0}, 2}
-
-## integer(combinator \\ empty(), count_or_opts)
-
-Defines an integer combinator with exact length or `min` and `max`
-length.
-
-If you want an integer of unknown size, use `integer(min: 1)`.
-
-This combinator does not parse the sign and is always on base 10.
-
-## Examples
-
-With exact length:
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :two_digits_integer, integer(2)
-    end
-
-    MyParser.two_digits_integer("123")
-    #=> {:ok, [12], "3", %{}, {1, 0}, 2}
-
-    MyParser.two_digits_integer("1a3")
-    #=> {:error, "expected ASCII character in the range '0' to '9', followed by ASCII character in the range '0' to '9'", "1a3", %{}, {1, 0}, 0}
-
-With min and max:
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :two_digits_integer, integer(min: 2, max: 4)
-    end
-
-    MyParser.two_digits_integer("123")
-    #=> {:ok, [123], "", %{}, {1, 0}, 2}
-
-    MyParser.two_digits_integer("1a3")
-    #=> {:error, "expected ASCII character in the range '0' to '9', followed by ASCII character in the range '0' to '9'", "1a3", %{}, {1, 0}, 0}
-
-If the size of the integer has a min and max close to each other, such as
-from 2 to 4 or from 1 to 2, using choice may emit more efficient code:
-
-    choice([integer(4), integer(3), integer(2)])
-
-Note you should start from bigger to smaller.
-
-## label(combinator \\ empty(), to_label, label)
-
-Adds a label to the combinator to be used in error reports.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :digit_and_lowercase,
-                empty()
-                |> ascii_char([?0..?9])
-                |> ascii_char([?a..?z])
-                |> label("digit followed by lowercase letter")
-    end
-
-    MyParser.digit_and_lowercase("1a")
-    #=> {:ok, [?1, ?a], "", %{}, {1, 0}, 2}
-
-    MyParser.digit_and_lowercase("a1")
-    #=> {:error, "expected a digit followed by lowercase letter", "a1", %{}, {1, 0}, 0}
-
-## line(combinator \\ empty(), to_wrap)
-
-Puts the result of the given combinator as the first element
-of a tuple with the `line` as second element.
-
-`line` is a tuple where the first element is the current line
-and the second element is the byte offset immediately after
-the newline.
-
-## lookahead(combinator \\ empty(), to_lookahead)
-
-Checks if a combinator is ahead.
-
-If it succeeds, it continues as usual, otherwise it aborts the
-closest `choice/2`, `repeat/2`, etc. If there is no closest
-operation to abort, then it errors.
-
-Note a lookahead never changes the accumulated output nor the
-context.
-
-## Examples
-
-For example, imagine you want to parse a language that has the
-keywords "if" and "while" and identifiers made of any letters or
-number, where keywords and identifiers can be separated by a
-single white space:
-
-    defmodule IfWhileLang do
-      import NimbleParsec
-
-      keyword =
-        choice([
-          string("if") |> replace(:if),
-          string("while") |> replace(:while)
-        ])
-
-      identifier =
-        ascii_string([?a..?z, ?A..?Z, ?0..?9], min: 1)
-
-      defparsec :expr, repeat(choice([keyword, identifier]) |> optional(string(" ")))
-    end
-
-The issue with the implementation above is that the following
-will parse:
-
-    IfWhileLang.expr("iffy")
-    {:ok, [:if, "fy"], "", %{}, {1, 0}, 4}
-
-However, "iffy" should be treated as a full identifier. We could
-solve this by inverting the order of `keyword` and `identifier`
-in `:expr` but that means "if" itself will be considered an identifier
-and not a keyword. To solve this, we need lookaheads.
-
-One option is to check that after the keyword we either have an
-empty string OR the end of the string:
-
-    keyword =
-      choice([
-        string("if") |> replace(:if),
-        string("while") |> replace(:while)
-      ])
-      |> lookahead(choice([string(" "), eos()]))
-
-However, in this case, a negative lookahead may be clearer,
-and we can assert that we don't have any identifier character after
-the keyword:
-
-    keyword =
-      choice([
-        string("if") |> replace(:if),
-        string("while") |> replace(:while)
-      ])
-      |> lookahead_not(ascii_char([?a..?z, ?A..?Z, ?0..?9]))
-
-Now we get the desired result back:
-
-    IfWhileLang.expr("iffy")
-    #=> {:ok, ["iffy"], "", %{}, {1, 0}, 4}
-
-    IfWhileLang.expr("if fy")
-    #=> {:ok, [:if, " ", "fy"], "", %{}, {1, 0}, 5}
-
-## lookahead_not(combinator \\ empty(), to_lookahead)
-
-Checks if a combinator is not ahead.
-
-If it succeeds, it aborts the closest `choice/2`, `repeat/2`, etc.
-Otherwise it continues as usual. If there is no closest operation
-to abort, then it errors.
-
-Note a lookahead never changes the accumulated output nor the
-context.
-
-For an example, see `lookahead/2`.
-
-## map(combinator \\ empty(), to_map, call)
-
-Maps over the combinator results with the remote or local function in `call`.
-
-`call` is either a `{module, function, args}` representing
-a remote call, a `{function, args}` representing a local call
-or an atom `function` representing `{function, []}`.
-
-Each parser result will be invoked individually for the `call`.
-Each result be prepended to the given `args`. The `args` will
-be injected at the compile site and therefore must be escapable
-via `Macro.escape/1`.
-
-See `post_traverse/3` for a low level version of this function.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :letters_to_string_chars,
-                ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> map({Integer, :to_string, []})
-    end
-
-    MyParser.letters_to_string_chars("abc")
-    #=> {:ok, ["97", "98", "99"], "", %{}, {1, 0}, 3}
-
-## optional(combinator \\ empty(), optional)
-
-Marks the given combinator as `optional`.
-
-It is equivalent to `choice([combinator, empty()])`.
-
-## parsec(combinator \\ empty(), name)
+## parsec/2
 
 Invokes an already compiled combinator with name `name` in the
 same module.
@@ -777,60 +296,27 @@ When using `defcombinatorp`, you can no longer invoke
 `SimpleXML.xml(xml)` as there is no associated parsing function.
 You can only access the combinator above via `parsec/2`.
 
-## post_traverse(combinator \\ empty(), to_post_traverse, call)
+## duplicate/3
 
-Traverses the combinator results with the remote or local function `call`.
+Duplicates the combinator `to_duplicate` `n` times.
 
-`call` is either a `{module, function, args}` representing
-a remote call, a `{function, args}` representing a local call
-or an atom `function` representing `{function, []}`.
+## byte_offset/2
 
-The function given in `call` will receive 5 additional arguments.
-The rest of the parsed binary, the parser results to be post_traversed,
-the parser context, the current line and the current offset will
-be prepended to the given `args`. The `args` will be injected at
-the compile site and therefore must be escapable via `Macro.escape/1`.
+Puts the result of the given combinator as the first element
+of a tuple with the `byte_offset` as second element.
 
-The line and offset will represent the location after the combinators.
-To retrieve the position before the combinators, use `pre_traverse/3`.
+`byte_offset` is a non-negative integer.
 
-The `call` must return a tuple `{rest, acc, context}` with list of
-results to be added to the accumulator as first argument and a context
-as second argument. It may also return `{:error, reason}` to stop
-processing. Notice the received results are in reverse order and
-must be returned in reverse order too.
+## line/2
 
-The number of elements returned does not need to be
-the same as the number of elements given.
+Puts the result of the given combinator as the first element
+of a tuple with the `line` as second element.
 
-This is a low-level function for changing the parsed result.
-On top of this function, other functions are built, such as
-`map/3` if you want to map over each individual element and
-not worry about ordering, `reduce/3` to reduce all elements
-into a single one, `replace/3` if you want to replace the
-parsed result by a single value and `ignore/2` if you want to
-ignore the parsed result.
+`line` is a tuple where the first element is the current line
+and the second element is the byte offset immediately after
+the newline.
 
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :letters_to_chars,
-                ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> post_traverse({:join_and_wrap, ["-"]})
-
-      defp join_and_wrap(rest, args, context, _line, _offset, joiner) do
-        {rest, args |> Enum.join(joiner) |> List.wrap(), context}
-      end
-    end
-
-    MyParser.letters_to_chars("abc")
-    #=> {:ok, ["99-98-97"], "", %{}, {1, 0}, 3}
-
-## pre_traverse(combinator \\ empty(), to_pre_traverse, call)
+## pre_traverse/3
 
 The same as `post_traverse/3` but receives the line and offset
 from before the wrapped combinators.
@@ -839,7 +325,7 @@ from before the wrapped combinators.
 information. Use `pre_traverse/3` only if you have to access
 the line and offset from before the given combinators.
 
-## quoted_post_traverse(combinator \\ empty(), to_post_traverse, call)
+## quoted_post_traverse/3
 
 Invokes `call` to emit the AST that post traverses the `to_post_traverse`
 combinator results.
@@ -863,7 +349,7 @@ has no runtime dependencies in other modules. In most cases,
 using `post_traverse/3` is better, since it doesn't work on ASTs
 and instead works at runtime.
 
-## quoted_pre_traverse(combinator \\ empty(), to_pre_traverse, call)
+## quoted_pre_traverse/3
 
 The same as `quoted_post_traverse/3` but receives the line and offset
 from before the wrapped combinators.
@@ -872,49 +358,88 @@ from before the wrapped combinators.
 information. Use `quoted_pre_traverse/3` only if you have to access
 the line and offset from before the given combinators.
 
-## quoted_repeat_while(combinator \\ empty(), to_repeat, while, opts \\ [])
+## wrap/2
 
-Invokes `while` to emit the AST that will repeat `to_repeat`
-while the AST code returns `{:cont, context}`.
+Wraps the results of the given combinator in `to_wrap` in a list.
 
-In case repetition should stop, `while` must return `{:halt, context}`.
+## tag/3
 
-`while` is a `{module, function, args}` and it will receive 4
-additional arguments. The AST representations of the binary to be
-parsed, context, line and offset will be prepended to `args`. `while`
-is invoked at compile time and is useful in combinators that avoid
-injecting runtime dependencies.
-
-## reduce(combinator \\ empty(), to_reduce, call)
-
-Reduces over the combinator results with the remote or local function in `call`.
-
-`call` is either a `{module, function, args}` representing
-a remote call, a `{function, args}` representing a local call
-or an atom `function` representing `{function, []}`.
-
-The parser results to be reduced will be prepended to the
-given `args`. The `args` will be injected at the compile site
-and therefore must be escapable via `Macro.escape/1`.
-
-See `post_traverse/3` for a low level version of this function.
+Tags the result of the given combinator in `to_tag` in a tuple with
+`tag` as first element.
 
 ## Examples
 
     defmodule MyParser do
       import NimbleParsec
 
-      defparsec :letters_to_reduced_chars,
-                ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> ascii_char([?a..?z])
-                |> reduce({Enum, :join, ["-"]})
+      defparsec :integer, integer(min: 1) |> tag(:integer)
     end
 
-    MyParser.letters_to_reduced_chars("abc")
-    #=> {:ok, ["97-98-99"], "", %{}, {1, 0}, 3}
+    MyParser.integer("1234")
+    #=> {:ok, [integer: [1234]], "", %{}, {1, 0}, 4}
 
-## repeat(combinator \\ empty(), to_repeat, opts \\ [])
+Notice, however, that the integer result is wrapped in a list, because
+the parser is expected to emit multiple tokens. When you are sure that
+only a single token is emitted, you should use `unwrap_and_tag/3`.
+
+## unwrap_and_tag/3
+
+Unwraps and tags the result of the given combinator in `to_tag` in a tuple with
+`tag` as first element.
+
+## Examples
+
+    defmodule MyParser do
+      import NimbleParsec
+
+      defparsec :integer, integer(min: 1) |> unwrap_and_tag(:integer)
+    end
+
+    MyParser.integer("1234")
+    #=> {:ok, [integer: 1234], "", %{}, {1, 0}, 4}
+
+
+In case the combinator emits greater than one token, an error will be raised.
+See `tag/3` for more information.
+
+## debug/2
+
+Inspects the combinator state given to `to_debug` with the given `opts`.
+
+## ignore/2
+
+Ignores the output of combinator given in `to_ignore`.
+
+## Examples
+
+    defmodule MyParser do
+      import NimbleParsec
+
+      defparsec :ignorable, string("T") |> ignore() |> integer(2)
+    end
+
+    MyParser.ignorable("T12")
+    #=> {:ok, [12], "", %{}, {1, 0}, 2}
+
+## replace/3
+
+Replaces the output of combinator given in `to_replace` by a single value.
+
+The `value` will be injected at the compile site
+and therefore must be escapable via `Macro.escape/1`.
+
+## Examples
+
+    defmodule MyParser do
+      import NimbleParsec
+
+      defparsec :replaceable, string("T") |> replace("OTHER") |> integer(2, 2)
+    end
+
+    MyParser.replaceable("T12")
+    #=> {:ok, ["OTHER", 12], "", %{}, {1, 0}, 2}
+
+## repeat/3
 
 Allows the combinator given on `to_repeat` to appear zero or more times.
 
@@ -957,135 +482,51 @@ to parse 0 or more `?a` characters, it can be represented by
     MyParser.repeat_lower("1234")
     #=> {:ok, [], "1234", %{}, {1, 0}, 0}
 
-## repeat_while(combinator \\ empty(), to_repeat, while, opts \\ [])
+## eventually/2
 
-Repeats while the given remote or local function `while` returns
-`{:cont, context}`.
+Marks the given combinator should appear eventually.
 
-If the combinator `to_repeat` stops matching, then the whole repeat
-loop stops successfully, hence it is important to assert the terminated
-value after repeating.
+Any other data before the combinator appears is discarded.
+If the combinator never appears, then it is an error.
+
+**Note:** this can be potentially a very expensive operation
+as it executes the given combinator byte by byte until finding
+an eventual match or ultimately failing. For example, if you
+are looking for an integer, it is preferable to discard
+everything that is not an integer
+
+    ignore(ascii_string([not: ?0..?9]))
+
+rather than eventually look for an integer
+
+    eventually(ascii_string([?0..?9]))
+
+## Examples
+
+    defmodule MyParser do
+      import NimbleParsec
+
+      hour = integer(min: 1, max: 2)
+      defparsec :extract_hour, eventually(hour)
+    end
+
+    MyParser.extract_hour("let's meet at 12?")
+    #=> {:ok, [12], "?", %{}, {1, 0}, 16}
+
+## quoted_repeat_while/4
+
+Invokes `while` to emit the AST that will repeat `to_repeat`
+while the AST code returns `{:cont, context}`.
 
 In case repetition should stop, `while` must return `{:halt, context}`.
 
-`while` is either a `{module, function, args}` representing
-a remote call, a `{function, args}` representing a local call
-or an atom `function` representing `{function, []}`.
+`while` is a `{module, function, args}` and it will receive 4
+additional arguments. The AST representations of the binary to be
+parsed, context, line and offset will be prepended to `args`. `while`
+is invoked at compile time and is useful in combinators that avoid
+injecting runtime dependencies.
 
-The function given in `while` will receive 4 additional arguments.
-The `rest` of the binary to be parsed, the parser context, the
-current line and the current offset will be prepended to the
-given `args`. The `args` will be injected at the compile site
-and therefore must be escapable via `Macro.escape/1`.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :string_with_quotes,
-                ascii_char([?"])
-                |> repeat_while(
-                  choice([
-                    ~S(\") |> string() |> replace(?"),
-                    utf8_char([])
-                  ]),
-                  {:not_quote, []}
-                )
-                |> ascii_char([?"])
-                |> reduce({List, :to_string, []})
-
-      defp not_quote(<<?", _::binary>>, context, _, _), do: {:halt, context}
-      defp not_quote(_, context, _, _), do: {:cont, context}
-    end
-
-    MyParser.string_with_quotes(~S("string with quotes \" inside"))
-    {:ok, ["\"string with quotes \" inside\""], "", %{}, {1, 0}, 30}
-
-Note you can use `lookahead/2` and `lookahead_not/2` with
-`repeat/2` (instead of `repeat_while/3`) to write a combinator
-that repeats while a combinator matches (or does not match).
-For example, the same combinator above could be written as:
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :string_with_quotes,
-                ascii_char([?"])
-                |> repeat(
-                  lookahead_not(ascii_char([?"]))
-                  |> choice([
-                    ~S(\") |> string() |> replace(?"),
-                    utf8_char([])
-                  ])
-                )
-                |> ascii_char([?"])
-                |> reduce({List, :to_string, []})
-    end
-
-    MyParser.string_with_quotes(~S("string with quotes \" inside"))
-    {:ok, ["\"string with quotes \" inside\""], "", %{}, {1, 0}, 30}
-
-However, `repeat_while` is still useful when the condition to
-repeat comes from the context passed around.
-
-## replace(combinator \\ empty(), to_replace, value)
-
-Replaces the output of combinator given in `to_replace` by a single value.
-
-The `value` will be injected at the compile site
-and therefore must be escapable via `Macro.escape/1`.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :replaceable, string("T") |> replace("OTHER") |> integer(2, 2)
-    end
-
-    MyParser.replaceable("T12")
-    #=> {:ok, ["OTHER", 12], "", %{}, {1, 0}, 2}
-
-## string(combinator \\ empty(), binary)
-
-Defines a string binary value.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :string_t, string("T")
-    end
-
-    MyParser.string_t("T")
-    #=> {:ok, ["T"], "", %{}, {1, 0}, 1}
-
-    MyParser.string_t("not T")
-    #=> {:error, "expected a string \"T\"", "not T", %{}, {1, 0}, 0}
-
-## tag(combinator \\ empty(), to_tag, tag)
-
-Tags the result of the given combinator in `to_tag` in a tuple with
-`tag` as first element.
-
-## Examples
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      defparsec :integer, integer(min: 1) |> tag(:integer)
-    end
-
-    MyParser.integer("1234")
-    #=> {:ok, [integer: [1234]], "", %{}, {1, 0}, 4}
-
-Notice, however, that the integer result is wrapped in a list, because
-the parser is expected to emit multiple tokens. When you are sure that
-only a single token is emitted, you should use `unwrap_and_tag/3`.
-
-## times(combinator \\ empty(), to_repeat, count_or_min_max)
+## times/3
 
 Allow the combinator given on `to_repeat` to appear at least, at most
 or exactly a given amount of times.
@@ -1107,190 +548,77 @@ or exactly a given amount of times.
     MyParser.minimum_lower("a123")
     #=> {:ok, [], "a123", %{}, {1, 0}, 0}
 
-## unwrap_and_tag(combinator \\ empty(), to_tag, tag)
+## choice/3
 
-Unwraps and tags the result of the given combinator in `to_tag` in a tuple with
-`tag` as first element.
+Chooses one of the given combinators.
 
-## Examples
+Expects at least two choices.
 
-    defmodule MyParser do
-      import NimbleParsec
+## Beware! Char combinators
 
-      defparsec :integer, integer(min: 1) |> unwrap_and_tag(:integer)
-    end
+Note both `utf8_char/2` and `ascii_char/2` allow multiple ranges to
+be given. Therefore, instead this:
 
-    MyParser.integer("1234")
-    #=> {:ok, [integer: 1234], "", %{}, {1, 0}, 4}
+    choice([
+      ascii_char([?a..?z]),
+      ascii_char([?A..?Z]),
+    ])
 
+One should simply prefer:
 
-In case the combinator emits greater than one token, an error will be raised.
-See `tag/3` for more information.
+    ascii_char([?a..?z, ?A..?Z])
 
-## utf8_char(combinator \\ empty(), ranges)
+As the latter is compiled more efficiently by `NimbleParsec`.
 
-Defines a single UTF-8 codepoint in the given ranges.
+## Beware! Always successful combinators
 
-`ranges` is a list containing one of:
+If a combinator that always succeeds is given as a choice, that choice
+will always succeed which may lead to unused function warnings since
+any further choice won't ever be attempted. For example, because `repeat/2`
+always succeeds, the `string/2` combinator below it won't ever run:
 
-  * a `min..max` range expressing supported codepoints
-  * a `codepoint` integer expressing a supported codepoint
-  * `{:not, min..max}` expressing not supported codepoints
-  * `{:not, codepoint}` expressing a not supported codepoint
+    choice([
+      repeat(ascii_char([?0..?9])),
+      string("OK")
+    ])
 
-## Examples
+Instead of `repeat/2`, you may want to use `times/3` with the flags `:min`
+and `:max`.
 
-    defmodule MyParser do
-      import NimbleParsec
+## Beware! Overlapping choices
 
-      defparsec :digit_and_utf8,
-                empty()
-                |> utf8_char([?0..?9])
-                |> utf8_char([])
-    end
+In case choices overlap, there is no guarantee which error will be the one
+effectively returned. For example, imagine this choice:
 
-    MyParser.digit_and_utf8("1é")
-    #=> {:ok, [?1, ?é], "", %{}, {1, 0}, 2}
+    choice([
+      string("<abc>foo</abc>"),
+      string("<abc>")
+    ]
 
-    MyParser.digit_and_utf8("a1")
-    #=> {:error, "expected utf8 codepoint in the range '0' to '9', followed by utf8 codepoint", "a1", %{}, {1, 0}, 0}
+Since both choices can be activated for an input starting with "abc",
+NimbleParsec guarantees it will return the error from one of them, but
+not which.
 
-## utf8_string(combinator \\ empty(), range, count_or_opts)
+## optional/2
 
-Defines an UTF8 string combinator with of exact length or `min` and `max`
-codepoint length.
+Marks the given combinator as `optional`.
 
-The `ranges` specify the allowed characters in the UTF8 string.
-See `utf8_char/2` for more information.
+It is equivalent to `choice([combinator, empty()])`.
 
-If you want a string of unknown size, use `utf8_string(ranges, min: 1)`.
-If you want a literal string, use `string/2`.
+## bytes/2
 
-Note that the combinator matches on codepoints, not graphemes. Therefore
-results may vary depending on whether the input is in `nfc` or `nfd`
-normalized form.
+Defines a combinator to consume the next `n` bytes from the input.
 
 ## Examples
 
-    defmodule MyParser do
-      import NimbleParsec
+      defmodule MyParser do
+        import NimbleParsec
 
-      defparsec :two_letters, utf8_string([], 2)
-    end
-
-    MyParser.two_letters("áé")
-    #=> {:ok, ["áé"], "", %{}, {1, 0}, 3}
-
-## wrap(combinator \\ empty(), to_wrap)
-
-Wraps the results of the given combinator in `to_wrap` in a list.
-
-## defcombinator(name, combinator, opts \\ [])
-
-Defines a combinator with the given `name` and `opts`.
-
-It is similar to `defparsec/3` except it does not define
-an entry-point parsing function, just the combinator function
-to be used with `parsec/2`.
-
-## defcombinatorp(name, combinator, opts \\ [])
-
-Defines a combinator with the given `name` and `opts`.
-
-It is similar to `defparsecp/3` except it does not define
-an entry-point parsing function, just the combinator function
-to be used with `parsec/2`.
-
-## defparsec(name, combinator, opts \\ [])
-
-Defines a parser (and a combinator) with the given `name` and `opts`.
-
-The parser is a function that receives two arguments, the binary
-to be parsed and a set of options. You can consult the documentation
-of the generated parser function for more information.
-
-This function will also define a combinator that can be used as
-`parsec(name)` when building other parsers. See `parsec/2` for
-more information on invoking compiled combinators.
-
-## Beware!
-
-`defparsec/3` is executed during compilation. This means you can't
-invoke a function defined in the same module. The following will error
-because the `date` function has not yet been defined:
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      def date do
-        integer(4)
-        |> ignore(string("-"))
-        |> integer(2)
-        |> ignore(string("-"))
-        |> integer(2)
+        defparsec :three_bytes, bytes(3)
       end
 
-      defparsec :date, date()
-    end
+      MyParser.three_bytes("abc")
+      #=> {:ok, ["abc"], "", %{}, {1, 0}, 3}
 
-This can be solved in different ways. You may simply
-compose a long parser using variables. For example:
-
-    defmodule MyParser do
-      import NimbleParsec
-
-      date =
-        integer(4)
-        |> ignore(string("-"))
-        |> integer(2)
-        |> ignore(string("-"))
-        |> integer(2)
-
-      defparsec :date, date
-    end
-
-Alternatively, you may define a `Helpers` module with many
-convenience combinators, and then invoke them in your parser
-module:
-
-    defmodule MyParser.Helpers do
-      import NimbleParsec
-
-      def date do
-        integer(4)
-        |> ignore(string("-"))
-        |> integer(2)
-        |> ignore(string("-"))
-        |> integer(2)
-      end
-    end
-
-    defmodule MyParser do
-      import NimbleParsec
-      import MyParser.Helpers
-
-      defparsec :date, date()
-    end
-
-The approach of using helper modules is the favorite way
-of composing parsers in `NimbleParsec`.
-
-## Options
-
-  * `:inline` - when true, inlines clauses that work as redirection for
-    other clauses. Settings this may improve runtime performance at the
-    cost of increased compilation time and bytecode size
-
-  * `:debug` - when true, writes generated clauses to `:stderr` for debugging
-
-  * `:export_combinator` - make the underlying combinator function public
-    so it can be used as part of `parsec/1` from other modules
-
-  * `:export_metadata` - export metadata necessary to use this parser
-    combinator to generate inputs
-
-## defparsecp(name, combinator, opts \\ [])
-
-Defines a private parser (and a combinator) with the given `name` and `opts`.
-
-The same as `defparsec/3` but the parsing function is private.
+      MyParser.three_bytes("ab")
+      #=> {:error, "expected 3 bytes", "ab", %{}, {1, 0}, 0}

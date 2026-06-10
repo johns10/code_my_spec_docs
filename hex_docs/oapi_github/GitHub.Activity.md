@@ -2,7 +2,7 @@
 
 Provides API endpoints related to activity
 
-## check_repo_is_starred_by_authenticated_user(owner, repo, opts \\ [])
+## check_repo_is_starred_by_authenticated_user/3
 
 Check if a repository is starred by the authenticated user
 
@@ -12,7 +12,7 @@ Whether the authenticated user has starred the repository.
 
   * [API method documentation](https://docs.github.com/rest/activity/starring#check-if-a-repository-is-starred-by-the-authenticated-user)
 
-## delete_repo_subscription(owner, repo, opts \\ [])
+## delete_repo_subscription/3
 
 Delete a repository subscription
 
@@ -22,7 +22,7 @@ This endpoint should only be used to stop watching a repository. To control whet
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#delete-a-repository-subscription)
 
-## delete_thread_subscription(thread_id, opts \\ [])
+## delete_thread_subscription/2
 
 Delete a thread subscription
 
@@ -32,7 +32,7 @@ Mutes all future notifications for a conversation until you comment on the threa
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#delete-a-thread-subscription)
 
-## get_feeds(opts \\ [])
+## get_feeds/1
 
 Get feeds
 
@@ -54,7 +54,7 @@ By default, timeline resources are returned in JSON. You can specify the `applic
 
   * [API method documentation](https://docs.github.com/rest/activity/feeds#get-feeds)
 
-## get_repo_subscription(owner, repo, opts \\ [])
+## get_repo_subscription/3
 
 Get a repository subscription
 
@@ -64,7 +64,7 @@ Gets information about whether the authenticated user is subscribed to the repos
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#get-a-repository-subscription)
 
-## get_thread(thread_id, opts \\ [])
+## get_thread/2
 
 Get a thread
 
@@ -74,7 +74,7 @@ Gets information about a notification thread.
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#get-a-thread)
 
-## get_thread_subscription_for_authenticated_user(thread_id, opts \\ [])
+## get_thread_subscription_for_authenticated_user/2
 
 Get a thread subscription for the authenticated user
 
@@ -86,7 +86,7 @@ Note that subscriptions are only generated if a user is participating in a conve
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#get-a-thread-subscription-for-the-authenticated-user)
 
-## list_events_for_authenticated_user(username, opts \\ [])
+## list_events_for_authenticated_user/2
 
 List events for the authenticated user
 
@@ -101,7 +101,7 @@ If you are authenticated as the given user, you will see your private events. Ot
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-events-for-the-authenticated-user)
 
-## list_notifications_for_authenticated_user(opts \\ [])
+## list_notifications_for_authenticated_user/1
 
 List notifications for the authenticated user
 
@@ -120,7 +120,7 @@ List all notifications for the current user, sorted by most recently updated.
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)
 
-## list_org_events_for_authenticated_user(username, org, opts \\ [])
+## list_org_events_for_authenticated_user/3
 
 List organization events for the authenticated user
 
@@ -135,7 +135,7 @@ This is the user's organization dashboard. You must be authenticated as the user
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-organization-events-for-the-authenticated-user)
 
-## list_public_events(opts \\ [])
+## list_public_events/1
 
 List public events
 
@@ -150,7 +150,7 @@ We delay the public events feed by five minutes, which means the most recent eve
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-public-events)
 
-## list_public_events_for_repo_network(owner, repo, opts \\ [])
+## list_public_events_for_repo_network/3
 
 List public events for a network of repositories
 
@@ -163,7 +163,7 @@ List public events for a network of repositories
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-public-events-for-a-network-of-repositories)
 
-## list_public_events_for_user(username, opts \\ [])
+## list_public_events_for_user/2
 
 List public events for a user
 
@@ -176,7 +176,7 @@ List public events for a user
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-public-events-for-a-user)
 
-## list_public_org_events(org, opts \\ [])
+## list_public_org_events/2
 
 List public organization events
 
@@ -189,7 +189,7 @@ List public organization events
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-public-organization-events)
 
-## list_received_events_for_user(username, opts \\ [])
+## list_received_events_for_user/2
 
 List events received by the authenticated user
 
@@ -204,7 +204,7 @@ These are events that you've received by watching repositories and following use
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-events-received-by-the-authenticated-user)
 
-## list_received_public_events_for_user(username, opts \\ [])
+## list_received_public_events_for_user/2
 
 List public events received by a user
 
@@ -217,7 +217,7 @@ List public events received by a user
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-public-events-received-by-a-user)
 
-## list_repo_events(owner, repo, opts \\ [])
+## list_repo_events/3
 
 List repository events
 
@@ -233,7 +233,7 @@ List repository events
 
   * [API method documentation](https://docs.github.com/rest/activity/events#list-repository-events)
 
-## list_repo_notifications_for_authenticated_user(owner, repo, opts \\ [])
+## list_repo_notifications_for_authenticated_user/3
 
 List repository notifications for the authenticated user
 
@@ -252,7 +252,7 @@ Lists all notifications for the current user in the specified repository.
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#list-repository-notifications-for-the-authenticated-user)
 
-## list_repos_starred_by_authenticated_user(opts \\ [])
+## list_repos_starred_by_authenticated_user/1
 
 List repositories starred by the authenticated user
 
@@ -273,7 +273,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/activity/starring#list-repositories-starred-by-the-authenticated-user)
 
-## list_repos_starred_by_user(username, opts \\ [])
+## list_repos_starred_by_user/2
 
 List repositories starred by a user
 
@@ -294,7 +294,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user)
 
-## list_repos_watched_by_user(username, opts \\ [])
+## list_repos_watched_by_user/2
 
 List repositories watched by a user
 
@@ -309,7 +309,7 @@ Lists repositories a user is watching.
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#list-repositories-watched-by-a-user)
 
-## list_stargazers_for_repo(owner, repo, opts \\ [])
+## list_stargazers_for_repo/3
 
 List stargazers
 
@@ -328,7 +328,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/activity/starring#list-stargazers)
 
-## list_watched_repos_for_authenticated_user(opts \\ [])
+## list_watched_repos_for_authenticated_user/1
 
 List repositories watched by the authenticated user
 
@@ -343,7 +343,7 @@ Lists repositories the authenticated user is watching.
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#list-repositories-watched-by-the-authenticated-user)
 
-## list_watchers_for_repo(owner, repo, opts \\ [])
+## list_watchers_for_repo/3
 
 List watchers
 
@@ -358,7 +358,7 @@ Lists the people watching the specified repository.
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#list-watchers)
 
-## mark_notifications_as_read(body, opts \\ [])
+## mark_notifications_as_read/2
 
 Mark notifications as read
 
@@ -368,7 +368,7 @@ Marks all notifications as "read" for the current user. If the number of notific
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#mark-notifications-as-read)
 
-## mark_repo_notifications_as_read(owner, repo, body, opts \\ [])
+## mark_repo_notifications_as_read/4
 
 Mark repository notifications as read
 
@@ -378,7 +378,7 @@ Marks all notifications in a repository as "read" for the current user. If the n
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#mark-repository-notifications-as-read)
 
-## mark_thread_as_done(thread_id, opts \\ [])
+## mark_thread_as_done/2
 
 Mark a thread as done
 
@@ -388,7 +388,7 @@ Marks a thread as "done." Marking a thread as "done" is equivalent to marking a 
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#mark-a-thread-as-done)
 
-## mark_thread_as_read(thread_id, opts \\ [])
+## mark_thread_as_read/2
 
 Mark a thread as read
 
@@ -398,7 +398,7 @@ Marks a thread as "read." Marking a thread as "read" is equivalent to clicking a
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#mark-a-thread-as-read)
 
-## set_repo_subscription(owner, repo, body, opts \\ [])
+## set_repo_subscription/4
 
 Set a repository subscription
 
@@ -408,7 +408,7 @@ If you would like to watch a repository, set `subscribed` to `true`. If you woul
 
   * [API method documentation](https://docs.github.com/rest/activity/watching#set-a-repository-subscription)
 
-## set_thread_subscription(thread_id, body, opts \\ [])
+## set_thread_subscription/3
 
 Set a thread subscription
 
@@ -422,7 +422,7 @@ Unsubscribing from a conversation in a repository that you are not watching is f
 
   * [API method documentation](https://docs.github.com/rest/activity/notifications#set-a-thread-subscription)
 
-## star_repo_for_authenticated_user(owner, repo, opts \\ [])
+## star_repo_for_authenticated_user/3
 
 Star a repository for the authenticated user
 
@@ -432,7 +432,7 @@ Note that you'll need to set `Content-Length` to zero when calling out to this e
 
   * [API method documentation](https://docs.github.com/rest/activity/starring#star-a-repository-for-the-authenticated-user)
 
-## unstar_repo_for_authenticated_user(owner, repo, opts \\ [])
+## unstar_repo_for_authenticated_user/3
 
 Unstar a repository for the authenticated user
 

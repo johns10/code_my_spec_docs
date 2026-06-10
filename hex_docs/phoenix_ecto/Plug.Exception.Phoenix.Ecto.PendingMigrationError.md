@@ -1,1 +1,0 @@
-# Plug.Exception.Phoenix.Ecto.PendingMigrationError

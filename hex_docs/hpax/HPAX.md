@@ -16,56 +16,13 @@ implemented as **HPACK tables**. This library uses the name "tables" everywhere 
 
 HPACK tables can be created through the `new/1` function.
 
-## decode(block, table)
-
-Decodes a header block fragment (HBF) through a given table.
-
-If decoding is successful, this function returns a `{:ok, headers, updated_table}` tuple where
-`headers` is a list of decoded headers, and `updated_table` is the updated table. If there's
-an error in decoding, this function returns `{:error, reason}`.
-
-## Examples
-
-    decoding_context = HPAX.new(1000)
-    hbf = get_hbf_from_somewhere()
-    HPAX.decode(hbf, decoding_context)
-    #=> {:ok, [{":method", "GET"}], decoding_context}
-
-## encode(headers, table)
-
-Encodes a list of headers through the given table.
-
-Returns a two-element tuple where the first element is a binary representing the encoded headers
-and the second element is an updated table.
-
-## Examples
-
-    headers = [{:store, ":authority", "https://example.com"}]
-    encoding_context = HPAX.new(1000)
-    HPAX.encode(headers, encoding_context)
-    #=> {iodata, updated_encoding_context}
-
-## encode(action, headers, table)
-
-Encodes a list of headers through the given table, applying the same `action` to all of them.
-
-This function is the similar to `encode/2`, but `headers` are `{name, value}` tuples instead,
-and the same `action` is applied to all headers.
-
-  ## Examples
-
-    headers = [{":authority", "https://example.com"}]
-    encoding_context = HPAX.new(1000)
-    HPAX.encode(:store, headers, encoding_context)
-    #=> {iodata, updated_encoding_context}
-
-## new(max_table_size)
+## new/1
 
 Creates a new HPACK table.
 
 Same as `new/2` with default options.
 
-## new(max_table_size, options)
+## new/2
 
 Create a new HPACK table that can be used as encoding or decoding context.
 
@@ -85,38 +42,45 @@ This function accepts the following `options`:
 
     encoding_context = HPAX.new(4096)
 
-## resize(table, new_max_size)
+## decode/2
 
-Resizes the given table to the given maximum size.
+Decodes a header block fragment (HBF) through a given table.
 
-This is intended for use where the overlying protocol has signaled a change to the table's
-maximum size, such as when an HTTP/2 `SETTINGS` frame is received.
-
-If the indicated size is less than the table's current size, entries
-will be evicted as needed to fit within the specified size, and the table's
-maximum size will be decreased to the specified value. A flag will also be
-set which will enqueue a "dynamic table size update" command to be prefixed
-to the next block encoded with this table, per
-[RFC9113§4.3.1](https://www.rfc-editor.org/rfc/rfc9113.html#section-4.3.1).
-
-If the indicated size is greater than or equal to the table's current max size, no entries are evicted
-and the table's maximum size changes to the specified value.
+If decoding is successful, this function returns a `{:ok, headers, updated_table}` tuple where
+`headers` is a list of decoded headers, and `updated_table` is the updated table. If there's
+an error in decoding, this function returns `{:error, reason}`.
 
 ## Examples
 
-    decoding_context = HPAX.new(4096)
-    HPAX.resize(decoding_context, 8192)
+    decoding_context = HPAX.new(1000)
+    hbf = get_hbf_from_somewhere()
+    HPAX.decode(hbf, decoding_context)
+    #=> {:ok, [{":method", "GET"}], decoding_context}
 
-## header_name/0
+## encode/2
 
-An HPACK header name.
+Encodes a list of headers through the given table.
 
-## header_value/0
+Returns a two-element tuple where the first element is a binary representing the encoded headers
+and the second element is an updated table.
 
-An HPACK header value.
+## Examples
 
-## table/0
+    headers = [{:store, ":authority", "https://example.com"}]
+    encoding_context = HPAX.new(1000)
+    HPAX.encode(headers, encoding_context)
+    #=> {iodata, updated_encoding_context}
 
-An HPACK table.
+## encode/3
 
-This can be used for encoding or decoding.
+Encodes a list of headers through the given table, applying the same `action` to all of them.
+
+This function is the similar to `encode/2`, but `headers` are `{name, value}` tuples instead,
+and the same `action` is applied to all headers.
+
+  ## Examples
+
+    headers = [{":authority", "https://example.com"}]
+    encoding_context = HPAX.new(1000)
+    HPAX.encode(:store, headers, encoding_context)
+    #=> {iodata, updated_encoding_context}

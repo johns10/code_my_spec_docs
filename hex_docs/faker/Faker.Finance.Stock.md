@@ -2,7 +2,7 @@
 
 Functions for stock data
 
-## ticker()
+## ticker/0
 
 Returns a ticker.
 
@@ -17,7 +17,7 @@ Returns a ticker.
     iex> Faker.Finance.Stock.ticker()
     "5166.N225"
 
-## ticker(atom1, atom2)
+## ticker/2
 
 The first argument is the ticker format.
 The second argument is the name of the exchange.

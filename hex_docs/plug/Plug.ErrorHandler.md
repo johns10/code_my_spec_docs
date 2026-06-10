@@ -42,7 +42,7 @@ using `Plug.Debugger`.
 **Note:** If this module is used with `Plug.Debugger`, it must be used
 after `Plug.Debugger`.
 
-## handle_errors/2
+## __using__/1
 
 Handle errors from plugs.
 

@@ -45,14 +45,14 @@ Defines a struct that tracks client requests
   * `response_types` (list of types): OpenAPI type specifications for the response body. These are
     specified as tuples with the status code and the type specification.
 
-## get_caller(operation)
+## get_caller/1
 
 Get the client's calling function and original arguments
 
 This level of introspection is meant for testing purposes, although other plugins can take
 advantage of it as necessary.
 
-## get_options(operation)
+## get_options/1
 
 Get the options passed to the client request
 
@@ -62,7 +62,7 @@ Get the options passed to the client request
     iex> Operation.get_options(operation)
     [server: "https://api.github.com"]
 
-## get_response_header(operation, header)
+## get_response_header/2
 
 Get the value of a response header
 
@@ -79,7 +79,7 @@ then `nil` will be returned.
     iex> Operation.get_response_header(operation, "ETag")
     nil
 
-## put_private(operation, key, value)
+## put_private/3
 
 Put information in the operation's private data store
 
@@ -91,7 +91,7 @@ Existing data with the same key will be overridden.
     iex> operation = Operation.put_private(operation, :my_plugin_data, "abc123")
     %Operation{private: %{my_plugin_data: "abc123"}} = operation
 
-## put_request_header(operation, header, value)
+## put_request_header/3
 
 Add a request header to an outgoing operation
 
@@ -102,11 +102,3 @@ This function makes no effort to deduplicate headers.
     iex> operation = %Operation{request_headers: []}
     iex> operation = Operation.put_request_header(operation, "Content-Type", "application/json")
     %Operation{request_headers: [{"Content-Type", "application/json"}]} = operation
-
-## type/0
-
-Type annotation produced by [OpenAPI](https://github.com/aj-foster/open-api-generator)
-
-## t/0
-
-Operation struct for tracking client requests from start to finish

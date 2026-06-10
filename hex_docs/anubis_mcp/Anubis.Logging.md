@@ -2,15 +2,7 @@
 
 
 
-## client_event(event, details, metadata \\ [])
-
-Log client events with structured format.
-
-## Options
-  * metadata - Additional metadata including:
-    * :level - The log level (:debug, :info, :warning, :error, etc.)
-
-## message(direction, type, id, data, metadata \\ [])
+## message/5
 
 Log protocol messages with automatic formatting and context.
 
@@ -21,7 +13,7 @@ Log protocol messages with automatic formatting and context.
   * data - the message content
   * metadata - additional metadata to include with level option (:debug, :info, :warning, :error, etc.)
 
-## server_event(event, details, metadata \\ [])
+## server_event/3
 
 Log server events with structured format.
 
@@ -29,7 +21,15 @@ Log server events with structured format.
   * metadata - Additional metadata including:
     * :level - The log level (:debug, :info, :warning, :error, etc.)
 
-## transport_event(event, details, metadata \\ [])
+## client_event/3
+
+Log client events with structured format.
+
+## Options
+  * metadata - Additional metadata including:
+    * :level - The log level (:debug, :info, :warning, :error, etc.)
+
+## transport_event/3
 
 Log transport events with structured format.
 

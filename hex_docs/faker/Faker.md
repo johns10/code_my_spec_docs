@@ -2,42 +2,37 @@
 
 Main module to start application with some helper functions.
 
-## country()
+## start/0
 
-Returns application country.
+Starts Faker with default locale.
 
-## format(str)
+## start/1
+
+Starts Faker with `lang` locale.
+
+## format/1
 
 Internal function to format string.
 
 It replaces `"#"` to random number and `"?"` to random Latin letter.
 
-## locale()
-
-Returns application locale.
-
-## locale(lang)
-
-Sets application locale.
-
-## mlocale()
+## mlocale/0
 
 Returns application locale ready for module construct.
 
-## random_between(left, right)
+## locale/0
 
-Returns a (pseudo) random number as an integer between the range intervals.
+Returns application locale.
 
-## Examples
+## country/0
 
-    iex> random_between(3, 7) in [3, 4, 5, 6, 7]
-    true
+Returns application country.
 
-## random_bytes(total)
+## locale/1
 
-Returns a random bytes.
+Sets application locale.
 
-## random_uniform()
+## random_uniform/0
 
 Returns a random float in the value range 0.0 =< x < 1.0.
 
@@ -46,10 +41,15 @@ Returns a random float in the value range 0.0 =< x < 1.0.
     iex> is_float(random_uniform())
     true
 
-## start()
+## random_between/2
 
-Starts Faker with default locale.
+Returns a (pseudo) random number as an integer between the range intervals.
 
-## start(lang)
+## Examples
 
-Starts Faker with `lang` locale.
+    iex> random_between(3, 7) in [3, 4, 5, 6, 7]
+    true
+
+## random_bytes/1
+
+Returns a random bytes.

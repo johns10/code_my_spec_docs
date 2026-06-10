@@ -6,7 +6,7 @@ on the supported file format.
 
 This implementation uses parsing over regular expressions for most of its work.
 
-## parse(contents, vars \\ %{}, opts \\ [])
+## parse/3
 
 Parse the given `contents`, substituting and merging with the given `vars`.
 

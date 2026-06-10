@@ -2,7 +2,7 @@
 
 This module helps decode Tesla responses
 
-## decode(env, opts \\ [])
+## decode/2
 
 Handle the response for a Tesla request
 

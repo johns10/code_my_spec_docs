@@ -5,7 +5,3 @@ Describes a metric column in the report. Visible metrics requested in a report p
 ## Attributes
 
 *   `metricName` (*type:* `String.t`, *default:* `nil`) - The metric's name; for example 'accessCount'.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

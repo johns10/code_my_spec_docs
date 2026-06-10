@@ -23,11 +23,11 @@ transmission of the access token directly to the client without
 passing it through the resource owner's user-agent and potentially
 exposing it to others, including the resource owner.
 
-## authorize_url(client, params)
+## authorize_url/2
 
 The authorization URL endpoint of the provider.
 params additional query parameters for the URL
 
-## get_token(client, params, headers)
+## get_token/3
 
 Retrieve an access token given the specified validation code.

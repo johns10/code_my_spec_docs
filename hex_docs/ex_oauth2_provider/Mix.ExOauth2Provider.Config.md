@@ -1,1 +1,0 @@
-# Mix.ExOauth2Provider.Config

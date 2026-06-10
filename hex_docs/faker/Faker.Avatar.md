@@ -2,7 +2,7 @@
 
 Functions for generate random urls for avatars.
 
-## image_url()
+## image_url/0
 
 Return avatar url with random set and background.
 
@@ -17,7 +17,7 @@ Return avatar url with random set and background.
     iex> Faker.Avatar.image_url()
     "https://robohash.org/set_set3/bgset_bg1/JNth88PrhGDhwp4LNQMt"
 
-## image_url(slug)
+## image_url/1
 
 Return avatar url for given `slug`.
 
@@ -32,7 +32,7 @@ Return avatar url for given `slug`.
     iex> Faker.Avatar.image_url('ecto')
     "https://robohash.org/ecto"
 
-## image_url(width, height)
+## image_url/2
 
 Return avatar url with random set and background, with size `width` x `height`
 pixels.
@@ -48,7 +48,7 @@ pixels.
     iex> Faker.Avatar.image_url(128, 128)
     "https://robohash.org/set_set1/bgset_bg2/JNth88PrhGDhwp4LNQMt?size=128x128"
 
-## image_url(slug, width, height)
+## image_url/3
 
 Return avatar url for given `slug`, with size `width` x `height` pixels.
 

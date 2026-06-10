@@ -2,7 +2,7 @@
 
 Provides API endpoints related to copilot
 
-## add_copilot_seats_for_teams(org, body, opts \\ [])
+## add_copilot_seats_for_teams/3
 
 Add teams to the Copilot subscription for an organization
 
@@ -23,7 +23,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#add-teams-to-the-copilot-subscription-for-an-organization)
 
-## add_copilot_seats_for_users(org, body, opts \\ [])
+## add_copilot_seats_for_users/3
 
 Add users to the Copilot subscription for an organization
 
@@ -44,7 +44,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#add-users-to-the-copilot-subscription-for-an-organization)
 
-## cancel_copilot_seat_assignment_for_teams(org, body, opts \\ [])
+## cancel_copilot_seat_assignment_for_teams/3
 
 Remove teams from the Copilot subscription for an organization
 
@@ -65,7 +65,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#remove-teams-from-the-copilot-subscription-for-an-organization)
 
-## cancel_copilot_seat_assignment_for_users(org, body, opts \\ [])
+## cancel_copilot_seat_assignment_for_users/3
 
 Remove users from the Copilot subscription for an organization
 
@@ -86,7 +86,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#remove-users-from-the-copilot-subscription-for-an-organization)
 
-## get_copilot_organization_details(org, opts \\ [])
+## get_copilot_organization_details/2
 
 Get Copilot seat information and settings for an organization
 
@@ -104,7 +104,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-information-and-settings-for-an-organization)
 
-## get_copilot_seat_details_for_user(org, username, opts \\ [])
+## get_copilot_seat_details_for_user/3
 
 Get Copilot seat assignment details for a user
 
@@ -120,7 +120,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#get-copilot-seat-assignment-details-for-a-user)
 
-## list_copilot_seats(org, opts \\ [])
+## list_copilot_seats/2
 
 List all Copilot seat assignments for an organization
 
@@ -141,7 +141,7 @@ OAuth app tokens and personal access tokens (classic) need the `manage_billing:c
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-user-management#list-all-copilot-seat-assignments-for-an-organization)
 
-## usage_metrics_for_enterprise(enterprise, opts \\ [])
+## usage_metrics_for_enterprise/2
 
 Get a summary of Copilot usage for enterprise members
 
@@ -171,7 +171,7 @@ OAuth app tokens and personal access tokens (classic) need the `copilot`, `manag
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-enterprise-members)
 
-## usage_metrics_for_org(org, opts \\ [])
+## usage_metrics_for_org/2
 
 Get a summary of Copilot usage for organization members
 
@@ -201,7 +201,7 @@ OAuth app tokens and personal access tokens (classic) need the `copilot`, `manag
 
   * [API method documentation](https://docs.github.com/rest/copilot/copilot-usage#get-a-summary-of-copilot-usage-for-organization-members)
 
-## usage_metrics_for_team(org, team_slug, opts \\ [])
+## usage_metrics_for_team/3
 
 Get a summary of Copilot usage for a team
 

@@ -3,7 +3,7 @@
 Functions for data created/released by the Italian government,
 like fiscal codes
 
-## fiscal_id()
+## fiscal_id/0
 
 Returns a random Italian fiscal code
 

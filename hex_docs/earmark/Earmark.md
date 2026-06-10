@@ -201,18 +201,11 @@ HTML from Markdown and HTML. It is your job to sanitize and or
 filter the output of `Earmark.as_html` if you cannot trust the input
 and are to serve the produced HTML on the Web.
 
-## as_ast(lines, options \\ %Options{})
+## as_ast/2
 
 DEPRECATED call `Earmark.Parser.as_ast` instead
 
-## from_file!(filename, options \\ [])
-
-A convenience method that *always* returns an HTML representation of the markdown document passed in.
-In case of the presence of any error messages they are printed to stderr.
-
-Otherwise it behaves exactly as `as_html`.
-
-## version()
+## version/0
 
 Accesses current hex version of the `Earmark` application. Convenience for
   `iex` usage.

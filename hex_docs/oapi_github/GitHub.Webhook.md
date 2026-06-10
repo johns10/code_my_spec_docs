@@ -46,7 +46,7 @@ body in an assign `:raw_body` or `:body`. This usually requires implementing a c
 
 See `verify_github_event/2` and `verify_github_signature/2` for more information.
 
-## body_reader(opts \\ [])
+## body_reader/1
 
 Construct the value of the `:body_reader` option for `Plug.Parsers` for caching request bodies
 
@@ -72,7 +72,7 @@ body as an assign `:raw_body` for use during signature verification.
     a list of strings (ex. `["/hook/github"]`). Defaults to caching request bodies for all
     requests, which can cause a significant performance impact.
 
-## cache_request_body(conn, parser_opts, cache_opts)
+## cache_request_body/3
 
 Cache request body as `:raw_body` assign for chosen connections
 
@@ -82,7 +82,7 @@ can be used for signature verification later.
 
 This function is not usually called directly. Instead, use `body_reader/1`.
 
-## verify_github_event(conn, opts)
+## verify_github_event/2
 
 Get and store the GitHub webhook event type
 
@@ -91,7 +91,7 @@ event and stores the event as a `:github_event` assign on the connection. If the
 missing, the connection is immediately halted with a simple error message that will appear in
 GitHub's UI.
 
-## verify_github_signature(conn, opts)
+## verify_github_signature/2
 
 Check the validity of a GitHub webhook request
 

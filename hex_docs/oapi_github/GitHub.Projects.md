@@ -2,7 +2,7 @@
 
 Provides API endpoints related to projects
 
-## add_collaborator(project_id, username, body, opts \\ [])
+## add_collaborator/4
 
 Add project collaborator
 
@@ -12,7 +12,7 @@ Adds a collaborator to an organization project and sets their permission level. 
 
   * [API method documentation](https://docs.github.com/rest/projects/collaborators#add-project-collaborator)
 
-## create_card(column_id, body, opts \\ [])
+## create_card/3
 
 Create a project card
 
@@ -20,7 +20,7 @@ Create a project card
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#create-a-project-card)
 
-## create_column(project_id, body, opts \\ [])
+## create_column/3
 
 Create a project column
 
@@ -30,7 +30,7 @@ Creates a new project column.
 
   * [API method documentation](https://docs.github.com/rest/projects/columns#create-a-project-column)
 
-## create_for_authenticated_user(body, opts \\ [])
+## create_for_authenticated_user/2
 
 Create a user project
 
@@ -40,7 +40,7 @@ Creates a user project board. Returns a `410 Gone` status if the user does not h
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#create-a-user-project)
 
-## create_for_org(org, body, opts \\ [])
+## create_for_org/3
 
 Create an organization project
 
@@ -50,7 +50,7 @@ Creates an organization project board. Returns a `410 Gone` status if projects a
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#create-an-organization-project)
 
-## create_for_repo(owner, repo, body, opts \\ [])
+## create_for_repo/4
 
 Create a repository project
 
@@ -60,7 +60,7 @@ Creates a repository project board. Returns a `410 Gone` status if projects are 
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#create-a-repository-project)
 
-## delete(project_id, opts \\ [])
+## delete/2
 
 Delete a project
 
@@ -70,7 +70,7 @@ Deletes a project board. Returns a `404 Not Found` status if projects are disabl
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#delete-a-project)
 
-## delete_card(card_id, opts \\ [])
+## delete_card/2
 
 Delete a project card
 
@@ -80,7 +80,7 @@ Deletes a project card
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#delete-a-project-card)
 
-## delete_column(column_id, opts \\ [])
+## delete_column/2
 
 Delete a project column
 
@@ -90,7 +90,7 @@ Deletes a project column.
 
   * [API method documentation](https://docs.github.com/rest/projects/columns#delete-a-project-column)
 
-## get(project_id, opts \\ [])
+## get/2
 
 Get a project
 
@@ -100,7 +100,7 @@ Gets a project by its `id`. Returns a `404 Not Found` status if projects are dis
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#get-a-project)
 
-## get_card(card_id, opts \\ [])
+## get_card/2
 
 Get a project card
 
@@ -110,7 +110,7 @@ Gets information about a project card.
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#get-a-project-card)
 
-## get_column(column_id, opts \\ [])
+## get_column/2
 
 Get a project column
 
@@ -120,7 +120,7 @@ Gets information about a project column.
 
   * [API method documentation](https://docs.github.com/rest/projects/columns#get-a-project-column)
 
-## get_permission_for_user(project_id, username, opts \\ [])
+## get_permission_for_user/3
 
 Get project permission for a user
 
@@ -130,7 +130,7 @@ Returns the collaborator's permission level for an organization project. Possibl
 
   * [API method documentation](https://docs.github.com/rest/projects/collaborators#get-project-permission-for-a-user)
 
-## list_cards(column_id, opts \\ [])
+## list_cards/2
 
 List project cards
 
@@ -146,7 +146,7 @@ Lists the project cards in a project.
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#list-project-cards)
 
-## list_collaborators(project_id, opts \\ [])
+## list_collaborators/2
 
 List project collaborators
 
@@ -162,7 +162,7 @@ Lists the collaborators for an organization project. For a project, the list of 
 
   * [API method documentation](https://docs.github.com/rest/projects/collaborators#list-project-collaborators)
 
-## list_columns(project_id, opts \\ [])
+## list_columns/2
 
 List project columns
 
@@ -177,7 +177,7 @@ Lists the project columns in a project.
 
   * [API method documentation](https://docs.github.com/rest/projects/columns#list-project-columns)
 
-## list_for_org(org, opts \\ [])
+## list_for_org/2
 
 List organization projects
 
@@ -193,7 +193,7 @@ Lists the projects in an organization. Returns a `404 Not Found` status if proje
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#list-organization-projects)
 
-## list_for_repo(owner, repo, opts \\ [])
+## list_for_repo/3
 
 List repository projects
 
@@ -209,7 +209,7 @@ Lists the projects in a repository. Returns a `404 Not Found` status if projects
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#list-repository-projects)
 
-## list_for_user(username, opts \\ [])
+## list_for_user/2
 
 List user projects
 
@@ -225,7 +225,7 @@ Lists projects for a user.
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#list-user-projects)
 
-## move_card(card_id, body, opts \\ [])
+## move_card/3
 
 Move a project card
 
@@ -233,7 +233,7 @@ Move a project card
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#move-a-project-card)
 
-## move_column(column_id, body, opts \\ [])
+## move_column/3
 
 Move a project column
 
@@ -241,7 +241,7 @@ Move a project column
 
   * [API method documentation](https://docs.github.com/rest/projects/columns#move-a-project-column)
 
-## remove_collaborator(project_id, username, opts \\ [])
+## remove_collaborator/3
 
 Remove user as a collaborator
 
@@ -251,7 +251,7 @@ Removes a collaborator from an organization project. You must be an organization
 
   * [API method documentation](https://docs.github.com/rest/projects/collaborators#remove-user-as-a-collaborator)
 
-## update(project_id, body, opts \\ [])
+## update/3
 
 Update a project
 
@@ -261,7 +261,7 @@ Updates a project board's information. Returns a `404 Not Found` status if proje
 
   * [API method documentation](https://docs.github.com/rest/projects/projects#update-a-project)
 
-## update_card(card_id, body, opts \\ [])
+## update_card/3
 
 Update an existing project card
 
@@ -269,7 +269,7 @@ Update an existing project card
 
   * [API method documentation](https://docs.github.com/rest/projects/cards#update-an-existing-project-card)
 
-## update_column(column_id, body, opts \\ [])
+## update_column/3
 
 Update an existing project column
 

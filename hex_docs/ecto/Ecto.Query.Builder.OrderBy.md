@@ -2,23 +2,22 @@
 
 
 
-## apply(query, expr, op)
+## valid_direction?/1
 
-The callback applied by `build/4` to build the query.
+Returns `true` if term is a valid order_by direction; otherwise returns `false`.
 
-## build(query, binding, expr, op, env)
+## Examples
 
-Builds a quoted expression.
+    iex> valid_direction?(:asc)
+    true
 
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
+    iex> valid_direction?(:desc)
+    true
 
-## dir!(kind, dir)
+    iex> valid_direction?(:invalid)
+    false
 
-Called at runtime to verify the direction.
-
-## escape(kind, expr, params_acc, vars, env)
+## escape/5
 
 Escapes an order by query.
 
@@ -34,38 +33,39 @@ pairs at runtime. Escaping also validates direction is one of
       desc: 13],
      {[], %{}}}
 
-## field!(kind, field)
-
-Called at runtime to verify a field.
-
-## order_by!(query, exprs, op, file, line)
-
-Called at runtime to assemble order_by.
-
-## order_by_or_distinct!(kind, query, exprs, params)
-
-Shared between order_by and distinct.
-
-## quoted_dir!(kind, dir)
+## quoted_dir!/2
 
 Checks the variable is a quoted direction at compilation time or
 delegate the check to runtime for interpolation.
 
-## update_order_bys(orders, expr, mode)
+## dir!/2
+
+Called at runtime to verify the direction.
+
+## field!/2
+
+Called at runtime to verify a field.
+
+## order_by_or_distinct!/4
+
+Shared between order_by and distinct.
+
+## order_by!/5
+
+Called at runtime to assemble order_by.
+
+## build/5
+
+Builds a quoted expression.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## apply/3
+
+The callback applied by `build/4` to build the query.
+
+## update_order_bys/3
 
 Updates the `order_bys` value for a query.
-
-## valid_direction?(term)
-
-Returns `true` if term is a valid order_by direction; otherwise returns `false`.
-
-## Examples
-
-    iex> valid_direction?(:asc)
-    true
-
-    iex> valid_direction?(:desc)
-    true
-
-    iex> valid_direction?(:invalid)
-    false

@@ -2,7 +2,7 @@
 
 Provides API endpoints related to dependabot
 
-## add_selected_repo_to_org_secret(org, secret_name, repository_id, opts \\ [])
+## add_selected_repo_to_org_secret/4
 
 Add selected repository to an organization secret
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#add-selected-repository-to-an-organization-secret)
 
-## create_or_update_org_secret(org, secret_name, body, opts \\ [])
+## create_or_update_org_secret/4
 
 Create or update an organization secret
 
@@ -29,7 +29,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret)
 
-## create_or_update_repo_secret(owner, repo, secret_name, body, opts \\ [])
+## create_or_update_repo_secret/5
 
 Create or update a repository secret
 
@@ -42,7 +42,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#create-or-update-a-repository-secret)
 
-## delete_org_secret(org, secret_name, opts \\ [])
+## delete_org_secret/3
 
 Delete an organization secret
 
@@ -54,7 +54,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#delete-an-organization-secret)
 
-## delete_repo_secret(owner, repo, secret_name, opts \\ [])
+## delete_repo_secret/4
 
 Delete a repository secret
 
@@ -66,7 +66,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#delete-a-repository-secret)
 
-## get_alert(owner, repo, alert_number, opts \\ [])
+## get_alert/4
 
 Get a Dependabot alert
 
@@ -76,7 +76,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/dependabot/alerts#get-a-dependabot-alert)
 
-## get_org_public_key(org, opts \\ [])
+## get_org_public_key/2
 
 Get an organization public key
 
@@ -89,7 +89,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key)
 
-## get_org_secret(org, secret_name, opts \\ [])
+## get_org_secret/3
 
 Get an organization secret
 
@@ -101,7 +101,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret)
 
-## get_repo_public_key(owner, repo, opts \\ [])
+## get_repo_public_key/3
 
 Get a repository public key
 
@@ -115,7 +115,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key)
 
-## get_repo_secret(owner, repo, secret_name, opts \\ [])
+## get_repo_secret/4
 
 Get a repository secret
 
@@ -127,7 +127,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret)
 
-## list_alerts_for_enterprise(enterprise, opts \\ [])
+## list_alerts_for_enterprise/2
 
 List Dependabot alerts for an enterprise
 
@@ -170,7 +170,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
 
   * [API method documentation](https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-enterprise)
 
-## list_alerts_for_org(org, opts \\ [])
+## list_alerts_for_org/2
 
 List Dependabot alerts for an organization
 
@@ -211,7 +211,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization)
 
-## list_alerts_for_repo(owner, repo, opts \\ [])
+## list_alerts_for_repo/3
 
 List Dependabot alerts for a repository
 
@@ -250,7 +250,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository)
 
-## list_org_secrets(org, opts \\ [])
+## list_org_secrets/2
 
 List organization secrets
 
@@ -268,7 +268,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#list-organization-secrets)
 
-## list_repo_secrets(owner, repo, opts \\ [])
+## list_repo_secrets/3
 
 List repository secrets
 
@@ -286,7 +286,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#list-repository-secrets)
 
-## list_selected_repos_for_org_secret(org, secret_name, opts \\ [])
+## list_selected_repos_for_org_secret/3
 
 List selected repositories for an organization secret
 
@@ -304,7 +304,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#list-selected-repositories-for-an-organization-secret)
 
-## remove_selected_repo_from_org_secret(org, secret_name, repository_id, opts \\ [])
+## remove_selected_repo_from_org_secret/4
 
 Remove selected repository from an organization secret
 
@@ -318,7 +318,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#remove-selected-repository-from-an-organization-secret)
 
-## set_selected_repos_for_org_secret(org, secret_name, body, opts \\ [])
+## set_selected_repos_for_org_secret/4
 
 Set selected repositories for an organization secret
 
@@ -332,7 +332,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/dependabot/secrets#set-selected-repositories-for-an-organization-secret)
 
-## update_alert(owner, repo, alert_number, body, opts \\ [])
+## update_alert/5
 
 Update a Dependabot alert
 

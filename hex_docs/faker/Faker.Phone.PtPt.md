@@ -2,22 +2,22 @@
 
 Functions for generating phone related data for portugal location
 
-## cell_number()
+## number/0
 
-Returns a random cell phone number
+Returns a random phone number.
 
 ## Examples
 
-    iex> Faker.Phone.PtPt.cell_number()
-    "919999999"
-    iex> Faker.Phone.PtPt.cell_number()
+    iex> Faker.Phone.PtPt.number()
     "929999999"
-    iex> Faker.Phone.PtPt.cell_number()
+    iex> Faker.Phone.PtPt.number()
+    "919999999"
+    iex> Faker.Phone.PtPt.number()
+    "234999999"
+    iex> Faker.Phone.PtPt.number()
     "939999999"
-    iex> Faker.Phone.PtPt.cell_number()
-    "969999999"
 
-## landline_number()
+## landline_number/0
 
 Returns a random landline phone number
 
@@ -32,17 +32,17 @@ Returns a random landline phone number
     iex> Faker.Phone.PtPt.landline_number()
     "399999998"
 
-## number()
+## cell_number/0
 
-Returns a random phone number.
+Returns a random cell phone number
 
 ## Examples
 
-    iex> Faker.Phone.PtPt.number()
-    "929999999"
-    iex> Faker.Phone.PtPt.number()
+    iex> Faker.Phone.PtPt.cell_number()
     "919999999"
-    iex> Faker.Phone.PtPt.number()
-    "234999999"
-    iex> Faker.Phone.PtPt.number()
+    iex> Faker.Phone.PtPt.cell_number()
+    "929999999"
+    iex> Faker.Phone.PtPt.cell_number()
     "939999999"
+    iex> Faker.Phone.PtPt.cell_number()
+    "969999999"

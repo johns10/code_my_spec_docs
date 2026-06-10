@@ -2,40 +2,40 @@
 
 `SourceFile` structs represent a source file in the codebase.
 
-## ast(source_file)
+## parse/2
+
+Returns a `SourceFile` struct for the given `source` code and `filename`.
+
+## ast/1
 
 Returns the AST for the given `source_file`.
 
-## column(source_file, line_no, trigger)
+## lines/1
 
-Returns the column of the given `trigger` inside the given line.
+Returns the lines of source code for the given `source_file`.
 
-NOTE: Both `line_no` and the returned index are 1-based.
+## source/1
 
-## line_at(source_file, line_no)
+Returns the source code for the given `source_file`.
+
+## source_and_filename/2
+
+Returns the source code and filename for the given `source_file_or_source`.
+
+## line_at/2
 
 Returns the line at the given `line_no`.
 
 NOTE: `line_no` is a 1-based index.
 
-## line_at(source_file, line_no, column1, column2)
+## line_at/4
 
 Returns the snippet at the given `line_no` between `column1` and `column2`.
 
 NOTE: `line_no` is a 1-based index.
 
-## lines(source_file)
+## column/3
 
-Returns the lines of source code for the given `source_file`.
+Returns the column of the given `trigger` inside the given line.
 
-## parse(source, filename)
-
-Returns a `SourceFile` struct for the given `source` code and `filename`.
-
-## source(source_file)
-
-Returns the source code for the given `source_file`.
-
-## source_and_filename(source_file_or_source, default_filename \\ "nofilename")
-
-Returns the source code and filename for the given `source_file_or_source`.
+NOTE: Both `line_no` and the returned index are 1-based.

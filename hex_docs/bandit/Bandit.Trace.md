@@ -30,17 +30,7 @@ queue will not be included in this output.
 sent and received on all requests which are contained in the output. It is therefore of the utmost
 importance that you carefully redact the output before sharing it publicly.
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## get_events()
-
-Return the complete queue of telemetry events that `Bandit.Trace` is currently tracking
-
-## start_tracing(opts \\ [])
+## start_tracing/1
 
 Start tracing of all Bandit requests
 
@@ -51,6 +41,10 @@ See module documentation for intended usage. Accepts the following options:
 * `trace_on_exception`: Whether or not to emit traces when an error is raised within
   Bandit. Defaults to `true`
 
-## stop_tracing()
+## stop_tracing/0
 
 Stop any active trace session
+
+## get_events/0
+
+Return the complete queue of telemetry events that `Bandit.Trace` is currently tracking

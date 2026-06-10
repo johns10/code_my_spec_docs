@@ -122,7 +122,11 @@ files and combine them into a list:
     |> run_check(FooBar)
     |> assert_issue(fn issue -> assert issue.filename == "foo.ex" end)
 
-## assert_issue(issues, callback \\ nil)
+## refute_issues/1
+
+Refutes the presence of any issues.
+
+## assert_issue/2
 
 Asserts the presence of a single issue.
 
@@ -141,28 +145,7 @@ If `callback` is given, calls it with the found issue:
       assert issue.trigger == "foo"
     end)
 
-## assert_issue_matches(issues, pattern)
-
-Asserts the presence of one or more issues based on the given patterns.
-
-This is useful for saying "in this snippet, there should be at least one issue looking like this":
-
-    source_file
-    |> run_check(FooBar)
-    |> assert_issue_matches(%{line_no: 3})
-
-The given patterns can contain all fields of `Credo.Issue`:
-
-    source_file
-    |> run_check(FooBar)
-    |> assert_issue_matches(%{
-        message: "Module attribute @config_7 causes trouble",
-        trigger: "@config_7",
-        line_no: 8,
-        column: 13
-      })
-
-## assert_issues(issues, callback \\ nil)
+## assert_issues/2
 
 Asserts the presence of more than one issue.
 
@@ -186,7 +169,7 @@ If a number is given, checks that the count of issues matches:
     |> run_check(FooBar)
     |> assert_issues(3)
 
-## assert_issues_match(issues, patterns)
+## assert_issues_match/2
 
 Asserts the presence of one or more issues based on the given patterns.
 
@@ -228,11 +211,28 @@ The given patterns can contain all fields of `Credo.Issue`:
       %{line_no: 6}
     ])
 
-## refute_issues(issues)
+## assert_issue_matches/2
 
-Refutes the presence of any issues.
+Asserts the presence of one or more issues based on the given patterns.
 
-## run_check(source_files, check, params \\ [])
+This is useful for saying "in this snippet, there should be at least one issue looking like this":
+
+    source_file
+    |> run_check(FooBar)
+    |> assert_issue_matches(%{line_no: 3})
+
+The given patterns can contain all fields of `Credo.Issue`:
+
+    source_file
+    |> run_check(FooBar)
+    |> assert_issue_matches(%{
+        message: "Module attribute @config_7 causes trouble",
+        trigger: "@config_7",
+        line_no: 8,
+        column: 13
+      })
+
+## run_check/3
 
 Runs the given `check` on the given `source_file` using the given `params`.
 
@@ -240,21 +240,21 @@ Runs the given `check` on the given `source_file` using the given `params`.
     |> to_source_file()
     |> run_check(MyProject.MyCheck, foo_parameter: "bar")
 
-## to_source_file(source)
+## to_source_file/1
 
 Converts the given `source` string to a `%SourceFile{}`.
 
     "x = 5"
     |> to_source_file()
 
-## to_source_file(source, filename)
+## to_source_file/2
 
 Converts the given `source` string to a `%SourceFile{}` with the given `filename`.
 
     "x = 5"
     |> to_source_file("simple.ex")
 
-## to_source_files(list)
+## to_source_files/1
 
 Converts the given `list` of source code strings to a list of `%SourceFile{}` structs.
 

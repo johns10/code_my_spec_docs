@@ -2,15 +2,11 @@
 
 
 
-## apply(query, kind, expr)
+## with_ties!/1
 
-The callback applied by `build/4` to build the query.
+Validates `with_ties` at runtime.
 
-## apply_limit(limit, with_ties)
-
-Applies the `with_ties` value to the `limit` struct.
-
-## build(type, query, binding, expr, env)
+## build/5
 
 Builds a quoted expression.
 
@@ -18,6 +14,10 @@ The quoted expression should evaluate to a query at runtime.
 If possible, it does all calculations at compile time to avoid
 runtime work.
 
-## with_ties!(with_ties)
+## apply/3
 
-Validates `with_ties` at runtime.
+The callback applied by `build/4` to build the query.
+
+## apply_limit/2
+
+Applies the `with_ties` value to the `limit` struct.

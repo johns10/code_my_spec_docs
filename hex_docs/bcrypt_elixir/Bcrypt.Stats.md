@@ -22,7 +22,7 @@ has to log in, and the hardware you are using. However, for password
 hashing, we do not recommend setting the number of log rounds to anything
 less than 12.
 
-## report(opts \\ [])
+## report/1
 
 Hash a password with Bcrypt and print out a report.
 

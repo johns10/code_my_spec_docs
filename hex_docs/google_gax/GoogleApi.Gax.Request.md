@@ -2,7 +2,46 @@
 
 This module is used to build an HTTP request
 
-## add_optional_params(request, definitions, list)
+## library_version/2
+
+Specify the library version when building a request
+
+## Parameters
+
+*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
+*   `version` (*type:* `String`) - Library version
+
+## Returns
+
+*   `GoogleApi.Gax.Request.t`
+
+## method/2
+
+Specify the request method when building a request
+
+## Parameters
+
+*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
+*   `m` (*type:* `String`) - Request method
+
+## Returns
+
+*   `GoogleApi.Gax.Request.t`
+
+## url/3
+
+Specify the request URL when building a request
+
+## Parameters
+
+*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
+*   `u` (*type:* `String`) - Request URL
+
+## Returns
+
+*   `GoogleApi.Gax.Request.t`
+
+## add_optional_params/3
 
 Add optional parameters to the request
 
@@ -16,7 +55,7 @@ Add optional parameters to the request
 
 *   `GoogleApi.Gax.Request.t`
 
-## add_param(request, location, key, values)
+## add_param/4
 
 Add optional parameters to the request
 
@@ -26,45 +65,6 @@ Add optional parameters to the request
 *   `location` (*type:* `atom()`) - Where to put the parameter
 *   `key` (*type:* `atom()`) - The name of the parameter
 *   `value` (*type:* `any()`) - The value of the parameter
-
-## Returns
-
-*   `GoogleApi.Gax.Request.t`
-
-## library_version(request, version)
-
-Specify the library version when building a request
-
-## Parameters
-
-*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
-*   `version` (*type:* `String`) - Library version
-
-## Returns
-
-*   `GoogleApi.Gax.Request.t`
-
-## method(request, m)
-
-Specify the request method when building a request
-
-## Parameters
-
-*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
-*   `m` (*type:* `String`) - Request method
-
-## Returns
-
-*   `GoogleApi.Gax.Request.t`
-
-## url(request, u, replacements)
-
-Specify the request URL when building a request
-
-## Parameters
-
-*   `request` (*type:* `GoogleApi.Gax.Request.t`) - Collected request options
-*   `u` (*type:* `String`) - Request URL
 
 ## Returns
 

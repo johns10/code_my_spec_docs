@@ -2,7 +2,7 @@
 
 Provides API endpoints related to gitignore
 
-## get_all_templates(opts \\ [])
+## get_all_templates/1
 
 Get all gitignore templates
 
@@ -12,7 +12,7 @@ List all templates available to pass as an option when [creating a repository](h
 
   * [API method documentation](https://docs.github.com/rest/gitignore/gitignore#get-all-gitignore-templates)
 
-## get_template(name, opts \\ [])
+## get_template/2
 
 Get a gitignore template
 

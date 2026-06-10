@@ -25,7 +25,11 @@ Union types often require this kind of inference. This module handles them on a 
 basis using required keys to determine the correct type. Some of these are done on a "best
 guess" basis due to a lack of official documentation.
 
-## decode(response, type)
+## decode_response/2
+
+Decode a response body based on type information from the operation and schemas
+
+## decode/2
 
 Manually decode a response
 
@@ -33,10 +37,6 @@ This function takes a parsed response and decodes it using the given type. It is
 use in testing scenarios only. For regular API requests, use `decode_response/2` as part of the
 client stack.
 
-## decode_response(operation, opts)
-
-Decode a response body based on type information from the operation and schemas
-
-## normalize_errors(operation, opts)
+## normalize_errors/2
 
 Change API error responses into `GitHub.Error` results

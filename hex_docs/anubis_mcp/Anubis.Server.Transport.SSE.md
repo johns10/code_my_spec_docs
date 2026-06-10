@@ -63,45 +63,11 @@ For integration with existing Phoenix/Plug applications:
 - `:server` - The MCP server process to connect to
 - `:name` - Process registration name
 
-## child_spec(init_arg)
+## start_link/1
 
-Returns a specification to start this module under a supervisor.
+Starts the SSE transport.
 
-See `Supervisor`.
-
-## get_endpoint_url(transport)
-
-Gets the endpoint URL that should be sent to clients.
-
-This constructs the URL that clients should use for POST requests.
-
-## get_sse_handler(transport, session_id)
-
-Gets the SSE handler process for a session.
-
-Returns the pid of the process handling SSE for this session,
-or nil if no SSE connection exists.
-
-## handle_message(transport, session_id, message, context)
-
-Handles an incoming message from a client with request context.
-
-Called by the Plug when a message is received via HTTP POST.
-
-## register_sse_handler(transport, session_id)
-
-Registers an SSE handler process for a session.
-
-Called by the Plug when establishing an SSE connection.
-The calling process becomes the SSE handler for the session.
-
-## route_to_session(transport, session_id, message)
-
-Routes a message to a specific session's SSE handler.
-
-Used for targeted server notifications to specific clients.
-
-## send_message(transport, message, opts)
+## send_message/3
 
 Sends a message to the client via the active SSE connection.
 
@@ -115,7 +81,7 @@ This broadcasts to all active SSE connections for the session.
   * `:ok` if message was sent successfully
   * `{:error, reason}` otherwise
 
-## shutdown(transport)
+## shutdown/1
 
 Shuts down the transport connection.
 
@@ -124,21 +90,40 @@ This terminates all active sessions managed by this transport.
 ## Parameters
   * `transport` - The transport process
 
-## start_link(opts)
+## register_sse_handler/2
 
-Starts the SSE transport.
+Registers an SSE handler process for a session.
 
-## unregister_sse_handler(transport, session_id)
+Called by the Plug when establishing an SSE connection.
+The calling process becomes the SSE handler for the session.
+
+## unregister_sse_handler/2
 
 Unregisters an SSE handler process for a session.
 
 Called when the SSE connection is closed.
 
-## option/0
+## handle_message/4
 
-SSE transport options
+Handles an incoming message from a client with request context.
 
-- `:server` - The server process (required)
-- `:name` - Name for registering the GenServer (required)
-- `:base_url` - Base URL for constructing endpoint URLs
-- `:post_path` - Path for POST endpoint (default: "/messages")
+Called by the Plug when a message is received via HTTP POST.
+
+## get_sse_handler/2
+
+Gets the SSE handler process for a session.
+
+Returns the pid of the process handling SSE for this session,
+or nil if no SSE connection exists.
+
+## route_to_session/3
+
+Routes a message to a specific session's SSE handler.
+
+Used for targeted server notifications to specific clients.
+
+## get_endpoint_url/1
+
+Gets the endpoint URL that should be sent to clients.
+
+This constructs the URL that clients should use for POST requests.

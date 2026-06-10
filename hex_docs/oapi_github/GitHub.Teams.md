@@ -2,7 +2,7 @@
 
 Provides API endpoints related to teams
 
-## add_member_legacy(team_id, username, opts \\ [])
+## add_member_legacy/3
 
 Add team member (Legacy)
 
@@ -22,7 +22,7 @@ Note that you'll need to set `Content-Length` to zero when calling out to this e
 
   * [API method documentation](https://docs.github.com/rest/teams/members#add-team-member-legacy)
 
-## add_or_update_membership_for_user_in_org(org, team_slug, username, body, opts \\ [])
+## add_or_update_membership_for_user_in_org/5
 
 Add or update team membership for a user
 
@@ -42,7 +42,7 @@ If the user is already a member of the team, this endpoint will update the role 
 
   * [API method documentation](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user)
 
-## add_or_update_membership_for_user_legacy(team_id, username, body, opts \\ [])
+## add_or_update_membership_for_user_legacy/4
 
 Add or update team membership for a user (Legacy)
 
@@ -62,7 +62,7 @@ If the user is already a member of the team, this endpoint will update the role 
 
   * [API method documentation](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user-legacy)
 
-## add_or_update_project_permissions_in_org(org, team_slug, project_id, body, opts \\ [])
+## add_or_update_project_permissions_in_org/5
 
 Add or update team project permissions
 
@@ -74,7 +74,7 @@ Adds an organization project to a team. To add a project to a team or update the
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions)
 
-## add_or_update_project_permissions_legacy(team_id, project_id, body, opts \\ [])
+## add_or_update_project_permissions_legacy/4
 
 Add or update team project permissions (Legacy)
 
@@ -86,7 +86,7 @@ Adds an organization project to a team. To add a project to a team or update the
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#add-or-update-team-project-permissions-legacy)
 
-## add_or_update_repo_permissions_in_org(org, team_slug, owner, repo, body, opts \\ [])
+## add_or_update_repo_permissions_in_org/6
 
 Add or update team repository permissions
 
@@ -100,7 +100,7 @@ For more information about the permission levels, see "[Repository permission le
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions)
 
-## add_or_update_repo_permissions_legacy(team_id, owner, repo, body, opts \\ [])
+## add_or_update_repo_permissions_legacy/5
 
 Add or update team repository permissions (Legacy)
 
@@ -114,7 +114,7 @@ Note that, if you choose not to pass any parameters, you'll need to set `Content
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions-legacy)
 
-## check_permissions_for_project_in_org(org, team_slug, project_id, opts \\ [])
+## check_permissions_for_project_in_org/4
 
 Check team permissions for a project
 
@@ -126,7 +126,7 @@ Checks whether a team has `read`, `write`, or `admin` permissions for an organiz
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project)
 
-## check_permissions_for_project_legacy(team_id, project_id, opts \\ [])
+## check_permissions_for_project_legacy/3
 
 Check team permissions for a project (Legacy)
 
@@ -138,7 +138,7 @@ Checks whether a team has `read`, `write`, or `admin` permissions for an organiz
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-project-legacy)
 
-## check_permissions_for_repo_in_org(org, team_slug, owner, repo, opts \\ [])
+## check_permissions_for_repo_in_org/5
 
 Check team permissions for a repository
 
@@ -156,7 +156,7 @@ If the repository is private, you must have at least `read` permission for that 
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository)
 
-## check_permissions_for_repo_legacy(team_id, owner, repo, opts \\ [])
+## check_permissions_for_repo_legacy/4
 
 Check team permissions for a repository (Legacy)
 
@@ -170,7 +170,7 @@ You can also get information about the specified repository, including what perm
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository-legacy)
 
-## create(org, body, opts \\ [])
+## create/3
 
 Create a team
 
@@ -182,7 +182,7 @@ When you create a new team, you automatically become a team maintainer without e
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#create-a-team)
 
-## create_discussion_comment_in_org(org, team_slug, discussion_number, body, opts \\ [])
+## create_discussion_comment_in_org/5
 
 Create a discussion comment
 
@@ -198,7 +198,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment)
 
-## create_discussion_comment_legacy(team_id, discussion_number, body, opts \\ [])
+## create_discussion_comment_legacy/4
 
 Create a discussion comment (Legacy)
 
@@ -214,7 +214,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment-legacy)
 
-## create_discussion_in_org(org, team_slug, body, opts \\ [])
+## create_discussion_in_org/4
 
 Create a discussion
 
@@ -230,7 +230,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#create-a-discussion)
 
-## create_discussion_legacy(team_id, body, opts \\ [])
+## create_discussion_legacy/3
 
 Create a discussion (Legacy)
 
@@ -246,7 +246,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#create-a-discussion-legacy)
 
-## delete_discussion_comment_in_org(org, team_slug, discussion_number, comment_number, opts \\ [])
+## delete_discussion_comment_in_org/5
 
 Delete a discussion comment
 
@@ -260,7 +260,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment)
 
-## delete_discussion_comment_legacy(team_id, discussion_number, comment_number, opts \\ [])
+## delete_discussion_comment_legacy/4
 
 Delete a discussion comment (Legacy)
 
@@ -274,7 +274,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment-legacy)
 
-## delete_discussion_in_org(org, team_slug, discussion_number, opts \\ [])
+## delete_discussion_in_org/4
 
 Delete a discussion
 
@@ -288,7 +288,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#delete-a-discussion)
 
-## delete_discussion_legacy(team_id, discussion_number, opts \\ [])
+## delete_discussion_legacy/3
 
 Delete a discussion (Legacy)
 
@@ -302,7 +302,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#delete-a-discussion-legacy)
 
-## delete_in_org(org, team_slug, opts \\ [])
+## delete_in_org/3
 
 Delete a team
 
@@ -316,7 +316,7 @@ If you are an organization owner, deleting a parent team will delete all of its 
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#delete-a-team)
 
-## delete_legacy(team_id, opts \\ [])
+## delete_legacy/2
 
 Delete a team (Legacy)
 
@@ -330,7 +330,7 @@ If you are an organization owner, deleting a parent team will delete all of its 
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#delete-a-team-legacy)
 
-## get_by_name(org, team_slug, opts \\ [])
+## get_by_name/3
 
 Get a team by name
 
@@ -342,7 +342,7 @@ Gets a team using the team's `slug`. To create the `slug`, GitHub replaces speci
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#get-a-team-by-name)
 
-## get_discussion_comment_in_org(org, team_slug, discussion_number, comment_number, opts \\ [])
+## get_discussion_comment_in_org/5
 
 Get a discussion comment
 
@@ -356,7 +356,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment)
 
-## get_discussion_comment_legacy(team_id, discussion_number, comment_number, opts \\ [])
+## get_discussion_comment_legacy/4
 
 Get a discussion comment (Legacy)
 
@@ -370,7 +370,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment-legacy)
 
-## get_discussion_in_org(org, team_slug, discussion_number, opts \\ [])
+## get_discussion_in_org/4
 
 Get a discussion
 
@@ -384,7 +384,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#get-a-discussion)
 
-## get_discussion_legacy(team_id, discussion_number, opts \\ [])
+## get_discussion_legacy/3
 
 Get a discussion (Legacy)
 
@@ -398,7 +398,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#get-a-discussion-legacy)
 
-## get_legacy(team_id, opts \\ [])
+## get_legacy/2
 
 Get a team (Legacy)
 
@@ -408,7 +408,7 @@ Get a team (Legacy)
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#get-a-team-legacy)
 
-## get_member_legacy(team_id, username, opts \\ [])
+## get_member_legacy/3
 
 Get team member (Legacy)
 
@@ -422,7 +422,7 @@ To list members in a team, the team must be visible to the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/teams/members#get-team-member-legacy)
 
-## get_membership_for_user_in_org(org, team_slug, username, opts \\ [])
+## get_membership_for_user_in_org/4
 
 Get team membership for a user
 
@@ -441,7 +441,7 @@ The `role` for organization owners is set to `maintainer`. For more information 
 
   * [API method documentation](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user)
 
-## get_membership_for_user_legacy(team_id, username, opts \\ [])
+## get_membership_for_user_legacy/3
 
 Get team membership for a user (Legacy)
 
@@ -460,7 +460,7 @@ The `role` for organization owners is set to `maintainer`. For more information 
 
   * [API method documentation](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user-legacy)
 
-## list(org, opts \\ [])
+## list/2
 
 List teams
 
@@ -475,7 +475,7 @@ Lists all teams in an organization that are visible to the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-teams)
 
-## list_child_in_org(org, team_slug, opts \\ [])
+## list_child_in_org/3
 
 List child teams
 
@@ -492,7 +492,7 @@ Lists the child teams of the team specified by `{team_slug}`.
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-child-teams)
 
-## list_child_legacy(team_id, opts \\ [])
+## list_child_legacy/2
 
 List child teams (Legacy)
 
@@ -507,7 +507,7 @@ List child teams (Legacy)
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-child-teams-legacy)
 
-## list_discussion_comments_in_org(org, team_slug, discussion_number, opts \\ [])
+## list_discussion_comments_in_org/4
 
 List discussion comments
 
@@ -527,7 +527,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments)
 
-## list_discussion_comments_legacy(team_id, discussion_number, opts \\ [])
+## list_discussion_comments_legacy/3
 
 List discussion comments (Legacy)
 
@@ -547,7 +547,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments-legacy)
 
-## list_discussions_in_org(org, team_slug, opts \\ [])
+## list_discussions_in_org/3
 
 List discussions
 
@@ -568,7 +568,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#list-discussions)
 
-## list_discussions_legacy(team_id, opts \\ [])
+## list_discussions_legacy/2
 
 List discussions (Legacy)
 
@@ -588,7 +588,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#list-discussions-legacy)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List teams for the authenticated user
 
@@ -608,7 +608,7 @@ When using a fine-grained personal access token, the resource owner of the token
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-teams-for-the-authenticated-user)
 
-## list_members_in_org(org, team_slug, opts \\ [])
+## list_members_in_org/3
 
 List team members
 
@@ -626,7 +626,7 @@ To list members in a team, the team must be visible to the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/teams/members#list-team-members)
 
-## list_members_legacy(team_id, opts \\ [])
+## list_members_legacy/2
 
 List team members (Legacy)
 
@@ -644,7 +644,7 @@ Team members will include the members of child teams.
 
   * [API method documentation](https://docs.github.com/rest/teams/members#list-team-members-legacy)
 
-## list_pending_invitations_in_org(org, team_slug, opts \\ [])
+## list_pending_invitations_in_org/3
 
 List pending team invitations
 
@@ -661,7 +661,7 @@ The return hash contains a `role` field which refers to the Organization Invitat
 
   * [API method documentation](https://docs.github.com/rest/teams/members#list-pending-team-invitations)
 
-## list_pending_invitations_legacy(team_id, opts \\ [])
+## list_pending_invitations_legacy/2
 
 List pending team invitations (Legacy)
 
@@ -678,7 +678,7 @@ The return hash contains a `role` field which refers to the Organization Invitat
 
   * [API method documentation](https://docs.github.com/rest/teams/members#list-pending-team-invitations-legacy)
 
-## list_projects_in_org(org, team_slug, opts \\ [])
+## list_projects_in_org/3
 
 List team projects
 
@@ -695,7 +695,7 @@ Lists the organization projects for a team.
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-team-projects)
 
-## list_projects_legacy(team_id, opts \\ [])
+## list_projects_legacy/2
 
 List team projects (Legacy)
 
@@ -712,7 +712,7 @@ Lists the organization projects for a team.
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-team-projects-legacy)
 
-## list_repos_in_org(org, team_slug, opts \\ [])
+## list_repos_in_org/3
 
 List team repositories
 
@@ -729,7 +729,7 @@ Lists a team's repositories visible to the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-team-repositories)
 
-## list_repos_legacy(team_id, opts \\ [])
+## list_repos_legacy/2
 
 List team repositories (Legacy)
 
@@ -744,7 +744,7 @@ List team repositories (Legacy)
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#list-team-repositories-legacy)
 
-## remove_member_legacy(team_id, username, opts \\ [])
+## remove_member_legacy/3
 
 Remove team member (Legacy)
 
@@ -762,7 +762,7 @@ To remove a team member, the authenticated user must have 'admin' permissions to
 
   * [API method documentation](https://docs.github.com/rest/teams/members#remove-team-member-legacy)
 
-## remove_membership_for_user_in_org(org, team_slug, username, opts \\ [])
+## remove_membership_for_user_in_org/4
 
 Remove team membership for a user
 
@@ -778,7 +778,7 @@ Team synchronization is available for organizations using GitHub Enterprise Clou
 
   * [API method documentation](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user)
 
-## remove_membership_for_user_legacy(team_id, username, opts \\ [])
+## remove_membership_for_user_legacy/3
 
 Remove team membership for a user (Legacy)
 
@@ -794,7 +794,7 @@ To remove a membership between a user and a team, the authenticated user must ha
 
   * [API method documentation](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user-legacy)
 
-## remove_project_in_org(org, team_slug, project_id, opts \\ [])
+## remove_project_in_org/4
 
 Remove a project from a team
 
@@ -806,7 +806,7 @@ Removes an organization project from a team. An organization owner or a team mai
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team)
 
-## remove_project_legacy(team_id, project_id, opts \\ [])
+## remove_project_legacy/3
 
 Remove a project from a team (Legacy)
 
@@ -818,7 +818,7 @@ Removes an organization project from a team. An organization owner or a team mai
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#remove-a-project-from-a-team-legacy)
 
-## remove_repo_in_org(org, team_slug, owner, repo, opts \\ [])
+## remove_repo_in_org/5
 
 Remove a repository from a team
 
@@ -830,7 +830,7 @@ If the authenticated user is an organization owner or a team maintainer, they ca
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team)
 
-## remove_repo_legacy(team_id, owner, repo, opts \\ [])
+## remove_repo_legacy/4
 
 Remove a repository from a team (Legacy)
 
@@ -842,7 +842,7 @@ If the authenticated user is an organization owner or a team maintainer, they ca
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team-legacy)
 
-## update_discussion_comment_in_org(org, team_slug, discussion_number, comment_number, body, opts \\ [])
+## update_discussion_comment_in_org/6
 
 Update a discussion comment
 
@@ -856,7 +856,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment)
 
-## update_discussion_comment_legacy(team_id, discussion_number, comment_number, body, opts \\ [])
+## update_discussion_comment_legacy/5
 
 Update a discussion comment (Legacy)
 
@@ -870,7 +870,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment-legacy)
 
-## update_discussion_in_org(org, team_slug, discussion_number, body, opts \\ [])
+## update_discussion_in_org/5
 
 Update a discussion
 
@@ -884,7 +884,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#update-a-discussion)
 
-## update_discussion_legacy(team_id, discussion_number, body, opts \\ [])
+## update_discussion_legacy/4
 
 Update a discussion (Legacy)
 
@@ -898,7 +898,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/teams/discussions#update-a-discussion-legacy)
 
-## update_in_org(org, team_slug, body, opts \\ [])
+## update_in_org/4
 
 Update a team
 
@@ -910,7 +910,7 @@ To edit a team, the authenticated user must either be an organization owner or a
 
   * [API method documentation](https://docs.github.com/rest/teams/teams#update-a-team)
 
-## update_legacy(team_id, body, opts \\ [])
+## update_legacy/3
 
 Update a team (Legacy)
 

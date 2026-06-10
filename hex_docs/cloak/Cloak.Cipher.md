@@ -54,31 +54,3 @@ You can now use your cipher with your vault!
 
     MyApp.Vault.decrypt!("Hello, World!")
     # => "World!"
-
-## can_decrypt?/2
-
-Determines if a given ciphertext can be decrypted by this cipher. Options
-are derived from the cipher configuration. See `encrypt/2`.
-
-## decrypt/2
-
-Decrypt a value, using the given opts. Options are derived from the cipher
-configuration. See `encrypt/2`.
-
-## encrypt/2
-
-Encrypt a value, using the given keyword list of options. These options
-derive from the cipher configuration, like so:
-
-    config :my_app, MyApp.Vault,
-      ciphers: [
-        default: {Cloak.Ciphers.AES.GCM, tag: "AES.GCM.V1", key: <<1, 0, ...>>}
-      ]
-
-The above configuration will result in the following `opts` being passed
-to this function:
-
-    [tag: "AES.GCM.V1", key: <<1, 0, ...>>]
-
-Your implementation **must** include any information it will need for
-decryption in the generated ciphertext.

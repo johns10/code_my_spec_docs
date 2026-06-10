@@ -1,12 +1,8 @@
 # Swoosh.Adapter
 
-Specification of the email delivery adapter.
 
-## deliver/2
 
-Delivers an email with the given config.
-
-## deliver_many/2
+## validate_config/2
 
 Delivers multiple emails with the given config in one request. Some email providers allow multiple
 messages to be sent in one HTTP request, for example Mailjet and Postmark allow this. Check your

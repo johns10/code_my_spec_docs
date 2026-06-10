@@ -2,7 +2,7 @@
 
 Handler for dealing with generating access tokens.
 
-## grant(request, config \\ [])
+## grant/2
 
 Grants an access token based on grant_type strategy.
 
@@ -18,7 +18,7 @@ Grants an access token based on grant_type strategy.
 
     {:error, %{error: error, error_description: description}, http_status}
 
-## revoke(request, config \\ [])
+## revoke/2
 
 Revokes an access token as per http://tools.ietf.org/html/rfc7009
 

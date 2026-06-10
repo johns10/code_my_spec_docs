@@ -2,7 +2,7 @@
 
 
 
-## app(app_name)
+## app/1
 
 Constructs a `GitHub.App` struct using information from configuration
 
@@ -33,7 +33,7 @@ the app's ID (integer), and the app's private key (string, PEM formatted).
 
 JWTs are designed to last for several minutes.
 
-## raw(module, function, args, opts \\ [])
+## raw/4
 
 Run a client operation and return the raw Operation or Error
 

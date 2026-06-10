@@ -2,7 +2,7 @@
 
 Provides API endpoints related to issues
 
-## add_assignees(owner, repo, issue_number, body, opts \\ [])
+## add_assignees/5
 
 Add assignees to an issue
 
@@ -12,7 +12,7 @@ Adds up to 10 assignees to an issue. Users already assigned to an issue are not 
 
   * [API method documentation](https://docs.github.com/rest/issues/assignees#add-assignees-to-an-issue)
 
-## add_labels(owner, repo, issue_number, body, opts \\ [])
+## add_labels/5
 
 Add labels to an issue
 
@@ -22,7 +22,7 @@ Adds labels to an issue. If you provide an empty array of labels, all labels are
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#add-labels-to-an-issue)
 
-## check_user_can_be_assigned(owner, repo, assignee, opts \\ [])
+## check_user_can_be_assigned/4
 
 Check if a user can be assigned
 
@@ -36,7 +36,7 @@ Otherwise a `404` status code is returned.
 
   * [API method documentation](https://docs.github.com/rest/issues/assignees#check-if-a-user-can-be-assigned)
 
-## check_user_can_be_assigned_to_issue(owner, repo, issue_number, assignee, opts \\ [])
+## check_user_can_be_assigned_to_issue/5
 
 Check if a user can be assigned to a issue
 
@@ -50,7 +50,7 @@ Otherwise a `404` status code is returned.
 
   * [API method documentation](https://docs.github.com/rest/issues/assignees#check-if-a-user-can-be-assigned-to-a-issue)
 
-## create(owner, repo, body, opts \\ [])
+## create/4
 
 Create an issue
 
@@ -70,7 +70,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#create-an-issue)
 
-## create_comment(owner, repo, issue_number, body, opts \\ [])
+## create_comment/5
 
 Create an issue comment
 
@@ -92,7 +92,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#create-an-issue-comment)
 
-## create_label(owner, repo, body, opts \\ [])
+## create_label/4
 
 Create a label
 
@@ -102,7 +102,7 @@ Creates a label for the specified repository with the given name and color. The 
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#create-a-label)
 
-## create_milestone(owner, repo, body, opts \\ [])
+## create_milestone/4
 
 Create a milestone
 
@@ -112,7 +112,7 @@ Creates a milestone.
 
   * [API method documentation](https://docs.github.com/rest/issues/milestones#create-a-milestone)
 
-## delete_comment(owner, repo, comment_id, opts \\ [])
+## delete_comment/4
 
 Delete an issue comment
 
@@ -122,7 +122,7 @@ You can use the REST API to delete comments on issues and pull requests. Every p
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#delete-an-issue-comment)
 
-## delete_label(owner, repo, name, opts \\ [])
+## delete_label/4
 
 Delete a label
 
@@ -132,7 +132,7 @@ Deletes a label using the given label name.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#delete-a-label)
 
-## delete_milestone(owner, repo, milestone_number, opts \\ [])
+## delete_milestone/4
 
 Delete a milestone
 
@@ -142,7 +142,7 @@ Deletes a milestone using the given milestone number.
 
   * [API method documentation](https://docs.github.com/rest/issues/milestones#delete-a-milestone)
 
-## get(owner, repo, issue_number, opts \\ [])
+## get/4
 
 Get an issue
 
@@ -169,7 +169,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#get-an-issue)
 
-## get_comment(owner, repo, comment_id, opts \\ [])
+## get_comment/4
 
 Get an issue comment
 
@@ -186,7 +186,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#get-an-issue-comment)
 
-## get_event(owner, repo, event_id, opts \\ [])
+## get_event/4
 
 Get an issue event
 
@@ -196,7 +196,7 @@ Gets a single event by the event id.
 
   * [API method documentation](https://docs.github.com/rest/issues/events#get-an-issue-event)
 
-## get_label(owner, repo, name, opts \\ [])
+## get_label/4
 
 Get a label
 
@@ -206,7 +206,7 @@ Gets a label using the given name.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#get-a-label)
 
-## get_milestone(owner, repo, milestone_number, opts \\ [])
+## get_milestone/4
 
 Get a milestone
 
@@ -216,7 +216,7 @@ Gets a milestone using the given milestone number.
 
   * [API method documentation](https://docs.github.com/rest/issues/milestones#get-a-milestone)
 
-## list(opts \\ [])
+## list/1
 
 List issues assigned to the authenticated user
 
@@ -255,7 +255,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#list-issues-assigned-to-the-authenticated-user)
 
-## list_assignees(owner, repo, opts \\ [])
+## list_assignees/3
 
 List assignees
 
@@ -270,7 +270,7 @@ Lists the [available assignees](https://docs.github.com/articles/assigning-issue
 
   * [API method documentation](https://docs.github.com/rest/issues/assignees#list-assignees)
 
-## list_comments(owner, repo, issue_number, opts \\ [])
+## list_comments/4
 
 List issue comments
 
@@ -295,7 +295,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#list-issue-comments)
 
-## list_comments_for_repo(owner, repo, opts \\ [])
+## list_comments_for_repo/3
 
 List issue comments for a repository
 
@@ -322,7 +322,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#list-issue-comments-for-a-repository)
 
-## list_events(owner, repo, issue_number, opts \\ [])
+## list_events/4
 
 List issue events
 
@@ -337,7 +337,7 @@ Lists all events for an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/events#list-issue-events)
 
-## list_events_for_repo(owner, repo, opts \\ [])
+## list_events_for_repo/3
 
 List issue events for a repository
 
@@ -352,7 +352,7 @@ Lists events for a repository.
 
   * [API method documentation](https://docs.github.com/rest/issues/events#list-issue-events-for-a-repository)
 
-## list_events_for_timeline(owner, repo, issue_number, opts \\ [])
+## list_events_for_timeline/4
 
 List timeline events for an issue
 
@@ -367,7 +367,7 @@ List all timeline events for an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/timeline#list-timeline-events-for-an-issue)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List user account issues assigned to the authenticated user
 
@@ -400,7 +400,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#list-user-account-issues-assigned-to-the-authenticated-user)
 
-## list_for_org(org, opts \\ [])
+## list_for_org/2
 
 List organization issues assigned to the authenticated user
 
@@ -433,7 +433,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#list-organization-issues-assigned-to-the-authenticated-user)
 
-## list_for_repo(owner, repo, opts \\ [])
+## list_for_repo/3
 
 List repository issues
 
@@ -469,7 +469,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#list-repository-issues)
 
-## list_labels_for_milestone(owner, repo, milestone_number, opts \\ [])
+## list_labels_for_milestone/4
 
 List labels for issues in a milestone
 
@@ -484,7 +484,7 @@ Lists labels for issues in a milestone.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#list-labels-for-issues-in-a-milestone)
 
-## list_labels_for_repo(owner, repo, opts \\ [])
+## list_labels_for_repo/3
 
 List labels for a repository
 
@@ -499,7 +499,7 @@ Lists all labels for a repository.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#list-labels-for-a-repository)
 
-## list_labels_on_issue(owner, repo, issue_number, opts \\ [])
+## list_labels_on_issue/4
 
 List labels for an issue
 
@@ -514,7 +514,7 @@ Lists all labels for an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#list-labels-for-an-issue)
 
-## list_milestones(owner, repo, opts \\ [])
+## list_milestones/3
 
 List milestones
 
@@ -532,7 +532,7 @@ Lists milestones for a repository.
 
   * [API method documentation](https://docs.github.com/rest/issues/milestones#list-milestones)
 
-## lock(owner, repo, issue_number, body, opts \\ [])
+## lock/5
 
 Lock an issue
 
@@ -544,7 +544,7 @@ Note that, if you choose not to pass any parameters, you'll need to set `Content
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#lock-an-issue)
 
-## remove_all_labels(owner, repo, issue_number, opts \\ [])
+## remove_all_labels/4
 
 Remove all labels from an issue
 
@@ -554,7 +554,7 @@ Removes all labels from an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#remove-all-labels-from-an-issue)
 
-## remove_assignees(owner, repo, issue_number, body, opts \\ [])
+## remove_assignees/5
 
 Remove assignees from an issue
 
@@ -564,7 +564,7 @@ Removes one or more assignees from an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/assignees#remove-assignees-from-an-issue)
 
-## remove_label(owner, repo, issue_number, name, opts \\ [])
+## remove_label/5
 
 Remove a label from an issue
 
@@ -574,7 +574,7 @@ Removes the specified label from the issue, and returns the remaining labels on 
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#remove-a-label-from-an-issue)
 
-## set_labels(owner, repo, issue_number, body, opts \\ [])
+## set_labels/5
 
 Set labels for an issue
 
@@ -584,7 +584,7 @@ Removes any previous labels and sets the new labels for an issue.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#set-labels-for-an-issue)
 
-## unlock(owner, repo, issue_number, opts \\ [])
+## unlock/4
 
 Unlock an issue
 
@@ -594,7 +594,7 @@ Users with push access can unlock an issue's conversation.
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#unlock-an-issue)
 
-## update(owner, repo, issue_number, body, opts \\ [])
+## update/5
 
 Update an issue
 
@@ -611,7 +611,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/issues#update-an-issue)
 
-## update_comment(owner, repo, comment_id, body, opts \\ [])
+## update_comment/5
 
 Update an issue comment
 
@@ -628,7 +628,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/issues/comments#update-an-issue-comment)
 
-## update_label(owner, repo, name, body, opts \\ [])
+## update_label/5
 
 Update a label
 
@@ -638,7 +638,7 @@ Updates a label using the given label name.
 
   * [API method documentation](https://docs.github.com/rest/issues/labels#update-a-label)
 
-## update_milestone(owner, repo, milestone_number, body, opts \\ [])
+## update_milestone/5
 
 Update a milestone
 

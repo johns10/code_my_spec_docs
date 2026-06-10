@@ -20,18 +20,18 @@ General Usage Examples:
     ...(2)> make_postprocessor(tsp).({"x", [], nil, nil})
     {"x", [], nil, nil}
 
-## make_postprocessor(tag_specific_processors)
+## make_postprocessor/1
 
 Constructs a postprocessor function from this struct which will find the function associated
 to the tag of the node, and apply the node to it if such a function was found.
 
-## new()
+## new/0
 
 Convenience construction
 
     iex(3)> new()
     %Earmark.TagSpecificProcessors{}
 
-## prepend_tag_function(tsp, tag, function)
+## prepend_tag_function/3
 
 Prepends a tuple {tag, function} to the list of such tuples.

@@ -5,6 +5,6 @@ to be handled upper in the stack.
 
 Used by both `Plug.Debugger` and `Plug.ErrorHandler`.
 
-## reraise(reason)
+## reraise/1
 
 Reraises an error or a wrapped one.

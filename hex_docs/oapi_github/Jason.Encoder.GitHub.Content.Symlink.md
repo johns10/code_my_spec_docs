@@ -1,1 +1,0 @@
-# Jason.Encoder.GitHub.Content.Symlink

@@ -2,7 +2,7 @@
 
 This module is used to find and read all source files for analysis.
 
-## find(exec)
+## find/1
 
 Finds sources for a given `Credo.Execution`.
 
@@ -14,7 +14,7 @@ For `excluded`, patterns can also be specified as regular expressions.
 
     iex> Sources.find(%Credo.Execution{files: %{excluded: [~r/messy/], included: ["lib/mix", "root.ex"]}})
 
-## find_in_dir(working_dir, included, excluded)
+## find_in_dir/3
 
 Finds sources in a given `directory` using a list of `included` and `excluded`
 patterns. For `included`, patterns can be file paths, directory paths and globs.

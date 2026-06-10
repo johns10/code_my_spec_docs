@@ -2,7 +2,7 @@
 
 
 
-## escape(value)
+## escape/1
 
 Escapes a string for use as a CSS identifier.
 

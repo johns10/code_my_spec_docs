@@ -2,7 +2,7 @@
 
 Provides API endpoints related to interactions
 
-## get_restrictions_for_authenticated_user(opts \\ [])
+## get_restrictions_for_authenticated_user/1
 
 Get interaction restrictions for your public repositories
 
@@ -12,7 +12,7 @@ Shows which type of GitHub user can interact with your public repositories and w
 
   * [API method documentation](https://docs.github.com/rest/interactions/user#get-interaction-restrictions-for-your-public-repositories)
 
-## get_restrictions_for_org(org, opts \\ [])
+## get_restrictions_for_org/2
 
 Get interaction restrictions for an organization
 
@@ -22,7 +22,7 @@ Shows which type of GitHub user can interact with this organization and when the
 
   * [API method documentation](https://docs.github.com/rest/interactions/orgs#get-interaction-restrictions-for-an-organization)
 
-## get_restrictions_for_repo(owner, repo, opts \\ [])
+## get_restrictions_for_repo/3
 
 Get interaction restrictions for a repository
 
@@ -32,7 +32,7 @@ Shows which type of GitHub user can interact with this repository and when the r
 
   * [API method documentation](https://docs.github.com/rest/interactions/repos#get-interaction-restrictions-for-a-repository)
 
-## remove_restrictions_for_authenticated_user(opts \\ [])
+## remove_restrictions_for_authenticated_user/1
 
 Remove interaction restrictions from your public repositories
 
@@ -42,7 +42,7 @@ Removes any interaction restrictions from your public repositories.
 
   * [API method documentation](https://docs.github.com/rest/interactions/user#remove-interaction-restrictions-from-your-public-repositories)
 
-## remove_restrictions_for_org(org, opts \\ [])
+## remove_restrictions_for_org/2
 
 Remove interaction restrictions for an organization
 
@@ -52,7 +52,7 @@ Removes all interaction restrictions from public repositories in the given organ
 
   * [API method documentation](https://docs.github.com/rest/interactions/orgs#remove-interaction-restrictions-for-an-organization)
 
-## remove_restrictions_for_repo(owner, repo, opts \\ [])
+## remove_restrictions_for_repo/3
 
 Remove interaction restrictions for a repository
 
@@ -62,7 +62,7 @@ Removes all interaction restrictions from the given repository. You must have ow
 
   * [API method documentation](https://docs.github.com/rest/interactions/repos#remove-interaction-restrictions-for-a-repository)
 
-## set_restrictions_for_authenticated_user(body, opts \\ [])
+## set_restrictions_for_authenticated_user/2
 
 Set interaction restrictions for your public repositories
 
@@ -72,7 +72,7 @@ Temporarily restricts which type of GitHub user can interact with your public re
 
   * [API method documentation](https://docs.github.com/rest/interactions/user#set-interaction-restrictions-for-your-public-repositories)
 
-## set_restrictions_for_org(org, body, opts \\ [])
+## set_restrictions_for_org/3
 
 Set interaction restrictions for an organization
 
@@ -82,7 +82,7 @@ Temporarily restricts interactions to a certain type of GitHub user in any publi
 
   * [API method documentation](https://docs.github.com/rest/interactions/orgs#set-interaction-restrictions-for-an-organization)
 
-## set_restrictions_for_repo(owner, repo, body, opts \\ [])
+## set_restrictions_for_repo/4
 
 Set interaction restrictions for a repository
 

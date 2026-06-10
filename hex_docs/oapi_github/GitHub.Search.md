@@ -2,7 +2,7 @@
 
 Provides API endpoints related to search
 
-## code(opts \\ [])
+## code/1
 
 Search code
 
@@ -39,7 +39,7 @@ This endpoint requires you to authenticate and limits you to 10 requests per min
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-code)
 
-## commits(opts \\ [])
+## commits/1
 
 Search commits
 
@@ -64,7 +64,7 @@ For example, if you want to find commits related to CSS in the [octocat/Spoon-Kn
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-commits)
 
-## issues_and_pull_requests(opts \\ [])
+## issues_and_pull_requests/1
 
 Search issues and pull requests
 
@@ -93,7 +93,7 @@ This query searches for the keyword `windows`, within any open issue that is lab
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-issues-and-pull-requests)
 
-## labels(opts \\ [])
+## labels/1
 
 Search labels
 
@@ -120,7 +120,7 @@ The labels that best match the query appear first in the search results.
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-labels)
 
-## repos(opts \\ [])
+## repos/1
 
 Search repositories
 
@@ -146,7 +146,7 @@ This query searches for repositories with the word `tetris` in the name, the des
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-repositories)
 
-## topics(opts \\ [])
+## topics/1
 
 Search topics
 
@@ -170,7 +170,7 @@ This query searches for topics with the keyword `ruby` and limits the results to
 
   * [API method documentation](https://docs.github.com/rest/search/search#search-topics)
 
-## users(opts \\ [])
+## users/1
 
 Search users
 

@@ -2,7 +2,7 @@
 
 
 
-## sigil_L(arg, list)
+## sigil_L/2
 
 Provides `~L` sigil with HTML safe Live EEx syntax inside source files.
 

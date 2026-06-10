@@ -12,7 +12,3 @@ A snapshot of a resource as before or after the result of a change in change his
 *   `googleAdsLink` (*type:* `GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaGoogleAdsLink.t`, *default:* `nil`) - A snapshot of a GoogleAdsLink resource in change history.
 *   `measurementProtocolSecret` (*type:* `GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaMeasurementProtocolSecret.t`, *default:* `nil`) - A snapshot of a MeasurementProtocolSecret resource in change history.
 *   `property` (*type:* `GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaProperty.t`, *default:* `nil`) - A snapshot of a Property resource in change history.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

@@ -2,7 +2,22 @@
 
 Tools for AST manipulation
 
-## find_att_in_node(node_or_atts, att)
+## merge_atts/2
+
+A helper to merge attributes in their cannonical representation
+
+
+    iex(1)> merge_atts([{"href", "url"}], target: "_blank")
+    [{"href", "url"}, {"target", "_blank"}]
+
+    iex(2)> merge_atts([{"href", "url"}, {"target", "nonsense"}], %{"target" => "_blank"})
+    [{"href", "url"}, {"target", "_blank nonsense"}]
+
+    iex(3)>  merge_atts([{"href", "url"}, {"target", "nonsense"}, {"alt", "nowhere"}],
+    ...(3)>              [{"target", "_blank"}, title: "where?"])
+    [{"alt", "nowhere"}, {"href", "url"}, {"target", "_blank nonsense"}, {"title", "where?"}]
+
+## find_att_in_node/2
 
 Convenience function to access an attribute from an AST node or a list of attributes
 
@@ -18,7 +33,7 @@ Convenience function to access an attribute from an AST node or a list of attrib
     iex(7)> find_att_in_node([{"class", "link"}], "target")
     nil
 
-## find_att_in_node(node_or_atts, att, default)
+## find_att_in_node/3
 
 Convenience function to access an attribute from an AST node or a list of attributes with a default value.
 
@@ -29,22 +44,7 @@ Convenience function to access an attribute from an AST node or a list of attrib
     iex(9)> find_att_in_node([{"class", "link"}], "target", :default)
     :default
 
-## merge_atts(attrs, new)
-
-A helper to merge attributes in their cannonical representation
-
-
-    iex(1)> merge_atts([{"href", "url"}], target: "_blank")
-    [{"href", "url"}, {"target", "_blank"}]
-
-    iex(2)> merge_atts([{"href", "url"}, {"target", "nonsense"}], %{"target" => "_blank"})
-    [{"href", "url"}, {"target", "_blank nonsense"}]
-
-    iex(3)>  merge_atts([{"href", "url"}, {"target", "nonsense"}, {"alt", "nowhere"}],
-    ...(3)>              [{"target", "_blank"}, title: "where?"])
-    [{"alt", "nowhere"}, {"href", "url"}, {"target", "_blank nonsense"}, {"title", "where?"}]
-
-## merge_atts_in_node(arg, new_atts)
+## merge_atts_in_node/2
 
 A convenience function that extracts the original attributes to be merged with new attributes
 and puts the result into the node again
@@ -52,7 +52,7 @@ and puts the result into the node again
     iex(10)> merge_atts_in_node({"img", [{"src", "there"}, {"alt", "there"}], [], %{some: "meta"}}, alt: "here")
     {"img", [{"alt", "here there"}, {"src", "there"}], [], %{some: "meta"}}
 
-## node_only_fn(fun)
+## node_only_fn/1
 
 Wrap a function that can only be called on nodes
 

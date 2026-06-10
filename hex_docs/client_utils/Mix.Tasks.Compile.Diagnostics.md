@@ -31,7 +31,7 @@ Options can be set under the `:diagnostics` key:
       ]
     end
 
-## write_diagnostics(output, extra_diagnostics \\ [])
+## write_diagnostics/2
 
 Writes diagnostics to the output file.
 

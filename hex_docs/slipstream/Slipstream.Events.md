@@ -2,7 +2,7 @@
 
 
 
-## map(server_message, connection_state)
+## map/2
 
 Maps a message from the remote websocket server to an internally known
 Slipstream event

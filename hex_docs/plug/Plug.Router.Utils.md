@@ -2,31 +2,24 @@
 
 
 
-## build_host_match(host)
+## decode_path_info!/1
 
-Builds the pattern that will be used to match against the request's host
-(provided via the `:host`) option.
+Decodes path information for dispatching.
 
-If `host` is `nil`, a wildcard match (`_`) will be returned. If `host` ends
-with a dot, a match like `"host." <> _` will be returned.
+## normalize_method/1
+
+Converts a given method to its connection representation.
+
+The request method is stored in the `Plug.Conn` struct as an uppercase string
+(like `"GET"` or `"POST"`). This function converts `method` to that
+representation.
 
 ## Examples
 
-    iex> Plug.Router.Utils.build_host_match(nil)
-    {:_, [], Plug.Router.Utils}
+    iex> Plug.Router.Utils.normalize_method(:get)
+    "GET"
 
-    iex> Plug.Router.Utils.build_host_match("foo.com")
-    "foo.com"
-
-    iex> "api." |> Plug.Router.Utils.build_host_match() |> Macro.to_string()
-    "\"api.\" <> _"
-
-## build_path_clause(path, guard, context \\ nil)
-
-Builds a clause with match, guards, and post matches,
-including the known parameters.
-
-## build_path_match(path, context \\ nil)
+## build_path_match/2
 
 Generates a representation that will only match routes
 according to the given `spec`.
@@ -39,7 +32,7 @@ custom match arguments and they are simply returned.
     iex> Plug.Router.Utils.build_path_match("/foo/:id")
     {[:id], ["foo", {:id, [], nil}]}
 
-## build_path_params_match(params, context \\ nil)
+## build_path_params_match/2
 
 Builds a list of path param names and var match pairs.
 
@@ -58,24 +51,12 @@ Excludes variables with underscore.
     iex> Plug.Router.Utils.build_path_params_match([:_id])
     []
 
-## decode_path_info!(conn)
+## build_path_clause/3
 
-Decodes path information for dispatching.
+Builds a clause with match, guards, and post matches,
+including the known parameters.
 
-## normalize_method(method)
-
-Converts a given method to its connection representation.
-
-The request method is stored in the `Plug.Conn` struct as an uppercase string
-(like `"GET"` or `"POST"`). This function converts `method` to that
-representation.
-
-## Examples
-
-    iex> Plug.Router.Utils.normalize_method(:get)
-    "GET"
-
-## split(bin)
+## split/1
 
 Splits the given path into several segments.
 It ignores both leading and trailing slashes in the path.

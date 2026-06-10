@@ -8,7 +8,7 @@ This struct encapsulates all information about a client API call:
 - `progress_opts` - Progress tracking options (optional)
 - `timeout` - The timeout for this specific operation (default: 30 seconds)
 
-## new(attrs)
+## new/1
 
 Creates a new operation struct.
 

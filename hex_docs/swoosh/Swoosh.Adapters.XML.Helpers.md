@@ -2,6 +2,6 @@
 
 
 
-## first_text(node, path)
+## first_text/2
 
 returns the text value of the first found node

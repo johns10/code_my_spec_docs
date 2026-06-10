@@ -2,7 +2,7 @@
 
 Module for making and processing AWS requests.
 
-## request(op, config_overrides \\ [])
+## request/2
 
 Perform an AWS request.
 
@@ -62,14 +62,14 @@ With `:metadata` map including the following fields:
   * `:options` - extra options given to the repo operation under
     `:telemetry_options`
 
-## request!(op, config_overrides \\ [])
+## request!/2
 
 Perform an AWS request, raise if it fails.
 
 Same as `request/1,2` except it will either return the successful response from
 AWS or raise an exception.
 
-## stream!(op, config_overrides \\ [])
+## stream!/2
 
 Return a stream for the AWS resource.
 

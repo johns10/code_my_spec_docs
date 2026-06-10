@@ -2,28 +2,22 @@
 
 
 
-## child_spec(init_arg)
+## start_link/4
 
-Returns a specification to start this module under a supervisor.
+Starts the repo supervisor.
 
-See `Supervisor`.
-
-## compile_config(repo, opts)
-
-Retrieves the compile time configuration.
-
-## init_config(type, repo, otp_app, opts)
+## init_config/4
 
 Retrieves the runtime configuration.
 
-## parse_url(url)
+## compile_config/2
+
+Retrieves the compile time configuration.
+
+## parse_url/1
 
 Parses an Ecto URL allowed in configuration.
 
 The format must be:
 
     "ecto://username:password@hostname:port/database?ssl=true&timeout=1000"
-
-## start_link(repo, otp_app, adapter, opts)
-
-Starts the repo supervisor.

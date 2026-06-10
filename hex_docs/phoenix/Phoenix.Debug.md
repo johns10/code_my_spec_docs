@@ -13,13 +13,46 @@ It allows you to:
   * Get the socket of a channel process.
   * Check if a process is a `Phoenix.Socket` or `Phoenix.Channel`.
 
-## channel_process?(pid)
+## list_sockets/0
+
+Returns a list of all currently connected `Phoenix.Socket` transport processes.
+
+Note that custom sockets implementing the `Phoenix.Socket.Transport` behaviour
+are not listed.
+
+Each process corresponds to one connection that can have multiple channels.
+
+For example, when using Phoenix LiveView, the browser establishes a socket
+connection when initially navigating to the page, and each live navigation
+retains the same socket connection. Nested LiveViews also share the same
+connection, each being a different channel. See `Phoenix.Debug.channels/1`.
+
+## Examples
+
+    iex> Phoenix.Debug.list_sockets()
+    [%{pid: #PID<0.123.0>, module: Phoenix.LiveView.Socket, id: nil}]
+
+## socket_process?/1
+
+Returns true if the given pid is a `Phoenix.Socket` transport process.
+
+It returns `false` for custom sockets implementing the `Phoenix.Socket.Transport` behaviour.
+
+## Examples
+
+    iex> Phoenix.Debug.list_sockets() |> Enum.at(0) |> Map.fetch!(:pid) |> socket_process?()
+    true
+
+    iex> socket_process?(pid(0,456,0))
+    false
+
+## channel_process?/1
 
 Checks if the given pid is a `Phoenix.Channel` process.
 
 Note: this function returns false for [custom channels](https://hexdocs.pm/phoenix/Phoenix.Socket.html#module-custom-channels).
 
-## list_channels(socket_pid)
+## list_channels/1
 
 Returns a list of all currently connected channels for the given `Phoenix.Socket` pid.
 
@@ -46,26 +79,7 @@ function, which returns `false` for custom channels.
     iex> Phoenix.Debug.list_channels(pid(0,456,0))
     {:error, :not_alive}
 
-## list_sockets()
-
-Returns a list of all currently connected `Phoenix.Socket` transport processes.
-
-Note that custom sockets implementing the `Phoenix.Socket.Transport` behaviour
-are not listed.
-
-Each process corresponds to one connection that can have multiple channels.
-
-For example, when using Phoenix LiveView, the browser establishes a socket
-connection when initially navigating to the page, and each live navigation
-retains the same socket connection. Nested LiveViews also share the same
-connection, each being a different channel. See `Phoenix.Debug.channels/1`.
-
-## Examples
-
-    iex> Phoenix.Debug.list_sockets()
-    [%{pid: #PID<0.123.0>, module: Phoenix.LiveView.Socket, id: nil}]
-
-## socket(channel_pid)
+## socket/1
 
 Returns the socket of the channel process.
 
@@ -81,17 +95,3 @@ For LiveViews, use the functions defined in `Phoenix.LiveView.Debug` instead.
 
     iex> socket(pid(0,456,0))
     {:error, :not_alive_or_not_a_channel}
-
-## socket_process?(pid)
-
-Returns true if the given pid is a `Phoenix.Socket` transport process.
-
-It returns `false` for custom sockets implementing the `Phoenix.Socket.Transport` behaviour.
-
-## Examples
-
-    iex> Phoenix.Debug.list_sockets() |> Enum.at(0) |> Map.fetch!(:pid) |> socket_process?()
-    true
-
-    iex> socket_process?(pid(0,456,0))
-    false

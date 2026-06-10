@@ -2,19 +2,7 @@
 
 
 
-## apply(query, expr)
-
-The callback applied by `build/4` to build the query.
-
-## build(query, binding, expr, env)
-
-Builds a quoted expression.
-
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
-
-## escape(kind, expr, params_acc, vars, env)
+## escape/5
 
 Escapes a list of quoted expressions.
 
@@ -25,14 +13,26 @@ See `Ecto.Builder.escape/2`.
       13],
      {[], %{}}}
 
-## field!(kind, field)
+## field!/2
 
 Called at runtime to verify a field.
 
-## group_by!(query, group_by, file, line)
+## group_or_partition_by!/4
+
+Shared between group_by and partition_by.
+
+## group_by!/4
 
 Called at runtime to assemble group_by.
 
-## group_or_partition_by!(kind, query, exprs, params)
+## build/4
 
-Shared between group_by and partition_by.
+Builds a quoted expression.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## apply/2
+
+The callback applied by `build/4` to build the query.

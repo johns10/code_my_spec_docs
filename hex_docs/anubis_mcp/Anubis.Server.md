@@ -95,7 +95,92 @@ use `send/2` with the session PID directly.
       {:noreply, frame}
     end
 
-## send_elicitation_request(message, requested_schema, opts \\ [])
+## __using__/1
+
+Called when a session is being auto-recovered after expiry.
+
+Invoked during `auto_initialize/1` instead of the normal client handshake.
+Receives the session ID and the current frame (pre-populated from the session
+store if one is configured).
+
+Return values:
+- `{:ok, frame}` — accept recovery using synthetic client info
+- `{:ok, client_info, frame}` — accept recovery and supply real client info
+- `{:error, reason}` — reject recovery; the client receives an internal error
+
+If this callback is not implemented, the default behavior is unchanged:
+synthetic client info is used and `init/2` is called normally.
+
+## component/2
+
+Registers a component (tool, prompt, or resource) with the server.
+
+## send_resources_list_changed/0
+
+Sends a resources list changed notification.
+
+**Must be called from within a Session callback** — the current process must be
+the Session GenServer. Calling from outside a callback will silently lose the message.
+
+For external processes, use `send(session_pid, {:send_notification, "notifications/resources/list_changed", %{}})`.
+
+## send_resource_updated/2
+
+Sends a resource updated notification for a specific resource.
+
+Subscription-gated: only emits if the current session has previously
+received a `resources/subscribe` request for this URI. Calls for
+unsubscribed URIs are silently dropped.
+
+**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
+
+## send_prompts_list_changed/0
+
+Sends a prompts list changed notification.
+
+**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
+
+## send_tools_list_changed/0
+
+Sends a tools list changed notification.
+
+**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
+
+## send_log_message/3
+
+Sends a log message to the client.
+
+**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
+
+## send_progress/3
+
+Sends a progress notification for an ongoing operation.
+
+## send_task_status/1
+
+Sends a `notifications/tasks/status` notification with the current state of
+the given task.
+
+**Must be called from within a Session callback** — see
+`send_resources_list_changed/0` for details.
+
+Per spec (2025-11-25), receivers MAY send these notifications when a task's
+status changes; they are optional and requestors MUST NOT rely on them. This
+helper looks up the task in the configured task store and emits the full
+`Task` projection.
+
+## send_sampling_request/2
+
+Sends a sampling/createMessage request to the client.
+
+This is an asynchronous operation. The response will be delivered to your
+`handle_sampling/3` callback.
+
+## send_roots_request/1
+
+Sends a roots/list request to the client.
+
+## send_elicitation_request/3
 
 Sends an `elicitation/create` request to the client.
 
@@ -141,136 +226,3 @@ elicitation.
         {:reply, "asked for name", frame}
       end
     end
-
-## send_log_message(level, message, data \\ nil)
-
-Sends a log message to the client.
-
-**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
-
-## send_progress(progress_token, progress, opts \\ [])
-
-Sends a progress notification for an ongoing operation.
-
-## send_prompts_list_changed()
-
-Sends a prompts list changed notification.
-
-**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
-
-## send_resource_updated(uri, timestamp \\ nil)
-
-Sends a resource updated notification for a specific resource.
-
-Subscription-gated: only emits if the current session has previously
-received a `resources/subscribe` request for this URI. Calls for
-unsubscribed URIs are silently dropped.
-
-**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
-
-## send_resources_list_changed()
-
-Sends a resources list changed notification.
-
-**Must be called from within a Session callback** — the current process must be
-the Session GenServer. Calling from outside a callback will silently lose the message.
-
-For external processes, use `send(session_pid, {:send_notification, "notifications/resources/list_changed", %{}})`.
-
-## send_roots_request(opts \\ [])
-
-Sends a roots/list request to the client.
-
-## send_sampling_request(messages, opts \\ [])
-
-Sends a sampling/createMessage request to the client.
-
-This is an asynchronous operation. The response will be delivered to your
-`handle_sampling/3` callback.
-
-## send_task_status(task_id)
-
-Sends a `notifications/tasks/status` notification with the current state of
-the given task.
-
-**Must be called from within a Session callback** — see
-`send_resources_list_changed/0` for details.
-
-Per spec (2025-11-25), receivers MAY send these notifications when a task's
-status changes; they are optional and requestors MUST NOT rely on them. This
-helper looks up the task in the configured task store and emits the full
-`Task` projection.
-
-## send_tools_list_changed()
-
-Sends a tools list changed notification.
-
-**Must be called from within a Session callback** — see `send_resources_list_changed/0` for details.
-
-## component(module, opts \\ [])
-
-Registers a component (tool, prompt, or resource) with the server.
-
-## handle_notification/2
-
-Handles incoming MCP notifications from clients.
-
-## handle_prompt_get/3
-
-Handles a prompt get request.
-
-## handle_request/2
-
-Low-level handler for any MCP request.
-
-When implemented, it bypasses automatic routing to specific handlers.
-
-## handle_resource_read/2
-
-Handles a resource read request.
-
-## handle_session_expired/2
-
-Called when a session is being auto-recovered after expiry.
-
-Invoked during `auto_initialize/1` instead of the normal client handshake.
-Receives the session ID and the current frame (pre-populated from the session
-store if one is configured).
-
-Return values:
-- `{:ok, frame}` — accept recovery using synthetic client info
-- `{:ok, client_info, frame}` — accept recovery and supply real client info
-- `{:error, reason}` — reject recovery; the client receives an internal error
-
-If this callback is not implemented, the default behavior is unchanged:
-synthetic client info is used and `init/2` is called normally.
-
-## handle_tool_call/3
-
-Handles a tool call request.
-
-This callback is invoked when a client calls a specific tool. It receives the tool name,
-the arguments provided by the client, and the current frame.
-
-## init/2
-
-Called after a client requests a `initialize` request.
-
-This callback is invoked while the MCP handshake starts and so the client may not sent
-the `notifications/initialized` message yet. For checking if the notification was already sent
-and the MCP handshake was successfully completed, you can check the `context.initialized` field
-in the frame.
-
-It receives the client's information and
-the current frame, allowing you to perform client-specific setup, validate capabilities,
-or prepare resources based on the connected client.
-
-## server_instructions/0
-
-Returns optional instructions describing how to use the server and its features.
-
-This can be used by clients to improve the LLM's understanding of available tools,
-resources, etc. It can be thought of like a "hint" to the model. For example, this
-information MAY be added to the system prompt.
-
-Return `nil` to omit the instructions field from the initialize response.

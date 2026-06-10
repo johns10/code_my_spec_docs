@@ -2,7 +2,65 @@
 
 The interface to the NIF implementation.
 
-## bind(stmt, args)
+## open/2
+
+Opens a new sqlite database at the Path provided.
+
+`path` can be `":memory"` to keep the sqlite database in memory.
+
+## Options
+
+  * `:mode` - use `:readwrite` to open the database for reading and writing
+    , `:readonly` to open it in read-only mode or `[:readonly | :readwrite, :nomutex]`
+    to open it with no mutex mode. `:readwrite` will also create
+    the database if it doesn't already exist. Defaults to `:readwrite`.
+    Note: [:readwrite, :nomutex] is not recommended.
+
+## close/1
+
+Closes the database and releases any underlying resources.
+
+## interrupt/1
+
+Interrupt a long-running query.
+
+> #### Warning {: .warning}
+> If you are going to interrupt a long running process, it is unsafe to call
+> `close/1` immediately after. You run the risk of undefined behavior. This
+> is a limitation of the sqlite library itself. Please see the documentation
+> https://www.sqlite.org/c3ref/interrupt.html for more information.
+>
+> If close must be called after, it is best to put a short sleep in order to
+> let sqlite finish doing its book keeping.
+
+## execute/2
+
+Executes an sql script. Multiple stanzas can be passed at once.
+
+## changes/1
+
+Get the number of changes recently.
+
+**Note**: If triggers are used, the count may be larger than expected.
+
+See: https://sqlite.org/c3ref/changes.html
+
+## reset/1
+
+Resets a prepared statement.
+
+See: https://sqlite.org/c3ref/reset.html
+
+## bind_parameter_count/1
+
+Returns number of SQL parameters in a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?, ?")
+    iex> Sqlite3.bind_parameter_count(stmt)
+    2
+
+## bind/2
 
 Resets a prepared statement and binds values to it.
 
@@ -33,113 +91,21 @@ Resets a prepared statement and binds values to it.
     iex> Sqlite3.bind(stmt, [:erlang.list_to_pid(~c"<0.0.0>")])
     ** (ArgumentError) unsupported type: #PID<0.0.0>
 
-## bind_blob(stmt, index, blob)
+## shrink_memory/1
 
-Binds a blob value to a prepared statement.
+Causes the database connection to free as much memory as it can. This is
+useful if you are on a memory restricted system.
 
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
-    iex> Sqlite3.bind_blob(stmt, 1, <<0, 0, 0>>)
-    :ok
+## serialize/2
 
-## bind_float(stmt, index, float)
+Serialize the contents of the database to a binary.
 
-Binds a float value to a prepared statement.
-
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
-    iex> Sqlite3.bind_float(stmt, 1, 3.14)
-    :ok
-
-## bind_integer(stmt, index, integer)
-
-Binds an integer value to a prepared statement.
-
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
-    iex> Sqlite3.bind_integer(stmt, 1, 42)
-    :ok
-
-## bind_null(stmt, index)
-
-Binds a null value to a prepared statement.
-
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
-    iex> Sqlite3.bind_null(stmt, 1)
-    :ok
-
-## bind_parameter_count(stmt)
-
-Returns number of SQL parameters in a prepared statement.
-
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?, ?")
-    iex> Sqlite3.bind_parameter_count(stmt)
-    2
-
-## bind_text(stmt, index, text)
-
-Binds a text value to a prepared statement.
-
-    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
-    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
-    iex> Sqlite3.bind_text(stmt, 1, "Alice")
-    :ok
-
-## changes(conn)
-
-Get the number of changes recently.
-
-**Note**: If triggers are used, the count may be larger than expected.
-
-See: https://sqlite.org/c3ref/changes.html
-
-## close(conn)
-
-Closes the database and releases any underlying resources.
-
-## deserialize(conn, database \\ "main", serialized)
+## deserialize/3
 
 Disconnect from database and then reopen as an in-memory database based on
 the serialized binary.
 
-## enable_load_extension(conn, flag)
-
-Allow loading native extensions.
-
-## execute(conn, sql)
-
-Executes an sql script. Multiple stanzas can be passed at once.
-
-## interrupt(conn)
-
-Interrupt a long-running query.
-
-> #### Warning {: .warning}
-> If you are going to interrupt a long running process, it is unsafe to call
-> `close/1` immediately after. You run the risk of undefined behavior. This
-> is a limitation of the sqlite library itself. Please see the documentation
-> https://www.sqlite.org/c3ref/interrupt.html for more information.
->
-> If close must be called after, it is best to put a short sleep in order to
-> let sqlite finish doing its book keeping.
-
-## open(path, opts \\ [])
-
-Opens a new sqlite database at the Path provided.
-
-`path` can be `":memory"` to keep the sqlite database in memory.
-
-## Options
-
-  * `:mode` - use `:readwrite` to open the database for reading and writing
-    , `:readonly` to open it in read-only mode or `[:readonly | :readwrite, :nomutex]`
-    to open it with no mutex mode. `:readwrite` will also create
-    the database if it doesn't already exist. Defaults to `:readwrite`.
-    Note: [:readwrite, :nomutex] is not recommended.
-
-## release(conn, statement)
+## release/2
 
 Once finished with the prepared statement, call this to release the underlying
 resources.
@@ -151,37 +117,11 @@ pressure.
 
 If you are operating on limited memory capacity systems, definitely call this.
 
-## reset(stmt)
+## enable_load_extension/2
 
-Resets a prepared statement.
+Allow loading native extensions.
 
-See: https://sqlite.org/c3ref/reset.html
-
-## serialize(conn, database \\ "main")
-
-Serialize the contents of the database to a binary.
-
-## set_log_hook(pid)
-
-Send log messages to a process.
-
-Each time a message is logged in SQLite a message will be sent to the pid provided as the argument.
-
-The message is of the form: `{:log, rc, message}`, where:
-
-  * `rc` is an integer [result code](https://www.sqlite.org/rescode.html) or an [extended result code](https://www.sqlite.org/rescode.html#extrc)
-  * `message` is a string representing the log message
-
-See [`SQLITE_CONFIG_LOG`](https://www.sqlite.org/c3ref/c_config_covering_index_scan.html) and
-["The Error And Warning Log"](https://www.sqlite.org/errlog.html) for more details.
-
-## Restrictions
-
-  * Only one pid can listen to the log messages at a time.
-    If this function is called multiple times, only the last pid will
-    receive the notifications
-
-## set_update_hook(conn, pid)
+## set_update_hook/2
 
 Send data change notifications to a process.
 
@@ -207,7 +147,67 @@ The message is of the form: `{action, db_name, table, row_id}`, where:
     hook set for connection A will not receive the update, but the hook for
     connection B will receive the update.
 
-## shrink_memory(conn)
+## set_log_hook/1
 
-Causes the database connection to free as much memory as it can. This is
-useful if you are on a memory restricted system.
+Send log messages to a process.
+
+Each time a message is logged in SQLite a message will be sent to the pid provided as the argument.
+
+The message is of the form: `{:log, rc, message}`, where:
+
+  * `rc` is an integer [result code](https://www.sqlite.org/rescode.html) or an [extended result code](https://www.sqlite.org/rescode.html#extrc)
+  * `message` is a string representing the log message
+
+See [`SQLITE_CONFIG_LOG`](https://www.sqlite.org/c3ref/c_config_covering_index_scan.html) and
+["The Error And Warning Log"](https://www.sqlite.org/errlog.html) for more details.
+
+## Restrictions
+
+  * Only one pid can listen to the log messages at a time.
+    If this function is called multiple times, only the last pid will
+    receive the notifications
+
+## bind_text/3
+
+Binds a text value to a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
+    iex> Sqlite3.bind_text(stmt, 1, "Alice")
+    :ok
+
+## bind_blob/3
+
+Binds a blob value to a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
+    iex> Sqlite3.bind_blob(stmt, 1, <<0, 0, 0>>)
+    :ok
+
+## bind_integer/3
+
+Binds an integer value to a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
+    iex> Sqlite3.bind_integer(stmt, 1, 42)
+    :ok
+
+## bind_float/3
+
+Binds a float value to a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
+    iex> Sqlite3.bind_float(stmt, 1, 3.14)
+    :ok
+
+## bind_null/2
+
+Binds a null value to a prepared statement.
+
+    iex> {:ok, conn} = Sqlite3.open(":memory:", [:readonly])
+    iex> {:ok, stmt} = Sqlite3.prepare(conn, "SELECT ?")
+    iex> Sqlite3.bind_null(stmt, 1)
+    :ok

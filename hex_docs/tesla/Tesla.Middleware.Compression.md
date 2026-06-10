@@ -20,13 +20,13 @@ end
 
 - `:format` - request compression format, `"gzip"` (default) or `"deflate"`
 
-## compress(env, opts)
+## compress/2
 
 Compress request.
 
 It is used by `Tesla.Middleware.CompressRequest`.
 
-## decompress(env)
+## decompress/1
 
 Decompress response.
 

@@ -2,6 +2,6 @@
 
 
 
-## run(source_files, exec)
+## run/2
 
 Runs all checks on all source files (according to the config).

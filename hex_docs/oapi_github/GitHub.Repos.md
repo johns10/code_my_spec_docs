@@ -2,7 +2,7 @@
 
 Provides API endpoints related to repos
 
-## accept_invitation_for_authenticated_user(invitation_id, opts \\ [])
+## accept_invitation_for_authenticated_user/2
 
 Accept a repository invitation
 
@@ -10,7 +10,7 @@ Accept a repository invitation
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#accept-a-repository-invitation)
 
-## add_app_access_restrictions(owner, repo, branch, body, opts \\ [])
+## add_app_access_restrictions/5
 
 Add app access restrictions
 
@@ -22,7 +22,7 @@ Grants the specified apps push access for this branch. Only GitHub Apps that are
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#add-app-access-restrictions)
 
-## add_collaborator(owner, repo, username, body, opts \\ [])
+## add_collaborator/5
 
 Add a repository collaborator
 
@@ -52,7 +52,7 @@ You are limited to sending 50 invitations to a repository per 24 hour period. No
 
   * [API method documentation](https://docs.github.com/rest/collaborators/collaborators#add-a-repository-collaborator)
 
-## add_status_check_contexts(owner, repo, branch, body, opts \\ [])
+## add_status_check_contexts/5
 
 Add status check contexts
 
@@ -62,7 +62,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#add-status-check-contexts)
 
-## add_team_access_restrictions(owner, repo, branch, body, opts \\ [])
+## add_team_access_restrictions/5
 
 Add team access restrictions
 
@@ -74,7 +74,7 @@ Grants the specified teams push access for this branch. You can also give push a
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#add-team-access-restrictions)
 
-## add_user_access_restrictions(owner, repo, branch, body, opts \\ [])
+## add_user_access_restrictions/5
 
 Add user access restrictions
 
@@ -90,7 +90,7 @@ Grants the specified people push access for this branch.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#add-user-access-restrictions)
 
-## cancel_pages_deployment(owner, repo, pages_deployment_id, opts \\ [])
+## cancel_pages_deployment/4
 
 Cancel a GitHub Pages deployment
 
@@ -102,7 +102,7 @@ The authenticated user must have write permissions for the GitHub Pages site.
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#cancel-a-github-pages-deployment)
 
-## check_automated_security_fixes(owner, repo, opts \\ [])
+## check_automated_security_fixes/3
 
 Check if automated security fixes are enabled for a repository
 
@@ -112,7 +112,7 @@ Shows whether automated security fixes are enabled, disabled or paused for a rep
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#check-if-automated-security-fixes-are-enabled-for-a-repository)
 
-## check_collaborator(owner, repo, username, opts \\ [])
+## check_collaborator/4
 
 Check if a user is a repository collaborator
 
@@ -128,7 +128,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:org` and `r
 
   * [API method documentation](https://docs.github.com/rest/collaborators/collaborators#check-if-a-user-is-a-repository-collaborator)
 
-## check_private_vulnerability_reporting(owner, repo, opts \\ [])
+## check_private_vulnerability_reporting/3
 
 Check if private vulnerability reporting is enabled for a repository
 
@@ -138,7 +138,7 @@ Returns a boolean indicating whether or not private vulnerability reporting is e
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#check-if-private-vulnerability-reporting-is-enabled-for-a-repository)
 
-## check_vulnerability_alerts(owner, repo, opts \\ [])
+## check_vulnerability_alerts/3
 
 Check if vulnerability alerts are enabled for a repository
 
@@ -148,7 +148,7 @@ Shows whether dependency alerts are enabled or disabled for a repository. The au
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#check-if-vulnerability-alerts-are-enabled-for-a-repository)
 
-## codeowners_errors(owner, repo, opts \\ [])
+## codeowners_errors/3
 
 List CODEOWNERS errors
 
@@ -166,7 +166,7 @@ see "[About code owners](https://docs.github.com/repositories/managing-your-repo
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-codeowners-errors)
 
-## compare_commits(owner, repo, basehead, opts \\ [])
+## compare_commits/4
 
 Compare two commits
 
@@ -230,7 +230,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/commits/commits#compare-two-commits)
 
-## create_autolink(owner, repo, body, opts \\ [])
+## create_autolink/4
 
 Create an autolink reference for a repository
 
@@ -240,7 +240,7 @@ Users with admin access to the repository can create an autolink.
 
   * [API method documentation](https://docs.github.com/rest/repos/autolinks#create-an-autolink-reference-for-a-repository)
 
-## create_commit_comment(owner, repo, commit_sha, body, opts \\ [])
+## create_commit_comment/5
 
 Create a commit comment
 
@@ -259,7 +259,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#create-a-commit-comment)
 
-## create_commit_signature_protection(owner, repo, branch, opts \\ [])
+## create_commit_signature_protection/4
 
 Create commit signature protection
 
@@ -271,7 +271,7 @@ When authenticated with admin or owner permissions to the repository, you can us
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#create-commit-signature-protection)
 
-## create_commit_status(owner, repo, sha, body, opts \\ [])
+## create_commit_status/5
 
 Create a commit status
 
@@ -283,7 +283,7 @@ Note: there is a limit of 1000 statuses per `sha` and `context` within a reposit
 
   * [API method documentation](https://docs.github.com/rest/commits/statuses#create-a-commit-status)
 
-## create_deploy_key(owner, repo, body, opts \\ [])
+## create_deploy_key/4
 
 Create a deploy key
 
@@ -293,7 +293,7 @@ You can create a read-only deploy key.
 
   * [API method documentation](https://docs.github.com/rest/deploy-keys/deploy-keys#create-a-deploy-key)
 
-## create_deployment(owner, repo, body, opts \\ [])
+## create_deployment/4
 
 Create a deployment
 
@@ -350,7 +350,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `repo_d
 
   * [API method documentation](https://docs.github.com/rest/deployments/deployments#create-a-deployment)
 
-## create_deployment_branch_policy(owner, repo, environment_name, body, opts \\ [])
+## create_deployment_branch_policy/5
 
 Create a deployment branch policy
 
@@ -362,7 +362,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/branch-policies#create-a-deployment-branch-policy)
 
-## create_deployment_protection_rule(environment_name, repo, owner, body, opts \\ [])
+## create_deployment_protection_rule/5
 
 Create a custom deployment protection rule on an environment
 
@@ -378,7 +378,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/protection-rules#create-a-custom-deployment-protection-rule-on-an-environment)
 
-## create_deployment_status(owner, repo, deployment_id, body, opts \\ [])
+## create_deployment_status/5
 
 Create a deployment status
 
@@ -390,7 +390,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo_deployment`
 
   * [API method documentation](https://docs.github.com/rest/deployments/statuses#create-a-deployment-status)
 
-## create_dispatch_event(owner, repo, body, opts \\ [])
+## create_dispatch_event/4
 
 Create a repository dispatch event
 
@@ -406,7 +406,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#create-a-repository-dispatch-event)
 
-## create_for_authenticated_user(body, opts \\ [])
+## create_for_authenticated_user/2
 
 Create a repository for the authenticated user
 
@@ -418,7 +418,7 @@ OAuth app tokens and personal access tokens (classic) need the `public_repo` or 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user)
 
-## create_fork(owner, repo, body, opts \\ [])
+## create_fork/4
 
 Create a fork
 
@@ -432,7 +432,7 @@ Create a fork for the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/repos/forks#create-a-fork)
 
-## create_in_org(org, body, opts \\ [])
+## create_in_org/3
 
 Create an organization repository
 
@@ -444,7 +444,7 @@ OAuth app tokens and personal access tokens (classic) need the `public_repo` or 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#create-an-organization-repository)
 
-## create_or_update_custom_properties_values(owner, repo, body, opts \\ [])
+## create_or_update_custom_properties_values/4
 
 Create or update custom property values for a repository
 
@@ -457,7 +457,7 @@ Repository admins and other users with the repository-level "edit custom propert
 
   * [API method documentation](https://docs.github.com/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository)
 
-## create_or_update_environment(owner, repo, environment_name, body, opts \\ [])
+## create_or_update_environment/5
 
 Create or update an environment
 
@@ -473,7 +473,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/environments#create-or-update-an-environment)
 
-## create_or_update_file_contents(owner, repo, path, body, opts \\ [])
+## create_or_update_file_contents/5
 
 Create or update file contents
 
@@ -487,7 +487,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#create-or-update-file-contents)
 
-## create_org_ruleset(org, body, opts \\ [])
+## create_org_ruleset/3
 
 Create an organization repository ruleset
 
@@ -497,7 +497,7 @@ Create a repository ruleset for an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/rules#create-an-organization-repository-ruleset)
 
-## create_pages_deployment(owner, repo, body, opts \\ [])
+## create_pages_deployment/4
 
 Create a GitHub Pages deployment
 
@@ -509,7 +509,7 @@ The authenticated user must have write permission to the repository.
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#create-a-github-pages-deployment)
 
-## create_pages_site(owner, repo, body, opts \\ [])
+## create_pages_site/4
 
 Create a GitHub Pages site
 
@@ -523,7 +523,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#create-a-apiname-pages-site)
 
-## create_release(owner, repo, body, opts \\ [])
+## create_release/4
 
 Create a release
 
@@ -535,7 +535,7 @@ This endpoint triggers [notifications](https://docs.github.com/github/managing-s
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#create-a-release)
 
-## create_repo_ruleset(owner, repo, body, opts \\ [])
+## create_repo_ruleset/4
 
 Create a repository ruleset
 
@@ -545,7 +545,7 @@ Create a ruleset for a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#create-a-repository-ruleset)
 
-## create_tag_protection(owner, repo, body, opts \\ [])
+## create_tag_protection/4
 
 Create a tag protection state for a repository
 
@@ -556,7 +556,7 @@ This endpoint is only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/tags#create-a-tag-protection-state-for-a-repository)
 
-## create_using_template(template_owner, template_repo, body, opts \\ [])
+## create_using_template/4
 
 Create a repository using a template
 
@@ -568,7 +568,7 @@ OAuth app tokens and personal access tokens (classic) need the `public_repo` or 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#create-a-repository-using-a-template)
 
-## create_webhook(owner, repo, body, opts \\ [])
+## create_webhook/4
 
 Create a repository webhook
 
@@ -579,7 +579,7 @@ share the same `config` as long as those webhooks do not have any `events` that 
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#create-a-repository-webhook)
 
-## decline_invitation_for_authenticated_user(invitation_id, opts \\ [])
+## decline_invitation_for_authenticated_user/2
 
 Decline a repository invitation
 
@@ -587,7 +587,7 @@ Decline a repository invitation
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#decline-a-repository-invitation)
 
-## delete(owner, repo, opts \\ [])
+## delete/3
 
 Delete a repository
 
@@ -602,7 +602,7 @@ OAuth app tokens and personal access tokens (classic) need the `delete_repo` sco
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#delete-a-repository)
 
-## delete_access_restrictions(owner, repo, branch, opts \\ [])
+## delete_access_restrictions/4
 
 Delete access restrictions
 
@@ -614,7 +614,7 @@ Disables the ability to restrict who can push to this branch.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#delete-access-restrictions)
 
-## delete_admin_branch_protection(owner, repo, branch, opts \\ [])
+## delete_admin_branch_protection/4
 
 Delete admin branch protection
 
@@ -626,7 +626,7 @@ Removing admin enforcement requires admin or owner permissions to the repository
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#delete-admin-branch-protection)
 
-## delete_an_environment(owner, repo, environment_name, opts \\ [])
+## delete_an_environment/4
 
 Delete an environment
 
@@ -636,7 +636,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/environments#delete-an-environment)
 
-## delete_autolink(owner, repo, autolink_id, opts \\ [])
+## delete_autolink/4
 
 Delete an autolink reference from a repository
 
@@ -648,7 +648,7 @@ Information about autolinks are only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/autolinks#delete-an-autolink-reference-from-a-repository)
 
-## delete_branch_protection(owner, repo, branch, opts \\ [])
+## delete_branch_protection/4
 
 Delete branch protection
 
@@ -658,7 +658,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#delete-branch-protection)
 
-## delete_commit_comment(owner, repo, comment_id, opts \\ [])
+## delete_commit_comment/4
 
 Delete a commit comment
 
@@ -666,7 +666,7 @@ Delete a commit comment
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#delete-a-commit-comment)
 
-## delete_commit_signature_protection(owner, repo, branch, opts \\ [])
+## delete_commit_signature_protection/4
 
 Delete commit signature protection
 
@@ -678,7 +678,7 @@ When authenticated with admin or owner permissions to the repository, you can us
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#delete-commit-signature-protection)
 
-## delete_deploy_key(owner, repo, key_id, opts \\ [])
+## delete_deploy_key/4
 
 Delete a deploy key
 
@@ -688,7 +688,7 @@ Deploy keys are immutable. If you need to update a key, remove the key and creat
 
   * [API method documentation](https://docs.github.com/rest/deploy-keys/deploy-keys#delete-a-deploy-key)
 
-## delete_deployment(owner, repo, deployment_id, opts \\ [])
+## delete_deployment/4
 
 Delete a deployment
 
@@ -707,7 +707,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `repo_d
 
   * [API method documentation](https://docs.github.com/rest/deployments/deployments#delete-a-deployment)
 
-## delete_deployment_branch_policy(owner, repo, environment_name, branch_policy_id, opts \\ [])
+## delete_deployment_branch_policy/5
 
 Delete a deployment branch policy
 
@@ -719,7 +719,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/branch-policies#delete-a-deployment-branch-policy)
 
-## delete_file(owner, repo, path, body, opts \\ [])
+## delete_file/5
 
 Delete a file
 
@@ -737,7 +737,7 @@ You must provide values for both `name` and `email`, whether you choose to use `
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#delete-a-file)
 
-## delete_invitation(owner, repo, invitation_id, opts \\ [])
+## delete_invitation/4
 
 Delete a repository invitation
 
@@ -745,7 +745,7 @@ Delete a repository invitation
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#delete-a-repository-invitation)
 
-## delete_org_ruleset(org, ruleset_id, opts \\ [])
+## delete_org_ruleset/3
 
 Delete an organization repository ruleset
 
@@ -755,7 +755,7 @@ Delete a ruleset for an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/rules#delete-an-organization-repository-ruleset)
 
-## delete_pages_site(owner, repo, opts \\ [])
+## delete_pages_site/3
 
 Delete a GitHub Pages site
 
@@ -769,7 +769,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#delete-a-apiname-pages-site)
 
-## delete_pull_request_review_protection(owner, repo, branch, opts \\ [])
+## delete_pull_request_review_protection/4
 
 Delete pull request review protection
 
@@ -779,7 +779,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#delete-pull-request-review-protection)
 
-## delete_release(owner, repo, release_id, opts \\ [])
+## delete_release/4
 
 Delete a release
 
@@ -789,7 +789,7 @@ Users with push access to the repository can delete a release.
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#delete-a-release)
 
-## delete_release_asset(owner, repo, asset_id, opts \\ [])
+## delete_release_asset/4
 
 Delete a release asset
 
@@ -797,7 +797,7 @@ Delete a release asset
 
   * [API method documentation](https://docs.github.com/rest/releases/assets#delete-a-release-asset)
 
-## delete_repo_ruleset(owner, repo, ruleset_id, opts \\ [])
+## delete_repo_ruleset/4
 
 Delete a repository ruleset
 
@@ -807,7 +807,7 @@ Delete a ruleset for a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset)
 
-## delete_tag_protection(owner, repo, tag_protection_id, opts \\ [])
+## delete_tag_protection/4
 
 Delete a tag protection state for a repository
 
@@ -818,7 +818,7 @@ This endpoint is only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/tags#delete-a-tag-protection-state-for-a-repository)
 
-## delete_webhook(owner, repo, hook_id, opts \\ [])
+## delete_webhook/4
 
 Delete a repository webhook
 
@@ -826,7 +826,7 @@ Delete a repository webhook
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#delete-a-repository-webhook)
 
-## disable_automated_security_fixes(owner, repo, opts \\ [])
+## disable_automated_security_fixes/3
 
 Disable automated security fixes
 
@@ -836,7 +836,7 @@ Disables automated security fixes for a repository. The authenticated user must 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#disable-automated-security-fixes)
 
-## disable_deployment_protection_rule(environment_name, repo, owner, protection_rule_id, opts \\ [])
+## disable_deployment_protection_rule/5
 
 Disable a custom protection rule for an environment
 
@@ -850,7 +850,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/protection-rules#disable-a-custom-protection-rule-for-an-environment)
 
-## disable_private_vulnerability_reporting(owner, repo, opts \\ [])
+## disable_private_vulnerability_reporting/3
 
 Disable private vulnerability reporting for a repository
 
@@ -860,7 +860,7 @@ Disables private vulnerability reporting for a repository. The authenticated use
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#disable-private-vulnerability-reporting-for-a-repository)
 
-## disable_vulnerability_alerts(owner, repo, opts \\ [])
+## disable_vulnerability_alerts/3
 
 Disable vulnerability alerts
 
@@ -872,7 +872,7 @@ see "[About security alerts for vulnerable dependencies](https://docs.github.com
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#disable-vulnerability-alerts)
 
-## download_tarball_archive(owner, repo, ref, opts \\ [])
+## download_tarball_archive/4
 
 Download a repository archive (tar)
 
@@ -885,7 +885,7 @@ the `Location` header to make a second `GET` request.
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#download-a-repository-archive-tar)
 
-## download_zipball_archive(owner, repo, ref, opts \\ [])
+## download_zipball_archive/4
 
 Download a repository archive (zip)
 
@@ -899,7 +899,7 @@ the `Location` header to make a second `GET` request.
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#download-a-repository-archive-zip)
 
-## enable_automated_security_fixes(owner, repo, opts \\ [])
+## enable_automated_security_fixes/3
 
 Enable automated security fixes
 
@@ -909,7 +909,7 @@ Enables automated security fixes for a repository. The authenticated user must h
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#enable-automated-security-fixes)
 
-## enable_private_vulnerability_reporting(owner, repo, opts \\ [])
+## enable_private_vulnerability_reporting/3
 
 Enable private vulnerability reporting for a repository
 
@@ -919,7 +919,7 @@ Enables private vulnerability reporting for a repository. The authenticated user
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#enable-private-vulnerability-reporting-for-a-repository)
 
-## enable_vulnerability_alerts(owner, repo, opts \\ [])
+## enable_vulnerability_alerts/3
 
 Enable vulnerability alerts
 
@@ -929,7 +929,7 @@ Enables dependency alerts and the dependency graph for a repository. The authent
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#enable-vulnerability-alerts)
 
-## generate_release_notes(owner, repo, body, opts \\ [])
+## generate_release_notes/4
 
 Generate release notes content for a release
 
@@ -939,7 +939,7 @@ Generate a name and body describing a [release](https://docs.github.com/rest/rel
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#generate-release-notes-content-for-a-release)
 
-## get(owner, repo, opts \\ [])
+## get/3
 
 Get a repository
 
@@ -951,7 +951,7 @@ The `parent` and `source` objects are present when the repository is a fork. `pa
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#get-a-repository)
 
-## get_access_restrictions(owner, repo, branch, opts \\ [])
+## get_access_restrictions/4
 
 Get access restrictions
 
@@ -965,7 +965,7 @@ Lists who has access to this protected branch.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-access-restrictions)
 
-## get_admin_branch_protection(owner, repo, branch, opts \\ [])
+## get_admin_branch_protection/4
 
 Get admin branch protection
 
@@ -975,7 +975,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-admin-branch-protection)
 
-## get_all_deployment_protection_rules(environment_name, repo, owner, opts \\ [])
+## get_all_deployment_protection_rules/4
 
 Get all deployment protection rules for an environment
 
@@ -989,7 +989,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/protection-rules#get-all-deployment-protection-rules-for-an-environment)
 
-## get_all_environments(owner, repo, opts \\ [])
+## get_all_environments/3
 
 List environments
 
@@ -1008,7 +1008,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/environments#list-environments)
 
-## get_all_status_check_contexts(owner, repo, branch, opts \\ [])
+## get_all_status_check_contexts/4
 
 Get all status check contexts
 
@@ -1018,7 +1018,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-all-status-check-contexts)
 
-## get_all_topics(owner, repo, opts \\ [])
+## get_all_topics/3
 
 Get all repository topics
 
@@ -1031,7 +1031,7 @@ Get all repository topics
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#get-all-repository-topics)
 
-## get_apps_with_access_to_protected_branch(owner, repo, branch, opts \\ [])
+## get_apps_with_access_to_protected_branch/4
 
 Get apps with access to the protected branch
 
@@ -1043,7 +1043,7 @@ Lists the GitHub Apps that have push access to this branch. Only GitHub Apps tha
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-apps-with-access-to-the-protected-branch)
 
-## get_autolink(owner, repo, autolink_id, opts \\ [])
+## get_autolink/4
 
 Get an autolink reference of a repository
 
@@ -1055,7 +1055,7 @@ Information about autolinks are only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/autolinks#get-an-autolink-reference-of-a-repository)
 
-## get_branch(owner, repo, branch, opts \\ [])
+## get_branch/4
 
 Get a branch
 
@@ -1063,7 +1063,7 @@ Get a branch
 
   * [API method documentation](https://docs.github.com/rest/branches/branches#get-a-branch)
 
-## get_branch_protection(owner, repo, branch, opts \\ [])
+## get_branch_protection/4
 
 Get branch protection
 
@@ -1073,7 +1073,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-branch-protection)
 
-## get_branch_rules(owner, repo, branch, opts \\ [])
+## get_branch_rules/4
 
 Get rules for a branch
 
@@ -1091,7 +1091,7 @@ enforcement statuses are not returned.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#get-rules-for-a-branch)
 
-## get_clones(owner, repo, opts \\ [])
+## get_clones/3
 
 Get repository clones
 
@@ -1105,7 +1105,7 @@ Get the total number of clones and breakdown per day or week for the last 14 day
 
   * [API method documentation](https://docs.github.com/rest/metrics/traffic#get-repository-clones)
 
-## get_code_frequency_stats(owner, repo, opts \\ [])
+## get_code_frequency_stats/3
 
 Get the weekly commit activity
 
@@ -1120,7 +1120,7 @@ Returns a weekly aggregate of the number of additions and deletions pushed to a 
 
   * [API method documentation](https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-activity)
 
-## get_collaborator_permission_level(owner, repo, username, opts \\ [])
+## get_collaborator_permission_level/4
 
 Get repository permissions for a user
 
@@ -1136,7 +1136,7 @@ collaborator, see the `role_name` attribute, which will provide the full role na
 
   * [API method documentation](https://docs.github.com/rest/collaborators/collaborators#get-repository-permissions-for-a-user)
 
-## get_combined_status_for_ref(owner, repo, ref, opts \\ [])
+## get_combined_status_for_ref/4
 
 Get the combined status for a specific reference
 
@@ -1158,7 +1158,7 @@ Additionally, a combined `state` is returned. The `state` is one of:
 
   * [API method documentation](https://docs.github.com/rest/commits/statuses#get-the-combined-status-for-a-specific-reference)
 
-## get_commit(owner, repo, ref, opts \\ [])
+## get_commit/4
 
 Get a commit
 
@@ -1210,7 +1210,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/commits/commits#get-a-commit)
 
-## get_commit_activity_stats(owner, repo, opts \\ [])
+## get_commit_activity_stats/3
 
 Get the last year of commit activity
 
@@ -1220,7 +1220,7 @@ Returns the last year of commit activity grouped by week. The `days` array is a 
 
   * [API method documentation](https://docs.github.com/rest/metrics/statistics#get-the-last-year-of-commit-activity)
 
-## get_commit_comment(owner, repo, comment_id, opts \\ [])
+## get_commit_comment/4
 
 Get a commit comment
 
@@ -1237,7 +1237,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#get-a-commit-comment)
 
-## get_commit_signature_protection(owner, repo, branch, opts \\ [])
+## get_commit_signature_protection/4
 
 Get commit signature protection
 
@@ -1251,7 +1251,7 @@ When authenticated with admin or owner permissions to the repository, you can us
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-commit-signature-protection)
 
-## get_community_profile_metrics(owner, repo, opts \\ [])
+## get_community_profile_metrics/3
 
 Get community profile metrics
 
@@ -1271,7 +1271,7 @@ the recommended community health files are present. For more information, see
 
   * [API method documentation](https://docs.github.com/rest/metrics/community#get-community-profile-metrics)
 
-## get_content(owner, repo, path, opts \\ [])
+## get_content/4
 
 Get repository content
 
@@ -1309,7 +1309,7 @@ string and the `encoding` field will be `"none"`. To get the contents of these l
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#get-repository-content)
 
-## get_contributors_stats(owner, repo, opts \\ [])
+## get_contributors_stats/3
 
 Get all contributor commit activity
 
@@ -1327,7 +1327,7 @@ Returns the `total` number of commits authored by the contributor. In addition, 
 
   * [API method documentation](https://docs.github.com/rest/metrics/statistics#get-all-contributor-commit-activity)
 
-## get_custom_deployment_protection_rule(owner, repo, environment_name, protection_rule_id, opts \\ [])
+## get_custom_deployment_protection_rule/5
 
 Get a custom deployment protection rule
 
@@ -1341,7 +1341,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/protection-rules#get-a-custom-deployment-protection-rule)
 
-## get_custom_properties_values(owner, repo, opts \\ [])
+## get_custom_properties_values/3
 
 Get all custom property values for a repository
 
@@ -1352,7 +1352,7 @@ Users with read access to the repository can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository)
 
-## get_deploy_key(owner, repo, key_id, opts \\ [])
+## get_deploy_key/4
 
 Get a deploy key
 
@@ -1360,7 +1360,7 @@ Get a deploy key
 
   * [API method documentation](https://docs.github.com/rest/deploy-keys/deploy-keys#get-a-deploy-key)
 
-## get_deployment(owner, repo, deployment_id, opts \\ [])
+## get_deployment/4
 
 Get a deployment
 
@@ -1368,7 +1368,7 @@ Get a deployment
 
   * [API method documentation](https://docs.github.com/rest/deployments/deployments#get-a-deployment)
 
-## get_deployment_branch_policy(owner, repo, environment_name, branch_policy_id, opts \\ [])
+## get_deployment_branch_policy/5
 
 Get a deployment branch policy
 
@@ -1382,7 +1382,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/branch-policies#get-a-deployment-branch-policy)
 
-## get_deployment_status(owner, repo, deployment_id, status_id, opts \\ [])
+## get_deployment_status/5
 
 Get a deployment status
 
@@ -1392,7 +1392,7 @@ Users with pull access can view a deployment status for a deployment:
 
   * [API method documentation](https://docs.github.com/rest/deployments/statuses#get-a-deployment-status)
 
-## get_environment(owner, repo, environment_name, opts \\ [])
+## get_environment/4
 
 Get an environment
 
@@ -1406,7 +1406,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/environments#get-an-environment)
 
-## get_latest_pages_build(owner, repo, opts \\ [])
+## get_latest_pages_build/3
 
 Get latest Pages build
 
@@ -1418,7 +1418,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#get-latest-pages-build)
 
-## get_latest_release(owner, repo, opts \\ [])
+## get_latest_release/3
 
 Get the latest release
 
@@ -1430,7 +1430,7 @@ The latest release is the most recent non-prerelease, non-draft release, sorted 
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#get-the-latest-release)
 
-## get_org_rule_suite(org, rule_suite_id, opts \\ [])
+## get_org_rule_suite/3
 
 Get an organization rule suite
 
@@ -1441,7 +1441,7 @@ For more information, see "[Managing rulesets for repositories in your organizat
 
   * [API method documentation](https://docs.github.com/rest/orgs/rule-suites#get-an-organization-rule-suite)
 
-## get_org_rule_suites(org, opts \\ [])
+## get_org_rule_suites/2
 
 List organization rule suites
 
@@ -1463,7 +1463,7 @@ For more information, see "[Managing rulesets for repositories in your organizat
 
   * [API method documentation](https://docs.github.com/rest/orgs/rule-suites#list-organization-rule-suites)
 
-## get_org_ruleset(org, ruleset_id, opts \\ [])
+## get_org_ruleset/3
 
 Get an organization repository ruleset
 
@@ -1473,7 +1473,7 @@ Get a repository ruleset for an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/rules#get-an-organization-repository-ruleset)
 
-## get_org_rulesets(org, opts \\ [])
+## get_org_rulesets/2
 
 Get all organization repository rulesets
 
@@ -1488,7 +1488,7 @@ Get all the repository rulesets for an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/rules#get-all-organization-repository-rulesets)
 
-## get_pages(owner, repo, opts \\ [])
+## get_pages/3
 
 Get a GitHub Pages site
 
@@ -1500,7 +1500,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site)
 
-## get_pages_build(owner, repo, build_id, opts \\ [])
+## get_pages_build/4
 
 Get GitHub Pages build
 
@@ -1512,7 +1512,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#get-apiname-pages-build)
 
-## get_pages_deployment(owner, repo, pages_deployment_id, opts \\ [])
+## get_pages_deployment/4
 
 Get the status of a GitHub Pages deployment
 
@@ -1524,7 +1524,7 @@ The authenticated user must have read permission for the GitHub Pages site.
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#get-the-status-of-a-github-pages-deployment)
 
-## get_pages_health_check(owner, repo, opts \\ [])
+## get_pages_health_check/3
 
 Get a DNS health check for GitHub Pages
 
@@ -1540,7 +1540,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#get-a-dns-health-check-for-github-pages)
 
-## get_participation_stats(owner, repo, opts \\ [])
+## get_participation_stats/3
 
 Get the weekly commit count
 
@@ -1554,7 +1554,7 @@ The most recent week is seven days ago at UTC midnight to today at UTC midnight.
 
   * [API method documentation](https://docs.github.com/rest/metrics/statistics#get-the-weekly-commit-count)
 
-## get_pull_request_review_protection(owner, repo, branch, opts \\ [])
+## get_pull_request_review_protection/4
 
 Get pull request review protection
 
@@ -1564,7 +1564,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-pull-request-review-protection)
 
-## get_punch_card_stats(owner, repo, opts \\ [])
+## get_punch_card_stats/3
 
 Get the hourly commit count for each day
 
@@ -1580,7 +1580,7 @@ For example, `[2, 14, 25]` indicates that there were 25 total commits, during th
 
   * [API method documentation](https://docs.github.com/rest/metrics/statistics#get-the-hourly-commit-count-for-each-day)
 
-## get_readme(owner, repo, opts \\ [])
+## get_readme/3
 
 Get a repository README
 
@@ -1599,7 +1599,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#get-a-repository-readme)
 
-## get_readme_in_directory(owner, repo, dir, opts \\ [])
+## get_readme_in_directory/4
 
 Get a repository README for a directory
 
@@ -1618,7 +1618,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/repos/contents#get-a-repository-readme-for-a-directory)
 
-## get_release(owner, repo, release_id, opts \\ [])
+## get_release/4
 
 Get a release
 
@@ -1632,7 +1632,7 @@ for uploading release assets. This key is a hypermedia resource. For more inform
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#get-a-release)
 
-## get_release_asset(owner, repo, asset_id, opts \\ [])
+## get_release_asset/4
 
 Get a release asset
 
@@ -1642,7 +1642,7 @@ To download the asset's binary content, set the `Accept` header of the request t
 
   * [API method documentation](https://docs.github.com/rest/releases/assets#get-a-release-asset)
 
-## get_release_by_tag(owner, repo, tag, opts \\ [])
+## get_release_by_tag/4
 
 Get a release by tag name
 
@@ -1652,7 +1652,7 @@ Get a published release with the specified tag.
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#get-a-release-by-tag-name)
 
-## get_repo_rule_suite(owner, repo, rule_suite_id, opts \\ [])
+## get_repo_rule_suite/4
 
 Get a repository rule suite
 
@@ -1663,7 +1663,7 @@ For more information, see "[Managing rulesets for a repository](https://docs.git
 
   * [API method documentation](https://docs.github.com/rest/repos/rule-suites#get-a-repository-rule-suite)
 
-## get_repo_rule_suites(owner, repo, opts \\ [])
+## get_repo_rule_suites/3
 
 List repository rule suites
 
@@ -1685,7 +1685,7 @@ For more information, see "[Managing rulesets for a repository](https://docs.git
 
   * [API method documentation](https://docs.github.com/rest/repos/rule-suites#list-repository-rule-suites)
 
-## get_repo_ruleset(owner, repo, ruleset_id, opts \\ [])
+## get_repo_ruleset/4
 
 Get a repository ruleset
 
@@ -1699,7 +1699,7 @@ Get a ruleset for a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#get-a-repository-ruleset)
 
-## get_repo_rulesets(owner, repo, opts \\ [])
+## get_repo_rulesets/3
 
 Get all repository rulesets
 
@@ -1715,7 +1715,7 @@ Get all the rulesets for a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#get-all-repository-rulesets)
 
-## get_status_checks_protection(owner, repo, branch, opts \\ [])
+## get_status_checks_protection/4
 
 Get status checks protection
 
@@ -1725,7 +1725,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-status-checks-protection)
 
-## get_teams_with_access_to_protected_branch(owner, repo, branch, opts \\ [])
+## get_teams_with_access_to_protected_branch/4
 
 Get teams with access to the protected branch
 
@@ -1737,7 +1737,7 @@ Lists the teams who have push access to this branch. The list includes child tea
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-teams-with-access-to-the-protected-branch)
 
-## get_top_paths(owner, repo, opts \\ [])
+## get_top_paths/3
 
 Get top referral paths
 
@@ -1747,7 +1747,7 @@ Get the top 10 popular contents over the last 14 days.
 
   * [API method documentation](https://docs.github.com/rest/metrics/traffic#get-top-referral-paths)
 
-## get_top_referrers(owner, repo, opts \\ [])
+## get_top_referrers/3
 
 Get top referral sources
 
@@ -1757,7 +1757,7 @@ Get the top 10 referrers over the last 14 days.
 
   * [API method documentation](https://docs.github.com/rest/metrics/traffic#get-top-referral-sources)
 
-## get_users_with_access_to_protected_branch(owner, repo, branch, opts \\ [])
+## get_users_with_access_to_protected_branch/4
 
 Get users with access to the protected branch
 
@@ -1769,7 +1769,7 @@ Lists the people who have push access to this branch.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#get-users-with-access-to-the-protected-branch)
 
-## get_views(owner, repo, opts \\ [])
+## get_views/3
 
 Get page views
 
@@ -1783,7 +1783,7 @@ Get the total number of views and breakdown per day or week for the last 14 days
 
   * [API method documentation](https://docs.github.com/rest/metrics/traffic#get-page-views)
 
-## get_webhook(owner, repo, hook_id, opts \\ [])
+## get_webhook/4
 
 Get a repository webhook
 
@@ -1793,7 +1793,7 @@ Returns a webhook configured in a repository. To get only the webhook `config` p
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#get-a-repository-webhook)
 
-## get_webhook_config_for_repo(owner, repo, hook_id, opts \\ [])
+## get_webhook_config_for_repo/4
 
 Get a webhook configuration for a repository
 
@@ -1805,7 +1805,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:repo_hook` 
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#get-a-webhook-configuration-for-a-repository)
 
-## get_webhook_delivery(owner, repo, hook_id, delivery_id, opts \\ [])
+## get_webhook_delivery/5
 
 Get a delivery for a repository webhook
 
@@ -1815,7 +1815,7 @@ Returns a delivery for a webhook configured in a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#get-a-delivery-for-a-repository-webhook)
 
-## list_activities(owner, repo, opts \\ [])
+## list_activities/3
 
 List repository activities
 
@@ -1845,7 +1845,7 @@ see "[Viewing activity and data for your repository](https://docs.github.com/rep
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repository-activities)
 
-## list_autolinks(owner, repo, opts \\ [])
+## list_autolinks/3
 
 Get all autolinks of a repository
 
@@ -1857,7 +1857,7 @@ Information about autolinks are only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/autolinks#get-all-autolinks-of-a-repository)
 
-## list_branches(owner, repo, opts \\ [])
+## list_branches/3
 
 List branches
 
@@ -1871,7 +1871,7 @@ List branches
 
   * [API method documentation](https://docs.github.com/rest/branches/branches#list-branches)
 
-## list_branches_for_head_commit(owner, repo, commit_sha, opts \\ [])
+## list_branches_for_head_commit/4
 
 List branches for HEAD commit
 
@@ -1883,7 +1883,7 @@ Returns all branches where the given commit SHA is the HEAD, or latest commit fo
 
   * [API method documentation](https://docs.github.com/rest/commits/commits#list-branches-for-head-commit)
 
-## list_collaborators(owner, repo, opts \\ [])
+## list_collaborators/3
 
 List repository collaborators
 
@@ -1907,7 +1907,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:org` and `r
 
   * [API method documentation](https://docs.github.com/rest/collaborators/collaborators#list-repository-collaborators)
 
-## list_comments_for_commit(owner, repo, commit_sha, opts \\ [])
+## list_comments_for_commit/4
 
 List commit comments
 
@@ -1929,7 +1929,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#list-commit-comments)
 
-## list_commit_comments_for_repo(owner, repo, opts \\ [])
+## list_commit_comments_for_repo/3
 
 List commit comments for a repository
 
@@ -1951,7 +1951,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#list-commit-comments-for-a-repository)
 
-## list_commit_statuses_for_ref(owner, repo, ref, opts \\ [])
+## list_commit_statuses_for_ref/4
 
 List commit statuses for a reference
 
@@ -1968,7 +1968,7 @@ This resource is also available via a legacy route: `GET /repos/:owner/:repo/sta
 
   * [API method documentation](https://docs.github.com/rest/commits/statuses#list-commit-statuses-for-a-reference)
 
-## list_commits(owner, repo, opts \\ [])
+## list_commits/3
 
 List commits
 
@@ -2016,7 +2016,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/commits/commits#list-commits)
 
-## list_contributors(owner, repo, opts \\ [])
+## list_contributors/3
 
 List repository contributors
 
@@ -2034,7 +2034,7 @@ GitHub identifies contributors by author email address. This endpoint groups con
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repository-contributors)
 
-## list_custom_deployment_rule_integrations(environment_name, repo, owner, opts \\ [])
+## list_custom_deployment_rule_integrations/4
 
 List custom deployment rule integrations available for an environment
 
@@ -2055,7 +2055,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/protection-rules#list-custom-deployment-rule-integrations-available-for-an-environment)
 
-## list_deploy_keys(owner, repo, opts \\ [])
+## list_deploy_keys/3
 
 List deploy keys
 
@@ -2068,7 +2068,7 @@ List deploy keys
 
   * [API method documentation](https://docs.github.com/rest/deploy-keys/deploy-keys#list-deploy-keys)
 
-## list_deployment_branch_policies(owner, repo, environment_name, opts \\ [])
+## list_deployment_branch_policies/4
 
 List deployment branch policies
 
@@ -2087,7 +2087,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/branch-policies#list-deployment-branch-policies)
 
-## list_deployment_statuses(owner, repo, deployment_id, opts \\ [])
+## list_deployment_statuses/4
 
 List deployment statuses
 
@@ -2102,7 +2102,7 @@ Users with pull access can view deployment statuses for a deployment:
 
   * [API method documentation](https://docs.github.com/rest/deployments/statuses#list-deployment-statuses)
 
-## list_deployments(owner, repo, opts \\ [])
+## list_deployments/3
 
 List deployments
 
@@ -2121,7 +2121,7 @@ Simple filtering of deployments is available via query parameters:
 
   * [API method documentation](https://docs.github.com/rest/deployments/deployments#list-deployments)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List repositories for the authenticated user
 
@@ -2148,7 +2148,7 @@ The authenticated user has explicit permission to access repositories they own, 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repositories-for-the-authenticated-user)
 
-## list_for_org(org, opts \\ [])
+## list_for_org/2
 
 List organization repositories
 
@@ -2168,7 +2168,7 @@ Lists repositories for the specified organization.
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-organization-repositories)
 
-## list_for_user(username, opts \\ [])
+## list_for_user/2
 
 List repositories for a user
 
@@ -2186,7 +2186,7 @@ Lists public repositories for the specified user.
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repositories-for-a-user)
 
-## list_forks(owner, repo, opts \\ [])
+## list_forks/3
 
 List forks
 
@@ -2200,7 +2200,7 @@ List forks
 
   * [API method documentation](https://docs.github.com/rest/repos/forks#list-forks)
 
-## list_invitations(owner, repo, opts \\ [])
+## list_invitations/3
 
 List repository invitations
 
@@ -2215,7 +2215,7 @@ When authenticating as a user with admin rights to a repository, this endpoint w
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#list-repository-invitations)
 
-## list_invitations_for_authenticated_user(opts \\ [])
+## list_invitations_for_authenticated_user/1
 
 List repository invitations for the authenticated user
 
@@ -2230,7 +2230,7 @@ When authenticating as a user, this endpoint will list all currently open reposi
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user)
 
-## list_languages(owner, repo, opts \\ [])
+## list_languages/3
 
 List repository languages
 
@@ -2240,7 +2240,7 @@ Lists languages for the specified repository. The value shown for each language 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repository-languages)
 
-## list_pages_builds(owner, repo, opts \\ [])
+## list_pages_builds/3
 
 List GitHub Pages builds
 
@@ -2257,7 +2257,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#list-apiname-pages-builds)
 
-## list_public(opts \\ [])
+## list_public/1
 
 List public repositories
 
@@ -2275,7 +2275,7 @@ Note:
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-public-repositories)
 
-## list_pull_requests_associated_with_commit(owner, repo, commit_sha, opts \\ [])
+## list_pull_requests_associated_with_commit/4
 
 List pull requests associated with a commit
 
@@ -2292,7 +2292,7 @@ To list the open or merged pull requests associated with a branch, you can set t
 
   * [API method documentation](https://docs.github.com/rest/commits/commits#list-pull-requests-associated-with-a-commit)
 
-## list_release_assets(owner, repo, release_id, opts \\ [])
+## list_release_assets/4
 
 List release assets
 
@@ -2305,7 +2305,7 @@ List release assets
 
   * [API method documentation](https://docs.github.com/rest/releases/assets#list-release-assets)
 
-## list_releases(owner, repo, opts \\ [])
+## list_releases/3
 
 List releases
 
@@ -2322,7 +2322,7 @@ Information about published releases are available to everyone. Only users with 
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#list-releases)
 
-## list_tag_protection(owner, repo, opts \\ [])
+## list_tag_protection/3
 
 List tag protection states for a repository
 
@@ -2334,7 +2334,7 @@ This information is only available to repository administrators.
 
   * [API method documentation](https://docs.github.com/rest/repos/tags#list-tag-protection-states-for-a-repository)
 
-## list_tags(owner, repo, opts \\ [])
+## list_tags/3
 
 List repository tags
 
@@ -2347,7 +2347,7 @@ List repository tags
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repository-tags)
 
-## list_teams(owner, repo, opts \\ [])
+## list_teams/3
 
 List repository teams
 
@@ -2366,7 +2366,7 @@ OAuth app tokens and personal access tokens (classic) need the `public_repo` or 
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#list-repository-teams)
 
-## list_webhook_deliveries(owner, repo, hook_id, opts \\ [])
+## list_webhook_deliveries/4
 
 List deliveries for a repository webhook
 
@@ -2382,7 +2382,7 @@ Returns a list of webhook deliveries for a webhook configured in a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#list-deliveries-for-a-repository-webhook)
 
-## list_webhooks(owner, repo, opts \\ [])
+## list_webhooks/3
 
 List repository webhooks
 
@@ -2397,7 +2397,7 @@ Lists webhooks for a repository. `last response` may return null if there have n
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#list-repository-webhooks)
 
-## merge(owner, repo, body, opts \\ [])
+## merge/4
 
 Merge a branch
 
@@ -2405,7 +2405,7 @@ Merge a branch
 
   * [API method documentation](https://docs.github.com/rest/branches/branches#merge-a-branch)
 
-## merge_upstream(owner, repo, body, opts \\ [])
+## merge_upstream/4
 
 Sync a fork branch with the upstream repository
 
@@ -2415,7 +2415,7 @@ Sync a branch of a forked repository to keep it up-to-date with the upstream rep
 
   * [API method documentation](https://docs.github.com/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository)
 
-## ping_webhook(owner, repo, hook_id, opts \\ [])
+## ping_webhook/4
 
 Ping a repository webhook
 
@@ -2425,7 +2425,7 @@ This will trigger a [ping event](https://docs.github.com/webhooks/#ping-event) t
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#ping-a-repository-webhook)
 
-## redeliver_webhook_delivery(owner, repo, hook_id, delivery_id, opts \\ [])
+## redeliver_webhook_delivery/5
 
 Redeliver a delivery for a repository webhook
 
@@ -2435,7 +2435,7 @@ Redeliver a webhook delivery for a webhook configured in a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#redeliver-a-delivery-for-a-repository-webhook)
 
-## remove_app_access_restrictions(owner, repo, branch, body, opts \\ [])
+## remove_app_access_restrictions/5
 
 Remove app access restrictions
 
@@ -2447,7 +2447,7 @@ Removes the ability of an app to push to this branch. Only GitHub Apps that are 
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#remove-app-access-restrictions)
 
-## remove_collaborator(owner, repo, username, opts \\ [])
+## remove_collaborator/4
 
 Remove a repository collaborator
 
@@ -2477,7 +2477,7 @@ For more information on fork permissions, see "[About permissions and visibility
 
   * [API method documentation](https://docs.github.com/rest/collaborators/collaborators#remove-a-repository-collaborator)
 
-## remove_status_check_contexts(owner, repo, branch, body, opts \\ [])
+## remove_status_check_contexts/5
 
 Remove status check contexts
 
@@ -2487,7 +2487,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#remove-status-check-contexts)
 
-## remove_status_check_protection(owner, repo, branch, opts \\ [])
+## remove_status_check_protection/4
 
 Remove status check protection
 
@@ -2497,7 +2497,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#remove-status-check-protection)
 
-## remove_team_access_restrictions(owner, repo, branch, body, opts \\ [])
+## remove_team_access_restrictions/5
 
 Remove team access restrictions
 
@@ -2509,7 +2509,7 @@ Removes the ability of a team to push to this branch. You can also remove push a
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#remove-team-access-restrictions)
 
-## remove_user_access_restrictions(owner, repo, branch, body, opts \\ [])
+## remove_user_access_restrictions/5
 
 Remove user access restrictions
 
@@ -2525,7 +2525,7 @@ Removes the ability of a user to push to this branch.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#remove-user-access-restrictions)
 
-## rename_branch(owner, repo, branch, body, opts \\ [])
+## rename_branch/5
 
 Rename a branch
 
@@ -2541,7 +2541,7 @@ In order to rename the default branch, fine-grained access tokens also need the 
 
   * [API method documentation](https://docs.github.com/rest/branches/branches#rename-a-branch)
 
-## replace_all_topics(owner, repo, body, opts \\ [])
+## replace_all_topics/4
 
 Replace all repository topics
 
@@ -2549,7 +2549,7 @@ Replace all repository topics
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#replace-all-repository-topics)
 
-## request_pages_build(owner, repo, opts \\ [])
+## request_pages_build/3
 
 Request a GitHub Pages build
 
@@ -2561,7 +2561,7 @@ Build requests are limited to one concurrent build per repository and one concur
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#request-a-apiname-pages-build)
 
-## set_admin_branch_protection(owner, repo, branch, opts \\ [])
+## set_admin_branch_protection/4
 
 Set admin branch protection
 
@@ -2573,7 +2573,7 @@ Adding admin enforcement requires admin or owner permissions to the repository a
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#set-admin-branch-protection)
 
-## set_app_access_restrictions(owner, repo, branch, body, opts \\ [])
+## set_app_access_restrictions/5
 
 Set app access restrictions
 
@@ -2585,7 +2585,7 @@ Replaces the list of apps that have push access to this branch. This removes all
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#set-app-access-restrictions)
 
-## set_status_check_contexts(owner, repo, branch, body, opts \\ [])
+## set_status_check_contexts/5
 
 Set status check contexts
 
@@ -2595,7 +2595,7 @@ Protected branches are available in public repositories with GitHub Free and Git
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#set-status-check-contexts)
 
-## set_team_access_restrictions(owner, repo, branch, body, opts \\ [])
+## set_team_access_restrictions/5
 
 Set team access restrictions
 
@@ -2607,7 +2607,7 @@ Replaces the list of teams that have push access to this branch. This removes al
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#set-team-access-restrictions)
 
-## set_user_access_restrictions(owner, repo, branch, body, opts \\ [])
+## set_user_access_restrictions/5
 
 Set user access restrictions
 
@@ -2623,7 +2623,7 @@ Replaces the list of people that have push access to this branch. This removes a
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#set-user-access-restrictions)
 
-## test_push_webhook(owner, repo, hook_id, opts \\ [])
+## test_push_webhook/4
 
 Test the push repository webhook
 
@@ -2635,7 +2635,7 @@ This will trigger the hook with the latest push to the current repository if the
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#test-the-push-repository-webhook)
 
-## transfer(owner, repo, body, opts \\ [])
+## transfer/4
 
 Transfer a repository
 
@@ -2645,7 +2645,7 @@ A transfer request will need to be accepted by the new owner when transferring a
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#transfer-a-repository)
 
-## update(owner, repo, body, opts \\ [])
+## update/4
 
 Update a repository
 
@@ -2655,7 +2655,7 @@ Update a repository
 
   * [API method documentation](https://docs.github.com/rest/repos/repos#update-a-repository)
 
-## update_branch_protection(owner, repo, branch, body, opts \\ [])
+## update_branch_protection/5
 
 Update branch protection
 
@@ -2671,7 +2671,7 @@ Protecting a branch requires admin or owner permissions to the repository.
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#update-branch-protection)
 
-## update_commit_comment(owner, repo, comment_id, body, opts \\ [])
+## update_commit_comment/5
 
 Update a commit comment
 
@@ -2688,7 +2688,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/commits/comments#update-a-commit-comment)
 
-## update_deployment_branch_policy(owner, repo, environment_name, branch_policy_id, body, opts \\ [])
+## update_deployment_branch_policy/6
 
 Update a deployment branch policy
 
@@ -2700,7 +2700,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/deployments/branch-policies#update-a-deployment-branch-policy)
 
-## update_information_about_pages_site(owner, repo, body, opts \\ [])
+## update_information_about_pages_site/4
 
 Update information about a GitHub Pages site
 
@@ -2714,7 +2714,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/pages/pages#update-information-about-a-apiname-pages-site)
 
-## update_invitation(owner, repo, invitation_id, body, opts \\ [])
+## update_invitation/5
 
 Update a repository invitation
 
@@ -2722,7 +2722,7 @@ Update a repository invitation
 
   * [API method documentation](https://docs.github.com/rest/collaborators/invitations#update-a-repository-invitation)
 
-## update_org_ruleset(org, ruleset_id, body, opts \\ [])
+## update_org_ruleset/4
 
 Update an organization repository ruleset
 
@@ -2732,7 +2732,7 @@ Update a ruleset for an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/rules#update-an-organization-repository-ruleset)
 
-## update_pull_request_review_protection(owner, repo, branch, body, opts \\ [])
+## update_pull_request_review_protection/5
 
 Update pull request review protection
 
@@ -2746,7 +2746,7 @@ Updating pull request review enforcement requires admin or owner permissions to 
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#update-pull-request-review-protection)
 
-## update_release(owner, repo, release_id, body, opts \\ [])
+## update_release/5
 
 Update a release
 
@@ -2756,7 +2756,7 @@ Users with push access to the repository can edit a release.
 
   * [API method documentation](https://docs.github.com/rest/releases/releases#update-a-release)
 
-## update_release_asset(owner, repo, asset_id, body, opts \\ [])
+## update_release_asset/5
 
 Update a release asset
 
@@ -2766,7 +2766,7 @@ Users with push access to the repository can edit a release asset.
 
   * [API method documentation](https://docs.github.com/rest/releases/assets#update-a-release-asset)
 
-## update_repo_ruleset(owner, repo, ruleset_id, body, opts \\ [])
+## update_repo_ruleset/5
 
 Update a repository ruleset
 
@@ -2776,7 +2776,7 @@ Update a ruleset for a repository.
 
   * [API method documentation](https://docs.github.com/rest/repos/rules#update-a-repository-ruleset)
 
-## update_status_check_protection(owner, repo, branch, body, opts \\ [])
+## update_status_check_protection/5
 
 Update status check protection
 
@@ -2788,7 +2788,7 @@ Updating required status checks requires admin or owner permissions to the repos
 
   * [API method documentation](https://docs.github.com/rest/branches/branch-protection#update-status-check-protection)
 
-## update_webhook(owner, repo, hook_id, body, opts \\ [])
+## update_webhook/5
 
 Update a repository webhook
 
@@ -2798,7 +2798,7 @@ Updates a webhook configured in a repository. If you previously had a `secret` s
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#update-a-repository-webhook)
 
-## update_webhook_config_for_repo(owner, repo, hook_id, body, opts \\ [])
+## update_webhook_config_for_repo/5
 
 Update a webhook configuration for a repository
 
@@ -2810,7 +2810,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:repo_hook`
 
   * [API method documentation](https://docs.github.com/rest/repos/webhooks#update-a-webhook-configuration-for-a-repository)
 
-## upload_release_asset(owner, repo, release_id, body, opts \\ [])
+## upload_release_asset/5
 
 Upload a release asset
 

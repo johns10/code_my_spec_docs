@@ -81,7 +81,7 @@ In this case it is possible to encode the parameters using maps instead of lists
 
 For stateful decoding, see `decode_init/0`, `decode_each/2`, and `decode_done/2`.
 
-## decode(query, initial \\ [], invalid_exception \\ Plug.Conn.InvalidQueryError, validate_utf8 \\ true)
+## decode/4
 
 Decodes the given `query`.
 
@@ -95,22 +95,14 @@ an atom with a custom exception to raise.
 `invalid_exception` is the exception module for the exception to raise on
 errors with decoding.
 
-## decode_done(decoder, initial \\ [])
+## decode_init/0
 
-Finishes stateful decoding and returns a map with the decoded pairs.
+Starts a stateful decoder.
 
-`decoder` is the stateful decoder returned by `decode_init/0` and `decode_each/2`.
-`initial` is an enumerable of key-value pairs that functions as the initial
-accumulator for the returned map (see examples below).
+Use `decode_each/2` and `decode_done/2` to decode and complete.
+See `decode_each/2` for examples.
 
-## Examples
-
-    iex> decoder = Plug.Conn.Query.decode_init()
-    iex> decoder = Plug.Conn.Query.decode_each({"foo", "bar"}, decoder)
-    iex> Plug.Conn.Query.decode_done(decoder, %{"initial" => true})
-    %{"foo" => "bar", "initial" => true}
-
-## decode_each(pair, decoder)
+## decode_each/2
 
 Decodes the given `pair` tuple.
 
@@ -126,14 +118,22 @@ encoded in `"x-www-form-urlencoded"`.
     iex> Plug.Conn.Query.decode_done(decoder)
     %{"baz" => "bat", "foo" => "bar"}
 
-## decode_init()
+## decode_done/2
 
-Starts a stateful decoder.
+Finishes stateful decoding and returns a map with the decoded pairs.
 
-Use `decode_each/2` and `decode_done/2` to decode and complete.
-See `decode_each/2` for examples.
+`decoder` is the stateful decoder returned by `decode_init/0` and `decode_each/2`.
+`initial` is an enumerable of key-value pairs that functions as the initial
+accumulator for the returned map (see examples below).
 
-## decode_pair(pair, acc)
+## Examples
+
+    iex> decoder = Plug.Conn.Query.decode_init()
+    iex> decoder = Plug.Conn.Query.decode_each({"foo", "bar"}, decoder)
+    iex> Plug.Conn.Query.decode_done(decoder, %{"initial" => true})
+    %{"foo" => "bar", "initial" => true}
+
+## decode_pair/2
 
 Decodes the given tuple and stores it in the given accumulator.
 
@@ -144,12 +144,6 @@ encoded in "x-www-form-urlencoded".
 Parameter lists are added to the accumulator in reverse
 order, so be sure to pass the parameters in reverse order.
 
-## encode(kv, encoder \\ &to_string/1)
+## encode/2
 
 Encodes the given map or list of tuples.
-
-## decoder/0
-
-Stateful decoder accumulator.
-
-See `decode_init/0`, `decode_each/2`, and `decode_done/2`.

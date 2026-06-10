@@ -2,7 +2,7 @@
 
 Functions for dealing with revocation.
 
-## revoke(request, config \\ [])
+## revoke/2
 
 Revokes access token.
 

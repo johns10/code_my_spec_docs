@@ -3,17 +3,7 @@
 A `Cloak.Cipher` which encrypts values with the AES cipher in GCM (block) mode.
 Internally relies on Erlang's `:crypto.block_encrypt/4`.
 
-## can_decrypt?(ciphertext, opts)
-
-Callback implementation for `Cloak.Cipher`. Determines whether this module
-can decrypt the given ciphertext.
-
-## decrypt(ciphertext, opts)
-
-Callback implementation for `Cloak.Cipher`. Decrypts a value
-encrypted with AES in GCM mode.
-
-## encrypt(plaintext, opts)
+## encrypt/2
 
 Callback implementation for `Cloak.Cipher`. Encrypts a value using
 AES in GCM mode.
@@ -38,3 +28,13 @@ and `Value` triplet for easy decoding.
 
 **Important**: Because a random IV is used for every encryption, `encrypt/2`
 will not produce the same ciphertext twice for the same value.
+
+## decrypt/2
+
+Callback implementation for `Cloak.Cipher`. Decrypts a value
+encrypted with AES in GCM mode.
+
+## can_decrypt?/2
+
+Callback implementation for `Cloak.Cipher`. Determines whether this module
+can decrypt the given ciphertext.

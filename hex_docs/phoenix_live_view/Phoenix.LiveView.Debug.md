@@ -28,7 +28,7 @@ at runtime. It allows you to:
     iex> Phoenix.LiveView.Debug.live_components(pid(0,123,0))
     {:ok, [%{id: "component-1", module: MyAppWeb.PostLive.Index.Component1, ...}]}
 
-## list_liveviews()
+## list_liveviews/0
 
 Returns a list of all currently connected LiveView processes (on the current node).
 
@@ -46,7 +46,31 @@ The `transport_pid` can be used to group LiveViews on the same page.
     iex> list_liveviews()
     [%{pid: #PID<0.123.0>, view: MyAppWeb.PostLive.Index, topic: "lv:12345678", transport_pid: #PID<0.122.0>}]
 
-## live_components(liveview_pid)
+## liveview_process?/1
+
+Checks if the given pid is a LiveView process.
+
+## Examples
+
+    iex> list_liveviews() |> Enum.at(0) |> Map.fetch!(:pid) |> liveview_process?()
+    true
+
+    iex> liveview_process?(pid(0,456,0))
+    false
+
+## socket/1
+
+Returns the socket of the LiveView process.
+
+## Examples
+
+    iex> list_liveviews() |> Enum.at(0) |> Map.fetch!(:pid) |> socket()
+    {:ok, %Phoenix.LiveView.Socket{...}}
+
+    iex> socket(pid(0,123,0))
+    {:error, :not_alive_or_not_a_liveview}
+
+## live_components/1
 
 Returns a list with information about all LiveComponents rendered in the LiveView.
 
@@ -68,27 +92,3 @@ Returns a list with information about all LiveComponents rendered in the LiveVie
          }
        }
      ]}
-
-## liveview_process?(pid)
-
-Checks if the given pid is a LiveView process.
-
-## Examples
-
-    iex> list_liveviews() |> Enum.at(0) |> Map.fetch!(:pid) |> liveview_process?()
-    true
-
-    iex> liveview_process?(pid(0,456,0))
-    false
-
-## socket(liveview_pid)
-
-Returns the socket of the LiveView process.
-
-## Examples
-
-    iex> list_liveviews() |> Enum.at(0) |> Map.fetch!(:pid) |> socket()
-    {:ok, %Phoenix.LiveView.Socket{...}}
-
-    iex> socket(pid(0,123,0))
-    {:error, :not_alive_or_not_a_liveview}

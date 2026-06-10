@@ -1,1 +1,0 @@
-# Tesla.Middleware.Logger.Formatter

@@ -120,25 +120,16 @@ errors individually:
       )
     end)
 
-## all(multi, name, queryable_or_fun, opts \\ [])
+## new/0
 
-Runs a query and stores all results in the Multi.
-
-The `name` must be unique within the Multi.
-
-The remaining arguments and options are the same as in `c:Ecto.Repo.all/2`.
+Returns an empty `Ecto.Multi` struct.
 
 ## Example
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.all(:all, Post)
-    |> MyApp.Repo.transact()
+    iex> Ecto.Multi.new() |> Ecto.Multi.to_list()
+    []
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.all(:all, fn _changes -> Post end)
-    |> MyApp.Repo.transact()
-
-## append(lhs, rhs)
+## append/2
 
 Appends the second Multi to the first.
 
@@ -151,7 +142,125 @@ All names must be unique within both structures.
     iex> Ecto.Multi.append(lhs, rhs) |> Ecto.Multi.to_list |> Keyword.keys
     [:left, :right]
 
-## delete(multi, name, changeset_or_struct_fun, opts \\ [])
+## prepend/2
+
+Prepends the second Multi to the first.
+
+All names must be unique within both structures.
+
+## Example
+
+    iex> lhs = Ecto.Multi.new() |> Ecto.Multi.run(:left, fn _, changes -> {:ok, changes} end)
+    iex> rhs = Ecto.Multi.new() |> Ecto.Multi.run(:right, fn _, changes -> {:error, changes} end)
+    iex> Ecto.Multi.prepend(lhs, rhs) |> Ecto.Multi.to_list |> Keyword.keys
+    [:right, :left]
+
+## merge/2
+
+Merges a Multi returned dynamically by an anonymous function.
+
+This function is useful when the Multi to be merged requires information
+from the original Multi. The second argument is an anonymous function
+that receives the Multi changes so far. The anonymous function must return
+another Multi.
+
+If you would prefer to simply merge two Multis together, see `append/2` or
+`prepend/2`.
+
+Duplicated operations are not allowed.
+
+## Example
+
+    multi =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:post, %Post{title: "first"})
+
+    multi
+    |> Ecto.Multi.merge(fn %{post: post} ->
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:comment, Ecto.build_assoc(post, :comments))
+    end)
+    |> MyApp.Repo.transact()
+
+## merge/4
+
+Merges a Multi returned dynamically by calling `module` and `function` with `args`.
+
+Similar to `merge/2` but allows passing of module name, function and
+arguments. The function should return an `Ecto.Multi`, and receives changes so far
+as the first argument (prepended to those passed in the call to the function).
+
+Duplicated operations are not allowed.
+
+## insert/4
+
+Adds an insert operation to the Multi.
+
+The `name` must be unique within the Multi.
+
+The remaining arguments and options are the same as in `c:Ecto.Repo.insert/2`.
+
+## Example
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:insert, %Post{title: "first"})
+    |> MyApp.Repo.transact()
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:post, %Post{title: "first"})
+    |> Ecto.Multi.insert(:comment, fn %{post: post} ->
+      Ecto.build_assoc(post, :comments)
+    end)
+    |> MyApp.Repo.transact()
+
+## update/4
+
+Adds an update operation to the Multi.
+
+The `name` must be unique within the Multi.
+
+The remaining arguments and options are the same as in `c:Ecto.Repo.update/2`.
+
+## Example
+
+    post = MyApp.Repo.get!(Post, 1)
+    changeset = Ecto.Changeset.change(post, title: "New title")
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:update, changeset)
+    |> MyApp.Repo.transact()
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:post, %Post{title: "first"})
+    |> Ecto.Multi.update(:fun, fn %{post: post} ->
+      Ecto.Changeset.change(post, title: "New title")
+    end)
+    |> MyApp.Repo.transact()
+
+## insert_or_update/4
+
+Inserts or updates a changeset depending on whether or not the changeset was persisted.
+
+The `name` must be unique within the Multi.
+
+The remaining arguments and options are the same as in `c:Ecto.Repo.insert_or_update/2`.
+
+## Example
+
+    changeset = Post.changeset(%Post{}, %{title: "New title"})
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert_or_update(:insert_or_update, changeset)
+    |> MyApp.Repo.transact()
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:post, fn repo, _changes ->
+      {:ok, repo.get(Post, 1) || %Post{}}
+    end)
+    |> Ecto.Multi.insert_or_update(:update, fn %{post: post} ->
+      Ecto.Changeset.change(post, title: "New title")
+    end)
+    |> MyApp.Repo.transact()
+
+## delete/4
 
 Adds a delete operation to the Multi.
 
@@ -179,41 +288,42 @@ The remaining arguments and options are the same as in `c:Ecto.Repo.delete/2`.
     end)
     |> MyApp.Repo.transact()
 
-## delete_all(multi, name, queryable_or_fun, opts \\ [])
+## one/4
 
-Adds a `delete_all` operation to the Multi.
+Runs a query expecting one result and stores the result in the Multi.
 
-Accepts the same arguments and options as `c:Ecto.Repo.delete_all/2`.
+The `name` must be unique within the Multi.
+
+The remaining arguments and options are the same as in `c:Ecto.Repo.one/2`.
 
 ## Example
 
-    queryable = from(p in Post, where: p.id < 5)
     Ecto.Multi.new()
-    |> Ecto.Multi.delete_all(:delete_all, queryable)
-    |> MyApp.Repo.transact()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.run(:post, fn repo, _changes ->
-      case repo.get(Post, 1) do
-        nil -> {:error, :not_found}
-        post -> {:ok, post}
-      end
-    end)
-    |> Ecto.Multi.delete_all(:delete_all, fn %{post: post} ->
-      # Others validations
-      from(c in Comment, where: c.post_id == ^post.id)
+    |> Ecto.Multi.one(:post, Post)
+    |> Ecto.Multi.one(:author, fn %{post: post} ->
+      from(a in Author, where: a.id == ^post.author_id)
     end)
     |> MyApp.Repo.transact()
 
-## error(multi, name, value)
+## all/4
 
-Causes the Multi to fail with the given value.
+Runs a query and stores all results in the Multi.
 
-Running the Multi in a transaction will execute
-no previous steps and return the value of the first
-error added.
+The `name` must be unique within the Multi.
 
-## exists?(multi, name, queryable_or_fun, opts \\ [])
+The remaining arguments and options are the same as in `c:Ecto.Repo.all/2`.
+
+## Example
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.all(:all, Post)
+    |> MyApp.Repo.transact()
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.all(:all, fn _changes -> Post end)
+    |> MyApp.Repo.transact()
+
+## exists?/4
 
 Checks if an entry matching the given query exists and stores a boolean in the Multi.
 
@@ -231,28 +341,40 @@ The remaining arguments and options are the same as in `c:Ecto.Repo.exists?/2`.
     |> Ecto.Multi.exists?(:post, fn _changes -> Post end)
     |> MyApp.Repo.transact()
 
-## insert(multi, name, changeset_or_struct_or_fun, opts \\ [])
+## error/3
 
-Adds an insert operation to the Multi.
+Causes the Multi to fail with the given value.
 
-The `name` must be unique within the Multi.
+Running the Multi in a transaction will execute
+no previous steps and return the value of the first
+error added.
 
-The remaining arguments and options are the same as in `c:Ecto.Repo.insert/2`.
+## run/3
+
+Adds a function to run as part of the Multi.
+
+The function should return either `{:ok, value}` or `{:error, value}`,
+and receives the repo as the first argument and the changes so far
+as the second argument.
 
 ## Example
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.insert(:insert, %Post{title: "first"})
-    |> MyApp.Repo.transact()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.insert(:post, %Post{title: "first"})
-    |> Ecto.Multi.insert(:comment, fn %{post: post} ->
-      Ecto.build_assoc(post, :comments)
+    Ecto.Multi.run(multi, :write, fn _repo, %{image: image} ->
+      with :ok <- File.write(image.name, image.contents) do
+        {:ok, nil}
+      end
     end)
-    |> MyApp.Repo.transact()
 
-## insert_all(multi, name, schema_or_source, entries_or_query_or_fun, opts \\ [])
+## run/5
+
+Adds a function to run as part of the Multi.
+
+Similar to `run/3`, but allows passing of module name, function and arguments.
+The function should return either `{:ok, value}` or `{:error, value}`, and
+receives the repo as the first argument and the changes so far as the
+second argument (prepended to those passed in the call to the function).
+
+## insert_all/5
 
 Adds an `insert_all` operation to the Multi.
 
@@ -282,31 +404,95 @@ Accepts the same arguments and options as `c:Ecto.Repo.insert_all/3`.
     end)
     |> MyApp.Repo.transact()
 
-## insert_or_update(multi, name, changeset_or_fun, opts \\ [])
+## update_all/5
 
-Inserts or updates a changeset depending on whether or not the changeset was persisted.
+Adds an `update_all` operation to the Multi.
 
-The `name` must be unique within the Multi.
-
-The remaining arguments and options are the same as in `c:Ecto.Repo.insert_or_update/2`.
+Accepts the same arguments and options as `c:Ecto.Repo.update_all/3`.
 
 ## Example
 
-    changeset = Post.changeset(%Post{}, %{title: "New title"})
     Ecto.Multi.new()
-    |> Ecto.Multi.insert_or_update(:insert_or_update, changeset)
+    |> Ecto.Multi.update_all(:update_all, Post, set: [title: "New title"])
     |> MyApp.Repo.transact()
 
     Ecto.Multi.new()
     |> Ecto.Multi.run(:post, fn repo, _changes ->
-      {:ok, repo.get(Post, 1) || %Post{}}
+      case repo.get(Post, 1) do
+        nil -> {:error, :not_found}
+        post -> {:ok, post}
+      end
     end)
-    |> Ecto.Multi.insert_or_update(:update, fn %{post: post} ->
-      Ecto.Changeset.change(post, title: "New title")
+    |> Ecto.Multi.update_all(:update_all, fn %{post: post} ->
+      # Others validations
+      from(c in Comment, where: c.post_id == ^post.id, update: [set: [title: "New title"]])
+    end, [])
+    |> MyApp.Repo.transact()
+
+## delete_all/4
+
+Adds a `delete_all` operation to the Multi.
+
+Accepts the same arguments and options as `c:Ecto.Repo.delete_all/2`.
+
+## Example
+
+    queryable = from(p in Post, where: p.id < 5)
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete_all(:delete_all, queryable)
+    |> MyApp.Repo.transact()
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:post, fn repo, _changes ->
+      case repo.get(Post, 1) do
+        nil -> {:error, :not_found}
+        post -> {:ok, post}
+      end
+    end)
+    |> Ecto.Multi.delete_all(:delete_all, fn %{post: post} ->
+      # Others validations
+      from(c in Comment, where: c.post_id == ^post.id)
     end)
     |> MyApp.Repo.transact()
 
-## inspect(multi, opts \\ [])
+## to_list/1
+
+Returns the list of operations stored in the Multi.
+
+Always use this function when you need to access the operations you
+have defined in `Ecto.Multi`. Inspecting the `Ecto.Multi` struct internals
+directly is discouraged.
+
+## put/3
+
+Adds a value to the changes so far under the given name.
+
+The given `value` is added to the Multi before the transaction starts.
+If you would like to run arbitrary functions as part of your transaction,
+see `run/3` or `run/5`.
+
+## Example
+
+Imagine there is an existing company schema that you retrieved from
+the database. You can insert it as a change in the Multi using `put/3`:
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.put(:company, company)
+    |> Ecto.Multi.insert(:user, fn changes -> User.changeset(changes.company) end)
+    |> Ecto.Multi.insert(:person, fn changes -> Person.changeset(changes.user, changes.company) end)
+    |> MyApp.Repo.transact()
+
+In the example above, there isn't a significant benefit in putting
+the `company` in the Multi because you could also access the
+`company` variable directly inside the anonymous function.
+
+However, the benefit of `put/3` is seen when composing `Ecto.Multi`s.
+If the insert operations above were defined in another module,
+you could use `put(:company, company)` to inject changes that
+will be accessed by other functions down the chain, removing
+the need to pass both `multi` and `company` values around.
+
+## inspect/2
 
 Inspects results from a Multi.
 
@@ -341,205 +527,3 @@ We can use the `:only` option to limit which fields will be printed:
 
 Prints:
     %{person_a: %Person{...}}
-
-## merge(multi, merge)
-
-Merges a Multi returned dynamically by an anonymous function.
-
-This function is useful when the Multi to be merged requires information
-from the original Multi. The second argument is an anonymous function
-that receives the Multi changes so far. The anonymous function must return
-another Multi.
-
-If you would prefer to simply merge two Multis together, see `append/2` or
-`prepend/2`.
-
-Duplicated operations are not allowed.
-
-## Example
-
-    multi =
-      Ecto.Multi.new()
-      |> Ecto.Multi.insert(:post, %Post{title: "first"})
-
-    multi
-    |> Ecto.Multi.merge(fn %{post: post} ->
-      Ecto.Multi.new()
-      |> Ecto.Multi.insert(:comment, Ecto.build_assoc(post, :comments))
-    end)
-    |> MyApp.Repo.transact()
-
-## merge(multi, mod, fun, args)
-
-Merges a Multi returned dynamically by calling `module` and `function` with `args`.
-
-Similar to `merge/2` but allows passing of module name, function and
-arguments. The function should return an `Ecto.Multi`, and receives changes so far
-as the first argument (prepended to those passed in the call to the function).
-
-Duplicated operations are not allowed.
-
-## new()
-
-Returns an empty `Ecto.Multi` struct.
-
-## Example
-
-    iex> Ecto.Multi.new() |> Ecto.Multi.to_list()
-    []
-
-## one(multi, name, queryable_or_fun, opts \\ [])
-
-Runs a query expecting one result and stores the result in the Multi.
-
-The `name` must be unique within the Multi.
-
-The remaining arguments and options are the same as in `c:Ecto.Repo.one/2`.
-
-## Example
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.one(:post, Post)
-    |> Ecto.Multi.one(:author, fn %{post: post} ->
-      from(a in Author, where: a.id == ^post.author_id)
-    end)
-    |> MyApp.Repo.transact()
-
-## prepend(lhs, rhs)
-
-Prepends the second Multi to the first.
-
-All names must be unique within both structures.
-
-## Example
-
-    iex> lhs = Ecto.Multi.new() |> Ecto.Multi.run(:left, fn _, changes -> {:ok, changes} end)
-    iex> rhs = Ecto.Multi.new() |> Ecto.Multi.run(:right, fn _, changes -> {:error, changes} end)
-    iex> Ecto.Multi.prepend(lhs, rhs) |> Ecto.Multi.to_list |> Keyword.keys
-    [:right, :left]
-
-## put(multi, name, value)
-
-Adds a value to the changes so far under the given name.
-
-The given `value` is added to the Multi before the transaction starts.
-If you would like to run arbitrary functions as part of your transaction,
-see `run/3` or `run/5`.
-
-## Example
-
-Imagine there is an existing company schema that you retrieved from
-the database. You can insert it as a change in the Multi using `put/3`:
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.put(:company, company)
-    |> Ecto.Multi.insert(:user, fn changes -> User.changeset(changes.company) end)
-    |> Ecto.Multi.insert(:person, fn changes -> Person.changeset(changes.user, changes.company) end)
-    |> MyApp.Repo.transact()
-
-In the example above, there isn't a significant benefit in putting
-the `company` in the Multi because you could also access the
-`company` variable directly inside the anonymous function.
-
-However, the benefit of `put/3` is seen when composing `Ecto.Multi`s.
-If the insert operations above were defined in another module,
-you could use `put(:company, company)` to inject changes that
-will be accessed by other functions down the chain, removing
-the need to pass both `multi` and `company` values around.
-
-## run(multi, name, run)
-
-Adds a function to run as part of the Multi.
-
-The function should return either `{:ok, value}` or `{:error, value}`,
-and receives the repo as the first argument and the changes so far
-as the second argument.
-
-## Example
-
-    Ecto.Multi.run(multi, :write, fn _repo, %{image: image} ->
-      with :ok <- File.write(image.name, image.contents) do
-        {:ok, nil}
-      end
-    end)
-
-## run(multi, name, mod, fun, args)
-
-Adds a function to run as part of the Multi.
-
-Similar to `run/3`, but allows passing of module name, function and arguments.
-The function should return either `{:ok, value}` or `{:error, value}`, and
-receives the repo as the first argument and the changes so far as the
-second argument (prepended to those passed in the call to the function).
-
-## to_list(multi)
-
-Returns the list of operations stored in the Multi.
-
-Always use this function when you need to access the operations you
-have defined in `Ecto.Multi`. Inspecting the `Ecto.Multi` struct internals
-directly is discouraged.
-
-## update(multi, name, changeset_or_fun, opts \\ [])
-
-Adds an update operation to the Multi.
-
-The `name` must be unique within the Multi.
-
-The remaining arguments and options are the same as in `c:Ecto.Repo.update/2`.
-
-## Example
-
-    post = MyApp.Repo.get!(Post, 1)
-    changeset = Ecto.Changeset.change(post, title: "New title")
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:update, changeset)
-    |> MyApp.Repo.transact()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.insert(:post, %Post{title: "first"})
-    |> Ecto.Multi.update(:fun, fn %{post: post} ->
-      Ecto.Changeset.change(post, title: "New title")
-    end)
-    |> MyApp.Repo.transact()
-
-## update_all(multi, name, queryable_or_fun, updates, opts \\ [])
-
-Adds an `update_all` operation to the Multi.
-
-Accepts the same arguments and options as `c:Ecto.Repo.update_all/3`.
-
-## Example
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update_all(:update_all, Post, set: [title: "New title"])
-    |> MyApp.Repo.transact()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.run(:post, fn repo, _changes ->
-      case repo.get(Post, 1) do
-        nil -> {:error, :not_found}
-        post -> {:ok, post}
-      end
-    end)
-    |> Ecto.Multi.update_all(:update_all, fn %{post: post} ->
-      # Others validations
-      from(c in Comment, where: c.post_id == ^post.id, update: [set: [title: "New title"]])
-    end, [])
-    |> MyApp.Repo.transact()
-
-## changes/0
-
-Map of changes made so far during the current transaction. For any Multi
-which returns `{:ok, result}`, its `t:name/0` is added as a key and its
-result as the value.
-
-## name/0
-
-Name of an operation in the Multi. Can be any term, as long as it is unique
-within the list of operations; for example, `:insert_post` or `{:delete_post,
-5}`.
-
-## failure/0
-
-Result of a failed transaction using a Multi.

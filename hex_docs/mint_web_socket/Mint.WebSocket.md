@@ -109,133 +109,7 @@ See `Mint.WebSocket.Extension` for more information about extensions and
 `Mint.WebSocket.PerMessageDeflate` for information about the
 "permessage-deflate" extension.
 
-## decode(websocket, data)
-
-Decodes a binary into a list of frames.
-
-The binary may received from the connection with `stream/2`.
-
-This function will invoke the `c:Mint.WebSocket.Extension.decode/2` callback
-for any accepted extensions.
-
-## Examples
-
-    message = receive(do: (message -> message))
-    {:ok, conn, [{:data, ^ref, data}]} = Mint.HTTP.stream(conn, message)
-    {:ok, websocket, frames} = Mint.WebSocket.decode(websocket, data)
-
-## encode(websocket, frame)
-
-Encodes a frame into a binary.
-
-The resulting binary may be sent with `stream_request_body/3`.
-
-This function will invoke the `c:Mint.WebSocket.Extension.encode/2` callback
-for any accepted extensions.
-
-## Examples
-
-    {:ok, websocket, data} = Mint.WebSocket.encode(websocket, {:text, "hello world"})
-    {:ok, conn} = Mint.WebSocket.stream_request_body(conn, websocket_ref, data)
-
-## new(conn, request_ref, status, response_headers, opts \\ [])
-
-Creates a new WebSocket data structure given the server's reply to the
-upgrade request.
-
-`request_ref` should be the reference of the request made with `upgrade/5`.
-`status` and `response_headers` should be the status code and headers
-of the server's response to the upgrade request—see the example below.
-
-The returned [WebSocket data structure](`t:t/0`) is used to encode and decode frames.
-
-This function will setup any extensions accepted by the server using
-the `c:Mint.WebSocket.Extension.init/2` callback.
-
-## Options
-
-  * `:mode` - (default: `:active`) either `:active` or `:passive`. This
-    corresponds to the same option in `Mint.HTTP.connect/4`.
-
-## Examples
-
-    http_reply = receive(do: (message -> message))
-
-    {:ok, conn, [{:status, ^ref, status}, {:headers, ^ref, headers}, {:done, ^ref}]} =
-      Mint.WebSocket.stream(conn, http_reply)
-
-    {:ok, conn, websocket} =
-      Mint.WebSocket.new(conn, ref, status, headers)
-
-## recv(conn, byte_count, timeout)
-
-Receives data from the socket.
-
-This function is used instead of `stream/2` when the connection is
-in `:passive` mode. You must pass the `mode: :passive` option to
-`new/5` in order to use `recv/3`.
-
-This function wraps `Mint.HTTP.recv/3`. See the `Mint.HTTP.recv/3`
-documentation for more information.
-
-## Examples
-
-    {:ok, conn, [{:data, ^ref, data}]} = Mint.WebSocket.recv(conn, 0, 5_000)
-
-    {:ok, websocket, [{:text, "hello world!"}]} =
-      Mint.WebSocket.decode(websocket, data)
-
-## stream(conn, message)
-
-A wrapper around `Mint.HTTP.stream/2` for streaming HTTP and WebSocket
-messages.
-
-**This function does not decode WebSocket frames**. Instead, once a WebSocket
-connection has been established, decode any `{:data, request_ref, data}`
-frames with `decode/2`.
-
-This function is a drop-in replacement for `Mint.HTTP.stream/2`, which
-enables streaming WebSocket data after the bootstrapping HTTP/1 connection
-has concluded. It decodes both WebSocket and regular HTTP messages.
-
-## Examples
-
-    message = receive(do: (message -> message))
-
-    {:ok, conn, [{:data, ^websocket_ref, data}]} =
-      Mint.WebSocket.stream(conn, message)
-
-    {:ok, websocket, [{:text, "hello world!"}]} =
-      Mint.WebSocket.decode(websocket, data)
-
-## stream_request_body(conn, request_ref, data)
-
-Streams chunks of data on the connection.
-
-`stream_request_body/3` should be used to send encoded data on an
-established WebSocket connection that has already been upgraded with
-`upgrade/5`.
-
-> #### Encoding {: .warning}
->
-> This function doesn't perform any encoding. You should use `encode/2`
-> to encode frames before sending them with `stream_request_body/3`.
-
-This function is a wrapper around `Mint.HTTP.stream_request_body/3`. It
-delegates to that function unless the `request_ref` belongs to an HTTP/1
-WebSocket connection. When the request is an HTTP/1 WebSocket, this
-function allows sending data on a request which Mint considers to be
-closed, but is actually a valid WebSocket connection.
-
-See the `Mint.HTTP.stream_request_body/3` documentation for more
-information.
-
-## Examples
-
-    {:ok, websocket, data} = Mint.WebSocket.encode(websocket, {:text, "hello world!"})
-    {:ok, conn} = Mint.WebSocket.stream_request_body(conn, websocket_ref, data)
-
-## upgrade(scheme, conn, path, headers, opts \\ [])
+## upgrade/5
 
 Requests that a connection be upgraded to the WebSocket protocol
 
@@ -294,61 +168,99 @@ Here's an example of providing extension parameters:
         extensions: [{Mint.WebSocket.PerMessageDeflate, [:client_max_window_bits]]}]
       )
 
-## shorthand_frame/0
+## new/5
 
-Shorthand notations for control frames.
+Creates a new WebSocket data structure given the server's reply to the
+upgrade request.
 
-  * `:ping` - shorthand for `{:ping, ""}`
-  * `:pong` - shorthand for `{:pong, ""}`
-  * `:close` - shorthand for `{:close, nil, nil}`
+`request_ref` should be the reference of the request made with `upgrade/5`.
+`status` and `response_headers` should be the status code and headers
+of the server's response to the upgrade request—see the example below.
 
-These may be passed to `encode/2`. Frames decoded with `decode/2` are always
-in `t:frame/0` format.
+The returned [WebSocket data structure](`t:t/0`) is used to encode and decode frames.
 
-## frame/0
+This function will setup any extensions accepted by the server using
+the `c:Mint.WebSocket.Extension.init/2` callback.
 
-A WebSocket frame.
+## Options
 
-  * `{:binary, binary}` - a frame containing binary data. Binary frames
-    can be used to send arbitrary binary data such as a PDF.
-  * `{:text, text}` - a frame containing string data. Text frames must be
-    valid utf8. Elixir has wonderful support for utf8: `String.valid?/1`
-    can detect valid and invalid utf8.
-  * `{:ping, binary}` - a control frame which the server should respond to
-    with a pong. The binary data must be echoed in the pong response.
-  * `{:pong, binary}` - a control frame which forms a reply to a ping frame.
-    Pings and pongs may be used to check the a connection is alive or to
-    estimate latency.
-  * `{:close, code, reason}` - a control frame used to request that a connection
-    be closed or to acknowledgee a close frame send by the server.
+  * `:mode` - (default: `:active`) either `:active` or `:passive`. This
+    corresponds to the same option in `Mint.HTTP.connect/4`.
 
-These may be passed to `encode/2` or returned from `decode/2`.
+## Examples
 
-## Close frames
+    http_reply = receive(do: (message -> message))
 
-In order to close a WebSocket connection gracefully, either the client or
-server sends a close frame. Then the other endpoint responds with a
-close with code `1_000` and then closes the TCP/TLS connection. This can be
-accomplished in `Mint.WebSocket` like so:
+    {:ok, conn, [{:status, ^ref, status}, {:headers, ^ref, headers}, {:done, ^ref}]} =
+      Mint.WebSocket.stream(conn, http_reply)
 
-    {:ok, websocket, data} = Mint.WebSocket.encode(websocket, :close)
-    {:ok, conn} = Mint.WebSocket.stream_request_body(conn, ref, data)
+    {:ok, conn, websocket} =
+      Mint.WebSocket.new(conn, ref, status, headers)
 
-    close_response = receive(do: (message -> message))
-    {:ok, conn, [{:data, ^ref, data}]} = Mint.WebSocket.stream(conn, close_response)
-    {:ok, websocket, [{:close, 1_000, ""}]} = Mint.WebSocket.decode(websocket, data)
+## stream/2
 
-    Mint.HTTP.close(conn)
+A wrapper around `Mint.HTTP.stream/2` for streaming HTTP and WebSocket
+messages.
 
-[RFC6455 § 7.4.1](https://datatracker.ietf.org/doc/html/rfc6455#section-7.4.1)
-documents codes which may be used in the `code` element.
+**This function does not decode WebSocket frames**. Instead, once a WebSocket
+connection has been established, decode any `{:data, request_ref, data}`
+frames with `decode/2`.
 
-## t/0
+This function is a drop-in replacement for `Mint.HTTP.stream/2`, which
+enables streaming WebSocket data after the bootstrapping HTTP/1 connection
+has concluded. It decodes both WebSocket and regular HTTP messages.
 
-An immutable data structure representing WebSocket state.
+## Examples
 
-You will usually want to keep these around:
+    message = receive(do: (message -> message))
 
-  * The Mint connection
-  * The request reference for the WebSocket upgrade request
-  * This WebSocket data structure
+    {:ok, conn, [{:data, ^websocket_ref, data}]} =
+      Mint.WebSocket.stream(conn, message)
+
+    {:ok, websocket, [{:text, "hello world!"}]} =
+      Mint.WebSocket.decode(websocket, data)
+
+## recv/3
+
+Receives data from the socket.
+
+This function is used instead of `stream/2` when the connection is
+in `:passive` mode. You must pass the `mode: :passive` option to
+`new/5` in order to use `recv/3`.
+
+This function wraps `Mint.HTTP.recv/3`. See the `Mint.HTTP.recv/3`
+documentation for more information.
+
+## Examples
+
+    {:ok, conn, [{:data, ^ref, data}]} = Mint.WebSocket.recv(conn, 0, 5_000)
+
+    {:ok, websocket, [{:text, "hello world!"}]} =
+      Mint.WebSocket.decode(websocket, data)
+
+## stream_request_body/3
+
+Streams chunks of data on the connection.
+
+`stream_request_body/3` should be used to send encoded data on an
+established WebSocket connection that has already been upgraded with
+`upgrade/5`.
+
+> #### Encoding {: .warning}
+>
+> This function doesn't perform any encoding. You should use `encode/2`
+> to encode frames before sending them with `stream_request_body/3`.
+
+This function is a wrapper around `Mint.HTTP.stream_request_body/3`. It
+delegates to that function unless the `request_ref` belongs to an HTTP/1
+WebSocket connection. When the request is an HTTP/1 WebSocket, this
+function allows sending data on a request which Mint considers to be
+closed, but is actually a valid WebSocket connection.
+
+See the `Mint.HTTP.stream_request_body/3` documentation for more
+information.
+
+## Examples
+
+    {:ok, websocket, data} = Mint.WebSocket.encode(websocket, {:text, "hello world!"})
+    {:ok, conn} = Mint.WebSocket.stream_request_body(conn, websocket_ref, data)

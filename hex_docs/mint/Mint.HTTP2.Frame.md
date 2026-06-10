@@ -2,12 +2,12 @@
 
 
 
-## decode_next(bin, max_frame_size \\ 16384)
+## decode_next/2
 
 Decodes the next frame of the given binary.
 
 Returns `{:ok, frame, rest}` if successful, `{:error, reason}` if not.
 
-## encode(frame)
+## encode/1
 
 Encodes the given `frame`.

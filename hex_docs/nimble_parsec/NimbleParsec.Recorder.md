@@ -2,18 +2,18 @@
 
 
 
-## record(module, parser_kind, combinator_kind, name, combinators, inline, opts)
-
-Records the given call and potentially debugs it.
-
-## replay(contents, id)
-
-Replays recorded parsers on the given content.
-
-## start_link(opts)
+## start_link/1
 
 Starts the recorder server.
 
-## stop()
+## stop/0
 
 Stops the recorder server.
+
+## record/7
+
+Records the given call and potentially debugs it.
+
+## replay/2
+
+Replays recorded parsers on the given content.

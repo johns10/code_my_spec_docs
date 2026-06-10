@@ -11,7 +11,3 @@ A resource message representing a Google Analytics account.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Resource name of this account. Format: accounts/{account} Example: "accounts/100"
 *   `regionCode` (*type:* `String.t`, *default:* `nil`) - Country of business. Must be a Unicode CLDR region code.
 *   `updateTime` (*type:* `DateTime.t`, *default:* `nil`) - Output only. Time when account payload fields were last updated.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

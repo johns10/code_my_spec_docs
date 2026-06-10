@@ -12,11 +12,11 @@ This module provides functions used to create the UI.
     This is a warning.
     nil
 
-## edge()
+## edge/0
 
 Returns the edge (`┃`) which is used in much of Credo's output as a binary.
 
-## truncate(line, max_length)
+## truncate/2
 
 Truncate a line to fit within a specified maximum length.
 Truncation is indicated by a trailing ellipsis (…), and you can override this

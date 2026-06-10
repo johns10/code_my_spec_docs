@@ -2,6 +2,6 @@
 
 Resend API client.
 
-## new(config)
+## new/1
 
 Creates a new Resend client struct given a keyword list of config opts.

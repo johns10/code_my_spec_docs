@@ -5,7 +5,7 @@ Provides validation of WebSocket upgrade requests as described in RFC6455§4.2 &
 The `validate_upgrade/1` function is called internally by `WebSockAdapter.upgrade/4`; there is
 no need to call it yourself before attempting an upgrade (though doing so is harmless)
 
-## validate_upgrade(conn)
+## validate_upgrade/1
 
 Validates that the request satisfies the requirements to issue a WebSocket upgrade response.
 
@@ -20,7 +20,7 @@ server & would merit further investigation)
 Returns `:ok` if the connection satisfies the requirements for a WebSocket upgrade, and
 `{:error, reason}` if not
 
-## validate_upgrade!(conn)
+## validate_upgrade!/1
 
 Raising variant of `validate_upgrade/1`.
 

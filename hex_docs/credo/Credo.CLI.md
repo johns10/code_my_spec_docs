@@ -2,7 +2,7 @@
 
 `Credo.CLI` is the entrypoint for both the Mix task and the escript.
 
-## main(argv \\ [])
+## main/1
 
 Runs Credo with the given `argv` and exits the process.
 

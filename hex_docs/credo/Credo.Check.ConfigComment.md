@@ -9,10 +9,10 @@ The following comments are supported:
     # credo:disable-for-previous-line
     # credo:disable-for-lines:<number>
 
-## ignores_issue?(config_comment, issue)
-
-Returns `true` if the given `issue` should be ignored based on the given `config_comment`
-
-## new(instruction, param_string, line_no)
+## new/3
 
 Returns a `ConfigComment` struct based on the given parameters.
+
+## ignores_issue?/2
+
+Returns `true` if the given `issue` should be ignored based on the given `config_comment`

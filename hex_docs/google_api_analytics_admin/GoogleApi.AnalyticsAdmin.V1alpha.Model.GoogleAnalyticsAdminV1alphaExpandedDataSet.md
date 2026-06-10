@@ -11,7 +11,3 @@ A resource message representing an `ExpandedDataSet`.
 *   `displayName` (*type:* `String.t`, *default:* `nil`) - Required. The display name of the ExpandedDataSet. Max 200 chars.
 *   `metricNames` (*type:* `list(String.t)`, *default:* `nil`) - Immutable. The list of metrics included in the ExpandedDataSet. See the [API Metrics](https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#metrics) for the list of dimension names.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. The resource name for this ExpandedDataSet resource. Format: properties/{property_id}/expandedDataSets/{expanded_data_set}
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

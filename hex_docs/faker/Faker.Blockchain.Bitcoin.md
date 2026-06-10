@@ -2,7 +2,7 @@
 
 Functions for generate random bitcoin addresses.
 
-## address(format \\ :main)
+## address/1
 
 Return bitcoin address. If pass `:testnet` it'll generate testnet address.
 

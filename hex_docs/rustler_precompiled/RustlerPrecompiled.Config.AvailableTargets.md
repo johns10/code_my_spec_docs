@@ -2,7 +2,7 @@
 
 
 
-## list()
+## list/0
 
 The list of Rust's built-in targets.
 

@@ -2,7 +2,7 @@
 
 Provides API endpoints related to dependency graph
 
-## create_repository_snapshot(owner, repo, body, opts \\ [])
+## create_repository_snapshot/4
 
 Create a snapshot of dependencies for a repository
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/dependency-graph/dependency-submission#create-a-snapshot-of-dependencies-for-a-repository)
 
-## diff_range(owner, repo, basehead, opts \\ [])
+## diff_range/4
 
 Get a diff of the dependencies between commits
 
@@ -30,7 +30,7 @@ Gets the diff of the dependency changes between two commits of a repository, bas
 
   * [API method documentation](https://docs.github.com/rest/dependency-graph/dependency-review#get-a-diff-of-the-dependencies-between-commits)
 
-## export_sbom(owner, repo, opts \\ [])
+## export_sbom/3
 
 Export a software bill of materials (SBOM) for a repository.
 

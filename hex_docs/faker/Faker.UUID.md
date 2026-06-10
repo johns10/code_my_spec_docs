@@ -2,7 +2,7 @@
 
 Functions for generating UUID's.
 
-## v4()
+## v4/0
 
 Generate a random v4 UUID.
 

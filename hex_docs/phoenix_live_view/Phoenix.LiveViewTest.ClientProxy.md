@@ -2,25 +2,23 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## encode!(msg)
+## encode!/1
 
 Encoding used by the Channel serializer.
 
-## report_upload_progress(proxy_pid, from, element, entry_ref, percent, cid)
+## stop/2
 
-Reports upload progress to the proxy.
+Stops the client proxy gracefully.
 
-## root_view(proxy_pid)
+## root_view/1
 
 Returns the tokens of the root view.
 
-## start_link(opts)
+## report_upload_progress/6
+
+Reports upload progress to the proxy.
+
+## start_link/1
 
 Starts a client proxy.
 
@@ -29,7 +27,3 @@ Starts a client proxy.
   * `:caller` - the required `{ref, pid}` pair identifying the caller.
   * `:view` - the required `%Phoenix.LiveViewTest.View{}`
   * `:html` - the required string of HTML for the document.
-
-## stop(proxy_pid, reason)
-
-Stops the client proxy gracefully.

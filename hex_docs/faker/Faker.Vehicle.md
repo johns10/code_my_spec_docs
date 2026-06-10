@@ -2,94 +2,7 @@
 
 Functions for generating Vehicle related data
 
-## body_style()
-
-Returns a vehicle body style string
-
-## Examples
-    iex> Faker.Vehicle.body_style()
-    "Minivan"
-    iex> Faker.Vehicle.body_style()
-    "Hatchback"
-    iex> Faker.Vehicle.body_style()
-    "Crew Cab Pickup"
-    iex> Faker.Vehicle.body_style()
-    "Regular Cab Pickup"
-
-## drivetrain()
-
-Returns a vehicle drivetrain string
-
-## Examples
-    iex> Faker.Vehicle.drivetrain()
-    "4x2/2-wheel drive"
-    iex> Faker.Vehicle.drivetrain()
-    "4x4/4-wheel drive"
-    iex> Faker.Vehicle.drivetrain()
-    "4x2/2-wheel drive"
-    iex> Faker.Vehicle.drivetrain()
-    "RWD"
-
-## fuel_type()
-
-Returns a vehicle fuel type string
-
-## Examples
-    iex> Faker.Vehicle.fuel_type()
-    "Ethanol"
-    iex> Faker.Vehicle.fuel_type()
-    "E-85/Gasoline"
-    iex> Faker.Vehicle.fuel_type()
-    "Compressed Natural Gas"
-    iex> Faker.Vehicle.fuel_type()
-    "Gasoline Hybrid"
-
-## make()
-
-Returns a vehicle make string
-
-## Examples
-
-    iex> Faker.Vehicle.make()
-    "Lincoln"
-    iex> Faker.Vehicle.make()
-    "Dodge"
-    iex> Faker.Vehicle.make()
-    "Chevrolet"
-    iex> Faker.Vehicle.make()
-    "Honda"
-
-## make_and_model()
-
-Returns a vehicle make and model string
-
-## Examples
-
-    iex> Faker.Vehicle.make_and_model()
-    "Lincoln MKZ"
-    iex> Faker.Vehicle.make_and_model()
-    "Chevrolet Malibu"
-    iex> Faker.Vehicle.make_and_model()
-    "Ford Focus"
-    iex> Faker.Vehicle.make_and_model()
-    "Ford Focus"
-
-## model()
-
-Returns a vehicle model string
-
-## Examples
-
-    iex> Faker.Vehicle.model()
-    "Encore"
-    iex> Faker.Vehicle.model()
-    "S5"
-    iex> Faker.Vehicle.model()
-    "Fiesta"
-    iex> Faker.Vehicle.model()
-    "X1"
-
-## model(make)
+## model/1
 
 Returns a vehicle model string belonging to the given make
 
@@ -103,35 +16,7 @@ Returns a vehicle model string belonging to the given make
     iex> Faker.Vehicle.model("Toyota")
     "Corolla"
 
-## option()
-
-Returns a vehicle option string
-
-## Examples
-    iex> Faker.Vehicle.option()
-    "Premium Sound"
-    iex> Faker.Vehicle.option()
-    "Power Steering"
-    iex> Faker.Vehicle.option()
-    "A/C: Front"
-    iex> Faker.Vehicle.option()
-    "Keyless Entry"
-
-## options()
-
-Returns a vehicle option string
-
-## Examples
-    iex> Faker.Vehicle.option()
-    "Premium Sound"
-    iex> Faker.Vehicle.option()
-    "Power Steering"
-    iex> Faker.Vehicle.option()
-    "A/C: Front"
-    iex> Faker.Vehicle.option()
-    "Keyless Entry"
-
-## options(number)
+## options/1
 
 Returns a list of vehicle options()
 
@@ -145,21 +30,7 @@ Returns a list of vehicle options()
     iex> Faker.Vehicle.options
     ["Fog Lights", "Rear Window Wiper", "MP3 (Multi Disc)", "Navigation", "Airbag: Side", "Rear Window Defroster", "Premium Sound"]
 
-## standard_spec()
-
-Returns a vehicle standard option string
-
-## Examples
-    iex> Faker.Vehicle.standard_spec()
-    "Tire pressure monitoring system (TPMS)"
-    iex> Faker.Vehicle.standard_spec()
-    "20\" x 9.0\" front & 20\" x 10.0\" rear aluminum wheels"
-    iex> Faker.Vehicle.standard_spec()
-    "Deluxe insulation group"
-    iex> Faker.Vehicle.standard_spec()
-    "Torsion beam rear suspension w/stabilizer bar"
-
-## standard_specs()
+## standard_specs/0
 
 Returns a list of vehicle standard specs
 
@@ -173,7 +44,7 @@ Returns a list of vehicle standard specs
     iex> Faker.Vehicle.standard_specs()
     ["Multi-reflector halogen headlamps", "Multi-info display -inc: driving range, average MPG, current MPG, average speed, outside temp, elapsed time, maintenance & diagnostic messages", "Zone body construction -inc: front/rear crumple zones, hood deformation point", "60/40 split fold-down rear seat w/outboard adjustable headrests", "Trim-panel-mounted storage net", "Front side-impact airbags", "Front/rear spot-lamp illumination"]
 
-## standard_specs(number)
+## standard_specs/1
 
 Returns a list of vehicle standard specs of the given length
 
@@ -187,21 +58,7 @@ Returns a list of vehicle standard specs of the given length
     iex> Faker.Vehicle.En.standard_specs(3)
     ["XM satellite radio receiver -inc: 90 day trial subscription", "625-amp maintenance-free battery", "Body color sill extension"]
 
-## transmission()
-
-Returns a vehicle transmission string
-
-## Examples
-    iex> Faker.Vehicle.transmission()
-    "CVT"
-    iex> Faker.Vehicle.transmission()
-    "Automatic"
-    iex> Faker.Vehicle.transmission()
-    "Manual"
-    iex> Faker.Vehicle.transmission()
-    "Automanual"
-
-## vin()
+## vin/0
 
 Returns a vehicle identification number string
 

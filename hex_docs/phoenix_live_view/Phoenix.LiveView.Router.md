@@ -2,118 +2,7 @@
 
 Provides LiveView routing for Phoenix routers.
 
-## fetch_live_flash(conn, opts \\ [])
-
-Fetches the LiveView and merges with the controller flash.
-
-Replaces the default `:fetch_flash` plug used by `Phoenix.Router`.
-
-## Examples
-
-    defmodule MyAppWeb.Router do
-      use LiveGenWeb, :router
-      import Phoenix.LiveView.Router
-
-      pipeline :browser do
-        ...
-        plug :fetch_live_flash
-      end
-      ...
-    end
-
-## live(path, live_view, action \\ nil, opts \\ [])
-
-Defines a LiveView route.
-
-A LiveView can be routed to by using the `live` macro with a path and
-the name of the LiveView:
-
-    live "/thermostat", ThermostatLive
-
-To navigate to this route within your app, you can use `Phoenix.VerifiedRoutes`:
-
-    push_navigate(socket, to: ~p"/thermostat")
-    push_patch(socket, to: ~p"/thermostat?page=#{page}")
-
-> #### HTTP requests {: .info}
->
-> The HTTP request method that a route defined by the `live/4` macro
-> responds to is `GET`.
-
-## Actions and live navigation
-
-It is common for a LiveView to have multiple states and multiple URLs.
-For example, you can have a single LiveView that lists all articles on
-your web app. For each article there is an "Edit" button which, when
-pressed, opens up a modal on the same page to edit the article. It is a
-best practice to use live navigation in those cases, so when you click
-edit, the URL changes to "/articles/1/edit", even though you are still
-within the same LiveView. Similarly, you may also want to show a "New"
-button, which opens up the modal to create new entries, and you want
-this to be reflected in the URL as "/articles/new".
-
-In order to make it easier to recognize the current "action" your
-LiveView is on, you can pass the action option when defining LiveViews
-too:
-
-    live "/articles", ArticleLive.Index, :index
-    live "/articles/new", ArticleLive.Index, :new
-    live "/articles/:id/edit", ArticleLive.Index, :edit
-
-The current action will always be available inside the LiveView as
-the `@live_action` assign, that can be used to render a LiveComponent:
-
-```heex
-<.live_component :if={@live_action == :new} module={MyAppWeb.ArticleLive.FormComponent} id="form" />
-```
-
-Or can be used to show or hide parts of the template:
-
-```heex
-{if @live_action == :edit, do: render("form.html", user: @user)}
-```
-
-Note that `@live_action` will be `nil` if no action is given on the route definition.
-
-## Options
-
-  * `:container` - an optional tuple for the HTML tag and DOM attributes to
-    be used for the LiveView container. For example: `{:li, style: "color: blue;"}`.
-    See `Phoenix.Component.live_render/3` for more information and examples.
-
-  * `:as` - optionally configures the named helper. Defaults to `:live` when
-    using a LiveView without actions or defaults to the LiveView name when using
-    actions.
-
-  * `:metadata` - a map to optional feed metadata used on telemetry events and route info,
-    for example: `%{route_name: :foo, access: :user}`. This data can be retrieved by
-    calling `Phoenix.Router.route_info/4` with the `uri` from the `handle_params`
-    callback. This can be used to customize a LiveView which may be invoked from
-    different routes.
-
-  * `:private` - an optional map of private data to put in the *plug connection*,
-    for example: `%{route_name: :foo, access: :user}`. The data will be available
-    inside `conn.private` in plug functions.
-
-## Examples
-
-    defmodule MyApp.Router
-      use Phoenix.Router
-      import Phoenix.LiveView.Router
-
-      scope "/", MyApp do
-        pipe_through [:browser]
-
-        live "/thermostat", ThermostatLive
-        live "/clock", ClockLive
-        live "/dashboard", DashboardLive, container: {:main, class: "row"}
-      end
-    end
-
-    iex> MyApp.Router.Helpers.live_path(MyApp.Endpoint, MyApp.ThermostatLive)
-    "/thermostat"
-
-## live_session(name, opts \\ [], list)
+## live_session/3
 
 Defines a live session for live redirects within a group of live routes.
 
@@ -215,4 +104,23 @@ your own plug that performs the same authentication and authorization rules as
         live "/admin", AdminDashboardLive, :index
         live "/admin/posts", AdminPostLive, :index
       end
+    end
+
+## fetch_live_flash/2
+
+Fetches the LiveView and merges with the controller flash.
+
+Replaces the default `:fetch_flash` plug used by `Phoenix.Router`.
+
+## Examples
+
+    defmodule MyAppWeb.Router do
+      use LiveGenWeb, :router
+      import Phoenix.LiveView.Router
+
+      pipeline :browser do
+        ...
+        plug :fetch_live_flash
+      end
+      ...
     end

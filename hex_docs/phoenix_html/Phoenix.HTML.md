@@ -76,57 +76,21 @@ window.addEventListener('phoenix.link.click', function (e) {
 }, false);
 ```
 
-## attributes_escape(attrs)
+## raw/1
 
-Escapes an enumerable of attributes, returning iodata.
+Marks the given content as raw.
 
-The attributes are rendered in the given order. Note if
-a map is given, the key ordering is not guaranteed.
+This means any HTML code inside the given
+string won't be escaped.
 
-The keys and values can be of any shape, as long as they
-implement the `Phoenix.HTML.Safe` protocol. In addition,
-if the key is an atom, it will be "dasherized". In other
-words, `:phx_value_id` will be converted to `phx-value-id`.
+    iex> raw("<hello>")
+    {:safe, "<hello>"}
+    iex> raw({:safe, "<hello>"})
+    {:safe, "<hello>"}
+    iex> raw(nil)
+    {:safe, ""}
 
-Furthermore, the following attributes provide behaviour:
-
-  * `:aria`, `:data`, and `:phx` - they accept a keyword list as
-    value. `data: [confirm: "are you sure?"]` is converted to
-    `data-confirm="are you sure?"`.
-
-  * `:class` - it accepts a list of classes as argument. Each
-    element in the list is separated by space. `nil` and `false`
-    elements are discarded. `class: ["foo", nil, "bar"]` then
-    becomes `class="foo bar"`.
-
-  * `:id` - it is validated raise if a number is given as ID,
-    which is not allowed by the HTML spec and leads to unpredictable
-    behaviour.
-
-## Examples
-
-    iex> safe_to_string attributes_escape(title: "the title", id: "the id", selected: true)
-    " title=\"the title\" id=\"the id\" selected"
-
-    iex> safe_to_string attributes_escape(%{data: [confirm: "Are you sure?"]})
-    " data-confirm=\"Are you sure?\""
-
-    iex> safe_to_string attributes_escape(%{phx: [value: [foo: "bar"]]})
-    " phx-value-foo=\"bar\""
-
-## css_escape(value)
-
-Escapes a string for use as a CSS identifier.
-
-## Examples
-
-    iex> css_escape("hello world")
-    "hello\\ world"
-
-    iex> css_escape("-123")
-    "-\\31 23"
-
-## html_escape(safe)
+## html_escape/1
 
 Escapes the HTML entities in the given term, returning safe iodata.
 
@@ -142,32 +106,7 @@ Escapes the HTML entities in the given term, returning safe iodata.
     iex> html_escape({:safe, "<hello>"})
     {:safe, "<hello>"}
 
-## javascript_escape(data)
-
-Escapes HTML content to be inserted into a JavaScript string.
-
-This function is useful in JavaScript responses when there is a need
-to escape HTML rendered from other templates, like in the following:
-
-    $("#container").append("<%= javascript_escape(render("post.html", post: @post)) %>");
-
-It escapes quotes (double and single), double backslashes and others.
-
-## raw(value)
-
-Marks the given content as raw.
-
-This means any HTML code inside the given
-string won't be escaped.
-
-    iex> raw("<hello>")
-    {:safe, "<hello>"}
-    iex> raw({:safe, "<hello>"})
-    {:safe, "<hello>"}
-    iex> raw(nil)
-    {:safe, ""}
-
-## safe_to_string(arg)
+## safe_to_string/1
 
 Converts a safe result into a string.
 
@@ -179,10 +118,25 @@ to convert a data structure to a escaped string:
 
     data |> html_escape() |> safe_to_string()
 
-## safe/0
+## javascript_escape/1
 
-Guaranteed to be safe
+Escapes HTML content to be inserted into a JavaScript string.
 
-## unsafe/0
+This function is useful in JavaScript responses when there is a need
+to escape HTML rendered from other templates, like in the following:
 
-May be safe or unsafe (i.e. it needs to be converted)
+    $("#container").append("<%= javascript_escape(render("post.html", post: @post)) %>");
+
+It escapes quotes (double and single), double backslashes and others.
+
+## css_escape/1
+
+Escapes a string for use as a CSS identifier.
+
+## Examples
+
+    iex> css_escape("hello world")
+    "hello\\ world"
+
+    iex> css_escape("-123")
+    "-\\31 23"

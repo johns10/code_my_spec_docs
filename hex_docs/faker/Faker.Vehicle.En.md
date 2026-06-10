@@ -2,49 +2,7 @@
 
 Functions for generating Vehicle related data in English
 
-## body_style()
-
-Returns a vehicle body style string
-
-## Examples
-    iex> Faker.Vehicle.En.body_style()
-    "Minivan"
-    iex> Faker.Vehicle.En.body_style()
-    "Hatchback"
-    iex> Faker.Vehicle.En.body_style()
-    "Crew Cab Pickup"
-    iex> Faker.Vehicle.En.body_style()
-    "Regular Cab Pickup"
-
-## drivetrain()
-
-Returns a vehicle drivetrain string
-
-## Examples
-    iex> Faker.Vehicle.En.drivetrain()
-    "4x2/2-wheel drive"
-    iex> Faker.Vehicle.En.drivetrain()
-    "4x4/4-wheel drive"
-    iex> Faker.Vehicle.En.drivetrain()
-    "4x2/2-wheel drive"
-    iex> Faker.Vehicle.En.drivetrain()
-    "RWD"
-
-## fuel_type()
-
-Returns a vehicle fuel type string
-
-## Examples
-    iex> Faker.Vehicle.En.fuel_type()
-    "Ethanol"
-    iex> Faker.Vehicle.En.fuel_type()
-    "E-85/Gasoline"
-    iex> Faker.Vehicle.En.fuel_type()
-    "Compressed Natural Gas"
-    iex> Faker.Vehicle.En.fuel_type()
-    "Gasoline Hybrid"
-
-## make()
+## make/0
 
 Returns a vehicle make string
 
@@ -59,7 +17,7 @@ Returns a vehicle make string
     iex> Faker.Vehicle.En.make()
     "Honda"
 
-## make_and_model()
+## make_and_model/0
 
 Returns a vehicle make and model string
 
@@ -74,7 +32,7 @@ Returns a vehicle make and model string
     iex> Faker.Vehicle.En.make_and_model()
     "Ford Focus"
 
-## model()
+## model/0
 
 Returns a vehicle model string
 
@@ -89,7 +47,7 @@ Returns a vehicle model string
     iex> Faker.Vehicle.En.model()
     "X1"
 
-## model(make)
+## model/1
 
 Returns a realistic vehicle model string
 for the given model.
@@ -105,7 +63,7 @@ for the given model.
     iex> Faker.Vehicle.En.model("Toyota")
     "Corolla"
 
-## option()
+## option/0
 
 Returns a vehicle option string
 
@@ -119,7 +77,7 @@ Returns a vehicle option string
     iex> Faker.Vehicle.En.option()
     "Keyless Entry"
 
-## options()
+## options/0
 
 Returns a list of vehicle options()
 
@@ -133,7 +91,7 @@ Returns a list of vehicle options()
     iex> Faker.Vehicle.En.options
     ["Fog Lights", "Rear Window Wiper", "MP3 (Multi Disc)", "Navigation", "Airbag: Side", "Rear Window Defroster", "Premium Sound"]
 
-## options(number)
+## options/1
 
 Returns a list of vehicle options of the given length
 
@@ -147,7 +105,7 @@ Returns a list of vehicle options of the given length
     iex> Faker.Vehicle.En.options(3)
     ["Cassette Player", "MP3 (Multi Disc)", "A/C: Rear"]
 
-## standard_spec()
+## standard_spec/0
 
 Reterns a vehicle standard option string
 
@@ -161,7 +119,7 @@ Reterns a vehicle standard option string
     iex> Faker.Vehicle.En.standard_spec()
     "Torsion beam rear suspension w/stabilizer bar"
 
-## standard_specs()
+## standard_specs/0
 
 Returns a list of vehicle standard specs
 
@@ -175,7 +133,7 @@ Returns a list of vehicle standard specs
     iex> Faker.Vehicle.En.standard_specs()
     ["Multi-reflector halogen headlamps", "Multi-info display -inc: driving range, average MPG, current MPG, average speed, outside temp, elapsed time, maintenance & diagnostic messages", "Zone body construction -inc: front/rear crumple zones, hood deformation point", "60/40 split fold-down rear seat w/outboard adjustable headrests", "Trim-panel-mounted storage net", "Front side-impact airbags", "Front/rear spot-lamp illumination"]
 
-## standard_specs(number)
+## standard_specs/1
 
 Returns a list of vehicle standard specs of the given length
 
@@ -188,17 +146,3 @@ Returns a list of vehicle standard specs of the given length
     ["Traveler/mini trip computer", "P235/50R18 all-season tires", "Front door tinted glass"]
     iex> Faker.Vehicle.En.standard_specs(3)
     ["XM satellite radio receiver -inc: 90 day trial subscription", "625-amp maintenance-free battery", "Body color sill extension"]
-
-## transmission()
-
-Returns a vehicle transmission string
-
-## Examples
-    iex> Faker.Vehicle.En.transmission()
-    "CVT"
-    iex> Faker.Vehicle.En.transmission()
-    "Automatic"
-    iex> Faker.Vehicle.En.transmission()
-    "Manual"
-    iex> Faker.Vehicle.En.transmission()
-    "Automanual"

@@ -19,10 +19,10 @@ grant type can eliminate the need for the client to store the
 resource owner credentials for future use, by exchanging the
 credentials with a long-lived access token or refresh token.
 
-## authorize_url(client, params)
+## authorize_url/2
 
 Not used for this strategy.
 
-## get_token(client, params, headers)
+## get_token/3
 
 Retrieve an access token given the specified End User username and password.

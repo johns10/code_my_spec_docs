@@ -638,458 +638,22 @@ iex> update_in(doc, [:document, Access.key!(:nodes), Access.all(), selector], fn
 }
 ```
 
-## append_steps(document, steps)
+## register_options/2
 
-Appends steps to the end of the existing document's step list.
+Registers a list of valid options that can be used by steps in the document pipeline.
 
 ## Examples
 
     iex> document = MDEx.new()
-    iex> document = MDEx.Document.append_steps(
-    ...>   document,
-    ...>   enable_tables: fn doc -> MDEx.Document.put_extension_options(doc, table: true) end
-    ...> )
-    iex> document
-    ...> |> MDEx.Document.run()
-    ...> |> MDEx.Document.get_option(:extension)
-    ...> |> Keyword.get(:table)
-    true
-
-## assign(document, keyword_or_map)
-
-Adds key-value pairs to the document assigns.
-
-## Examples
-
-    iex> document = MDEx.Document.assign(MDEx.new(), title: "Hello", author: "Jane")
-    iex> MDEx.Document.get_option(document, :assigns)
-    %{title: "Hello", author: "Jane"}
-
-    iex> document = MDEx.Document.assign(MDEx.new(), %{title: "Hello"})
-    iex> MDEx.Document.get_option(document, :assigns)
-    %{title: "Hello"}
-
-## assign(document, key, value)
-
-Adds a key-value pair to the document assigns.
-
-## Examples
-
-    iex> document = MDEx.Document.assign(MDEx.new(), :title, "Hello")
-    iex> MDEx.Document.get_option(document, :assigns)
-    %{title: "Hello"}
-
-## default_extension_options()
-
-Returns the default `:extension` options.
-
-```elixir
-[
-  phoenix_heex: false,
-  cjk_friendly_emphasis: false,
-  link_url_rewriter: nil,
-  image_url_rewriter: nil,
-  insert: false,
-  highlight: false,
-  subtext: false,
-  greentext: false,
-  spoiler: false,
-  subscript: false,
-  underline: false,
-  wikilinks_title_before_pipe: false,
-  wikilinks_title_after_pipe: false,
-  shortcodes: false,
-  math_code: false,
-  math_dollars: false,
-  alerts: false,
-  multiline_block_quotes: false,
-  front_matter_delimiter: nil,
-  description_lists: false,
-  inline_footnotes: false,
-  footnotes: false,
-  header_ids: nil,
-  superscript: false,
-  tasklist: false,
-  autolink: false,
-  table: false,
-  tagfilter: false,
-  strikethrough: false
-]
-```
-
-## default_options()
-
-Returns all default options.
-
-```elixir
-[
-  codefence_renderers: %{},
-  plugins: [],
-  assigns: %{},
-  streaming: false,
-  sanitize: nil,
-  syntax_highlight: [
-    formatter: {:html_inline,
-     [
-       header: nil,
-       highlight_lines: nil,
-       include_highlights: false,
-       italic: false,
-       pre_class: nil,
-       theme: "onedark"
-     ]}
-  ],
-  render: [
-    experimental_minimize_commonmark: false,
-    ol_width: 1,
-    tasklist_classes: false,
-    figure_with_caption: false,
-    prefer_fenced: false,
-    gfm_quirks: false,
-    ignore_empty_links: false,
-    escaped_char_spans: false,
-    sourcepos: false,
-    list_style: :dash,
-    escape: false,
-    unsafe: false,
-    width: 0,
-    full_info_string: false,
-    github_pre_lang: false,
-    hardbreaks: false
-  ],
-  parse: [
-    escaped_char_spans: false,
-    leave_footnote_definitions: false,
-    tasklist_in_table: false,
-    ignore_setext: false,
-    relaxed_autolinks: true,
-    relaxed_tasklist_matching: false,
-    default_info_string: nil,
-    smart: false
-  ],
-  extension: [
-    phoenix_heex: false,
-    cjk_friendly_emphasis: false,
-    link_url_rewriter: nil,
-    image_url_rewriter: nil,
-    insert: false,
-    highlight: false,
-    subtext: false,
-    greentext: false,
-    spoiler: false,
-    subscript: false,
-    underline: false,
-    wikilinks_title_before_pipe: false,
-    wikilinks_title_after_pipe: false,
-    shortcodes: false,
-    math_code: false,
-    math_dollars: false,
-    alerts: false,
-    multiline_block_quotes: false,
-    front_matter_delimiter: nil,
-    description_lists: false,
-    inline_footnotes: false,
-    footnotes: false,
-    header_ids: nil,
-    superscript: false,
-    tasklist: false,
-    autolink: false,
-    table: false,
-    tagfilter: false,
-    strikethrough: false
-  ]
-]
-```
-
-## default_parse_options()
-
-Returns the default `:parse` options.
-
-```elixir
-[
-  escaped_char_spans: false,
-  leave_footnote_definitions: false,
-  tasklist_in_table: false,
-  ignore_setext: false,
-  relaxed_autolinks: true,
-  relaxed_tasklist_matching: false,
-  default_info_string: nil,
-  smart: false
-]
-```
-
-## default_render_options()
-
-Returns the default `:render` options.
-
-```elixir
-[
-  experimental_minimize_commonmark: false,
-  ol_width: 1,
-  tasklist_classes: false,
-  figure_with_caption: false,
-  prefer_fenced: false,
-  gfm_quirks: false,
-  ignore_empty_links: false,
-  escaped_char_spans: false,
-  sourcepos: false,
-  list_style: :dash,
-  escape: false,
-  unsafe: false,
-  width: 0,
-  full_info_string: false,
-  github_pre_lang: false,
-  hardbreaks: false
-]
-```
-
-## default_sanitize_options()
-
-Returns the default `:sanitize` options.
-
-```elixir
-[
-  id_prefix: nil,
-  strip_comments: true,
-  rm_allowed_classes: %{},
-  add_allowed_classes: %{},
-  allowed_classes: %{},
-  link_rel: "noopener noreferrer",
-  url_relative: :passthrough,
-  rm_url_schemes: [],
-  add_url_schemes: [],
-  url_schemes: ["bitcoin", "ftp", "ftps", "geo", "http", "https", "im", "irc",
-   "ircs", "magnet", "mailto", "mms", "mx", "news", "nntp", "openpgp4fpr",
-   "sip", "sms", "smsto", "ssh", "tel", "url", "webcal", "wtai", "xmpp"],
-  rm_generic_attributes: [],
-  add_generic_attributes: [],
-  generic_attributes: ["lang", "title"],
-  rm_generic_attribute_prefixes: [],
-  add_generic_attribute_prefixes: [],
-  generic_attribute_prefixes: [],
-  rm_set_tag_attribute_value: %{},
-  set_tag_attribute_value: %{},
-  set_tag_attribute_values: %{},
-  rm_tag_attribute_values: %{},
-  add_tag_attribute_values: %{},
-  tag_attribute_values: %{},
-  rm_tag_attributes: %{},
-  add_tag_attributes: %{},
-  tag_attributes: %{
-    "a" => ["href", "hreflang"],
-    "bdo" => ["dir"],
-    "blockquote" => ["cite"],
-    "code" => ["class", "translate", "tabindex"],
-    "col" => ["align", "char", "charoff", "span"],
-    "colgroup" => ["align", "char", "charoff", "span"],
-    "del" => ["cite", "datetime"],
-    "hr" => ["align", "size", "width"],
-    "img" => ["align", "alt", "height", "src", "width"],
-    "ins" => ["cite", "datetime"],
-    "ol" => ["start"],
-    "pre" => ["class", "style"],
-    "q" => ["cite"],
-    "span" => ["class", "style", "data-line"],
-    "table" => ["align", "char", "charoff", "summary"],
-    "tbody" => ["align", "char", "charoff"],
-    "td" => ["align", "char", "charoff", "colspan", "headers", "rowspan"],
-    "tfoot" => ["align", "char", "charoff"],
-    "th" => ["align", "char", "charoff", "colspan", "headers", "rowspan",
-     "scope"],
-    "thead" => ["align", "char", "charoff"],
-    "tr" => ["align", "char", "charoff"]
-  },
-  rm_clean_content_tags: [],
-  add_clean_content_tags: [],
-  clean_content_tags: ["script", "style"],
-  rm_tags: [],
-  add_tags: [],
-  tags: ["a", "abbr", "acronym", "area", "article", "aside", "b", "bdi", "bdo",
-   "blockquote", "br", "caption", "center", "cite", "code", "col", "colgroup",
-   "data", "dd", "del", "details", "dfn", "div", "dl", "dt", "em", "figcaption",
-   "figure", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup",
-   "hr", "i", "img", "ins", "kbd", "li", "map", "mark", "nav", "ol", "p", "pre",
-   "q", "rp", "rt", "rtc", "ruby", "s", "samp", "small", "span", "strike",
-   "strong", "sub", "summary", "sup", "table", "tbody", "td", "th", "thead",
-   "time", "tr", "tt", "u", "ul", "var", "wbr"]
-]
-```
-
-## default_syntax_highlight_options()
-
-Returns the default `:syntax_highlight` options.
-
-```elixir
-[
-  formatter: {:html_inline,
-   [
-     header: nil,
-     highlight_lines: nil,
-     include_highlights: false,
-     italic: false,
-     pre_class: nil,
-     theme: "onedark"
-   ]}
-]
-```
-
-## fetch(document, selector)
-
-Callback implementation for `Access.fetch/2`.
-
-See the [Access](#module-access) section for more info.
-
-## get_and_update(document, selector, fun)
-
-Callback implementation for `Access.get_and_update/3`.
-
-See the [Access](#module-access) section for more info.
-
-## get_option(document, key, default \\ nil)
-
-Retrieves an option value from the document.
-
-## Examples
-
-    iex> document = MDEx.new(render: [escape: true])
-    iex> MDEx.Document.get_option(document, :render)[:escape]
-    true
-
-## get_private(document, key, default \\ nil)
-
-Retrieves a private value from the document.
-
-## Examples
-
-    iex> document = MDEx.new() |> MDEx.Document.put_private(:count, 2)
-    iex> MDEx.Document.get_private(document, :count)
-    2
-
-## get_sanitize_option(document, key, default \\ nil)
-
-Retrieves one of the `t:sanitize_options/0` options from the document.
-
-## Examples
-
-    iex> document =
-    ...>   MDEx.new()
-    ...>   |> MDEx.Document.put_sanitize_options(add_tags: ["x-component"])
-    iex> MDEx.Document.get_sanitize_option(document, :add_tags)
-    ["x-component"]
-
-## halt(document)
-
-Halts the document pipeline execution.
-
-This function is used to stop the pipeline from processing any further steps. Once a pipeline
-is halted, no more steps will be executed. This is useful for plugins that need to stop
-processing when certain conditions are met or when an error occurs.
-
-## Examples
-
-    iex> document = MDEx.Document.halt(MDEx.new())
-    iex> document.halted
-    true
-
-## halt(document, exception)
-
-Halts the document pipeline execution with an exception.
-
-## is_sanitize_enabled(document)
-
-Returns `true` if the document has the `:sanitize` option set, otherwise `false`.
-
-## pop(document, key, default \\ nil)
-
-Callback implementation for `Access.fetch/2`.
-
-See the [Access](#module-access) section for more info.
-
-## prepend_steps(document, steps)
-
-Prepends steps to the beginning of the existing document's step list.
-
-## put_codefence_renderers(document, renderers)
-
-Updates the document's `:codefence_renderers` option.
-
-Codefence renderers allow to customize how code blocks are rendered based on their info string.
-
-See [Codefence Renderers examples](https://hexdocs.pm/mdex/codefence_renderers.html) for more info.
-
-## Example
-
-Given a Markdown containing a code block with `chart` as info string:
-
-    ```chart
-    {"type": "bar", "width": 630, "height": 410, "title_text": "Weekly Revenue", ...
-    ```
-
-Provide a custom renderer for `chart` code blocks to customize what will be rendered in that block (the key must match the info string):
-
-    codefence_renderers: %{
-      "chart" => fn _lang, _meta, code -> SvgCharts.render!(code) end
-    }
-
-## put_extension_options(document, options)
-
-Updates the document's `:extension` options.
-
-## Examples
-
-    iex> document = MDEx.Document.put_extension_options(MDEx.new(), table: true)
-    iex> MDEx.Document.get_option(document, :extension)[:table]
-    true
-
-## put_markdown(document, markdown, position \\ :bottom)
-
-Adds `markdown` chunks into the `document` buffer.
-
-## Examples
-
-    iex> document =
-    ...>   MDEx.new(markdown: "# First\n")
-    ...>   |> MDEx.Document.put_markdown("# Second")
-    ...>   |> MDEx.Document.run()
-    iex> document.nodes
-    [
-      %MDEx.Heading{nodes: [%MDEx.Text{literal: "First"}], level: 1, setext: false},
-      %MDEx.Heading{nodes: [%MDEx.Text{literal: "Second"}], level: 1, setext: false}
-    ]
-
-    iex> document =
-    ...>   MDEx.new(markdown: "# Last")
-    ...>   |> MDEx.Document.put_markdown("# First\n", :top)
-    ...>   |> MDEx.Document.run()
-    iex> document.nodes
-    [
-      %MDEx.Heading{nodes: [%MDEx.Text{literal: "First"}], level: 1, setext: false},
-      %MDEx.Heading{nodes: [%MDEx.Text{literal: "Last"}], level: 1, setext: false}
-    ]
-
-    iex> document = MDEx.new(streaming: true) |> MDEx.Document.put_markdown("`let x =")
-    iex> MDEx.to_html!(document)
-    "<p><code>let x =</code></p>"
-
-## put_node_in_document_root(document, node, position \\ :top)
-
-Inserts `node` into the document root at the specified `position`.
-
-  - By default, the node is inserted at the top of the document.
-  - Node must be a valid fragment node like a `MDEx.Heading`, `MDEx.HtmlBlock`, etc.
-
-## Examples
-
-    iex> document =
-    ...>   MDEx.new(markdown: "# Doc")
-    ...>   |> MDEx.Document.append_steps(append_node: fn document ->
-    ...>     html_block = %MDEx.HtmlBlock{literal: "<p>Hello</p>"}
-    ...>     MDEx.Document.put_node_in_document_root(document, html_block, :bottom)
-    ...>   end)
-    iex> MDEx.to_html(document, render: [unsafe: true])
-    {:ok, "<h1>Doc</h1>\n<p>Hello</p>"}
-
-## put_options(document, options)
+    iex> document = MDEx.Document.register_options(document, [:mermaid_version])
+    iex> document = MDEx.Document.put_options(document, mermaid_version: "11")
+    iex> document.options[:mermaid_version]
+    "11"
+
+    iex> MDEx.new(rendr: [unsafe: true])
+    ** (ArgumentError) unknown option :rendr. Did you mean :render?
+
+## put_options/2
 
 Merges options into the document options.
 
@@ -1117,7 +681,27 @@ Built-in options are validated against their respective schemas:
     ...> end
     :error
 
-## put_parse_options(document, options)
+## put_extension_options/2
+
+Updates the document's `:extension` options.
+
+## Examples
+
+    iex> document = MDEx.Document.put_extension_options(MDEx.new(), table: true)
+    iex> MDEx.Document.get_option(document, :extension)[:table]
+    true
+
+## put_render_options/2
+
+Updates the document's `:render` options.
+
+## Examples
+
+    iex> document = MDEx.Document.put_render_options(MDEx.new(), escape: true)
+    iex> MDEx.Document.get_option(document, :render)[:escape]
+    true
+
+## put_parse_options/2
 
 Updates the document's `:parse` options.
 
@@ -1127,7 +711,27 @@ Updates the document's `:parse` options.
     iex> MDEx.Document.get_option(document, :parse)[:smart]
     true
 
-## put_plugins(document, plugins)
+## put_syntax_highlight_options/2
+
+Updates the document's `:syntax_highlight` options.
+
+## Examples
+
+    iex> document = MDEx.Document.put_syntax_highlight_options(MDEx.new(), formatter: :html_linked)
+    iex> MDEx.Document.get_option(document, :syntax_highlight)[:formatter]
+    :html_linked
+
+## put_sanitize_options/2
+
+Updates the document's `:sanitize` options.
+
+## Examples
+
+    iex> document = MDEx.Document.put_sanitize_options(MDEx.new(), add_tags: ["MyComponent"])
+    iex> MDEx.Document.get_option(document, :sanitize)[:add_tags]
+    ["MyComponent"]
+
+## put_plugins/2
 
 Attaches plugins to the document.
 
@@ -1159,7 +763,100 @@ Note that you can also use the pipeline `Plugin.attach(document)` style:
     |> MyPlugin.attach(option: "value")
     |> MDEx.to_html!()
 
-## put_private(document, key, value)
+## put_codefence_renderers/2
+
+Updates the document's `:codefence_renderers` option.
+
+Codefence renderers allow to customize how code blocks are rendered based on their info string.
+
+See [Codefence Renderers examples](https://hexdocs.pm/mdex/codefence_renderers.html) for more info.
+
+## Example
+
+Given a Markdown containing a code block with `chart` as info string:
+
+    ```chart
+    {"type": "bar", "width": 630, "height": 410, "title_text": "Weekly Revenue", ...
+    ```
+
+Provide a custom renderer for `chart` code blocks to customize what will be rendered in that block (the key must match the info string):
+
+    codefence_renderers: %{
+      "chart" => fn _lang, _meta, code -> SvgCharts.render!(code) end
+    }
+
+## get_option/3
+
+Retrieves an option value from the document.
+
+## Examples
+
+    iex> document = MDEx.new(render: [escape: true])
+    iex> MDEx.Document.get_option(document, :render)[:escape]
+    true
+
+## assign/2
+
+Adds key-value pairs to the document assigns.
+
+## Examples
+
+    iex> document = MDEx.Document.assign(MDEx.new(), title: "Hello", author: "Jane")
+    iex> MDEx.Document.get_option(document, :assigns)
+    %{title: "Hello", author: "Jane"}
+
+    iex> document = MDEx.Document.assign(MDEx.new(), %{title: "Hello"})
+    iex> MDEx.Document.get_option(document, :assigns)
+    %{title: "Hello"}
+
+## assign/3
+
+Adds a key-value pair to the document assigns.
+
+## Examples
+
+    iex> document = MDEx.Document.assign(MDEx.new(), :title, "Hello")
+    iex> MDEx.Document.get_option(document, :assigns)
+    %{title: "Hello"}
+
+## get_sanitize_option/3
+
+Retrieves one of the `t:sanitize_options/0` options from the document.
+
+## Examples
+
+    iex> document =
+    ...>   MDEx.new()
+    ...>   |> MDEx.Document.put_sanitize_options(add_tags: ["x-component"])
+    iex> MDEx.Document.get_sanitize_option(document, :add_tags)
+    ["x-component"]
+
+## is_sanitize_enabled/1
+
+Returns `true` if the document has the `:sanitize` option set, otherwise `false`.
+
+## get_private/3
+
+Retrieves a private value from the document.
+
+## Examples
+
+    iex> document = MDEx.new() |> MDEx.Document.put_private(:count, 2)
+    iex> MDEx.Document.get_private(document, :count)
+    2
+
+## update_private/4
+
+Updates a value in the document's private storage using a function.
+
+## Examples
+
+    iex> document = MDEx.new() |> MDEx.Document.put_private(:count, 1)
+    iex> document = MDEx.Document.update_private(document, :count, 0, &(&1 + 1))
+    iex> MDEx.Document.get_private(document, :count)
+    2
+
+## put_private/3
 
 Stores a value in the document's private storage.
 
@@ -1169,52 +866,46 @@ Stores a value in the document's private storage.
     iex> MDEx.Document.get_private(document, :mermaid_version)
     "11"
 
-## put_render_options(document, options)
+## append_steps/2
 
-Updates the document's `:render` options.
-
-## Examples
-
-    iex> document = MDEx.Document.put_render_options(MDEx.new(), escape: true)
-    iex> MDEx.Document.get_option(document, :render)[:escape]
-    true
-
-## put_sanitize_options(document, options)
-
-Updates the document's `:sanitize` options.
-
-## Examples
-
-    iex> document = MDEx.Document.put_sanitize_options(MDEx.new(), add_tags: ["MyComponent"])
-    iex> MDEx.Document.get_option(document, :sanitize)[:add_tags]
-    ["MyComponent"]
-
-## put_syntax_highlight_options(document, options)
-
-Updates the document's `:syntax_highlight` options.
-
-## Examples
-
-    iex> document = MDEx.Document.put_syntax_highlight_options(MDEx.new(), formatter: :html_linked)
-    iex> MDEx.Document.get_option(document, :syntax_highlight)[:formatter]
-    :html_linked
-
-## register_options(document, options)
-
-Registers a list of valid options that can be used by steps in the document pipeline.
+Appends steps to the end of the existing document's step list.
 
 ## Examples
 
     iex> document = MDEx.new()
-    iex> document = MDEx.Document.register_options(document, [:mermaid_version])
-    iex> document = MDEx.Document.put_options(document, mermaid_version: "11")
-    iex> document.options[:mermaid_version]
-    "11"
+    iex> document = MDEx.Document.append_steps(
+    ...>   document,
+    ...>   enable_tables: fn doc -> MDEx.Document.put_extension_options(doc, table: true) end
+    ...> )
+    iex> document
+    ...> |> MDEx.Document.run()
+    ...> |> MDEx.Document.get_option(:extension)
+    ...> |> Keyword.get(:table)
+    true
 
-    iex> MDEx.new(rendr: [unsafe: true])
-    ** (ArgumentError) unknown option :rendr. Did you mean :render?
+## prepend_steps/2
 
-## run(document)
+Prepends steps to the beginning of the existing document's step list.
+
+## halt/1
+
+Halts the document pipeline execution.
+
+This function is used to stop the pipeline from processing any further steps. Once a pipeline
+is halted, no more steps will be executed. This is useful for plugins that need to stop
+processing when certain conditions are met or when an error occurs.
+
+## Examples
+
+    iex> document = MDEx.Document.halt(MDEx.new())
+    iex> document.halted
+    true
+
+## halt/2
+
+Halts the document pipeline execution with an exception.
+
+## run/1
 
 Executes the document pipeline.
 
@@ -1270,7 +961,55 @@ Streaming:
       }
     ]
 
-## update_nodes(document, selector, fun)
+## put_node_in_document_root/3
+
+Inserts `node` into the document root at the specified `position`.
+
+  - By default, the node is inserted at the top of the document.
+  - Node must be a valid fragment node like a `MDEx.Heading`, `MDEx.HtmlBlock`, etc.
+
+## Examples
+
+    iex> document =
+    ...>   MDEx.new(markdown: "# Doc")
+    ...>   |> MDEx.Document.append_steps(append_node: fn document ->
+    ...>     html_block = %MDEx.HtmlBlock{literal: "<p>Hello</p>"}
+    ...>     MDEx.Document.put_node_in_document_root(document, html_block, :bottom)
+    ...>   end)
+    iex> MDEx.to_html(document, render: [unsafe: true])
+    {:ok, "<h1>Doc</h1>\n<p>Hello</p>"}
+
+## put_markdown/3
+
+Adds `markdown` chunks into the `document` buffer.
+
+## Examples
+
+    iex> document =
+    ...>   MDEx.new(markdown: "# First\n")
+    ...>   |> MDEx.Document.put_markdown("# Second")
+    ...>   |> MDEx.Document.run()
+    iex> document.nodes
+    [
+      %MDEx.Heading{nodes: [%MDEx.Text{literal: "First"}], level: 1, setext: false},
+      %MDEx.Heading{nodes: [%MDEx.Text{literal: "Second"}], level: 1, setext: false}
+    ]
+
+    iex> document =
+    ...>   MDEx.new(markdown: "# Last")
+    ...>   |> MDEx.Document.put_markdown("# First\n", :top)
+    ...>   |> MDEx.Document.run()
+    iex> document.nodes
+    [
+      %MDEx.Heading{nodes: [%MDEx.Text{literal: "First"}], level: 1, setext: false},
+      %MDEx.Heading{nodes: [%MDEx.Text{literal: "Last"}], level: 1, setext: false}
+    ]
+
+    iex> document = MDEx.new(streaming: true) |> MDEx.Document.put_markdown("`let x =")
+    iex> MDEx.to_html!(document)
+    "<p><code>let x =</code></p>"
+
+## update_nodes/3
 
 Updates all nodes in the document that match `selector`.
 
@@ -1290,18 +1029,7 @@ Updates all nodes in the document that match `selector`.
       %MDEx.Heading{nodes: [%MDEx.Text{literal: "WORLD"}], level: 2, setext: false}
     ]
 
-## update_private(document, key, default, fun)
-
-Updates a value in the document's private storage using a function.
-
-## Examples
-
-    iex> document = MDEx.new() |> MDEx.Document.put_private(:count, 1)
-    iex> document = MDEx.Document.update_private(document, :count, 0, &(&1 + 1))
-    iex> MDEx.Document.get_private(document, :count)
-    2
-
-## wrap(document)
+## wrap/1
 
 Wraps nodes in a `MDEx.Document`.
 
@@ -1318,361 +1046,20 @@ Wraps nodes in a `MDEx.Document`.
     iex> document.nodes
     [%MDEx.Text{literal: "Hello"}]
 
-## t/0
+## fetch/2
 
-Tree root of a Markdown document, including all children nodes.
+Callback implementation for `Access.fetch/2`.
 
-## md_node/0
+See the [Access](#module-access) section for more info.
 
-Fragment of a Markdown document, a single node. May contain children nodes.
+## get_and_update/3
 
-## step/0
+Callback implementation for `Access.get_and_update/3`.
 
-Step in a pipeline.
+See the [Access](#module-access) section for more info.
 
-It's a function that receives a `t:MDEx.Document.t/0` struct and must return either one of the following:
+## pop/3
 
-  - a `t:MDEx.Document.t/0` struct
-  - a tuple with a `t:MDEx.Document.t/0` struct and an `t:Exception.t/0` as `{document, exception}`
-  - a tuple with a module, function and arguments which will be invoked with `apply/3`
+Callback implementation for `Access.fetch/2`.
 
-## selector/0
-
-Selector used to match nodes in the document.
-
-Valid selectors can be the module or struct, an atom representing the node name, or a function that receives a node and returns a boolean.
-
-See `MDEx.Document` for more info and examples.
-
-## plugins/0
-
-A list of plugins to attach to a document.
-
-Each plugin may be one of:
-
-- `t:module/0` - A module that exposes `attach/1`, where the `t:MDEx.Document.t/0` is the only parameter
-- `{module, keyword}` - A module exposing `attach/2`, where the `t:MDEx.Document.t/0` is
-  the first parameter, and the second parameter is a keyword option list
-- `(document -> document)` - A function that accepts a `t:MDEx.Document.t/0` and returns one
-
-## extension_options/0
-
-List of [comrak extension options](https://docs.rs/comrak/latest/comrak/options/struct.Extension.html).
-
-## Example
-
-    MDEx.to_html!("~~strikethrough~~", extension: [strikethrough: true])
-    #=> "<p><del>strikethrough</del></p>"
-
-## parse_options/0
-
-List of [comrak parse options](https://docs.rs/comrak/latest/comrak/options/struct.Parse.html).
-
-## Example
-
-    MDEx.to_html!(""Hello" -- world...", parse: [smart: true])
-    #=> "<p>“Hello” – world…</p>"
-
-## render_options/0
-
-List of [comrak render options](https://docs.rs/comrak/latest/comrak/options/struct.Render.html).
-
-## Example
-
-    MDEx.to_html!("<script>alert('xss')</script>", render: [unsafe: true])
-    #=> "<script>alert('xss')</script>"
-
-## syntax_highlight_options/0
-
-Syntax Highlight code blocks using [lumis](https://hexdocs.pm/lumis).
-
-## Example
-
-    MDEx.to_html!("""
-    ...> ```elixir
-    ...> {:mdex, "~> 0.1"}
-    ...> ```
-    ...> """, syntax_highlight: [formatter: {:html_inline, theme: "nord"}])
-    #=> <pre class="lumis" style="color: #d8dee9; background-color: #2e3440;"><code class="language-elixir" translate="no" tabindex="0"><span class="line" data-line="1"><span style="color: #88c0d0;">&lbrace;</span><span style="color: #ebcb8b;">:mdex</span><span style="color: #88c0d0;">,</span> <span style="color: #a3be8c;">&quot;~&gt; 0.1&quot;</span><span style="color: #88c0d0;">&rbrace;</span>
-    #=> </span></code></pre>
-
-## sanitize_options/0
-
-List of [ammonia options](https://docs.rs/ammonia/latest/ammonia/struct.Builder.html).
-
-## Example
-
-    iex> MDEx.to_html!("<h1>Title</h1><p>Content</p>", sanitize: [rm_tags: ["h1"]], render: [unsafe: true])
-    "Title<p>Content</p>"
-
-## options/0
-
-Options to customize the parsing and rendering of Markdown documents.
-
-## Examples
-
-- Enable the `table` extension:
-
-    ````elixir
-    MDEx.to_html!("""
-    | lang |
-    |------|
-    | elixir |
-    """,
-    extension: [table: true]
-    )
-    ````
-
-- Syntax highlight using inline style and the `github_light` theme:
-
-    ````elixir
-    MDEx.to_html!("""
-    ## Code Example
-
-    ```elixir
-    Atom.to_string(:elixir)
-    ```
-    """,
-    syntax_highlight: [
-      formatter: {:html_inline, theme: "github_light"}
-    ])
-    ````
-
-- Sanitize HTML output, in this example disallow `<a>` tags:
-
-    ````elixir
-    MDEx.to_html!("""
-    ## Links won't be displayed
-
-    <a href="https://example.com">Example</a>
-    ```
-    """,
-    sanitize: [
-      rm_tags: ["a"],
-    ])
-    ````
-
-## Options
-
-* `:extension` (`t:keyword/0`) - Enable extensions. See comrak's [ExtensionOptions](https://docs.rs/comrak/latest/comrak/struct.ExtensionOptions.html) for more info and examples. The default value is `[]`.
-
-  * `:strikethrough` (`t:boolean/0`) - Enables the [strikethrough extension](https://github.github.com/gfm/#strikethrough-extension-) from the GFM spec. The default value is `false`.
-
-  * `:tagfilter` (`t:boolean/0`) - Enables the [tagfilter extension](https://github.github.com/gfm/#disallowed-raw-html-extension-) from the GFM spec. The default value is `false`.
-
-  * `:table` (`t:boolean/0`) - Enables the [table extension](https://github.github.com/gfm/#tables-extension-) from the GFM spec. The default value is `false`.
-
-  * `:autolink` (`t:boolean/0`) - Enables the [autolink extension](https://github.github.com/gfm/#autolinks-extension-) from the GFM spec. The default value is `false`.
-
-  * `:tasklist` (`t:boolean/0`) - Enables the [task list extension](https://github.github.com/gfm/#task-list-items-extension-) from the GFM spec. The default value is `false`.
-
-  * `:superscript` (`t:boolean/0`) - Enables the superscript Comrak extension. The default value is `false`.
-
-  * `:header_ids` - Enables the header IDs Comrak extension. The default value is `nil`.
-
-  * `:footnotes` (`t:boolean/0`) - Enables the footnotes extension per cmark-gfm The default value is `false`.
-
-  * `:inline_footnotes` (`t:boolean/0`) - Enables inline footnotes with ^[footnote content] syntax The default value is `false`.
-
-  * `:description_lists` (`t:boolean/0`) - Enables the description lists extension. The default value is `false`.
-
-  * `:front_matter_delimiter` - Enables the front matter extension. The default value is `nil`.
-
-  * `:multiline_block_quotes` (`t:boolean/0`) - Enables the multiline block quotes extension. The default value is `false`.
-
-  * `:alerts` (`t:boolean/0`) - Enables GitHub style alerts. The default value is `false`.
-
-  * `:math_dollars` (`t:boolean/0`) - Enables math using dollar syntax. The default value is `false`.
-
-  * `:math_code` (`t:boolean/0`) - Enables the [math code extension](https://github.github.com/gfm/#math-code) from the GFM spec. The default value is `false`.
-
-  * `:shortcodes` (`t:boolean/0`) - Phrases wrapped inside of ':' blocks will be replaced with emojis. The default value is `false`.
-
-  * `:wikilinks_title_after_pipe` (`t:boolean/0`) - Enables wikilinks using title after pipe syntax. The default value is `false`.
-
-  * `:wikilinks_title_before_pipe` (`t:boolean/0`) - Enables wikilinks using title before pipe syntax. The default value is `false`.
-
-  * `:underline` (`t:boolean/0`) - Enables underlines using double underscores. The default value is `false`.
-
-  * `:subscript` (`t:boolean/0`) - Enables subscript text using single tildes. The default value is `false`.
-
-  * `:spoiler` (`t:boolean/0`) - Enables spoilers using double vertical bars. The default value is `false`.
-
-  * `:greentext` (`t:boolean/0`) - Requires at least one space after a > character to generate a blockquote, and restarts blockquote nesting across unique lines of input. The default value is `false`.
-
-  * `:subtext` (`t:boolean/0`) - Enables Discord-style subtext using curly braces with hyphens: {-text-}. The default value is `false`.
-
-  * `:highlight` (`t:boolean/0`) - Enables the highlight extension using double equals ==highlighted text== (wraps text in <mark> tags). The default value is `false`.
-
-  * `:insert` (`t:boolean/0`) - Enables the insert extension using double plus ++inserted text++ (wraps text in <ins> tags). The default value is `false`.
-
-  * `:image_url_rewriter` - Wraps embedded image URLs using a string template.
-
-      Example:
-
-      Given this image `![alt text](http://unsafe.com/image.png)` and this rewriter:
-
-        image_url_rewriter: "https://example.com?url={@url}"
-
-      Renders `<p><img src="https://example.com?url=http://unsafe.com/image.png" alt="alt text" /></p>`
-
-      Notes:
-
-      - Assign `@url` is always passed to the template.
-      - Function callback is not supported, only string templates.
-        Transform the Document AST for more complex cases.
-
-    The default value is `nil`.
-
-  * `:link_url_rewriter` - Wraps link URLs using a string template.
-
-      Example:
-
-      Given this link `[my link](http://unsafe.example.com/bad)` and this rewriter:
-
-        link_url_rewriter: "https://safe.example.com/norefer?url={@url}"
-
-      Renders `<p><a href="https://safe.example.com/norefer?url=http://unsafe.example.com/bad">my link</a></p>`
-
-      Notes:
-
-      - Assign `@url` is always passed to the template.
-      - Function callback is not supported, only string templates.
-        Transform the Document AST for more complex cases.
-
-    The default value is `nil`.
-
-  * `:cjk_friendly_emphasis` (`t:boolean/0`) - Recognizes many emphasis that appear in CJK contexts but are not recognized by plain CommonMark. The default value is `false`.
-
-  * `:phoenix_heex` (`t:boolean/0`) - Enables Phoenix HEEx components and expressions. The default value is `false`.
-
-* `:parse` (`t:keyword/0`) - Configure parsing behavior. See comrak's [ParseOptions](https://docs.rs/comrak/latest/comrak/struct.ParseOptions.html) for more info and examples. The default value is `[]`.
-
-  * `:smart` (`t:boolean/0`) - Punctuation (quotes, full-stops and hyphens) are converted into 'smart' punctuation. The default value is `false`.
-
-  * `:default_info_string` - The default info string for fenced code blocks. The default value is `nil`.
-
-  * `:relaxed_tasklist_matching` (`t:boolean/0`) - Whether or not a simple `x` or `X` is used for tasklist or any other symbol is allowed. The default value is `false`.
-
-  * `:relaxed_autolinks` (`t:boolean/0`) - Relax parsing of autolinks, allow links to be detected inside brackets and allow all url schemes. It is intended to allow a very specific type of autolink detection, such as `[this http://and.com that]` or `{http://foo.com}`, on a best can basis. The default value is `true`.
-
-  * `:ignore_setext` (`t:boolean/0`) - Ignore setext headings in input. The default value is `false`.
-
-  * `:tasklist_in_table` (`t:boolean/0`) - Parse a tasklist item if it's the only content of a table cell. The default value is `false`.
-
-  * `:leave_footnote_definitions` (`t:boolean/0`) - Leave footnote definitions inline instead of moving them to the end of the document. The default value is `false`.
-
-  * `:escaped_char_spans` (`t:boolean/0`) - Wrap escaped characters in a <span> to allow any post-processing to recognize them. The default value is `false`.
-
-* `:render` (`t:keyword/0`) - Configure rendering behavior. See comrak's [RenderOptions](https://docs.rs/comrak/latest/comrak/struct.RenderOptions.html) for more info and examples. The default value is `[]`.
-
-  * `:hardbreaks` (`t:boolean/0`) - [Soft line breaks](http://spec.commonmark.org/0.27/#soft-line-breaks) in the input translate into hard line breaks in the output. The default value is `false`.
-
-  * `:github_pre_lang` (`t:boolean/0`) - GitHub-style `<pre lang="xyz">` is used for fenced code blocks with info tags. The default value is `false`.
-
-  * `:full_info_string` (`t:boolean/0`) - Enable full info strings for code blocks. The default value is `false`.
-
-  * `:width` (`t:integer/0`) - The wrap column when outputting CommonMark. The default value is `0`.
-
-  * `:unsafe` (`t:boolean/0`) - Allow rendering of raw HTML and potentially dangerous links. The default value is `false`.
-
-  * `:escape` (`t:boolean/0`) - Escape raw HTML instead of clobbering it. The default value is `false`.
-
-  * `:list_style` - Set the type of [bullet list marker](https://spec.commonmark.org/0.30/#bullet-list-marker) to use.
-    Either one of `:dash`, `:plus`, or `:star`. The default value is `:dash`.
-
-  * `:sourcepos` (`t:boolean/0`) - Include source position attributes in HTML and XML output. The default value is `false`.
-
-  * `:escaped_char_spans` (`t:boolean/0`) - Wrap escaped characters in a `<span>` to allow any post-processing to recognize them. The default value is `false`.
-
-  * `:ignore_empty_links` (`t:boolean/0`) - Ignore empty links in input. The default value is `false`.
-
-  * `:gfm_quirks` (`t:boolean/0`) - Enables GFM quirks in HTML output which break CommonMark compatibility. The default value is `false`.
-
-  * `:prefer_fenced` (`t:boolean/0`) - Prefer fenced code blocks when outputting CommonMark. The default value is `false`.
-
-  * `:figure_with_caption` (`t:boolean/0`) - Render the image as a figure element with the title as its caption. The default value is `false`.
-
-  * `:tasklist_classes` (`t:boolean/0`) - Add classes to the output of the tasklist extension. This allows tasklists to be styled. The default value is `false`.
-
-  * `:ol_width` (`t:integer/0`) - Render ordered list with a minimum marker width. Having a width lower than 3 doesn't do anything. The default value is `1`.
-
-  * `:experimental_minimize_commonmark` (`t:boolean/0`) - Minimise escapes used in CommonMark output (`-t commonmark`) by removing each individually and seeing if the resulting document roundtrips.
-    Brute-force and expensive, but produces nicer output.
-    Note that the result may not in fact be minimal. The default value is `false`.
-
-* `:syntax_highlight` - Apply syntax highlighting to code blocks.
-
-    Examples:
-
-        syntax_highlight: [formatter: {:html_inline, theme: "github_dark"}]
-
-        syntax_highlight: [formatter: {:html_linked, theme: "github_light"}]
-
-    See [Lumis](https://hexdocs.pm/lumis) for more info and examples.
-
-  The default value is `[formatter: {:html_inline, [theme: "onedark"]}]`.
-
-* `:sanitize` - Cleans HTML using [ammonia](https://crates.io/crates/ammonia) after rendering.
-
-  It's disabled by default but you can enable its [conservative set of default options](https://docs.rs/ammonia/latest/ammonia/fn.clean.html) as:
-
-      [sanitize: MDEx.Document.default_sanitize_options()]
-
-  Or customize one of the options. For example, to disallow `<a>` tags:
-
-      [sanitize: [rm_tags: ["a"]]]
-
-  In the example above it will append `rm_tags: ["a"]` into the default set of options, essentially the same as:
-
-      sanitize = Keyword.put(MDEx.Document.default_sanitize_options(), :rm_tags, ["a"])
-      [sanitize: sanitize]
-
-  See the [Safety](#module-safety) section for more info.
-
-  The default value is `nil`.
-
-* `:streaming` (`t:boolean/0`) - Enables streaming. See the [Streaming guide](streaming.html) for details. The default value is `false`.
-
-* `:assigns` (`t:map/0`) - A map of assigns available for use in pipelines, plugins, and HEEx rendering.
-
-  Assigns can be set at document creation time:
-
-      MDEx.new(assigns: %{title: "My Doc"})
-
-  Or dynamically using `MDEx.Document.assign/2` and `MDEx.Document.assign/3`:
-
-      document
-      |> MDEx.Document.assign(:title, "My Doc")
-      |> MDEx.Document.assign(author: "Jane", version: 1)
-
-  When rendering HEEx templates, assigns are available as `@variables`:
-
-      MDEx.to_heex!(document, assigns: %{name: "World"})
-      # In the template: Hello, {@name}!
-
-  The default value is `%{}`.
-
-* `:plugins` (list of `t:term/0`) - A list of plugins to attach to the document.
-
-  Each plugin may be one of:
-
-  - `t:module/0` - A module that exposes `attach/1`
-  - `{module, keyword}` - A module exposing `attach/2` with options
-  - `(document -> document)` - A function that accepts and returns a document
-
-  See the [Pipeline and Plugins](#module-pipeline-and-plugins) section for more info.
-
-  ## Examples
-
-      MDEx.to_html!("# Hello", plugins: [MDExGFM])
-
-      MDEx.to_html!("# Hello", plugins: [{MDExMermaid, version: "11"}])
-
-  The default value is `[]`.
-
-* `:codefence_renderers` (`t:map/0`) - Provide language-specific renderers for codefence blocks.
-
-  See [Codefence Renderers examples](https://hexdocs.pm/mdex/codefence_renderers.html) for more info.
-
-  The default value is `%{}`.
+See the [Access](#module-access) section for more info.

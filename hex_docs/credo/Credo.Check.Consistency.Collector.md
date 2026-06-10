@@ -46,20 +46,7 @@ implementing the `Credo.Check.Consistency.Collector` behavior:
 Read further for more information on `collect_matches/2`,
 `find_locations_not_matching/2`, and `issue_formatter`.
 
-## collect_matches/2
-
-When you call `@collector.find_and_append_issues/4` inside the check module,
-the collector first counts the occurrences of different matches
-(e.g. :with_space and :without_space for a space around operators check)
-per each source file.
-
-`collect_matches/2` produces a map of matches as keys and their frequencies
-as values (e.g. %{with_space: 50, without_space: 40}).
-
-The maps for individual source files are then merged, producing a map
-that reflects frequency trends for the whole codebase.
-
-## find_locations_not_matching/2
+## __using__/1
 
 `issue_formatter` may call the `@collector.find_locations_not_matching/2`
 function to obtain additional metadata for each occurrence of

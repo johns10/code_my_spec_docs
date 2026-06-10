@@ -2,6 +2,6 @@
 
 Defaults for each service
 
-## defaults(service)
+## defaults/1
 
 Retrieve the default configuration for a service.

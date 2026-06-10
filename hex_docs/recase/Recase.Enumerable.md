@@ -2,10 +2,10 @@
 
 Helper module to convert enumerable keys recursively.
 
-## atomize_keys(enumerable)
+## atomize_keys/1
 
 Invoke fun for each keys of the enumerable and cast keys to atoms.
 
-## convert_keys(enumerable)
+## convert_keys/1
 
 Invoke fun for each keys of the enumerable.

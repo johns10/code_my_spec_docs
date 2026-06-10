@@ -54,14 +54,14 @@ end
 - `:engine_opts` - optional engine options
 - `:decode_content_types` - list of additional decodable content-types
 
-## decode(env, opts)
-
-Decode response body as JSON.
-
-It is used by `Tesla.Middleware.DecodeJson`.
-
-## encode(env, opts)
+## encode/2
 
 Encode request body as JSON.
 
 It is used by `Tesla.Middleware.EncodeJson`.
+
+## decode/2
+
+Decode response body as JSON.
+
+It is used by `Tesla.Middleware.DecodeJson`.

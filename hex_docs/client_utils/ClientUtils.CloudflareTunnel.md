@@ -55,16 +55,10 @@ Requires credentials and DNS configured in Cloudflare dashboard.
     (named mode only). Each hostname is added as an ingress rule pointing to
     the same `:origin_url`. Useful for white-label custom domains in dev.
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## url()
+## url/0
 
 Returns the current tunnel URL, or nil if not yet established.
 
-## url(name)
+## url/1
 
 Returns the current tunnel URL for the given server name.

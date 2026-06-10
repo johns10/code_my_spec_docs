@@ -4,7 +4,7 @@ Defines adapters to allow common Web Servers to serve applications via the `WebS
 Also provides a consistent upgrade facility to upgrade `Plug.Conn` requests to `WebSock`
 connections for supported servers.
 
-## upgrade(conn, websock, state, opts)
+## upgrade/4
 
 Upgrades the provided `Plug.Conn` connection request to a `WebSock` connection using the
 provided `WebSock` compliant module as a handler.
@@ -47,7 +47,3 @@ to `true`
   This option does not apply to Websocket over HTTP/2
 * `deflate_options`: A keyword list of options to pass to the deflate library.
   See `Bandit` or `:cow_ws` documentation for more details
-
-## connection_opt/0
-
-The type of a supported connection option

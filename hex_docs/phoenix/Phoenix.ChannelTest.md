@@ -150,78 +150,76 @@ In your test, you can assert that the close happened by:
     send(socket.channel_pid, :some_message)
     assert_receive {:DOWN, _, _, _, :normal}
 
-## broadcast_from(socket, event, message)
+## socket/1
 
-Broadcast event from pid to all subscribers of the socket topic.
+Builds a socket for the given `socket_module`.
 
-The test process will not receive the published message. This triggers
-the `handle_out/3` callback in the channel.
+The socket is then used to subscribe and join channels.
+Use this function when you want to create a blank socket
+to pass to functions like `UserSocket.connect/3`.
 
-## Examples
-
-    iex> broadcast_from(socket, "new_message", %{id: 1, content: "hello"})
-    :ok
-
-## broadcast_from!(socket, event, message)
-
-Same as `broadcast_from/3`, but raises if broadcast fails.
-
-## close(socket, timeout \\ 5000)
-
-Emulates the client closing the socket.
-
-By default this will crash the test process. Run
-`Process.unlink(socket.channel_pid)` before this to prevent
-this from happening. See [Leave and close](#module-leave-and-close).
-
-Closing socket is synchronous and has a default timeout
-of 5000 milliseconds.
-
-## join(socket, topic)
-
-See `join/4`.
-
-## join(socket, topic, payload)
-
-See `join/4`.
-
-## join(socket, channel, topic, payload \\ %{})
-
-Joins the channel under the given topic and payload.
-
-The given channel is joined in a separate process
-which is linked to the test process.
-
-It returns `{:ok, reply, socket}` or `{:error, reply}`.
-
-## leave(socket)
-
-Emulates the client leaving the channel.
-
-By default this will crash the test process. Run
-`Process.unlink(socket.channel_pid)` before this to prevent
-this from happening. See [Leave and close](#module-leave-and-close).
-
-## push(socket, event, payload \\ %{})
-
-Pushes a message into the channel.
-
-The triggers the `handle_in/3` callback in the channel.
+Otherwise, use `socket/4` if you want to build a socket with
+existing id and assigns.
 
 ## Examples
 
-    iex> push(socket, "new_message", %{id: 1, content: "hello"})
-    reference
+    socket(MyApp.UserSocket)
 
-## subscribe_and_join(socket, topic)
+## socket/4
+
+Builds a socket for the given `socket_module` with given id and assigns.
+
+## Examples
+
+    socket(MyApp.UserSocket, "user_id", %{some: :assign})
+
+If you need to access the socket in another process than the test process,
+you can give the `pid` of the test process in the 4th argument.
+
+## Examples
+
+    test "connect in a task" do
+      pid = self()
+      task = Task.async(fn ->
+        socket = socket(MyApp.UserSocket, "user_id", %{some: :assign}, test_process: pid)
+        broadcast_from!(socket, "default", %{"foo" => "bar"})
+        assert_push "default", %{"foo" => "bar"}
+      end)
+      Task.await(task)
+    end
+
+## connect/3
+
+Initiates a transport connection for the socket handler.
+
+Useful for testing UserSocket authentication. Returns
+the result of the handler's `connect/3` callback.
+
+## subscribe_and_join!/2
+
+See `subscribe_and_join!/4`.
+
+## subscribe_and_join!/3
+
+See `subscribe_and_join!/4`.
+
+## subscribe_and_join!/4
+
+Same as `subscribe_and_join/4`, but returns either the socket
+or throws an error.
+
+This is helpful when you are not testing joining the channel
+and just need the socket.
+
+## subscribe_and_join/2
 
 See `subscribe_and_join/4`.
 
-## subscribe_and_join(socket, topic, payload)
+## subscribe_and_join/3
 
 See `subscribe_and_join/4`.
 
-## subscribe_and_join(socket, channel, topic, payload \\ %{})
+## subscribe_and_join/4
 
 Subscribes to the given topic and joins the channel
 under the given topic and payload.
@@ -238,42 +236,70 @@ lookup the matching channel for the given topic.
 
 It returns `{:ok, reply, socket}` or `{:error, reply}`.
 
-## subscribe_and_join!(socket, topic)
+## join/2
 
-See `subscribe_and_join!/4`.
+See `join/4`.
 
-## subscribe_and_join!(socket, topic, payload)
+## join/3
 
-See `subscribe_and_join!/4`.
+See `join/4`.
 
-## subscribe_and_join!(socket, channel, topic, payload \\ %{})
+## join/4
 
-Same as `subscribe_and_join/4`, but returns either the socket
-or throws an error.
+Joins the channel under the given topic and payload.
 
-This is helpful when you are not testing joining the channel
-and just need the socket.
+The given channel is joined in a separate process
+which is linked to the test process.
 
-## assert_broadcast(event, payload, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
+It returns `{:ok, reply, socket}` or `{:error, reply}`.
 
-Asserts the channel has broadcast a message within `timeout`.
+## push/3
 
-Before asserting anything was broadcast, we must first
-subscribe to the topic of the channel in the test process:
+Pushes a message into the channel.
 
-    @endpoint.subscribe("foo:ok")
+The triggers the `handle_in/3` callback in the channel.
 
-Now we can match on event and payload as patterns:
+## Examples
 
-    assert_broadcast "some_event", %{"data" => _}
+    iex> push(socket, "new_message", %{id: 1, content: "hello"})
+    reference
 
-In the assertion above, we don't particularly care about
-the data being sent, as long as something was sent.
+## leave/1
 
-The timeout is in milliseconds and defaults to the `:assert_receive_timeout`
-set on the `:ex_unit` application (which defaults to 100ms).
+Emulates the client leaving the channel.
 
-## assert_push(event, payload, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
+By default this will crash the test process. Run
+`Process.unlink(socket.channel_pid)` before this to prevent
+this from happening. See [Leave and close](#module-leave-and-close).
+
+## close/2
+
+Emulates the client closing the socket.
+
+By default this will crash the test process. Run
+`Process.unlink(socket.channel_pid)` before this to prevent
+this from happening. See [Leave and close](#module-leave-and-close).
+
+Closing socket is synchronous and has a default timeout
+of 5000 milliseconds.
+
+## broadcast_from/3
+
+Broadcast event from pid to all subscribers of the socket topic.
+
+The test process will not receive the published message. This triggers
+the `handle_out/3` callback in the channel.
+
+## Examples
+
+    iex> broadcast_from(socket, "new_message", %{id: 1, content: "hello"})
+    :ok
+
+## broadcast_from!/3
+
+Same as `broadcast_from/3`, but raises if broadcast fails.
+
+## assert_push/3
 
 Asserts the channel has pushed a message back to the client
 with the given event and payload within `timeout`.
@@ -304,7 +330,20 @@ Bad:
     assert_push "some_event", expected_payload
     # The code above does not assert the payload matches the described map.
 
-## assert_reply(ref, status, payload \\ Macro.escape(%{}), timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
+## refute_push/3
+
+Asserts the channel has not pushed a message to the client
+matching the given event and payload within `timeout`.
+
+Like `assert_push`, the event and payload are patterns.
+
+The timeout is in milliseconds and defaults to the `:refute_receive_timeout`
+set on the `:ex_unit` application (which defaults to 100ms).
+Keep in mind this macro will block the test by the
+timeout value, so use it only when necessary as overuse
+will certainly slow down your test suite.
+
+## assert_reply/4
 
 Asserts the channel has replied to the given message within
 `timeout`.
@@ -320,41 +359,7 @@ the data being sent, as long as something was replied.
 The timeout is in milliseconds and defaults to the `:assert_receive_timeout`
 set on the `:ex_unit` application (which defaults to 100ms).
 
-## connect(handler, params, options \\ quote do
-  []
-end)
-
-Initiates a transport connection for the socket handler.
-
-Useful for testing UserSocket authentication. Returns
-the result of the handler's `connect/3` callback.
-
-## refute_broadcast(event, payload, timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
-
-Asserts the channel has not broadcast a message within `timeout`.
-
-Like `assert_broadcast`, the event and payload are patterns.
-
-The timeout is in milliseconds and defaults to the `:refute_receive_timeout`
-set on the `:ex_unit` application (which defaults to 100ms).
-Keep in mind this macro will block the test by the
-timeout value, so use it only when necessary as overuse
-will certainly slow down your test suite.
-
-## refute_push(event, payload, timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
-
-Asserts the channel has not pushed a message to the client
-matching the given event and payload within `timeout`.
-
-Like `assert_push`, the event and payload are patterns.
-
-The timeout is in milliseconds and defaults to the `:refute_receive_timeout`
-set on the `:ex_unit` application (which defaults to 100ms).
-Keep in mind this macro will block the test by the
-timeout value, so use it only when necessary as overuse
-will certainly slow down your test suite.
-
-## refute_reply(ref, status, payload \\ Macro.escape(%{}), timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
+## refute_reply/4
 
 Asserts the channel has not replied with a matching payload within
 `timeout`.
@@ -367,40 +372,33 @@ Keep in mind this macro will block the test by the
 timeout value, so use it only when necessary as overuse
 will certainly slow down your test suite.
 
-## socket(socket_module)
+## assert_broadcast/3
 
-Builds a socket for the given `socket_module`.
+Asserts the channel has broadcast a message within `timeout`.
 
-The socket is then used to subscribe and join channels.
-Use this function when you want to create a blank socket
-to pass to functions like `UserSocket.connect/3`.
+Before asserting anything was broadcast, we must first
+subscribe to the topic of the channel in the test process:
 
-Otherwise, use `socket/4` if you want to build a socket with
-existing id and assigns.
+    @endpoint.subscribe("foo:ok")
 
-## Examples
+Now we can match on event and payload as patterns:
 
-    socket(MyApp.UserSocket)
+    assert_broadcast "some_event", %{"data" => _}
 
-## socket(socket_module, socket_id, socket_assigns, options \\ [])
+In the assertion above, we don't particularly care about
+the data being sent, as long as something was sent.
 
-Builds a socket for the given `socket_module` with given id and assigns.
+The timeout is in milliseconds and defaults to the `:assert_receive_timeout`
+set on the `:ex_unit` application (which defaults to 100ms).
 
-## Examples
+## refute_broadcast/3
 
-    socket(MyApp.UserSocket, "user_id", %{some: :assign})
+Asserts the channel has not broadcast a message within `timeout`.
 
-If you need to access the socket in another process than the test process,
-you can give the `pid` of the test process in the 4th argument.
+Like `assert_broadcast`, the event and payload are patterns.
 
-## Examples
-
-    test "connect in a task" do
-      pid = self()
-      task = Task.async(fn ->
-        socket = socket(MyApp.UserSocket, "user_id", %{some: :assign}, test_process: pid)
-        broadcast_from!(socket, "default", %{"foo" => "bar"})
-        assert_push "default", %{"foo" => "bar"}
-      end)
-      Task.await(task)
-    end
+The timeout is in milliseconds and defaults to the `:refute_receive_timeout`
+set on the `:ex_unit` application (which defaults to 100ms).
+Keep in mind this macro will block the test by the
+timeout value, so use it only when necessary as overuse
+will certainly slow down your test suite.

@@ -3,7 +3,7 @@
 This module provides functions for handling parameters ("params") given to
 checks through `.credo.exs` (i.e. the `Credo.ConfigFile`).
 
-## get(params, field, check_mod)
+## get/3
 
 Returns the given `field`'s `params` value.
 

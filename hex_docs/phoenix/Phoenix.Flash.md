@@ -2,7 +2,7 @@
 
 Provides shared flash access.
 
-## get(flash, key)
+## get/2
 
 Gets the key from the map of flash data.
 

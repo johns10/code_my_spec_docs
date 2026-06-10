@@ -11,7 +11,3 @@ A link between a Google Analytics property and a Google Ads account.
 *   `customerId` (*type:* `String.t`, *default:* `nil`) - Immutable. Google Ads customer ID.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Format: properties/{propertyId}/googleAdsLinks/{googleAdsLinkId} Note: googleAdsLinkId is not the Google Ads customer ID.
 *   `updateTime` (*type:* `DateTime.t`, *default:* `nil`) - Output only. Time when this link was last updated.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

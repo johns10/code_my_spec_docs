@@ -2,7 +2,7 @@
 
 Provides API endpoints related to codespaces
 
-## add_repository_for_secret_for_authenticated_user(secret_name, repository_id, opts \\ [])
+## add_repository_for_secret_for_authenticated_user/3
 
 Add a selected repository to a user secret
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#add-a-selected-repository-to-a-user-secret)
 
-## add_selected_repo_to_org_secret(org, secret_name, repository_id, opts \\ [])
+## add_selected_repo_to_org_secret/4
 
 Add selected repository to an organization secret
 
@@ -27,7 +27,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#add-selected-repository-to-an-organization-secret)
 
-## check_permissions_for_devcontainer(owner, repo, opts \\ [])
+## check_permissions_for_devcontainer/3
 
 Check if permissions defined by a devcontainer have been accepted by the authenticated user
 
@@ -44,7 +44,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#check-if-permissions-defined-by-a-devcontainer-have-been-accepted-by-the-authenticated-user)
 
-## codespace_machines_for_authenticated_user(codespace_name, opts \\ [])
+## codespace_machines_for_authenticated_user/2
 
 List machine types for a codespace
 
@@ -56,7 +56,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/machines#list-machine-types-for-a-codespace)
 
-## create_for_authenticated_user(body, opts \\ [])
+## create_for_authenticated_user/2
 
 Create a codespace for the authenticated user
 
@@ -70,7 +70,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-for-the-authenticated-user)
 
-## create_or_update_org_secret(org, secret_name, body, opts \\ [])
+## create_or_update_org_secret/4
 
 Create or update an organization secret
 
@@ -83,7 +83,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret)
 
-## create_or_update_repo_secret(owner, repo, secret_name, body, opts \\ [])
+## create_or_update_repo_secret/5
 
 Create or update a repository secret
 
@@ -96,7 +96,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/codespaces/repository-secrets#create-or-update-a-repository-secret)
 
-## create_or_update_secret_for_authenticated_user(secret_name, body, opts \\ [])
+## create_or_update_secret_for_authenticated_user/3
 
 Create or update a secret for the authenticated user
 
@@ -111,7 +111,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#create-or-update-a-secret-for-the-authenticated-user)
 
-## create_with_pr_for_authenticated_user(owner, repo, pull_number, body, opts \\ [])
+## create_with_pr_for_authenticated_user/5
 
 Create a codespace from a pull request
 
@@ -123,7 +123,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-from-a-pull-request)
 
-## create_with_repo_for_authenticated_user(owner, repo, body, opts \\ [])
+## create_with_repo_for_authenticated_user/4
 
 Create a codespace in a repository
 
@@ -135,7 +135,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#create-a-codespace-in-a-repository)
 
-## delete_codespaces_access_users(org, body, opts \\ [])
+## delete_codespaces_access_users/3
 
 Remove users from Codespaces access for an organization
 
@@ -150,7 +150,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#remove-users-from-codespaces-access-for-an-organization)
 
-## delete_for_authenticated_user(codespace_name, opts \\ [])
+## delete_for_authenticated_user/2
 
 Delete a codespace for the authenticated user
 
@@ -162,7 +162,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#delete-a-codespace-for-the-authenticated-user)
 
-## delete_from_organization(org, username, codespace_name, opts \\ [])
+## delete_from_organization/4
 
 Delete a codespace from the organization
 
@@ -174,7 +174,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#delete-a-codespace-from-the-organization)
 
-## delete_org_secret(org, secret_name, opts \\ [])
+## delete_org_secret/3
 
 Delete an organization secret
 
@@ -186,7 +186,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#delete-an-organization-secret)
 
-## delete_repo_secret(owner, repo, secret_name, opts \\ [])
+## delete_repo_secret/4
 
 Delete a repository secret
 
@@ -198,7 +198,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/codespaces/repository-secrets#delete-a-repository-secret)
 
-## delete_secret_for_authenticated_user(secret_name, opts \\ [])
+## delete_secret_for_authenticated_user/2
 
 Delete a secret for the authenticated user
 
@@ -212,7 +212,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#delete-a-secret-for-the-authenticated-user)
 
-## export_for_authenticated_user(codespace_name, opts \\ [])
+## export_for_authenticated_user/2
 
 Export a codespace for the authenticated user
 
@@ -226,7 +226,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#export-a-codespace-for-the-authenticated-user)
 
-## get_codespaces_for_user_in_org(org, username, opts \\ [])
+## get_codespaces_for_user_in_org/3
 
 List codespaces for a user in organization
 
@@ -243,7 +243,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-a-user-in-organization)
 
-## get_export_details_for_authenticated_user(codespace_name, export_id, opts \\ [])
+## get_export_details_for_authenticated_user/3
 
 Get details about a codespace export
 
@@ -255,7 +255,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#get-details-about-a-codespace-export)
 
-## get_for_authenticated_user(codespace_name, opts \\ [])
+## get_for_authenticated_user/2
 
 Get a codespace for the authenticated user
 
@@ -267,7 +267,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#get-a-codespace-for-the-authenticated-user)
 
-## get_org_public_key(org, opts \\ [])
+## get_org_public_key/2
 
 Get an organization public key
 
@@ -278,7 +278,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-public-key)
 
-## get_org_secret(org, secret_name, opts \\ [])
+## get_org_secret/3
 
 Get an organization secret
 
@@ -290,7 +290,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-secret)
 
-## get_public_key_for_authenticated_user(opts \\ [])
+## get_public_key_for_authenticated_user/1
 
 Get public key for the authenticated user
 
@@ -304,7 +304,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#get-public-key-for-the-authenticated-user)
 
-## get_repo_public_key(owner, repo, opts \\ [])
+## get_repo_public_key/3
 
 Get a repository public key
 
@@ -319,7 +319,7 @@ If the repository is private, OAuth app tokens and personal access tokens (class
 
   * [API method documentation](https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-public-key)
 
-## get_repo_secret(owner, repo, secret_name, opts \\ [])
+## get_repo_secret/4
 
 Get a repository secret
 
@@ -331,7 +331,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-secret)
 
-## get_secret_for_authenticated_user(secret_name, opts \\ [])
+## get_secret_for_authenticated_user/2
 
 Get a secret for the authenticated user
 
@@ -345,7 +345,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#get-a-secret-for-the-authenticated-user)
 
-## list_devcontainers_in_repository_for_authenticated_user(owner, repo, opts \\ [])
+## list_devcontainers_in_repository_for_authenticated_user/3
 
 List devcontainer configurations in a repository for the authenticated user
 
@@ -363,7 +363,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#list-devcontainer-configurations-in-a-repository-for-the-authenticated-user)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List codespaces for the authenticated user
 
@@ -381,7 +381,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#list-codespaces-for-the-authenticated-user)
 
-## list_in_organization(org, opts \\ [])
+## list_in_organization/2
 
 List codespaces for the organization
 
@@ -398,7 +398,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#list-codespaces-for-the-organization)
 
-## list_in_repository_for_authenticated_user(owner, repo, opts \\ [])
+## list_in_repository_for_authenticated_user/3
 
 List codespaces in a repository for the authenticated user
 
@@ -415,7 +415,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#list-codespaces-in-a-repository-for-the-authenticated-user)
 
-## list_org_secrets(org, opts \\ [])
+## list_org_secrets/2
 
 List organization secrets
 
@@ -433,7 +433,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#list-organization-secrets)
 
-## list_repo_secrets(owner, repo, opts \\ [])
+## list_repo_secrets/3
 
 List repository secrets
 
@@ -451,7 +451,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/codespaces/repository-secrets#list-repository-secrets)
 
-## list_repositories_for_secret_for_authenticated_user(secret_name, opts \\ [])
+## list_repositories_for_secret_for_authenticated_user/2
 
 List selected repositories for a user secret
 
@@ -465,7 +465,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#list-selected-repositories-for-a-user-secret)
 
-## list_secrets_for_authenticated_user(opts \\ [])
+## list_secrets_for_authenticated_user/1
 
 List secrets for the authenticated user
 
@@ -485,7 +485,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#list-secrets-for-the-authenticated-user)
 
-## list_selected_repos_for_org_secret(org, secret_name, opts \\ [])
+## list_selected_repos_for_org_secret/3
 
 List selected repositories for an organization secret
 
@@ -503,7 +503,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#list-selected-repositories-for-an-organization-secret)
 
-## pre_flight_with_repo_for_authenticated_user(owner, repo, opts \\ [])
+## pre_flight_with_repo_for_authenticated_user/3
 
 Get default attributes for a codespace
 
@@ -520,7 +520,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#get-default-attributes-for-a-codespace)
 
-## publish_for_authenticated_user(codespace_name, body, opts \\ [])
+## publish_for_authenticated_user/3
 
 Create a repository from an unpublished codespace
 
@@ -536,7 +536,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#create-a-repository-from-an-unpublished-codespace)
 
-## remove_repository_for_secret_for_authenticated_user(secret_name, repository_id, opts \\ [])
+## remove_repository_for_secret_for_authenticated_user/3
 
 Remove a selected repository from a user secret
 
@@ -550,7 +550,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#remove-a-selected-repository-from-a-user-secret)
 
-## remove_selected_repo_from_org_secret(org, secret_name, repository_id, opts \\ [])
+## remove_selected_repo_from_org_secret/4
 
 Remove selected repository from an organization secret
 
@@ -564,7 +564,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#remove-selected-repository-from-an-organization-secret)
 
-## repo_machines_for_authenticated_user(owner, repo, opts \\ [])
+## repo_machines_for_authenticated_user/3
 
 List available machine types for a repository
 
@@ -582,7 +582,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/machines#list-available-machine-types-for-a-repository)
 
-## set_codespaces_access(org, body, opts \\ [])
+## set_codespaces_access/3
 
 Manage access control for organization codespaces
 
@@ -593,7 +593,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)
 
-## set_codespaces_access_users(org, body, opts \\ [])
+## set_codespaces_access_users/3
 
 Add users to Codespaces access for an organization
 
@@ -608,7 +608,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#add-users-to-codespaces-access-for-an-organization)
 
-## set_repositories_for_secret_for_authenticated_user(secret_name, body, opts \\ [])
+## set_repositories_for_secret_for_authenticated_user/3
 
 Set selected repositories for a user secret
 
@@ -622,7 +622,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` or `c
 
   * [API method documentation](https://docs.github.com/rest/codespaces/secrets#set-selected-repositories-for-a-user-secret)
 
-## set_selected_repos_for_org_secret(org, secret_name, body, opts \\ [])
+## set_selected_repos_for_org_secret/4
 
 Set selected repositories for an organization secret
 
@@ -636,7 +636,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organization-secrets#set-selected-repositories-for-an-organization-secret)
 
-## start_for_authenticated_user(codespace_name, opts \\ [])
+## start_for_authenticated_user/2
 
 Start a codespace for the authenticated user
 
@@ -648,7 +648,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#start-a-codespace-for-the-authenticated-user)
 
-## stop_for_authenticated_user(codespace_name, opts \\ [])
+## stop_for_authenticated_user/2
 
 Stop a codespace for the authenticated user
 
@@ -660,7 +660,7 @@ OAuth app tokens and personal access tokens (classic) need the `codespace` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/codespaces#stop-a-codespace-for-the-authenticated-user)
 
-## stop_in_organization(org, username, codespace_name, opts \\ [])
+## stop_in_organization/4
 
 Stop a codespace for an organization user
 
@@ -672,7 +672,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/codespaces/organizations#stop-a-codespace-for-an-organization-user)
 
-## update_for_authenticated_user(codespace_name, body, opts \\ [])
+## update_for_authenticated_user/3
 
 Update a codespace for the authenticated user
 

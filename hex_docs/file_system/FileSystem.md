@@ -5,7 +5,7 @@ A `GenServer` process to watch file system changes.
 The process receives data from Port, parse event, and send it to the worker
 process.
 
-## start_link(options)
+## start_link/1
 
 Starts a `GenServer` process and linked to the current process.
 
@@ -40,7 +40,7 @@ Monitor a directory by a process name:
     iex> FileSystem.start_link(backend: :fs_mac, dirs: ["/tmp/fs"], name: :worker)
     iex> FileSystem.subscribe(:worker)
 
-## subscribe(pid)
+## subscribe/1
 
 Register the current process as a subscriber of a `file_system` worker.
 

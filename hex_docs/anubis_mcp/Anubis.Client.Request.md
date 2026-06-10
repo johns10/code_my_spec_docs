@@ -2,11 +2,7 @@
 
 
 
-## elapsed_time(request)
-
-Calculates the elapsed time for a request in milliseconds.
-
-## new(attrs)
+## new/1
 
 Creates a new request struct.
 
@@ -17,3 +13,7 @@ Creates a new request struct.
     * `:method` - The MCP method name
     * `:from` - The GenServer caller reference
     * `:timer_ref` - Reference to the request-specific timeout timer
+
+## elapsed_time/1
+
+Calculates the elapsed time for a request in milliseconds.

@@ -2,7 +2,7 @@
 
 Functions for generating addresses in Spanish
 
-## building_number()
+## building_number/0
 
 Return random building number.
 
@@ -17,7 +17,7 @@ Return random building number.
     iex> Faker.Address.Es.building_number()
     "61"
 
-## city()
+## city/0
 
 Return city name.
 
@@ -32,61 +32,7 @@ Return city name.
     iex> Faker.Address.Es.city()
     "María José"
 
-## city_prefix()
-
-Return city prefix.
-
-## Examples
-
-    iex> Faker.Address.Es.city_prefix()
-    "Vitoria"
-    iex> Faker.Address.Es.city_prefix()
-    "Oviedo"
-    iex> Faker.Address.Es.city_prefix()
-    "Talavera de la Reina"
-    iex> Faker.Address.Es.city_prefix()
-    "Cáceres"
-
-## country()
-
-Return country.
-
-## Examples
-
-    iex> Faker.Address.Es.country()
-    "Cabo Verde"
-    iex> Faker.Address.Es.country()
-    "Malawi"
-    iex> Faker.Address.Es.country()
-    "Bielorusia"
-    iex> Faker.Address.Es.country()
-    "Mali"
-
-## country_code()
-
-Return country code.
-
-## Examples
-
-    iex> Faker.Address.Es.country_code()
-    "ES"
-
-## region()
-
-Return region.[Source](https://www.ine.es/daco/daco42/codmun/cod_ccaa.htm)
-
-## Examples
-
-    iex> Faker.Address.Es.region()
-    "Extremadura"
-    iex> Faker.Address.Es.region()
-    "Aragón"
-    iex> Faker.Address.Es.region()
-    "País Vasco"
-    iex> Faker.Address.Es.region()
-    "Canarias"
-
-## secondary_address()
+## secondary_address/0
 
 Return random secondary address.
 
@@ -101,26 +47,11 @@ Return random secondary address.
     iex> Faker.Address.Es.secondary_address()
     "Esc. 970"
 
-## state()
+## state/0
 
 Return state. But Spain doesn't have states so this calls Faker.Address.Es.region() instead.
 
-## state_abbr()
-
-Return state abbr.
-
-## Examples
-
-    iex> Faker.Address.Es.state_abbr()
-    "Ara"
-    iex> Faker.Address.Es.state_abbr()
-    "Cbr"
-    iex> Faker.Address.Es.state_abbr()
-    "Mad"
-    iex> Faker.Address.Es.state_abbr()
-    "Gal"
-
-## street_address()
+## street_address/0
 
 Return street address.
 
@@ -135,7 +66,7 @@ Return street address.
     iex> Faker.Address.Es.street_address()
     "Rambla Gutiérrez 02"
 
-## street_address(arg1)
+## street_address/1
 
 Return `street_address/0` or if argument is `true` adds `secondary_address/0`.
 
@@ -150,7 +81,7 @@ Return `street_address/0` or if argument is `true` adds `secondary_address/0`.
     iex> Faker.Address.Es.street_address(false)
     "Calle Murillo 2"
 
-## street_name()
+## street_name/0
 
 Return street name.
 
@@ -165,51 +96,7 @@ Return street name.
     iex> Faker.Address.Es.street_name()
     "Ferrocarril Huerta"
 
-## street_prefix()
-
-Return street prefix.
-
-## Examples
-
-    iex> Faker.Address.Es.street_prefix()
-    "Carretera"
-    iex> Faker.Address.Es.street_prefix()
-    "Arrabal"
-    iex> Faker.Address.Es.street_prefix()
-    "Chalet"
-    iex> Faker.Address.Es.street_prefix()
-    "Colegio"
-
-## street_suffix()
-
-Return street suffix.
-
-## Examples
-    iex> Faker.Address.Es.street_suffix()
-    "de arriba"
-    iex> Faker.Address.Es.street_suffix()
-    "Sur"
-    iex> Faker.Address.Es.street_suffix()
-    "de abajo"
-    iex> Faker.Address.Es.street_suffix()
-    "Norte"
-
-## time_zone()
-
-Return time zone.
-
-## Examples
-
-    iex> Faker.Address.Es.time_zone()
-    "Australia/Sydney"
-    iex> Faker.Address.Es.time_zone()
-    "America/Guyana"
-    iex> Faker.Address.Es.time_zone()
-    "Asia/Kathmandu"
-    iex> Faker.Address.Es.time_zone()
-    "Europa/Vienna"
-
-## zip_code()
+## zip_code/0
 
 Return random postcode.
 

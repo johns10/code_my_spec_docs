@@ -12,7 +12,3 @@ A resource message representing a data stream.
 *   `type` (*type:* `String.t`, *default:* `nil`) - Required. Immutable. The type of this DataStream resource.
 *   `updateTime` (*type:* `DateTime.t`, *default:* `nil`) - Output only. Time when stream payload fields were last updated.
 *   `webStreamData` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaDataStreamWebStreamData.t`, *default:* `nil`) - Data specific to web streams. Must be populated if type is WEB_DATA_STREAM.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

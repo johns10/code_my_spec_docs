@@ -2,15 +2,15 @@
 
 
 
-## build(binding, expr, env)
+## build/3
 
 Builds a dynamic expression.
 
-## fully_expand(query, dynamic)
+## fully_expand/2
 
 Expands a dynamic expression for insertion into the given query.
 
-## partially_expand(query, dynamic, params, subqueries, aliases, count)
+## partially_expand/6
 
 Expands a dynamic expression as part of an existing expression.
 

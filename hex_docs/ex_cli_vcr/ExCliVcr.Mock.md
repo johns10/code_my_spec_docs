@@ -44,7 +44,7 @@ Use `ExCliVcr.Mock.install/0` in your test_helper.exs to globally
 redirect all System.cmd calls. Note: This uses process dictionary
 and only works for the current process.
 
-## install()
+## install/0
 
 Install a global mock for System.cmd.
 
@@ -58,10 +58,10 @@ Call this in your test setup:
       :ok
     end
 
-## installed?()
-
-Check if the mock is installed.
-
-## uninstall()
+## uninstall/0
 
 Uninstall the global mock.
+
+## installed?/0
+
+Check if the mock is installed.

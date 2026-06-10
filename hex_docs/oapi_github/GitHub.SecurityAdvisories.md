@@ -2,7 +2,7 @@
 
 Provides API endpoints related to security advisories
 
-## create_fork(owner, repo, ghsa_id, opts \\ [])
+## create_fork/4
 
 Create a temporary private fork
 
@@ -14,7 +14,7 @@ Create a temporary private fork to collaborate on fixing a security vulnerabilit
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#create-a-temporary-private-fork)
 
-## create_private_vulnerability_report(owner, repo, body, opts \\ [])
+## create_private_vulnerability_report/4
 
 Privately report a security vulnerability
 
@@ -25,7 +25,7 @@ See "[Privately reporting a security vulnerability](https://docs.github.com/code
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability)
 
-## create_repository_advisory(owner, repo, body, opts \\ [])
+## create_repository_advisory/4
 
 Create a repository security advisory
 
@@ -39,7 +39,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `reposi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#create-a-repository-security-advisory)
 
-## create_repository_advisory_cve_request(owner, repo, ghsa_id, opts \\ [])
+## create_repository_advisory_cve_request/4
 
 Request a CVE for a repository security advisory
 
@@ -55,7 +55,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `reposi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#request-a-cve-for-a-repository-security-advisory)
 
-## get_global_advisory(ghsa_id, opts \\ [])
+## get_global_advisory/2
 
 Get a global security advisory
 
@@ -65,7 +65,7 @@ Gets a global security advisory using its GitHub Security Advisory (GHSA) identi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/global-advisories#get-a-global-security-advisory)
 
-## get_repository_advisory(owner, repo, ghsa_id, opts \\ [])
+## get_repository_advisory/4
 
 Get a repository security advisory
 
@@ -82,7 +82,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `reposi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#get-a-repository-security-advisory)
 
-## list_global_advisories(opts \\ [])
+## list_global_advisories/1
 
 List global security advisories
 
@@ -124,7 +124,7 @@ By default, all responses will exclude advisories for malware, because malware a
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/global-advisories#list-global-security-advisories)
 
-## list_org_repository_advisories(org, opts \\ [])
+## list_org_repository_advisories/2
 
 List repository security advisories for an organization
 
@@ -147,7 +147,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `reposi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#list-repository-security-advisories-for-an-organization)
 
-## list_repository_advisories(owner, repo, opts \\ [])
+## list_repository_advisories/3
 
 List repository security advisories
 
@@ -170,7 +170,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `reposi
 
   * [API method documentation](https://docs.github.com/rest/security-advisories/repository-advisories#list-repository-security-advisories)
 
-## update_repository_advisory(owner, repo, ghsa_id, body, opts \\ [])
+## update_repository_advisory/5
 
 Update a repository security advisory
 

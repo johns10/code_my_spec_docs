@@ -2,17 +2,7 @@
 
 This module provides helper functions regarding command line output.
 
-## foreground_color(background_color)
-
-Returns a suitable foreground color for a given `background_color`.
-
-    iex> Credo.CLI.Output.foreground_color(:yellow)
-    :black
-
-    iex> Credo.CLI.Output.foreground_color(:blue)
-    :white
-
-## issue_color(issue_or_priority)
+## issue_color/1
 
 Returns a suitable color for a given priority.
 
@@ -22,7 +12,7 @@ Returns a suitable color for a given priority.
     iex> Credo.CLI.Output.issue_color(%Credo.Issue{priority: 20})
     :red
 
-## priority_arrow(issue_or_priority)
+## priority_arrow/1
 
 Returns a suitable arrow for a given priority.
 
@@ -35,7 +25,7 @@ Returns a suitable arrow for a given priority.
     iex> Credo.CLI.Output.priority_arrow(%Credo.Issue{priority: 10})
     "↗"
 
-## priority_name(issue_or_priority)
+## priority_name/1
 
 Returns a suitable name for a given priority.
 
@@ -47,3 +37,13 @@ Returns a suitable name for a given priority.
 
     iex> Credo.CLI.Output.priority_name(%Credo.Issue{priority: 1})
     "normal"
+
+## foreground_color/1
+
+Returns a suitable foreground color for a given `background_color`.
+
+    iex> Credo.CLI.Output.foreground_color(:yellow)
+    :black
+
+    iex> Credo.CLI.Output.foreground_color(:blue)
+    :white

@@ -2,19 +2,7 @@
 
 
 
-## apply(query, kind, expr)
-
-The callback applied by `build/4` to build the query.
-
-## build(kind, op, query, binding, expr, env)
-
-Builds a quoted expression.
-
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
-
-## escape(kind, expr, binding, vars, env)
+## escape/5
 
 Escapes a where or having clause.
 
@@ -26,12 +14,24 @@ Returned is `{expression, {params, %{subqueries: subqueries}}}` which is
 a valid escaped expression, see `Macro.escape/2`. Both `params`
 and `subqueries` are reversed.
 
-## filter!(kind, query, dynamic, binding, file, line)
+## build/6
+
+Builds a quoted expression.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## apply/3
+
+The callback applied by `build/4` to build the query.
+
+## filter!/6
 
 Builds a filter based on the given arguments.
 
 This is shared by having, where and join's on expressions.
 
-## filter!(kind, op, query, dynamic, binding, file, line)
+## filter!/7
 
 Builds the filter and applies it to the given query as boolean operator.

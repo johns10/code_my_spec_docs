@@ -2,7 +2,7 @@
 
 Provides API endpoints related to oidc
 
-## get_oidc_custom_sub_template_for_org(org, opts \\ [])
+## get_oidc_custom_sub_template_for_org/2
 
 Get the customization template for an OIDC subject claim for an organization
 
@@ -14,7 +14,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:org` scope 
 
   * [API method documentation](https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-an-organization)
 
-## update_oidc_custom_sub_template_for_org(org, body, opts \\ [])
+## update_oidc_custom_sub_template_for_org/3
 
 Set the customization template for an OIDC subject claim for an organization
 

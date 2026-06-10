@@ -2,11 +2,7 @@
 
 
 
-## to_peri(json_schema)
-
-Converts a JSON Schema (Draft 7) into a Peri schema.
-
-## validator(json_schema)
+## validator/1
 
 Creates a validator function from a JSON Schema.
 

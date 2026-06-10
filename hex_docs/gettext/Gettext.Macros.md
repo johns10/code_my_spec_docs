@@ -30,15 +30,20 @@ instead.
       end
     end
 
-## dgettext(domain, msgid, bindings \\ Macro.escape(%{}))
+## dpgettext_noop/3
 
-Translates the given `msgid` in the given `domain`.
+Marks the given message for extraction and returns it unchanged.
 
-`bindings` is a map of bindings to support interpolation.
+This macro can be used to mark a message for extraction when `mix
+gettext.extract` is run. The return value is the given string, so that this
+macro can be used seamlessly in place of the string to extract.
 
-See also `Gettext.dgettext/4`.
+## Examples
 
-## dgettext_noop(domain, msgid)
+    dpgettext_noop("errors", "Home page", "Error found!")
+    #=> "Error found!"
+
+## dgettext_noop/2
 
 Marks the given message for extraction and returns it unchanged.
 
@@ -51,25 +56,46 @@ macro can be used seamlessly in place of the string to extract.
     dgettext_noop("errors", "Error found!")
     #=> "Error found!"
 
-## dgettext_noop_with_backend(backend, domain, msgid)
+## gettext_noop/1
 
-Same as `dgettext_noop/2`, but takes an explicit backend.
+Marks the given message for extraction and returns it unchanged.
 
-## dgettext_with_backend(backend, domain, msgid, bindings \\ Macro.escape(%{}))
+This macro can be used to mark a message for extraction when `mix
+gettext.extract` is run. The return value is the given string, so that this
+macro can be used seamlessly in place of the string to extract.
 
-Same as `dgettext/3`, but takes an explicit backend.
+## Examples
 
-## dngettext(domain, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
+    gettext_noop("Error found!")
+    #=> "Error found!"
 
-Translates the given plural message (`msgid` + `msgid_plural`) in the
-given `domain`.
+## pgettext_noop/2
 
-`n` is an integer used to determine how to pluralize the
-message. `bindings` is a map of bindings to support interpolation.
+Marks the given message for extraction and returns it unchanged.
 
-See also `Gettext.dngettext/6`.
+This macro can be used to mark a message for extraction when `mix
+gettext.extract` is run. The return value is the given string, so that this
+macro can be used seamlessly in place of the string to extract.
 
-## dngettext_noop(domain, msgid, msgid_plural)
+## Examples
+
+    pgettext_noop("Error found!", "Home page")
+    #=> "Error found!"
+
+## dpngettext_noop/4
+
+Marks the given message for extraction and returns it unchanged.
+
+This macro can be used to mark a message for extraction when `mix
+gettext.extract` is run. The return value is the given string, so that this
+macro can be used seamlessly in place of the string to extract.
+
+## Examples
+
+    dpngettext_noop("errors", "Home page", "Error found!", "Errors found!")
+    #=> "Error found!"
+
+## dngettext_noop/3
 
 Marks the given message for extraction and returns
 `{msgid, msgid_plural}`.
@@ -86,23 +112,7 @@ msgid_plural}`.
 
     my_fun.(dngettext_noop("errors", "One error", "%{count} errors"))
 
-## dngettext_noop_with_backend(backend, domain, msgid, msgid_plural)
-
-Same as `dngettext_noop/3`, but takes an explicit backend.
-
-## dngettext_with_backend(backend, domain, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
-
-Same as `dngettext/5`, but takes an explicit backend.
-
-## dpgettext(domain, msgctxt, msgid, bindings \\ Macro.escape(%{}))
-
-Translates the given `msgid` with a given context (`msgctxt`) in the given `domain`.
-
-`bindings` is a map of bindings to support interpolation.
-
-See also `Gettext.dpgettext/5`.
-
-## dpgettext_noop(domain, msgctxt, msgid)
+## pngettext_noop/3
 
 Marks the given message for extraction and returns it unchanged.
 
@@ -112,18 +122,46 @@ macro can be used seamlessly in place of the string to extract.
 
 ## Examples
 
-    dpgettext_noop("errors", "Home page", "Error found!")
+    pngettext_noop("Home page", "Error found!", "Errors found!")
     #=> "Error found!"
 
-## dpgettext_noop_with_backend(backend, domain, msgctxt, msgid)
+## ngettext_noop/2
 
-Same as `dpgettext_noop/3`, but takes an explicit backend.
+Same as `dngettext_noop("default", msgid, mgsid_plural)`, but will use a
+per-backend configured default domain if provided.
 
-## dpgettext_with_backend(backend, domain, msgctxt, msgid, bindings \\ Macro.escape(%{}))
+## dpgettext/4
 
-Same as `dpgettext/4`, but takes an explicit backend.
+Translates the given `msgid` with a given context (`msgctxt`) in the given `domain`.
 
-## dpngettext(domain, msgctxt, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
+`bindings` is a map of bindings to support interpolation.
+
+See also `Gettext.dpgettext/5`.
+
+## dgettext/3
+
+Translates the given `msgid` in the given `domain`.
+
+`bindings` is a map of bindings to support interpolation.
+
+See also `Gettext.dgettext/4`.
+
+## pgettext/3
+
+Translates the given `msgid` with the given context (`msgctxt`).
+
+`bindings` is a map of bindings to support interpolation.
+
+See also `Gettext.pgettext/4`.
+
+## gettext/2
+
+Same as `dgettext("default", msgid, %{})`, but will use a per-backend
+configured default domain if provided.
+
+See also `Gettext.gettext/3`.
+
+## dpngettext/6
 
 Translates the given plural message (`msgid` + `msgid_plural`) with the given context (`msgctxt`)
 in the given `domain`.
@@ -133,35 +171,33 @@ message. `bindings` is a map of bindings to support interpolation.
 
 See also `Gettext.dpngettext/7`.
 
-## dpngettext_noop(domain, msgctxt, msgid, msgid_plural)
+## dngettext/5
 
-Marks the given message for extraction and returns it unchanged.
+Translates the given plural message (`msgid` + `msgid_plural`) in the
+given `domain`.
 
-This macro can be used to mark a message for extraction when `mix
-gettext.extract` is run. The return value is the given string, so that this
-macro can be used seamlessly in place of the string to extract.
+`n` is an integer used to determine how to pluralize the
+message. `bindings` is a map of bindings to support interpolation.
 
-## Examples
+See also `Gettext.dngettext/6`.
 
-    dpngettext_noop("errors", "Home page", "Error found!", "Errors found!")
-    #=> "Error found!"
+## ngettext/4
 
-## dpngettext_noop_with_backend(backend, domain, msgctxt, msgid, msgid_plural)
+Same as `dngettext("default", msgid, msgid_plural, n, bindings)`, but will
+use a per-backend configured default domain if provided.
 
-Same as `dpngettext_noop/4`, but takes an explicit backend.
+See also `Gettext.ngettext/5`.
 
-## dpngettext_with_backend(backend, domain, msgctxt, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
+## pngettext/5
 
-Same as `dpngettext/6`, but takes an explicit backend.
+Translates the given plural message (`msgid` + `msgid_plural`) with the given context (`msgctxt`).
 
-## gettext(msgid, bindings \\ Macro.escape(%{}))
+`n` is an integer used to determine how to pluralize the
+message. `bindings` is a map of bindings to support interpolation.
 
-Same as `dgettext("default", msgid, %{})`, but will use a per-backend
-configured default domain if provided.
+See also `Gettext.pngettext/6`.
 
-See also `Gettext.gettext/3`.
-
-## gettext_comment(comment)
+## gettext_comment/1
 
 Stores an "extracted comment" for the next message.
 
@@ -183,102 +219,66 @@ This macro always returns `:ok`.
     gettext_comment("Another comment for the next message")
     gettext("The awesome message")
 
-## gettext_noop(msgid)
+## dpgettext_noop_with_backend/4
 
-Marks the given message for extraction and returns it unchanged.
+Same as `dpgettext_noop/3`, but takes an explicit backend.
 
-This macro can be used to mark a message for extraction when `mix
-gettext.extract` is run. The return value is the given string, so that this
-macro can be used seamlessly in place of the string to extract.
+## dgettext_noop_with_backend/3
 
-## Examples
+Same as `dgettext_noop/2`, but takes an explicit backend.
 
-    gettext_noop("Error found!")
-    #=> "Error found!"
-
-## gettext_noop_with_backend(backend, msgid)
-
-Same as `gettext_noop/1`, but takes an explicit backend.
-
-## gettext_with_backend(backend, msgid, bindings \\ Macro.escape(%{}))
-
-Same as `gettext/2`, but takes an explicit backend.
-
-## ngettext(msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
-
-Same as `dngettext("default", msgid, msgid_plural, n, bindings)`, but will
-use a per-backend configured default domain if provided.
-
-See also `Gettext.ngettext/5`.
-
-## ngettext_noop(msgid, msgid_plural)
-
-Same as `dngettext_noop("default", msgid, mgsid_plural)`, but will use a
-per-backend configured default domain if provided.
-
-## ngettext_noop_with_backend(backend, msgid, msgid_plural)
-
-Same as `ngettext_noop/2`, but takes an explicit backend.
-
-## ngettext_with_backend(backend, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
-
-Same as `ngettext/4`, but takes an explicit backend.
-
-## pgettext(msgctxt, msgid, bindings \\ Macro.escape(%{}))
-
-Translates the given `msgid` with the given context (`msgctxt`).
-
-`bindings` is a map of bindings to support interpolation.
-
-See also `Gettext.pgettext/4`.
-
-## pgettext_noop(msgid, context)
-
-Marks the given message for extraction and returns it unchanged.
-
-This macro can be used to mark a message for extraction when `mix
-gettext.extract` is run. The return value is the given string, so that this
-macro can be used seamlessly in place of the string to extract.
-
-## Examples
-
-    pgettext_noop("Error found!", "Home page")
-    #=> "Error found!"
-
-## pgettext_noop_with_backend(backend, msgctxt, msgid)
+## pgettext_noop_with_backend/3
 
 Same as `pgettext_noop/2`, but takes an explicit backend.
 
-## pgettext_with_backend(backend, msgctxt, msgid, bindings \\ Macro.escape(%{}))
+## gettext_noop_with_backend/2
 
-Same as `pgettext/3`, but takes an explicit backend.
+Same as `gettext_noop/1`, but takes an explicit backend.
 
-## pngettext(msgctxt, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
+## dpngettext_noop_with_backend/5
 
-Translates the given plural message (`msgid` + `msgid_plural`) with the given context (`msgctxt`).
+Same as `dpngettext_noop/4`, but takes an explicit backend.
 
-`n` is an integer used to determine how to pluralize the
-message. `bindings` is a map of bindings to support interpolation.
+## dngettext_noop_with_backend/4
 
-See also `Gettext.pngettext/6`.
+Same as `dngettext_noop/3`, but takes an explicit backend.
 
-## pngettext_noop(msgctxt, msgid, msgid_plural)
-
-Marks the given message for extraction and returns it unchanged.
-
-This macro can be used to mark a message for extraction when `mix
-gettext.extract` is run. The return value is the given string, so that this
-macro can be used seamlessly in place of the string to extract.
-
-## Examples
-
-    pngettext_noop("Home page", "Error found!", "Errors found!")
-    #=> "Error found!"
-
-## pngettext_noop_with_backend(backend, msgctxt, msgid, msgid_plural)
+## pngettext_noop_with_backend/4
 
 Same as `pngettext_noop/3`, but takes an explicit backend.
 
-## pngettext_with_backend(backend, msgctxt, msgid, msgid_plural, n, bindings \\ Macro.escape(%{}))
+## ngettext_noop_with_backend/3
+
+Same as `ngettext_noop/2`, but takes an explicit backend.
+
+## dpgettext_with_backend/5
+
+Same as `dpgettext/4`, but takes an explicit backend.
+
+## dgettext_with_backend/4
+
+Same as `dgettext/3`, but takes an explicit backend.
+
+## pgettext_with_backend/4
+
+Same as `pgettext/3`, but takes an explicit backend.
+
+## gettext_with_backend/3
+
+Same as `gettext/2`, but takes an explicit backend.
+
+## dpngettext_with_backend/7
+
+Same as `dpngettext/6`, but takes an explicit backend.
+
+## dngettext_with_backend/6
+
+Same as `dngettext/5`, but takes an explicit backend.
+
+## pngettext_with_backend/6
 
 Same as `pngettext/5`, but takes an explicit backend.
+
+## ngettext_with_backend/5
+
+Same as `ngettext/4`, but takes an explicit backend.

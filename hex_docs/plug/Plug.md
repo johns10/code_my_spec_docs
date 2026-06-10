@@ -57,7 +57,29 @@ Here's an example of a module plug:
 
 The `Plug.Builder` module provides conveniences for building plug pipelines.
 
-## forward(conn, new_path, target, opts)
+## run/3
+
+Run a series of plugs at runtime.
+
+The plugs given here can be either a tuple, representing a module plug
+and their options, or a simple function that receives a connection and
+returns a connection.
+
+If any plug halts, the connection won't invoke the remaining plugs. If the
+given connection was already halted, none of the plugs are invoked either.
+
+While `Plug.Builder` is designed to operate at compile-time, the `run` function
+serves as a straightforward alternative for runtime executions.
+
+## Examples
+
+    Plug.run(conn, [{Plug.Head, []}, &IO.inspect/1])
+
+## Options
+
+  * `:log_on_halt` - a log level to be used if a plug halts
+
+## forward/4
 
 Forwards requests to another plug while setting the connection to a trailing subpath of the request.
 
@@ -87,25 +109,3 @@ e.g., url generation.
         end
       end
     end
-
-## run(conn, plugs, opts \\ [])
-
-Run a series of plugs at runtime.
-
-The plugs given here can be either a tuple, representing a module plug
-and their options, or a simple function that receives a connection and
-returns a connection.
-
-If any plug halts, the connection won't invoke the remaining plugs. If the
-given connection was already halted, none of the plugs are invoked either.
-
-While `Plug.Builder` is designed to operate at compile-time, the `run` function
-serves as a straightforward alternative for runtime executions.
-
-## Examples
-
-    Plug.run(conn, [{Plug.Head, []}, &IO.inspect/1])
-
-## Options
-
-  * `:log_on_halt` - a log level to be used if a plug halts

@@ -162,11 +162,85 @@ Last but not least, attach the helper in your `test/test_helper.exs`:
 
     BroadwayReqStubs.attach(MyStub)
 
-## allow(name, owner, pid_to_allow)
+## redirect/2
 
-Allows `pid_to_allow` to access `name` provided that `owner` is already allowed.
+Sends redirect response to the given url.
 
-## expect(name, n \\ 1, plug)
+This function is adapted from [`Phoenix.Controller.redirect/2`](https://hexdocs.pm/phoenix/Phoenix.Controller.html#redirect/2).
+
+For security, `:to` only accepts paths. Use the `:external`
+option to redirect to any URL.
+
+The response will be sent with the status code defined within
+the connection, via `Plug.Conn.put_status/2`. If no status
+code is set, a 302 response is sent.
+
+## Examples
+
+
+    iex> plug = fn
+    ...>   conn when conn.request_path == nil ->
+    ...>     Req.Test.redirect(conn, to: "/hello")
+    ...>
+    ...>   conn when conn.request_path == "/hello" ->
+    ...>     Req.Test.text(conn, "Hello, World!")
+    ...>   conn -> dbg(conn)
+    ...> end
+    iex>
+    iex> resp = Req.get!(plug: plug, url: "http://example.com")
+    # 14:53:06.101 [debug] redirecting to /hello
+    iex> resp.body
+    "Hello, World!"
+
+## transport_error/2
+
+Simulates a network transport error.
+
+## Examples
+
+    iex> plug = fn conn ->
+    ...>   Req.Test.transport_error(conn, :timeout)
+    ...> end
+    iex>
+    iex> Req.get(plug: plug, retry: false)
+    {:error, %Req.TransportError{reason: :timeout}}
+
+## stub/2
+
+Creates a request stub with the given `name` and `plug`.
+
+Req allows running requests against _plugs_ (instead of over the network) using the
+[`:plug`](`Req.Steps.run_plug/1`) option. However, passing the `:plug` value throughout the
+system can be cumbersome. Instead, you can tell Req to find plugs by `name` by setting
+`plug: {Req.Test, name}`, and register plug stubs for that `name` by calling
+`Req.Test.stub(name, plug)`. In other words, multiple concurrent tests can register test stubs
+under the same `name`, and when Req makes the request, it will find the appropriate
+implementation, even when invoked from different processes than the test process.
+
+The `name` can be any term.
+
+The `plug` can be one of:
+
+  * A _function_ plug: a `fun(conn)` or `fun(conn, options)` function that takes a
+    `Plug.Conn` and returns a `Plug.Conn`.
+
+  * A _module_ plug: a `module` name or a `{module, options}` tuple.
+
+## Examples
+
+    iex> Req.Test.stub(MyStub, fn conn ->
+    ...>   send(self(), :req_happened)
+    ...>   Req.Test.json(conn, %{})
+    ...> end)
+    :ok
+    iex> Req.get!(plug: {Req.Test, MyStub}).body
+    %{}
+    iex> receive do
+    ...>   :req_happened -> :ok
+    ...> end
+    :ok
+
+## expect/3
 
 Creates a request expectation with the given `name` and `plug`, expected to be fetched at
 most `n` times, **in order**.
@@ -208,84 +282,21 @@ so it will make multiple requests exercising all of our request expectations:
     iex> Req.request!(plug: {Req.Test, MyStub})
     ** (RuntimeError) no mock or stub for MyStub
 
-## html(conn, data)
+## allow/3
 
-Sends HTML response.
+Allows `pid_to_allow` to access `name` provided that `owner` is already allowed.
 
-## Examples
+## set_req_test_to_shared/1
 
-    iex> plug = fn conn ->
-    ...>   Req.Test.html(conn, "<h1>Hello, World!</h1>")
-    ...> end
-    iex>
-    iex> resp = Req.get!(plug: plug)
-    iex> resp.headers["content-type"]
-    ["text/html; charset=utf-8"]
-    iex> resp.body
-    "<h1>Hello, World!</h1>"
+Sets the `Req.Test` mode to "global", meaning that the stubs are shared across all tests
+and cannot be used concurrently.
 
-## json(conn, data)
+## set_req_test_to_private/1
 
-Sends JSON response.
+Sets the `Req.Test` mode to "private", meaning that stubs can be shared across
+tests concurrently.
 
-## Examples
-
-    iex> plug = fn conn ->
-    ...>   Req.Test.json(conn, %{celsius: 25.0})
-    ...> end
-    iex>
-    iex> resp = Req.get!(plug: plug)
-    iex> resp.headers["content-type"]
-    ["application/json; charset=utf-8"]
-    iex> resp.body
-    %{"celsius" => 25.0}
-
-## raw_body(conn)
-
-Reads the raw request body from a plug request.
-
-## Examples
-
-    iex> echo = fn conn ->
-    ...>   body = Req.Test.raw_body(conn)
-    ...>   Plug.Conn.send_resp(conn, 200, body)
-    ...> end
-    iex>
-    iex> resp = Req.post!(plug: echo, json: %{hello: "world"})
-    iex> resp.body
-    "{\"hello\":\"world\"}"
-
-## redirect(conn, opts)
-
-Sends redirect response to the given url.
-
-This function is adapted from [`Phoenix.Controller.redirect/2`](https://hexdocs.pm/phoenix/Phoenix.Controller.html#redirect/2).
-
-For security, `:to` only accepts paths. Use the `:external`
-option to redirect to any URL.
-
-The response will be sent with the status code defined within
-the connection, via `Plug.Conn.put_status/2`. If no status
-code is set, a 302 response is sent.
-
-## Examples
-
-
-    iex> plug = fn
-    ...>   conn when conn.request_path == nil ->
-    ...>     Req.Test.redirect(conn, to: "/hello")
-    ...>
-    ...>   conn when conn.request_path == "/hello" ->
-    ...>     Req.Test.text(conn, "Hello, World!")
-    ...>   conn -> dbg(conn)
-    ...> end
-    iex>
-    iex> resp = Req.get!(plug: plug, url: "http://example.com")
-    # 14:53:06.101 [debug] redirecting to /hello
-    iex> resp.body
-    "Hello, World!"
-
-## set_req_test_from_context(context \\ %{})
+## set_req_test_from_context/1
 
 Sets the `Req.Test` mode based on the given `ExUnit` context.
 
@@ -293,90 +304,7 @@ This works as a ExUnit callback:
 
     setup :set_req_test_from_context
 
-## set_req_test_to_private(context \\ %{})
-
-Sets the `Req.Test` mode to "private", meaning that stubs can be shared across
-tests concurrently.
-
-## set_req_test_to_shared(context \\ %{})
-
-Sets the `Req.Test` mode to "global", meaning that the stubs are shared across all tests
-and cannot be used concurrently.
-
-## stub(name, plug)
-
-Creates a request stub with the given `name` and `plug`.
-
-Req allows running requests against _plugs_ (instead of over the network) using the
-[`:plug`](`Req.Steps.run_plug/1`) option. However, passing the `:plug` value throughout the
-system can be cumbersome. Instead, you can tell Req to find plugs by `name` by setting
-`plug: {Req.Test, name}`, and register plug stubs for that `name` by calling
-`Req.Test.stub(name, plug)`. In other words, multiple concurrent tests can register test stubs
-under the same `name`, and when Req makes the request, it will find the appropriate
-implementation, even when invoked from different processes than the test process.
-
-The `name` can be any term.
-
-The `plug` can be one of:
-
-  * A _function_ plug: a `fun(conn)` or `fun(conn, options)` function that takes a
-    `Plug.Conn` and returns a `Plug.Conn`.
-
-  * A _module_ plug: a `module` name or a `{module, options}` tuple.
-
-## Examples
-
-    iex> Req.Test.stub(MyStub, fn conn ->
-    ...>   send(self(), :req_happened)
-    ...>   Req.Test.json(conn, %{})
-    ...> end)
-    :ok
-    iex> Req.get!(plug: {Req.Test, MyStub}).body
-    %{}
-    iex> receive do
-    ...>   :req_happened -> :ok
-    ...> end
-    :ok
-
-## text(conn, data)
-
-Sends text response.
-
-## Examples
-
-    iex> plug = fn conn ->
-    ...>   Req.Test.text(conn, "Hello, World!")
-    ...> end
-    iex>
-    iex> resp = Req.get!(plug: plug)
-    iex> resp.headers["content-type"]
-    ["text/plain; charset=utf-8"]
-    iex> resp.body
-    "Hello, World!"
-
-## transport_error(conn, reason)
-
-Simulates a network transport error.
-
-## Examples
-
-    iex> plug = fn conn ->
-    ...>   Req.Test.transport_error(conn, :timeout)
-    ...> end
-    iex>
-    iex> Req.get(plug: plug, retry: false)
-    {:error, %Req.TransportError{reason: :timeout}}
-
-## verify!()
-
-Verifies that all the plugs expected to be executed within any scope have been executed.
-
-## verify!(name)
-
-Verifies that all the plugs expected to be executed within the scope of `name` have been
-executed.
-
-## verify_on_exit!(context \\ %{})
+## verify_on_exit!/1
 
 Sets a ExUnit callback to verify the expectations on exit.
 
@@ -385,3 +313,12 @@ Similar to calling `verify!/0` at the end of your test.
 This works as a ExUnit callback:
 
     setup {Req.Test, :verify_on_exit!}
+
+## verify!/0
+
+Verifies that all the plugs expected to be executed within any scope have been executed.
+
+## verify!/1
+
+Verifies that all the plugs expected to be executed within the scope of `name` have been
+executed.

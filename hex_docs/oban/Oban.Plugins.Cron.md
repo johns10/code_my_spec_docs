@@ -60,7 +60,7 @@ event (see `Oban.Telemetry`):
 [tz]: https://hexdocs.pm/tz
 [perjob]: periodic_jobs.html
 
-## parse(input)
+## init/1
 
 Parse a crontab expression into a cron struct.
 

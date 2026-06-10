@@ -2,7 +2,7 @@
 
 Provides LiveView routing for LiveDashboard.
 
-## live_dashboard(path, opts \\ [])
+## live_dashboard/2
 
 Defines a LiveDashboard route.
 

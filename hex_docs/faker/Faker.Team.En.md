@@ -2,22 +2,7 @@
 
 Functions for generating team related data in English
 
-## creature()
-
-Returns a random creature name
-
-## Examples
-
-    iex> Faker.Team.En.creature()
-    "prophets"
-    iex> Faker.Team.En.creature()
-    "cats"
-    iex> Faker.Team.En.creature()
-    "enchanters"
-    iex> Faker.Team.En.creature()
-    "banshees"
-
-## name()
+## name/0
 
 Returns a string of the form [state] [creature]
 

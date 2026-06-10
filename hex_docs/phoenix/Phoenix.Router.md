@@ -253,130 +253,7 @@ No plug is invoked in case no matches were found.
 See the [Routing](routing.md) guide for more information and examples
 within an actual Phoenix application.
 
-## route_info(router, method, path, host)
-
-Returns the compile-time route info and runtime path params for a request.
-
-The `path` can be either a string or the `path_info` segments.
-
-A map of metadata is returned with the following keys:
-
-  * `:log` - the configured log level. For example `:debug`
-  * `:path_params` - the map of runtime path params
-  * `:pipe_through` - the list of pipelines for the route's scope, for example `[:browser]`
-  * `:plug` - the plug to dispatch the route to, for example `AppWeb.PostController`
-  * `:plug_opts` - the options to pass when calling the plug, for example: `:index`
-  * `:route` - the string route pattern, such as `"/posts/:id"`
-
-## Examples
-
-    iex> Phoenix.Router.route_info(AppWeb.Router, "GET", "/posts/123", "myhost")
-    %{
-      log: :debug,
-      path_params: %{"id" => "123"},
-      pipe_through: [:browser],
-      plug: AppWeb.PostController,
-      plug_opts: :show,
-      route: "/posts/:id",
-    }
-
-    iex> Phoenix.Router.route_info(MyRouter, "GET", "/not-exists", "myhost")
-    :error
-
-## routes(router)
-
-Returns all routes information from the given router.
-
-## scoped_alias(router_module, alias)
-
-Returns the full alias with the current scope's aliased prefix.
-
-Useful for applying the same short-hand alias handling to
-other values besides the second argument in route definitions.
-
-## Examples
-
-    scope "/", MyPrefix do
-      get "/", ProxyPlug, controller: scoped_alias(__MODULE__, MyController)
-    end
-
-## scoped_path(router_module, path)
-
-Returns the full path with the current scope's path prefix.
-
-## connect(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a connect request to the given path.
-
-    connect("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## delete(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a delete request to the given path.
-
-    delete("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## forward(path, plug, plug_opts \\ [], router_opts \\ [])
-
-Forwards a request at the given path to a plug.
-
-This is commonly used to forward all subroutes to another Plug.
-For example:
-
-    forward "/admin", SomeLib.AdminDashboard
-
-The above will allow `SomeLib.AdminDashboard` to handle `/admin`,
-`/admin/foo`, `/admin/bar/baz`, and so on. Furthermore,
-`SomeLib.AdminDashboard` does not to be aware of the prefix it
-is mounted in. From its point of view, the routes above are simply
-handled as `/`, `/foo`, and `/bar/baz`.
-
-A common use case for `forward` is for sharing a router between
-applications or even breaking a big router into smaller ones.
-However, in other for route generation to route accordingly, you
-can only forward to a given `Phoenix.Router` once.
-
-The router pipelines will be invoked prior to forwarding the
-connection.
-
-## Examples
-
-    scope "/", MyApp do
-      pipe_through [:browser, :admin]
-
-      forward "/admin", SomeLib.AdminDashboard
-      forward "/api", ApiRouter
-    end
-
-## get(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a get request to the given path.
-
-    get("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## head(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a head request to the given path.
-
-    head("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## Compatibility with `Plug.Head`
-
-By default, Phoenix applications include `Plug.Head` in their endpoint,
-which converts HEAD requests into regular GET requests. Therefore, if
-you intend to use `head/4` in your router, you need to move `Plug.Head`
-to inside your router in a way it does not conflict with the paths given
-to `head/4`.
-
-## match(verb, path, plug, plug_opts, options \\ [])
+## match/5
 
 Generates a route match based on an arbitrary HTTP method.
 
@@ -412,23 +289,36 @@ The catch-all verb, `:*`, may also be used to match all HTTP methods.
 
     match(:*, "/any", SomeController, :any)
 
-## options(path, plug, plug_opts, options \\ [])
+## pipeline/2
 
-Generates a route to handle a options request to the given path.
+Defines a plug pipeline.
 
-    options("/events/:id", EventController, :action)
+Pipelines are defined at the router root and can be used
+from any scope.
 
-See `match/5` for options.
+## Examples
 
-## patch(path, plug, plug_opts, options \\ [])
+    pipeline :api do
+      plug :token_authentication
+      plug :dispatch
+    end
 
-Generates a route to handle a patch request to the given path.
+A scope may then use this pipeline as:
 
-    patch("/events/:id", EventController, :action)
+    scope "/" do
+      pipe_through :api
+    end
 
-See `match/5` for options.
+Every time `pipe_through/1` is called, the new pipelines
+are appended to the ones previously given.
 
-## pipe_through(pipes)
+## plug/2
+
+Defines a plug inside a pipeline.
+
+See `pipeline/2` for more information.
+
+## pipe_through/1
 
 Defines a list of plugs (and pipelines) to send the connection through.
 
@@ -468,60 +358,7 @@ confusion, we recommend a single `pipe_through` at the top of each scope:
       get "/settings", UserController, :edit
     end
 
-## pipeline(plug, list)
-
-Defines a plug pipeline.
-
-Pipelines are defined at the router root and can be used
-from any scope.
-
-## Examples
-
-    pipeline :api do
-      plug :token_authentication
-      plug :dispatch
-    end
-
-A scope may then use this pipeline as:
-
-    scope "/" do
-      pipe_through :api
-    end
-
-Every time `pipe_through/1` is called, the new pipelines
-are appended to the ones previously given.
-
-## plug(plug, opts \\ [])
-
-Defines a plug inside a pipeline.
-
-See `pipeline/2` for more information.
-
-## post(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a post request to the given path.
-
-    post("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## put(path, plug, plug_opts, options \\ [])
-
-Generates a route to handle a put request to the given path.
-
-    put("/events/:id", EventController, :action)
-
-See `match/5` for options.
-
-## resources(path, controller)
-
-See `resources/4`.
-
-## resources(path, controller, opts)
-
-See `resources/4`.
-
-## resources(path, controller, opts, list)
+## resources/4
 
 Defines "RESTful" routes for a resource.
 
@@ -600,7 +437,15 @@ user_post_path  PATCH   /users/:user_id/posts/:id       PostController :update
 user_post_path  DELETE  /users/:user_id/posts/:id       PostController :delete
 ```
 
-## scope(options, list)
+## resources/3
+
+See `resources/4`.
+
+## resources/2
+
+See `resources/4`.
+
+## scope/2
 
 Defines a scope in which routes can be nested.
 
@@ -634,7 +479,7 @@ The supported options are:
     the plug level logging. To alter the plug log level, please see
     https://hexdocs.pm/phoenix/Phoenix.Logger.html#module-dynamic-log-level.
 
-## scope(path, options, list)
+## scope/3
 
 Define a scope with the given path.
 
@@ -650,7 +495,7 @@ This function is a shortcut for:
       get "/pages/:id", PageController, :show
     end
 
-## scope(path, alias, options, list)
+## scope/4
 
 Defines a scope with the given path and alias.
 
@@ -666,10 +511,85 @@ This function is a shortcut for:
       get "/pages/:id", PageController, :show
     end
 
-## trace(path, plug, plug_opts, options \\ [])
+## scoped_alias/2
 
-Generates a route to handle a trace request to the given path.
+Returns the full alias with the current scope's aliased prefix.
 
-    trace("/events/:id", EventController, :action)
+Useful for applying the same short-hand alias handling to
+other values besides the second argument in route definitions.
 
-See `match/5` for options.
+## Examples
+
+    scope "/", MyPrefix do
+      get "/", ProxyPlug, controller: scoped_alias(__MODULE__, MyController)
+    end
+
+## scoped_path/2
+
+Returns the full path with the current scope's path prefix.
+
+## forward/4
+
+Forwards a request at the given path to a plug.
+
+This is commonly used to forward all subroutes to another Plug.
+For example:
+
+    forward "/admin", SomeLib.AdminDashboard
+
+The above will allow `SomeLib.AdminDashboard` to handle `/admin`,
+`/admin/foo`, `/admin/bar/baz`, and so on. Furthermore,
+`SomeLib.AdminDashboard` does not to be aware of the prefix it
+is mounted in. From its point of view, the routes above are simply
+handled as `/`, `/foo`, and `/bar/baz`.
+
+A common use case for `forward` is for sharing a router between
+applications or even breaking a big router into smaller ones.
+However, in other for route generation to route accordingly, you
+can only forward to a given `Phoenix.Router` once.
+
+The router pipelines will be invoked prior to forwarding the
+connection.
+
+## Examples
+
+    scope "/", MyApp do
+      pipe_through [:browser, :admin]
+
+      forward "/admin", SomeLib.AdminDashboard
+      forward "/api", ApiRouter
+    end
+
+## routes/1
+
+Returns all routes information from the given router.
+
+## route_info/4
+
+Returns the compile-time route info and runtime path params for a request.
+
+The `path` can be either a string or the `path_info` segments.
+
+A map of metadata is returned with the following keys:
+
+  * `:log` - the configured log level. For example `:debug`
+  * `:path_params` - the map of runtime path params
+  * `:pipe_through` - the list of pipelines for the route's scope, for example `[:browser]`
+  * `:plug` - the plug to dispatch the route to, for example `AppWeb.PostController`
+  * `:plug_opts` - the options to pass when calling the plug, for example: `:index`
+  * `:route` - the string route pattern, such as `"/posts/:id"`
+
+## Examples
+
+    iex> Phoenix.Router.route_info(AppWeb.Router, "GET", "/posts/123", "myhost")
+    %{
+      log: :debug,
+      path_params: %{"id" => "123"},
+      pipe_through: [:browser],
+      plug: AppWeb.PostController,
+      plug_opts: :show,
+      route: "/posts/:id",
+    }
+
+    iex> Phoenix.Router.route_info(MyRouter, "GET", "/not-exists", "myhost")
+    :error

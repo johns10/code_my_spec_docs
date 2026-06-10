@@ -225,62 +225,7 @@ and simply no-ops on channel leaves.
       end
     end
 
-## await_connect(socket, timeout \\ 5000)
-
-Awaits a pending connection request synchronously
-
-## await_connect!(socket, timeout \\ 5000)
-
-Awaits a pending connection request synchronously, raising on failure
-
-## await_disconnect(socket, timeout \\ 5000)
-
-Awaits a pending disconnection request synchronously
-
-## await_disconnect!(socket, timeout \\ 5000)
-
-Awaits a pending disconnection request synchronously, raising on failure
-
-## await_join(socket, topic, timeout \\ 5000)
-
-Awaits a pending join request synchronously
-
-## await_join!(socket, topic, timeout \\ 5000)
-
-Awaits a join request synchronously, raising on failure
-
-## await_leave(socket, topic, timeout \\ 5000)
-
-Awaits a leave request synchronously
-
-## await_leave!(socket, topic, timeout \\ 5000)
-
-Awaits a leave request synchronously, raising on failure
-
-## await_reply(push_reference, timeout \\ 5000)
-
-Awaits the server's response to a message
-
-## await_reply!(push_reference, timeout \\ 5000)
-
-Awaits the server's response to a message, exiting on timeout
-
-See `await_reply/2` for more information.
-
-## collect_garbage(socket)
-
-Requests that the connection process undergoe garbage collection
-
-If you're using Slipstream to send large messages, you may wish to flush
-the process memory of the connection process between large messages. This
-can be achieved through garbage collection.
-
-## Examples
-
-    iex> collect_garbage(socket)
-    :ok
-
-## connect(socket \\ new_socket(), opts)
+## connect/2
 
 Requests connection to the remote endpoint
 
@@ -294,7 +239,7 @@ established.
 
     {:ok, socket} = connect(uri: "ws://localhost:4000/socket/websocket")
 
-## connect!(socket \\ new_socket(), opts)
+## connect!/2
 
 Same as `connect/2` but raises on configuration validation error
 
@@ -302,32 +247,39 @@ Note that `connect!/2` will not necessarily raise an error on failure to
 connect. The `!` only pertains to the potential for raising when the
 configuration is invalid.
 
-## disconnect(socket)
+## reconnect/1
 
-Requests that an open connection be closed
+Request reconnection given the last-used connection configuration
 
-This function will no-op when the socket is not currently connected to
-any remote websocket server.
+Note that when `reconnect/1` is used to re-connect instead of `connect/2`
+(or `connect!/2`), the slipstream process will attempt to reconnect with
+a retry mechanism with backoff. The process will wait an interval between
+reconnection attempts following the list of milliseconds provided in the
+`:reconnect_after_msec` key of configuration passed to `connect/2` (or
+`connect!/2`).
 
-Note that you do not need to use `disconnect/1` to clean up a connection.
-The connection process monitors the slipstream client process and will shut
-down when it detects that the process has terminated.
-
-Disconnection may be awaited synchronously with `await_disconnect/2`
-
-## Examples
+The `c:handle_disconnect/2` callback will be invoked for each
+failure to re-connect, however, so an implementation of that callback which
+will simply retry with backoff can be achieved like so:
 
     @impl Slipstream
-    def handle_info(:chaos_monkey, socket) do
-      {:ok, socket} =
-        socket
-        |> disconnect()
-        |> await_disconnect()
-
-      {:noreply, reconnect(socket)}
+    def handle_disconnect(_reason, socket) do
+      case reconnect(socket) do
+        {:ok, socket} -> {:ok, socket}
+        {:error, reason} -> {:stop, reason, socket}
+      end
     end
 
-## join(socket, topic, params \\ %{})
+`reconnect/1` may return an `:error` tuple in the case that the socket passed
+does not contain any connection information (which is added to the socket
+with `connect/2` or `connect!/2`), or if the socket is currently connected.
+For a `reconnect/1` call without configuration, the return pattern is
+`{:error, :no_config}`, and for a socket that is already connected, the
+pattern is `{:error, :connected}`.
+
+A reconnect may be awaited with `await_connect/2`.
+
+## join/3
 
 Requests that a topic be joined in the current connection
 
@@ -350,7 +302,36 @@ A join can be awaited in a blocking fashion with `await_join/3`.
       {:ok, join(socket, "rooms:lobby", %{user: 1})}
     end
 
-## leave(socket, topic)
+## rejoin/3
+
+Requests that the specified topic be joined again
+
+If `params` is not provided, the previously used value will be sent.
+
+In the case that the specified topic has not been joined before, `rejoin/3`
+will return `{:error, :never_joined}`.
+
+Note that a rejoin may be awaited with `await_join/3`.
+
+## Dealing with crashes
+
+When attempting to re-join a disconnected topic with `rejoin/3`, the
+Slipstream process will attempt to use backoff governed by the
+`:rejoin_after_msec` list in configuration passed to `connect/2` (or
+`connect!/2`).
+
+The `c:handle_topic_close/3` callback will be invoked with
+the for each crash, however, so a minimal implementation of that callback
+which achieves the backoff retry is like so:
+
+## Examples
+
+    @impl Slipstream
+    def handle_topic_close(topic, _reason, socket) do
+      {:ok, _socket} = rejoin(socket, topic)
+    end
+
+## leave/2
 
 Requests that the given topic be left
 
@@ -365,33 +346,7 @@ if the provided topic is not currently joined.
     iex> {:ok, socket} = leave(socket, "room:lobby") |> await_leave("rooms:lobby")
     iex> join(socket, "rooms:specific")
 
-## new_socket()
-
-Creates a new socket without immediately connecting to a remote websocket
-
-This can be useful if you do not wish to request connection with `connect/2`
-during the `c:init/1` callback (because the `c:init/1` callback requires that
-you return a `t:Slipstream.Socket.t/0`).
-
-## Examples
-
-    defmodule MySocketClient do
-      use Slipstream
-
-      ..
-
-      @impl Slipstream
-      def init(args) do
-        {:ok, new_socket() |> assign(:init_args, args)}
-      end
-
-      ..
-    end
-
-    iex> new_socket()
-    #Slipstream.Socket<assigns: %{}, ...>
-
-## push(socket, topic, event, params, timeout \\ 5000)
+## push/5
 
 Requests that a message be pushed on the websocket connection
 
@@ -435,7 +390,7 @@ The default value is `5_000` msec (5 seconds).
       {:ok, state}
     end
 
-## push!(socket, topic, event, params)
+## push!/4
 
 Pushes, raising if the topic is not joined or if the channel is dead
 
@@ -448,89 +403,107 @@ This can be useful for pipeing into `await_reply/2`
     iex> {:ok, result} = push!(socket, "rooms:lobby", "msg:new", params) |> await_reply()
     {:ok, %{"created?" => true}}
 
-## reconnect(socket)
+## collect_garbage/1
 
-Request reconnection given the last-used connection configuration
+Requests that the connection process undergoe garbage collection
 
-Note that when `reconnect/1` is used to re-connect instead of `connect/2`
-(or `connect!/2`), the slipstream process will attempt to reconnect with
-a retry mechanism with backoff. The process will wait an interval between
-reconnection attempts following the list of milliseconds provided in the
-`:reconnect_after_msec` key of configuration passed to `connect/2` (or
-`connect!/2`).
+If you're using Slipstream to send large messages, you may wish to flush
+the process memory of the connection process between large messages. This
+can be achieved through garbage collection.
 
-The `c:handle_disconnect/2` callback will be invoked for each
-failure to re-connect, however, so an implementation of that callback which
-will simply retry with backoff can be achieved like so:
+## Examples
 
-    @impl Slipstream
-    def handle_disconnect(_reason, socket) do
-      case reconnect(socket) do
-        {:ok, socket} -> {:ok, socket}
-        {:error, reason} -> {:stop, reason, socket}
-      end
-    end
+    iex> collect_garbage(socket)
+    :ok
 
-`reconnect/1` may return an `:error` tuple in the case that the socket passed
-does not contain any connection information (which is added to the socket
-with `connect/2` or `connect!/2`), or if the socket is currently connected.
-For a `reconnect/1` call without configuration, the return pattern is
-`{:error, :no_config}`, and for a socket that is already connected, the
-pattern is `{:error, :connected}`.
+## disconnect/1
 
-A reconnect may be awaited with `await_connect/2`.
+Requests that an open connection be closed
 
-## rejoin(socket, topic, params \\ nil)
+This function will no-op when the socket is not currently connected to
+any remote websocket server.
 
-Requests that the specified topic be joined again
+Note that you do not need to use `disconnect/1` to clean up a connection.
+The connection process monitors the slipstream client process and will shut
+down when it detects that the process has terminated.
 
-If `params` is not provided, the previously used value will be sent.
-
-In the case that the specified topic has not been joined before, `rejoin/3`
-will return `{:error, :never_joined}`.
-
-Note that a rejoin may be awaited with `await_join/3`.
-
-## Dealing with crashes
-
-When attempting to re-join a disconnected topic with `rejoin/3`, the
-Slipstream process will attempt to use backoff governed by the
-`:rejoin_after_msec` list in configuration passed to `connect/2` (or
-`connect!/2`).
-
-The `c:handle_topic_close/3` callback will be invoked with
-the for each crash, however, so a minimal implementation of that callback
-which achieves the backoff retry is like so:
+Disconnection may be awaited synchronously with `await_disconnect/2`
 
 ## Examples
 
     @impl Slipstream
-    def handle_topic_close(topic, _reason, socket) do
-      {:ok, _socket} = rejoin(socket, topic)
+    def handle_info(:chaos_monkey, socket) do
+      {:ok, socket} =
+        socket
+        |> disconnect()
+        |> await_disconnect()
+
+      {:noreply, reconnect(socket)}
     end
 
-## start_link(module, init_arg, options \\ [])
+## await_connect/2
 
-Starts a slipstream client process
+Awaits a pending connection request synchronously
 
-This function delegates to `GenServer.start_link/3`, so all options passable
-to that function are passable here as well. Most notably, you may name your
-slipstream clients using the same naming rules as GenServers, as in the
-example below.
+## await_connect!/2
+
+Awaits a pending connection request synchronously, raising on failure
+
+## await_disconnect/2
+
+Awaits a pending disconnection request synchronously
+
+## await_disconnect!/2
+
+Awaits a pending disconnection request synchronously, raising on failure
+
+## await_join/3
+
+Awaits a pending join request synchronously
+
+## await_join!/3
+
+Awaits a join request synchronously, raising on failure
+
+## await_leave/3
+
+Awaits a leave request synchronously
+
+## await_leave!/3
+
+Awaits a leave request synchronously, raising on failure
+
+## await_message/4
+
+Awaits the server's message push
+
+Note that unlike the other `await_*` functions, `await_message/4` is a
+macro. This allows an author to match on patterns in the topic, event, and/or
+payload parts of a message.
 
 ## Examples
 
-    defmodule MySlipstreamClient do
-      use Slipstream
+    iex> event = "msg:new"
+    iex> await_message("rooms:lobby", ^event, %{"user_id" => 5})
+    {:ok, "rooms:lobby", "msg:new", %{"user_id" => 5, body: "hello"}}
 
-      def start_link(args) do
-        Slipstream.start_link(__MODULE__, args, name: __MODULE__)
-      end
+## await_message!/4
 
-      ..
-    end
+Awaits the server's message push, raising on failure
 
-## __using__(opts)
+See `await_message/4`
+
+## await_reply/2
+
+Awaits the server's response to a message
+
+## await_reply!/2
+
+Awaits the server's response to a message, exiting on timeout
+
+See `await_reply/2` for more information.
+
+## __using__/1
 
 Declares that a module is a Slipstream socket client
 
@@ -572,370 +545,3 @@ strategy of the client with the `:restart` option. See the example below.
 
       ..
     end
-
-## await_message(topic_expr, event_expr, payload_expr, timeout \\ 5000)
-
-Awaits the server's message push
-
-Note that unlike the other `await_*` functions, `await_message/4` is a
-macro. This allows an author to match on patterns in the topic, event, and/or
-payload parts of a message.
-
-## Examples
-
-    iex> event = "msg:new"
-    iex> await_message("rooms:lobby", ^event, %{"user_id" => 5})
-    {:ok, "rooms:lobby", "msg:new", %{"user_id" => 5, body: "hello"}}
-
-## await_message!(topic_expr, event_expr, payload_expr, timeout \\ 5000)
-
-Awaits the server's message push, raising on failure
-
-See `await_message/4`
-
-## handle_call/3
-
-Invoked when a slipstream process receives a GenServer call
-
-Behaves the same as `c:GenServer.handle_call/3`
-
-## handle_cast/2
-
-Invoked when a slipstream process receives a GenServer cast
-
-Behaves the same as `c:GenServer.handle_cast/2`
-
-## handle_connect/1
-
-Invoked when a connection has been established to a websocket server
-
-This callback provides a good place to `join/3`.
-
-## Examples
-
-    @impl Slipstream
-    def handle_connect(socket) do
-      {:ok, socket}
-    end
-
-## handle_continue/2
-
-Invoked as a continuation of another GenServer callback
-
-GenServer callbacks may end with signatures that declare that the next
-function invoked should be a continuation. E.g.
-
-    def init(state) do
-      {:ok, state, {:continue, :my_continue}}
-    end
-
-    # this will be invoked immediately after `init/1`
-    def handle_continue(:my_continue, state) do
-      # do something with state
-
-      {:noreply, state}
-    end
-
-This provides a way to schedule work to occur immediately after
-successful initialization or to break work across multiple callbacks, which
-can be useful for clients which are state-machine-like.
-
-See `c:GenServer.handle_continue/2` for more information.
-
-## handle_disconnect/2
-
-Invoked when a connection has been terminated
-
-The default implementation of this callback requests reconnection
-
-## Examples
-
-    @impl Slipstream
-    def handle_disconnect(_reason, socket) do
-      case reconnect(socket) do
-        {:ok, socket} -> {:ok, socket}
-        {:error, reason} -> {:stop, reason, socket}
-      end
-    end
-
-## handle_info/2
-
-Invoked when a slipstream process receives a message
-
-Behaves the same as `c:GenServer.handle_info/2`
-
-## handle_join/3
-
-Invoked when the websocket server replies to the request to join
-
-## Examples
-
-    @impl Slipstream
-    def handle_join("rooms:echo", %{}, socket) do
-      push(socket, "rooms:echo", "echo", %{"ping" => 1})
-
-      {:ok, socket}
-    end
-
-## handle_leave/2
-
-Invoked when a join has concluded by a leave request
-
-This callback is invoked when the remote server acknowledges that the client
-has disconnected as a result of calling `leave/2`.
-
-The default implementation of this callback performs a no-op.
-
-## Examples
-
-    @impl Slipstream
-    def handle_leave(topic, socket) do
-      Logger.info("Successfully left topic " <> topic)
-
-      {:ok, socket}
-    end
-
-## handle_message/4
-
-Invoked when a message is received on the websocket connection
-
-This callback will not be invoked for a message which is a reply. Those
-messages will be handled in `c:handle_reply/3`.
-
-Note that while replying is supported on the server-side of the Phoenix
-Channel protocol, it is not supported by a client. Messages sent from
-the server cannot be directly replied to.
-
-## Examples
-
-    @impl Slipstream
-    def handle_message("room:lobby", "new:msg", params, socket) do
-      MyApp.Msg.create(params)
-
-      {:ok, socket}
-    end
-
-## handle_reply/3
-
-Invoked when a message is received on the websocket connection which
-references a push from this client process.
-
-`ref` is the string reference returned from the `push/2` which resulted in
-this reply.
-
-## Examples
-
-    @impl Slipstream
-    def handle_join(topic, _params, socket) do
-      my_req = push(socket, topic, "msg:new", %{"foo" => "bar"})
-
-      {:ok, assign(socket, :request, my_req)}
-    end
-
-    @impl Slipstream
-    def handle_reply(ref, reply, %{assigns: %{request: ref}} = socket) do
-      IO.inspect(reply, label: "reply to my request")
-
-      {:ok, socket}
-    end
-
-## handle_topic_close/3
-
-Invoked when a join has concluded
-
-This callback will be invoked in the case that the remote channel crashes.
-`reason` is an error tuple `{:error, params :: json_serializable()}` where
-`params` is the message sent from the remote channel on crash.
-
-The default implementation of this callback attempts to re-join the
-last-joined topic.
-
-## Examples
-
-    @impl Slipstream
-    def handle_topic_close(topic, _reason, socket) do
-      {:ok, socket} = rejoin(socket, topic)
-    end
-
-## init/1
-
-Invoked when the slipstream process in started
-
-Behaves the same as `c:GenServer.init/1`, but the return state must be a
-new `t:Slipstream.Socket.t/0`. Values from `c:init/1` that you'd
-like to keep in state can be stored with `Slipstream.Socket.assign/3`.
-
-This callback is a good place to request connection with `connect/2`. Note
-that `connect/2` is an asynchronous request for connection. Awaiting
-connection with `await_connect/2` is unwise in many scenarios, however,
-because failure to connect may result in an exit from the process, crashing
-the supervision tree that started the process. If you wish to connect
-synchronously upon init, a better approach could be:
-
-    @impl Slipstream
-    def init(_args) do
-      config = Application.fetch_env!(:my_app, __MODULE__)
-      socket = new_socket() |> assign(:connect_config, config)
-
-      {:ok, socket, {:continue, :connect}}
-    end
-
-    @impl Slipstream
-    def handle_continue(:connect, socket) do
-      {:ok, socket} = connect(socket, socket.assigns.connect_config)
-
-      {:ok, socket} = await_connect(socket)
-
-      {:noreply, socket}
-    end
-
-But a more minimalistic approach that still provides safety in cases of
-configuration validation failures would be:
-
-    defmodule MySocketClient do
-      use Slipstream
-
-      def start_link(args) do
-        Slipstream.start_link(__MODULE__, args, name: __MODULE__)
-      end
-
-      @impl Slipstream
-      def init(_args) do
-        config = Application.fetch_env!(:my_app, __MODULE__)
-
-        case connect(config) do
-          {:ok, socket} ->
-            {:ok, socket}
-
-          {:error, reason} ->
-            Logger.error("Could not start #{__MODULE__} because of " <>
-              "validation failure: #{inspect(reason)}")
-
-            :ignore
-        end
-      end
-
-      ..
-    end
-
-The configuration could be stored in application config:
-
-    # config/<env>.exs
-    config :my_app, MySocketClient,
-      uri: "ws://example.org/socket/websocket",
-      reconnect_after_msec: [200, 500, 1_000, 2_000]
-
-And in cases where the configuration validation fails, the `MySocketClient`
-process will not crash the application's supervision tree.
-
-## Examples
-
-    @impl Slipstream
-    def init(config) do
-      connect(config)
-    end
-
-## terminate/2
-
-Invoked when a slipstream process is terminated
-
-Note that this callback is not always invoked as the process shuts down.
-See `c:GenServer.terminate/2` for more information.
-
-It is wise to `disconnect/1` in this callback (and such is the default
-implementation). This will gracefully end the websocket connection.
-This is the behavior of the default implementation of `c:terminate/2`.
-
-## Examples
-
-    @impl Slipstream
-    def terminate(reason, socket) do
-      Logger.debug("shutting down: " <> inspect(reason))
-
-      disconnect(socket)
-    end
-
-## json_serializable/0
-
-Any data structure capable of being serialized as JSON
-
-Any argument typed as `t:Slipstream.json_serializable/0` must be able to
-be encoded with the JSON parser passed in configuration. See
-`Slipstream.Configuration`.
-
-## push_reference/0
-
-A reference to a message pushed by the client
-
-These references are returned by calls to `push/4` and may be matched on
-in `c:handle_reply/3`. They are also used to match messages
-for `await_reply/2`.
-
-## Synchronicity
-
-This approach treats the websocket connection as an RPC: some other process
-in the service does a `GenServer.call/3` to the slipstream client process,
-which sends a push to the remote websocket server, waits for a reply
-(synchronously) and then sends that back to the caller. All-in-all, this
-appears completely synchronous for the caller.
-
-    @impl Slipstream
-    def handle_call({:new_message, params}, _from, socket) do
-      {:ok, ref} = push(socket, "rooms:lobby", "msg:new", params)
-
-      {:reply, await_reply(ref), socket}
-    end
-
-This approach is written in a more asynchronous fashion. An info message
-arriving from any other process triggers the slipstream client to push a
-work message to the remote websocket server. When the remote websocket server
-replies with the result, the slipstream client sends off the result to be
-dealt with else-where. No process in this scenario blocks, so they are all
-capable of receiving other messages while the work is being completed.
-
-    @impl Slipstream
-    def handle_info(:do_work, socket) do
-      ref = push(socket, "worker_queue:foo", "do_work", %{})
-
-      {:noreply, assign(socket, :work_ref, ref)}
-    end
-
-    @impl Slipstream
-    def handle_reply(ref, result, %{assigns: %{work_ref: ref}} = socket) do
-      IO.inspect(result, label: "work complete!")
-
-      {:ok, socket}
-    end
-
-## reply/0
-
-A reply from a remote server to a push from the client
-
-Replies may be any of
-
-- `:ok`
-- `:error`
-- `{:ok, any()}`
-- `{:error, any()}`
-
-depending on how the remote server's reply is written.
-
-Note that the empty map is removed in ok and error tuples, so a reply written
-like so on the server-side:
-
-    def handle_in(_event, _params, socket) do
-      {:reply, {:ok, %{}}, socket}
-    end
-
-will translate to a reply of `:ok` (and the same for `{:error, %{}}`).
-
-## Examples
-
-    # on the Phoenix.Channel (server) side:
-    def handle_in(_event, _params, socket) do
-      {:reply, {:ok, %{created?: true}}, socket}
-    end
-
-    # on the Slipstream (client) side:
-    def handle_reply(_ref, {:ok, %{"created?" => true}} = _reply, socket) do
-      ..

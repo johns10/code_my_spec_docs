@@ -2,13 +2,7 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## start_link(opts)
+## start_link/1
 
 Starts the client supervisor.
 

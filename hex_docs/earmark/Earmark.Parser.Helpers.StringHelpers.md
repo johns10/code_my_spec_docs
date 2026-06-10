@@ -2,6 +2,6 @@
 
 
 
-## behead(str, ignore)
+## behead/2
 
 Remove the leading part of a string

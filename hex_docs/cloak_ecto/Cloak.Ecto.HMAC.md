@@ -76,7 +76,7 @@ query by `:field_name`.
 
     user = Repo.get_by(User, email_hash: "user@email.com")
 
-## init/1
+## __using__/1
 
 Configures the `HMAC` field using runtime information.
 
@@ -91,7 +91,3 @@ Configures the `HMAC` field using runtime information.
 
       {:ok, config}
     end
-
-## algorithms/0
-
-HMAC algorithms supported by Cloak.Field.HMAC

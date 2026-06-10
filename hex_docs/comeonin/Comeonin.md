@@ -2,7 +2,7 @@
 
 Defines a behaviour for higher-level password hashing functions.
 
-## no_user_verify/1
+## __using__/1
 
 Runs the password hash function, but always returns false.
 

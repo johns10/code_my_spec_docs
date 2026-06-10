@@ -2,7 +2,7 @@
 
 
 
-## exponential(attempt, opts \\ [])
+## exponential/2
 
 Calculate an exponential backoff in seconds for a given attempt.
 
@@ -25,7 +25,7 @@ By default, the exponent is clamped to a maximum of 10 to prevent unreasonably l
     iex> Oban.Backoff.exponential(11)
     1024
 
-## jitter(time, opts \\ [])
+## jitter/2
 
 Applies a random amount of jitter to the provided value.
 
@@ -43,7 +43,7 @@ Applies a random amount of jitter to the provided value.
     ...> jitter in 180..200
     true
 
-## with_retry(fun, retries \\ :infinity)
+## with_retry/2
 
 Attempt a database interaction repeatedly until it succeeds or retries are exhausted.
 

@@ -2,7 +2,7 @@
 
 Functions for generating file related data
 
-## file_extension()
+## file_extension/0
 
 Returns a random file extension
 
@@ -17,7 +17,7 @@ Returns a random file extension
     iex> Faker.File.file_extension()
     "mov"
 
-## file_extension(category)
+## file_extension/1
 
 Returns a random file extension from the category given
 Available categories: :audio, :image, :text, :video, :office
@@ -33,7 +33,7 @@ Available categories: :audio, :image, :text, :video, :office
     iex> Faker.File.file_extension(:office)
     "xls"
 
-## file_name()
+## file_name/0
 
 Returns a random file name
 
@@ -48,7 +48,7 @@ Returns a random file name
     iex> Faker.File.file_name()
     "quibusdam.csv"
 
-## file_name(category)
+## file_name/1
 
 Returns a random file name from the category given
 Available categories: :audio, :image, :text, :video, :office
@@ -64,7 +64,7 @@ Available categories: :audio, :image, :text, :video, :office
     iex> Faker.File.file_name(:audio)
     "qui.wav"
 
-## mime_type()
+## mime_type/0
 
 Returns a random mime type
 
@@ -79,7 +79,7 @@ Returns a random mime type
     iex> Faker.File.mime_type()
     "model/x3d+xml"
 
-## mime_type(category)
+## mime_type/1
 
 Returns a random mime type from the category given
 Available categories: :application, :audio, :image, :message, :model,

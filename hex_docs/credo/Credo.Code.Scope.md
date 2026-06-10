@@ -3,7 +3,7 @@
 This module provides helper functions to determine the scope name at a certain
 point in the analysed code.
 
-## mod_name(scope_name)
+## mod_name/1
 
 Returns the module part of a scope.
 
@@ -13,7 +13,7 @@ Returns the module part of a scope.
     iex> Credo.Code.Scope.mod_name("Credo.Code.ast")
     "Credo.Code"
 
-## name(ast, list)
+## name/2
 
 Returns the scope for the given line as a tuple consisting of the call to
 define the scope (`:defmodule`, `:def`, `:defp` or `:defmacro`) and the

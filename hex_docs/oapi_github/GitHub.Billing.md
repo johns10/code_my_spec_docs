@@ -2,7 +2,7 @@
 
 Provides API endpoints related to billing
 
-## get_github_actions_billing_org(org, opts \\ [])
+## get_github_actions_billing_org/2
 
 Get GitHub Actions billing for an organization
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:
 
   * [API method documentation](https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-an-organization)
 
-## get_github_actions_billing_user(username, opts \\ [])
+## get_github_actions_billing_user/2
 
 Get GitHub Actions billing for a user
 
@@ -30,7 +30,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/billing/billing#get-github-actions-billing-for-a-user)
 
-## get_github_packages_billing_org(org, opts \\ [])
+## get_github_packages_billing_org/2
 
 Get GitHub Packages billing for an organization
 
@@ -44,7 +44,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:
 
   * [API method documentation](https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-an-organization)
 
-## get_github_packages_billing_user(username, opts \\ [])
+## get_github_packages_billing_user/2
 
 Get GitHub Packages billing for a user
 
@@ -58,7 +58,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/billing/billing#get-github-packages-billing-for-a-user)
 
-## get_shared_storage_billing_org(org, opts \\ [])
+## get_shared_storage_billing_org/2
 
 Get shared storage billing for an organization
 
@@ -72,7 +72,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:
 
   * [API method documentation](https://docs.github.com/rest/billing/billing#get-shared-storage-billing-for-an-organization)
 
-## get_shared_storage_billing_user(username, opts \\ [])
+## get_shared_storage_billing_user/2
 
 Get shared storage billing for a user
 

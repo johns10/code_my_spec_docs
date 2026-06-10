@@ -2,7 +2,7 @@
 
 Provides utilities for testing Tesla-based HTTP clients.
 
-## assert_tesla_env(given_env, expected_env, opts \\ [])
+## assert_tesla_env/3
 
 Asserts that two `t:Tesla.Env.t/0` structs match.
 
@@ -40,38 +40,7 @@ testing.
       end
     end
 
-## expect_tesla_call(opts)
-
-Expects a call on the given adapter using `Mox.expect/4`. Only available when
-`Mox` is loaded.
-
-## Options
-
-- `:times` - Required. The number of times to expect the call.
-- `:returns` - Required. The value to return from the adapter.
-- `:send_to` - Optional. The process to send the message to. Defaults to
-  the current process.
-- `:adapter` - Optional. The adapter to expect the call on. Falls back to
-  the `:tesla` application configuration.
-
-## Examples
-
-Returning a `t:Tesla.Env.t/0` struct with a `200` status:
-
-    Tesla.Test.expect_tesla_call(
-      times: 2,
-      returns: %Tesla.Env{status: 200}
-    )
-
-Changing the `Mox` mocked adapter:
-
-    Tesla.Test.expect_tesla_call(
-      times: 2,
-      returns: %Tesla.Env{status: 200},
-      adapter: MyApp.MockAdapter
-    )
-
-## html(env, body)
+## html/2
 
 Puts an HTML response.
 
@@ -82,7 +51,7 @@ Puts an HTML response.
       ...
     }
 
-## json(env, body)
+## json/2
 
 Puts a JSON response.
 
@@ -96,7 +65,7 @@ Puts a JSON response.
 If the body is binary, it will be returned as is and it will not try to encode
 it to JSON.
 
-## text(env, body)
+## text/2
 
 Puts a text response.
 
@@ -107,7 +76,16 @@ Puts a text response.
       ...
     }
 
-## assert_received_tesla_call(expected_env, expected_opts \\ [], opts \\ [])
+## assert_tesla_empty_mailbox/0
+
+Asserts that the current process's mailbox does not contain any `Tesla.Test`
+messages.
+
+This function is designed to be used in conjunction with
+`Tesla.Test.assert_received_tesla_call/1` for comprehensive request
+testing.
+
+## assert_received_tesla_call/3
 
 Asserts that the current process's mailbox contains a `TeslaMox` message.
 It uses `assert_received/1` under the hood.
@@ -154,12 +132,3 @@ status:
         Tesla.Test.assert_tesla_empty_mailbox()
       end
     end
-
-## assert_tesla_empty_mailbox()
-
-Asserts that the current process's mailbox does not contain any `Tesla.Test`
-messages.
-
-This function is designed to be used in conjunction with
-`Tesla.Test.assert_received_tesla_call/1` for comprehensive request
-testing.

@@ -13,10 +13,10 @@ to you.
 The current algorithm used is HMAC-SHA, with SHA256, SHA384, and
 SHA512 as supported digest types.
 
-## sign(message, secret, digest_type \\ :sha256)
+## sign/3
 
 Signs a message according to the given secret.
 
-## verify(signed, secret)
+## verify/2
 
 Decodes and verifies the encoded binary was not tampered with.

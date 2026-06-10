@@ -21,10 +21,10 @@ authorization information. Unlike access tokens, refresh tokens are
 intended for use only with authorization servers and are never sent
 to resource servers.
 
-## authorize_url(client, params)
+## authorize_url/2
 
 Not used for this strategy.
 
-## get_token(client, params, headers)
+## get_token/3
 
 Refresh an access token given the specified validation code.

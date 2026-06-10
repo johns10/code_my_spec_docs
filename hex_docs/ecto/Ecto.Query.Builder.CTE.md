@@ -2,11 +2,14 @@
 
 
 
-## apply(query, name, with_query, materialized, operation)
+## escape/2
 
-The callback applied by `build/4` to build the query.
+Escapes the CTE name.
 
-## build(query, name, cte, materialized, operation, env)
+    iex> escape(quote(do: "FOO"), __ENV__)
+    "FOO"
+
+## build/6
 
 Builds a quoted expression.
 
@@ -14,9 +17,6 @@ The quoted expression should evaluate to a query at runtime.
 If possible, it does all calculations at compile time to avoid
 runtime work.
 
-## escape(name, env)
+## apply/5
 
-Escapes the CTE name.
-
-    iex> escape(quote(do: "FOO"), __ENV__)
-    "FOO"
+The callback applied by `build/4` to build the query.

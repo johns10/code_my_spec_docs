@@ -2,7 +2,7 @@
 
 Provides API endpoints related to classroom
 
-## get_a_classroom(classroom_id, opts \\ [])
+## get_a_classroom/2
 
 Get a classroom
 
@@ -12,7 +12,7 @@ Gets a GitHub Classroom classroom for the current user. Classroom will only be r
 
   * [API method documentation](https://docs.github.com/rest/classroom/classroom#get-a-classroom)
 
-## get_an_assignment(assignment_id, opts \\ [])
+## get_an_assignment/2
 
 Get an assignment
 
@@ -22,7 +22,7 @@ Gets a GitHub Classroom assignment. Assignment will only be returned if the curr
 
   * [API method documentation](https://docs.github.com/rest/classroom/classroom#get-an-assignment)
 
-## get_assignment_grades(assignment_id, opts \\ [])
+## get_assignment_grades/2
 
 Get assignment grades
 
@@ -32,7 +32,7 @@ Gets grades for a GitHub Classroom assignment. Grades will only be returned if t
 
   * [API method documentation](https://docs.github.com/rest/classroom/classroom#get-assignment-grades)
 
-## list_accepted_assigments_for_an_assignment(assignment_id, opts \\ [])
+## list_accepted_assigments_for_an_assignment/2
 
 List accepted assignments for an assignment
 
@@ -47,7 +47,7 @@ Lists any assignment repositories that have been created by students accepting a
 
   * [API method documentation](https://docs.github.com/rest/classroom/classroom#list-accepted-assignments-for-an-assignment)
 
-## list_assignments_for_a_classroom(classroom_id, opts \\ [])
+## list_assignments_for_a_classroom/2
 
 List assignments for a classroom
 
@@ -62,7 +62,7 @@ Lists GitHub Classroom assignments for a classroom. Assignments will only be ret
 
   * [API method documentation](https://docs.github.com/rest/classroom/classroom#list-assignments-for-a-classroom)
 
-## list_classrooms(opts \\ [])
+## list_classrooms/1
 
 List classrooms
 

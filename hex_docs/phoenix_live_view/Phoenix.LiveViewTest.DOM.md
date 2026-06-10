@@ -2,7 +2,15 @@
 
 
 
-## css_escape(value)
+## to_tree/2
+
+Turns a lazy into a tree.
+
+## to_lazy/1
+
+Turns a tree into a lazy.
+
+## css_escape/1
 
 Escapes a string for use as a CSS identifier.
 
@@ -14,14 +22,6 @@ Escapes a string for use as a CSS identifier.
     iex> css_escape("-123")
     "-\\31 23"
 
-## find_static_views(lazy)
+## find_static_views/1
 
 Find static information in the given HTML tree.
-
-## to_lazy(tree)
-
-Turns a tree into a lazy.
-
-## to_tree(lazy, opts \\ [])
-
-Turns a lazy into a tree.

@@ -55,7 +55,11 @@ Check leadership for a couple of instances:
     Oban.Peer.leader?(Oban.B)
     # => false
 
-## get_leader(conf_or_name \\ Oban, timeout \\ 5000)
+## child_spec/1
+
+Check which node's peer instance currently leads the cluster.
+
+## get_leader/2
 
 Get the name and node of the instance that currently leads the cluster.
 
@@ -71,7 +75,7 @@ Get the leader node for an alternate instance named `Oban.Private`
     Oban.Peer.get_leader(Oban.Private)
     "web.1"
 
-## leader?(conf_or_name \\ Oban, timeout \\ 5000)
+## leader?/2
 
 Check whether the current instance leads the cluster.
 
@@ -86,15 +90,3 @@ Check leadership for an alternate instance named `Oban.Private`:
 
     Oban.Peer.leader?(Oban.Private)
     # => true
-
-## get_leader/1
-
-Check which node's peer instance currently leads the cluster.
-
-## leader?/1
-
-Check whether the current peer instance leads the cluster.
-
-## start_link/1
-
-Starts a peer instance.

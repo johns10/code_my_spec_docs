@@ -548,49 +548,49 @@ end
 
 That way the namespace hierarchy will match the logical model.
 
-## all(view)
+## all/1
 
 Returns definitions of all boundaries of the main app.
 
 You shouldn't access the data in this result directly, as it may change significantly without warnings. Use exported
 functions of this module to acquire the information you need.
 
-## app(view, module)
-
-Returns the application of the given module.
-
-## errors(view, references)
-
-Returns all boundary errors.
-
-## fetch(view, name)
+## fetch!/2
 
 Returns the definition of the given boundary.
 
-## fetch!(view, name)
+## fetch/2
 
 Returns the definition of the given boundary.
 
-## for_module(view, module)
+## get/2
+
+Returns the definition of the given boundary.
+
+## for_module/2
 
 Returns definition of the boundary to which the given module belongs.
 
-## get(view, name)
+## unclassified_modules/1
 
-Returns the definition of the given boundary.
+Returns the collection of unclassified modules.
 
-## parent(view, map)
+## errors/2
 
-Returns the immediate parent of the boundary, or nil if the boundary is a top-level boundary.
+Returns all boundary errors.
 
-## protocol_impl?(view, module)
+## app/2
+
+Returns the application of the given module.
+
+## protocol_impl?/2
 
 Returns true if the module is an implementation of some protocol.
 
-## siblings?(boundary1, boundary2)
+## parent/2
+
+Returns the immediate parent of the boundary, or nil if the boundary is a top-level boundary.
+
+## siblings?/2
 
 Returns true if given boundaries are siblings.
-
-## unclassified_modules(view)
-
-Returns the collection of unclassified modules.

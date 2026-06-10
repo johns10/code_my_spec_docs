@@ -2,7 +2,7 @@
 
 
 
-## execute(event_name, measurements, metadata)
+## execute/3
 
 Execute a telemetry event with the Anubis MCP namespace.
 

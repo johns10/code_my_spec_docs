@@ -13,7 +13,3 @@ A resource message representing an Audience.
 *   `filterClauses` (*type:* `list(GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudienceFilterClause.t)`, *default:* `nil`) - Required. Immutable. Unordered list. Filter clauses that define the Audience. All clauses will be AND’ed together.
 *   `membershipDurationDays` (*type:* `integer()`, *default:* `nil`) - Required. Immutable. The duration a user should stay in an Audience. It cannot be set to more than 540 days.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. The resource name for this Audience resource. Format: properties/{propertyId}/audiences/{audienceId}
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

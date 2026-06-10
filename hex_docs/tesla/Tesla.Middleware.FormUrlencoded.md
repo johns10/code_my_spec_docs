@@ -53,14 +53,14 @@ client = Myclient.client()
 Myclient.post(client, "/url", %{key: %{nested: "value"}})
 ```
 
-## decode(env, opts)
-
-Decode response body as querystring.
-
-It is used by `Tesla.Middleware.DecodeFormUrlencoded`.
-
-## encode(env, opts)
+## encode/2
 
 Encode response body as querystring.
 
 It is used by `Tesla.Middleware.EncodeFormUrlencoded`.
+
+## decode/2
+
+Decode response body as querystring.
+
+It is used by `Tesla.Middleware.DecodeFormUrlencoded`.

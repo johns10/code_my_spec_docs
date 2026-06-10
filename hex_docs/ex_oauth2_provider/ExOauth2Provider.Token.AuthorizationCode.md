@@ -2,7 +2,7 @@
 
 Functions for dealing with authorization code strategy.
 
-## grant(request, config \\ [])
+## grant/2
 
 Will grant access token by client credentials.
 

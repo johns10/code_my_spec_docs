@@ -14,10 +14,10 @@ also the resource owner) or is requesting access to protected
 resources based on an authorization previously arranged with the
 authorization server.
 
-## authorize_url(client, params)
+## authorize_url/2
 
 Not used for this strategy.
 
-## get_token(client, params, headers)
+## get_token/3
 
 Retrieve an access token given the specified strategy.

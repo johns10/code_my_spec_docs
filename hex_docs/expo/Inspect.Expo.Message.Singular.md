@@ -1,1 +1,0 @@
-# Inspect.Expo.Message.Singular

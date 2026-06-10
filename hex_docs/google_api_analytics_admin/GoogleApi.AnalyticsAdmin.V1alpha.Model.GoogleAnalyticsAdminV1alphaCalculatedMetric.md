@@ -12,7 +12,3 @@ A definition for a calculated metric.
 *   `metricUnit` (*type:* `String.t`, *default:* `nil`) - Required. The type for the calculated metric's value.
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Resource name for this CalculatedMetric. Format: 'properties/{property_id}/calculatedMetrics/{calculated_metric_id}'
 *   `restrictedMetricType` (*type:* `list(String.t)`, *default:* `nil`) - Output only. Types of restricted data that this metric contains.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

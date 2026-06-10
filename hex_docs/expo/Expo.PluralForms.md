@@ -11,31 +11,7 @@ Some functions in this module are considered "low level", and are meant to be
 used by other libraries. For example, `parse/1` returns an expression
 that is not really meant to be inspected, but rather used internally by this library.
 
-## index(plural_form, n)
-
-Gets the plural form for the given number based on the given `plural_forms` struct.
-
-### Examples
-
-    iex> {:ok, plural_form} = Expo.PluralForms.parse("nplurals=2; plural=n != 1;")
-    iex> Expo.PluralForms.index(plural_form, 4)
-    1
-    iex> Expo.PluralForms.index(plural_form, 1)
-    0
-
-## known_locales()
-
-Get known locales where plural form information is available.
-
-### Examples
-
-    iex> "de" in Expo.PluralForms.known_locales()
-    true
-
-    iex> "invalid" in Expo.PluralForms.known_locales()
-    false
-
-## parse(content)
+## parse/1
 
 Parses a plural forms string into a `t:t/0` struct.
 
@@ -47,7 +23,7 @@ if it isn't.
     iex> Expo.PluralForms.parse("nplurals=2; plural=n != 1;")
     {:ok, Expo.PluralForms.parse!("nplurals=2; plural=n != 1;")}
 
-## parse!(content)
+## parse!/1
 
 Parses a plural forms string into a `t:t/0` struct, raising if there are errors.
 
@@ -63,19 +39,7 @@ look a bit weird.
     iex> Expo.PluralForms.parse!("nplurals=2; plural=n != 1;")
     Expo.PluralForms.parse!("nplurals=2; plural=n != 1;")
 
-## plural_form(iso_language_tag)
-
-Gets the plural form for the given language based on built-in information.
-
-### Examples
-
-    iex> Expo.PluralForms.plural_form("de")
-    {:ok, Expo.PluralForms.parse!("nplurals=2; plural=(n != 1);")}
-
-    iex> Expo.PluralForms.plural_form("invalid")
-    :error
-
-## to_string(plural_forms)
+## to_string/1
 
 Converts a plural forms struct into its string representation.
 
@@ -85,13 +49,14 @@ Converts a plural forms struct into its string representation.
     iex> Expo.PluralForms.to_string(plural_forms)
     "nplurals=2; plural=n != 1;"
 
-## t/0
+## index/2
 
-A struct representing a plural forms expression.
+Gets the plural form for the given number based on the given `plural_forms` struct.
 
-## plural_ast/0
+### Examples
 
-The AST of a plural forms expression.
-
-This is evaluated internally to determine the plural form for a given number
-using `index/2`, and is not meant to be inspected directly.
+    iex> {:ok, plural_form} = Expo.PluralForms.parse("nplurals=2; plural=n != 1;")
+    iex> Expo.PluralForms.index(plural_form, 4)
+    1
+    iex> Expo.PluralForms.index(plural_form, 1)
+    0

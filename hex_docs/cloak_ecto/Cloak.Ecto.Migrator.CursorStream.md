@@ -1,1 +1,0 @@
-# Cloak.Ecto.Migrator.CursorStream

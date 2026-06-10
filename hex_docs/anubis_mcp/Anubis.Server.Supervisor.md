@@ -2,13 +2,7 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## start_link(server, opts)
+## start_link/2
 
 Starts the server supervisor.
 
@@ -23,10 +17,10 @@ Starts the server supervisor.
     * `:session_idle_timeout` - Time in milliseconds before idle sessions expire (default: 30 minutes)
     * `:request_timeout` - Time limit in milliseconds for server requests (defaults to 30s)
 
-## start_session(server, opts)
+## start_session/2
 
 Starts a new session under the configured session supervisor.
 
-## stop_session(server, registry_mod, session_id)
+## stop_session/3
 
 Terminates a session.

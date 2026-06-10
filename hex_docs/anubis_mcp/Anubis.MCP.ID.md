@@ -2,7 +2,7 @@
 
 
 
-## generate()
+## generate/0
 
 Generates a unique request ID.
 
@@ -17,33 +17,7 @@ Creates a Base64 encoded string containing:
     iex> is_binary(id)
     true
 
-## generate_error_id()
-
-Generates a unique error ID.
-
-Creates a standard ID with a "err_" prefix for clarity.
-error IDs are used to correlate errors with their responses.
-
-## Examples
-
-    iex> id = Anubis.MCP.ID.generate_error_id()
-    iex> String.starts_with?(id, "err_")
-    true
-
-## generate_progress_token()
-
-Generates a unique progress token.
-
-Creates a standard request ID with a "progress_" prefix for clarity.
-Progress tokens are used in the MCP protocol to track long-running operations.
-
-## Examples
-
-    iex> token = Anubis.MCP.ID.generate_progress_token()
-    iex> String.starts_with?(token, "progress_")
-    true
-
-## generate_request_id()
+## generate_request_id/0
 
 Generates a unique request ID.
 
@@ -56,7 +30,33 @@ Request IDs are used to correlate requests with their responses.
     iex> String.starts_with?(id, "req_")
     true
 
-## generate_session_id()
+## generate_error_id/0
+
+Generates a unique error ID.
+
+Creates a standard ID with a "err_" prefix for clarity.
+error IDs are used to correlate errors with their responses.
+
+## Examples
+
+    iex> id = Anubis.MCP.ID.generate_error_id()
+    iex> String.starts_with?(id, "err_")
+    true
+
+## generate_progress_token/0
+
+Generates a unique progress token.
+
+Creates a standard request ID with a "progress_" prefix for clarity.
+Progress tokens are used in the MCP protocol to track long-running operations.
+
+## Examples
+
+    iex> token = Anubis.MCP.ID.generate_progress_token()
+    iex> String.starts_with?(token, "progress_")
+    true
+
+## generate_session_id/0
 
 Generates a unique session ID.
 
@@ -69,7 +69,7 @@ Session IDs are used to track HTTP sessions in transports.
     iex> String.starts_with?(id, "session_")
     true
 
-## timestamp_from_id(id)
+## timestamp_from_id/1
 
 Extracts timestamp from an ID for debugging purposes.
 
@@ -94,7 +94,7 @@ analyzing the sequence of requests.
     iex> Anubis.MCP.ID.timestamp_from_id("invalid-id")
     nil
 
-## valid?(id)
+## valid?/1
 
 Checks if a string appears to be a valid MCP ID.
 
@@ -110,23 +110,7 @@ to the expected ID format.
     iex> Anubis.MCP.ID.valid?("invalid-id")
     false
 
-## valid_progress_token?(token)
-
-Checks if a string appears to be a valid progress token.
-
-Validates that the string starts with "progress_" and the 
-remainder is a valid MCP ID.
-
-## Examples
-
-    iex> token = Anubis.MCP.ID.generate_progress_token()
-    iex> Anubis.MCP.ID.valid_progress_token?(token)
-    true
-    
-    iex> Anubis.MCP.ID.valid_progress_token?("not-a-token")
-    false
-
-## valid_request_id?(id)
+## valid_request_id?/1
 
 Checks if a string appears to be a valid request ID.
 
@@ -140,4 +124,20 @@ remainder is a valid MCP ID.
     true
     
     iex> Anubis.MCP.ID.valid_request_id?("not-an-id")
+    false
+
+## valid_progress_token?/1
+
+Checks if a string appears to be a valid progress token.
+
+Validates that the string starts with "progress_" and the 
+remainder is a valid MCP ID.
+
+## Examples
+
+    iex> token = Anubis.MCP.ID.generate_progress_token()
+    iex> Anubis.MCP.ID.valid_progress_token?(token)
+    true
+    
+    iex> Anubis.MCP.ID.valid_progress_token?("not-a-token")
     false

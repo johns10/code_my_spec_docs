@@ -2,14 +2,14 @@
 
 
 
-## decode(charref)
+## decode/1
 
 Decode charrefs and numeric charrefs.
 
 This is useful if you want to decode any charref. The tokenizer will
 use a different algorithm, so this may not be necessary.
 
-## encode(string)
+## encode/1
 
 Encode HTML entities in a string.
 

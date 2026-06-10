@@ -2,7 +2,7 @@
 
 Provides API endpoints related to git
 
-## create_blob(owner, repo, body, opts \\ [])
+## create_blob/4
 
 Create a blob
 
@@ -10,7 +10,7 @@ Create a blob
 
   * [API method documentation](https://docs.github.com/rest/git/blobs#create-a-blob)
 
-## create_commit(owner, repo, body, opts \\ [])
+## create_commit/4
 
 Create a commit
 
@@ -49,7 +49,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/git/commits#create-a-commit)
 
-## create_ref(owner, repo, body, opts \\ [])
+## create_ref/4
 
 Create a reference
 
@@ -59,7 +59,7 @@ Creates a reference for your repository. You are unable to create new references
 
   * [API method documentation](https://docs.github.com/rest/git/refs#create-a-reference)
 
-## create_tag(owner, repo, body, opts \\ [])
+## create_tag/4
 
 Create a tag object
 
@@ -98,7 +98,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/git/tags#create-a-tag-object)
 
-## create_tree(owner, repo, body, opts \\ [])
+## create_tree/4
 
 Create a tree
 
@@ -112,7 +112,7 @@ Returns an error if you try to delete a file that does not exist.
 
   * [API method documentation](https://docs.github.com/rest/git/trees#create-a-tree)
 
-## delete_ref(owner, repo, ref, opts \\ [])
+## delete_ref/4
 
 Delete a reference
 
@@ -122,7 +122,7 @@ Deletes the provided reference.
 
   * [API method documentation](https://docs.github.com/rest/git/refs#delete-a-reference)
 
-## get_blob(owner, repo, file_sha, opts \\ [])
+## get_blob/4
 
 Get a blob
 
@@ -139,7 +139,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/git/blobs#get-a-blob)
 
-## get_commit(owner, repo, commit_sha, opts \\ [])
+## get_commit/4
 
 Get a commit object
 
@@ -180,7 +180,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/git/commits#get-a-commit-object)
 
-## get_ref(owner, repo, ref, opts \\ [])
+## get_ref/4
 
 Get a reference
 
@@ -192,7 +192,7 @@ Returns a single reference from your Git database. The `:ref` in the URL must be
 
   * [API method documentation](https://docs.github.com/rest/git/refs#get-a-reference)
 
-## get_tag(owner, repo, tag_sha, opts \\ [])
+## get_tag/4
 
 Get a tag
 
@@ -229,7 +229,7 @@ These are the possible values for `reason` in the `verification` object:
 
   * [API method documentation](https://docs.github.com/rest/git/tags#get-a-tag)
 
-## get_tree(owner, repo, tree_sha, opts \\ [])
+## get_tree/4
 
 Get a tree
 
@@ -248,7 +248,7 @@ If `truncated` is `true` in the response then the number of items in the `tree` 
 
   * [API method documentation](https://docs.github.com/rest/git/trees#get-a-tree)
 
-## list_matching_refs(owner, repo, ref, opts \\ [])
+## list_matching_refs/4
 
 List matching references
 
@@ -264,7 +264,7 @@ If you request matching references for a branch named `feature` but the branch `
 
   * [API method documentation](https://docs.github.com/rest/git/refs#list-matching-references)
 
-## update_ref(owner, repo, ref, body, opts \\ [])
+## update_ref/5
 
 Update a reference
 

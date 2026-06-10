@@ -1,1 +1,0 @@
-# Credo.Check.Readability.NestedFunctionCalls.PipeHelper

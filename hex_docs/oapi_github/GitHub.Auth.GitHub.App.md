@@ -1,1 +1,0 @@
-# GitHub.Auth.GitHub.App

@@ -12,10 +12,10 @@ Example:
       field(:tags, as: Tag, type: :list)
     end
 
-## decode(value, arg2, module)
+## decode/3
 
 Helper to decode model fields
 
-## encode(value, options)
+## encode/2
 
 Helper to encode model into JSON

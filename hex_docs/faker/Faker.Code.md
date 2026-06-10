@@ -2,38 +2,7 @@
 
 Functions for generate common codes.
 
-## iban()
-
-Returns a random IBAN starting with the given components. The given components are not validated
-but are included in the checksum.
-
-## Examples
-
-    iex> Faker.Code.iban("NL", ["ABNA"])
-    "NL16ABNA0154264610"
-    iex> Faker.Code.iban("MC", ["FOO", "BAR"])
-    "MC98FOOBAR83"
-    iex> Faker.Code.iban("SM", ["A"])
-    "SM86A2970523570AY38NWIVZ5XT"
-    iex> Faker.Code.iban("MC", ["FOO", "BAR"])
-    "MC40FOOBAR60"
-
-## isbn()
-
-Returns a random isbn code
-
-## Examples
-
-    iex> Faker.Code.isbn
-    "015426461X"
-    iex> Faker.Code.isbn
-    "0832970522"
-    iex> Faker.Code.isbn
-    "3570203034"
-    iex> Faker.Code.isbn
-    "2097337600"
-
-## isbn10()
+## isbn10/0
 
 Returns a random isbn10 code
 
@@ -48,7 +17,7 @@ Returns a random isbn10 code
     iex> Faker.Code.isbn10
     "2097337600"
 
-## isbn13()
+## isbn13/0
 
 Returns a random isbn13 code
 
@@ -63,7 +32,7 @@ Returns a random isbn13 code
     iex> Faker.Code.isbn13
     "9793376033741"
 
-## issn()
+## issn/0
 
 Returns a random issn code
 

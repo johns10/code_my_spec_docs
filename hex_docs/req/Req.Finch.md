@@ -2,10 +2,10 @@
 
 
 
-## pool_options(options)
-
-Returns Finch pool options for the given Req `options`.
-
-## run(request)
+## run/1
 
 Runs the request using `Finch`.
+
+## pool_options/1
+
+Returns Finch pool options for the given Req `options`.

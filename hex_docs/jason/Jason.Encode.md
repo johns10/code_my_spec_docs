@@ -2,7 +2,7 @@
 
 Utilities for encoding elixir values to JSON.
 
-## value(value, arg)
+## value/2
 
 Equivalent to calling the `Jason.Encoder.encode/2` protocol function.
 

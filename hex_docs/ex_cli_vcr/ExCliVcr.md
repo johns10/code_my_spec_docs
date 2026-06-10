@@ -54,11 +54,26 @@ Configure ExCliVcr in your `config/test.exs`:
 - `:none` - Never record, only replay (raises if cassette missing)
 - `:all` - Record all calls even if cassette exists
 
-## cassette_dir()
+## use_cmd_cassette/3
 
-Get the configured cassette directory.
+Execute a block of code with command recording/playback enabled.
 
-## cmd(command, args, opts \\ [])
+## Options
+
+- `:record` - Override the record mode for this cassette
+- `:match_requests_on` - List of fields to match on (default: `[:command, :args]`)
+
+## Examples
+
+    use_cmd_cassette "list_files" do
+      ExCliVcr.cmd("ls", ["-la"])
+    end
+
+    use_cmd_cassette "list_files", record: :new do
+      ExCliVcr.cmd("ls", ["-la"])
+    end
+
+## cmd/3
 
 Execute a command, recording or replaying as appropriate.
 
@@ -77,29 +92,13 @@ When called outside a `use_cassette` block, it passes through to `System.cmd/3`.
       {output, exit_code} = ExCliVcr.cmd("echo", ["hello"], [])
     end
 
-## default_record_mode()
-
-Get the default record mode.
-
-## execute_cmd(command, args, opts \\ [])
+## execute_cmd/3
 
 Execute a command, recording or replaying as appropriate.
 
 Alias for `cmd/3`.
 
-## port_close(port)
-
-Close a port.
-
-Use this instead of Port.close/1 when working with recorded ports.
-
-## port_command(port, data, opts \\ [])
-
-Send a command to a port.
-
-Use this instead of Port.command/2 when working with recorded ports.
-
-## port_open(open_args, opts)
+## port_open/2
 
 Open a port, recording or replaying as appropriate.
 
@@ -121,21 +120,22 @@ When called outside a `use_cmd_cassette` block, it passes through to `Port.open/
       end
     end
 
-## use_cmd_cassette(name, opts \\ [], list)
+## port_command/3
 
-Execute a block of code with command recording/playback enabled.
+Send a command to a port.
 
-## Options
+Use this instead of Port.command/2 when working with recorded ports.
 
-- `:record` - Override the record mode for this cassette
-- `:match_requests_on` - List of fields to match on (default: `[:command, :args]`)
+## port_close/1
 
-## Examples
+Close a port.
 
-    use_cmd_cassette "list_files" do
-      ExCliVcr.cmd("ls", ["-la"])
-    end
+Use this instead of Port.close/1 when working with recorded ports.
 
-    use_cmd_cassette "list_files", record: :new do
-      ExCliVcr.cmd("ls", ["-la"])
-    end
+## cassette_dir/0
+
+Get the configured cassette directory.
+
+## default_record_mode/0
+
+Get the default record mode.

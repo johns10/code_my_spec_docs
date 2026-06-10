@@ -1,1 +1,0 @@
-# Bandit.WebSocket.Frame.Serializable.Bandit.WebSocket.Frame.Text

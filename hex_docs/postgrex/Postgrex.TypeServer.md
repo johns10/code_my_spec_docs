@@ -2,27 +2,21 @@
 
 
 
-## child_spec(init_arg)
+## start_link/1
 
-Returns a specification to start this module under a supervisor.
+Starts a type server.
 
-See `Supervisor`.
-
-## done(server, ref)
-
-Unlocks the given reference for a given module if no update.
-
-## fetch(server)
+## fetch/1
 
 Fetches a lock for the given type server.
 
 We attempt to achieve a lock on the type server for updating the entries.
 If another process got the lock we wait for it to finish.
 
-## start_link(arg)
-
-Starts a type server.
-
-## update(server, ref, type_infos)
+## update/3
 
 Update the type server using the given reference and configuration.
+
+## done/2
+
+Unlocks the given reference for a given module if no update.

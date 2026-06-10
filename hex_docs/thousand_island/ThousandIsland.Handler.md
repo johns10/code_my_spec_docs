@@ -179,93 +179,7 @@ down when shutting down a Thousand Island server instance.
 `ThousandIsland.Handler` implementation. If you use your own implementation in its place it is
 likely that such spans will not behave as expected.
 
-## handle_close/2
-
-This callback is called when the underlying socket is closed by the remote end; it should perform any cleanup required
-as it is the last callback called before the process backing this connection is terminated. The underlying socket
-has already been closed by the time this callback is called. The return value is ignored.
-
-This callback is not called if the connection is explicitly closed via `ThousandIsland.Socket.close/1`, however it
-will be called in cases where `handle_connection/2` or `handle_data/3` return a `{:close, state}` tuple.
-
-## handle_connection/2
-
-This callback is called shortly after a client connection has been made, immediately after the socket handshake process has
-completed. It is called with the server's configured `handler_options` value as initial state. Handlers may choose to
-interact synchronously with the socket in this callback via calls to various `ThousandIsland.Socket` functions.
-
-The value returned by this callback causes Thousand Island to proceed in one of several ways:
-
-* Returning `{:close, state}` will cause Thousand Island to close the socket & call the `c:handle_close/2` callback to
-allow final cleanup to be done.
-* Returning `{:continue, state}` will cause Thousand Island to switch the socket to an asynchronous mode. When the
-client subsequently sends data (or if there is already unread data waiting from the client), Thousand Island will call
-`c:handle_data/3` to allow this data to be processed.
-* Returning `{:continue, state, timeout}` is identical to the previous case with the
-addition of a timeout. If `timeout` milliseconds passes with no data being received or messages
-being sent to the process, the socket will be closed and `c:handle_timeout/2` will be called.
-Note that this timeout is not persistent; it applies only to the interval until the next message
-is received. In order to set a persistent timeout for all future messages (essentially
-overwriting the value of `read_timeout` that was set at server startup), a value of
-`{:persistent, timeout}` may be returned.
-* Returning `{:continue, state, {:continue, continue}}` is identical to the previous case with the
-addition of a `c:GenServer.handle_continue/2` callback being made immediately after, in line with
-similar behaviour on `GenServer` callbacks.
-* Returning `{:switch_transport, {module, opts}, state}` will cause Thousand Island to try switching the transport of the
-current socket. The `module` should be an Elixir module that implements the `ThousandIsland.Transport` behaviour.
-Thousand Island will call `c:ThousandIsland.Transport.upgrade/2` for the given module to upgrade the transport in-place.
-After a successful upgrade Thousand Island will switch the socket to an asynchronous mode, as if `{:continue, state}`
-was returned. As with `:continue` return values, there are also timeout-specifying variants of
-this return value.
-* Returning `{:error, reason, state}` will cause Thousand Island to close the socket & call the `c:handle_error/3` callback to
-allow final cleanup to be done.
-
-## handle_data/3
-
-This callback is called whenever client data is received after `c:handle_connection/2` or `c:handle_data/3` have returned an
-`{:continue, state}` tuple. The data received is passed as the first argument, and handlers may choose to interact
-synchronously with the socket in this callback via calls to various `ThousandIsland.Socket` functions.
-
-The value returned by this callback causes Thousand Island to proceed in one of several ways:
-
-* Returning `{:close, state}` will cause Thousand Island to close the socket & call the `c:handle_close/2` callback to
-allow final cleanup to be done.
-* Returning `{:continue, state}` will cause Thousand Island to switch the socket to an asynchronous mode. When the
-client subsequently sends data (or if there is already unread data waiting from the client), Thousand Island will call
-`c:handle_data/3` to allow this data to be processed.
-* Returning `{:continue, state, timeout}` is identical to the previous case with the
-addition of a timeout. If `timeout` milliseconds passes with no data being received or messages
-being sent to the process, the socket will be closed and `c:handle_timeout/2` will be called.
-Note that this timeout is not persistent; it applies only to the interval until the next message
-is received. In order to set a persistent timeout for all future messages (essentially
-overwriting the value of `read_timeout` that was set at server startup), a value of
-`{:persistent, timeout}` may be returned.
-* Returning `{:continue, state, {:continue, continue}}` is identical to the previous case with the
-addition of a `c:GenServer.handle_continue/2` callback being made immediately after, in line with
-similar behaviour on `GenServer` callbacks.
-* Returning `{:error, reason, state}` will cause Thousand Island to close the socket & call the `c:handle_error/3` callback to
-allow final cleanup to be done.
-
-## handle_error/3
-
-This callback is called when the underlying socket encounters an error; it should perform any cleanup required
-as it is the last callback called before the process backing this connection is terminated. The underlying socket
-has already been closed by the time this callback is called. The return value is ignored.
-
-In addition to socket level errors, this callback is also called in cases where `handle_connection/2` or `handle_data/3`
-return a `{:error, reason, state}` tuple, or when connection handshaking (typically TLS
-negotiation) fails.
-
-## handle_shutdown/2
-
-This callback is called when the server process itself is being shut down; it should perform any cleanup required
-as it is the last callback called before the process backing this connection is terminated. The underlying socket
-has NOT been closed by the time this callback is called. The return value is ignored.
-
-This callback is only called when the shutdown reason is `:normal`, and is subject to the same caveats described
-in `c:GenServer.terminate/2`.
-
-## handle_timeout/2
+## __using__/1
 
 This callback is called when a handler process has gone more than `timeout` ms without receiving
 either remote data or a local message. The value used for `timeout` defaults to the
@@ -274,11 +188,3 @@ persistent basis based on values returned from `c:handle_connection/2` or `c:han
 calls. Note that it is NOT called on explicit `ThousandIsland.Socket.recv/3` calls as they have
 their own timeout semantics. The underlying socket has NOT been closed by the time this callback
 is called. The return value is ignored.
-
-## timeout_options/0
-
-The possible ways to indicate a timeout when returning values to Thousand Island
-
-## handler_result/0
-
-The value returned by `c:handle_connection/2` and `c:handle_data/3`

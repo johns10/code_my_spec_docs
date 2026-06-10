@@ -2,41 +2,14 @@
 
 
 
-## base()
+## eval_from/3
 
-Returns the module base name based on the configuration value.
+Evals EEx files from source dir.
 
-    config :my_app
-      namespace: My.App
+Files are evaluated against EEx according to
+the given binding.
 
-## check_module_name_availability!(name)
-
-Checks the availability of a given module name.
-
-## context_app()
-
-Returns the OTP context app.
-
-## context_app_path(ctx_app, rel_path)
-
-Returns the context app path prefix to be used in generated context files.
-
-## context_base(ctx_app)
-
-Returns the context module base name based on the configuration value.
-
-    config :my_app
-      namespace: My.App
-
-## context_lib_path(ctx_app, rel_path)
-
-Returns the context lib path to be used in generated context files.
-
-## context_test_path(ctx_app, rel_path)
-
-Returns the context test path to be used in generated context files.
-
-## copy_from(apps, source_dir, binding, mapping)
+## copy_from/4
 
 Copies files from source dir to target dir
 according to the given map.
@@ -44,29 +17,7 @@ according to the given map.
 Files are evaluated against EEx according to
 the given binding.
 
-## ensure_live_view_compat!(generator_mod)
-
-Ensures user's LiveView is compatible with the current generators.
-
-## eval_from(apps, source_file_path, binding)
-
-Evals EEx files from source dir.
-
-Files are evaluated against EEx according to
-the given binding.
-
-## generator_paths()
-
-The paths to look for template files for generators.
-
-Defaults to checking the current app's `priv` directory,
-and falls back to Phoenix's `priv` directory.
-
-## in_umbrella?(app_path)
-
-Checks if the given `app_path` is inside an umbrella.
-
-## inflect(singular)
+## inflect/1
 
 Inflects path, scope, alias and more from the given name.
 
@@ -102,26 +53,75 @@ Inflects path, scope, alias and more from the given name.
      singular: "super_user",
      path: "admin/super_user"]
 
-## modules()
+## check_module_name_availability!/1
 
-Returns all compiled modules in a project.
+Checks the availability of a given module name.
 
-## otp_app()
+## base/0
+
+Returns the module base name based on the configuration value.
+
+    config :my_app
+      namespace: My.App
+
+## context_base/1
+
+Returns the context module base name based on the configuration value.
+
+    config :my_app
+      namespace: My.App
+
+## otp_app/0
 
 Returns the OTP app from the Mix project configuration.
 
-## prompt_for_conflicts(generator_files)
+## modules/0
 
-Prompts to continue if any files exist.
+Returns all compiled modules in a project.
 
-## web_module(base)
+## generator_paths/0
 
-Returns the web module prefix.
+The paths to look for template files for generators.
 
-## web_path(ctx_app, rel_path \\ "")
+Defaults to checking the current app's `priv` directory,
+and falls back to Phoenix's `priv` directory.
+
+## in_umbrella?/1
+
+Checks if the given `app_path` is inside an umbrella.
+
+## web_path/2
 
 Returns the web prefix to be used in generated file specs.
 
-## web_test_path(ctx_app, rel_path \\ "")
+## context_app_path/2
+
+Returns the context app path prefix to be used in generated context files.
+
+## context_lib_path/2
+
+Returns the context lib path to be used in generated context files.
+
+## context_test_path/2
+
+Returns the context test path to be used in generated context files.
+
+## context_app/0
+
+Returns the OTP context app.
+
+## web_test_path/2
 
 Returns the test prefix to be used in generated file specs.
+
+## prompt_for_conflicts/1
+
+Prompts to continue if any files exist.
+
+## web_module/1
+
+Returns the web module prefix.
+
+## ensure_live_view_compat!/1
+
+Ensures user's LiveView is compatible with the current generators.

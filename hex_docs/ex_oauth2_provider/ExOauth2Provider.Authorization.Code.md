@@ -55,7 +55,27 @@ def delete(conn, params) do
 end
 ```
 
-## authorize(resource_owner, request, config \\ [])
+## preauthorize/3
+
+Validates an authorization code flow request.
+
+Will check if there's already an existing access token with same scope and client
+for the resource owner.
+
+## Example
+    resource_owner
+    |> ExOauth2Provider.Authorization.preauthorize(%{
+      "client_id" => "Jf5rM8hQBc",
+      "response_type" => "code"
+    }, otp_app: :my_app)
+
+## Response
+    {:ok, client, scopes}                                         # Show request page with client and scopes
+    {:error, %{error: error, error_description: _}, http_status}  # Show error page with error and http status
+    {:redirect, redirect_uri}                                     # Redirect
+    {:native_redirect, %{code: code}}                             # Redirect to :show page
+
+## authorize/3
 
 Authorizes an authorization code flow request.
 
@@ -78,7 +98,7 @@ this will generate an access token grant.
     {:redirect, redirect_uri}                                    # Redirect
     {:native_redirect, %{code: code}}                            # Redirect to :show page
 
-## deny(resource_owner, request, config \\ [])
+## deny/3
 
 Rejects an authorization code flow request.
 
@@ -94,23 +114,3 @@ This is used when a resource owner has rejected access.
 ## Response type
     {:error, %{error: error, error_description: _}, http_status} # Error occurred
     {:redirect, redirect_uri}                                    # Redirect
-
-## preauthorize(resource_owner, request, config \\ [])
-
-Validates an authorization code flow request.
-
-Will check if there's already an existing access token with same scope and client
-for the resource owner.
-
-## Example
-    resource_owner
-    |> ExOauth2Provider.Authorization.preauthorize(%{
-      "client_id" => "Jf5rM8hQBc",
-      "response_type" => "code"
-    }, otp_app: :my_app)
-
-## Response
-    {:ok, client, scopes}                                         # Show request page with client and scopes
-    {:error, %{error: error, error_description: _}, http_status}  # Show error page with error and http status
-    {:redirect, redirect_uri}                                     # Redirect
-    {:native_redirect, %{code: code}}                             # Redirect to :show page

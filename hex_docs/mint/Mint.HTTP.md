@@ -120,24 +120,7 @@ Mint to be too low level. However, you can enable logging by passing `log: true`
 > without it being considered a breaking change. You are only meant to control what
 > gets logged by using the `Logger` API and Erlang's `:logger` module.
 
-## close(conn)
-
-Closes the given connection.
-
-This function closes the socket wrapped by the given connection. Once the socket
-is closed, the connection goes into the "closed" state and `open?/1` returns `false`.
-You can throw away a closed connection.
-
-Closing a connection does not guarantee that data that is in flight gets delivered
-to the server.
-
-Always returns `{:ok, conn}` where `conn` is the updated connection.
-
-## Examples
-
-    {:ok, conn} = Mint.HTTP.close(conn)
-
-## connect(scheme, address, port, opts \\ [])
+## connect/4
 
 Creates a new connection to a given server.
 
@@ -362,96 +345,36 @@ Enable all default cipher suites of Erlang/OTP (release 20.3 or later):
     opts = [transport_opts: [ciphers: :ssl.cipher_suites(:default, :"tlsv1.2")]]
     {:ok, conn} = Mint.HTTP.connect(:https, "httpbin.org", 443, opts)
 
-## controlling_process(conn, new_pid)
+## protocol/1
 
-Changes the *controlling process* of the given connection to `new_pid`.
-
-The **controlling process** is a concept that comes from the Erlang TCP and
-SSL implementations. The controlling process of a connection is the process
-that started the connection and that receives the messages for that connection.
-You can change the controlling process of a connection through this function.
-
-This function also takes care of "transferring" all the connection messages
-that are in the mailbox of the current controlling process to the new
-controlling process.
-
-Remember that the connection is a data structure, so if you
-change the controlling process it doesn't mean you "transferred" the
-connection data structure itself to the other process, which you have
-to do manually (for example by sending the connection data structure to the
-new controlling process). If you do that, be careful of race conditions
-and be sure to retrieve the connection in the new controlling process
-before accepting connection messages in the new controlling process.
-In fact, this function is guaranteed to return the connection unchanged,
-so you are free to ignore the connection entry returned in `{:ok, conn}`.
+Returns the protocol used by the current connection.
 
 ## Examples
 
-    send(new_pid, {:conn, conn})
-    {:ok, conn} = Mint.HTTP.controlling_process(conn, new_pid)
+    iex> Mint.HTTP.protocol(%Mint.HTTP1{})
+    :http1
 
-    # In the "new_pid" process
-    receive do
-      {:conn, conn} ->
-        # Will receive connection messages.
-    end
+    iex> Mint.HTTP.protocol(%Mint.HTTP2{})
+    :http2
 
-## delete_private(conn, key)
+## close/1
 
-Deletes a value in the private store.
+Closes the given connection.
 
-Deletes the private value stored under `key` in the connection. Returns the
-updated connection.
+This function closes the socket wrapped by the given connection. Once the socket
+is closed, the connection goes into the "closed" state and `open?/1` returns `false`.
+You can throw away a closed connection.
 
-See also `put_private/3` and `get_private/3`.
+Closing a connection does not guarantee that data that is in flight gets delivered
+to the server.
 
-## Examples
-
-    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
-
-    Mint.HTTP.get_private(conn, :client_name)
-    #=> "Mint"
-
-    conn = Mint.HTTP.delete_private(conn, :client_name)
-    Mint.HTTP.get_private(conn, :client_name)
-    #=> nil
-
-## get_private(conn, key, default \\ nil)
-
-Gets a private value from the connection.
-
-Retrieves a private value previously set with `put_private/3` from the connection.
-`key` is the key under which the value to retrieve is stored. `default` is a default
-value returned in case there's no value under the given key.
-
-See also `put_private/3` and `delete_private/2`.
+Always returns `{:ok, conn}` where `conn` is the updated connection.
 
 ## Examples
 
-    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
+    {:ok, conn} = Mint.HTTP.close(conn)
 
-    Mint.HTTP.get_private(conn, :client_name)
-    #=> "Mint"
-
-    Mint.HTTP.get_private(conn, :non_existent)
-    #=> nil
-
-## get_proxy_headers(conn)
-
-Gets the proxy headers associated with the connection in the `CONNECT` method.
-
-When using tunnel proxy and HTTPs, the only way to exchange data with
-the proxy is through headers in the `CONNECT` method.
-
-## get_socket(conn)
-
-Gets the socket associated with the connection.
-
-Do not use the returned socket to change its internal state. Only read information from the socket.
-For instance, use `:ssl.connection_information/2` to retrieve TLS-specific information from the
-socket.
-
-## open?(conn, type \\ :write)
+## open?/2
 
 Checks whether the connection is open.
 
@@ -484,90 +407,7 @@ to the server, start a new connection with `connect/4`.
     Mint.HTTP.open?(conn)
     #=> true
 
-## open_request_count(conn)
-
-Returns the number of open requests.
-
-Open requests are requests that have not yet received a `:done` response.
-This function returns the number of open requests for both HTTP/1 and HTTP/2,
-but for HTTP/2 only client-initiated requests are considered as open requests.
-See `Mint.HTTP2.open_request_count/1` for more information.
-
-## Examples
-
-    {:ok, conn, _ref} = Mint.HTTP.request(conn, "GET", "/", [])
-    Mint.HTTP.open_request_count(conn)
-    #=> 1
-
-## protocol(conn)
-
-Returns the protocol used by the current connection.
-
-## Examples
-
-    iex> Mint.HTTP.protocol(%Mint.HTTP1{})
-    :http1
-
-    iex> Mint.HTTP.protocol(%Mint.HTTP2{})
-    :http2
-
-## put_log(conn, log?)
-
-Sets whether the connection should log information or not.
-
-See the ["Logging" section](#module-logging) in the module documentation for more information.
-
-## put_private(conn, key, value)
-
-Assigns a new private key and value in the connection.
-
-This storage is meant to be used to associate metadata with the connection and
-it can be useful when handling multiple connections.
-
-The given `key` must be an atom, while the given `value` can be an arbitrary
-term. The return value of this function is an updated connection.
-
-See also `get_private/3` and `delete_private/2`.
-
-## Examples
-
-Let's see an example of putting a value and then getting it:
-
-    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
-    Mint.HTTP.get_private(conn, :client_name)
-    #=> "Mint"
-
-## recv(conn, byte_count, timeout)
-
-Receives data from the socket in a blocking way.
-
-By default Mint operates in active mode, meaning that messages are delivered
-to the process that started the connection. However, Mint also supports passive
-mode (see the "Mode" section in the module documentation).
-
-In passive mode, you'll need to manually get bytes out of the socket. You can
-do that with this function.
-
-`byte_count` is the number of bytes you want out of the socket. If `byte_count`
-is `0`, all available bytes will be returned.
-
-`timeout` is the maximum time to wait before returning an error.
-
-This function will raise an error if the socket is in active mode.
-
-> #### Hanging Waiting for Bytes {: .warning}
->
-> If `byte_count` is greater than `0` and the socket doesn't receive
-> *at least* `byte_count` bytes withing the `timeout`, then the function
-> will block for the duration of `timeout` and then return a timeout error.
-> This behavior is the same as the `recv` function in [`:gen_tcp`](`:gen_tcp`)
-> and [`:ssl`](`:ssl`).
-
-## Examples
-
-    {:ok, conn, responses} = Mint.HTTP.recv(conn, 0, 5000)
-
-## request(conn, method, path, headers, body)
+## request/5
 
 Sends a request to the connected server.
 
@@ -622,29 +462,88 @@ transfer-encoding when a content-length is not provided (see `Mint.HTTP1.request
     Mint.HTTP.request(conn, "GET", "/", _headers = [], _body = nil)
     Mint.HTTP.request(conn, "POST", "/path", [{"content-type", "application/json"}], "{}")
 
-## set_mode(conn, mode)
+## stream_request_body/3
 
-Changes the mode of the underlying socket.
+Streams a chunk of the request body on the connection or signals the end of the body.
 
-To use the connection in *active mode*, where the process that started the
-connection receives socket messages, set the mode to `:active` (see also `stream/2`).
-To use the connection in *passive mode*, where you need to manually receive data
-from the socket, set the mode to `:passive` (see also `recv/3`).
+If a request is opened (through `request/5`) with the body as `:stream`, then the
+body can be streamed through this function. The function takes a `conn`, a
+`request_ref` returned by `request/5` to identify the request to stream the body for,
+and a chunk of body to stream. The value of chunk can be:
 
-The mode can also be controlled at connection time by the `:mode` option passed
-to `connect/4`.
+  * iodata - a chunk of iodata is transmitted to the server as part of the body
+    of the request. If the chunk is empty, in HTTP/1 it's a no-op, while in HTTP/2
+    a `DATA` frame will be sent.
 
-Note that if you're switching from active to passive mode, you still might have
-socket messages in the process mailbox that you need to consume before doing
-any other operation on the connection.
+  * `:eof` - signals the end of the streaming of the request body for the given
+    request. Usually the server won't send any reply until this is sent.
 
-See the "Mode" section in the module documentation for more information on modes.
+  * `{:eof, trailer_headers}` - sends **trailer headers** and signals the end
+    of the streaming of the request body for the given request. This behaves the
+    same way as `:eof` but first sends the trailer headers. See the
+    [*Trailer headers*](#module-trailer-headers) section below.
+
+This function always returns an updated connection to be stored over the old connection.
+
+For information about transfer encoding and content length in HTTP/1, see
+`Mint.HTTP1.stream_request_body/3`.
+
+## Trailer headers
+
+HTTP trailer headers can be sent after the body of a request. trailer headers are described
+[in RFC 9110](https://www.rfc-editor.org/rfc/rfc9110#section-6.5).
+
+The behaviour is slightly different for HTTP/1 and HTTP/2:
+
+  * In HTTP/1, trailer headers are only supported if the transfer encoding is set to
+    `chunked`. See `Mint.HTTP1.stream_request_body/3` for more information on chunked
+    transfer encoding.
+
+  * In HTTP/2, trailer headers behave like normal headers. You don't need to care
+    about the transfer encoding.
+
+### The `trailer` header
+
+As specified in [section 4.4 of RFC 7230](https://tools.ietf.org/html/rfc7230#section-4.4),
+in HTTP/1 you need to specify which headers you're going to send as traoler
+headers using the `trailer` header. The `trailer` header applies to both HTTP/1
+and HTTP/2. See the examples below for more information.
+
+### The `te` header
+
+As specified in  [section 4.3 of RFC 7230](https://tools.ietf.org/html/rfc7230#section-4.3),
+the `te` (or `TE`) header is used to specify which transfer-encodings the client
+is willing to accept (besides `chunked`). Mint supports decoding of trailer headers,
+but if you want to notify the server that you are accepting trailer headers,
+use the `trailers` value in the `te` header. For example:
+
+    Mint.HTTP.request(conn, "GET", "/", [{"te", "trailers"}], "some body")
+
+Note that the `te` header can also be used to communicate which encodings you
+support to the server.
 
 ## Examples
 
-    {:ok, conn} = Mint.HTTP.set_mode(conn, :passive)
+Let's see an example of streaming an empty JSON object (`{}`) by streaming one curly
+brace at a time.
 
-## stream(conn, message)
+    headers = [{"content-type", "application/json"}, {"content-length", "2"}]
+    {:ok, conn, request_ref} = Mint.HTTP.request(conn, "POST", "/", headers, :stream)
+    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "{")
+    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "}")
+    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, :eof)
+
+Here's an example of sending trailer headers:
+
+    headers = [{"content-type", "application/json"}, {"trailer", "my-trailer, x-expires"}]
+    {:ok, conn, request_ref} = Mint.HTTP.request(conn, "POST", "/", headers, :stream)
+
+    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "{}")
+
+    trailer_headers = [{"my-trailer", "xxx"}, {"x-expires", "10 days"}]
+    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, {:eof, trailer_headers})
+
+## stream/2
 
 Streams the next batch of responses from the given `message`.
 
@@ -774,110 +673,184 @@ Now, we can see an example of a workflow involving `stream/2`.
     responses
     #=> [{:data, ^request_ref, "}"}, {:done, ^request_ref}]
 
-## stream_request_body(conn, ref, body)
+## open_request_count/1
 
-Streams a chunk of the request body on the connection or signals the end of the body.
+Returns the number of open requests.
 
-If a request is opened (through `request/5`) with the body as `:stream`, then the
-body can be streamed through this function. The function takes a `conn`, a
-`request_ref` returned by `request/5` to identify the request to stream the body for,
-and a chunk of body to stream. The value of chunk can be:
-
-  * iodata - a chunk of iodata is transmitted to the server as part of the body
-    of the request. If the chunk is empty, in HTTP/1 it's a no-op, while in HTTP/2
-    a `DATA` frame will be sent.
-
-  * `:eof` - signals the end of the streaming of the request body for the given
-    request. Usually the server won't send any reply until this is sent.
-
-  * `{:eof, trailer_headers}` - sends **trailer headers** and signals the end
-    of the streaming of the request body for the given request. This behaves the
-    same way as `:eof` but first sends the trailer headers. See the
-    [*Trailer headers*](#module-trailer-headers) section below.
-
-This function always returns an updated connection to be stored over the old connection.
-
-For information about transfer encoding and content length in HTTP/1, see
-`Mint.HTTP1.stream_request_body/3`.
-
-## Trailer headers
-
-HTTP trailer headers can be sent after the body of a request. trailer headers are described
-[in RFC 9110](https://www.rfc-editor.org/rfc/rfc9110#section-6.5).
-
-The behaviour is slightly different for HTTP/1 and HTTP/2:
-
-  * In HTTP/1, trailer headers are only supported if the transfer encoding is set to
-    `chunked`. See `Mint.HTTP1.stream_request_body/3` for more information on chunked
-    transfer encoding.
-
-  * In HTTP/2, trailer headers behave like normal headers. You don't need to care
-    about the transfer encoding.
-
-### The `trailer` header
-
-As specified in [section 4.4 of RFC 7230](https://tools.ietf.org/html/rfc7230#section-4.4),
-in HTTP/1 you need to specify which headers you're going to send as traoler
-headers using the `trailer` header. The `trailer` header applies to both HTTP/1
-and HTTP/2. See the examples below for more information.
-
-### The `te` header
-
-As specified in  [section 4.3 of RFC 7230](https://tools.ietf.org/html/rfc7230#section-4.3),
-the `te` (or `TE`) header is used to specify which transfer-encodings the client
-is willing to accept (besides `chunked`). Mint supports decoding of trailer headers,
-but if you want to notify the server that you are accepting trailer headers,
-use the `trailers` value in the `te` header. For example:
-
-    Mint.HTTP.request(conn, "GET", "/", [{"te", "trailers"}], "some body")
-
-Note that the `te` header can also be used to communicate which encodings you
-support to the server.
+Open requests are requests that have not yet received a `:done` response.
+This function returns the number of open requests for both HTTP/1 and HTTP/2,
+but for HTTP/2 only client-initiated requests are considered as open requests.
+See `Mint.HTTP2.open_request_count/1` for more information.
 
 ## Examples
 
-Let's see an example of streaming an empty JSON object (`{}`) by streaming one curly
-brace at a time.
+    {:ok, conn, _ref} = Mint.HTTP.request(conn, "GET", "/", [])
+    Mint.HTTP.open_request_count(conn)
+    #=> 1
 
-    headers = [{"content-type", "application/json"}, {"content-length", "2"}]
-    {:ok, conn, request_ref} = Mint.HTTP.request(conn, "POST", "/", headers, :stream)
-    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "{")
-    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "}")
-    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, :eof)
+## recv/3
 
-Here's an example of sending trailer headers:
+Receives data from the socket in a blocking way.
 
-    headers = [{"content-type", "application/json"}, {"trailer", "my-trailer, x-expires"}]
-    {:ok, conn, request_ref} = Mint.HTTP.request(conn, "POST", "/", headers, :stream)
+By default Mint operates in active mode, meaning that messages are delivered
+to the process that started the connection. However, Mint also supports passive
+mode (see the "Mode" section in the module documentation).
 
-    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, "{}")
+In passive mode, you'll need to manually get bytes out of the socket. You can
+do that with this function.
 
-    trailer_headers = [{"my-trailer", "xxx"}, {"x-expires", "10 days"}]
-    {:ok, conn} = Mint.HTTP.stream_request_body(conn, request_ref, {:eof, trailer_headers})
+`byte_count` is the number of bytes you want out of the socket. If `byte_count`
+is `0`, all available bytes will be returned.
 
-## is_connection_message(conn, message)
+`timeout` is the maximum time to wait before returning an error.
 
-Macro to check that a given received `message` is intended for the given connection `conn`.
+This function will raise an error if the socket is in active mode.
 
-This guard is useful in `receive` loops or in callbacks that handle generic messages (such as a
-`c:GenServer.handle_info/2` callback) so that you don't have to hand the `message` to
-`Mint.HTTP.stream/2` and check for the `:unknown_message` return value.
-
-This macro can be used in guards.
-
-**Note**: this macro is only available if you compile Mint with Elixir 1.10.0 or greater (and
-OTP 21+, which is required by Elixir 1.10.0 and on).
+> #### Hanging Waiting for Bytes {: .warning}
+>
+> If `byte_count` is greater than `0` and the socket doesn't receive
+> *at least* `byte_count` bytes withing the `timeout`, then the function
+> will block for the duration of `timeout` and then return a timeout error.
+> This behavior is the same as the `recv` function in [`:gen_tcp`](`:gen_tcp`)
+> and [`:ssl`](`:ssl`).
 
 ## Examples
 
-    require Mint.HTTP
+    {:ok, conn, responses} = Mint.HTTP.recv(conn, 0, 5000)
 
-    {:ok, conn, request_ref} = Mint.HTTP.request(conn, "POST", "/", headers, "")
+## set_mode/2
 
+Changes the mode of the underlying socket.
+
+To use the connection in *active mode*, where the process that started the
+connection receives socket messages, set the mode to `:active` (see also `stream/2`).
+To use the connection in *passive mode*, where you need to manually receive data
+from the socket, set the mode to `:passive` (see also `recv/3`).
+
+The mode can also be controlled at connection time by the `:mode` option passed
+to `connect/4`.
+
+Note that if you're switching from active to passive mode, you still might have
+socket messages in the process mailbox that you need to consume before doing
+any other operation on the connection.
+
+See the "Mode" section in the module documentation for more information on modes.
+
+## Examples
+
+    {:ok, conn} = Mint.HTTP.set_mode(conn, :passive)
+
+## controlling_process/2
+
+Changes the *controlling process* of the given connection to `new_pid`.
+
+The **controlling process** is a concept that comes from the Erlang TCP and
+SSL implementations. The controlling process of a connection is the process
+that started the connection and that receives the messages for that connection.
+You can change the controlling process of a connection through this function.
+
+This function also takes care of "transferring" all the connection messages
+that are in the mailbox of the current controlling process to the new
+controlling process.
+
+Remember that the connection is a data structure, so if you
+change the controlling process it doesn't mean you "transferred" the
+connection data structure itself to the other process, which you have
+to do manually (for example by sending the connection data structure to the
+new controlling process). If you do that, be careful of race conditions
+and be sure to retrieve the connection in the new controlling process
+before accepting connection messages in the new controlling process.
+In fact, this function is guaranteed to return the connection unchanged,
+so you are free to ignore the connection entry returned in `{:ok, conn}`.
+
+## Examples
+
+    send(new_pid, {:conn, conn})
+    {:ok, conn} = Mint.HTTP.controlling_process(conn, new_pid)
+
+    # In the "new_pid" process
     receive do
-      message when Mint.HTTP.is_connection_message(conn, message) ->
-        Mint.HTTP.stream(conn, message)
-
-      other ->
-        # This message is related to something else or to some other connection
+      {:conn, conn} ->
+        # Will receive connection messages.
     end
+
+## put_private/3
+
+Assigns a new private key and value in the connection.
+
+This storage is meant to be used to associate metadata with the connection and
+it can be useful when handling multiple connections.
+
+The given `key` must be an atom, while the given `value` can be an arbitrary
+term. The return value of this function is an updated connection.
+
+See also `get_private/3` and `delete_private/2`.
+
+## Examples
+
+Let's see an example of putting a value and then getting it:
+
+    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
+    Mint.HTTP.get_private(conn, :client_name)
+    #=> "Mint"
+
+## get_private/3
+
+Gets a private value from the connection.
+
+Retrieves a private value previously set with `put_private/3` from the connection.
+`key` is the key under which the value to retrieve is stored. `default` is a default
+value returned in case there's no value under the given key.
+
+See also `put_private/3` and `delete_private/2`.
+
+## Examples
+
+    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
+
+    Mint.HTTP.get_private(conn, :client_name)
+    #=> "Mint"
+
+    Mint.HTTP.get_private(conn, :non_existent)
+    #=> nil
+
+## delete_private/2
+
+Deletes a value in the private store.
+
+Deletes the private value stored under `key` in the connection. Returns the
+updated connection.
+
+See also `put_private/3` and `get_private/3`.
+
+## Examples
+
+    conn = Mint.HTTP.put_private(conn, :client_name, "Mint")
+
+    Mint.HTTP.get_private(conn, :client_name)
+    #=> "Mint"
+
+    conn = Mint.HTTP.delete_private(conn, :client_name)
+    Mint.HTTP.get_private(conn, :client_name)
+    #=> nil
+
+## get_socket/1
+
+Gets the socket associated with the connection.
+
+Do not use the returned socket to change its internal state. Only read information from the socket.
+For instance, use `:ssl.connection_information/2` to retrieve TLS-specific information from the
+socket.
+
+## put_log/2
+
+Sets whether the connection should log information or not.
+
+See the ["Logging" section](#module-logging) in the module documentation for more information.
+
+## get_proxy_headers/1
+
+Gets the proxy headers associated with the connection in the `CONNECT` method.
+
+When using tunnel proxy and HTTPs, the only way to exchange data with
+the proxy is through headers in the `CONNECT` method.

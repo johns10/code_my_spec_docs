@@ -64,11 +64,11 @@ configuration of specific `http:` and `https:` values is done on a per-environme
 Phoenix, so these changes will typically be in your `config/dev.exs`, `config/prod.exs` and
 similar files.
 
-## bandit_pid(endpoint, scheme \\ :http)
+## bandit_pid/2
 
 Returns the Bandit server process for the provided scheme within the given Phoenix Endpoint
 
-## server_info(endpoint, scheme)
+## server_info/2
 
 Returns the bound address and port of the Bandit server process for the provided
 scheme within the given Phoenix Endpoint

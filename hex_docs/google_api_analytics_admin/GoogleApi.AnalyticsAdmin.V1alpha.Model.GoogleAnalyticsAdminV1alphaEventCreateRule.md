@@ -9,7 +9,3 @@ An Event Create Rule defines conditions that will trigger the creation of an ent
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Resource name for this EventCreateRule resource. Format: properties/{property}/dataStreams/{data_stream}/eventCreateRules/{event_create_rule}
 *   `parameterMutations` (*type:* `list(GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaParameterMutation.t)`, *default:* `nil`) - Parameter mutations define parameter behavior on the new event, and are applied in order. A maximum of 20 mutations can be applied.
 *   `sourceCopyParameters` (*type:* `boolean()`, *default:* `nil`) - If true, the source parameters are copied to the new event. If false, or unset, all non-internal parameters are not copied from the source event. Parameter mutations are applied after the parameters have been copied.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

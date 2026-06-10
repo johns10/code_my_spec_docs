@@ -2,7 +2,7 @@
 
 
 
-## parse_markdown(lines, options)
+## parse_markdown/2
 
 Given a markdown document (as either a list of lines or
 a string containing newlines), return a parse tree and

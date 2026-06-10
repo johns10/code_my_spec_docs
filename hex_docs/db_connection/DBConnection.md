@@ -47,315 +47,11 @@ public.
 Most functions in this module raise a `DBConnection.ConnectionError` exception
 when failing to check out a connection from the pool.
 
-## available_connection_options()
+## __using__/1
 
-Returns the names of all possible options that you can pass to most functions
-in this module.
+Use `DBConnection` to set the behaviour.
 
-This is mostly useful for library authors that base their library on top of
-`DBConnection`, since they can use the return value of this function to perform
-validation on options only passing down these options to DBConnection.
-
-See also `t:connection_option/0`.
-
-## available_start_options()
-
-Returns the names of all possible options that you can pass to `start_link/2`.
-
-This is mostly useful for library authors that base their library on top of
-`DBConnection`, since they can use the return value of this function to perform
-validation on options only passing down these options to DBConnection.
-
-See also `t:start_option/0`.
-
-## child_spec(conn_mod, opts)
-
-Creates a supervisor child specification for a pool of connections.
-
-See `start_link/2` for options.
-
-## close(conn, query, opts \\ [])
-
-Close a prepared query on a database connection and return `{:ok, result}` on
-success or `{:error, exception}` on error.
-
-This function should be used to free resources held by the connection
-process and/or the database server.
-
-## Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-  * `:log` - A function to log information about a call, either
-  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
-  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
-
-The pool and connection module may support other options. All options
-are passed to `c:handle_close/3`.
-
-See `prepare/3`.
-
-## close!(conn, query, opts \\ [])
-
-Close a prepared query on a database connection and return the result. Raises
-an exception on error.
-
-See `close/3`.
-
-## connection_module(conn)
-
-Returns the connection module used by the given connection pool.
-
-When given a process that is not a connection pool, returns an `:error`.
-
-## disconnect_all(conn, interval, opts \\ [])
-
-Forces all connections in the pool to disconnect within the given interval
-in milliseconds.
-
-Once this function is called, the pool will disconnect all of its connections
-as they are checked in or as they are pinged. Checked in connections will be
-randomly disconnected within the given time interval. Pinged connections are
-immediately disconnected - as they are idle (according to `:idle_interval`).
-
-If the connection has a backoff configured (which is the case by default),
-disconnecting means an attempt at a new connection will be done immediately
-after, without starting a new process for each connection. However, if backoff
-has been disabled, the connection process will terminate. In such cases,
-disconnecting all connections may cause the pool supervisor to restart
-depending on the max_restarts/max_seconds configuration of the pool,
-so you will want to set those carefully.
-
-## execute(conn, query, params, opts \\ [])
-
-Execute a prepared query with a database connection and return
-`{:ok, query, result}` on success or `{:error, exception}` if there was an error.
-
-If the query is not prepared on the connection an attempt may be made to
-prepare it and then execute again.
-
-### Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-  * `:log` - A function to log information about a call, either
-  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
-  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
-
-The pool and connection module may support other options. All options
-are passed to `handle_execute/4`.
-
-See `prepare/3`.
-
-## execute!(conn, query, params, opts \\ [])
-
-Execute a prepared query with a database connection and return the
-result. Raises an exception on error.
-
-See `execute/4`
-
-## get_connection_metrics(conn, opts \\ [])
-
-Returns connection metrics as a list in the shape of:
-
-    [%{
-      source: {:pool | :proxy, pid()},
-      ready_conn_count: non_neg_integer(),
-      checkout_queue_length: non_neg_integer()
-    }]
-
-## prepare(conn, query, opts \\ [])
-
-Prepare a query with a database connection for later execution.
-
-It returns `{:ok, query}` on success or `{:error, exception}` if there was
-an error.
-
-The returned `query` can then be passed to `execute/4` and/or `close/3`
-
-### Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-  * `:log` - A function to log information about a call, either
-  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
-  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
-
-The pool and connection module may support other options. All options
-are passed to `c:handle_prepare/3`.
-
-### Example
-
-    DBConnection.transaction(pool, fn conn ->
-      query = %Query{statement: "SELECT * FROM table"}
-      query = DBConnection.prepare!(conn, query)
-      try do
-        DBConnection.execute!(conn, query, [])
-      after
-        DBConnection.close(conn, query)
-      end
-    end)
-
-## prepare!(conn, query, opts \\ [])
-
-Prepare a query with a database connection and return the prepared
-query. An exception is raised on error.
-
-See `prepare/3`.
-
-## prepare_execute(conn, query, params, opts \\ [])
-
-Prepare a query and execute it with a database connection and return both the
-prepared query and the result, `{:ok, query, result}` on success or
-`{:error, exception}` if there was an error.
-
-The returned `query` can be passed to `execute/4` and `close/3`.
-
-### Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-  * `:log` - A function to log information about a call, either
-  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
-  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
-
-### Example
-
-    query                = %Query{statement: "SELECT id FROM table WHERE id=$1"}
-    {:ok, query, result} = DBConnection.prepare_execute(conn, query, [1])
-    {:ok, result2}       = DBConnection.execute(conn, query, [2])
-    :ok                  = DBConnection.close(conn, query)
-
-## prepare_execute!(conn, query, params, opts \\ [])
-
-Prepare a query and execute it with a database connection and return both the
-prepared query and result. An exception is raised on error.
-
-See `prepare_execute/4`.
-
-## prepare_stream(conn, query, params, opts \\ [])
-
-Create a stream that will prepare a query, execute it and stream results
-using a cursor.
-
-### Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-  * `:log` - A function to log information about a call, either
-  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
-  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
-
-The pool and connection module may support other options. All options
-are passed to `c:handle_prepare/3`, `c:handle_close/3`, `c:handle_declare/4`,
-and `c:handle_deallocate/4`.
-
-### Example
-
-    {:ok, results} = DBConnection.transaction(conn, fn conn ->
-      query = %Query{statement: "SELECT id FROM table"}
-      stream = DBConnection.prepare_stream(conn, query, [])
-      Enum.to_list(stream)
-    end)
-
-## reduce(stream, acc, fun)
-
-Reduces a previously built stream or prepared stream.
-
-## rollback(conn, reason)
-
-Rollback a database transaction and release lock on connection.
-
-When inside of a `transaction/3` call does a non-local return, using a
-`throw/1` to cause the transaction to enter a failed state and the
-`transaction/3` call returns `{:error, reason}`. If `transaction/3` calls are
-nested the connection is marked as failed until the outermost transaction call
-does the database rollback.
-
-### Example
-
-    {:error, :oops} = DBConnection.transaction(pool, fun(conn) ->
-      DBConnection.rollback(conn, :oops)
-    end)
-
-## run(conn, fun, opts \\ [])
-
-Acquire a lock on a connection and run a series of requests on it.
-
-The return value of this function is the return value of `fun`.
-
-To use the locked connection call the request with the connection
-reference passed as the single argument to the `fun`. If the
-connection disconnects all future calls using that connection
-reference will fail.
-
-`run/3` and `transaction/3` can be nested multiple times but a
-`transaction/3` call inside another `transaction/3` will be treated
-the same as `run/3`.
-
-> #### Checkout failures {: .warning}
->
-> If we cannot check out a connection from the pool, this function raises a
-> `DBConnection.ConnectionError` exception.
-> If you want to handle these cases, you should rescue
-> `DBConnection.ConnectionError` exceptions when using `run/3`.
-
-## Options
-
-  * `:queue` - Whether to block waiting in an internal queue for the
-  connection's state (boolean, default: `true`). See "Queue config" in
-  `start_link/2` docs
-  * `:timeout` - The maximum time that the caller is allowed to perform
-  this operation (default: `15_000`)
-  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
-  monotonic time in milliseconds by which caller must perform operation.
-  See `System` module documentation for more information on monotonic time
-  (default: `nil`)
-
-The pool may support other options.
-
-## Example
-
-    {:ok, res} = DBConnection.run(conn, fn conn ->
-      DBConnection.execute!(conn, query, [])
-    end)
-
-## start_link(conn_mod, opts)
+## start_link/2
 
 Starts and links to a database connection process.
 
@@ -568,42 +264,59 @@ You may also consume `[:db_connection, :connected]` and `[:db_connection, :disco
 events by spawning a `DBConnection.TelemetryListener` process that subscribes to the pool
 and emits them in a robust manner.
 
-## status(conn, opts \\ [])
+## child_spec/2
 
-Return the transaction status of a connection.
+Creates a supervisor child specification for a pool of connections.
 
-The callback implementation should return the transaction status according to
-the database, and not make assumptions based on client-side state.
+See `start_link/2` for options.
 
-This function will raise a `DBConnection.ConnectionError` when called inside a
-deprecated `transaction/3`.
+## available_start_options/0
 
-### Options
+Returns the names of all possible options that you can pass to `start_link/2`.
 
-See module documentation. The pool and connection module may support other
-options. All options are passed to `c:handle_status/2`.
+This is mostly useful for library authors that base their library on top of
+`DBConnection`, since they can use the return value of this function to perform
+validation on options only passing down these options to DBConnection.
 
-### Example
+See also `t:start_option/0`.
 
-    # outside of the transaction, the status is `:idle`
-    DBConnection.status(conn) #=> :idle
+## available_connection_options/0
 
-    DBConnection.transaction(conn, fn conn ->
-      DBConnection.status(conn) #=> :transaction
+Returns the names of all possible options that you can pass to most functions
+in this module.
 
-      # run a query that will cause the transaction to rollback, e.g.
-      # uniqueness constraint violation
-      DBConnection.execute(conn, bad_query, [])
+This is mostly useful for library authors that base their library on top of
+`DBConnection`, since they can use the return value of this function to perform
+validation on options only passing down these options to DBConnection.
 
-      DBConnection.status(conn) #=> :error
-    end)
+See also `t:connection_option/0`.
 
-    DBConnection.status(conn) #=> :idle
+## disconnect_all/3
 
-## stream(conn, query, params, opts \\ [])
+Forces all connections in the pool to disconnect within the given interval
+in milliseconds.
 
-Create a stream that will execute a prepared query and stream results using a
-cursor.
+Once this function is called, the pool will disconnect all of its connections
+as they are checked in or as they are pinged. Checked in connections will be
+randomly disconnected within the given time interval. Pinged connections are
+immediately disconnected - as they are idle (according to `:idle_interval`).
+
+If the connection has a backoff configured (which is the case by default),
+disconnecting means an attempt at a new connection will be done immediately
+after, without starting a new process for each connection. However, if backoff
+has been disabled, the connection process will terminate. In such cases,
+disconnecting all connections may cause the pool supervisor to restart
+depending on the max_restarts/max_seconds configuration of the pool,
+so you will want to set those carefully.
+
+## prepare/3
+
+Prepare a query with a database connection for later execution.
+
+It returns `{:ok, query}` on success or `{:error, exception}` if there was
+an error.
+
+The returned `query` can then be passed to `execute/4` and/or `close/3`
 
 ### Options
 
@@ -621,23 +334,177 @@ cursor.
   prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
 
 The pool and connection module may support other options. All options
-are passed to `c:handle_declare/4` and `c:handle_deallocate/4`.
+are passed to `c:handle_prepare/3`.
 
 ### Example
 
     DBConnection.transaction(pool, fn conn ->
-      query = %Query{statement: "SELECT id FROM table"}
+      query = %Query{statement: "SELECT * FROM table"}
       query = DBConnection.prepare!(conn, query)
       try do
-        stream = DBConnection.stream(conn, query, [])
-        Enum.to_list(stream)
+        DBConnection.execute!(conn, query, [])
       after
-        # Make sure query is closed!
         DBConnection.close(conn, query)
       end
     end)
 
-## transaction(conn, fun, opts \\ [])
+## prepare!/3
+
+Prepare a query with a database connection and return the prepared
+query. An exception is raised on error.
+
+See `prepare/3`.
+
+## prepare_execute/4
+
+Prepare a query and execute it with a database connection and return both the
+prepared query and the result, `{:ok, query, result}` on success or
+`{:error, exception}` if there was an error.
+
+The returned `query` can be passed to `execute/4` and `close/3`.
+
+### Options
+
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+  * `:log` - A function to log information about a call, either
+  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
+  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
+
+### Example
+
+    query                = %Query{statement: "SELECT id FROM table WHERE id=$1"}
+    {:ok, query, result} = DBConnection.prepare_execute(conn, query, [1])
+    {:ok, result2}       = DBConnection.execute(conn, query, [2])
+    :ok                  = DBConnection.close(conn, query)
+
+## prepare_execute!/4
+
+Prepare a query and execute it with a database connection and return both the
+prepared query and result. An exception is raised on error.
+
+See `prepare_execute/4`.
+
+## execute/4
+
+Execute a prepared query with a database connection and return
+`{:ok, query, result}` on success or `{:error, exception}` if there was an error.
+
+If the query is not prepared on the connection an attempt may be made to
+prepare it and then execute again.
+
+### Options
+
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+  * `:log` - A function to log information about a call, either
+  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
+  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
+
+The pool and connection module may support other options. All options
+are passed to `handle_execute/4`.
+
+See `prepare/3`.
+
+## execute!/4
+
+Execute a prepared query with a database connection and return the
+result. Raises an exception on error.
+
+See `execute/4`
+
+## close/3
+
+Close a prepared query on a database connection and return `{:ok, result}` on
+success or `{:error, exception}` on error.
+
+This function should be used to free resources held by the connection
+process and/or the database server.
+
+## Options
+
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+  * `:log` - A function to log information about a call, either
+  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
+  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
+
+The pool and connection module may support other options. All options
+are passed to `c:handle_close/3`.
+
+See `prepare/3`.
+
+## close!/3
+
+Close a prepared query on a database connection and return the result. Raises
+an exception on error.
+
+See `close/3`.
+
+## run/3
+
+Acquire a lock on a connection and run a series of requests on it.
+
+The return value of this function is the return value of `fun`.
+
+To use the locked connection call the request with the connection
+reference passed as the single argument to the `fun`. If the
+connection disconnects all future calls using that connection
+reference will fail.
+
+`run/3` and `transaction/3` can be nested multiple times but a
+`transaction/3` call inside another `transaction/3` will be treated
+the same as `run/3`.
+
+> #### Checkout failures {: .warning}
+>
+> If we cannot check out a connection from the pool, this function raises a
+> `DBConnection.ConnectionError` exception.
+> If you want to handle these cases, you should rescue
+> `DBConnection.ConnectionError` exceptions when using `run/3`.
+
+## Options
+
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+
+The pool may support other options.
+
+## Example
+
+    {:ok, res} = DBConnection.run(conn, fn conn ->
+      DBConnection.execute!(conn, query, [])
+    end)
+
+## transaction/3
 
 Acquire a lock on a connection and run a series of requests inside a
 transaction. The result of the transaction fun is return inside an `:ok`
@@ -682,190 +549,139 @@ are passed to `c:handle_begin/2`, `c:handle_commit/2` and
       DBConnection.execute!(conn, query, [])
     end)
 
-## __using__(_)
+## rollback/2
 
-Use `DBConnection` to set the behaviour.
+Rollback a database transaction and release lock on connection.
 
-## checkout/1
+When inside of a `transaction/3` call does a non-local return, using a
+`throw/1` to cause the transaction to enter a failed state and the
+`transaction/3` call returns `{:error, reason}`. If `transaction/3` calls are
+nested the connection is marked as failed until the outermost transaction call
+does the database rollback.
 
-Checkouts the state from the connection process. Return `{:ok, state}`
-to allow the checkout or `{:disconnect, exception, state}` to disconnect.
+### Example
 
-This callback is called immediately after the connection is established
-and the state is never effectively checked in again. That's because
-DBConnection keeps the connection state in an ETS table that is moved
-between the different clients checking out connections. There is no
-`checkin` callback. The state is only handed back to the connection
-process during pings and (re)connects.
+    {:error, :oops} = DBConnection.transaction(pool, fun(conn) ->
+      DBConnection.rollback(conn, :oops)
+    end)
 
-This callback is called in the connection process.
+## status/2
 
-## connect/1
+Return the transaction status of a connection.
 
-Connect to the database. Return `{:ok, state}` on success or
-`{:error, exception}` on failure.
+The callback implementation should return the transaction status according to
+the database, and not make assumptions based on client-side state.
 
-If an error is returned it will be logged and another
-connection attempt will be made after a backoff interval.
+This function will raise a `DBConnection.ConnectionError` when called inside a
+deprecated `transaction/3`.
 
-This callback is called in the connection process.
+### Options
 
-## disconnect/2
+See module documentation. The pool and connection module may support other
+options. All options are passed to `c:handle_status/2`.
 
-Disconnect from the database. Return `:ok`.
+### Example
 
-This callback is called from the connection process. The first argument is
-either the exception from a `:disconnect` 3-tuple returned by a previous
-callback or an exception generated by the connection process.
+    # outside of the transaction, the status is `:idle`
+    DBConnection.status(conn) #=> :idle
 
-If the state is controlled by a client and it exits or times out while
-processing a request, the last known state will be sent and the exception
-will be a `DBConnection.ConnectionError`.
+    DBConnection.transaction(conn, fn conn ->
+      DBConnection.status(conn) #=> :transaction
 
-When the connection is stopped, this callback will be invoked from `terminate`.
-The last known state will be sent and the exception will be a `DBConnection.ConnectionError`
-containing the reason for the exit. To have the same happen on unexpected
-shutdowns, you may trap exits from the `connect` callback.
+      # run a query that will cause the transaction to rollback, e.g.
+      # uniqueness constraint violation
+      DBConnection.execute(conn, bad_query, [])
 
-## handle_begin/2
+      DBConnection.status(conn) #=> :error
+    end)
 
-Handle the beginning of a transaction.
+    DBConnection.status(conn) #=> :idle
 
-Return `{:ok, result, state}`/`{:ok, query, result, state}` to continue,
-`{status, state}` to notify caller that the transaction can not begin due
-to the transaction status `status`, or `{:disconnect | :disconnect_and_retry, exception, state}`
-to error and disconnect (and optionally retry). If `{:ok, query, result, state}`
-is returned, the query will be used to log the begin command. Otherwise,
-it will be logged as `begin`.
+## prepare_stream/4
 
-A callback implementation should only return `status` if it
-can determine the database's transaction status without side effect.
+Create a stream that will prepare a query, execute it and stream results
+using a cursor.
 
-This callback is called in the client process.
+### Options
 
-## handle_close/3
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+  * `:log` - A function to log information about a call, either
+  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
+  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
 
-Close a query prepared by `c:handle_prepare/3` with the database. Return
-`{:ok, result, state}` on success and to continue,
-`{:error, exception, state}` to return an error and continue, or
-`{:disconnect | :disconnect_and_retry, exception, state}` to
-error and disconnect (and optionally retry).
+The pool and connection module may support other options. All options
+are passed to `c:handle_prepare/3`, `c:handle_close/3`, `c:handle_declare/4`,
+and `c:handle_deallocate/4`.
 
-This callback is called in the client process.
+### Example
 
-## handle_commit/2
+    {:ok, results} = DBConnection.transaction(conn, fn conn ->
+      query = %Query{statement: "SELECT id FROM table"}
+      stream = DBConnection.prepare_stream(conn, query, [])
+      Enum.to_list(stream)
+    end)
 
-Handle committing a transaction. Return `{:ok, result, state}` on successfully
-committing transaction, `{status, state}` to notify caller that the
-transaction can not commit due to the transaction status `status`,
-or `{:disconnect, exception, state}` to error and disconnect.
+## stream/4
 
-A callback implementation should only return `status` if it
-can determine the database's transaction status without side effect.
+Create a stream that will execute a prepared query and stream results using a
+cursor.
 
-This callback is called in the client process.
+### Options
 
-## handle_deallocate/4
+  * `:queue` - Whether to block waiting in an internal queue for the
+  connection's state (boolean, default: `true`). See "Queue config" in
+  `start_link/2` docs
+  * `:timeout` - The maximum time that the caller is allowed to perform
+  this operation (default: `15_000`)
+  * `:deadline` - If set, overrides `:timeout` option and specifies absolute
+  monotonic time in milliseconds by which caller must perform operation.
+  See `System` module documentation for more information on monotonic time
+  (default: `nil`)
+  * `:log` - A function to log information about a call, either
+  a 1-arity fun, `{module, function, args}` with `t:DBConnection.LogEntry.t/0`
+  prepended to `args` or `nil`. See `DBConnection.LogEntry` (default: `nil`)
 
-Deallocate a cursor declared by `c:handle_declare/4` with the database. Return
-`{:ok, result, state}` on success and to continue,
-`{:error, exception, state}` to return an error and continue, or
-`{:disconnect, exception, state}` to return an error and disconnect.
+The pool and connection module may support other options. All options
+are passed to `c:handle_declare/4` and `c:handle_deallocate/4`.
 
-This callback is called in the client process.
+### Example
 
-## handle_declare/4
+    DBConnection.transaction(pool, fn conn ->
+      query = %Query{statement: "SELECT id FROM table"}
+      query = DBConnection.prepare!(conn, query)
+      try do
+        stream = DBConnection.stream(conn, query, [])
+        Enum.to_list(stream)
+      after
+        # Make sure query is closed!
+        DBConnection.close(conn, query)
+      end
+    end)
 
-Declare a cursor using a query prepared by `c:handle_prepare/3`. Return
-`{:ok, query, cursor, state}` to return altered query `query` and cursor
-`cursor` for a stream and continue, `{:error, exception, state}` to return an
-error and continue or `{:disconnect, exception, state}` to error and disconnect.
+## reduce/3
 
-This callback is called in the client process.
+Reduces a previously built stream or prepared stream.
 
-## handle_execute/4
+## connection_module/1
 
-Execute a query prepared by `c:handle_prepare/3`. Return
-`{:ok, query, result, state}` to return altered query `query` and result
-`result` and continue, `{:error, exception, state}` to return an error and
-continue or `{:disconnect | :disconnect_and_retry, exception, state}` to
-error and disconnect (and optionally retry).
+Returns the connection module used by the given connection pool.
 
-This callback is called in the client process.
+When given a process that is not a connection pool, returns an `:error`.
 
-## handle_fetch/4
+## get_connection_metrics/2
 
-Fetch the next result from a cursor declared by `c:handle_declare/4`. Return
-`{:cont, result, state}` to return the result `result` and continue using
-cursor, `{:halt, result, state}` to return the result `result` and close the
-cursor, `{:error, exception, state}` to return an error and close the
-cursor, `{:disconnect, exception, state}` to return an error and disconnect.
+Returns connection metrics as a list in the shape of:
 
-This callback is called in the client process.
-
-## handle_prepare/3
-
-Prepare a query with the database. Return `{:ok, query, state}` where
-`query` is a query to pass to `execute/4` or `close/3`,
-`{:error, exception, state}` to return an error and continue or
-`{:disconnect | :disconnect_and_retry, exception, state}` to error and disconnect
-(and optionally retry).
-
-This callback is intended for cases where the state of a connection is
-needed to prepare a query and/or the query can be saved in the
-database to call later.
-
-This callback is called in the client process.
-
-## handle_rollback/2
-
-Handle rolling back a transaction. Return `{:ok, result, state}` on successfully
-rolling back transaction, `{status, state}` to notify caller that the
-transaction can not rollback due to the transaction status `status` or
-`{:disconnect, exception, state}` to error and disconnect.
-
-A callback implementation should only return `status` if it
-can determine the database' transaction status without side effect.
-
-This callback is called in the client and connection process.
-
-## handle_status/2
-
-Handle getting the transaction status. Return `{:idle, state}` if outside a
-transaction, `{:transaction, state}` if inside a transaction,
-`{:error, state}` if inside an aborted transaction, or
-`{:disconnect | :disconnect_and_retry, exception, state}` to error and disconnect
-(and optionally retry).
-
-If the callback returns a `:disconnect` tuples then `status/2` will return
-`:error`.
-
-## ping/1
-
-Called when the connection has been idle for a period of time. Return
-`{:ok, state}` to continue or `{:disconnect, exception, state}` to
-disconnect.
-
-This callback is called if no callbacks have been called after the
-idle timeout and a client process is not using the state. The idle
-timeout can be configured by the `:idle_interval` and `:idle_limit`
-options. This function can be called whether the connection is checked
-in or checked out.
-
-This callback is called in the connection process.
-
-## t/0
-
-Run or transaction connection reference.
-
-## option/0
-
-An option you can pass to DBConnection functions (*deprecated*).
-
-> #### Deprecated {: .warning}
->
-> This option is deprecated since v2.6.0. Use `t:connection_option/0` instead.
-
-## connection_option/0
-
-An option you can pass to DBConnection functions.
+    [%{
+      source: {:pool | :proxy, pid()},
+      ready_conn_count: non_neg_integer(),
+      checkout_queue_length: non_neg_integer()
+    }]

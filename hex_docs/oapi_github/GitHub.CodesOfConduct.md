@@ -2,7 +2,7 @@
 
 Provides API endpoints related to codes of conduct
 
-## get_all_codes_of_conduct(opts \\ [])
+## get_all_codes_of_conduct/1
 
 Get all codes of conduct
 
@@ -12,7 +12,7 @@ Returns array of all GitHub's codes of conduct.
 
   * [API method documentation](https://docs.github.com/rest/codes-of-conduct/codes-of-conduct#get-all-codes-of-conduct)
 
-## get_conduct_code(key, opts \\ [])
+## get_conduct_code/2
 
 Get a code of conduct
 

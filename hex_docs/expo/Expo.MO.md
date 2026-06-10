@@ -2,7 +2,7 @@
 
 File handling for MO (`.mo`) files.
 
-## compose(messages, options \\ [])
+## compose/2
 
 Composes a MO (`.mo`) file from the given `messages`.
 
@@ -22,7 +22,7 @@ Composes a MO (`.mo`) file from the given `messages`.
       45, 84, 114, 97, 110, 115, 108, 97, 116, 111, 114, 58, 32, 74, 97, 110, 101,
       32, 68, 111, 101, 0, 98, 97, 114, 0>>
 
-## parse_binary(binary, options \\ [])
+## parse_binary/2
 
 Parses the given `binary` as an MO file.
 
@@ -44,7 +44,7 @@ where `error` is an exception struct.
     ...> >>)
     {:ok, %Expo.Messages{headers: [], messages: []}}
 
-## parse_binary!(binary, options \\ [])
+## parse_binary!/2
 
 Parses a string into a `Expo.Messages` struct, raising an exception if there are
 any errors.
@@ -69,7 +69,7 @@ if there are no errors or raises an exception if there are.
     iex> Expo.MO.parse_binary!("invalid")
     ** (Expo.MO.InvalidFileError) invalid file
 
-## parse_file(path, options \\ [])
+## parse_file/2
 
 Parses the contents of the given file into a `Expo.Messages` struct.
 
@@ -93,7 +93,7 @@ and parses the contents of that file as an MO file. It can return:
     Expo.MO.parse_file("nonexistent")
     #=> {:error, :enoent}
 
-## parse_file!(path, options \\ [])
+## parse_file!/2
 
 Parses the contents of a file into a `Expo.Messages` struct, raising if there
 are any errors.

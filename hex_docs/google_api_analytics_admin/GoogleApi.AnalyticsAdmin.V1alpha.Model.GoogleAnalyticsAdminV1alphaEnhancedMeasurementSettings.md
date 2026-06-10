@@ -15,7 +15,3 @@ Singleton resource under a web DataStream, configuring measurement of additional
 *   `streamEnabled` (*type:* `boolean()`, *default:* `nil`) - Indicates whether Enhanced Measurement Settings will be used to automatically measure interactions and content on this web stream. Changing this value does not affect the settings themselves, but determines whether they are respected.
 *   `uriQueryParameter` (*type:* `String.t`, *default:* `nil`) - Additional URL query parameters. Max length is 1024 characters.
 *   `videoEngagementEnabled` (*type:* `boolean()`, *default:* `nil`) - If enabled, capture video play, progress, and complete events as visitors view embedded videos on your site.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

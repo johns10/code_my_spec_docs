@@ -11,7 +11,3 @@ A key event in a Google Analytics property.
 *   `deletable` (*type:* `boolean()`, *default:* `nil`) - Output only. If set to true, this event can be deleted.
 *   `eventName` (*type:* `String.t`, *default:* `nil`) - Immutable. The event name for this key event. Examples: 'click', 'purchase'
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Resource name of this key event. Format: properties/{property}/keyEvents/{key_event}
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

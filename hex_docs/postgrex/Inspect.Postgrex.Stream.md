@@ -1,1 +1,0 @@
-# Inspect.Postgrex.Stream

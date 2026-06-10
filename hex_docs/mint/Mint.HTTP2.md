@@ -124,41 +124,126 @@ The response to a promised request is like a response to any normal request.
 > You can pass this option when connecting or in `put_settings/2`. By default server push
 > is enabled.
 
-## cancel_request(conn, request_ref)
-
-Cancels an in-flight request.
-
-This function is HTTP/2 specific. It cancels an in-flight request. The server could have
-already sent responses for the request you want to cancel: those responses will be parsed
-by the connection but not returned to the user. No more responses
-to a request will be returned after you call `cancel_request/2` on that request.
-
-If there's no error in canceling the request, `{:ok, conn}` is returned where `conn` is
-the updated connection. If there's an error, `{:error, conn, reason}` is returned where
-`conn` is the updated connection and `reason` is the error reason.
-
-## Examples
-
-    {:ok, conn, ref} = Mint.HTTP2.request(conn, "GET", "/", _headers = [])
-    {:ok, conn} = Mint.HTTP2.cancel_request(conn, ref)
-
-## close(conn)
-
-See `Mint.HTTP.close/1`.
-
-## connect(scheme, address, port, opts \\ [])
+## connect/4
 
 Same as `Mint.HTTP.connect/4`, but forces a HTTP/2 connection.
 
-## controlling_process(conn, new_pid)
+## close/1
 
-See `Mint.HTTP.controlling_process/2`.
+See `Mint.HTTP.close/1`.
 
-## delete_private(conn, key)
+## open?/2
 
-See `Mint.HTTP.delete_private/2`.
+See `Mint.HTTP.open?/1`.
 
-## get_client_setting(conn, name)
+## request/5
+
+See `Mint.HTTP.request/5`.
+
+In HTTP/2, opening a request means opening a new HTTP/2 stream (see the
+module documentation). This means that a request could fail because the
+maximum number of concurrent streams allowed by the server has been reached.
+In that case, the error reason `:too_many_concurrent_requests` is returned.
+If you want to avoid incurring in this error, you can retrieve the value of
+the maximum number of concurrent streams supported by the server through
+`get_server_setting/2` (passing in the `:max_concurrent_streams` setting name).
+
+## Header list size
+
+In HTTP/2, the server can optionally specify a maximum header list size that
+the client needs to respect when sending headers. The header list size is calculated
+by summing the length (in bytes) of each header name plus value, plus 32 bytes for
+each header. Note that pseudo-headers (like `:path` or `:method`) count towards
+this size. If the size is exceeded, an error is returned. To check what the size
+is, use `get_server_setting/2`.
+
+## Request body size
+
+If the request body size will exceed the window size of the HTTP/2 stream created by the
+request or the window size of the connection Mint will return a `:exceeds_window_size`
+error.
+
+To ensure you do not exceed the window size it is recommended to stream the request
+body by initially passing `:stream` as the body and sending the body in chunks using
+`stream_request_body/3` and using `get_window_size/2` to get the window size of the
+request and connection.
+
+## stream_request_body/3
+
+See `Mint.HTTP.stream_request_body/3`.
+
+## ping/2
+
+Pings the server.
+
+This function is specific to HTTP/2 connections. It sends a **ping** request to
+the server `conn` is connected to. A `{:ok, conn, request_ref}` tuple is returned,
+where `conn` is the updated connection and `request_ref` is a unique reference that
+identifies this ping request. The response to a ping request is returned by `stream/2`
+as a `{:pong, request_ref}` tuple. If there's an error, this function returns
+`{:error, conn, reason}` where `conn` is the updated connection and `reason` is the
+error reason.
+
+`payload` must be an 8-byte binary with arbitrary content. When the server responds to
+a ping request, it will use that same payload. By default, the payload is an 8-byte
+binary with all bits set to `0`.
+
+Pinging can be used to measure the latency with the server and to ensure the connection
+is alive and well.
+
+## Examples
+
+    {:ok, conn, ref} = Mint.HTTP2.ping(conn)
+
+## put_settings/2
+
+Communicates the given **client settings** to the server.
+
+This function is HTTP/2-specific.
+
+This function takes a connection and a keyword list of HTTP/2 settings and sends
+the values of those settings to the server. The settings won't be effective until
+the server acknowledges them, which will be handled transparently by `stream/2`.
+
+This function returns `{:ok, conn}` when sending the settings to the server is
+successful, with `conn` being the updated connection. If there's an error, this
+function returns `{:error, conn, reason}` with `conn` being the updated connection
+and `reason` being the reason of the error.
+
+## Supported Settings
+
+See `t:setting/0` for the supported settings. You can see the meaning
+of these settings [in the corresponding section in the HTTP/2
+RFC](https://httpwg.org/specs/rfc7540.html#SettingValues).
+
+See the "HTTP/2 settings" section in the module documentation for more information.
+
+## Examples
+
+    {:ok, conn} = Mint.HTTP2.put_settings(conn, max_frame_size: 100)
+
+## get_server_setting/2
+
+Gets the value of the given HTTP/2 server settings.
+
+This function returns the value of the given HTTP/2 setting that the server
+advertised to the client. This function is HTTP/2 specific.
+For more information on HTTP/2 settings, see [the related section in
+the RFC](https://httpwg.org/specs/rfc7540.html#SettingValues).
+
+See the "HTTP/2 settings" section in the module documentation for more information.
+
+## Supported settings
+
+The possible settings that can be retrieved are described in `t:setting/0`.
+Any other atom passed as `name` will raise an error.
+
+## Examples
+
+    Mint.HTTP2.get_server_setting(conn, :max_concurrent_streams)
+    #=> 500
+
+## get_client_setting/2
 
 Gets the value of the given HTTP/2 client setting.
 
@@ -183,40 +268,25 @@ Any other atom passed as `name` will raise an error.
     Mint.HTTP2.get_client_setting(conn, :max_concurrent_streams)
     #=> 500
 
-## get_private(conn, key, default \\ nil)
+## cancel_request/2
 
-See `Mint.HTTP.get_private/3`.
+Cancels an in-flight request.
 
-## get_proxy_headers(conn)
+This function is HTTP/2 specific. It cancels an in-flight request. The server could have
+already sent responses for the request you want to cancel: those responses will be parsed
+by the connection but not returned to the user. No more responses
+to a request will be returned after you call `cancel_request/2` on that request.
 
-See `Mint.HTTP.get_proxy_headers/1`.
-
-## get_server_setting(conn, name)
-
-Gets the value of the given HTTP/2 server settings.
-
-This function returns the value of the given HTTP/2 setting that the server
-advertised to the client. This function is HTTP/2 specific.
-For more information on HTTP/2 settings, see [the related section in
-the RFC](https://httpwg.org/specs/rfc7540.html#SettingValues).
-
-See the "HTTP/2 settings" section in the module documentation for more information.
-
-## Supported settings
-
-The possible settings that can be retrieved are described in `t:setting/0`.
-Any other atom passed as `name` will raise an error.
+If there's no error in canceling the request, `{:ok, conn}` is returned where `conn` is
+the updated connection. If there's an error, `{:error, conn, reason}` is returned where
+`conn` is the updated connection and `reason` is the error reason.
 
 ## Examples
 
-    Mint.HTTP2.get_server_setting(conn, :max_concurrent_streams)
-    #=> 500
+    {:ok, conn, ref} = Mint.HTTP2.request(conn, "GET", "/", _headers = [])
+    {:ok, conn} = Mint.HTTP2.cancel_request(conn, ref)
 
-## get_socket(conn)
-
-See `Mint.HTTP.get_socket/1`.
-
-## get_window_size(conn, connection_or_request)
+## get_window_size/2
 
 Returns the window size of the connection or of a single request.
 
@@ -267,11 +337,11 @@ On a single streamed request:
     HTTP2.get_window_size(conn, {:request, request_ref})
     #=> 65_531
 
-## open?(conn, type \\ :write)
+## stream/2
 
-See `Mint.HTTP.open?/1`.
+See `Mint.HTTP.stream/2`.
 
-## open_request_count(conn)
+## open_request_count/1
 
 See `Mint.HTTP.open_request_count/1`.
 
@@ -284,214 +354,38 @@ clients might need to know how many open requests there are because the server l
 the number of concurrent requests the client can open. To know how many requests the client
 can open, see `get_server_setting/2` with the `:max_concurrent_streams` setting.
 
-## ping(conn, payload \\ :binary.copy(<<0>>, 8))
-
-Pings the server.
-
-This function is specific to HTTP/2 connections. It sends a **ping** request to
-the server `conn` is connected to. A `{:ok, conn, request_ref}` tuple is returned,
-where `conn` is the updated connection and `request_ref` is a unique reference that
-identifies this ping request. The response to a ping request is returned by `stream/2`
-as a `{:pong, request_ref}` tuple. If there's an error, this function returns
-`{:error, conn, reason}` where `conn` is the updated connection and `reason` is the
-error reason.
-
-`payload` must be an 8-byte binary with arbitrary content. When the server responds to
-a ping request, it will use that same payload. By default, the payload is an 8-byte
-binary with all bits set to `0`.
-
-Pinging can be used to measure the latency with the server and to ensure the connection
-is alive and well.
-
-## Examples
-
-    {:ok, conn, ref} = Mint.HTTP2.ping(conn)
-
-## put_log(conn, log?)
-
-See `Mint.HTTP.put_log/2`.
-
-## put_private(conn, key, value)
-
-See `Mint.HTTP.put_private/3`.
-
-## put_settings(conn, settings)
-
-Communicates the given **client settings** to the server.
-
-This function is HTTP/2-specific.
-
-This function takes a connection and a keyword list of HTTP/2 settings and sends
-the values of those settings to the server. The settings won't be effective until
-the server acknowledges them, which will be handled transparently by `stream/2`.
-
-This function returns `{:ok, conn}` when sending the settings to the server is
-successful, with `conn` being the updated connection. If there's an error, this
-function returns `{:error, conn, reason}` with `conn` being the updated connection
-and `reason` being the reason of the error.
-
-## Supported Settings
-
-See `t:setting/0` for the supported settings. You can see the meaning
-of these settings [in the corresponding section in the HTTP/2
-RFC](https://httpwg.org/specs/rfc7540.html#SettingValues).
-
-See the "HTTP/2 settings" section in the module documentation for more information.
-
-## Examples
-
-    {:ok, conn} = Mint.HTTP2.put_settings(conn, max_frame_size: 100)
-
-## recv(conn, byte_count, timeout)
+## recv/3
 
 See `Mint.HTTP.recv/3`.
 
-## request(conn, method, path, headers, body)
-
-See `Mint.HTTP.request/5`.
-
-In HTTP/2, opening a request means opening a new HTTP/2 stream (see the
-module documentation). This means that a request could fail because the
-maximum number of concurrent streams allowed by the server has been reached.
-In that case, the error reason `:too_many_concurrent_requests` is returned.
-If you want to avoid incurring in this error, you can retrieve the value of
-the maximum number of concurrent streams supported by the server through
-`get_server_setting/2` (passing in the `:max_concurrent_streams` setting name).
-
-## Header list size
-
-In HTTP/2, the server can optionally specify a maximum header list size that
-the client needs to respect when sending headers. The header list size is calculated
-by summing the length (in bytes) of each header name plus value, plus 32 bytes for
-each header. Note that pseudo-headers (like `:path` or `:method`) count towards
-this size. If the size is exceeded, an error is returned. To check what the size
-is, use `get_server_setting/2`.
-
-## Request body size
-
-If the request body size will exceed the window size of the HTTP/2 stream created by the
-request or the window size of the connection Mint will return a `:exceeds_window_size`
-error.
-
-To ensure you do not exceed the window size it is recommended to stream the request
-body by initially passing `:stream` as the body and sending the body in chunks using
-`stream_request_body/3` and using `get_window_size/2` to get the window size of the
-request and connection.
-
-## set_mode(conn, mode)
+## set_mode/2
 
 See `Mint.HTTP.set_mode/2`.
 
-## stream(conn, message)
+## controlling_process/2
 
-See `Mint.HTTP.stream/2`.
+See `Mint.HTTP.controlling_process/2`.
 
-## stream_request_body(conn, request_ref, chunk)
+## put_private/3
 
-See `Mint.HTTP.stream_request_body/3`.
+See `Mint.HTTP.put_private/3`.
 
-## setting/0
+## get_private/3
 
-HTTP/2 setting with its value.
+See `Mint.HTTP.get_private/3`.
 
-This type represents both server settings as well as client settings. To retrieve
-server settings use `get_server_setting/2` and to retrieve client settings use
-`get_client_setting/2`. To send client settings to the server, see `put_settings/2`.
+## delete_private/2
 
-The supported settings are the following:
+See `Mint.HTTP.delete_private/2`.
 
-  * `:header_table_size` - corresponds to `SETTINGS_HEADER_TABLE_SIZE`.
+## put_log/2
 
-  * `:enable_push` - corresponds to `SETTINGS_ENABLE_PUSH`. Sets whether
-    push promises are supported. If you don't want to support push promises,
-    use `put_settings/2` to tell the server that your client doesn't want push promises.
+See `Mint.HTTP.put_log/2`.
 
-  * `:max_concurrent_streams` - corresponds to `SETTINGS_MAX_CONCURRENT_STREAMS`.
-    Tells what is the maximum number of streams that the peer sending this (client or server)
-    supports. As mentioned in the module documentation, HTTP/2 streams are equivalent to
-    requests, so knowing the maximum number of streams that the server supports can be useful
-    to know how many concurrent requests can be open at any time. Use `get_server_setting/2`
-    to find out how many concurrent streams the server supports.
+## get_socket/1
 
-  * `:initial_window_size` -  corresponds to `SETTINGS_INITIAL_WINDOW_SIZE`.
-    Tells what is the value of the initial HTTP/2 window size for the peer
-    that sends this setting.
+See `Mint.HTTP.get_socket/1`.
 
-  * `:max_frame_size` - corresponds to `SETTINGS_MAX_FRAME_SIZE`. Tells what is the
-    maximum size of an HTTP/2 frame for the peer that sends this setting.
+## get_proxy_headers/1
 
-  * `:max_header_list_size` - corresponds to `SETTINGS_MAX_HEADER_LIST_SIZE`.
-
-  * `:enable_connect_protocol` - corresponds to `SETTINGS_ENABLE_CONNECT_PROTOCOL`.
-    Sets whether the client may invoke the extended connect protocol which is used to
-    bootstrap WebSocket connections.
-
-## settings/0
-
-HTTP/2 settings.
-
-See `t:setting/0`.
-
-## error_reason/0
-
-An HTTP/2-specific error reason.
-
-The values can be:
-
-  * `:closed` - when you try to make a request or stream a body chunk but the connection
-    is closed.
-
-  * `:closed_for_writing` - when you try to make a request or stream a body chunk but
-    the connection is closed for writing. This means you cannot issue any more requests.
-    See the "Closed connection" section in the module documentation for more information.
-
-  * `:too_many_concurrent_requests` - when the maximum number of concurrent requests
-    allowed by the server is reached. To find out what this limit is, use `get_setting/2`
-    with the `:max_concurrent_streams` setting name.
-
-  * `{:max_header_list_size_exceeded, size, max_size}` - when the maximum size of
-    the header list is reached. `size` is the actual value of the header list size,
-    `max_size` is the maximum value allowed. See `get_setting/2` to retrieve the
-    value of the max size.
-
-  * `{:exceeds_window_size, what, window_size}` - when the data you're trying to send
-    exceeds the window size of the connection (if `what` is `:connection`) or of a request
-    (if `what` is `:request`). `window_size` is the allowed window size. See
-    `get_window_size/2`.
-
-  * `{:stream_not_found, stream_id}` - when the given request is not found.
-
-  * `:unknown_request_to_stream` - when you're trying to stream data on an unknown
-    request.
-
-  * `:request_is_not_streaming` - when you try to send data (with `stream_request_body/3`)
-    on a request that is not open for streaming.
-
-  * `:unprocessed` - when a request was closed because it was not processed by the server.
-    When this error is returned, it means that the server hasn't processed the request at all,
-    so it's safe to retry the given request on a different or new connection.
-
-  * `{:server_closed_request, error_code}` - when the server closes the request.
-    `error_code` is the reason why the request was closed.
-
-  * `{:server_closed_connection, reason, debug_data}` - when the server closes the connection
-    gracefully or because of an error. In HTTP/2, this corresponds to a `GOAWAY` frame.
-    `error` is the reason why the connection was closed. `debug_data` is additional debug data.
-
-  * `{:frame_size_error, frame}` - when there's an error with the size of a frame.
-    `frame` is the frame type, such as `:settings` or `:window_update`.
-
-  * `{:protocol_error, debug_data}` - when there's a protocol error.
-    `debug_data` is a string that explains the nature of the error.
-
-  * `{:compression_error, debug_data}` - when there's a header compression error.
-    `debug_data` is a string that explains the nature of the error.
-
-  * `{:flow_control_error, debug_data}` - when there's a flow control error.
-    `debug_data` is a string that explains the nature of the error.
-
-## t/0
-
-A Mint HTTP/2 connection struct.
-
-The struct's fields are private.
+See `Mint.HTTP.get_proxy_headers/1`.

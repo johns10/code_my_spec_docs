@@ -2,15 +2,11 @@
 
 
 
-## apply_defaults(struct, defaults, owner)
-
-Applies default values into the struct.
-
-## association_from_schema!(schema, assoc)
+## association_from_schema!/2
 
 Retrieves the association from the given schema.
 
-## association_key(module, suffix)
+## association_key/2
 
 Returns the association key for the given module with the given suffix.
 
@@ -25,44 +21,32 @@ Returns the association key for the given module with the given suffix.
     iex> Ecto.Association.association_key(Hello.HTTPServer, :id)
     :http_server_id
 
-## combine_assoc_query(query, conditions)
+## filter_through_chain/3
 
-Add the default assoc query where clauses a provided query.
+Build an association query through the given associations from the specified owner table
+and through the given associations. Finally filter by the provided values of the owner_key of
+the first relationship in the chain. Used in Ecto.assoc/2.
 
-## combine_joins_query(query, conditions, binding)
+## join_through_chain/3
+
+Join the target table given a list of associations to go through starting from the owner table.
+
+## combine_joins_query/3
 
 Add the default assoc query where clauses to a join.
 
 This handles only `where` and converts it to a `join`,
 as that is the only information propagate in join queries.
 
-## filter_through_chain(owner, through, values)
+## combine_assoc_query/2
 
-Build an association query through the given associations from the specified owner table
-and through the given associations. Finally filter by the provided values of the owner_key of
-the first relationship in the chain. Used in Ecto.assoc/2.
+Add the default assoc query where clauses a provided query.
 
-## join_through_chain(owner, through, query)
-
-Join the target table given a list of associations to go through starting from the owner table.
-
-## joins_query(query, through, counter)
+## joins_query/3
 
 Build a join query with the given `through` associations starting at `counter`.
 
-## merge_source(schema, query)
-
-Merges source from query into to the given schema.
-
-In case the query does not have a source, returns
-the schema unchanged.
-
-## on_repo_change(changeset, assocs, adapter, opts)
-
-Performs the repository action in the related changeset,
-returning `{:ok, data}` or `{:error, changes}`.
-
-## related_from_query(atom, name)
+## related_from_query/2
 
 Retrieves related module from queryable.
 
@@ -77,93 +61,30 @@ Retrieves related module from queryable.
     iex> Ecto.Association.related_from_query("wrong", :comments_v1)
     ** (ArgumentError) association :comments_v1 queryable must be a schema or a {source, schema}. got: "wrong"
 
-## update_parent_prefix(changeset, arg2)
+## apply_defaults/3
 
-Updates the prefix of a changeset based on the metadata.
+Applies default values into the struct.
 
-## validate_defaults!(module, name, defaults)
+## validate_defaults!/3
 
 Validates `defaults` for association named `name`.
 
-## validate_preload_order!(name, preload_order)
+## validate_preload_order!/2
 
 Validates `preload_order` for association named `name`.
 
-## after_verify_validation/1
+## merge_source/2
 
-Invoked after the schema is compiled to validate associations.
+Merges source from query into to the given schema.
 
-Useful for checking if associated modules exist without running
-into deadlocks.
+In case the query does not have a source, returns
+the schema unchanged.
 
-## assoc_query/3
+## update_parent_prefix/2
 
-Returns the association query on top of the given query.
+Updates the prefix of a changeset based on the metadata.
 
-If the query is `nil`, the association target must be used.
+## on_repo_change/4
 
-This callback receives the association struct and it must return
-a query that retrieves all associated entries with the given
-values for the owner key.
-
-This callback is used by `Ecto.assoc/2` and when preloading.
-
-## build/3
-
-Builds a struct for the given association.
-
-The struct to build from is given as argument in case default values
-should be set in the struct.
-
-Invoked by `Ecto.build_assoc/3`.
-
-## joins_query/1
-
-Returns an association join query.
-
-This callback receives the association struct and it must return
-a query that retrieves all associated entries using joins up to
-the owner association.
-
-For example, a `has_many :comments` inside a `Post` module would
-return:
-
-    from c in Comment, join: p in Post, on: c.post_id == p.id
-
-Note all the logic must be expressed inside joins, as fields like
-`where` and `order_by` won't be used by the caller.
-
-This callback is invoked when `join: assoc(p, :comments)` is used
-inside queries.
-
-## on_repo_change/5
-
-Performs the repository change on the association.
-
-Receives the parent changeset, the current changesets
-and the repository action options. Must return the
-persisted struct (or nil) or the changeset error.
-
-## preload_info/1
-
-Returns information used by the preloader.
-
-## struct/3
-
-Builds the association struct.
-
-The struct must be defined in the module that implements the
-callback and it must contain at least the following keys:
-
-  * `:cardinality` - tells if the association is one to one
-    or one/many to many
-
-  * `:field` - tells the field in the owner struct where the
-    association should be stored
-
-  * `:owner` - the owner module of the association
-
-  * `:owner_key` - the key in the owner with the association value
-
-  * `:relationship` - if the relationship to the specified schema is
-    of a `:child` or a `:parent`
+Performs the repository action in the related changeset,
+returning `{:ok, data}` or `{:error, changes}`.

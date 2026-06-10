@@ -2,7 +2,7 @@
 
 Helpers for rendering LiveViews from a controller.
 
-## live_render(conn, view, opts \\ [])
+## live_render/3
 
 Renders a live view from a Plug request and sends an HTML response
 from within a controller.

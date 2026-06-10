@@ -2,6 +2,6 @@
 
 
 
-## sort_messages(container)
+## sort_messages/1
 
 For final output

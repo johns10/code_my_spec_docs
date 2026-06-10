@@ -5,15 +5,7 @@ A plug and module to handle automatic code reloading.
 To avoid race conditions, all code reloads are funneled through a
 sequential call operation.
 
-## call(conn, opts)
-
-API used by Plug to invoke the code reloader on every request.
-
-## init(opts)
-
-API used by Plug to start the code reloader.
-
-## reload(endpoint, opts \\ [])
+## reload/2
 
 Reloads code for the current Mix project by invoking the
 `:reloadable_compilers` on the list of `:reloadable_apps`.
@@ -56,12 +48,10 @@ concurrently.
     Defaults to `["--no-all-warnings"]` so only warnings related to the
     files being compiled are printed
 
-## reload!(endpoint, opts)
+## init/1
 
-Same as `reload/1` but it will raise if Mix is not available.
+API used by Plug to start the code reloader.
 
-## sync()
+## call/2
 
-Synchronizes with the code server if it is alive.
-
-It returns `:ok`. If it is not running, it also returns `:ok`.
+API used by Plug to invoke the code reloader on every request.

@@ -33,7 +33,7 @@ grant flow is automatically enabled.
 If access_token_expires_in is set to nil, access tokens will never
 expire.
 
-## authenticate_token(token, config \\ [])
+## authenticate_token/2
 
 Authenticate an access token.
 

@@ -2,7 +2,7 @@
 
 
 
-## init(indentation, file, source, tag_handler)
+## init/4
 
 Initiate the Tokenizer state.
 
@@ -14,7 +14,7 @@ Initiate the Tokenizer state.
 * `tag_handler` - Tag handler to classify the tags. See `Phoenix.LiveView.TagEngine`
   behaviour.
 
-## tokenize(text, meta, tokens, cont, state)
+## tokenize/5
 
 Tokenize the given text according to the given params.
 

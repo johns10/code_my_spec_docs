@@ -24,44 +24,7 @@ Runtime-registered components are stored in typed maps keyed by name/URI:
 
   * `context` - read-only `%Context{}`, refreshed by Session before each callback
 
-## assign(frame, assigns)
-
-Assigns a value or multiple values to the frame.
-
-## Examples
-
-    frame = Frame.assign(frame, :status, :active)
-    frame = Frame.assign(frame, %{status: :active, count: 5})
-    frame = Frame.assign(frame, status: :active, count: 5)
-
-## assign_new(frame, key, fun)
-
-Assigns a value to the frame only if the key doesn't already exist.
-
-The value is computed lazily using the provided function.
-
-## Examples
-
-    frame = Frame.assign_new(frame, :timestamp, fn -> DateTime.utc_now() end)
-
-## clear_components(frame)
-
-Clears all runtime-registered components
-
-## from_saved(map)
-
-Reconstructs Frame from a previously saved map.
-
-Restored: `assigns`, `pagination_limit`, `resource_subscriptions`. Runtime-only fields
-(`tools`, `resources`, `prompts`, `resource_templates`) are initialized empty — their
-validator functions are not serializable. `context` is left as the default struct and
-will be set by Session before each callback invocation.
-
-## get_components(frame)
-
-Retrieves all runtime-registered components as a flat list
-
-## new(assigns \\ %{})
+## new/1
 
 Creates a new frame with optional initial assigns.
 
@@ -73,7 +36,27 @@ Creates a new frame with optional initial assigns.
     iex> Frame.new(%{user: "alice"})
     %Frame{assigns: %{user: "alice"}}
 
-## put_pagination_limit(frame, limit)
+## assign/2
+
+Assigns a value or multiple values to the frame.
+
+## Examples
+
+    frame = Frame.assign(frame, :status, :active)
+    frame = Frame.assign(frame, %{status: :active, count: 5})
+    frame = Frame.assign(frame, status: :active, count: 5)
+
+## assign_new/3
+
+Assigns a value to the frame only if the key doesn't already exist.
+
+The value is computed lazily using the provided function.
+
+## Examples
+
+    frame = Frame.assign_new(frame, :timestamp, fn -> DateTime.utc_now() end)
+
+## put_pagination_limit/2
 
 Sets the pagination limit for listing operations.
 
@@ -83,17 +66,21 @@ Sets the pagination limit for listing operations.
     frame.pagination_limit
     # => 10
 
-## register_prompt(frame, name, opts)
+## register_tool/3
+
+Registers a tool definition at runtime.
+
+## register_prompt/3
 
 Registers a prompt definition at runtime.
 
-## register_resource(frame, uri, opts)
+## register_resource/3
 
 Registers a resource definition with a fixed URI.
 
 For parameterized resources, use `register_resource_template/3` instead.
 
-## register_resource_template(frame, uri_template, opts)
+## register_resource_template/3
 
 Registers a resource template definition using a URI template (RFC 6570).
 
@@ -105,15 +92,7 @@ Registers a resource template definition using a URI template (RFC 6570).
       description: "Access files in the project directory"
     )
 
-## register_tool(frame, name, opts)
-
-Registers a tool definition at runtime.
-
-## resource_subscribed?(frame, uri)
-
-Returns whether this session has an active subscription for the given URI.
-
-## subscribe_resource(frame, uri)
+## subscribe_resource/2
 
 Records that this session has subscribed to updates for the given resource
 URI.
@@ -121,7 +100,23 @@ URI.
 Idempotent — subscribing twice to the same URI is a no-op. Per the MCP spec,
 the URI does not need to refer to a currently-registered resource.
 
-## to_saved(frame)
+## unsubscribe_resource/2
+
+Removes a previously-recorded subscription for the given URI.
+
+## resource_subscribed?/2
+
+Returns whether this session has an active subscription for the given URI.
+
+## clear_components/1
+
+Clears all runtime-registered components
+
+## get_components/1
+
+Retrieves all runtime-registered components as a flat list
+
+## to_saved/1
 
 Serializes Frame for persistent storage.
 
@@ -137,6 +132,11 @@ Only `assigns` and `pagination_limit` are persisted. The following fields are
 Compile-time components (registered via the `component` macro) are always
 available from the server module and do not need persistence.
 
-## unsubscribe_resource(frame, uri)
+## from_saved/1
 
-Removes a previously-recorded subscription for the given URI.
+Reconstructs Frame from a previously saved map.
+
+Restored: `assigns`, `pagination_limit`, `resource_subscriptions`. Runtime-only fields
+(`tools`, `resources`, `prompts`, `resource_templates`) are initialized empty — their
+validator functions are not serializable. `context` is left as the default struct and
+will be set by Session before each callback invocation.

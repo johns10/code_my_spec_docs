@@ -208,7 +208,51 @@ case MySchemas.user(user_data) do
 end
 ```
 
-## conforms?(schema, data, opts \\ [])
+## defschema/3
+
+Defines a schema with a given name and schema definition.
+
+## Examples
+
+    defmodule MySchemas do
+      import Peri
+
+      defschema :user, %{
+        name: :string,
+        age: :integer,
+        email: {:required, :string}
+      }
+
+      # With permissive mode
+      defschema :flexible_user, %{
+        name: :string,
+        email: {:required, :string}
+      }, mode: :permissive
+
+      # With metadata (field-level and schema-level)
+      defschema :documented_user, %{
+        email: {:meta, {:required, :string}, doc: "Login email", example: "a@b.io"}
+      }, title: "User", description: "Account holder"
+    end
+
+    # Schema-level metadata is accessible via __schema_meta__/1:
+    MySchemas.__schema_meta__(:documented_user)
+    # => [title: "User", description: "Account holder"]
+
+    user_data = %{name: "John", age: 30, email: "john@example.com"}
+    MySchemas.user(user_data)
+    # => {:ok, %{name: "John", age: 30, email: "john@example.com"}}
+
+    invalid_data = %{name: "John", age: 30}
+    MySchemas.user(invalid_data)
+    # => {:error, [email: "is required"]}
+
+    # Permissive mode preserves extra fields
+    flexible_data = %{name: "John", email: "john@example.com", role: "admin"}
+    MySchemas.flexible_user(flexible_data)
+    # => {:ok, %{name: "John", email: "john@example.com", role: "admin"}}
+
+## conforms?/3
 
 Checks if the given data conforms to the specified schema.
 
@@ -239,50 +283,7 @@ Checks if the given data conforms to the specified schema.
     iex> Peri.conforms?(schema, invalid_data)
     false
 
-## from_json_schema(json_schema, opts \\ [])
-
-Decodes a JSON Schema (Draft 7) map into a Peri schema.
-
-Returns `{:ok, schema}` if the resulting Peri schema is valid, otherwise
-`{:error, errors}`.
-
-## put_in_enum(enum, key, val)
-
-Helper function to put a value into an enum, handling
-not only maps and keyword lists but also structs.
-
-## Examples
-
-    iex> Peri.put_in_enum(%{}, :hello, "world")
-    iex> Peri.put_in_enum(%{}, "hello", "world")
-    iex> Peri.put_in_enum(%User{}, :hello, "world")
-    iex> Peri.put_in_enum([], :hello, "world")
-
-## to_changeset!(s, attrs)
-
-Converts a `Peri.schema()` definition to an Ecto [schemaless changesets](https://hexdocs.pm/ecto/Ecto.Changeset.html#module-schemaless-changesets).
-
-## to_json_schema(schema, opts \\ [])
-
-Converts a Peri schema into a JSON Schema (Draft 7) map.
-
-Reads `{:meta, type, opts}` annotations and emits `title`, `description`,
-`examples`, `deprecated`. Dynamic types degrade per `:on_unsupported`
-(`:omit | :true_schema | :raise`, default `:omit`).
-
-Pass `:exclude_meta_keys` to drop annotation keywords from the output —
-commonly `[:default]` when the consumer-facing schema should not surface
-validation defaults.
-
-## Examples
-
-    iex> Peri.to_json_schema(%{name: {:required, :string}})
-    %{"type" => "object", "properties" => %{"name" => %{"type" => "string"}}, "required" => ["name"]}
-
-    iex> Peri.to_json_schema({:integer, {:default, 0}}, exclude_meta_keys: [:default])
-    %{"type" => "integer"}
-
-## validate(schema, data, opts \\ [])
+## validate/3
 
 Validates a given data map against a schema with options.
 
@@ -313,7 +314,19 @@ Returns `{:ok, data}` if the data is valid according to the schema, or `{:error,
     Peri.validate(schema, data, mode: :permissive)
     # => {:ok, %{name: "John", age: 30, extra: "field"}}
 
-## validate_schema(schema)
+## put_in_enum/3
+
+Helper function to put a value into an enum, handling
+not only maps and keyword lists but also structs.
+
+## Examples
+
+    iex> Peri.put_in_enum(%{}, :hello, "world")
+    iex> Peri.put_in_enum(%{}, "hello", "world")
+    iex> Peri.put_in_enum(%User{}, :hello, "world")
+    iex> Peri.put_in_enum([], :hello, "world")
+
+## validate_schema/1
 
 Validates a schema definition to ensure it adheres to the expected structure and types.
 
@@ -366,136 +379,3 @@ This function can handle both simple and complex schema definitions, including n
   }
   assert {:error, _errors} = validate_schema(schema)
   ```
-
-## walk(schema, fun)
-
-Depth-first rewrite of a schema tree.
-
-The callback is invoked on every subtree (pre-order). It must return either
-`{:cont, new_node}` to replace the node and continue, or `:drop` to remove it
-(only valid for values inside a map or keyword schema).
-
-Building block for transforms like "make every field optional" or "strip
-internal-only fields from a public DTO". See `Peri.Walker` for details.
-
-## Examples
-
-    iex> schema = %{name: {:required, :string}, age: {:required, :integer}}
-    iex> Peri.walk(schema, fn
-    ...>   {:required, t} -> {:cont, t}
-    ...>   other -> {:cont, other}
-    ...> end)
-    %{name: :string, age: :integer}
-
-## defschema(name, schema, opts \\ [])
-
-Defines a schema with a given name and schema definition.
-
-## Examples
-
-    defmodule MySchemas do
-      import Peri
-
-      defschema :user, %{
-        name: :string,
-        age: :integer,
-        email: {:required, :string}
-      }
-
-      # With permissive mode
-      defschema :flexible_user, %{
-        name: :string,
-        email: {:required, :string}
-      }, mode: :permissive
-
-      # With metadata (field-level and schema-level)
-      defschema :documented_user, %{
-        email: {:meta, {:required, :string}, doc: "Login email", example: "a@b.io"}
-      }, title: "User", description: "Account holder"
-    end
-
-    # Schema-level metadata is accessible via __schema_meta__/1:
-    MySchemas.__schema_meta__(:documented_user)
-    # => [title: "User", description: "Account holder"]
-
-    user_data = %{name: "John", age: 30, email: "john@example.com"}
-    MySchemas.user(user_data)
-    # => {:ok, %{name: "John", age: 30, email: "john@example.com"}}
-
-    invalid_data = %{name: "John", age: 30}
-    MySchemas.user(invalid_data)
-    # => {:error, [email: "is required"]}
-
-    # Permissive mode preserves extra fields
-    flexible_data = %{name: "John", email: "john@example.com", role: "admin"}
-    MySchemas.flexible_user(flexible_data)
-    # => {:ok, %{name: "John", email: "john@example.com", role: "admin"}}
-
-## is_enumerable(data)
-
-Checks if the given data is an enumerable, specifically a map or a list.
-
-## Parameters
-
-  - `data`: The data to check.
-
-## Examples
-
-    iex> is_enumerable(%{})
-    true
-
-    iex> is_enumerable([])
-    true
-
-    iex> is_enumerable(123)
-    false
-
-    iex> is_enumerable("string")
-    false
-
-## is_numeric(n)
-
-Checks if the given data is a numeric value, specifically a integer or a float.
-
-## Parameters
-
-  - `data`: The data to check.
-
-## Examples
-
-    iex> is_numeric(123)
-    true
-
-    iex> is_numeric(0xFF)
-    true
-
-    iex> is_numeric(12.12)
-    true
-
-    iex> is_numeric("string")
-    false
-
-    iex> is_numeric(%{})
-    false
-
-## is_numeric_type(t)
-
-Checks if the given type as an atom is a numeric (integer or float).
-
-## Parameters
-
-  - `data`: The data to check.
-
-## Examples
-
-    iex> is_numeric(:integer)
-    true
-
-    iex> is_numeric(:float)
-    true
-
-    iex> is_numeric(:list)
-    false
-
-    iex> is_numeric({:enum, _})
-    false

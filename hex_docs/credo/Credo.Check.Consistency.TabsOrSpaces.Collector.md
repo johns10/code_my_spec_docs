@@ -1,1 +1,0 @@
-# Credo.Check.Consistency.TabsOrSpaces.Collector

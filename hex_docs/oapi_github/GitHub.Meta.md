@@ -2,7 +2,7 @@
 
 Provides API endpoints related to meta
 
-## get(opts \\ [])
+## get/1
 
 Get GitHub meta information
 
@@ -18,7 +18,7 @@ The values shown in the documentation's response are example values. You must al
 
   * [API method documentation](https://docs.github.com/rest/meta/meta#get-apiname-meta-information)
 
-## get_all_versions(opts \\ [])
+## get_all_versions/1
 
 Get all API versions
 
@@ -28,7 +28,7 @@ Get all supported GitHub API versions.
 
   * [API method documentation](https://docs.github.com/rest/meta/meta#get-all-api-versions)
 
-## get_octocat(opts \\ [])
+## get_octocat/1
 
 Get Octocat
 
@@ -42,7 +42,7 @@ Get the octocat as ASCII art
 
   * [API method documentation](https://docs.github.com/rest/meta/meta#get-octocat)
 
-## get_zen(opts \\ [])
+## get_zen/1
 
 Get the Zen of GitHub
 
@@ -52,7 +52,7 @@ Get a random sentence from the Zen of GitHub
 
   * [API method documentation](https://docs.github.com/rest/meta/meta#get-the-zen-of-github)
 
-## root(opts \\ [])
+## root/1
 
 GitHub API Root
 

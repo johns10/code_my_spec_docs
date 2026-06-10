@@ -42,17 +42,3 @@ See `c:Tesla.Middleware.call/3` for details.
         end
       end
     end
-
-## call/3
-
-Invoked when a request runs.
-
-- (optionally) read and/or writes request data
-- calls `Tesla.run/2`
-- (optionally) read and/or writes response data
-
-## Arguments
-
-- `env` - `Tesla.Env` struct that stores request/response data
-- `next` - middlewares that should be called after current one
-- `options` - middleware options provided by user

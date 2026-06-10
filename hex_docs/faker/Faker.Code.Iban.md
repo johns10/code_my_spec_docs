@@ -19,7 +19,7 @@ generated IBAN. The components will not be validated, but are used when calculat
     iex> Faker.Code.Iban.iban(["NL", "BE"])
     "BE31198979502980"
 
-## iban()
+## iban/0
 
 Returns a random IBAN from a random country
 
@@ -34,7 +34,7 @@ Returns a random IBAN from a random country
     iex> Faker.Code.Iban.iban
     "PT72807856869061130164499"
 
-## iban(country_code_or_codes)
+## iban/1
 
 Returns a random IBAN for a specific country code, or a random country code from a given list of
 country codes.
@@ -50,7 +50,7 @@ country codes.
     iex> Faker.Code.Iban.iban(["BE", "DE"])
     "DE57989795029807856869"
 
-## iban(country_code, prefix_components)
+## iban/2
 
 Returns a random IBAN starting with the given components. The given components are not validated
 but are included in the checksum.

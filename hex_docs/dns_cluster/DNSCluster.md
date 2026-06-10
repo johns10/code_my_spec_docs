@@ -33,32 +33,3 @@ See the `start_link/1` docs for all available options.
 
 If you require more advanced clustering options and strategies, see the
 [libcluster](https://hexdocs.pm/libcluster) library.
-
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## start_link(opts)
-
-Starts DNS based cluster discovery.
-
-## Options
-
-  * `:name` - the name of the cluster. Defaults to `DNSCluster`.
-  * `:query` - the required DNS query for node discovery, for example:
-    `"myapp.internal"` or `["foo.internal", "bar.internal"]`. If the basename
-    differs between nodes, a tuple of `{basename, query}` can be provided as well.
-    The value `:ignore` can be used to ignore starting the DNSCluster.
-  * `:interval` - the millisec interval between DNS queries. Defaults to `5000`.
-  * `:connect_timeout` - the millisec timeout to allow discovered nodes to connect.
-    Defaults to `10_000`.
-
-## Examples
-
-    iex> DNSCluster.start_link(query: "myapp.internal")
-    {:ok, pid}
-
-    iex> DNSCluster.start_link(query: :ignore)
-    :ignore

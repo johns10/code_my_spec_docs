@@ -1,1 +1,0 @@
-# Collectable.MDEx.Document

@@ -102,7 +102,20 @@ end
 **WARNING**: Using global mocks may affect tests with local mock
 (because of fallback to global mock in case local one is not found)
 
-## json(body, opts \\ [])
+## mock/1
+
+Setup mocks for current test.
+
+This mock will only be available to the current process.
+
+## mock_global/1
+
+Setup global mocks.
+
+**WARNING**: This mock will be available to ALL processes.
+It might cause conflicts when running tests in parallel!
+
+## json/2
 
 Return JSON response.
 
@@ -115,20 +128,7 @@ Example
       %{url: "/404"} -> json(%{"some" => "data"}, status: 404)
     end
 
-## mock(fun)
-
-Setup mocks for current test.
-
-This mock will only be available to the current process.
-
-## mock_global(fun)
-
-Setup global mocks.
-
-**WARNING**: This mock will be available to ALL processes.
-It might cause conflicts when running tests in parallel!
-
-## text(body, opts \\ [])
+## text/2
 
 Return text response.
 

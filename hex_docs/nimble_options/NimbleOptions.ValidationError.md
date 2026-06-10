@@ -7,7 +7,7 @@ or turn it into a message string with `Exception.message/1`.
 
 See [`%NimbleOptions.ValidationError{}`](`__struct__/0`) for documentation on the fields.
 
-## %NimbleOptions.ValidationError{}
+## message/1
 
 The error struct.
 

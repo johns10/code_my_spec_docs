@@ -17,52 +17,7 @@ also 1).
 The allowed ranges for xxxx (subscriber number) are [0–9] for each of the four
 digits.
 
-## area_code()
-
-Returns a random area code
-
-## Examples
-
-    iex> Faker.Phone.EnUs.area_code()
-    "825"
-    iex> Faker.Phone.EnUs.area_code()
-    "246"
-    iex> Faker.Phone.EnUs.area_code()
-    "681"
-    iex> Faker.Phone.EnUs.area_code()
-    "683"
-
-## exchange_code()
-
-Returns a random exchange code
-
-## Examples
-
-    iex> Faker.Phone.EnUs.exchange_code()
-    "503"
-    iex> Faker.Phone.EnUs.exchange_code()
-    "845"
-    iex> Faker.Phone.EnUs.exchange_code()
-    "549"
-    iex> Faker.Phone.EnUs.exchange_code()
-    "509"
-
-## extension(n)
-
-Returns a random extension `n` digits long
-
-## Examples
-
-    iex> Faker.Phone.EnUs.extension()
-    "0154"
-    iex> Faker.Phone.EnUs.extension()
-    "2646"
-    iex> Faker.Phone.EnUs.extension(3)
-    "108"
-    iex> Faker.Phone.EnUs.extension(5)
-    "32970"
-
-## phone()
+## phone/0
 
 Returns a random US phone number
 
@@ -85,7 +40,37 @@ Possible returned formats:
     iex> Faker.Phone.EnUs.phone()
     "(377) 347-8109"
 
-## subscriber_number(n)
+## area_code/0
+
+Returns a random area code
+
+## Examples
+
+    iex> Faker.Phone.EnUs.area_code()
+    "825"
+    iex> Faker.Phone.EnUs.area_code()
+    "246"
+    iex> Faker.Phone.EnUs.area_code()
+    "681"
+    iex> Faker.Phone.EnUs.area_code()
+    "683"
+
+## exchange_code/0
+
+Returns a random exchange code
+
+## Examples
+
+    iex> Faker.Phone.EnUs.exchange_code()
+    "503"
+    iex> Faker.Phone.EnUs.exchange_code()
+    "845"
+    iex> Faker.Phone.EnUs.exchange_code()
+    "549"
+    iex> Faker.Phone.EnUs.exchange_code()
+    "509"
+
+## subscriber_number/1
 
 Returns a random subscriber number `n` digits long
 

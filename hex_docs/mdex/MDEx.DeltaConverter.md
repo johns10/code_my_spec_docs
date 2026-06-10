@@ -2,7 +2,7 @@
 
 
 
-## convert(document, options)
+## convert/2
 
 Convert an MDEx document to Quill Delta format.
 
@@ -11,15 +11,3 @@ Convert an MDEx document to Quill Delta format.
     iex> doc = %MDEx.Document{nodes: [%MDEx.Text{literal: "Hello"}]}
     iex> MDEx.DeltaConverter.convert(doc, %{})
     {:ok, [%{"insert" => "Hello"}]}
-
-## delta_op/0
-
-Delta operation map
-
-## delta/0
-
-Complete Delta document
-
-## options/0
-
-Conversion options

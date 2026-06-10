@@ -31,18 +31,14 @@ Or check out all the [available themes](https://docs.rs/lumis/latest/lumis/#them
        }
     }
 
-## from_file(path)
-
-Load a theme from a JSON file.
-
-## from_json(json_string)
-
-Load a theme from a JSON string.
-
-## get(name, default \\ nil)
+## get/2
 
 Get a theme by name.
 
-## t/0
+## from_file/1
 
-A Neovim theme with name, appearance (:light or :dark), revision, and highlight styles.
+Load a theme from a JSON file.
+
+## from_json/1
+
+Load a theme from a JSON string.

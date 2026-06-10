@@ -1,1 +1,0 @@
-# Postgrex.Extensions.TSVector

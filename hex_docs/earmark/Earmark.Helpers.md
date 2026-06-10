@@ -2,6 +2,6 @@
 
 
 
-## replace(text, regex, replacement, options \\ [])
+## replace/4
 
 `Regex.replace` with the arguments in the correct order

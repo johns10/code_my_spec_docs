@@ -2,10 +2,10 @@
 
 Utilities module for mix tasks.
 
-## no_umbrella!(task)
+## no_umbrella!/1
 
 Raises an exception if the project is an umbrella app.
 
-## parse_options(args, switches, default_opts)
+## parse_options/3
 
 Parses argument options into a map.

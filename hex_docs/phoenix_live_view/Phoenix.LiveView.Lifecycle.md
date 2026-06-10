@@ -2,6 +2,6 @@
 
 
 
-## stage_info(socket, view, stage, arity)
+## stage_info/4
 
 Returns a map of infos about the lifecycle stage for the given `view`.

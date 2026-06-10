@@ -2,7 +2,7 @@
 
 Provides API endpoints related to licenses
 
-## get(license, opts \\ [])
+## get/2
 
 Get a license
 
@@ -12,7 +12,7 @@ Gets information about a specific license. For more information, see "[Licensing
 
   * [API method documentation](https://docs.github.com/rest/licenses/licenses#get-a-license)
 
-## get_all_commonly_used(opts \\ [])
+## get_all_commonly_used/1
 
 Get all commonly used licenses
 
@@ -28,7 +28,7 @@ Lists the most commonly used licenses on GitHub. For more information, see "[Lic
 
   * [API method documentation](https://docs.github.com/rest/licenses/licenses#get-all-commonly-used-licenses)
 
-## get_for_repo(owner, repo, opts \\ [])
+## get_for_repo/3
 
 Get the license for a repository
 

@@ -8,7 +8,3 @@ Expresses dimension or metric filters. The fields in the same expression need to
 *   `andGroup` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessFilterExpressionList.t`, *default:* `nil`) - Each of the FilterExpressions in the and_group has an AND relationship.
 *   `notExpression` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessFilterExpression.t`, *default:* `nil`) - The FilterExpression is NOT of not_expression.
 *   `orGroup` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessFilterExpressionList.t`, *default:* `nil`) - Each of the FilterExpressions in the or_group has an OR relationship.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

@@ -11,7 +11,7 @@ The message format requires the following keys:
   * `:ref` - The unique string ref
   * `:join_ref` - The unique string ref when joining
 
-## from_map!(map)
+## from_map!/1
 
 Converts a map with string keys into a message struct.
 

@@ -11,7 +11,3 @@ A conversion event in a Google Analytics property.
 *   `deletable` (*type:* `boolean()`, *default:* `nil`) - Output only. If set, this event can currently be deleted with DeleteConversionEvent.
 *   `eventName` (*type:* `String.t`, *default:* `nil`) - Immutable. The event name for this conversion event. Examples: 'click', 'purchase'
 *   `name` (*type:* `String.t`, *default:* `nil`) - Output only. Resource name of this conversion event. Format: properties/{property}/conversionEvents/{conversion_event}
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

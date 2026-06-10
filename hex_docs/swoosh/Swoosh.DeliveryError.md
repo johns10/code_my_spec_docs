@@ -1,1 +1,0 @@
-# Swoosh.DeliveryError

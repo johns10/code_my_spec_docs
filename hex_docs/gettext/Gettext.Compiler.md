@@ -2,7 +2,7 @@
 
 
 
-## warn_if_domain_contains_slashes(domain)
+## warn_if_domain_contains_slashes/1
 
 Logs a warning via `Logger.error/1` if `domain` contains slashes.
 

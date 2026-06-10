@@ -11,16 +11,16 @@ Use the helpers to look up current_access_token and current_resource_owner.
     ExOauth2Provider.Plug.current_access_token(conn)
     ExOauth2Provider.Plug.current_resource_owner(conn)
 
-## authenticated?(conn, type \\ :default)
+## authenticated?/2
 
 Check if a request is authenticated
 
-## current_access_token(conn, the_key \\ :default)
-
-Fetch the currently verified token from the request.
-Optionally located at a key
-
-## current_resource_owner(conn, the_key \\ :default)
+## current_resource_owner/2
 
 Fetch the currently authenticated resource if loaded,
 optionally located at a key
+
+## current_access_token/2
+
+Fetch the currently verified token from the request.
+Optionally located at a key

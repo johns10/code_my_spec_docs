@@ -1,1 +1,0 @@
-# Credo.Check.Design.TagHelper

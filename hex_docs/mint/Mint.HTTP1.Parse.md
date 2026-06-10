@@ -1,1 +1,0 @@
-# Mint.HTTP1.Parse

@@ -2,6 +2,6 @@
 
 
 
-## struct_load!(arg1, values, acc, all_nil?, struct, adapter)
+## struct_load!/6
 
 Load structs from query.

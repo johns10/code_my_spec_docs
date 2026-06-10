@@ -2,21 +2,17 @@
 
 Conveniences for writing Ecto related Mix tasks.
 
-## ensure_implements(module, behaviour, message)
+## parse_repo/1
 
-Returns `true` if module implements behaviour.
+Parses the repository option from the given command line args list.
 
-## ensure_repo(repo, args)
+If no repo option is given, it is retrieved from the application environment.
+
+## ensure_repo/2
 
 Ensures the given module is an Ecto.Repo.
 
-## no_umbrella!(task)
-
-Gets a path relative to the application path.
-
-Raises on umbrella application.
-
-## open?(file, line \\ 1)
+## open?/2
 
 Asks if the user wants to open a file based on ECTO_EDITOR.
 
@@ -39,8 +35,12 @@ Custom editors are supported by using the `__FILE__` and
 
 and Elixir will properly interpolate values.
 
-## parse_repo(args)
+## no_umbrella!/1
 
-Parses the repository option from the given command line args list.
+Gets a path relative to the application path.
 
-If no repo option is given, it is retrieved from the application environment.
+Raises on umbrella application.
+
+## ensure_implements/3
+
+Returns `true` if module implements behaviour.

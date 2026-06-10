@@ -27,11 +27,21 @@ cases, it can be done with:
 
     $ mix deps.clean mime --build
 
-## compiled_custom_types()
+## compiled_custom_types/0
 
 Returns the custom types compiled into the MIME module.
 
-## extensions(type)
+## known_types/0
+
+Returns a mapping of all known types to their extensions,
+including custom types compiled into the MIME module.
+
+## Examples
+
+    known_types()
+    #=> %{"application/json" => ["json"], ...}
+
+## extensions/1
 
 Returns the extensions associated with a given MIME type.
 
@@ -49,16 +59,7 @@ Returns the extensions associated with a given MIME type.
     iex> MIME.extensions("foo/bar")
     []
 
-## from_path(path)
-
-Guesses the MIME type based on the path's extension. See `type/1`.
-
-## Examples
-
-    iex> MIME.from_path("index.html")
-    "text/html"
-
-## has_type?(file_extension)
+## has_type?/1
 
 Returns whether an extension has a MIME type registered.
 
@@ -70,27 +71,11 @@ Returns whether an extension has a MIME type registered.
     iex> MIME.has_type?("foobarbaz")
     false
 
-## known_types()
+## from_path/1
 
-Returns a mapping of all known types to their extensions,
-including custom types compiled into the MIME module.
-
-## Examples
-
-    known_types()
-    #=> %{"application/json" => ["json"], ...}
-
-## type(file_extension)
-
-Returns the MIME type associated with a file extension.
-
-If no MIME type is known for `file_extension`,
-`"application/octet-stream"` is returned.
+Guesses the MIME type based on the path's extension. See `type/1`.
 
 ## Examples
 
-    iex> MIME.type("html")
+    iex> MIME.from_path("index.html")
     "text/html"
-
-    iex> MIME.type("foobarbaz")
-    "application/octet-stream"

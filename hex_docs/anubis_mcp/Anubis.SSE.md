@@ -2,7 +2,7 @@
 
 
 
-## connect(server_url, headers \\ %{}, opts \\ [])
+## connect/3
 
 Connects to a server-sent event stream.
 

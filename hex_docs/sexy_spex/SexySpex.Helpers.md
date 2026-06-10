@@ -5,15 +5,7 @@ Common helper functions for spex files.
 These helpers provide reusable patterns for application startup,
 connectivity testing, and other common spex operations.
 
-## application_running?(app_name)
-
-Checks if an application is currently running.
-
-## can_connect_to_scenic_mcp?(port)
-
-Checks if we can connect to a Scenic MCP server on the given port.
-
-## start_scenic_app(app_name, opts \\ [])
+## start_scenic_app/2
 
 Starts a Scenic application with MCP server and waits for it to be ready.
 
@@ -38,6 +30,14 @@ This helper handles the common pattern of:
       start_scenic_app(:quillex)
     end
 
-## wait_for_mcp_server(port, retries \\ 20)
+## can_connect_to_scenic_mcp?/1
+
+Checks if we can connect to a Scenic MCP server on the given port.
+
+## wait_for_mcp_server/2
 
 Waits for MCP server to be ready with configurable retries.
+
+## application_running?/1
+
+Checks if an application is currently running.

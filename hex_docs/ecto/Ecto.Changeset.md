@@ -1,502 +1,104 @@
 # Ecto.Changeset
 
-Changesets allow filtering, type casting, validation, and
-constraints when manipulating structs, usually in preparation
-for inserting and updating entries into a database.
 
-Let's break down what those features mean. Imagine the common
-scenario where you want to receive data from a user submitted
-web form to create or update entries in the database. Once you
-receive this data on the server, changesets will help you perform
-the following actions:
 
-  * **filtering** - because you are receiving external data from
-    a third-party, you must explicitly list which data you accept.
-    For example, you most likely don't want to allow a user to set
-    its own "is_admin" field to true
-  
-  * **type casting** - a web form sends most of its data as strings.
-    When the user types the number "100", Ecto will receive it as
-    the string "100", which must then be converted to 100.
-    Changesets are responsible for converting these values to the
-    types defined in your `Ecto.Schema`, support even complex types
-    such as datetimes
+## change/2
 
-  * **validations** - the data the user submits may not correct.
-    For example, the user may type an invalid email address, with
-    a trailing dot. Or say the date for a future meeting would
-    happen in the last year. You must validate the data and give
-    feedback to the user
+Wraps the given data in a changeset or adds changes to a changeset.
 
-  * **constraints** - some validations can only happen with the
-    help of the database. For example, in order to know if a user
-    email is already taken or not, you must query the database.
-    Constraints help you do that in a way that respects data
-    integrity
+`changes` is a map or keyword where the key is an atom representing a
+field, association or embed and the value is a term. Note the `value` is
+directly stored in the changeset with no validation whatsoever. For this
+reason, this function is meant for working with data internal to the
+application.
 
-Although we have used a web form as an example, changesets can be used
-for APIs and many other scenarios. Changesets may also be used to work
-with data even if it won't be written to a database. We will cover
-these scenarios in the documentation below. There is also an introductory
-example of working with changesets and how it relates to schemas and
-repositories [in the `Ecto` module](`Ecto#module-changesets`).
+When changing embeds and associations, see `put_assoc/4` for a complete
+reference on the accepted values.
 
-In a nutshell, there are two main functions for creating a changeset.
-The `cast/4` function is used to receive external parameters from a
-form, API or command line, and convert them to the types defined in
-your `Ecto.Schema`. `change/2` is used to modify data directly from
-your application, assuming the data given is valid and matches the
-existing types. The remaining functions in this module, such as
-validations, constraints, association handling, are about manipulating
-changesets.
+This function is useful for:
 
-## External vs internal data
+  * wrapping a struct inside a changeset
+  * directly changing a struct without performing castings nor validations
+  * directly bulk-adding changes to a changeset
 
-Changesets allow working with two kinds of data:
+Changed attributes will only be added if the change does not have the
+same value as the field in the data.
 
-  * external to the application - for example user input from
-    a form that needs to be type-converted and properly validated. This
-    use case is primarily covered by the `cast/4` function.
+When a changeset is passed as the first argument, the changes passed as the
+second argument are merged over the changes already in the changeset if they
+differ from the values in the struct.
 
-  * internal to the application - for example programmatically generated,
-    or coming from other subsystems. This use case is primarily covered
-    by the `change/2` and `put_change/3` functions.
+When a `{data, types}` is passed as the first argument, a changeset is
+created with the given data and types and marked as valid.
 
-When working with external data, the data is typically provided
-as maps with string keys (also known as parameters). On the other hand,
-when working with internal data, you typically have maps of atom keys
-or structs. This duality allows you to track the nature of your data:
-if you have structs or maps with atom keys, it means the data has been
-parsed/validated.
+See `cast/4` if you'd prefer to cast and validate external parameters.
 
-If you have external data or you have maps that may have either
-string or atom keys, consider using `cast/4` to create a changeset.
-The changeset will parse and validate these parameters and provide APIs
-to safely manipulate and change the data accordingly.
+## Examples
 
-## Validations and constraints
-
-Ecto changesets provide both validations and constraints which
-are ultimately turned into errors in case something goes wrong.
-
-The difference between them is that most validations can be
-executed without a need to interact with the database and, therefore,
-are always executed before attempting to insert or update the entry
-in the database. Validations run immediately when a validation function
-is called on the data that is contained in the changeset at that time.
-
-Some validations may happen against the database but
-they are inherently unsafe. Those validations start with a `unsafe_`
-prefix, such as `unsafe_validate_unique/4`.
-
-On the other hand, constraints rely on the database and are always safe.
-As a consequence, validations are always checked before constraints.
-Constraints won't even be checked in case validations failed.
-
-Let's see an example:
-
-    defmodule User do
-      use Ecto.Schema
-      import Ecto.Changeset
-
-      schema "users" do
-        field :name
-        field :email
-        field :age, :integer
-      end
-
-      def changeset(user, params \\ %{}) do
-        user
-        |> cast(params, [:name, :email, :age])
-        |> validate_required([:name, :email])
-        |> validate_format(:email, ~r/@/)
-        |> validate_inclusion(:age, 18..100)
-        |> unique_constraint(:email)
-      end
-    end
-
-In the `changeset/2` function above, we define three validations.
-They check that `name` and `email` fields are present in the
-changeset, the e-mail is of the specified format, and the age is
-between 18 and 100 - as well as a unique constraint in the email
-field.
-
-Let's suppose the e-mail is given but the age is invalid. The
-changeset would have the following errors:
-
-    changeset = User.changeset(%User{}, %{age: 0, email: "mary@example.com"})
-    {:error, changeset} = Repo.insert(changeset)
-    changeset.errors #=> [age: {"is invalid", []}, name: {"can't be blank", []}]
-
-In this case, we haven't checked the unique constraint in the
-e-mail field because the data did not validate. Let's fix the
-age and the name, and assume that the e-mail already exists in the
-database:
-
-    changeset = User.changeset(%User{}, %{age: 42, name: "Mary", email: "mary@example.com"})
-    {:error, changeset} = Repo.insert(changeset)
-    changeset.errors #=> [email: {"has already been taken", []}]
-
-Validations and constraints define an explicit boundary when the check
-happens. By moving constraints to the database, we also provide a safe,
-correct and data-race free means of checking the user input.
-
-### Deferred constraints
-
-Some databases support deferred constraints, i.e., constraints which are
-checked at the end of the transaction rather than at the end of each statement.
-
-Changesets do not support this type of constraints. When working with deferred
-constraints, a violation while invoking `c:Ecto.Repo.insert/2` or `c:Ecto.Repo.update/2` won't
-return `{:error, changeset}`, but rather raise an error at the end of the
-transaction.
-
-## Empty values
-
-Many times, the data given on cast needs to be further pruned, specially
-regarding empty values. For example, if you are gathering data to be
-cast from the command line or through an HTML form or any other text-based
-format, it is likely those means cannot express nil values. For
-those reasons, changesets include the concept of empty values.
-
-When applying changes using `cast/4`, an empty value will be automatically
-converted to the field's default value. If the field is an array type, any
-empty value inside the array will be removed. When a plain map is used in
-the data portion of a schemaless changeset, every field's default value is
-considered to be `nil`. For example:
-
-    iex> data = %{name: "Bob"}
-    iex> types = %{name: :string}
-    iex> params = %{name: ""}
-    iex> changeset = Ecto.Changeset.cast({data, types}, params, Map.keys(types))
+    iex> changeset = change(%Post{})
+    %Ecto.Changeset{...}
+    iex> changeset.valid?
+    true
     iex> changeset.changes
-    %{name: nil}
+    %{}
 
-Empty values are stored as a list in the changeset's `:empty_values` field.
-The list contains elements of type `t:empty_value/0`. Those are either values,
-which will be considered empty if they
-match, or a function that must return a boolean if the value is empty or
-not. By default, Ecto uses `Ecto.Changeset.empty_values/0` which will mark
-a field as empty if it is a string made only of whitespace characters.
-You can also pass the `:empty_values` option to `cast/4` in case you want
-to change how a particular `cast/4` work.
+    iex> changeset = change(%Post{author: "bar"}, title: "title")
+    iex> changeset.changes
+    %{title: "title"}
 
-## Associations, embeds, and on replace
+    iex> changeset = change(%Post{title: "title"}, title: "title")
+    iex> changeset.changes
+    %{}
 
-Using changesets you can work with associations as well as with
-[embedded](embedded-schemas.html) structs. There are two primary APIs:
+    iex> changeset = change(changeset, %{title: "new title", body: "body"})
+    iex> changeset.changes.title
+    "new title"
+    iex> changeset.changes.body
+    "body"
 
-  * `cast_assoc/3` and `cast_embed/3` - those functions are used when
-    working with external data. In particular, they allow you to change
-    associations and embeds alongside the parent struct, all at once.
+## changed?/3
 
-  * `put_assoc/4` and `put_embed/4` - it allows you to replace the
-    association or embed as a whole. This can be used to move associated
-    data from one entry to another, to completely remove or replace
-    existing entries.
+Returns true if a field was changed in a changeset.
 
-These functions are opinionated on how it works with associations.
-If you need different behaviour or explicit control over the associated
-data, you can skip this functionality and use `Ecto.Multi` to encode how
-several database operations will happen on several schemas and changesets
-at once.
-
-You can learn more about working with associations in our documentation,
-including cheatsheets and practical examples. Check out:
-
-  * The docs for `cast_assoc/3` and `put_assoc/3`
-  * The [associations cheatsheet](associations.html)
-  * The [Constraints and Upserts guide](constraints-and-upserts.html)
-  * The [Polymorphic associations with many to many guide](polymorphic-associations-with-many-to-many.html)
-
-### The `:on_replace` option
-
-When using any of those APIs, you may run into situations where Ecto sees
-data is being replaced. For example, imagine a Post has many Comments where
-the comments have IDs 1, 2 and 3. If you call `cast_assoc/3` passing only
-the IDs 1 and 2, Ecto will consider 3 is being "replaced" and it will raise
-by default. Such behaviour can be changed when defining the relation by
-setting `:on_replace` option when defining your association/embed according
-to the values below:
-
-  * `:raise` (default) - do not allow removing association or embedded
-    data via parent changesets
-  * `:mark_as_invalid` - if attempting to remove the association or
-    embedded data via parent changeset - an error will be added to the parent
-    changeset, and it will be marked as invalid
-  * `:nilify` - sets owner reference column to `nil` (available only for
-    associations). Use this on a `belongs_to` column to allow the association
-    to be cleared out so that it can be set to a new value. Will set `action`
-    on associated changesets to `:replace`
-  * `:update` - updates the association, available only for `has_one`, `belongs_to`
-    and `embeds_one`. This option will update all the fields given to the changeset
-    including the id for the association
-  * `:delete` - removes the association or related data from the database.
-    This option has to be used carefully (see below). Will set `action` on associated
-    changesets to `:replace`
-  * `:delete_if_exists` - like `:delete` except that it ignores any stale entry
-    error. For instance, if you set `on_replace: :delete` but the replaced
-    resource was already deleted by a separate request, it will raise a
-    `Ecto.StaleEntryError`. `:delete_if_exists` makes it so it will only delete
-    if the entry still exists
-
-The `:delete` and `:delete_if_exists` options must be used carefully as they allow
-users to delete any associated data by simply setting it to `nil` or an empty list.
-If you need deletion, it is often preferred to add a separate boolean virtual field
-in the schema and manually mark the changeset for deletion if the `:delete` field is
-set in the params, as in the example below. Note that we don't call `cast/4` in this
-case because we don't want to prevent deletion if a change is invalid (changes are
-irrelevant if the entity needs to be deleted).
-
-    defmodule Comment do
-      use Ecto.Schema
-      import Ecto.Changeset
-
-      schema "comments" do
-        field :body, :string
-        field :delete, :boolean, virtual: true
-      end
-
-      def changeset(comment, %{"delete" => "true"}) do
-        %{Ecto.Changeset.change(comment, delete: true) | action: :delete}
-      end
-
-      def changeset(comment, params) do
-        cast(comment, params, [:body])
-      end
-    end
-
-## Schemaless changesets
-
-In the changeset examples so far, we have always used changesets to validate
-and cast data contained in a struct defined by an Ecto schema, such as the `%User{}`
-struct defined by the `User` module.
-
-However, changesets can also be used with "regular" structs too by passing a tuple
-with the data and its types:
-
-    user = %User{}
-    types = %{name: :string, email: :string, age: :integer}
-    params = %{name: "Callum", email: "callum@example.com", age: 27}
-    changeset =
-      {user, types}
-      |> Ecto.Changeset.cast(params, Map.keys(types))
-      |> Ecto.Changeset.validate_required(...)
-      |> Ecto.Changeset.validate_length(...)
-
-where the user struct refers to the definition in the following module:
-
-    defmodule User do
-      defstruct [:name, :email, :age]
-    end
-
-Changesets can also be used with data in a plain map, by following the same API:
-
-    data  = %{}
-    types = %{name: :string, email: :string, age: :integer}
-    params = %{name: "Callum", email: "callum@example.com", age: 27}
-    changeset =
-      {data, types}
-      |> Ecto.Changeset.cast(params, Map.keys(types))
-      |> Ecto.Changeset.validate_required(...)
-      |> Ecto.Changeset.validate_length(...)
-
-Besides the basic types which are mentioned above, such as `:boolean` and `:string`,
-parameterized types can also be used in schemaless changesets. They implement
-the `Ecto.ParameterizedType` behaviour and we can create the necessary type info by
-calling the `init/2` function.
-
-For example, to use `Ecto.Enum` in a schemaless changeset:
-
-    types = %{
-      name: :string,
-      role: Ecto.ParameterizedType.init(Ecto.Enum, values: [:reader, :editor, :admin])
-    }
-
-    data  = %{}
-    params = %{name: "Callum", role: "reader"}
-
-    changeset =
-      {data, types}
-      |> Ecto.Changeset.cast(params, Map.keys(types))
-      |> Ecto.Changeset.validate_required(...)
-      |> Ecto.Changeset.validate_length(...)
-
-Schemaless changesets make Ecto extremely useful to cast, validate and prune data even
-if it is not meant to be persisted to the database.
-
-### Changeset actions
-
-Changesets have an action field which is usually set by `Ecto.Repo`
-whenever one of the operations such as `insert` or `update` is called:
-
-    changeset = User.changeset(%User{}, %{age: 42, email: "mary@example.com"})
-    {:error, changeset} = Repo.insert(changeset)
-    changeset.action
-    #=> :insert
-
-This means that when working with changesets that are not meant to be
-persisted to the database, such as schemaless changesets, you may need
-to explicitly set the action to one specific value. Frameworks such as
-Phoenix [use the action value to define how HTML forms should
-act](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#form/1-a-note-on-errors).
-
-Instead of setting the action manually, you may use `apply_action/2` that
-emulates operations such as `c:Ecto.Repo.insert`. `apply_action/2` will return
-`{:ok, changes}` if the changeset is valid or `{:error, changeset}`, with
-the given `action` set in the changeset in case of errors.
-
-## The Ecto.Changeset struct
-
-The public fields are:
-
-  * `valid?`       - Stores if the changeset is valid
-  * `data`         - The changeset source data, for example, a struct
-  * `params`       - The parameters as given on changeset creation
-  * `changes`      - The `changes` from parameters that were approved in casting
-  * `errors`       - All errors from validations
-  * `required`     - All required fields as a list of atoms
-  * `action`       - The action to be performed with the changeset
-  * `types`        - Cache of the data's field types
-  * `empty_values` - A list of values to be considered empty
-  * `repo`         - The repository applying the changeset (only set after a Repo function is called)
-  * `repo_opts`    - A keyword list of options given to the underlying repository operation
-
-The following fields are private and must not be accessed directly.
-
-  * `validations`
-  * `constraints`
-  * `filters`
-  * `prepare`
-
-### Redacting fields in inspect
-
-To hide a field's value from the inspect protocol of `Ecto.Changeset`, mark
-the field as `redact: true` in the schema, and it will display with the
-value `**redacted**`.
-
-## add_error(changeset, key, message, keys \\ [])
-
-Adds an error to the changeset.
-
-An additional keyword list `keys` can be passed to provide additional
-contextual information for the error. This is useful when using
-`traverse_errors/2` and when translating errors with `Gettext`
-
-## Examples
-
-    iex> changeset = change(%Post{}, %{title: ""})
-    iex> changeset = add_error(changeset, :title, "empty")
-    iex> changeset.errors
-    [title: {"empty", []}]
-    iex> changeset.valid?
-    false
-
-    iex> changeset = change(%Post{}, %{title: ""})
-    iex> changeset = add_error(changeset, :title, "empty", additional: "info")
-    iex> changeset.errors
-    [title: {"empty", [additional: "info"]}]
-    iex> changeset.valid?
-    false
-
-    iex> changeset = change(%Post{}, %{tags: ["ecto", "elixir", "x"]})
-    iex> changeset = add_error(changeset, :tags, "tag '%{val}' is too short", val: "x")
-    iex> changeset.errors
-    [tags: {"tag '%{val}' is too short", [val: "x"]}]
-    iex> changeset.valid?
-    false
-
-## apply_action(changeset, action)
-
-Applies the changeset action only if the changes are valid.
-
-If the changes are valid, all changes are applied to the changeset data.
-If the changes are invalid, no changes are applied, and an error tuple
-is returned with the changeset containing the action that was attempted
-to be applied.
-
-The action may be any atom.
-
-## Examples
-
-    iex> {:ok, data} = apply_action(changeset, :update)
-
-    iex> {:ok, data} = apply_action(changeset, :my_action)
-
-    iex> {:error, changeset} = apply_action(changeset, :update)
-    %Ecto.Changeset{action: :update}
-
-## apply_action!(changeset, action)
-
-Applies the changeset action if the changes are valid or raises an error.
-
-## Examples
-
-    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
-    iex> apply_action!(changeset, :update)
-    %Post{author: "bar", title: "foo"}
-
-    iex> changeset = change(%Post{author: "bar"}, %{title: :bad})
-    iex> apply_action!(changeset, :update)
-    ** (Ecto.InvalidChangesetError) could not perform update because changeset is invalid.
-
-See `apply_action/2` for more information.
-
-## apply_changes(changeset)
-
-Applies the changeset changes to the changeset data.
-
-This operation will return the underlying data with changes
-regardless if the changeset is valid or not. See `apply_action/2`
-for a similar function that ensures the changeset is valid.
-
-## Examples
-
-    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
-    iex> apply_changes(changeset)
-    %Post{author: "bar", title: "foo"}
-
-## assoc_constraint(changeset, assoc, opts \\ [])
-
-Checks the associated field exists.
-
-This is similar to `foreign_key_constraint/3` except that the
-field is inferred from the association definition. This is useful
-to guarantee that a child will only be created if the parent exists
-in the database too. Therefore, it only applies to `belongs_to`
-associations.
-
-As the name says, a constraint is required in the database for
-this function to work. Such constraint is often added as a
-reference to the child table:
-
-    create table(:comments) do
-      add :post_id, references(:posts)
-    end
-
-Now, when inserting a comment, it is possible to forbid any
-comment to be added if the associated post does not exist:
-
-    comment
-    |> Ecto.Changeset.cast(params, [:post_id])
-    |> Ecto.Changeset.assoc_constraint(:post)
-    |> Repo.insert
+This function can check associations and embeds, but doesn't support the `:to`
+and `:from` options for such fields.
 
 ## Options
 
-  * `:message` - the message in case the constraint check fails,
-    defaults to "does not exist"
-  * `:name` - the constraint name. By default, the constraint
-    name is inferred from the table + field. If this option is given,
-    the `field` argument only indicates the field the error will be
-    added to. May be required explicitly for complex cases
-  * `:match` - how the changeset constraint name is matched against the
-    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
-    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
-    to this changeset constraint. `:prefix` matches any repo constraint which
-    `starts_with?` `:name` to this changeset constraint.
+  * `:to` - Check if the field was changed to a specific value
+  * `:from` - Check if the field was changed from a specific value
 
-## cast(data, params, permitted, opts \\ [])
+## Examples
+
+    iex> post = %Post{title: "Foo", body: "Old"}
+    iex> changeset = change(post, %{title: "New title", body: "Old"})
+
+    iex> changed?(changeset, :body)
+    false
+
+    iex> changed?(changeset, :title)
+    true
+
+    iex> changed?(changeset, :title, to: "NEW TITLE")
+    false
+
+## empty_values/0
+
+Returns the default empty values used by `Ecto.Changeset`.
+
+By default, Ecto marks a field as empty if it is a string made
+only of whitespace characters. If you want to provide your
+additional empty values on top of the default, such as an empty
+list, you can write:
+
+    @empty_values [[]] ++ Ecto.Changeset.empty_values()
+
+Then, you can pass `empty_values: @empty_values` on `cast/3`.
+
+See also the [*Empty values* section](#module-empty-values) for more
+information.
+
+## cast/4
 
 Applies the given `params` as changes on the `data` according to
 the set of `permitted` keys. Returns a changeset.
@@ -620,7 +222,7 @@ are simply added to the ones already present in the argument changeset.
 Parameters are merged (**not deep-merged**) and the ones passed to `cast/4`
 take precedence over the ones already in the changeset.
 
-## cast_assoc(changeset, name, opts \\ [])
+## cast_assoc/3
 
 Casts the given association with the changeset parameters.
 
@@ -844,7 +446,7 @@ including cheatsheets and practical examples. Check out:
     entries. Non-listed indexes will come before any sorted ones. See
     `cast_assoc/3` for more information
 
-## cast_embed(changeset, name, opts \\ [])
+## cast_embed/3
 
 Casts the given embed with the changeset parameters.
 
@@ -887,444 +489,7 @@ The changeset must have been previously `cast` using
     entries. Non-listed indexes will come before any sorted ones. See
     `cast_assoc/3` for more information
 
-## change(data, changes \\ %{})
-
-Wraps the given data in a changeset or adds changes to a changeset.
-
-`changes` is a map or keyword where the key is an atom representing a
-field, association or embed and the value is a term. Note the `value` is
-directly stored in the changeset with no validation whatsoever. For this
-reason, this function is meant for working with data internal to the
-application.
-
-When changing embeds and associations, see `put_assoc/4` for a complete
-reference on the accepted values.
-
-This function is useful for:
-
-  * wrapping a struct inside a changeset
-  * directly changing a struct without performing castings nor validations
-  * directly bulk-adding changes to a changeset
-
-Changed attributes will only be added if the change does not have the
-same value as the field in the data.
-
-When a changeset is passed as the first argument, the changes passed as the
-second argument are merged over the changes already in the changeset if they
-differ from the values in the struct.
-
-When a `{data, types}` is passed as the first argument, a changeset is
-created with the given data and types and marked as valid.
-
-See `cast/4` if you'd prefer to cast and validate external parameters.
-
-## Examples
-
-    iex> changeset = change(%Post{})
-    %Ecto.Changeset{...}
-    iex> changeset.valid?
-    true
-    iex> changeset.changes
-    %{}
-
-    iex> changeset = change(%Post{author: "bar"}, title: "title")
-    iex> changeset.changes
-    %{title: "title"}
-
-    iex> changeset = change(%Post{title: "title"}, title: "title")
-    iex> changeset.changes
-    %{}
-
-    iex> changeset = change(changeset, %{title: "new title", body: "body"})
-    iex> changeset.changes.title
-    "new title"
-    iex> changeset.changes.body
-    "body"
-
-## changed?(changeset, field, opts \\ [])
-
-Returns true if a field was changed in a changeset.
-
-This function can check associations and embeds, but doesn't support the `:to`
-and `:from` options for such fields.
-
-## Options
-
-  * `:to` - Check if the field was changed to a specific value
-  * `:from` - Check if the field was changed from a specific value
-
-## Examples
-
-    iex> post = %Post{title: "Foo", body: "Old"}
-    iex> changeset = change(post, %{title: "New title", body: "Old"})
-
-    iex> changed?(changeset, :body)
-    false
-
-    iex> changed?(changeset, :title)
-    true
-
-    iex> changed?(changeset, :title, to: "NEW TITLE")
-    false
-
-## check_constraint(changeset, field, opts \\ [])
-
-Checks for a check constraint in the given field.
-
-The check constraint works by relying on the database to check
-if the check constraint has been violated or not and, if so,
-Ecto converts it into a changeset error.
-
-In order to use the check constraint, the first step is
-to define the check constraint in a migration:
-
-    create constraint("users", :age_must_be_positive, check: "age > 0")
-
-Now that a constraint exists, when modifying users, we could
-annotate the changeset with a check constraint so Ecto knows
-how to convert it into an error message:
-
-    cast(user, params, [:age])
-    |> check_constraint(:age, name: :age_must_be_positive)
-
-Now, when invoking `c:Ecto.Repo.insert/2` or `c:Ecto.Repo.update/2`,
-if the age is not positive, the underlying operation will fail
-but Ecto will convert the database exception into a changeset error
-and return an `{:error, changeset}` tuple. Note that the error will
-occur only after hitting the database, so it will not be visible
-until all other validations pass. If the constraint fails inside a
-transaction, the transaction will be marked as aborted.
-
-## Options
-
-  * `:message` - the message in case the constraint check fails.
-    Defaults to "is invalid"
-  * `:name` - the constraint name. By default, the constraint
-    name is inferred from the table + field. If this option is given,
-    the `field` argument only indicates the field the error will be
-    added to. May be required explicitly for complex cases
-  * `:match` - how the changeset constraint name is matched against the
-    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
-    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
-    to this changeset constraint. `:prefix` matches any repo constraint which
-    `starts_with?` `:name` to this changeset constraint.
-
-## constraints(changeset)
-
-Returns all constraints in a changeset.
-
-A constraint is a map with the following fields:
-
-  * `:type` - the type of the constraint that will be checked in the database,
-    such as `:check`, `:unique`, etc
-  * `:constraint` - the database constraint name as a string or `Regex`. The constraint at
-    the database level will be checked against this according to `:match` type
-  * `:match` - the type of match Ecto will perform on a violated constraint
-    against the `:constraint` value. It is `:exact`, `:suffix` or `:prefix`
-  * `:field` - the field a violated constraint will apply the error to
-  * `:error_message` - the error message in case of violated constraints
-  * `:error_type` - the type of error that identifies the error message
-
-## delete_change(changeset, key)
-
-Deletes a change with the given key.
-
-## Examples
-
-    iex> changeset = change(%Post{}, %{title: "foo"})
-    iex> changeset = delete_change(changeset, :title)
-    iex> get_change(changeset, :title)
-    nil
-
-## empty_values()
-
-Returns the default empty values used by `Ecto.Changeset`.
-
-By default, Ecto marks a field as empty if it is a string made
-only of whitespace characters. If you want to provide your
-additional empty values on top of the default, such as an empty
-list, you can write:
-
-    @empty_values [[]] ++ Ecto.Changeset.empty_values()
-
-Then, you can pass `empty_values: @empty_values` on `cast/3`.
-
-See also the [*Empty values* section](#module-empty-values) for more
-information.
-
-## exclusion_constraint(changeset, field, opts \\ [])
-
-Checks for an exclusion constraint in the given field.
-
-The exclusion constraint works by relying on the database to check
-if the exclusion constraint has been violated or not and, if so,
-Ecto converts it into a changeset error.
-
-## Options
-
-  * `:message` - the message in case the constraint check fails,
-    defaults to "violates an exclusion constraint"
-  * `:name` - the constraint name. By default, the constraint
-    name is inferred from the table + field. If this option is given,
-    the `field` argument only indicates the field the error will be
-    added to. May be required explicitly for complex cases
-  * `:match` - how the changeset constraint name is matched against the
-    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
-    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
-    to this changeset constraint. `:prefix` matches any repo constraint which
-    `starts_with?` `:name` to this changeset constraint.
-
-## fetch_change(changeset, key)
-
-Fetches a change from the given changeset.
-
-This function only looks at the `:changes` field of the given `changeset` and
-returns `{:ok, value}` if the change is present or `:error` if it's not.
-
-## Examples
-
-    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
-    iex> fetch_change(changeset, :title)
-    {:ok, "bar"}
-    iex> fetch_change(changeset, :body)
-    :error
-
-## fetch_change!(changeset, key)
-
-Same as `fetch_change/2` but returns the value or raises if the given key was not found.
-
-## Examples
-
-    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
-    iex> fetch_change!(changeset, :title)
-    "bar"
-    iex> fetch_change!(changeset, :body)
-    ** (KeyError) key :body not found in: %{title: "bar"}
-
-## fetch_field(changeset, key)
-
-Fetches the given field from changes or from the data.
-
-While `fetch_change/2` only looks at the current `changes`
-to retrieve a value, this function looks at the changes and
-then falls back on the data, finally returning `:error` if
-no value is available.
-
-For relations, these functions will return the changeset
-original data with changes applied. To retrieve raw changesets,
-please use `fetch_change/2`.
-
-## Examples
-
-    iex> post = %Post{title: "Foo", body: "Bar baz bong"}
-    iex> changeset = change(post, %{title: "New title"})
-    iex> fetch_field(changeset, :title)
-    {:changes, "New title"}
-    iex> fetch_field(changeset, :body)
-    {:data, "Bar baz bong"}
-    iex> fetch_field(changeset, :not_a_field)
-    :error
-
-## fetch_field!(changeset, key)
-
-Same as `fetch_field/2` but returns the value or raises if the given key was not found.
-
-## Examples
-
-    iex> post = %Post{title: "Foo", body: "Bar baz bong"}
-    iex> changeset = change(post, %{title: "New title"})
-    iex> fetch_field!(changeset, :title)
-    "New title"
-    iex> fetch_field!(changeset, :other)
-    ** (KeyError) key :other not found in: %Post{...}
-
-## field_missing?(changeset, field)
-
-Determines whether a field is missing in a changeset.
-
-The field passed into this function will have its presence evaluated
-according to the same rules as `validate_required/3`.
-
-This is useful when performing complex validations that are not possible with
-`validate_required/3`. For example, evaluating whether at least one field
-from a list is present or evaluating that exactly one field from a list is
-present.
-
-## Examples
-
-    iex> changeset = cast(%Post{}, %{color: "Red"}, [:color])
-    iex> missing_fields = Enum.filter([:title, :body], &field_missing?(changeset, &1))
-    iex> changeset =
-    ...>   case missing_fields do
-    ...>     [_, _] -> add_error(changeset, :title, "at least one of `:title` or `:body` must be present")
-    ...>     _ -> changeset
-    ...>   end
-    ...> changeset.errors
-    [title: {"at least one of `:title` or `:body` must be present", []}]
-
-## force_change(changeset, key, value)
-
-Forces a change on the given `key` with `value`.
-
-If the change is already present, it is overridden with
-the new value. If the value is later modified via
-`put_change/3` and `update_change/3`, reverting back to
-its original value, the change will be reverted unless
-`force_change/3` is called once again.
-
-## Examples
-
-    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
-    iex> changeset = force_change(changeset, :title, "bar")
-    iex> changeset.changes
-    %{title: "bar"}
-
-    iex> changeset = force_change(changeset, :author, "bar")
-    iex> changeset.changes
-    %{title: "bar", author: "bar"}
-
-## foreign_key_constraint(changeset, field, opts \\ [])
-
-Checks for foreign key constraint in the given field.
-
-The foreign key constraint works by relying on the database to
-check if the associated data exists or not. This is useful to
-guarantee that a child will only be created if the parent exists
-in the database too.
-
-In order to use the foreign key constraint the first step is
-to define the foreign key in a migration. This is often done
-with references. For example, imagine you are creating a
-comments table that belongs to posts. One would have:
-
-    create table(:comments) do
-      add :post_id, references(:posts)
-    end
-
-By default, Ecto will generate a foreign key constraint with
-name "comments_post_id_fkey" (the name is configurable).
-
-Now that a constraint exists, when creating comments, we could
-annotate the changeset with foreign key constraint so Ecto knows
-how to convert it into an error message:
-
-    cast(comment, params, [:post_id])
-    |> foreign_key_constraint(:post_id)
-
-Now, when invoking `c:Ecto.Repo.insert/2` or `c:Ecto.Repo.update/2`,
-if the associated post does not exist, the underlying operation will
-fail but Ecto will convert the database exception into a changeset
-error and return an `{:error, changeset}` tuple. Note that the error
-will occur only after hitting the database, so it will not be visible
-until all other validations pass. If the constraint fails inside a
-transaction, the transaction will be marked as aborted.
-
-## Options
-
-  * `:message` - the message in case the constraint check fails,
-    defaults to "does not exist"
-  * `:name` - the constraint name. By default, the constraint
-    name is inferred from the table + field. If this option is given,
-    the `field` argument only indicates the field the error will be
-    added to. May be required explicitly for complex cases
-  * `:match` - how the changeset constraint name is matched against the
-    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
-    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
-    to this changeset constraint. `:prefix` matches any repo constraint which
-    `starts_with?` `:name` to this changeset constraint.
-
-## get_assoc(changeset, name, as \\ :changeset)
-
-Gets the association entry or entries from changes or from the data.
-
-Returned data is normalized to changesets by default. Pass the `:struct`
-flag to retrieve the data as structs with changes applied, similar to `get_field/2`.
-
-## Examples
-
-    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
-    ...> |> change()
-    ...> |> get_assoc(:posts)
-    [%Ecto.Changeset{data: %Post{id: 1, title: "hello"}, changes: %{}}]
-
-    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
-    ...> |> cast(%{posts: [%{id: 1, title: "world"}]}, [])
-    ...> |> cast_assoc(:posts)
-    ...> |> get_assoc(:posts, :changeset)
-    [%Ecto.Changeset{data: %Post{id: 1, title: "hello"}, changes: %{title: "world"}}]
-
-    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
-    ...> |> cast(%{posts: [%{id: 1, title: "world"}]}, [])
-    ...> |> cast_assoc(:posts)
-    ...> |> get_assoc(:posts, :struct)
-    [%Post{id: 1, title: "world"}]
-
-## get_change(changeset, key, default \\ nil)
-
-Gets a change or returns a default value.
-
-For associations and embeds, this function always returns
-nil, a changeset, or a list of changesets.
-
-## Examples
-
-    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
-    iex> get_change(changeset, :title)
-    "bar"
-    iex> get_change(changeset, :body)
-    nil
-
-## get_embed(changeset, name, as \\ :changeset)
-
-Gets the embedded entry or entries from changes or from the data.
-
-Returned data is normalized to changesets by default. Pass the `:struct`
-flag to retrieve the data as structs with changes applied, similar to `get_field/2`.
-
-## Examples
-
-    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
-    ...> |> change()
-    ...> |> get_embed(:comments)
-    [%Ecto.Changeset{data: %Comment{id: 1, body: "hello"}, changes: %{}}]
-
-    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
-    ...> |> cast(%{comments: [%{id: 1, body: "world"}]}, [])
-    ...> |> cast_embed(:comments)
-    ...> |> get_embed(:comments, :changeset)
-    [%Ecto.Changeset{data: %Comment{id: 1, body: "hello"}, changes: %{body: "world"}}]
-
-    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
-    ...> |> cast(%{comments: [%{id: 1, body: "world"}]}, [])
-    ...> |> cast_embed(:comments)
-    ...> |> get_embed(:comments, :struct)
-    [%Comment{id: 1, body: "world"}]
-
-## get_field(changeset, key, default \\ nil)
-
-Gets a field from changes or from the data.
-
-While `get_change/3` only looks at the current `changes`
-to retrieve a value, this function looks at the changes and
-then falls back on the data, finally returning `default` if
-no value is available.
-
-For associations and embeds, this function always returns
-nil, a struct, or a list of structs. In case of changes,
-the changeset data will have all data applies. This guarantees
-a consistent result regardless if changes have been applied
-or not. Use `get_change/2` or `get_assoc/3`/`get_embed/3`
-if you want to retrieve the relations as changesets or
-if you want more fine-grained control.
-
-    iex> post = %Post{title: "A title", body: "My body is a cage"}
-    iex> changeset = change(post, %{title: "A new title"})
-    iex> get_field(changeset, :title)
-    "A new title"
-    iex> get_field(changeset, :not_a_field, "Told you, not a field!")
-    "Told you, not a field!"
-
-## merge(changeset1, changeset2)
+## merge/2
 
 Merges two changesets.
 
@@ -1361,166 +526,210 @@ The other fields are merged with the following criteria:
     iex> merge(changeset1, changeset2)
     ** (ArgumentError) different :data when merging changesets
 
-## no_assoc_constraint(changeset, assoc, opts \\ [])
+## fetch_field/2
 
-Checks the associated field does not exist.
+Fetches the given field from changes or from the data.
 
-This is similar to `foreign_key_constraint/3` except that the
-field is inferred from the association definition. This is useful
-to guarantee that parent can only be deleted (or have its primary
-key changed) if no child exists in the database. Therefore, it only
-applies to `has_*` associations.
+While `fetch_change/2` only looks at the current `changes`
+to retrieve a value, this function looks at the changes and
+then falls back on the data, finally returning `:error` if
+no value is available.
 
-As the name says, a constraint is required in the database for
-this function to work. Such constraint is often added as a
-reference to the child table:
-
-    create table(:comments) do
-      add :post_id, references(:posts)
-    end
-
-Now, when deleting the post, it is possible to forbid any post to
-be deleted if they still have comments attached to it:
-
-    post
-    |> Ecto.Changeset.change
-    |> Ecto.Changeset.no_assoc_constraint(:comments)
-    |> Repo.delete
-
-## Options
-
-  * `:message` - the message in case the constraint check fails,
-    defaults to "is still associated with this entry" (for `has_one`)
-    and "are still associated with this entry" (for `has_many`)
-  * `:name` - the constraint name. By default, the constraint
-    name is inferred from the table + field. If this option is given,
-    the `field` argument only indicates the field the error will be
-    added to. May be required explicitly for complex cases
-  * `:match` - how the changeset constraint name is matched against the
-    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
-    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
-    to this changeset constraint. `:prefix` matches any repo constraint which
-    `starts_with?` `:name` to this changeset constraint.
-
-## optimistic_lock(data_or_changeset, field, incrementer \\ &increment_with_rollover/1)
-
-Applies optimistic locking to the changeset.
-
-[Optimistic
-locking](https://en.wikipedia.org/wiki/Optimistic_concurrency_control) (or
-*optimistic concurrency control*) is a technique that allows concurrent edits
-on a single record. While pessimistic locking works by locking a resource for
-an entire transaction, optimistic locking only checks if the resource changed
-before updating it.
-
-This is done by regularly fetching the record from the database, then checking
-whether another user has made changes to the record *only when updating the
-record*. This behaviour is ideal in situations where the chances of concurrent
-updates to the same record are low; if they're not, pessimistic locking or
-other concurrency patterns may be more suited.
-
-## Usage
-
-Optimistic locking works by keeping a "version" counter for each record; this
-counter gets incremented each time a modification is made to a record. Hence,
-in order to use optimistic locking, a field must exist in your schema for
-versioning purpose. Such field is usually an integer but other types are
-supported.
+For relations, these functions will return the changeset
+original data with changes applied. To retrieve raw changesets,
+please use `fetch_change/2`.
 
 ## Examples
 
-Assuming we have a `Post` schema (stored in the `posts` table), the first step
-is to add a version column to the `posts` table:
+    iex> post = %Post{title: "Foo", body: "Bar baz bong"}
+    iex> changeset = change(post, %{title: "New title"})
+    iex> fetch_field(changeset, :title)
+    {:changes, "New title"}
+    iex> fetch_field(changeset, :body)
+    {:data, "Bar baz bong"}
+    iex> fetch_field(changeset, :not_a_field)
+    :error
 
-    alter table(:posts) do
-      add :lock_version, :integer, default: 1
-    end
+## fetch_field!/2
 
-The column name is arbitrary and doesn't need to be `:lock_version`. Now add
-a field to the schema too:
+Same as `fetch_field/2` but returns the value or raises if the given key was not found.
 
-    defmodule Post do
-      use Ecto.Schema
+## Examples
 
-      schema "posts" do
-        field :title, :string
-        field :lock_version, :integer, default: 1
-      end
+    iex> post = %Post{title: "Foo", body: "Bar baz bong"}
+    iex> changeset = change(post, %{title: "New title"})
+    iex> fetch_field!(changeset, :title)
+    "New title"
+    iex> fetch_field!(changeset, :other)
+    ** (KeyError) key :other not found in: %Post{...}
 
-      def changeset(:update, struct, params \\ %{}) do
-        struct
-        |> Ecto.Changeset.cast(params, [:title])
-        |> Ecto.Changeset.optimistic_lock(:lock_version)
-      end
-    end
+## get_field/3
 
-Now let's take optimistic locking for a spin:
+Gets a field from changes or from the data.
 
-    iex> post = Repo.insert!(%Post{title: "foo"})
-    %Post{id: 1, title: "foo", lock_version: 1}
-    iex> valid_change = Post.changeset(:update, post, %{title: "bar"})
-    iex> stale_change = Post.changeset(:update, post, %{title: "baz"})
-    iex> Repo.update!(valid_change)
-    %Post{id: 1, title: "bar", lock_version: 2}
-    iex> Repo.update!(stale_change)
-    ** (Ecto.StaleEntryError) attempted to update a stale entry:
+While `get_change/3` only looks at the current `changes`
+to retrieve a value, this function looks at the changes and
+then falls back on the data, finally returning `default` if
+no value is available.
 
-    %Post{id: 1, title: "baz", lock_version: 1}
+For associations and embeds, this function always returns
+nil, a struct, or a list of structs. In case of changes,
+the changeset data will have all data applies. This guarantees
+a consistent result regardless if changes have been applied
+or not. Use `get_change/2` or `get_assoc/3`/`get_embed/3`
+if you want to retrieve the relations as changesets or
+if you want more fine-grained control.
 
-When a conflict happens (a record which has been previously fetched is
-being updated, but that same record has been modified since it was
-fetched), an `Ecto.StaleEntryError` exception is raised.
+    iex> post = %Post{title: "A title", body: "My body is a cage"}
+    iex> changeset = change(post, %{title: "A new title"})
+    iex> get_field(changeset, :title)
+    "A new title"
+    iex> get_field(changeset, :not_a_field, "Told you, not a field!")
+    "Told you, not a field!"
 
-Optimistic locking also works with delete operations. Just call the
-`optimistic_lock/3` function with the data before delete:
+## get_assoc/3
 
-    iex> changeset = Ecto.Changeset.optimistic_lock(post, :lock_version)
-    iex> Repo.delete(changeset)
+Gets the association entry or entries from changes or from the data.
 
-`optimistic_lock/3` by default assumes the field
-being used as a lock is an integer. If you want to use another type,
-you need to pass the third argument customizing how the next value
-is generated:
+Returned data is normalized to changesets by default. Pass the `:struct`
+flag to retrieve the data as structs with changes applied, similar to `get_field/2`.
 
-    iex> Ecto.Changeset.optimistic_lock(post, :lock_uuid, fn _ -> Ecto.UUID.generate end)
+## Examples
 
-## prepare_changes(changeset, function)
+    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
+    ...> |> change()
+    ...> |> get_assoc(:posts)
+    [%Ecto.Changeset{data: %Post{id: 1, title: "hello"}, changes: %{}}]
 
-Provides a function executed by the repository on insert/update/delete.
+    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
+    ...> |> cast(%{posts: [%{id: 1, title: "world"}]}, [])
+    ...> |> cast_assoc(:posts)
+    ...> |> get_assoc(:posts, :changeset)
+    [%Ecto.Changeset{data: %Post{id: 1, title: "hello"}, changes: %{title: "world"}}]
 
-If the changeset given to the repository is valid, the function given to
-`prepare_changes/2` will be called with the changeset and must return a
-changeset, allowing developers to do final adjustments to the changeset or
-to issue data consistency commands. The repository itself can be accessed
-inside the function under the `repo` field in the changeset. If the
-changeset given to the repository is invalid, the function will not be
-invoked.
+    iex> %Author{posts: [%Post{id: 1, title: "hello"}]}
+    ...> |> cast(%{posts: [%{id: 1, title: "world"}]}, [])
+    ...> |> cast_assoc(:posts)
+    ...> |> get_assoc(:posts, :struct)
+    [%Post{id: 1, title: "world"}]
 
-The given function is guaranteed to run inside the same transaction
-as the changeset operation for databases that do support transactions.
+## get_embed/3
 
-## Example
+Gets the embedded entry or entries from changes or from the data.
 
-A common use case is updating a counter cache, in this case updating a post's
-comment count when a comment is created:
+Returned data is normalized to changesets by default. Pass the `:struct`
+flag to retrieve the data as structs with changes applied, similar to `get_field/2`.
 
-    def create_comment(comment, params) do
-      comment
-      |> cast(params, [:body, :post_id])
-      |> prepare_changes(fn changeset ->
-           if post_id = get_change(changeset, :post_id) do
-             query = from Post, where: [id: ^post_id]
-             changeset.repo.update_all(query, inc: [comment_count: 1])
-           end
-           changeset
-         end)
-    end
+## Examples
 
-We retrieve the repo from the comment changeset itself and use
-update_all to update the counter cache in one query. Finally, the original
-changeset must be returned.
+    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
+    ...> |> change()
+    ...> |> get_embed(:comments)
+    [%Ecto.Changeset{data: %Comment{id: 1, body: "hello"}, changes: %{}}]
 
-## put_assoc(changeset, name, value, opts \\ [])
+    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
+    ...> |> cast(%{comments: [%{id: 1, body: "world"}]}, [])
+    ...> |> cast_embed(:comments)
+    ...> |> get_embed(:comments, :changeset)
+    [%Ecto.Changeset{data: %Comment{id: 1, body: "hello"}, changes: %{body: "world"}}]
+
+    iex> %Post{comments: [%Comment{id: 1, body: "hello"}]}
+    ...> |> cast(%{comments: [%{id: 1, body: "world"}]}, [])
+    ...> |> cast_embed(:comments)
+    ...> |> get_embed(:comments, :struct)
+    [%Comment{id: 1, body: "world"}]
+
+## fetch_change/2
+
+Fetches a change from the given changeset.
+
+This function only looks at the `:changes` field of the given `changeset` and
+returns `{:ok, value}` if the change is present or `:error` if it's not.
+
+## Examples
+
+    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
+    iex> fetch_change(changeset, :title)
+    {:ok, "bar"}
+    iex> fetch_change(changeset, :body)
+    :error
+
+## fetch_change!/2
+
+Same as `fetch_change/2` but returns the value or raises if the given key was not found.
+
+## Examples
+
+    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
+    iex> fetch_change!(changeset, :title)
+    "bar"
+    iex> fetch_change!(changeset, :body)
+    ** (KeyError) key :body not found in: %{title: "bar"}
+
+## get_change/3
+
+Gets a change or returns a default value.
+
+For associations and embeds, this function always returns
+nil, a changeset, or a list of changesets.
+
+## Examples
+
+    iex> changeset = change(%Post{body: "foo"}, %{title: "bar"})
+    iex> get_change(changeset, :title)
+    "bar"
+    iex> get_change(changeset, :body)
+    nil
+
+## update_change/3
+
+Updates a change.
+
+The given `function` is invoked with the change value only if there
+is a change for `key`. Once the function is invoked, it behaves as
+`put_change/3`.
+
+Note that the value of the change can still be `nil` (unless the field
+was marked as required on `validate_required/3`).
+
+## Examples
+
+    iex> changeset = change(%Post{}, %{impressions: 1})
+    iex> changeset = update_change(changeset, :impressions, &(&1 + 1))
+    iex> changeset.changes.impressions
+    2
+
+## put_change/3
+
+Puts a change on the given `key` with `value`.
+
+`key` is an atom that represents any field, embed or
+association in the changeset. Note the `value` is directly
+stored in the changeset with no validation whatsoever.
+For this reason, this function is meant for working with
+data internal to the application.
+
+If the change is already present, it is overridden with
+the new value. If the change has the same value as in the
+changeset data, no changes are added (and any existing
+changes are removed).
+
+When changing embeds and associations, see `put_assoc/4`
+for a complete reference on the accepted values.
+
+## Examples
+
+    iex> changeset = change(%Post{}, %{title: "foo"})
+    iex> changeset = put_change(changeset, :title, "bar")
+    iex> changeset.changes
+    %{title: "bar"}
+
+    iex> changeset = change(%Post{title: "foo"})
+    iex> changeset = put_change(changeset, :title, "foo")
+    iex> changeset.changes
+    %{}
+
+## put_assoc/4
 
 Puts the given association entry or entries as a change in the changeset.
 
@@ -1706,37 +915,7 @@ including cheatsheets and practical examples. Check out:
   * The [Constraints and Upserts guide](constraints-and-upserts.html)
   * The [Polymorphic associations with many to many guide](polymorphic-associations-with-many-to-many.html)
 
-## put_change(changeset, key, value)
-
-Puts a change on the given `key` with `value`.
-
-`key` is an atom that represents any field, embed or
-association in the changeset. Note the `value` is directly
-stored in the changeset with no validation whatsoever.
-For this reason, this function is meant for working with
-data internal to the application.
-
-If the change is already present, it is overridden with
-the new value. If the change has the same value as in the
-changeset data, no changes are added (and any existing
-changes are removed).
-
-When changing embeds and associations, see `put_assoc/4`
-for a complete reference on the accepted values.
-
-## Examples
-
-    iex> changeset = change(%Post{}, %{title: "foo"})
-    iex> changeset = put_change(changeset, :title, "bar")
-    iex> changeset.changes
-    %{title: "bar"}
-
-    iex> changeset = change(%Post{title: "foo"})
-    iex> changeset = put_change(changeset, :title, "foo")
-    iex> changeset.changes
-    %{}
-
-## put_embed(changeset, name, value, opts \\ [])
+## put_embed/4
 
 Puts the given embed entry or entries as a change in the changeset.
 
@@ -1754,54 +933,573 @@ it will raise.
 Although this function accepts an `opts` argument, there are no options
 currently supported by `put_embed/4`.
 
-## traverse_errors(changeset, msg_func)
+## force_change/3
 
-Traverses changeset errors and applies the given function to error messages.
+Forces a change on the given `key` with `value`.
 
-This function is particularly useful when associations and embeds
-are cast in the changeset as it will traverse all associations and
-embeds and place all errors in a series of nested maps.
-
-A changeset is supplied along with a function to apply to each
-error message as the changeset is traversed. The error message
-function receives an error tuple `{msg, opts}`, for example:
-
-    {"should be at least %{count} characters", [count: 3, validation: :length, min: 3]}
+If the change is already present, it is overridden with
+the new value. If the value is later modified via
+`put_change/3` and `update_change/3`, reverting back to
+its original value, the change will be reverted unless
+`force_change/3` is called once again.
 
 ## Examples
 
-    iex> traverse_errors(changeset, fn {msg, opts} ->
-    ...>   Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
-    ...>     opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
-    ...>   end)
-    ...> end)
-    %{title: ["should be at least 3 characters"]}
+    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
+    iex> changeset = force_change(changeset, :title, "bar")
+    iex> changeset.changes
+    %{title: "bar"}
 
-Optionally function can accept three arguments: `changeset`, `field`
-and error tuple `{msg, opts}`. It is useful whenever you want to extract
-validations rules from `changeset.validations` to build detailed error
-description.
+    iex> changeset = force_change(changeset, :author, "bar")
+    iex> changeset.changes
+    %{title: "bar", author: "bar"}
 
-## traverse_validations(changeset, msg_func)
+## delete_change/2
 
-Traverses changeset validations and applies the given function to validations.
-
-This behaves the same as `traverse_errors/2`, but operates on changeset
-validations instead of errors.
+Deletes a change with the given key.
 
 ## Examples
 
-    iex> traverse_validations(changeset, &(&1))
-    %{title: [format: ~r/pattern/, length: [min: 1, max: 20]]}
+    iex> changeset = change(%Post{}, %{title: "foo"})
+    iex> changeset = delete_change(changeset, :title)
+    iex> get_change(changeset, :title)
+    nil
 
-    iex> traverse_validations(changeset, fn
-    ...>   {:length, opts} -> {:length, "#{Keyword.get(opts, :min, 0)}-#{Keyword.get(opts, :max, 32)}"}
-    ...>   {:format, %Regex{source: source}} -> {:format, "/#{source}/"}
-    ...>   {other, opts} -> {other, inspect(opts)}
-    ...> end)
-    %{title: [format: "/pattern/", length: "1-20"]}
+## apply_changes/1
 
-## unique_constraint(changeset, field_or_fields, opts \\ [])
+Applies the changeset changes to the changeset data.
+
+This operation will return the underlying data with changes
+regardless if the changeset is valid or not. See `apply_action/2`
+for a similar function that ensures the changeset is valid.
+
+## Examples
+
+    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
+    iex> apply_changes(changeset)
+    %Post{author: "bar", title: "foo"}
+
+## apply_action/2
+
+Applies the changeset action only if the changes are valid.
+
+If the changes are valid, all changes are applied to the changeset data.
+If the changes are invalid, no changes are applied, and an error tuple
+is returned with the changeset containing the action that was attempted
+to be applied.
+
+The action may be any atom.
+
+## Examples
+
+    iex> {:ok, data} = apply_action(changeset, :update)
+
+    iex> {:ok, data} = apply_action(changeset, :my_action)
+
+    iex> {:error, changeset} = apply_action(changeset, :update)
+    %Ecto.Changeset{action: :update}
+
+## apply_action!/2
+
+Applies the changeset action if the changes are valid or raises an error.
+
+## Examples
+
+    iex> changeset = change(%Post{author: "bar"}, %{title: "foo"})
+    iex> apply_action!(changeset, :update)
+    %Post{author: "bar", title: "foo"}
+
+    iex> changeset = change(%Post{author: "bar"}, %{title: :bad})
+    iex> apply_action!(changeset, :update)
+    ** (Ecto.InvalidChangesetError) could not perform update because changeset is invalid.
+
+See `apply_action/2` for more information.
+
+## add_error/4
+
+Adds an error to the changeset.
+
+An additional keyword list `keys` can be passed to provide additional
+contextual information for the error. This is useful when using
+`traverse_errors/2` and when translating errors with `Gettext`
+
+## Examples
+
+    iex> changeset = change(%Post{}, %{title: ""})
+    iex> changeset = add_error(changeset, :title, "empty")
+    iex> changeset.errors
+    [title: {"empty", []}]
+    iex> changeset.valid?
+    false
+
+    iex> changeset = change(%Post{}, %{title: ""})
+    iex> changeset = add_error(changeset, :title, "empty", additional: "info")
+    iex> changeset.errors
+    [title: {"empty", [additional: "info"]}]
+    iex> changeset.valid?
+    false
+
+    iex> changeset = change(%Post{}, %{tags: ["ecto", "elixir", "x"]})
+    iex> changeset = add_error(changeset, :tags, "tag '%{val}' is too short", val: "x")
+    iex> changeset.errors
+    [tags: {"tag '%{val}' is too short", [val: "x"]}]
+    iex> changeset.valid?
+    false
+
+## validate_change/3
+
+Validates the given `field` change.
+
+It invokes the `validator` function to perform the validation
+only if a change for the given `field` exists and the change
+value is not `nil`. The function must return a list of errors
+(with an empty list meaning no errors).
+
+In case there's at least one error, the list of errors will be appended to the
+`:errors` field of the changeset and the `:valid?` flag will be set to
+`false`.
+
+## Examples
+
+    iex> changeset = change(%Post{}, %{title: "foo"})
+    iex> changeset = validate_change changeset, :title, fn :title, title  ->
+    ...>   # Value must not be "foo"!
+    ...>   if title == "foo" do
+    ...>     [title: "cannot be foo"]
+    ...>   else
+    ...>     []
+    ...>   end
+    ...> end
+    iex> changeset.errors
+    [title: {"cannot be foo", []}]
+
+    iex> changeset = change(%Post{}, %{title: "foo"})
+    iex> changeset = validate_change changeset, :title, fn :title, title  ->
+    ...>   if title == "foo" do
+    ...>     [title: {"cannot be foo", additional: "info"}]
+    ...>   else
+    ...>     []
+    ...>   end
+    ...> end
+    iex> changeset.errors
+    [title: {"cannot be foo", [additional: "info"]}]
+
+## validate_change/4
+
+Stores the validation `metadata` and validates the given `field` change.
+
+Similar to `validate_change/3` but stores the validation metadata
+into the changeset validators. The validator metadata is often used
+as a reflection mechanism, to automatically generate code based on
+the available validations.
+
+## Examples
+
+    iex> changeset = change(%Post{}, %{title: "foo"})
+    iex> changeset = validate_change changeset, :title, :useless_validator, fn
+    ...>   _, _ -> []
+    ...> end
+    iex> changeset.validations
+    [title: :useless_validator]
+
+## validate_required/3
+
+Validates that one or more fields are present in the changeset.
+
+You can pass a single field name or a list of field names that
+are required.
+
+If the value of a field is `nil` or a string made only of whitespace,
+the changeset is marked as invalid, the field is removed from the
+changeset's changes, and an error is added. An error won't be added if
+the field already has an error.
+
+If a field is given to `validate_required/3` but it has not been passed
+as parameter during `cast/3` (i.e. it has not been changed), then
+`validate_required/3` will check for its current value in the data.
+If the data contains a non-empty value for the field, then no error is
+added. This allows developers to use `validate_required/3` to perform
+partial updates. For example, on `insert` all fields would be required,
+because their default values on the data are all `nil`, but on `update`,
+if you don't want to change a field that has been previously set,
+you are not required to pass it as a parameter, since `validate_required/3`
+won't add an error for missing changes as long as the value in the
+data given to the `changeset` is not empty.
+
+Do not use this function to validate associations that are required,
+instead pass the `:required` option to `cast_assoc/3` or `cast_embed/3`.
+
+Opposite to other validations, calling this function does not store
+the validation under the `changeset.validations` key. Instead, it
+stores all required fields under `changeset.required`.
+
+## Options
+
+  * `:message` - the message on failure, defaults to "can't be blank".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_required(changeset, :title)
+    validate_required(changeset, [:title, :body])
+
+## field_missing?/2
+
+Determines whether a field is missing in a changeset.
+
+The field passed into this function will have its presence evaluated
+according to the same rules as `validate_required/3`.
+
+This is useful when performing complex validations that are not possible with
+`validate_required/3`. For example, evaluating whether at least one field
+from a list is present or evaluating that exactly one field from a list is
+present.
+
+## Examples
+
+    iex> changeset = cast(%Post{}, %{color: "Red"}, [:color])
+    iex> missing_fields = Enum.filter([:title, :body], &field_missing?(changeset, &1))
+    iex> changeset =
+    ...>   case missing_fields do
+    ...>     [_, _] -> add_error(changeset, :title, "at least one of `:title` or `:body` must be present")
+    ...>     _ -> changeset
+    ...>   end
+    ...> changeset.errors
+    [title: {"at least one of `:title` or `:body` must be present", []}]
+
+## unsafe_validate_unique/4
+
+Validates that no existing record with a different primary key
+has the same values for these fields.
+
+This function exists to provide quick feedback to users of your
+application. It should not be relied on for any data guarantee as it
+has race conditions and is inherently unsafe. For example, if this
+check happens twice in the same time interval (because the user
+submitted a form twice), both checks may pass and you may end-up with
+duplicate entries in the database. Therefore, a `unique_constraint/3`
+should also be used to ensure your data won't get corrupted.
+
+However, because constraints are only checked if all validations
+succeed, this function can be used as an early check to provide
+early feedback to users, since most conflicting data will have been
+inserted prior to the current validation phase.
+
+When applying this validation to a schemas loaded from the database
+this check will exclude rows having the same primary key as set on
+the changeset, as those are supposed to be overwritten anyways.
+
+## Options
+
+  * `:message` - the message in case the constraint check fails,
+    defaults to "has already been taken". Can also be a `{msg, opts}` tuple,
+    to provide additional options when using `traverse_errors/2`.
+
+  * `:error_key` - the key to which changeset error will be added when
+    check fails, defaults to the first field name of the given list of
+    fields.
+
+  * `:prefix` - the prefix to run the query on (such as the schema path
+    in Postgres or the database in MySQL). See `Ecto.Repo` documentation
+    for more information.
+
+  * `:nulls_distinct` - a boolean controlling whether different null values
+    are considered distinct (not equal). If `false`, `nil` values will have
+    their uniqueness checked. Otherwise, the check will not be performed. This
+    is only meaningful when paired with a unique index that treats nulls as equal,
+    such as Postgres 15's `NULLS NOT DISTINCT` option. Defaults to `true`
+
+  * `:repo_opts` - the options to pass to the `Ecto.Repo` call.
+
+  * `:query` - the base query to use for the check. Defaults to the schema of
+    the changeset. If the primary key is set, a clause will be added to exclude
+    the changeset row itself from the check.
+
+## Examples
+
+    unsafe_validate_unique(changeset, :city_name, repo)
+    unsafe_validate_unique(changeset, [:city_name, :state_name], repo)
+    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, message: "city must be unique within state")
+    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, prefix: "public")
+    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, query: from(c in City, where: is_nil(c.deleted_at)))
+
+## validate_format/4
+
+Validates a change has the given format.
+
+The format has to be expressed as a regular expression.
+
+The validation only runs if a change for the given `field` exists and the
+change value is not `nil`.
+
+## Options
+
+  * `:message` - the message on failure, defaults to "has invalid format".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_format(changeset, :email, ~r/@/)
+
+## validate_inclusion/4
+
+Validates a change is included in the given enumerable.
+
+The validation only runs if a change for the given `field` exists and the
+change value is not `nil`.
+
+## Options
+
+  * `:message` - the message on failure, defaults to "is invalid".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_inclusion(changeset, :cardinal_direction, ["north", "east", "south", "west"])
+    validate_inclusion(changeset, :age, 0..99)
+
+## validate_exclusion/4
+
+Validates a change is not included in the given enumerable.
+
+The validation only runs if a change for the given `field` exists and the
+change value is not `nil`.
+
+## Options
+
+  * `:message` - the message on failure, defaults to "is reserved".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_exclusion(changeset, :name, ~w(admin superadmin))
+
+## validate_length/3
+
+Validates a change is a string or list of the given length.
+
+Note that the length of a string is counted in graphemes by default. If using
+this validation to match a character limit of a database backend,
+it's likely that the limit ignores graphemes and limits the number
+of unicode characters. Then consider using the `:count` option to
+limit the number of codepoints (`:codepoints`), or limit the number of bytes (`:bytes`).
+
+The validation only runs if a change for the given `field` exists and the
+change value is not `nil`.
+
+## Options
+
+  * `:is` - the length must be exactly this value
+  * `:min` - the length must be greater than or equal to this value
+  * `:max` - the length must be less than or equal to this value
+  * `:count` - what length to count for string, `:graphemes` (default), `:codepoints` or `:bytes`
+  * `:message` - the message on failure, depending on the validation, is one of:
+    * for strings:
+      * "should be %{count} character(s)"
+      * "should be at least %{count} character(s)"
+      * "should be at most %{count} character(s)"
+    * for binary:
+      * "should be %{count} byte(s)"
+      * "should be at least %{count} byte(s)"
+      * "should be at most %{count} byte(s)"
+    * for lists and maps:
+      * "should have %{count} item(s)"
+      * "should have at least %{count} item(s)"
+      * "should have at most %{count} item(s)"
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_length(changeset, :title, min: 3)
+    validate_length(changeset, :title, max: 100)
+    validate_length(changeset, :title, min: 3, max: 100)
+    validate_length(changeset, :code, is: 9)
+    validate_length(changeset, :topics, is: 2)
+    validate_length(changeset, :icon, count: :bytes, max: 1024 * 16)
+
+## validate_number/3
+
+Validates the properties of a number.
+
+The validation only runs if a change for the given `field` exists and the
+change value is not `nil`.
+
+## Options
+
+  * `:less_than`
+  * `:greater_than`
+  * `:less_than_or_equal_to`
+  * `:greater_than_or_equal_to`
+  * `:equal_to`
+  * `:not_equal_to`
+  * `:message` - the message on failure, defaults to one of:
+    * "must be less than %{number}"
+    * "must be greater than %{number}"
+    * "must be less than or equal to %{number}"
+    * "must be greater than or equal to %{number}"
+    * "must be equal to %{number}"
+    * "must be not equal to %{number}"
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_number(changeset, :count, less_than: 3)
+    validate_number(changeset, :pi, greater_than: 3, less_than: 4)
+    validate_number(changeset, :the_answer_to_life_the_universe_and_everything, equal_to: 42)
+
+## validate_confirmation/3
+
+Validates that the given parameter matches its confirmation.
+
+By calling `validate_confirmation(changeset, :email)`, this
+validation will check if both "email" and "email_confirmation"
+in the parameter map matches. Note this validation only looks
+at the parameters themselves, never the fields in the schema.
+As such as, the "email_confirmation" field does not need to be
+added as a virtual field in your schema.
+
+Note that if the confirmation field is missing, this does not
+add a validation error. This is done on purpose as you do not
+trigger confirmation validation in places where a confirmation
+is not required (for example, in APIs). You can force the
+confirmation parameter to be required in the options (see below).
+
+## Options
+
+  * `:message` - the message on failure, defaults to "does not match confirmation".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+  * `:required` - boolean, sets whether existence of confirmation parameter
+    is required for addition of error. Defaults to false
+
+## Examples
+
+    validate_confirmation(changeset, :email)
+    validate_confirmation(changeset, :password, message: "does not match password")
+
+    cast(data, params, [:password])
+    |> validate_confirmation(:password, message: "does not match password")
+
+## validate_acceptance/3
+
+Validates the given parameter is true.
+
+Note this validation only checks the parameter itself is true, never
+the field in the schema. That's because acceptance parameters do not need
+to be persisted, as by definition they would always be stored as `true`.
+
+## Options
+
+  * `:message` - the message on failure, defaults to "must be accepted".
+    Can also be a `{msg, opts}` tuple, to provide additional options
+    when using `traverse_errors/2`.
+
+## Examples
+
+    validate_acceptance(changeset, :terms_of_service)
+    validate_acceptance(changeset, :rules, message: "please accept rules")
+
+## prepare_changes/2
+
+Provides a function executed by the repository on insert/update/delete.
+
+If the changeset given to the repository is valid, the function given to
+`prepare_changes/2` will be called with the changeset and must return a
+changeset, allowing developers to do final adjustments to the changeset or
+to issue data consistency commands. The repository itself can be accessed
+inside the function under the `repo` field in the changeset. If the
+changeset given to the repository is invalid, the function will not be
+invoked.
+
+The given function is guaranteed to run inside the same transaction
+as the changeset operation for databases that do support transactions.
+
+## Example
+
+A common use case is updating a counter cache, in this case updating a post's
+comment count when a comment is created:
+
+    def create_comment(comment, params) do
+      comment
+      |> cast(params, [:body, :post_id])
+      |> prepare_changes(fn changeset ->
+           if post_id = get_change(changeset, :post_id) do
+             query = from Post, where: [id: ^post_id]
+             changeset.repo.update_all(query, inc: [comment_count: 1])
+           end
+           changeset
+         end)
+    end
+
+We retrieve the repo from the comment changeset itself and use
+update_all to update the counter cache in one query. Finally, the original
+changeset must be returned.
+
+## constraints/1
+
+Returns all constraints in a changeset.
+
+A constraint is a map with the following fields:
+
+  * `:type` - the type of the constraint that will be checked in the database,
+    such as `:check`, `:unique`, etc
+  * `:constraint` - the database constraint name as a string or `Regex`. The constraint at
+    the database level will be checked against this according to `:match` type
+  * `:match` - the type of match Ecto will perform on a violated constraint
+    against the `:constraint` value. It is `:exact`, `:suffix` or `:prefix`
+  * `:field` - the field a violated constraint will apply the error to
+  * `:error_message` - the error message in case of violated constraints
+  * `:error_type` - the type of error that identifies the error message
+
+## check_constraint/3
+
+Checks for a check constraint in the given field.
+
+The check constraint works by relying on the database to check
+if the check constraint has been violated or not and, if so,
+Ecto converts it into a changeset error.
+
+In order to use the check constraint, the first step is
+to define the check constraint in a migration:
+
+    create constraint("users", :age_must_be_positive, check: "age > 0")
+
+Now that a constraint exists, when modifying users, we could
+annotate the changeset with a check constraint so Ecto knows
+how to convert it into an error message:
+
+    cast(user, params, [:age])
+    |> check_constraint(:age, name: :age_must_be_positive)
+
+Now, when invoking `c:Ecto.Repo.insert/2` or `c:Ecto.Repo.update/2`,
+if the age is not positive, the underlying operation will fail
+but Ecto will convert the database exception into a changeset error
+and return an `{:error, changeset}` tuple. Note that the error will
+occur only after hitting the database, so it will not be visible
+until all other validations pass. If the constraint fails inside a
+transaction, the transaction will be marked as aborted.
+
+## Options
+
+  * `:message` - the message in case the constraint check fails.
+    Defaults to "is invalid"
+  * `:name` - the constraint name. By default, the constraint
+    name is inferred from the table + field. If this option is given,
+    the `field` argument only indicates the field the error will be
+    added to. May be required explicitly for complex cases
+  * `:match` - how the changeset constraint name is matched against the
+    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
+    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
+    to this changeset constraint. `:prefix` matches any repo constraint which
+    `starts_with?` `:name` to this changeset constraint.
+
+## unique_constraint/3
 
 Checks for a unique constraint in the given field or list of fields.
 
@@ -1931,439 +1629,155 @@ you can explicitly downcase values before inserting/updating them:
     |> update_change(:email, &String.downcase/1)
     |> unique_constraint(:email)
 
-## unsafe_validate_unique(changeset, fields, repo, opts \\ [])
+## foreign_key_constraint/3
 
-Validates that no existing record with a different primary key
-has the same values for these fields.
+Checks for foreign key constraint in the given field.
 
-This function exists to provide quick feedback to users of your
-application. It should not be relied on for any data guarantee as it
-has race conditions and is inherently unsafe. For example, if this
-check happens twice in the same time interval (because the user
-submitted a form twice), both checks may pass and you may end-up with
-duplicate entries in the database. Therefore, a `unique_constraint/3`
-should also be used to ensure your data won't get corrupted.
+The foreign key constraint works by relying on the database to
+check if the associated data exists or not. This is useful to
+guarantee that a child will only be created if the parent exists
+in the database too.
 
-However, because constraints are only checked if all validations
-succeed, this function can be used as an early check to provide
-early feedback to users, since most conflicting data will have been
-inserted prior to the current validation phase.
+In order to use the foreign key constraint the first step is
+to define the foreign key in a migration. This is often done
+with references. For example, imagine you are creating a
+comments table that belongs to posts. One would have:
 
-When applying this validation to a schemas loaded from the database
-this check will exclude rows having the same primary key as set on
-the changeset, as those are supposed to be overwritten anyways.
+    create table(:comments) do
+      add :post_id, references(:posts)
+    end
+
+By default, Ecto will generate a foreign key constraint with
+name "comments_post_id_fkey" (the name is configurable).
+
+Now that a constraint exists, when creating comments, we could
+annotate the changeset with foreign key constraint so Ecto knows
+how to convert it into an error message:
+
+    cast(comment, params, [:post_id])
+    |> foreign_key_constraint(:post_id)
+
+Now, when invoking `c:Ecto.Repo.insert/2` or `c:Ecto.Repo.update/2`,
+if the associated post does not exist, the underlying operation will
+fail but Ecto will convert the database exception into a changeset
+error and return an `{:error, changeset}` tuple. Note that the error
+will occur only after hitting the database, so it will not be visible
+until all other validations pass. If the constraint fails inside a
+transaction, the transaction will be marked as aborted.
 
 ## Options
 
   * `:message` - the message in case the constraint check fails,
-    defaults to "has already been taken". Can also be a `{msg, opts}` tuple,
-    to provide additional options when using `traverse_errors/2`.
+    defaults to "does not exist"
+  * `:name` - the constraint name. By default, the constraint
+    name is inferred from the table + field. If this option is given,
+    the `field` argument only indicates the field the error will be
+    added to. May be required explicitly for complex cases
+  * `:match` - how the changeset constraint name is matched against the
+    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
+    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
+    to this changeset constraint. `:prefix` matches any repo constraint which
+    `starts_with?` `:name` to this changeset constraint.
 
-  * `:error_key` - the key to which changeset error will be added when
-    check fails, defaults to the first field name of the given list of
-    fields.
+## assoc_constraint/3
 
-  * `:prefix` - the prefix to run the query on (such as the schema path
-    in Postgres or the database in MySQL). See `Ecto.Repo` documentation
-    for more information.
+Checks the associated field exists.
 
-  * `:nulls_distinct` - a boolean controlling whether different null values
-    are considered distinct (not equal). If `false`, `nil` values will have
-    their uniqueness checked. Otherwise, the check will not be performed. This
-    is only meaningful when paired with a unique index that treats nulls as equal,
-    such as Postgres 15's `NULLS NOT DISTINCT` option. Defaults to `true`
+This is similar to `foreign_key_constraint/3` except that the
+field is inferred from the association definition. This is useful
+to guarantee that a child will only be created if the parent exists
+in the database too. Therefore, it only applies to `belongs_to`
+associations.
 
-  * `:repo_opts` - the options to pass to the `Ecto.Repo` call.
+As the name says, a constraint is required in the database for
+this function to work. Such constraint is often added as a
+reference to the child table:
 
-  * `:query` - the base query to use for the check. Defaults to the schema of
-    the changeset. If the primary key is set, a clause will be added to exclude
-    the changeset row itself from the check.
+    create table(:comments) do
+      add :post_id, references(:posts)
+    end
 
-## Examples
+Now, when inserting a comment, it is possible to forbid any
+comment to be added if the associated post does not exist:
 
-    unsafe_validate_unique(changeset, :city_name, repo)
-    unsafe_validate_unique(changeset, [:city_name, :state_name], repo)
-    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, message: "city must be unique within state")
-    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, prefix: "public")
-    unsafe_validate_unique(changeset, [:city_name, :state_name], repo, query: from(c in City, where: is_nil(c.deleted_at)))
-
-## update_change(changeset, key, function)
-
-Updates a change.
-
-The given `function` is invoked with the change value only if there
-is a change for `key`. Once the function is invoked, it behaves as
-`put_change/3`.
-
-Note that the value of the change can still be `nil` (unless the field
-was marked as required on `validate_required/3`).
-
-## Examples
-
-    iex> changeset = change(%Post{}, %{impressions: 1})
-    iex> changeset = update_change(changeset, :impressions, &(&1 + 1))
-    iex> changeset.changes.impressions
-    2
-
-## validate_acceptance(changeset, field, opts \\ [])
-
-Validates the given parameter is true.
-
-Note this validation only checks the parameter itself is true, never
-the field in the schema. That's because acceptance parameters do not need
-to be persisted, as by definition they would always be stored as `true`.
+    comment
+    |> Ecto.Changeset.cast(params, [:post_id])
+    |> Ecto.Changeset.assoc_constraint(:post)
+    |> Repo.insert
 
 ## Options
 
-  * `:message` - the message on failure, defaults to "must be accepted".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
+  * `:message` - the message in case the constraint check fails,
+    defaults to "does not exist"
+  * `:name` - the constraint name. By default, the constraint
+    name is inferred from the table + field. If this option is given,
+    the `field` argument only indicates the field the error will be
+    added to. May be required explicitly for complex cases
+  * `:match` - how the changeset constraint name is matched against the
+    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
+    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
+    to this changeset constraint. `:prefix` matches any repo constraint which
+    `starts_with?` `:name` to this changeset constraint.
 
-## Examples
+## no_assoc_constraint/3
 
-    validate_acceptance(changeset, :terms_of_service)
-    validate_acceptance(changeset, :rules, message: "please accept rules")
+Checks the associated field does not exist.
 
-## validate_change(changeset, field, validator)
+This is similar to `foreign_key_constraint/3` except that the
+field is inferred from the association definition. This is useful
+to guarantee that parent can only be deleted (or have its primary
+key changed) if no child exists in the database. Therefore, it only
+applies to `has_*` associations.
 
-Validates the given `field` change.
+As the name says, a constraint is required in the database for
+this function to work. Such constraint is often added as a
+reference to the child table:
 
-It invokes the `validator` function to perform the validation
-only if a change for the given `field` exists and the change
-value is not `nil`. The function must return a list of errors
-(with an empty list meaning no errors).
+    create table(:comments) do
+      add :post_id, references(:posts)
+    end
 
-In case there's at least one error, the list of errors will be appended to the
-`:errors` field of the changeset and the `:valid?` flag will be set to
-`false`.
+Now, when deleting the post, it is possible to forbid any post to
+be deleted if they still have comments attached to it:
 
-## Examples
-
-    iex> changeset = change(%Post{}, %{title: "foo"})
-    iex> changeset = validate_change changeset, :title, fn :title, title  ->
-    ...>   # Value must not be "foo"!
-    ...>   if title == "foo" do
-    ...>     [title: "cannot be foo"]
-    ...>   else
-    ...>     []
-    ...>   end
-    ...> end
-    iex> changeset.errors
-    [title: {"cannot be foo", []}]
-
-    iex> changeset = change(%Post{}, %{title: "foo"})
-    iex> changeset = validate_change changeset, :title, fn :title, title  ->
-    ...>   if title == "foo" do
-    ...>     [title: {"cannot be foo", additional: "info"}]
-    ...>   else
-    ...>     []
-    ...>   end
-    ...> end
-    iex> changeset.errors
-    [title: {"cannot be foo", [additional: "info"]}]
-
-## validate_change(changeset, field, metadata, validator)
-
-Stores the validation `metadata` and validates the given `field` change.
-
-Similar to `validate_change/3` but stores the validation metadata
-into the changeset validators. The validator metadata is often used
-as a reflection mechanism, to automatically generate code based on
-the available validations.
-
-## Examples
-
-    iex> changeset = change(%Post{}, %{title: "foo"})
-    iex> changeset = validate_change changeset, :title, :useless_validator, fn
-    ...>   _, _ -> []
-    ...> end
-    iex> changeset.validations
-    [title: :useless_validator]
-
-## validate_confirmation(changeset, field, opts \\ [])
-
-Validates that the given parameter matches its confirmation.
-
-By calling `validate_confirmation(changeset, :email)`, this
-validation will check if both "email" and "email_confirmation"
-in the parameter map matches. Note this validation only looks
-at the parameters themselves, never the fields in the schema.
-As such as, the "email_confirmation" field does not need to be
-added as a virtual field in your schema.
-
-Note that if the confirmation field is missing, this does not
-add a validation error. This is done on purpose as you do not
-trigger confirmation validation in places where a confirmation
-is not required (for example, in APIs). You can force the
-confirmation parameter to be required in the options (see below).
+    post
+    |> Ecto.Changeset.change
+    |> Ecto.Changeset.no_assoc_constraint(:comments)
+    |> Repo.delete
 
 ## Options
 
-  * `:message` - the message on failure, defaults to "does not match confirmation".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-  * `:required` - boolean, sets whether existence of confirmation parameter
-    is required for addition of error. Defaults to false
+  * `:message` - the message in case the constraint check fails,
+    defaults to "is still associated with this entry" (for `has_one`)
+    and "are still associated with this entry" (for `has_many`)
+  * `:name` - the constraint name. By default, the constraint
+    name is inferred from the table + field. If this option is given,
+    the `field` argument only indicates the field the error will be
+    added to. May be required explicitly for complex cases
+  * `:match` - how the changeset constraint name is matched against the
+    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
+    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
+    to this changeset constraint. `:prefix` matches any repo constraint which
+    `starts_with?` `:name` to this changeset constraint.
 
-## Examples
+## exclusion_constraint/3
 
-    validate_confirmation(changeset, :email)
-    validate_confirmation(changeset, :password, message: "does not match password")
+Checks for an exclusion constraint in the given field.
 
-    cast(data, params, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
-
-## validate_exclusion(changeset, field, data, opts \\ [])
-
-Validates a change is not included in the given enumerable.
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
-
-## Options
-
-  * `:message` - the message on failure, defaults to "is reserved".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_exclusion(changeset, :name, ~w(admin superadmin))
-
-## validate_format(changeset, field, format, opts \\ [])
-
-Validates a change has the given format.
-
-The format has to be expressed as a regular expression.
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
+The exclusion constraint works by relying on the database to check
+if the exclusion constraint has been violated or not and, if so,
+Ecto converts it into a changeset error.
 
 ## Options
 
-  * `:message` - the message on failure, defaults to "has invalid format".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_format(changeset, :email, ~r/@/)
-
-## validate_inclusion(changeset, field, data, opts \\ [])
-
-Validates a change is included in the given enumerable.
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
-
-## Options
-
-  * `:message` - the message on failure, defaults to "is invalid".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_inclusion(changeset, :cardinal_direction, ["north", "east", "south", "west"])
-    validate_inclusion(changeset, :age, 0..99)
-
-## validate_length(changeset, field, opts)
-
-Validates a change is a string or list of the given length.
-
-Note that the length of a string is counted in graphemes by default. If using
-this validation to match a character limit of a database backend,
-it's likely that the limit ignores graphemes and limits the number
-of unicode characters. Then consider using the `:count` option to
-limit the number of codepoints (`:codepoints`), or limit the number of bytes (`:bytes`).
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
-
-## Options
-
-  * `:is` - the length must be exactly this value
-  * `:min` - the length must be greater than or equal to this value
-  * `:max` - the length must be less than or equal to this value
-  * `:count` - what length to count for string, `:graphemes` (default), `:codepoints` or `:bytes`
-  * `:message` - the message on failure, depending on the validation, is one of:
-    * for strings:
-      * "should be %{count} character(s)"
-      * "should be at least %{count} character(s)"
-      * "should be at most %{count} character(s)"
-    * for binary:
-      * "should be %{count} byte(s)"
-      * "should be at least %{count} byte(s)"
-      * "should be at most %{count} byte(s)"
-    * for lists and maps:
-      * "should have %{count} item(s)"
-      * "should have at least %{count} item(s)"
-      * "should have at most %{count} item(s)"
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_length(changeset, :title, min: 3)
-    validate_length(changeset, :title, max: 100)
-    validate_length(changeset, :title, min: 3, max: 100)
-    validate_length(changeset, :code, is: 9)
-    validate_length(changeset, :topics, is: 2)
-    validate_length(changeset, :icon, count: :bytes, max: 1024 * 16)
-
-## validate_number(changeset, field, opts)
-
-Validates the properties of a number.
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
-
-## Options
-
-  * `:less_than`
-  * `:greater_than`
-  * `:less_than_or_equal_to`
-  * `:greater_than_or_equal_to`
-  * `:equal_to`
-  * `:not_equal_to`
-  * `:message` - the message on failure, defaults to one of:
-    * "must be less than %{number}"
-    * "must be greater than %{number}"
-    * "must be less than or equal to %{number}"
-    * "must be greater than or equal to %{number}"
-    * "must be equal to %{number}"
-    * "must be not equal to %{number}"
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_number(changeset, :count, less_than: 3)
-    validate_number(changeset, :pi, greater_than: 3, less_than: 4)
-    validate_number(changeset, :the_answer_to_life_the_universe_and_everything, equal_to: 42)
-
-## validate_required(changeset, fields, opts \\ [])
-
-Validates that one or more fields are present in the changeset.
-
-You can pass a single field name or a list of field names that
-are required.
-
-If the value of a field is `nil` or a string made only of whitespace,
-the changeset is marked as invalid, the field is removed from the
-changeset's changes, and an error is added. An error won't be added if
-the field already has an error.
-
-If a field is given to `validate_required/3` but it has not been passed
-as parameter during `cast/3` (i.e. it has not been changed), then
-`validate_required/3` will check for its current value in the data.
-If the data contains a non-empty value for the field, then no error is
-added. This allows developers to use `validate_required/3` to perform
-partial updates. For example, on `insert` all fields would be required,
-because their default values on the data are all `nil`, but on `update`,
-if you don't want to change a field that has been previously set,
-you are not required to pass it as a parameter, since `validate_required/3`
-won't add an error for missing changes as long as the value in the
-data given to the `changeset` is not empty.
-
-Do not use this function to validate associations that are required,
-instead pass the `:required` option to `cast_assoc/3` or `cast_embed/3`.
-
-Opposite to other validations, calling this function does not store
-the validation under the `changeset.validations` key. Instead, it
-stores all required fields under `changeset.required`.
-
-## Options
-
-  * `:message` - the message on failure, defaults to "can't be blank".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_required(changeset, :title)
-    validate_required(changeset, [:title, :body])
-
-## validate_subset(changeset, field, data, opts \\ [])
-
-Validates a change, of type enum, is a subset of the given enumerable.
-
-This validates if a list of values belongs to the given enumerable.
-If you need to validate if a single value is inside the given enumerable,
-you should use `validate_inclusion/4` instead.
-
-Type of the field must be array.
-
-The validation only runs if a change for the given `field` exists and the
-change value is not `nil`.
-
-## Options
-
-  * `:message` - the message on failure, defaults to "has an invalid entry".
-    Can also be a `{msg, opts}` tuple, to provide additional options
-    when using `traverse_errors/2`.
-
-## Examples
-
-    validate_subset(changeset, :pets, ["cat", "dog", "parrot"])
-    validate_subset(changeset, :lottery_numbers, 0..99)
-
-## validations(changeset)
-
-Returns a keyword list of the validations for this changeset.
-
-The keys in the list are the names of fields, and the values are a
-validation associated with the field. A field may occur multiple
-times in the list.
-
-## Example
-
-    %Post{}
-    |> change()
-    |> validate_format(:title, ~r/^\w+:\s/, message: "must start with a topic")
-    |> validate_length(:title, max: 100)
-    |> validations()
-    #=> [
-      title: {:length, [ max: 100 ]},
-      title: {:format, ~r/^\w+:\s/}
-    ]
-
-The following validations may be included in the result. The list is
-not necessarily exhaustive. For example, custom validations written
-by the developer will also appear in our return value.
-
-This first group contains validations that hold a keyword list of validators.
-This list may also include a `:message` key.
-
-  * `{:length, [option]}`
-
-    * `min: n`
-    * `max: n`
-    * `is: n`
-    * `count: :graphemes | :codepoints`
-
-  * `{:number,  [option]}`
-
-    * `equal_to: n`
-    * `greater_than: n`
-    * `greater_than_or_equal_to: n`
-    * `less_than: n`
-    * `less_than_or_equal_to: n`
-
-The other validators simply take a value:
-
-  * `{:exclusion, Enum.t}`
-  * `{:format, ~r/pattern/}`
-  * `{:inclusion, Enum.t}`
-  * `{:subset, Enum.t}`
-
-Note that calling `validate_required/3` does not store the validation under the
-`changeset.validations` key (and so won't be included in the result of this
-function). The required fields are stored under the `changeset.required` key.
-
-## empty_value/0
-
-A possible value that you can pass to the `:empty_values` option.
-
-See `empty_values/0` and the [*Empty values* section](#module-empty-values) in
-the module documentation for more information.
+  * `:message` - the message in case the constraint check fails,
+    defaults to "violates an exclusion constraint"
+  * `:name` - the constraint name. By default, the constraint
+    name is inferred from the table + field. If this option is given,
+    the `field` argument only indicates the field the error will be
+    added to. May be required explicitly for complex cases
+  * `:match` - how the changeset constraint name is matched against the
+    repo constraint, may be `:exact`, `:suffix` or `:prefix`. Defaults to
+    `:exact`. `:suffix` matches any repo constraint which `ends_with?` `:name`
+    to this changeset constraint. `:prefix` matches any repo constraint which
+    `starts_with?` `:name` to this changeset constraint.

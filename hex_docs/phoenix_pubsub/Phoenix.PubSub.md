@@ -136,111 +136,7 @@ This two-step process ensures that:
 
 To decrease the pool size, follow the same process in reverse order.
 
-## broadcast(pubsub, topic, message, dispatcher \\ __MODULE__)
-
-Broadcasts message on given topic across the whole cluster.
-
-  * `pubsub` - The name of the pubsub system
-  * `topic` - The topic to broadcast to, ie: `"users:123"`
-  * `message` - The payload of the broadcast
-
-A custom dispatcher may also be given as a fourth, optional argument.
-See the "Custom dispatching" section in the module documentation.
-
-## broadcast!(pubsub, topic, message, dispatcher \\ __MODULE__)
-
-Raising version of `broadcast/4`.
-
-## broadcast_from(pubsub, from, topic, message, dispatcher \\ __MODULE__)
-
-Broadcasts message on given topic from the given process across the whole cluster.
-
-  * `pubsub` - The name of the pubsub system
-  * `from` - The pid that will send the message
-  * `topic` - The topic to broadcast to, ie: `"users:123"`
-  * `message` - The payload of the broadcast
-
-The default dispatcher will broadcast the message to all subscribers except for the
-process that initiated the broadcast.
-
-A custom dispatcher may also be given as a fifth, optional argument.
-See the "Custom dispatching" section in the module documentation.
-
-## broadcast_from!(pubsub, from, topic, message, dispatcher \\ __MODULE__)
-
-Raising version of `broadcast_from/5`.
-
-## child_spec(options)
-
-Returns a child specification for pubsub with the given `options`.
-
-The `:name` is required as part of `options`. The remaining options
-are described below.
-
-## Options
-
-  * `:name` - the name of the pubsub to be started
-  * `:adapter` - the adapter to use (defaults to `Phoenix.PubSub.PG2`)
-  * `:pool_size` - number of pubsub partitions to launch
-    (defaults to one partition for every 4 cores)
-  * `:registry_size` - number of `Registry` partitions to launch
-    (defaults to `:pool_size`). This controls the number of Registry partitions
-    used for storing subscriptions and can be tuned independently from `:pool_size`
-    for better performance characteristics.
-  * `:broadcast_pool_size` - number of pubsub partitions used for broadcasting messages
-    (defaults to `:pool_size`). This option is used during pool size migrations to ensure
-    no messages are lost. See the "Safe Pool Size Migration" section in the module documentation.
-
-## direct_broadcast(node_name, pubsub, topic, message, dispatcher \\ __MODULE__)
-
-Broadcasts message on given topic to a given node.
-
-  * `node_name` - The target node name
-  * `pubsub` - The name of the pubsub system
-  * `topic` - The topic to broadcast to, ie: `"users:123"`
-  * `message` - The payload of the broadcast
-
-**DO NOT** use this function if you wish to broadcast to the current
-node, as it is always serialized, use `local_broadcast/4` instead.
-
-A custom dispatcher may also be given as a fifth, optional argument.
-See the "Custom dispatching" section in the module documentation.
-
-## direct_broadcast!(node_name, pubsub, topic, message, dispatcher \\ __MODULE__)
-
-Raising version of `direct_broadcast/5`.
-
-## local_broadcast(pubsub, topic, message, dispatcher \\ __MODULE__)
-
-Broadcasts message on given topic only for the current node.
-
-  * `pubsub` - The name of the pubsub system
-  * `topic` - The topic to broadcast to, ie: `"users:123"`
-  * `message` - The payload of the broadcast
-
-A custom dispatcher may also be given as a fourth, optional argument.
-See the "Custom dispatching" section in the module documentation.
-
-## local_broadcast_from(pubsub, from, topic, message, dispatcher \\ __MODULE__)
-
-Broadcasts message on given topic from a given process only for the current node.
-
-  * `pubsub` - The name of the pubsub system
-  * `from` - The pid that will send the message
-  * `topic` - The topic to broadcast to, ie: `"users:123"`
-  * `message` - The payload of the broadcast
-
-The default dispatcher will broadcast the message to all subscribers except for the
-process that initiated the broadcast.
-
-A custom dispatcher may also be given as a fifth, optional argument.
-See the "Custom dispatching" section in the module documentation.
-
-## node_name(pubsub)
-
-Returns the node name of the PubSub server.
-
-## subscribe(pubsub, topic, opts \\ [])
+## subscribe/3
 
 Subscribes the caller to the PubSub adapter's topic.
 
@@ -263,6 +159,89 @@ will be dropped.
     dispatching mechanisms. See the "Custom dispatching"
     section in the module documentation
 
-## unsubscribe(pubsub, topic)
+## unsubscribe/2
 
 Unsubscribes the caller from the PubSub adapter's topic.
+
+## broadcast/4
+
+Broadcasts message on given topic across the whole cluster.
+
+  * `pubsub` - The name of the pubsub system
+  * `topic` - The topic to broadcast to, ie: `"users:123"`
+  * `message` - The payload of the broadcast
+
+A custom dispatcher may also be given as a fourth, optional argument.
+See the "Custom dispatching" section in the module documentation.
+
+## broadcast_from/5
+
+Broadcasts message on given topic from the given process across the whole cluster.
+
+  * `pubsub` - The name of the pubsub system
+  * `from` - The pid that will send the message
+  * `topic` - The topic to broadcast to, ie: `"users:123"`
+  * `message` - The payload of the broadcast
+
+The default dispatcher will broadcast the message to all subscribers except for the
+process that initiated the broadcast.
+
+A custom dispatcher may also be given as a fifth, optional argument.
+See the "Custom dispatching" section in the module documentation.
+
+## local_broadcast/4
+
+Broadcasts message on given topic only for the current node.
+
+  * `pubsub` - The name of the pubsub system
+  * `topic` - The topic to broadcast to, ie: `"users:123"`
+  * `message` - The payload of the broadcast
+
+A custom dispatcher may also be given as a fourth, optional argument.
+See the "Custom dispatching" section in the module documentation.
+
+## local_broadcast_from/5
+
+Broadcasts message on given topic from a given process only for the current node.
+
+  * `pubsub` - The name of the pubsub system
+  * `from` - The pid that will send the message
+  * `topic` - The topic to broadcast to, ie: `"users:123"`
+  * `message` - The payload of the broadcast
+
+The default dispatcher will broadcast the message to all subscribers except for the
+process that initiated the broadcast.
+
+A custom dispatcher may also be given as a fifth, optional argument.
+See the "Custom dispatching" section in the module documentation.
+
+## direct_broadcast/5
+
+Broadcasts message on given topic to a given node.
+
+  * `node_name` - The target node name
+  * `pubsub` - The name of the pubsub system
+  * `topic` - The topic to broadcast to, ie: `"users:123"`
+  * `message` - The payload of the broadcast
+
+**DO NOT** use this function if you wish to broadcast to the current
+node, as it is always serialized, use `local_broadcast/4` instead.
+
+A custom dispatcher may also be given as a fifth, optional argument.
+See the "Custom dispatching" section in the module documentation.
+
+## broadcast!/4
+
+Raising version of `broadcast/4`.
+
+## broadcast_from!/5
+
+Raising version of `broadcast_from/5`.
+
+## direct_broadcast!/5
+
+Raising version of `direct_broadcast/5`.
+
+## node_name/1
+
+Returns the node name of the PubSub server.

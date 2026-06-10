@@ -1,31 +1,8 @@
 # Phoenix.HTML.Form
 
-Define a `Phoenix.HTML.Form` struct and functions to interact with it.
 
-For building actual forms in your Phoenix application, see
-[the `Phoenix.Component.form/1` component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#form/1).
 
-## Access behaviour
-
-The `Phoenix.HTML.Form` struct implements the `Access` behaviour.
-When you do `form[field]`, it returns a `Phoenix.HTML.FormField`
-struct with the `id`, `name`, `value`, and `errors` prefilled.
-
-The field name can be either an atom or a string. If it is an atom,
-it assumes the form keeps both data and errors as atoms. If it is a
-string, it considers that data and errors are stored as strings for said
-field. Forms backed by an `Ecto.Changeset` only support atom field names.
-
-It is possible to "access" fields which do not exist in the source data
-structure. A `Phoenix.HTML.FormField` struct will be dynamically created
-with some attributes such as `name` and `id` populated.
-
-## Custom implementations
-
-There is a protocol named `Phoenix.HTML.FormData` which can be implemented
-by any data structure that wants to be cast to the `Phoenix.HTML.Form` struct.
-
-## %Phoenix.HTML.Form{}
+## fetch/2
 
 Defines the Phoenix.HTML.Form struct.
 
@@ -59,43 +36,7 @@ Its fields are:
   * `:errors` - a keyword list of errors that are associated with
     the form
 
-## input_changed?(form1, form2, field)
-
-Receives two forms structs and checks if the given field changed.
-
-The field will have changed if either its associated value, errors,
-action, or implementation changed. This is mostly used for optimization
-engines as an extension of the `Access` behaviour.
-
-## input_id(name, field)
-
-Returns an id of a corresponding form field.
-
-The form should either be a `Phoenix.HTML.Form` or an atom.
-
-## input_id(name, field, value)
-
-Returns an id of a corresponding form field and value attached to it.
-
-Useful for radio buttons and inputs like multiselect checkboxes.
-
-## input_name(form_or_name, field)
-
-Returns a name of a corresponding form field.
-
-The first argument should either be a `Phoenix.HTML.Form` or an atom.
-
-## Examples
-
-    iex> Phoenix.HTML.Form.input_name(:user, :first_name)
-    "user[first_name]"
-
-## input_validations(form, field)
-
-Returns the HTML validations that would apply to
-the given field.
-
-## input_value(form, field)
+## input_value/2
 
 Returns a value of a corresponding form field.
 
@@ -115,7 +56,43 @@ parameter, and this function will return it as is. If you
 need to normalize the result of `input_value`, see
 `normalize_value/2`.
 
-## normalize_value(type, value)
+## input_id/2
+
+Returns an id of a corresponding form field.
+
+The form should either be a `Phoenix.HTML.Form` or an atom.
+
+## input_id/3
+
+Returns an id of a corresponding form field and value attached to it.
+
+Useful for radio buttons and inputs like multiselect checkboxes.
+
+## input_name/2
+
+Returns a name of a corresponding form field.
+
+The first argument should either be a `Phoenix.HTML.Form` or an atom.
+
+## Examples
+
+    iex> Phoenix.HTML.Form.input_name(:user, :first_name)
+    "user[first_name]"
+
+## input_changed?/3
+
+Receives two forms structs and checks if the given field changed.
+
+The field will have changed if either its associated value, errors,
+action, or implementation changed. This is mostly used for optimization
+engines as an extension of the `Access` behaviour.
+
+## input_validations/2
+
+Returns the HTML validations that would apply to
+the given field.
+
+## normalize_value/2
 
 Normalizes an input `value` according to its input `type`.
 
@@ -134,7 +111,7 @@ this logic. In particular:
     that the textarea is rendered with no spaces after its
     content
 
-## options_for_select(options, selected_values, extra \\ [])
+## options_for_select/3
 
 Returns options to be used inside a select element.
 

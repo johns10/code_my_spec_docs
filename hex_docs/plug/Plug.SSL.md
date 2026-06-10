@@ -82,7 +82,7 @@ For example, you may define it as:
         paths: ["/health"]
       ]
 
-## configure(options)
+## configure/1
 
 Configures and validates the options given to the `:ssl` application.
 

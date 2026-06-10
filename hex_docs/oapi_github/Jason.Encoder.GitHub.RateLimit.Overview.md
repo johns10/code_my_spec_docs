@@ -1,1 +1,0 @@
-# Jason.Encoder.GitHub.RateLimit.Overview

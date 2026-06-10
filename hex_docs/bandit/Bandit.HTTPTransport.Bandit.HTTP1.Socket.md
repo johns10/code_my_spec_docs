@@ -1,1 +1,0 @@
-# Bandit.HTTPTransport.Bandit.HTTP1.Socket

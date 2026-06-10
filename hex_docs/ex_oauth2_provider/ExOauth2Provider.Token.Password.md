@@ -2,7 +2,7 @@
 
 Functions for dealing with refresh token strategy.
 
-## grant(request, config \\ [])
+## grant/2
 
 Will grant access token by password authentication.
 

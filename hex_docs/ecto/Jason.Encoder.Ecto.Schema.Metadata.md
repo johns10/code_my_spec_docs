@@ -1,1 +1,0 @@
-# Jason.Encoder.Ecto.Schema.Metadata

@@ -1,1 +1,0 @@
-# Anubis.Server.Transport.StreamableHTTP.RequestParams

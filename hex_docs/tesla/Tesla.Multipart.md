@@ -19,15 +19,19 @@ mp =
 response = client.post(url, mp)
 ```
 
-## add_content_type_param(mp, param)
+## new/0
+
+Create a new Multipart struct to be used for a request body.
+
+## add_content_type_param/2
 
 Add a parameter to the multipart content-type.
 
-## add_field(mp, name, value, opts \\ [])
+## add_field/4
 
 Add a field part.
 
-## add_file(mp, path, opts \\ [])
+## add_file/3
 
 Add a file part. The file will be streamed.
 
@@ -38,7 +42,7 @@ Add a file part. The file will be streamed.
 - `:headers` - additional headers
 - `:detect_content_type` - auto-detect file content-type (defaults to false)
 
-## add_file_content(mp, data, filename, opts \\ [])
+## add_file_content/4
 
 Add a file part with value.
 
@@ -48,7 +52,3 @@ Same as `add_file/3` but the file content is read from `data` input argument.
 
 - `:name` - name of form param
 - `:headers` - additional headers
-
-## new()
-
-Create a new Multipart struct to be used for a request body.

@@ -78,7 +78,7 @@ OAuth 1.0a strategy.
       end
     end
 
-## authorize_url(config)
+## authorize_url/1
 
 Generate authorization URL for request phase.
 
@@ -92,7 +92,7 @@ Generate authorization URL for request phase.
     to, defaults to `/oauth/authenticate`
   - `:authorization_params` - The authorization parameters, defaults to `[]`
 
-## callback(config, params, strategy \\ __MODULE__)
+## callback/3
 
 Callback phase for generating access token and fetch user data.
 
@@ -104,6 +104,6 @@ Callback phase for generating access token and fetch user data.
   - `:session_params` - The session parameters that was returned from
     `authorize_url/1`, optional
 
-## request(config, token, method, url, params \\ [], headers \\ [])
+## request/6
 
 Performs a signed HTTP request to the API using the oauth token.

@@ -2,34 +2,34 @@
 
 
 
-## append_clock(clockset, arg)
-
-Adds a replicas context to a clockset, keeping only dominate contexts.
-
-## clockset_replicas(clockset)
+## clockset_replicas/1
 
 Returns a list of replicas from a list of contexts.
 
-## dominates?(c1, c2)
+## append_clock/2
+
+Adds a replicas context to a clockset, keeping only dominate contexts.
+
+## dominates?/2
 
 Checks if one clock causally dominates the other for all replicas.
 
-## dominates_or_equal?(c1, c2)
+## dominates_or_equal?/2
 
 Checks if one clock causally dominates the other for their shared replicas.
 
-## filter_replicas(c, replicas)
+## upperbound/2
 
-Returns the clock with just provided replicas.
+Returns the upper bound causal context of two clocks.
 
-## lowerbound(c1, c2)
+## lowerbound/2
 
 Returns the lower bound causal context of two clocks.
 
-## replicas(c)
+## filter_replicas/2
+
+Returns the clock with just provided replicas.
+
+## replicas/1
 
 Returns replicas from the given clock.
-
-## upperbound(c1, c2)
-
-Returns the upper bound causal context of two clocks.

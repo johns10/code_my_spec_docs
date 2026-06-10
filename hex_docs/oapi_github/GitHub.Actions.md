@@ -2,7 +2,7 @@
 
 Provides API endpoints related to actions
 
-## add_custom_labels_to_self_hosted_runner_for_org(org, runner_id, body, opts \\ [])
+## add_custom_labels_to_self_hosted_runner_for_org/4
 
 Add custom labels to a self-hosted runner for an organization
 
@@ -16,7 +16,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#add-custom-labels-to-a-self-hosted-runner-for-an-organization)
 
-## add_custom_labels_to_self_hosted_runner_for_repo(owner, repo, runner_id, body, opts \\ [])
+## add_custom_labels_to_self_hosted_runner_for_repo/5
 
 Add custom labels to a self-hosted runner for a repository
 
@@ -30,7 +30,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#add-custom-labels-to-a-self-hosted-runner-for-a-repository)
 
-## add_selected_repo_to_org_secret(org, secret_name, repository_id, opts \\ [])
+## add_selected_repo_to_org_secret/4
 
 Add selected repository to an organization secret
 
@@ -46,7 +46,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#add-selected-repository-to-an-organization-secret)
 
-## add_selected_repo_to_org_variable(org, name, repository_id, opts \\ [])
+## add_selected_repo_to_org_variable/4
 
 Add selected repository to an organization variable
 
@@ -61,7 +61,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#add-selected-repository-to-an-organization-variable)
 
-## approve_workflow_run(owner, repo, run_id, opts \\ [])
+## approve_workflow_run/4
 
 Approve a workflow run for a fork pull request
 
@@ -73,7 +73,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#approve-a-workflow-run-for-a-fork-pull-request)
 
-## cancel_workflow_run(owner, repo, run_id, opts \\ [])
+## cancel_workflow_run/4
 
 Cancel a workflow run
 
@@ -85,7 +85,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#cancel-a-workflow-run)
 
-## create_environment_variable(owner, repo, environment_name, body, opts \\ [])
+## create_environment_variable/5
 
 Create an environment variable
 
@@ -99,7 +99,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#create-an-environment-variable)
 
-## create_or_update_environment_secret(owner, repo, environment_name, secret_name, body, opts \\ [])
+## create_or_update_environment_secret/6
 
 Create or update an environment secret
 
@@ -114,7 +114,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#create-or-update-an-environment-secret)
 
-## create_or_update_org_secret(org, secret_name, body, opts \\ [])
+## create_or_update_org_secret/4
 
 Create or update an organization secret
 
@@ -129,7 +129,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret)
 
-## create_or_update_repo_secret(owner, repo, secret_name, body, opts \\ [])
+## create_or_update_repo_secret/5
 
 Create or update a repository secret
 
@@ -144,7 +144,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#create-or-update-a-repository-secret)
 
-## create_org_variable(org, body, opts \\ [])
+## create_org_variable/3
 
 Create an organization variable
 
@@ -158,7 +158,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#create-an-organization-variable)
 
-## create_registration_token_for_org(org, opts \\ [])
+## create_registration_token_for_org/2
 
 Create a registration token for an organization
 
@@ -178,7 +178,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization)
 
-## create_registration_token_for_repo(owner, repo, opts \\ [])
+## create_registration_token_for_repo/3
 
 Create a registration token for a repository
 
@@ -198,7 +198,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-a-registration-token-for-a-repository)
 
-## create_remove_token_for_org(org, opts \\ [])
+## create_remove_token_for_org/2
 
 Create a remove token for an organization
 
@@ -218,7 +218,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization)
 
-## create_remove_token_for_repo(owner, repo, opts \\ [])
+## create_remove_token_for_repo/3
 
 Create a remove token for a repository
 
@@ -238,7 +238,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-a-remove-token-for-a-repository)
 
-## create_repo_variable(owner, repo, body, opts \\ [])
+## create_repo_variable/4
 
 Create a repository variable
 
@@ -252,7 +252,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#create-a-repository-variable)
 
-## create_workflow_dispatch(owner, repo, workflow_id, body, opts \\ [])
+## create_workflow_dispatch/5
 
 Create a workflow dispatch event
 
@@ -266,7 +266,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event)
 
-## delete_actions_cache_by_id(owner, repo, cache_id, opts \\ [])
+## delete_actions_cache_by_id/4
 
 Delete a GitHub Actions cache for a repository (using a cache ID)
 
@@ -278,7 +278,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#delete-a-github-actions-cache-for-a-repository-using-a-cache-id)
 
-## delete_actions_cache_by_key(owner, repo, opts \\ [])
+## delete_actions_cache_by_key/3
 
 Delete GitHub Actions caches for a repository (using a cache key)
 
@@ -295,7 +295,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#delete-github-actions-caches-for-a-repository-using-a-cache-key)
 
-## delete_artifact(owner, repo, artifact_id, opts \\ [])
+## delete_artifact/4
 
 Delete an artifact
 
@@ -306,7 +306,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/artifacts#delete-an-artifact)
 
-## delete_environment_secret(owner, repo, environment_name, secret_name, opts \\ [])
+## delete_environment_secret/5
 
 Delete an environment secret
 
@@ -320,7 +320,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#delete-an-environment-secret)
 
-## delete_environment_variable(owner, repo, name, environment_name, opts \\ [])
+## delete_environment_variable/5
 
 Delete an environment variable
 
@@ -334,7 +334,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#delete-an-environment-variable)
 
-## delete_org_secret(org, secret_name, opts \\ [])
+## delete_org_secret/3
 
 Delete an organization secret
 
@@ -348,7 +348,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#delete-an-organization-secret)
 
-## delete_org_variable(org, name, opts \\ [])
+## delete_org_variable/3
 
 Delete an organization variable
 
@@ -362,7 +362,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#delete-an-organization-variable)
 
-## delete_repo_secret(owner, repo, secret_name, opts \\ [])
+## delete_repo_secret/4
 
 Delete a repository secret
 
@@ -376,7 +376,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#delete-a-repository-secret)
 
-## delete_repo_variable(owner, repo, name, opts \\ [])
+## delete_repo_variable/4
 
 Delete a repository variable
 
@@ -390,7 +390,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#delete-a-repository-variable)
 
-## delete_self_hosted_runner_from_org(org, runner_id, opts \\ [])
+## delete_self_hosted_runner_from_org/3
 
 Delete a self-hosted runner from an organization
 
@@ -404,7 +404,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization)
 
-## delete_self_hosted_runner_from_repo(owner, repo, runner_id, opts \\ [])
+## delete_self_hosted_runner_from_repo/4
 
 Delete a self-hosted runner from a repository
 
@@ -418,7 +418,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-a-repository)
 
-## delete_workflow_run(owner, repo, run_id, opts \\ [])
+## delete_workflow_run/4
 
 Delete a workflow run
 
@@ -432,7 +432,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#delete-a-workflow-run)
 
-## delete_workflow_run_logs(owner, repo, run_id, opts \\ [])
+## delete_workflow_run_logs/4
 
 Delete workflow run logs
 
@@ -444,7 +444,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#delete-workflow-run-logs)
 
-## disable_selected_repository_github_actions_organization(org, repository_id, opts \\ [])
+## disable_selected_repository_github_actions_organization/3
 
 Disable a selected repository for GitHub Actions in an organization
 
@@ -456,7 +456,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#disable-a-selected-repository-for-github-actions-in-an-organization)
 
-## disable_workflow(owner, repo, workflow_id, opts \\ [])
+## disable_workflow/4
 
 Disable a workflow
 
@@ -468,7 +468,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#disable-a-workflow)
 
-## download_artifact(owner, repo, artifact_id, archive_format, opts \\ [])
+## download_artifact/5
 
 Download an artifact
 
@@ -481,7 +481,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/artifacts#download-an-artifact)
 
-## download_job_logs_for_workflow_run(owner, repo, job_id, opts \\ [])
+## download_job_logs_for_workflow_run/4
 
 Download job logs for a workflow run
 
@@ -496,7 +496,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run)
 
-## download_workflow_run_attempt_logs(owner, repo, run_id, attempt_number, opts \\ [])
+## download_workflow_run_attempt_logs/5
 
 Download workflow run attempt logs
 
@@ -511,7 +511,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-attempt-logs)
 
-## download_workflow_run_logs(owner, repo, run_id, opts \\ [])
+## download_workflow_run_logs/4
 
 Download workflow run logs
 
@@ -526,7 +526,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#download-workflow-run-logs)
 
-## enable_selected_repository_github_actions_organization(org, repository_id, opts \\ [])
+## enable_selected_repository_github_actions_organization/3
 
 Enable a selected repository for GitHub Actions in an organization
 
@@ -538,7 +538,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#enable-a-selected-repository-for-github-actions-in-an-organization)
 
-## enable_workflow(owner, repo, workflow_id, opts \\ [])
+## enable_workflow/4
 
 Enable a workflow
 
@@ -550,7 +550,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#enable-a-workflow)
 
-## force_cancel_workflow_run(owner, repo, run_id, opts \\ [])
+## force_cancel_workflow_run/4
 
 Force cancel a workflow run
 
@@ -563,7 +563,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#force-cancel-a-workflow-run)
 
-## generate_runner_jitconfig_for_org(org, body, opts \\ [])
+## generate_runner_jitconfig_for_org/3
 
 Create configuration for a just-in-time runner for an organization
 
@@ -577,7 +577,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization)
 
-## generate_runner_jitconfig_for_repo(owner, repo, body, opts \\ [])
+## generate_runner_jitconfig_for_repo/4
 
 Create configuration for a just-in-time runner for a repository
 
@@ -591,7 +591,7 @@ OAuth tokens and personal access tokens (classic) need the`repo` scope to use th
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-a-repository)
 
-## get_actions_cache_list(owner, repo, opts \\ [])
+## get_actions_cache_list/3
 
 List GitHub Actions caches for a repository
 
@@ -612,7 +612,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#list-github-actions-caches-for-a-repository)
 
-## get_actions_cache_usage(owner, repo, opts \\ [])
+## get_actions_cache_usage/3
 
 Get GitHub Actions cache usage for a repository
 
@@ -627,7 +627,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-a-repository)
 
-## get_actions_cache_usage_by_repo_for_org(org, opts \\ [])
+## get_actions_cache_usage_by_repo_for_org/2
 
 List repositories with GitHub Actions cache usage for an organization
 
@@ -645,7 +645,7 @@ OAuth tokens and personal access tokens (classic) need the `read:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#list-repositories-with-github-actions-cache-usage-for-an-organization)
 
-## get_actions_cache_usage_for_org(org, opts \\ [])
+## get_actions_cache_usage_for_org/2
 
 Get GitHub Actions cache usage for an organization
 
@@ -658,7 +658,7 @@ OAuth tokens and personal access tokens (classic) need the `read:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/cache#get-github-actions-cache-usage-for-an-organization)
 
-## get_allowed_actions_organization(org, opts \\ [])
+## get_allowed_actions_organization/2
 
 Get allowed actions and reusable workflows for an organization
 
@@ -670,7 +670,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-an-organization)
 
-## get_allowed_actions_repository(owner, repo, opts \\ [])
+## get_allowed_actions_repository/3
 
 Get allowed actions and reusable workflows for a repository
 
@@ -682,7 +682,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-allowed-actions-and-reusable-workflows-for-a-repository)
 
-## get_artifact(owner, repo, artifact_id, opts \\ [])
+## get_artifact/4
 
 Get an artifact
 
@@ -696,7 +696,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/artifacts#get-an-artifact)
 
-## get_custom_oidc_sub_claim_for_repo(owner, repo, opts \\ [])
+## get_custom_oidc_sub_claim_for_repo/3
 
 Get the customization template for an OIDC subject claim for a repository
 
@@ -708,7 +708,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-a-repository)
 
-## get_environment_public_key(owner, repo, environment_name, opts \\ [])
+## get_environment_public_key/4
 
 Get an environment public key
 
@@ -723,7 +723,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-an-environment-public-key)
 
-## get_environment_secret(owner, repo, environment_name, secret_name, opts \\ [])
+## get_environment_secret/5
 
 Get an environment secret
 
@@ -737,7 +737,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-an-environment-secret)
 
-## get_environment_variable(owner, repo, environment_name, name, opts \\ [])
+## get_environment_variable/5
 
 Get an environment variable
 
@@ -751,7 +751,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#get-an-environment-variable)
 
-## get_github_actions_default_workflow_permissions_organization(org, opts \\ [])
+## get_github_actions_default_workflow_permissions_organization/2
 
 Get default workflow permissions for an organization
 
@@ -765,7 +765,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-default-workflow-permissions-for-an-organization)
 
-## get_github_actions_default_workflow_permissions_repository(owner, repo, opts \\ [])
+## get_github_actions_default_workflow_permissions_repository/3
 
 Get default workflow permissions for a repository
 
@@ -779,7 +779,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-default-workflow-permissions-for-a-repository)
 
-## get_github_actions_permissions_organization(org, opts \\ [])
+## get_github_actions_permissions_organization/2
 
 Get GitHub Actions permissions for an organization
 
@@ -791,7 +791,7 @@ OAuth tokens and personal access tokens (classic) need the `admin:org` scope to 
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-an-organization)
 
-## get_github_actions_permissions_repository(owner, repo, opts \\ [])
+## get_github_actions_permissions_repository/3
 
 Get GitHub Actions permissions for a repository
 
@@ -803,7 +803,7 @@ OAuth tokens and personal access tokens (classic) need the `repo` scope to use t
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-a-repository)
 
-## get_job_for_workflow_run(owner, repo, job_id, opts \\ [])
+## get_job_for_workflow_run/4
 
 Get a job for a workflow run
 
@@ -817,7 +817,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run)
 
-## get_org_public_key(org, opts \\ [])
+## get_org_public_key/2
 
 Get an organization public key
 
@@ -832,7 +832,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-an-organization-public-key)
 
-## get_org_secret(org, secret_name, opts \\ [])
+## get_org_secret/3
 
 Get an organization secret
 
@@ -846,7 +846,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-an-organization-secret)
 
-## get_org_variable(org, name, opts \\ [])
+## get_org_variable/3
 
 Get an organization variable
 
@@ -860,7 +860,7 @@ OAuth tokens and personal access tokens (classic) need the`admin:org` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#get-an-organization-variable)
 
-## get_pending_deployments_for_run(owner, repo, run_id, opts \\ [])
+## get_pending_deployments_for_run/4
 
 Get pending deployments for a workflow run
 
@@ -874,7 +874,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#get-pending-deployments-for-a-workflow-run)
 
-## get_repo_public_key(owner, repo, opts \\ [])
+## get_repo_public_key/3
 
 Get a repository public key
 
@@ -889,7 +889,7 @@ If the repository is private, OAuth tokens and personal access tokens (classic) 
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-a-repository-public-key)
 
-## get_repo_secret(owner, repo, secret_name, opts \\ [])
+## get_repo_secret/4
 
 Get a repository secret
 
@@ -903,7 +903,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#get-a-repository-secret)
 
-## get_repo_variable(owner, repo, name, opts \\ [])
+## get_repo_variable/4
 
 Get a repository variable
 
@@ -917,7 +917,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#get-a-repository-variable)
 
-## get_reviews_for_run(owner, repo, run_id, opts \\ [])
+## get_reviews_for_run/4
 
 Get the review history for a workflow run
 
@@ -929,7 +929,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#get-the-review-history-for-a-workflow-run)
 
-## get_self_hosted_runner_for_org(org, runner_id, opts \\ [])
+## get_self_hosted_runner_for_org/3
 
 Get a self-hosted runner for an organization
 
@@ -943,7 +943,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization)
 
-## get_self_hosted_runner_for_repo(owner, repo, runner_id, opts \\ [])
+## get_self_hosted_runner_for_repo/4
 
 Get a self-hosted runner for a repository
 
@@ -957,7 +957,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-a-repository)
 
-## get_workflow(owner, repo, workflow_id, opts \\ [])
+## get_workflow/4
 
 Get a workflow
 
@@ -972,7 +972,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#get-a-workflow)
 
-## get_workflow_access_to_repository(owner, repo, opts \\ [])
+## get_workflow_access_to_repository/3
 
 Get the level of access for workflows outside of the repository
 
@@ -986,7 +986,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#get-the-level-of-access-for-workflows-outside-of-the-repository)
 
-## get_workflow_run(owner, repo, run_id, opts \\ [])
+## get_workflow_run/4
 
 Get a workflow run
 
@@ -1004,7 +1004,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run)
 
-## get_workflow_run_attempt(owner, repo, run_id, attempt_number, opts \\ [])
+## get_workflow_run_attempt/5
 
 Get a workflow run attempt
 
@@ -1022,7 +1022,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#get-a-workflow-run-attempt)
 
-## get_workflow_run_usage(owner, repo, run_id, opts \\ [])
+## get_workflow_run_usage/4
 
 Get workflow run usage
 
@@ -1036,7 +1036,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#get-workflow-run-usage)
 
-## get_workflow_usage(owner, repo, workflow_id, opts \\ [])
+## get_workflow_usage/4
 
 Get workflow usage
 
@@ -1052,7 +1052,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#get-workflow-usage)
 
-## list_artifacts_for_repo(owner, repo, opts \\ [])
+## list_artifacts_for_repo/3
 
 List artifacts for a repository
 
@@ -1072,7 +1072,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/artifacts#list-artifacts-for-a-repository)
 
-## list_environment_secrets(owner, repo, environment_name, opts \\ [])
+## list_environment_secrets/4
 
 List environment secrets
 
@@ -1092,7 +1092,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#list-environment-secrets)
 
-## list_environment_variables(owner, repo, environment_name, opts \\ [])
+## list_environment_variables/4
 
 List environment variables
 
@@ -1111,7 +1111,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#list-environment-variables)
 
-## list_jobs_for_workflow_run(owner, repo, run_id, opts \\ [])
+## list_jobs_for_workflow_run/4
 
 List jobs for a workflow run
 
@@ -1132,7 +1132,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run)
 
-## list_jobs_for_workflow_run_attempt(owner, repo, run_id, attempt_number, opts \\ [])
+## list_jobs_for_workflow_run_attempt/5
 
 List jobs for a workflow run attempt
 
@@ -1152,7 +1152,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-jobs#list-jobs-for-a-workflow-run-attempt)
 
-## list_labels_for_self_hosted_runner_for_org(org, runner_id, opts \\ [])
+## list_labels_for_self_hosted_runner_for_org/3
 
 List labels for a self-hosted runner for an organization
 
@@ -1166,7 +1166,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-an-organization)
 
-## list_labels_for_self_hosted_runner_for_repo(owner, repo, runner_id, opts \\ [])
+## list_labels_for_self_hosted_runner_for_repo/4
 
 List labels for a self-hosted runner for a repository
 
@@ -1180,7 +1180,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-labels-for-a-self-hosted-runner-for-a-repository)
 
-## list_org_secrets(org, opts \\ [])
+## list_org_secrets/2
 
 List organization secrets
 
@@ -1200,7 +1200,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#list-organization-secrets)
 
-## list_org_variables(org, opts \\ [])
+## list_org_variables/2
 
 List organization variables
 
@@ -1219,7 +1219,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#list-organization-variables)
 
-## list_repo_organization_secrets(owner, repo, opts \\ [])
+## list_repo_organization_secrets/3
 
 List repository organization secrets
 
@@ -1239,7 +1239,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#list-repository-organization-secrets)
 
-## list_repo_organization_variables(owner, repo, opts \\ [])
+## list_repo_organization_variables/3
 
 List repository organization variables
 
@@ -1258,7 +1258,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#list-repository-organization-variables)
 
-## list_repo_secrets(owner, repo, opts \\ [])
+## list_repo_secrets/3
 
 List repository secrets
 
@@ -1278,7 +1278,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#list-repository-secrets)
 
-## list_repo_variables(owner, repo, opts \\ [])
+## list_repo_variables/3
 
 List repository variables
 
@@ -1297,7 +1297,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#list-repository-variables)
 
-## list_repo_workflows(owner, repo, opts \\ [])
+## list_repo_workflows/3
 
 List repository workflows
 
@@ -1316,7 +1316,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflows#list-repository-workflows)
 
-## list_runner_applications_for_org(org, opts \\ [])
+## list_runner_applications_for_org/2
 
 List runner applications for an organization
 
@@ -1330,7 +1330,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-an-organization)
 
-## list_runner_applications_for_repo(owner, repo, opts \\ [])
+## list_runner_applications_for_repo/3
 
 List runner applications for a repository
 
@@ -1344,7 +1344,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-runner-applications-for-a-repository)
 
-## list_selected_repos_for_org_secret(org, secret_name, opts \\ [])
+## list_selected_repos_for_org_secret/3
 
 List selected repositories for an organization secret
 
@@ -1364,7 +1364,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#list-selected-repositories-for-an-organization-secret)
 
-## list_selected_repos_for_org_variable(org, name, opts \\ [])
+## list_selected_repos_for_org_variable/3
 
 List selected repositories for an organization variable
 
@@ -1384,7 +1384,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#list-selected-repositories-for-an-organization-variable)
 
-## list_selected_repositories_enabled_github_actions_organization(org, opts \\ [])
+## list_selected_repositories_enabled_github_actions_organization/2
 
 List selected repositories enabled for GitHub Actions in an organization
 
@@ -1401,7 +1401,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#list-selected-repositories-enabled-for-github-actions-in-an-organization)
 
-## list_self_hosted_runners_for_org(org, opts \\ [])
+## list_self_hosted_runners_for_org/2
 
 List self-hosted runners for an organization
 
@@ -1421,7 +1421,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-an-organization)
 
-## list_self_hosted_runners_for_repo(owner, repo, opts \\ [])
+## list_self_hosted_runners_for_repo/3
 
 List self-hosted runners for a repository
 
@@ -1441,7 +1441,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository)
 
-## list_workflow_run_artifacts(owner, repo, run_id, opts \\ [])
+## list_workflow_run_artifacts/4
 
 List workflow run artifacts
 
@@ -1461,7 +1461,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/artifacts#list-workflow-run-artifacts)
 
-## list_workflow_runs(owner, repo, workflow_id, opts \\ [])
+## list_workflow_runs/4
 
 List workflow runs for a workflow
 
@@ -1488,7 +1488,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow)
 
-## list_workflow_runs_for_repo(owner, repo, opts \\ [])
+## list_workflow_runs_for_repo/3
 
 List workflow runs for a repository
 
@@ -1517,7 +1517,7 @@ This API will return up to 1,000 results for each search when using the followin
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#list-workflow-runs-for-a-repository)
 
-## re_run_job_for_workflow_run(owner, repo, job_id, body, opts \\ [])
+## re_run_job_for_workflow_run/5
 
 Re-run a job from a workflow run
 
@@ -1529,7 +1529,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)
 
-## re_run_workflow(owner, repo, run_id, body, opts \\ [])
+## re_run_workflow/5
 
 Re-run a workflow
 
@@ -1541,7 +1541,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#re-run-a-workflow)
 
-## re_run_workflow_failed_jobs(owner, repo, run_id, body, opts \\ [])
+## re_run_workflow_failed_jobs/5
 
 Re-run failed jobs from a workflow run
 
@@ -1553,7 +1553,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run)
 
-## remove_all_custom_labels_from_self_hosted_runner_for_org(org, runner_id, opts \\ [])
+## remove_all_custom_labels_from_self_hosted_runner_for_org/3
 
 Remove all custom labels from a self-hosted runner for an organization
 
@@ -1568,7 +1568,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#remove-all-custom-labels-from-a-self-hosted-runner-for-an-organization)
 
-## remove_all_custom_labels_from_self_hosted_runner_for_repo(owner, repo, runner_id, opts \\ [])
+## remove_all_custom_labels_from_self_hosted_runner_for_repo/4
 
 Remove all custom labels from a self-hosted runner for a repository
 
@@ -1583,7 +1583,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#remove-all-custom-labels-from-a-self-hosted-runner-for-a-repository)
 
-## remove_custom_label_from_self_hosted_runner_for_org(org, runner_id, name, opts \\ [])
+## remove_custom_label_from_self_hosted_runner_for_org/4
 
 Remove a custom label from a self-hosted runner for an organization
 
@@ -1601,7 +1601,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#remove-a-custom-label-from-a-self-hosted-runner-for-an-organization)
 
-## remove_custom_label_from_self_hosted_runner_for_repo(owner, repo, runner_id, name, opts \\ [])
+## remove_custom_label_from_self_hosted_runner_for_repo/5
 
 Remove a custom label from a self-hosted runner for a repository
 
@@ -1619,7 +1619,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#remove-a-custom-label-from-a-self-hosted-runner-for-a-repository)
 
-## remove_selected_repo_from_org_secret(org, secret_name, repository_id, opts \\ [])
+## remove_selected_repo_from_org_secret/4
 
 Remove selected repository from an organization secret
 
@@ -1635,7 +1635,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#remove-selected-repository-from-an-organization-secret)
 
-## remove_selected_repo_from_org_variable(org, name, repository_id, opts \\ [])
+## remove_selected_repo_from_org_variable/4
 
 Remove selected repository from an organization variable
 
@@ -1651,7 +1651,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#remove-selected-repository-from-an-organization-variable)
 
-## review_custom_gates_for_run(owner, repo, run_id, body, opts \\ [])
+## review_custom_gates_for_run/5
 
 Review custom deployment protection rules for a workflow run
 
@@ -1666,7 +1666,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#review-custom-deployment-protection-rules-for-a-workflow-run)
 
-## review_pending_deployments_for_run(owner, repo, run_id, body, opts \\ [])
+## review_pending_deployments_for_run/5
 
 Review pending deployments for a workflow run
 
@@ -1680,7 +1680,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run)
 
-## set_allowed_actions_organization(org, body, opts \\ [])
+## set_allowed_actions_organization/3
 
 Set allowed actions and reusable workflows for an organization
 
@@ -1692,7 +1692,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-an-organization)
 
-## set_allowed_actions_repository(owner, repo, body, opts \\ [])
+## set_allowed_actions_repository/4
 
 Set allowed actions and reusable workflows for a repository
 
@@ -1704,7 +1704,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-allowed-actions-and-reusable-workflows-for-a-repository)
 
-## set_custom_labels_for_self_hosted_runner_for_org(org, runner_id, body, opts \\ [])
+## set_custom_labels_for_self_hosted_runner_for_org/4
 
 Set custom labels for a self-hosted runner for an organization
 
@@ -1719,7 +1719,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#set-custom-labels-for-a-self-hosted-runner-for-an-organization)
 
-## set_custom_labels_for_self_hosted_runner_for_repo(owner, repo, runner_id, body, opts \\ [])
+## set_custom_labels_for_self_hosted_runner_for_repo/5
 
 Set custom labels for a self-hosted runner for a repository
 
@@ -1734,7 +1734,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/self-hosted-runners#set-custom-labels-for-a-self-hosted-runner-for-a-repository)
 
-## set_custom_oidc_sub_claim_for_repo(owner, repo, body, opts \\ [])
+## set_custom_oidc_sub_claim_for_repo/4
 
 Set the customization template for an OIDC subject claim for a repository
 
@@ -1746,7 +1746,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-a-repository)
 
-## set_github_actions_default_workflow_permissions_organization(org, body, opts \\ [])
+## set_github_actions_default_workflow_permissions_organization/3
 
 Set default workflow permissions for an organization
 
@@ -1760,7 +1760,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-default-workflow-permissions-for-an-organization)
 
-## set_github_actions_default_workflow_permissions_repository(owner, repo, body, opts \\ [])
+## set_github_actions_default_workflow_permissions_repository/4
 
 Set default workflow permissions for a repository
 
@@ -1774,7 +1774,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-default-workflow-permissions-for-a-repository)
 
-## set_github_actions_permissions_organization(org, body, opts \\ [])
+## set_github_actions_permissions_organization/3
 
 Set GitHub Actions permissions for an organization
 
@@ -1786,7 +1786,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-github-actions-permissions-for-an-organization)
 
-## set_github_actions_permissions_repository(owner, repo, body, opts \\ [])
+## set_github_actions_permissions_repository/4
 
 Set GitHub Actions permissions for a repository
 
@@ -1798,7 +1798,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-github-actions-permissions-for-a-repository)
 
-## set_selected_repos_for_org_secret(org, secret_name, body, opts \\ [])
+## set_selected_repos_for_org_secret/4
 
 Set selected repositories for an organization secret
 
@@ -1814,7 +1814,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/secrets#set-selected-repositories-for-an-organization-secret)
 
-## set_selected_repos_for_org_variable(org, name, body, opts \\ [])
+## set_selected_repos_for_org_variable/4
 
 Set selected repositories for an organization variable
 
@@ -1830,7 +1830,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#set-selected-repositories-for-an-organization-variable)
 
-## set_selected_repositories_enabled_github_actions_organization(org, body, opts \\ [])
+## set_selected_repositories_enabled_github_actions_organization/3
 
 Set selected repositories enabled for GitHub Actions in an organization
 
@@ -1843,7 +1843,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-selected-repositories-enabled-for-github-actions-in-an-organization)
 
-## set_workflow_access_to_repository(owner, repo, body, opts \\ [])
+## set_workflow_access_to_repository/4
 
 Set the level of access for workflows outside of the repository
 
@@ -1857,7 +1857,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/permissions#set-the-level-of-access-for-workflows-outside-of-the-repository)
 
-## update_environment_variable(owner, repo, name, environment_name, body, opts \\ [])
+## update_environment_variable/6
 
 Update an environment variable
 
@@ -1871,7 +1871,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#update-an-environment-variable)
 
-## update_org_variable(org, name, body, opts \\ [])
+## update_org_variable/4
 
 Update an organization variable
 
@@ -1885,7 +1885,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/actions/variables#update-an-organization-variable)
 
-## update_repo_variable(owner, repo, name, body, opts \\ [])
+## update_repo_variable/5
 
 Update a repository variable
 

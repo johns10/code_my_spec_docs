@@ -388,7 +388,7 @@ Then you could define a module that wires everything up:
       end
     end
 
-## counter(metric_name, options \\ [])
+## counter/2
 
 Returns a definition of counter metric.
 
@@ -408,41 +408,7 @@ information.
       tags: [:controller, :action]
     )
 
-## distribution(metric_name, options \\ [])
-
-Returns a definition of distribution metric.
-
-Distribution metric builds a histogram of selected measurement's values. It is up to the reporter
-to decide how the boundaries of the distribution buckets are configured - via `:reporter_options`,
-configuration of the aggregating system, or other means.
-
-See the ["Metrics"](#module-metrics) section in the top-level documentation of this module for more
-information.
-
-## Example
-
-    distribution(
-      "http.request.duration",
-      tags: [:controller, :action],
-    )
-
-## last_value(metric_name, options \\ [])
-
-Returns a definition of last value metric.
-
-Last value keeps track of the selected measurement found in the most recent event.
-
-See the ["Metrics"](#module-metrics) section in the top-level documentation of this module for more
-information.
-
-## Example
-
-    last_value(
-      "vm.memory.total",
-      description: "Total amount of memory allocated by the Erlang VM", unit: :byte
-    )
-
-## sum(metric_name, options \\ [])
+## sum/2
 
 Returns a definition of sum metric.
 
@@ -460,7 +426,23 @@ information.
       tags: [:role]
     )
 
-## summary(metric_name, options \\ [])
+## last_value/2
+
+Returns a definition of last value metric.
+
+Last value keeps track of the selected measurement found in the most recent event.
+
+See the ["Metrics"](#module-metrics) section in the top-level documentation of this module for more
+information.
+
+## Example
+
+    last_value(
+      "vm.memory.total",
+      description: "Total amount of memory allocated by the Erlang VM", unit: :byte
+    )
+
+## summary/2
 
 Returns a definition of summary metric.
 
@@ -478,14 +460,20 @@ information.
       unit: {:native, :millisecond}
     )
 
-## metric_name/0
+## distribution/2
 
-The name of the metric, either as string or a list of atoms.
+Returns a definition of distribution metric.
 
-## normalized_metric_name/0
+Distribution metric builds a histogram of selected measurement's values. It is up to the reporter
+to decide how the boundaries of the distribution buckets are configured - via `:reporter_options`,
+configuration of the aggregating system, or other means.
 
-The name of the metric represented as a list of atoms.
+See the ["Metrics"](#module-metrics) section in the top-level documentation of this module for more
+information.
 
-## t/0
+## Example
 
-One of the base metric definitions.
+    distribution(
+      "http.request.duration",
+      tags: [:controller, :action],
+    )

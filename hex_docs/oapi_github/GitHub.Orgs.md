@@ -2,7 +2,7 @@
 
 Provides API endpoints related to orgs
 
-## add_security_manager_team(org, team_slug, opts \\ [])
+## add_security_manager_team/3
 
 Add a security manager team
 
@@ -16,7 +16,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team)
 
-## assign_team_to_org_role(org, team_slug, role_id, opts \\ [])
+## assign_team_to_org_role/4
 
 Assign an organization role to a team
 
@@ -30,7 +30,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-team)
 
-## assign_user_to_org_role(org, username, role_id, opts \\ [])
+## assign_user_to_org_role/4
 
 Assign an organization role to a user
 
@@ -44,7 +44,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#assign-an-organization-role-to-a-user)
 
-## block_user(org, username, opts \\ [])
+## block_user/3
 
 Block a user from an organization
 
@@ -54,7 +54,7 @@ Blocks the given user on behalf of the specified organization and returns a 204.
 
   * [API method documentation](https://docs.github.com/rest/orgs/blocking#block-a-user-from-an-organization)
 
-## cancel_invitation(org, invitation_id, opts \\ [])
+## cancel_invitation/3
 
 Cancel an organization invitation
 
@@ -66,7 +66,7 @@ This endpoint triggers [notifications](https://docs.github.com/github/managing-s
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#cancel-an-organization-invitation)
 
-## check_blocked_user(org, username, opts \\ [])
+## check_blocked_user/3
 
 Check if a user is blocked by an organization
 
@@ -76,7 +76,7 @@ Returns a 204 if the given user is blocked by the given organization. Returns a 
 
   * [API method documentation](https://docs.github.com/rest/orgs/blocking#check-if-a-user-is-blocked-by-an-organization)
 
-## check_membership_for_user(org, username, opts \\ [])
+## check_membership_for_user/3
 
 Check organization membership for a user
 
@@ -86,7 +86,7 @@ Check if a user is, publicly or privately, a member of the organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#check-organization-membership-for-a-user)
 
-## check_public_membership_for_user(org, username, opts \\ [])
+## check_public_membership_for_user/3
 
 Check public organization membership for a user
 
@@ -96,7 +96,7 @@ Check if the provided user is a public member of the organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#check-public-organization-membership-for-a-user)
 
-## convert_member_to_outside_collaborator(org, username, body, opts \\ [])
+## convert_member_to_outside_collaborator/4
 
 Convert an organization member to outside collaborator
 
@@ -106,7 +106,7 @@ When an organization member is converted to an outside collaborator, they'll onl
 
   * [API method documentation](https://docs.github.com/rest/orgs/outside-collaborators#convert-an-organization-member-to-outside-collaborator)
 
-## create_custom_organization_role(org, body, opts \\ [])
+## create_custom_organization_role/3
 
 Create a custom organization role
 
@@ -123,7 +123,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#create-a-custom-organization-role)
 
-## create_invitation(org, body, opts \\ [])
+## create_invitation/3
 
 Create an organization invitation
 
@@ -136,7 +136,7 @@ and "[Best practices for using the REST API](https://docs.github.com/rest/guides
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#create-an-organization-invitation)
 
-## create_or_update_custom_properties(org, body, opts \\ [])
+## create_or_update_custom_properties/3
 
 Create or update custom properties for an organization
 
@@ -150,7 +150,7 @@ To use this endpoint, the authenticated user must be one of:
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization)
 
-## create_or_update_custom_properties_values_for_repos(org, body, opts \\ [])
+## create_or_update_custom_properties_values_for_repos/3
 
 Create or update custom property values for organization repositories
 
@@ -169,7 +169,7 @@ To use this endpoint, the authenticated user must be one of:
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories)
 
-## create_or_update_custom_property(org, custom_property_name, body, opts \\ [])
+## create_or_update_custom_property/4
 
 Create or update a custom property for an organization
 
@@ -183,7 +183,7 @@ To use this endpoint, the authenticated user must be one of:
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization)
 
-## create_webhook(org, body, opts \\ [])
+## create_webhook/3
 
 Create an organization webhook
 
@@ -198,7 +198,7 @@ edit webhooks that they did not create and users cannot list, view, or edit webh
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#create-an-organization-webhook)
 
-## delete(org, opts \\ [])
+## delete/2
 
 Delete an organization
 
@@ -214,7 +214,7 @@ https://docs.github.com/site-policy/github-terms/github-terms-of-service
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#delete-an-organization)
 
-## delete_custom_organization_role(org, role_id, opts \\ [])
+## delete_custom_organization_role/3
 
 Delete a custom organization role.
 
@@ -231,7 +231,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#delete-a-custom-organization-role)
 
-## delete_webhook(org, hook_id, opts \\ [])
+## delete_webhook/3
 
 Delete an organization webhook
 
@@ -244,7 +244,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#delete-an-organization-webhook)
 
-## enable_or_disable_security_product_on_all_org_repos(org, security_product, enablement, body, opts \\ [])
+## enable_or_disable_security_product_on_all_org_repos/5
 
 Enable or disable a security feature for an organization
 
@@ -258,7 +258,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#enable-or-disable-a-security-feature-for-an-organization)
 
-## get(org, opts \\ [])
+## get/2
 
 Get an organization
 
@@ -287,7 +287,7 @@ To see information about an organization's GitHub plan, GitHub Apps need the `Or
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#get-an-organization)
 
-## get_all_custom_properties(org, opts \\ [])
+## get_all_custom_properties/2
 
 Get all custom properties for an organization
 
@@ -298,7 +298,7 @@ Organization members can read these properties.
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization)
 
-## get_custom_property(org, custom_property_name, opts \\ [])
+## get_custom_property/3
 
 Get a custom property for an organization
 
@@ -309,7 +309,7 @@ Organization members can read these properties.
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#get-a-custom-property-for-an-organization)
 
-## get_membership_for_authenticated_user(org, opts \\ [])
+## get_membership_for_authenticated_user/2
 
 Get an organization membership for the authenticated user
 
@@ -319,7 +319,7 @@ If the authenticated user is an active or pending member of the organization, th
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#get-an-organization-membership-for-the-authenticated-user)
 
-## get_membership_for_user(org, username, opts \\ [])
+## get_membership_for_user/3
 
 Get organization membership for a user
 
@@ -329,7 +329,7 @@ In order to get a user's membership with an organization, the authenticated user
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#get-organization-membership-for-a-user)
 
-## get_org_role(org, role_id, opts \\ [])
+## get_org_role/3
 
 Get an organization role
 
@@ -346,7 +346,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#get-an-organization-role)
 
-## get_webhook(org, hook_id, opts \\ [])
+## get_webhook/3
 
 Get an organization webhook
 
@@ -362,7 +362,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#get-an-organization-webhook)
 
-## get_webhook_config_for_org(org, hook_id, opts \\ [])
+## get_webhook_config_for_org/3
 
 Get a webhook configuration for an organization
 
@@ -377,7 +377,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization)
 
-## get_webhook_delivery(org, hook_id, delivery_id, opts \\ [])
+## get_webhook_delivery/4
 
 Get a webhook delivery for an organization webhook
 
@@ -392,7 +392,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#get-a-webhook-delivery-for-an-organization-webhook)
 
-## list(opts \\ [])
+## list/1
 
 List organizations
 
@@ -409,7 +409,7 @@ Lists all organizations, in the order that they were created.
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#list-organizations)
 
-## list_app_installations(org, opts \\ [])
+## list_app_installations/2
 
 List app installations for an organization
 
@@ -429,7 +429,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:read` scop
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#list-app-installations-for-an-organization)
 
-## list_blocked_users(org, opts \\ [])
+## list_blocked_users/2
 
 List users blocked by an organization
 
@@ -444,7 +444,7 @@ List the users blocked by an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/blocking#list-users-blocked-by-an-organization)
 
-## list_custom_properties_values_for_repos(org, opts \\ [])
+## list_custom_properties_values_for_repos/2
 
 List custom property values for organization repositories
 
@@ -461,7 +461,7 @@ Organization members can read these properties.
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories)
 
-## list_failed_invitations(org, opts \\ [])
+## list_failed_invitations/2
 
 List failed organization invitations
 
@@ -476,7 +476,7 @@ The return hash contains `failed_at` and `failed_reason` fields which represent 
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-failed-organization-invitations)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List organizations for the authenticated user
 
@@ -493,7 +493,7 @@ For OAuth app tokens and personal access tokens (classic), this endpoint only li
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user)
 
-## list_for_user(username, opts \\ [])
+## list_for_user/2
 
 List organizations for a user
 
@@ -510,7 +510,7 @@ This method only lists _public_ memberships, regardless of authentication. If yo
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#list-organizations-for-a-user)
 
-## list_invitation_teams(org, invitation_id, opts \\ [])
+## list_invitation_teams/3
 
 List organization invitation teams
 
@@ -525,7 +525,7 @@ List all teams associated with an invitation. In order to see invitations in an 
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-organization-invitation-teams)
 
-## list_members(org, opts \\ [])
+## list_members/2
 
 List organization members
 
@@ -542,7 +542,7 @@ List all users who are members of an organization. If the authenticated user is 
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-organization-members)
 
-## list_memberships_for_authenticated_user(opts \\ [])
+## list_memberships_for_authenticated_user/1
 
 List organization memberships for the authenticated user
 
@@ -558,7 +558,7 @@ Lists all of the authenticated user's organization memberships.
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-organization-memberships-for-the-authenticated-user)
 
-## list_org_role_teams(org, role_id, opts \\ [])
+## list_org_role_teams/3
 
 List teams that are assigned to an organization role
 
@@ -577,7 +577,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#list-teams-that-are-assigned-to-an-organization-role)
 
-## list_org_role_users(org, role_id, opts \\ [])
+## list_org_role_users/3
 
 List users that are assigned to an organization role
 
@@ -596,7 +596,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#list-users-that-are-assigned-to-an-organization-role)
 
-## list_org_roles(org, opts \\ [])
+## list_org_roles/2
 
 Get all organization roles for an organization
 
@@ -613,7 +613,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#get-all-organization-roles-for-an-organization)
 
-## list_organization_fine_grained_permissions(org, opts \\ [])
+## list_organization_fine_grained_permissions/2
 
 List organization fine-grained permissions for an organization
 
@@ -632,7 +632,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization)
 
-## list_outside_collaborators(org, opts \\ [])
+## list_outside_collaborators/2
 
 List outside collaborators for an organization
 
@@ -648,7 +648,7 @@ List all users who are outside collaborators of an organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/outside-collaborators#list-outside-collaborators-for-an-organization)
 
-## list_pat_grant_repositories(org, pat_id, opts \\ [])
+## list_pat_grant_repositories/3
 
 List repositories a fine-grained personal access token has access to
 
@@ -665,7 +665,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-a-fine-grained-personal-access-token-has-access-to)
 
-## list_pat_grant_request_repositories(org, pat_request_id, opts \\ [])
+## list_pat_grant_request_repositories/3
 
 List repositories requested to be accessed by a fine-grained personal access token
 
@@ -682,7 +682,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#list-repositories-requested-to-be-accessed-by-a-fine-grained-personal-access-token)
 
-## list_pat_grant_requests(org, opts \\ [])
+## list_pat_grant_requests/2
 
 List requests to access organization resources with fine-grained personal access tokens
 
@@ -706,7 +706,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#list-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens)
 
-## list_pat_grants(org, opts \\ [])
+## list_pat_grants/2
 
 List fine-grained personal access tokens with access to organization resources
 
@@ -730,7 +730,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#list-fine-grained-personal-access-tokens-with-access-to-organization-resources)
 
-## list_pending_invitations(org, opts \\ [])
+## list_pending_invitations/2
 
 List pending organization invitations
 
@@ -747,7 +747,7 @@ The return hash contains a `role` field which refers to the Organization Invitat
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-pending-organization-invitations)
 
-## list_public_members(org, opts \\ [])
+## list_public_members/2
 
 List public organization members
 
@@ -762,7 +762,7 @@ Members of an organization can choose to have their membership publicized or not
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#list-public-organization-members)
 
-## list_security_manager_teams(org, opts \\ [])
+## list_security_manager_teams/2
 
 List security manager teams
 
@@ -776,7 +776,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:org` scope 
 
   * [API method documentation](https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams)
 
-## list_webhook_deliveries(org, hook_id, opts \\ [])
+## list_webhook_deliveries/3
 
 List deliveries for an organization webhook
 
@@ -797,7 +797,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#list-deliveries-for-an-organization-webhook)
 
-## list_webhooks(org, opts \\ [])
+## list_webhooks/2
 
 List organization webhooks
 
@@ -815,7 +815,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#list-organization-webhooks)
 
-## patch_custom_organization_role(org, role_id, body, opts \\ [])
+## patch_custom_organization_role/4
 
 Update a custom organization role
 
@@ -833,7 +833,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#update-a-custom-organization-role)
 
-## ping_webhook(org, hook_id, opts \\ [])
+## ping_webhook/3
 
 Ping an organization webhook
 
@@ -849,7 +849,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#ping-an-organization-webhook)
 
-## redeliver_webhook_delivery(org, hook_id, delivery_id, opts \\ [])
+## redeliver_webhook_delivery/4
 
 Redeliver a delivery for an organization webhook
 
@@ -864,7 +864,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#redeliver-a-delivery-for-an-organization-webhook)
 
-## remove_custom_property(org, custom_property_name, opts \\ [])
+## remove_custom_property/3
 
 Remove a custom property for an organization
 
@@ -878,7 +878,7 @@ To use this endpoint, the authenticated user must be one of:
 
   * [API method documentation](https://docs.github.com/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization)
 
-## remove_member(org, username, opts \\ [])
+## remove_member/3
 
 Remove an organization member
 
@@ -888,7 +888,7 @@ Removing a user from this list will remove them from all teams and they will no 
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#remove-an-organization-member)
 
-## remove_membership_for_user(org, username, opts \\ [])
+## remove_membership_for_user/3
 
 Remove organization membership for a user
 
@@ -900,7 +900,7 @@ If the specified user is an active member of the organization, this will remove 
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#remove-organization-membership-for-a-user)
 
-## remove_outside_collaborator(org, username, opts \\ [])
+## remove_outside_collaborator/3
 
 Remove outside collaborator from an organization
 
@@ -910,7 +910,7 @@ Removing a user from this list will remove them from all the organization's repo
 
   * [API method documentation](https://docs.github.com/rest/orgs/outside-collaborators#remove-outside-collaborator-from-an-organization)
 
-## remove_public_membership_for_authenticated_user(org, username, opts \\ [])
+## remove_public_membership_for_authenticated_user/3
 
 Remove public organization membership for the authenticated user
 
@@ -920,7 +920,7 @@ Removes the public membership for the authenticated user from the specified orga
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#remove-public-organization-membership-for-the-authenticated-user)
 
-## remove_security_manager_team(org, team_slug, opts \\ [])
+## remove_security_manager_team/3
 
 Remove a security manager team
 
@@ -934,7 +934,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team)
 
-## review_pat_grant_request(org, pat_request_id, body, opts \\ [])
+## review_pat_grant_request/4
 
 Review a request to access organization resources with a fine-grained personal access token
 
@@ -946,7 +946,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#review-a-request-to-access-organization-resources-with-a-fine-grained-personal-access-token)
 
-## review_pat_grant_requests_in_bulk(org, body, opts \\ [])
+## review_pat_grant_requests_in_bulk/3
 
 Review requests to access organization resources with fine-grained personal access tokens
 
@@ -958,7 +958,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#review-requests-to-access-organization-resources-with-fine-grained-personal-access-tokens)
 
-## revoke_all_org_roles_team(org, team_slug, opts \\ [])
+## revoke_all_org_roles_team/3
 
 Remove all organization roles for a team
 
@@ -972,7 +972,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-team)
 
-## revoke_all_org_roles_user(org, username, opts \\ [])
+## revoke_all_org_roles_user/3
 
 Remove all organization roles for a user
 
@@ -986,7 +986,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#remove-all-organization-roles-for-a-user)
 
-## revoke_org_role_team(org, team_slug, role_id, opts \\ [])
+## revoke_org_role_team/4
 
 Remove an organization role from a team
 
@@ -1000,7 +1000,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-team)
 
-## revoke_org_role_user(org, username, role_id, opts \\ [])
+## revoke_org_role_user/4
 
 Remove an organization role from a user
 
@@ -1014,7 +1014,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 
   * [API method documentation](https://docs.github.com/rest/orgs/organization-roles#remove-an-organization-role-from-a-user)
 
-## set_membership_for_user(org, username, body, opts \\ [])
+## set_membership_for_user/4
 
 Set organization membership for a user
 
@@ -1032,7 +1032,7 @@ To prevent abuse, the authenticated user is limited to 50 organization invitatio
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#set-organization-membership-for-a-user)
 
-## set_public_membership_for_authenticated_user(org, username, opts \\ [])
+## set_public_membership_for_authenticated_user/3
 
 Set public organization membership for the authenticated user
 
@@ -1044,7 +1044,7 @@ Note that you'll need to set `Content-Length` to zero when calling out to this e
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#set-public-organization-membership-for-the-authenticated-user)
 
-## unblock_user(org, username, opts \\ [])
+## unblock_user/3
 
 Unblock a user from an organization
 
@@ -1054,7 +1054,7 @@ Unblocks the given user on behalf of the specified organization.
 
   * [API method documentation](https://docs.github.com/rest/orgs/blocking#unblock-a-user-from-an-organization)
 
-## update(org, body, opts \\ [])
+## update/3
 
 Update an organization
 
@@ -1081,7 +1081,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` or `r
 
   * [API method documentation](https://docs.github.com/rest/orgs/orgs#update-an-organization)
 
-## update_membership_for_authenticated_user(org, body, opts \\ [])
+## update_membership_for_authenticated_user/3
 
 Update an organization membership for the authenticated user
 
@@ -1091,7 +1091,7 @@ Converts the authenticated user to an active member of the organization, if that
 
   * [API method documentation](https://docs.github.com/rest/orgs/members#update-an-organization-membership-for-the-authenticated-user)
 
-## update_pat_access(org, pat_id, body, opts \\ [])
+## update_pat_access/4
 
 Update the access a fine-grained personal access token has to organization resources
 
@@ -1103,7 +1103,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-a-fine-grained-personal-access-token-has-to-organization-resources)
 
-## update_pat_accesses(org, body, opts \\ [])
+## update_pat_accesses/3
 
 Update the access to organization resources via fine-grained personal access tokens
 
@@ -1115,7 +1115,7 @@ Only GitHub Apps can use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/orgs/personal-access-tokens#update-the-access-to-organization-resources-via-fine-grained-personal-access-tokens)
 
-## update_webhook(org, hook_id, body, opts \\ [])
+## update_webhook/4
 
 Update an organization webhook
 
@@ -1134,7 +1134,7 @@ webhooks that they did not create and users cannot list, view, or edit webhooks 
 
   * [API method documentation](https://docs.github.com/rest/orgs/webhooks#update-an-organization-webhook)
 
-## update_webhook_config_for_org(org, hook_id, body, opts \\ [])
+## update_webhook_config_for_org/4
 
 Update a webhook configuration for an organization
 

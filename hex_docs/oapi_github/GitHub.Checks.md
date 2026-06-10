@@ -2,7 +2,7 @@
 
 Provides API endpoints related to checks
 
-## create(owner, repo, body, opts \\ [])
+## create/4
 
 Create a check run
 
@@ -18,7 +18,7 @@ In a check suite, GitHub limits the number of check runs with the same name to 1
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#create-a-check-run)
 
-## create_suite(owner, repo, body, opts \\ [])
+## create_suite/4
 
 Create a check suite
 
@@ -32,7 +32,7 @@ OAuth apps and personal access tokens (classic) cannot use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/checks/suites#create-a-check-suite)
 
-## get(owner, repo, check_run_id, opts \\ [])
+## get/4
 
 Get a check run
 
@@ -46,7 +46,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#get-a-check-run)
 
-## get_suite(owner, repo, check_suite_id, opts \\ [])
+## get_suite/4
 
 Get a check suite
 
@@ -60,7 +60,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/suites#get-a-check-suite)
 
-## list_annotations(owner, repo, check_run_id, opts \\ [])
+## list_annotations/4
 
 List check run annotations
 
@@ -77,7 +77,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#list-check-run-annotations)
 
-## list_for_ref(owner, repo, ref, opts \\ [])
+## list_for_ref/4
 
 List check runs for a Git reference
 
@@ -102,7 +102,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#list-check-runs-for-a-git-reference)
 
-## list_for_suite(owner, repo, check_suite_id, opts \\ [])
+## list_for_suite/4
 
 List check runs in a check suite
 
@@ -124,7 +124,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#list-check-runs-in-a-check-suite)
 
-## list_suites_for_ref(owner, repo, ref, opts \\ [])
+## list_suites_for_ref/4
 
 List check suites for a Git reference
 
@@ -145,7 +145,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/checks/suites#list-check-suites-for-a-git-reference)
 
-## rerequest_run(owner, repo, check_run_id, opts \\ [])
+## rerequest_run/4
 
 Rerequest a check run
 
@@ -159,7 +159,7 @@ OAuth apps and personal access tokens (classic) cannot use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/checks/runs#rerequest-a-check-run)
 
-## rerequest_suite(owner, repo, check_suite_id, opts \\ [])
+## rerequest_suite/4
 
 Rerequest a check suite
 
@@ -171,7 +171,7 @@ OAuth apps and personal access tokens (classic) cannot use this endpoint.
 
   * [API method documentation](https://docs.github.com/rest/checks/suites#rerequest-a-check-suite)
 
-## set_suites_preferences(owner, repo, body, opts \\ [])
+## set_suites_preferences/4
 
 Update repository preferences for check suites
 
@@ -182,7 +182,7 @@ You must have admin permissions in the repository to set preferences for check s
 
   * [API method documentation](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)
 
-## update(owner, repo, check_run_id, body, opts \\ [])
+## update/5
 
 Update a check run
 

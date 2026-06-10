@@ -9,7 +9,7 @@ Provides a set of functions to handle multipart requests/responses
     # @spec decode_body(Response.t()) :: body
     # def decode_body(response)
 
-## decode_body(response)
+## decode_body/1
 
 Parses a multipart response body.
 

@@ -2,16 +2,10 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## puts(value)
+## puts/1
 
 Write the given `value` to `:stdout`.
 
-## warn(value)
+## warn/1
 
 Like `puts/1`, but writes to `:stderr`.

@@ -2,7 +2,7 @@
 
 Provides API endpoints related to users
 
-## add_email_for_authenticated_user(body, opts \\ [])
+## add_email_for_authenticated_user/2
 
 Add an email address for the authenticated user
 
@@ -12,7 +12,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/users/emails#add-an-email-address-for-the-authenticated-user)
 
-## add_social_account_for_authenticated_user(body, opts \\ [])
+## add_social_account_for_authenticated_user/2
 
 Add social accounts for the authenticated user
 
@@ -24,7 +24,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/users/social-accounts#add-social-accounts-for-the-authenticated-user)
 
-## block(username, opts \\ [])
+## block/2
 
 Block a user
 
@@ -34,7 +34,7 @@ Blocks the given user and returns a 204. If the authenticated user cannot block 
 
   * [API method documentation](https://docs.github.com/rest/users/blocking#block-a-user)
 
-## check_blocked(username, opts \\ [])
+## check_blocked/2
 
 Check if a user is blocked by the authenticated user
 
@@ -44,7 +44,7 @@ Returns a 204 if the given user is blocked by the authenticated user. Returns a 
 
   * [API method documentation](https://docs.github.com/rest/users/blocking#check-if-a-user-is-blocked-by-the-authenticated-user)
 
-## check_following_for_user(username, target_user, opts \\ [])
+## check_following_for_user/3
 
 Check if a user follows another user
 
@@ -52,7 +52,7 @@ Check if a user follows another user
 
   * [API method documentation](https://docs.github.com/rest/users/followers#check-if-a-user-follows-another-user)
 
-## check_person_is_followed_by_authenticated(username, opts \\ [])
+## check_person_is_followed_by_authenticated/2
 
 Check if a person is followed by the authenticated user
 
@@ -60,7 +60,7 @@ Check if a person is followed by the authenticated user
 
   * [API method documentation](https://docs.github.com/rest/users/followers#check-if-a-person-is-followed-by-the-authenticated-user)
 
-## create_gpg_key_for_authenticated_user(body, opts \\ [])
+## create_gpg_key_for_authenticated_user/2
 
 Create a GPG key for the authenticated user
 
@@ -72,7 +72,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:gpg_key` s
 
   * [API method documentation](https://docs.github.com/rest/users/gpg-keys#create-a-gpg-key-for-the-authenticated-user)
 
-## create_public_ssh_key_for_authenticated_user(body, opts \\ [])
+## create_public_ssh_key_for_authenticated_user/2
 
 Create a public SSH key for the authenticated user
 
@@ -84,7 +84,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:gpg_key` s
 
   * [API method documentation](https://docs.github.com/rest/users/keys#create-a-public-ssh-key-for-the-authenticated-user)
 
-## create_ssh_signing_key_for_authenticated_user(body, opts \\ [])
+## create_ssh_signing_key_for_authenticated_user/2
 
 Create a SSH signing key for the authenticated user
 
@@ -96,7 +96,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:ssh_signin
 
   * [API method documentation](https://docs.github.com/rest/users/ssh-signing-keys#create-a-ssh-signing-key-for-the-authenticated-user)
 
-## delete_email_for_authenticated_user(body, opts \\ [])
+## delete_email_for_authenticated_user/2
 
 Delete an email address for the authenticated user
 
@@ -106,7 +106,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/users/emails#delete-an-email-address-for-the-authenticated-user)
 
-## delete_gpg_key_for_authenticated_user(gpg_key_id, opts \\ [])
+## delete_gpg_key_for_authenticated_user/2
 
 Delete a GPG key for the authenticated user
 
@@ -118,7 +118,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:gpg_key` s
 
   * [API method documentation](https://docs.github.com/rest/users/gpg-keys#delete-a-gpg-key-for-the-authenticated-user)
 
-## delete_public_ssh_key_for_authenticated_user(key_id, opts \\ [])
+## delete_public_ssh_key_for_authenticated_user/2
 
 Delete a public SSH key for the authenticated user
 
@@ -130,7 +130,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:public_key
 
   * [API method documentation](https://docs.github.com/rest/users/keys#delete-a-public-ssh-key-for-the-authenticated-user)
 
-## delete_social_account_for_authenticated_user(body, opts \\ [])
+## delete_social_account_for_authenticated_user/2
 
 Delete social accounts for the authenticated user
 
@@ -142,7 +142,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope to u
 
   * [API method documentation](https://docs.github.com/rest/users/social-accounts#delete-social-accounts-for-the-authenticated-user)
 
-## delete_ssh_signing_key_for_authenticated_user(ssh_signing_key_id, opts \\ [])
+## delete_ssh_signing_key_for_authenticated_user/2
 
 Delete an SSH signing key for the authenticated user
 
@@ -154,7 +154,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:ssh_signin
 
   * [API method documentation](https://docs.github.com/rest/users/ssh-signing-keys#delete-an-ssh-signing-key-for-the-authenticated-user)
 
-## follow(username, opts \\ [])
+## follow/2
 
 Follow a user
 
@@ -166,7 +166,7 @@ OAuth app tokens and personal access tokens (classic) need the `user:follow` sco
 
   * [API method documentation](https://docs.github.com/rest/users/followers#follow-a-user)
 
-## get_authenticated(opts \\ [])
+## get_authenticated/1
 
 Get the authenticated user
 
@@ -176,7 +176,7 @@ OAuth app tokens and personal access tokens (classic) need the `user` scope in o
 
   * [API method documentation](https://docs.github.com/rest/users/users#get-the-authenticated-user)
 
-## get_by_username(username, opts \\ [])
+## get_by_username/2
 
 Get a user
 
@@ -190,7 +190,7 @@ The Emails API enables you to list all of your email addresses, and toggle a pri
 
   * [API method documentation](https://docs.github.com/rest/users/users#get-a-user)
 
-## get_context_for_user(username, opts \\ [])
+## get_context_for_user/2
 
 Get contextual information for a user
 
@@ -209,7 +209,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/users/users#get-contextual-information-for-a-user)
 
-## get_gpg_key_for_authenticated_user(gpg_key_id, opts \\ [])
+## get_gpg_key_for_authenticated_user/2
 
 Get a GPG key for the authenticated user
 
@@ -221,7 +221,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:gpg_key` sc
 
   * [API method documentation](https://docs.github.com/rest/users/gpg-keys#get-a-gpg-key-for-the-authenticated-user)
 
-## get_public_ssh_key_for_authenticated_user(key_id, opts \\ [])
+## get_public_ssh_key_for_authenticated_user/2
 
 Get a public SSH key for the authenticated user
 
@@ -233,7 +233,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:public_key`
 
   * [API method documentation](https://docs.github.com/rest/users/keys#get-a-public-ssh-key-for-the-authenticated-user)
 
-## get_ssh_signing_key_for_authenticated_user(ssh_signing_key_id, opts \\ [])
+## get_ssh_signing_key_for_authenticated_user/2
 
 Get an SSH signing key for the authenticated user
 
@@ -245,7 +245,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:ssh_signing
 
   * [API method documentation](https://docs.github.com/rest/users/ssh-signing-keys#get-an-ssh-signing-key-for-the-authenticated-user)
 
-## list(opts \\ [])
+## list/1
 
 List users
 
@@ -262,7 +262,7 @@ Note: Pagination is powered exclusively by the `since` parameter. Use the [Link 
 
   * [API method documentation](https://docs.github.com/rest/users/users#list-users)
 
-## list_blocked_by_authenticated_user(opts \\ [])
+## list_blocked_by_authenticated_user/1
 
 List users blocked by the authenticated user
 
@@ -277,7 +277,7 @@ List the users you've blocked on your personal account.
 
   * [API method documentation](https://docs.github.com/rest/users/blocking#list-users-blocked-by-the-authenticated-user)
 
-## list_emails_for_authenticated_user(opts \\ [])
+## list_emails_for_authenticated_user/1
 
 List email addresses for the authenticated user
 
@@ -295,7 +295,7 @@ OAuth app tokens and personal access tokens (classic) need the `user:email` scop
 
   * [API method documentation](https://docs.github.com/rest/users/emails#list-email-addresses-for-the-authenticated-user)
 
-## list_followed_by_authenticated_user(opts \\ [])
+## list_followed_by_authenticated_user/1
 
 List the people the authenticated user follows
 
@@ -310,7 +310,7 @@ Lists the people who the authenticated user follows.
 
   * [API method documentation](https://docs.github.com/rest/users/followers#list-the-people-the-authenticated-user-follows)
 
-## list_followers_for_authenticated_user(opts \\ [])
+## list_followers_for_authenticated_user/1
 
 List followers of the authenticated user
 
@@ -325,7 +325,7 @@ Lists the people following the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/users/followers#list-followers-of-the-authenticated-user)
 
-## list_followers_for_user(username, opts \\ [])
+## list_followers_for_user/2
 
 List followers of a user
 
@@ -340,7 +340,7 @@ Lists the people following the specified user.
 
   * [API method documentation](https://docs.github.com/rest/users/followers#list-followers-of-a-user)
 
-## list_following_for_user(username, opts \\ [])
+## list_following_for_user/2
 
 List the people a user follows
 
@@ -355,7 +355,7 @@ Lists the people who the specified user follows.
 
   * [API method documentation](https://docs.github.com/rest/users/followers#list-the-people-a-user-follows)
 
-## list_gpg_keys_for_authenticated_user(opts \\ [])
+## list_gpg_keys_for_authenticated_user/1
 
 List GPG keys for the authenticated user
 
@@ -372,7 +372,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:gpg_key` sc
 
   * [API method documentation](https://docs.github.com/rest/users/gpg-keys#list-gpg-keys-for-the-authenticated-user)
 
-## list_gpg_keys_for_user(username, opts \\ [])
+## list_gpg_keys_for_user/2
 
 List GPG keys for a user
 
@@ -387,7 +387,7 @@ Lists the GPG keys for a user. This information is accessible by anyone.
 
   * [API method documentation](https://docs.github.com/rest/users/gpg-keys#list-gpg-keys-for-a-user)
 
-## list_public_emails_for_authenticated_user(opts \\ [])
+## list_public_emails_for_authenticated_user/1
 
 List public email addresses for the authenticated user
 
@@ -406,7 +406,7 @@ OAuth app tokens and personal access tokens (classic) need the `user:email` scop
 
   * [API method documentation](https://docs.github.com/rest/users/emails#list-public-email-addresses-for-the-authenticated-user)
 
-## list_public_keys_for_user(username, opts \\ [])
+## list_public_keys_for_user/2
 
 List public keys for a user
 
@@ -421,7 +421,7 @@ Lists the _verified_ public SSH keys for a user. This is accessible by anyone.
 
   * [API method documentation](https://docs.github.com/rest/users/keys#list-public-keys-for-a-user)
 
-## list_public_ssh_keys_for_authenticated_user(opts \\ [])
+## list_public_ssh_keys_for_authenticated_user/1
 
 List public SSH keys for the authenticated user
 
@@ -438,7 +438,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:public_key`
 
   * [API method documentation](https://docs.github.com/rest/users/keys#list-public-ssh-keys-for-the-authenticated-user)
 
-## list_social_accounts_for_authenticated_user(opts \\ [])
+## list_social_accounts_for_authenticated_user/1
 
 List social accounts for the authenticated user
 
@@ -453,7 +453,7 @@ Lists all of your social accounts.
 
   * [API method documentation](https://docs.github.com/rest/users/social-accounts#list-social-accounts-for-the-authenticated-user)
 
-## list_social_accounts_for_user(username, opts \\ [])
+## list_social_accounts_for_user/2
 
 List social accounts for a user
 
@@ -468,7 +468,7 @@ Lists social media accounts for a user. This endpoint is accessible by anyone.
 
   * [API method documentation](https://docs.github.com/rest/users/social-accounts#list-social-accounts-for-a-user)
 
-## list_ssh_signing_keys_for_authenticated_user(opts \\ [])
+## list_ssh_signing_keys_for_authenticated_user/1
 
 List SSH signing keys for the authenticated user
 
@@ -485,7 +485,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:ssh_signing
 
   * [API method documentation](https://docs.github.com/rest/users/ssh-signing-keys#list-ssh-signing-keys-for-the-authenticated-user)
 
-## list_ssh_signing_keys_for_user(username, opts \\ [])
+## list_ssh_signing_keys_for_user/2
 
 List SSH signing keys for a user
 
@@ -500,7 +500,7 @@ Lists the SSH signing keys for a user. This operation is accessible by anyone.
 
   * [API method documentation](https://docs.github.com/rest/users/ssh-signing-keys#list-ssh-signing-keys-for-a-user)
 
-## set_primary_email_visibility_for_authenticated_user(body, opts \\ [])
+## set_primary_email_visibility_for_authenticated_user/2
 
 Set primary email visibility for the authenticated user
 
@@ -510,7 +510,7 @@ Sets the visibility for your primary email addresses.
 
   * [API method documentation](https://docs.github.com/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user)
 
-## unblock(username, opts \\ [])
+## unblock/2
 
 Unblock a user
 
@@ -520,7 +520,7 @@ Unblocks the given user and returns a 204.
 
   * [API method documentation](https://docs.github.com/rest/users/blocking#unblock-a-user)
 
-## unfollow(username, opts \\ [])
+## unfollow/2
 
 Unfollow a user
 
@@ -530,7 +530,7 @@ OAuth app tokens and personal access tokens (classic) need the `user:follow` sco
 
   * [API method documentation](https://docs.github.com/rest/users/followers#unfollow-a-user)
 
-## update_authenticated(body, opts \\ [])
+## update_authenticated/2
 
 Update the authenticated user
 

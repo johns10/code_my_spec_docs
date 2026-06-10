@@ -3,7 +3,3 @@
 Request message for CancelDisplayVideo360AdvertiserLinkProposal RPC.
 
 ## Attributes
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

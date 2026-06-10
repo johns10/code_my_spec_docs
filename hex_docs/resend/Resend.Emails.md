@@ -2,11 +2,7 @@
 
 Send emails via Resend.
 
-## get(client \\ Resend.client(), email_id)
-
-Gets an email given an ID.
-
-## send(client \\ Resend.client(), opts)
+## send/2
 
 Sends an email given a map of parameters.
 
@@ -24,3 +20,7 @@ Parameter options:
   * `:attachments` - List of attachments to include in the email
 
 You must include one or both of the `:html` and `:text` options.
+
+## get/2
+
+Gets an email given an ID.

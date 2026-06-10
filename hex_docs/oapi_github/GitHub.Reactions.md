@@ -2,7 +2,7 @@
 
 Provides API endpoints related to reactions
 
-## create_for_commit_comment(owner, repo, comment_id, body, opts \\ [])
+## create_for_commit_comment/5
 
 Create reaction for a commit comment
 
@@ -12,7 +12,7 @@ Create a reaction to a [commit comment](https://docs.github.com/rest/commits/com
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-commit-comment)
 
-## create_for_issue(owner, repo, issue_number, body, opts \\ [])
+## create_for_issue/5
 
 Create reaction for an issue
 
@@ -22,7 +22,7 @@ Create a reaction to an [issue](https://docs.github.com/rest/issues/issues#get-a
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue)
 
-## create_for_issue_comment(owner, repo, comment_id, body, opts \\ [])
+## create_for_issue_comment/5
 
 Create reaction for an issue comment
 
@@ -32,7 +32,7 @@ Create a reaction to an [issue comment](https://docs.github.com/rest/issues/comm
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment)
 
-## create_for_pull_request_review_comment(owner, repo, comment_id, body, opts \\ [])
+## create_for_pull_request_review_comment/5
 
 Create reaction for a pull request review comment
 
@@ -42,7 +42,7 @@ Create a reaction to a [pull request review comment](https://docs.github.com/res
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-pull-request-review-comment)
 
-## create_for_release(owner, repo, release_id, body, opts \\ [])
+## create_for_release/5
 
 Create reaction for a release
 
@@ -52,7 +52,7 @@ Create a reaction to a [release](https://docs.github.com/rest/releases/releases#
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-release)
 
-## create_for_team_discussion_comment_in_org(org, team_slug, discussion_number, comment_number, body, opts \\ [])
+## create_for_team_discussion_comment_in_org/6
 
 Create reaction for a team discussion comment
 
@@ -68,7 +68,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)
 
-## create_for_team_discussion_comment_legacy(team_id, discussion_number, comment_number, body, opts \\ [])
+## create_for_team_discussion_comment_legacy/5
 
 Create reaction for a team discussion comment (Legacy)
 
@@ -84,7 +84,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment-legacy)
 
-## create_for_team_discussion_in_org(org, team_slug, discussion_number, body, opts \\ [])
+## create_for_team_discussion_in_org/5
 
 Create reaction for a team discussion
 
@@ -100,7 +100,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion)
 
-## create_for_team_discussion_legacy(team_id, discussion_number, body, opts \\ [])
+## create_for_team_discussion_legacy/4
 
 Create reaction for a team discussion (Legacy)
 
@@ -116,7 +116,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-legacy)
 
-## delete_for_commit_comment(owner, repo, comment_id, reaction_id, opts \\ [])
+## delete_for_commit_comment/5
 
 Delete a commit comment reaction
 
@@ -128,7 +128,7 @@ Delete a reaction to a [commit comment](https://docs.github.com/rest/commits/com
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-a-commit-comment-reaction)
 
-## delete_for_issue(owner, repo, issue_number, reaction_id, opts \\ [])
+## delete_for_issue/5
 
 Delete an issue reaction
 
@@ -140,7 +140,7 @@ Delete a reaction to an [issue](https://docs.github.com/rest/issues/issues#get-a
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-an-issue-reaction)
 
-## delete_for_issue_comment(owner, repo, comment_id, reaction_id, opts \\ [])
+## delete_for_issue_comment/5
 
 Delete an issue comment reaction
 
@@ -152,7 +152,7 @@ Delete a reaction to an [issue comment](https://docs.github.com/rest/issues/comm
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-an-issue-comment-reaction)
 
-## delete_for_pull_request_comment(owner, repo, comment_id, reaction_id, opts \\ [])
+## delete_for_pull_request_comment/5
 
 Delete a pull request comment reaction
 
@@ -164,7 +164,7 @@ Delete a reaction to a [pull request review comment](https://docs.github.com/res
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-a-pull-request-comment-reaction)
 
-## delete_for_release(owner, repo, release_id, reaction_id, opts \\ [])
+## delete_for_release/5
 
 Delete a release reaction
 
@@ -176,7 +176,7 @@ Delete a reaction to a [release](https://docs.github.com/rest/releases/releases#
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-a-release-reaction)
 
-## delete_for_team_discussion(org, team_slug, discussion_number, reaction_id, opts \\ [])
+## delete_for_team_discussion/5
 
 Delete team discussion reaction
 
@@ -190,7 +190,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-team-discussion-reaction)
 
-## delete_for_team_discussion_comment(org, team_slug, discussion_number, comment_number, reaction_id, opts \\ [])
+## delete_for_team_discussion_comment/6
 
 Delete team discussion comment reaction
 
@@ -204,7 +204,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:discussion
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#delete-team-discussion-comment-reaction)
 
-## list_for_commit_comment(owner, repo, comment_id, opts \\ [])
+## list_for_commit_comment/4
 
 List reactions for a commit comment
 
@@ -220,7 +220,7 @@ List the reactions to a [commit comment](https://docs.github.com/rest/commits/co
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-commit-comment)
 
-## list_for_issue(owner, repo, issue_number, opts \\ [])
+## list_for_issue/4
 
 List reactions for an issue
 
@@ -236,7 +236,7 @@ List the reactions to an [issue](https://docs.github.com/rest/issues/issues#get-
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue)
 
-## list_for_issue_comment(owner, repo, comment_id, opts \\ [])
+## list_for_issue_comment/4
 
 List reactions for an issue comment
 
@@ -252,7 +252,7 @@ List the reactions to an [issue comment](https://docs.github.com/rest/issues/com
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment)
 
-## list_for_pull_request_review_comment(owner, repo, comment_id, opts \\ [])
+## list_for_pull_request_review_comment/4
 
 List reactions for a pull request review comment
 
@@ -268,7 +268,7 @@ List the reactions to a [pull request review comment](https://docs.github.com/re
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-pull-request-review-comment)
 
-## list_for_release(owner, repo, release_id, opts \\ [])
+## list_for_release/4
 
 List reactions for a release
 
@@ -284,7 +284,7 @@ List the reactions to a [release](https://docs.github.com/rest/releases/releases
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-release)
 
-## list_for_team_discussion_comment_in_org(org, team_slug, discussion_number, comment_number, opts \\ [])
+## list_for_team_discussion_comment_in_org/5
 
 List reactions for a team discussion comment
 
@@ -304,7 +304,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment)
 
-## list_for_team_discussion_comment_legacy(team_id, discussion_number, comment_number, opts \\ [])
+## list_for_team_discussion_comment_legacy/4
 
 List reactions for a team discussion comment (Legacy)
 
@@ -324,7 +324,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment-legacy)
 
-## list_for_team_discussion_in_org(org, team_slug, discussion_number, opts \\ [])
+## list_for_team_discussion_in_org/4
 
 List reactions for a team discussion
 
@@ -344,7 +344,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:discussion`
 
   * [API method documentation](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion)
 
-## list_for_team_discussion_legacy(team_id, discussion_number, opts \\ [])
+## list_for_team_discussion_legacy/3
 
 List reactions for a team discussion (Legacy)
 

@@ -29,11 +29,3 @@ an MFA tuple. The function it designates must return a keyword list.
     def runtime_opts() do
       Keyword.put(@session_options, :domain, host())
     end
-
-## assigns/0
-
-The data in a LiveView as stored in the socket.
-
-## assigns_not_in_socket/0
-
-Struct returned when `assigns` is not in the socket.

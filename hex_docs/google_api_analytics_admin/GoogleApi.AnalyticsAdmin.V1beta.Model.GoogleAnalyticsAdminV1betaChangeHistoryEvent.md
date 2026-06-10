@@ -10,7 +10,3 @@ A set of changes within a Google Analytics account or its child properties that 
 *   `changesFiltered` (*type:* `boolean()`, *default:* `nil`) - If true, then the list of changes returned was filtered, and does not represent all changes that occurred in this event.
 *   `id` (*type:* `String.t`, *default:* `nil`) - ID of this change history event. This ID is unique across Google Analytics.
 *   `userActorEmail` (*type:* `String.t`, *default:* `nil`) - Email address of the Google account that made the change. This will be a valid email address if the actor field is set to USER, and empty otherwise. Google accounts that have been deleted will cause an error.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

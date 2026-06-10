@@ -2,19 +2,7 @@
 
 
 
-## apply(query, expr, as, count_bind)
-
-Applies the join expression to the query.
-
-## build(query, qual, binding, expr, count_bind, on, as, prefix, maybe_hints, env)
-
-Builds a quoted expression.
-
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
-
-## escape(expr, vars, env)
+## escape/3
 
 Escapes a join expression (not including the `on` expression).
 
@@ -50,18 +38,30 @@ and the association expression.
     iex> escape(quote(do: x in fragment("foo")), [], __ENV__)
     {:x, {:{}, [], [:fragment, [], [raw: "foo"]]}, nil, nil, []}
 
-## join!(expr)
+## join!/1
 
 Called at runtime to check dynamic joins.
 
-## join!(query, join, expr, as, count_bind, file, line)
+## build/10
+
+Builds a quoted expression.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## apply/4
+
+Applies the join expression to the query.
+
+## runtime_aliases/3
+
+Called at runtime to build aliases.
+
+## join!/7
 
 Called at runtime to build a join.
 
-## qual!(qual)
+## qual!/1
 
 Called at runtime to check dynamic qualifier.
-
-## runtime_aliases(aliases, name, join_count)
-
-Called at runtime to build aliases.

@@ -13,7 +13,7 @@ representation.
 
 See http://tools.ietf.org/html/rfc2898#section-5.2
 
-## generate(secret, salt, opts \\ [])
+## generate/3
 
 Returns a derived key suitable for use.
 

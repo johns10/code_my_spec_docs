@@ -109,7 +109,7 @@ Assent will dynamically generate one for the session if `:nonce` is set to
 
 See `Assent.Strategy.OIDC.authorize_url/1` for more.
 
-## authorize_url(config)
+## authorize_url/1
 
 Generates an authorization URL for request phase.
 
@@ -125,7 +125,7 @@ could be stored in a httpOnly session cookie.
 
 See `Assent.Strategy.OAuth2.authorize_url/1` for more.
 
-## callback(config, params, strategy \\ __MODULE__)
+## callback/3
 
 Callback phase for generating access token and fetch user data.
 
@@ -141,24 +141,14 @@ The ID Token will be validated per
 
 See `Assent.Strategy.OAuth2.callback/3` for more.
 
-## fetch_user(config, token)
+## fetch_user/2
 
 Fetches user params from ID token.
 
 The ID Token is validated, and the claims is returned as the user params.
 Use `fetch_userinfo/2` to fetch the claims from the `userinfo` endpoint.
 
-## fetch_userinfo(config, token)
-
-Fetches claims from userinfo endpoint.
-
-The userinfo will be fetched from the `userinfo_endpoint` OpenID
-configuration.
-
-The returned claims will be validated against the `id_token` verifying that
-`sub` is equal.
-
-## validate_id_token(config, id_token)
+## validate_id_token/2
 
 Validates the ID token.
 
@@ -167,3 +157,13 @@ config.
 
 The ID Token will be validated per
 [OpenID Connect Core 1.0 rules](https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation).
+
+## fetch_userinfo/2
+
+Fetches claims from userinfo endpoint.
+
+The userinfo will be fetched from the `userinfo_endpoint` OpenID
+configuration.
+
+The returned claims will be validated against the `id_token` verifying that
+`sub` is equal.

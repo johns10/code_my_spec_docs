@@ -1,1 +1,0 @@
-# HTTPoison.AsyncRedirect

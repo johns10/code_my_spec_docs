@@ -2,14 +2,14 @@
 
 Handler for dealing with generating access grants.
 
-## authorize(resource_owner, request, config \\ [])
+## preauthorize/3
 
 Check ExOauth2Provider.Authorization.Code for usage.
 
-## deny(resource_owner, request, config \\ [])
+## authorize/3
 
 Check ExOauth2Provider.Authorization.Code for usage.
 
-## preauthorize(resource_owner, request, config \\ [])
+## deny/3
 
 Check ExOauth2Provider.Authorization.Code for usage.

@@ -18,7 +18,7 @@ It is typically invoked like this:
 
 Where `:tag_handler` implements the behaviour defined by this module.
 
-## compile(source, options)
+## compile/2
 
 Compiles the given string into Elixir AST.
 
@@ -30,7 +30,7 @@ The accepted options are:
   * `file` - the file of the template. Defaults to `"nofile"`.
   * `indentation` - the indentation of the template. Defaults to 0.
 
-## component(func, assigns, caller)
+## component/3
 
 Renders a component defined by the given function.
 
@@ -52,7 +52,7 @@ Is the same as:
     ) %>
 ```
 
-## inner_block(name, list)
+## inner_block/2
 
 Define a inner block, generally used by slots.
 
@@ -64,47 +64,3 @@ under.
 If you're using HEEx templates, you should use its higher
 level `<:slot>` notation instead. See `Phoenix.Component`
 for more information.
-
-## annotate_body/1
-
-Callback invoked to add annotations around the whole body of a template.
-
-## annotate_caller/2
-
-Callback invoked to add caller annotations before a function component is invoked.
-
-## annotate_slot/4
-
-Callback invoked to add annotations around each slot of a template.
-
-In case the slot is an implicit inner block, the tag meta points to
-the component.
-
-## classify_type/1
-
-Classify the tag type from the given binary.
-
-This must return a tuple containing the type of the tag and the name of tag.
-For instance, for LiveView which uses HTML as default tag handler this would
-return `{:tag, 'div'}` in case the given binary is identified as HTML tag.
-
-You can also return `{:error, "reason"}` so that the compiler will display this
-error.
-
-## handle_attributes/2
-
-Implements processing of attributes.
-
-It returns a quoted expression or attributes. If attributes are returned,
-the second element is a list where each element in the list represents
-one attribute. If the list element is a two-element tuple, it is assumed
-the key is the name to be statically written in the template. The second
-element is the value which is also statically written to the template whenever
-possible (such as binaries or binaries inside a list).
-
-## void?/1
-
-Returns if the given tag name is void or not.
-
-That's mainly useful for HTML tags and used internally by the compiler. You
-can just implement as `def void?(_), do: false` if you want to ignore this.

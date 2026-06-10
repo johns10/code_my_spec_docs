@@ -163,7 +163,7 @@ which could then be set as:
       body_reader: {CacheBodyReader, :read_body, []},
       json_decoder: Jason
 
-## parse/5
+## init/1
 
 Attempts to parse the connection's request body given the content-type type,
 subtype, and its parameters.

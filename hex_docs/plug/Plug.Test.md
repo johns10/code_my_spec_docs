@@ -20,7 +20,7 @@ false on the app config.
 
     config :plug, :validate_header_keys_during_test, false
 
-## conn(method, path, params_or_body \\ nil)
+## conn/3
 
 Creates a test connection.
 
@@ -49,46 +49,15 @@ The `params_or_body` field must be one of:
     conn(:post, "/")
     conn("patch", "/", "") |> put_req_header("content-type", "application/json")
 
-## delete_req_cookie(conn, key)
+## sent_resp/1
 
-Deletes a request cookie.
+Returns the sent response.
 
-## init_test_session(conn, session)
+This function is useful when the code being invoked crashes and
+there is a need to verify a particular response was sent, even with
+the crash. It returns a tuple with `{status, headers, body}`.
 
-Initializes the session with the given contents.
-
-If the session has already been initialized, the new contents will be merged
-with the previous ones.
-
-## put_http_protocol(conn, http_protocol)
-
-Puts the HTTP protocol.
-
-## put_peer_data(conn, peer_data)
-
-Puts the peer data.
-
-## put_req_cookie(conn, key, value)
-
-Puts a request cookie.
-
-## put_sock_data(conn, sock_data)
-
-Puts the sock data.
-
-## put_ssl_data(conn, ssl_data)
-
-Puts the ssl data.
-
-## recycle_cookies(new_conn, old_conn)
-
-Moves cookies from a connection into a new connection for subsequent requests.
-
-This function copies the cookie information in `old_conn` into `new_conn`,
-emulating multiple requests done by clients where cookies are always passed
-forward, and returns the new version of `new_conn`.
-
-## sent_informs(conn)
+## sent_informs/1
 
 Returns the informational requests that have been sent.
 
@@ -105,7 +74,21 @@ stored in a variable.
     assert {"/static/application.css", [{"accept", "text/css"}]} in informs
     assert {"/static/application.js", [{"accept", "application/javascript"}]} in informs
 
-## sent_pushes(conn)
+## sent_upgrades/1
+
+Returns the upgrade requests that have been sent.
+
+This function depends on gathering the messages sent by the test adapter when
+upgrade requests are sent. Calling this function will clear the upgrade request messages from the inbox for the
+process.
+
+## Examples
+
+    conn = conn(:get, "/foo", "bar=10")
+    upgrades = Plug.Test.send_upgrades(conn)
+    assert {:websocket, [opt: :value]} in upgrades
+
+## sent_pushes/1
 
 Returns the assets that have been pushed.
 
@@ -121,24 +104,41 @@ of the function should be stored in a variable.
     assert {"/static/application.css", [{"accept", "text/css"}]} in pushes
     assert {"/static/application.js", [{"accept", "application/javascript"}]} in pushes
 
-## sent_resp(conn)
+## put_http_protocol/2
 
-Returns the sent response.
+Puts the HTTP protocol.
 
-This function is useful when the code being invoked crashes and
-there is a need to verify a particular response was sent, even with
-the crash. It returns a tuple with `{status, headers, body}`.
+## put_peer_data/2
 
-## sent_upgrades(conn)
+Puts the peer data.
 
-Returns the upgrade requests that have been sent.
+## put_sock_data/2
 
-This function depends on gathering the messages sent by the test adapter when
-upgrade requests are sent. Calling this function will clear the upgrade request messages from the inbox for the
-process.
+Puts the sock data.
 
-## Examples
+## put_ssl_data/2
 
-    conn = conn(:get, "/foo", "bar=10")
-    upgrades = Plug.Test.send_upgrades(conn)
-    assert {:websocket, [opt: :value]} in upgrades
+Puts the ssl data.
+
+## put_req_cookie/3
+
+Puts a request cookie.
+
+## delete_req_cookie/2
+
+Deletes a request cookie.
+
+## recycle_cookies/2
+
+Moves cookies from a connection into a new connection for subsequent requests.
+
+This function copies the cookie information in `old_conn` into `new_conn`,
+emulating multiple requests done by clients where cookies are always passed
+forward, and returns the new version of `new_conn`.
+
+## init_test_session/2
+
+Initializes the session with the given contents.
+
+If the session has already been initialized, the new contents will be merged
+with the previous ones.

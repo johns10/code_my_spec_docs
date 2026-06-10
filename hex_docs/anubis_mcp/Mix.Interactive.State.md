@@ -2,7 +2,7 @@
 
 
 
-## print_state(client)
+## print_state/1
 
 Prints the formatted state of the client and its associated transport.
 

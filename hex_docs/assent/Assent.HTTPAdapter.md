@@ -26,7 +26,14 @@ You can also set global application config:
       end
     end
 
-## decode_response(response, opts)
+## user_agent_header/0
+
+Sets a user agent header.
+
+The header value will be `Assent-VERSION` with VERSION being the `:vsn` of
+`:assent` app.
+
+## decode_response/2
 
 Decodes request response body.
 
@@ -34,21 +41,3 @@ Decodes request response body.
 
 - `:json_library` - The JSON library to use, see
   `Assent.json_library/1`
-
-## request(method, url, body, headers, opts)
-
-Makes a HTTP request.
-
-## Options
-
-- `:http_adapter` - The HTTP adapter to use, defaults to
-  `Assent.HTTPAdapter.Req`.
-- `:json_library` - The JSON library to use, see
-  `Assent.json_library/1`.
-
-## user_agent_header()
-
-Sets a user agent header.
-
-The header value will be `Assent-VERSION` with VERSION being the `:vsn` of
-`:assent` app.

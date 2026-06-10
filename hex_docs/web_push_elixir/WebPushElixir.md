@@ -2,7 +2,7 @@
 
 Module to send web push notifications with an encrypted payload.
 
-## send_notification(subscription, message)
+## send_notification/2
 
 Sends a web push notification with an encrypted payload.
 

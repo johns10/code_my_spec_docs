@@ -2,7 +2,7 @@
 
 Provides API endpoints related to pulls
 
-## check_if_merged(owner, repo, pull_number, opts \\ [])
+## check_if_merged/4
 
 Check if a pull request has been merged
 
@@ -12,7 +12,7 @@ Checks if a pull request has been merged into the base branch. The HTTP status o
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#check-if-a-pull-request-has-been-merged)
 
-## create(owner, repo, body, opts \\ [])
+## create/4
 
 Create a pull request
 
@@ -34,7 +34,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#create-a-pull-request)
 
-## create_reply_for_review_comment(owner, repo, pull_number, comment_id, body, opts \\ [])
+## create_reply_for_review_comment/6
 
 Create a reply for a review comment
 
@@ -54,7 +54,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#create-a-reply-for-a-review-comment)
 
-## create_review(owner, repo, pull_number, body, opts \\ [])
+## create_review/5
 
 Create a review for a pull request
 
@@ -79,7 +79,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request)
 
-## create_review_comment(owner, repo, pull_number, body, opts \\ [])
+## create_review_comment/5
 
 Create a review comment for a pull request
 
@@ -103,7 +103,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#create-a-review-comment-for-a-pull-request)
 
-## delete_pending_review(owner, repo, pull_number, review_id, opts \\ [])
+## delete_pending_review/5
 
 Delete a pending review for a pull request
 
@@ -120,7 +120,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#delete-a-pending-review-for-a-pull-request)
 
-## delete_review_comment(owner, repo, comment_id, opts \\ [])
+## delete_review_comment/4
 
 Delete a review comment for a pull request
 
@@ -130,7 +130,7 @@ Deletes a review comment.
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#delete-a-review-comment-for-a-pull-request)
 
-## dismiss_review(owner, repo, pull_number, review_id, body, opts \\ [])
+## dismiss_review/6
 
 Dismiss a review for a pull request
 
@@ -151,7 +151,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#dismiss-a-review-for-a-pull-request)
 
-## get(owner, repo, pull_number, opts \\ [])
+## get/4
 
 Get a pull request
 
@@ -183,7 +183,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#get-a-pull-request)
 
-## get_review(owner, repo, pull_number, review_id, opts \\ [])
+## get_review/5
 
 Get a review for a pull request
 
@@ -200,7 +200,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#get-a-review-for-a-pull-request)
 
-## get_review_comment(owner, repo, comment_id, opts \\ [])
+## get_review_comment/4
 
 Get a review comment for a pull request
 
@@ -217,7 +217,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request)
 
-## list(owner, repo, opts \\ [])
+## list/3
 
 List pull requests
 
@@ -252,7 +252,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#list-pull-requests)
 
-## list_comments_for_review(owner, repo, pull_number, review_id, opts \\ [])
+## list_comments_for_review/5
 
 List comments for a pull request review
 
@@ -274,7 +274,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#list-comments-for-a-pull-request-review)
 
-## list_commits(owner, repo, pull_number, opts \\ [])
+## list_commits/4
 
 List commits on a pull request
 
@@ -299,7 +299,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#list-commits-on-a-pull-request)
 
-## list_files(owner, repo, pull_number, opts \\ [])
+## list_files/4
 
 List pull requests files
 
@@ -325,7 +325,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#list-pull-requests-files)
 
-## list_requested_reviewers(owner, repo, pull_number, opts \\ [])
+## list_requested_reviewers/4
 
 Get all requested reviewers for a pull request
 
@@ -335,7 +335,7 @@ Gets the users or teams whose review is requested for a pull request. Once a req
 
   * [API method documentation](https://docs.github.com/rest/pulls/review-requests#get-all-requested-reviewers-for-a-pull-request)
 
-## list_review_comments(owner, repo, pull_number, opts \\ [])
+## list_review_comments/4
 
 List review comments on a pull request
 
@@ -361,7 +361,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#list-review-comments-on-a-pull-request)
 
-## list_review_comments_for_repo(owner, repo, opts \\ [])
+## list_review_comments_for_repo/3
 
 List review comments in a repository
 
@@ -387,7 +387,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/comments#list-review-comments-in-a-repository)
 
-## list_reviews(owner, repo, pull_number, opts \\ [])
+## list_reviews/4
 
 List reviews for a pull request
 
@@ -409,7 +409,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request)
 
-## merge(owner, repo, pull_number, body, opts \\ [])
+## merge/5
 
 Merge a pull request
 
@@ -420,7 +420,7 @@ This endpoint triggers [notifications](https://docs.github.com/github/managing-s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#merge-a-pull-request)
 
-## remove_requested_reviewers(owner, repo, pull_number, body, opts \\ [])
+## remove_requested_reviewers/5
 
 Remove requested reviewers from a pull request
 
@@ -430,7 +430,7 @@ Removes review requests from a pull request for a given set of users and/or team
 
   * [API method documentation](https://docs.github.com/rest/pulls/review-requests#remove-requested-reviewers-from-a-pull-request)
 
-## request_reviewers(owner, repo, pull_number, body, opts \\ [])
+## request_reviewers/5
 
 Request reviewers for a pull request
 
@@ -441,7 +441,7 @@ This endpoint triggers [notifications](https://docs.github.com/github/managing-s
 
   * [API method documentation](https://docs.github.com/rest/pulls/review-requests#request-reviewers-for-a-pull-request)
 
-## submit_review(owner, repo, pull_number, review_id, body, opts \\ [])
+## submit_review/6
 
 Submit a review for a pull request
 
@@ -458,7 +458,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request)
 
-## update(owner, repo, pull_number, body, opts \\ [])
+## update/5
 
 Update a pull request
 
@@ -478,7 +478,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#update-a-pull-request)
 
-## update_branch(owner, repo, pull_number, body, opts \\ [])
+## update_branch/5
 
 Update a pull request branch
 
@@ -488,7 +488,7 @@ Updates the pull request branch with the latest upstream changes by merging HEAD
 
   * [API method documentation](https://docs.github.com/rest/pulls/pulls#update-a-pull-request-branch)
 
-## update_review(owner, repo, pull_number, review_id, body, opts \\ [])
+## update_review/6
 
 Update a review for a pull request
 
@@ -505,7 +505,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/pulls/reviews#update-a-review-for-a-pull-request)
 
-## update_review_comment(owner, repo, comment_id, body, opts \\ [])
+## update_review_comment/5
 
 Update a review comment for a pull request
 

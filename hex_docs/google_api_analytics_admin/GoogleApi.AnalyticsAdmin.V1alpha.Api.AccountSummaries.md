@@ -2,7 +2,7 @@
 
 API calls for all endpoints tagged `AccountSummaries`.
 
-## analyticsadmin_account_summaries_list(connection, optional_params \\ [], opts \\ [])
+## analyticsadmin_account_summaries_list/3
 
 Returns summaries of all accounts accessible by the caller.
 

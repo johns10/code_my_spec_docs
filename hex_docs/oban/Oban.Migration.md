@@ -108,33 +108,7 @@ project to generate `up` and `down` SQL migrations for you.
 
 [sql]: https://github.com/btwb/oban_migrations_sql
 
-## down(opts \\ [])
-
-Run the `down` changes for all migrations between the current version and the initial version.
-
-## Example
-
-Run all migrations from current version down to the first:
-
-    Oban.Migration.down()
-
-Run migrations down to and including a specified version:
-
-    Oban.Migration.down(version: 5)
-
-Run migrations in an alternate prefix:
-
-    Oban.Migration.down(prefix: "payments")
-
-## migrated_version(opts \\ [])
-
-Check the latest version the database is migrated to.
-
-## Example
-
-    Oban.Migration.migrated_version()
-
-## up(opts \\ [])
+## up/1
 
 Run the `up` changes for all migrations between the initial version and the current version.
 
@@ -162,12 +136,26 @@ Disable `UNLOGGED` tables for databases that don't support it (e.g. Yugabyte)
 
 ## down/1
 
-Migrates storage down to the previous version.
+Run the `down` changes for all migrations between the current version and the initial version.
+
+## Example
+
+Run all migrations from current version down to the first:
+
+    Oban.Migration.down()
+
+Run migrations down to and including a specified version:
+
+    Oban.Migration.down(version: 5)
+
+Run migrations in an alternate prefix:
+
+    Oban.Migration.down(prefix: "payments")
 
 ## migrated_version/1
 
-Identifies the last migrated version.
+Check the latest version the database is migrated to.
 
-## up/1
+## Example
 
-Migrates storage up to the latest version.
+    Oban.Migration.migrated_version()

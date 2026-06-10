@@ -2,7 +2,7 @@
 
 
 
-## tokenize(str, opts \\ [])
+## tokenize/2
 
 Converts a string into a list of tokens.
 

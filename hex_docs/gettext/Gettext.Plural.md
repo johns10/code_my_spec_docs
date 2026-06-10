@@ -129,56 +129,7 @@ As expected, `nplurals/1` returns the possible number of plural forms:
     iex> Gettext.Plural.nplurals("pl")
     3
 
-## nplurals(locale)
-
-Default implementation of the `c:nplurals/1` callback.
-
-## plural(locale, count)
-
-Default implementation of the `c:plural/2` callback.
-
 ## init/1
-
-Should initialize the context for `c:nplurals/1` and `c:plural/2`.
-
-This callback should perform all preparations for the provided locale, which
-is part of the pluralization context (see `t:pluralization_context/0`). For
-example, you can use this callback to parse the `Plural-Forms` header and
-determine pluralization rules for the locale.
-
-If defined, Gettext calls this callback *once* at compile time. If not defined,
-the returned `plural_info` will be equals to the locale found in
-`pluralization_context`.
-
-## Examples
-
-    defmodule MyApp.Plural do
-      @behaviour Gettext.Plural
-
-      @impl true
-      def init(%{locale: _locale, plural_forms_header: header}) do
-        {nplurals, rule} = parse_plural_forms_header(header)
-
-        # This is what other callbacks can use to determine the plural.
-        {nplurals, rule}
-      end
-
-      @impl true
-      def nplurals({_locale, nplurals, _rule}), do: nplurals
-
-      # ...
-    end
-
-## nplurals/1
-
-Should return the number of possible plural forms in the given `locale`.
-
-## plural/2
-
-Should return the plural form in the given `locale` for the given `count` of
-elements.
-
-## plural_forms_header/1
 
 Should return the value of the `Plural-Forms` header for the given `locale`,
 if present.
@@ -190,17 +141,10 @@ This callback is optional. If it's not defined, the fallback returns:
 
     "nplurals={nplurals};"
 
-## locale/0
+## nplurals/1
 
-A locale passed to `c:plural/2`.
+Default implementation of the `c:nplurals/1` callback.
 
-## pluralization_context/0
+## plural/2
 
-The context passed to the optional `c:init/1` callback.
-
-If `:plural_forms_header` is present, it contains the contents
-of the `Plural-Forms` Gettext header.
-
-## plural_info/0
-
-The term that the optional `c:init/1` callback returns.
+Default implementation of the `c:plural/2` callback.

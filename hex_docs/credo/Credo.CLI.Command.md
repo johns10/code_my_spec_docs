@@ -16,25 +16,7 @@ A basic command that writes "Hello World" can be implemented like this:
       end
     end
 
-## call/1
-
-Is called when a Command is invoked.
-
-    defmodule FooTask do
-      use Credo.Execution.Task
-
-      def call(exec) do
-        IO.inspect(exec)
-      end
-    end
-
-The `call/1` functions receives an `exec` struct and must return a (modified) `Credo.Execution`.
-
-## call/2
-
-Runs the Command
-
-## init/1
+## __using__/1
 
 Is called when a Command is initialized.
 
@@ -59,7 +41,3 @@ This can be used to initialize Execution pipelines for the current Command:
         )
       end
     end
-
-## short_description/0
-
-Returns a short, one-line description of what the command does

@@ -2,7 +2,7 @@
 
 
 
-## start(opts)
+## start/1
 
 Starts a supervised interactive shell session.
 

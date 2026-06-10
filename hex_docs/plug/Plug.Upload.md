@@ -23,32 +23,26 @@ The `:content_type` and `:filename` fields in the `Plug.Upload` struct are
 client-controlled. These values should be validated, via file content
 inspection or similar, before being trusted.
 
-## child_spec(init_arg)
+## random_file/1
 
-Returns a specification to start this module under a supervisor.
+Requests a random file to be created in the upload directory
+with the given prefix.
 
-See `Supervisor`.
-
-## delete(path)
+## delete/1
 
 Deletes the given upload file.
 
 Uploads are automatically removed when the current process terminates,
 but you may invoke this to request the file to be removed sooner.
 
-## give_away(upload, to_pid, from_pid \\ self())
+## give_away/3
 
 Assign ownership of the given upload file to another process.
 
 Useful if you want to do some work on an uploaded file in another process
 since it means that the file will survive the end of the request.
 
-## random_file(prefix)
-
-Requests a random file to be created in the upload directory
-with the given prefix.
-
-## random_file!(prefix)
+## random_file!/1
 
 Requests a random file to be created in the upload directory
 with the given prefix. Raises on failure.

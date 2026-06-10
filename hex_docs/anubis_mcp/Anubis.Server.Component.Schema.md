@@ -1,1 +1,0 @@
-# Anubis.Server.Component.Schema

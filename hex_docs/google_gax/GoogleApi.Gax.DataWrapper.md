@@ -12,7 +12,7 @@ means the response would have an outer object with a single "data" key:
       }
     }
 
-## decode(data_wrapper, options)
+## decode/2
 
 Unwrap a data-wrapped JSON response.
 

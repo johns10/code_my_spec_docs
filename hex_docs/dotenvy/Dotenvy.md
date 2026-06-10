@@ -12,23 +12,7 @@ you wish.
 
 See the [Getting Started](docs/getting_started.md) page for more info.
 
-## env!(variable, type \\ :string)
-
-Reads the given env `variable` and converts its value to the given `type`.
-
-This function attempts to read a value from a local data store of sourced values.
-
-This function may raise an error because type conversion is delegated to
-`Dotenvy.Transformer.to!/2` -- see its documentation for a list of supported types.
-
-## Examples
-
-    iex> env!("PORT", :integer)
-    5432
-    iex> env!("ENABLED", :boolean)
-    true
-
-## env!(variable, type, default)
+## env!/3
 
 Reads an env variable and converts its output or returns a default value.
 
@@ -61,7 +45,23 @@ This function attempts to read a value from a local data store of sourced values
     iex> env!("HOST", :string!, "localhost")
     ** (RuntimeError) Error converting HOST to string!: non-empty value required
 
-## source(files, opts \\ [])
+## env!/2
+
+Reads the given env `variable` and converts its value to the given `type`.
+
+This function attempts to read a value from a local data store of sourced values.
+
+This function may raise an error because type conversion is delegated to
+`Dotenvy.Transformer.to!/2` -- see its documentation for a list of supported types.
+
+## Examples
+
+    iex> env!("PORT", :integer)
+    5432
+    iex> env!("ENABLED", :boolean)
+    true
+
+## source/2
 
 Like its Bash namesake command, `source/2` accumulates values from the given input(s).
 The accumulated values are stored via a side effect function to make them available
@@ -167,21 +167,6 @@ the output of `Dotenvy.source/2`, e.g.
     iex> {:ok, parsed_vars} = Dotenvy.source([".env", System.get_env()])
     iex> System.put_env(parsed_vars)
 
-## source!(files, opts \\ [])
+## source!/2
 
 As `source/2`, but returns a map on success or raises on error.
-
-## parse/3
-
-A parser implementation should receive the `contents` read from a file,
-a map of `vars` (with string keys, as would come from `System.get_env/0`),
-and a keyword list of `opts`.
-
-See `Dotenvy.Parser` for the default implementation of this callback.
-
-## input_source/0
-
-An input source may be either a path to an env file or a map with string keys
-and values, e.g. `"envs/.env"` or `%{"FOO" => "bar"}`. This allows users to
-specify a list of env files interspersed with other values from other sources,
-most commonly `System.get_env()`.

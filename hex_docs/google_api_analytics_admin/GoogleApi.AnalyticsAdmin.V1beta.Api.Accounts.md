@@ -2,7 +2,7 @@
 
 API calls for all endpoints tagged `Accounts`.
 
-## analyticsadmin_accounts_delete(connection, name, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_delete/4
 
 Marks target Account as soft-deleted (ie: "trashed") and returns it. This API does not have a method to restore soft-deleted accounts. However, they can be restored using the Trash Can UI. If the accounts are not restored before the expiration time, the account and all child resources (eg: Properties, GoogleAdsLinks, Streams, AccessBindings) will be permanently purged. https://support.google.com/analytics/answer/6154772 Returns an error if the target is not found.
 
@@ -29,7 +29,7 @@ Marks target Account as soft-deleted (ie: "trashed") and returns it. This API do
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleProtobufEmpty{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_get(connection, name, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_get/4
 
 Lookup for a single Account.
 
@@ -56,7 +56,7 @@ Lookup for a single Account.
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaAccount{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_get_data_sharing_settings(connection, name, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_get_data_sharing_settings/4
 
 Get data sharing settings on an account. Data sharing settings are singletons.
 
@@ -83,7 +83,7 @@ Get data sharing settings on an account. Data sharing settings are singletons.
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaDataSharingSettings{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_list(connection, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_list/3
 
 Returns all accounts accessible by the caller. Note that these accounts might not currently have GA properties. Soft-deleted (ie: "trashed") accounts are excluded by default. Returns an empty list if no relevant accounts are found.
 
@@ -112,7 +112,7 @@ Returns all accounts accessible by the caller. Note that these accounts might no
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaListAccountsResponse{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_patch(connection, name, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_patch/4
 
 Updates an account.
 
@@ -141,7 +141,7 @@ Updates an account.
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaAccount{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_provision_account_ticket(connection, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_provision_account_ticket/3
 
 Requests a ticket for creating an account.
 
@@ -168,7 +168,7 @@ Requests a ticket for creating an account.
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaProvisionAccountTicketResponse{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_run_access_report(connection, entity, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_run_access_report/4
 
 Returns a customized report of data access records. The report provides records of each time a user reads Google Analytics reporting data. Access records are retained for up to 2 years. Data Access Reports can be requested for a property. Reports may be requested for any property, but dimensions that aren't related to quota can only be requested on Google Analytics 360 properties. This method is only available to Administrators. These data access records include GA UI Reporting, GA UI Explorations, GA Data API, and other products like Firebase & Admob that can retrieve data from Google Analytics through a linkage. These records don't include property configuration changes like adding a stream or changing a property's time zone. For configuration change history, see [searchChangeHistoryEvents](https://developers.google.com/analytics/devguides/config/admin/v1/rest/v1alpha/accounts/searchChangeHistoryEvents). To give your feedback on this API, complete the [Google Analytics Access Reports feedback](https://docs.google.com/forms/d/e/1FAIpQLSdmEBUrMzAEdiEKk5TV5dEHvDUZDRlgWYdQdAeSdtR4hVjEhw/viewform) form.
 
@@ -196,7 +196,7 @@ Returns a customized report of data access records. The report provides records 
 *   `{:ok, %GoogleApi.AnalyticsAdmin.V1beta.Model.GoogleAnalyticsAdminV1betaRunAccessReportResponse{}}` on success
 *   `{:error, info}` on failure
 
-## analyticsadmin_accounts_search_change_history_events(connection, account, optional_params \\ [], opts \\ [])
+## analyticsadmin_accounts_search_change_history_events/4
 
 Searches through all changes to an account or its children given the specified set of filters. Only returns the subset of changes supported by the API. The UI may return additional changes.
 

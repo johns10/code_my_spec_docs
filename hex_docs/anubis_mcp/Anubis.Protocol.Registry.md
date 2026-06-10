@@ -16,11 +16,7 @@ and provides the central dispatch point for version-specific protocol logic.
     iex> Anubis.Protocol.Registry.negotiate("2025-03-26")
     {:ok, "2025-03-26", Anubis.Protocol.V2025_03_26}
 
-## fallback_version()
-
-Returns the fallback protocol version for compatibility.
-
-## get(version)
+## get/1
 
 Get the protocol module for a given version string.
 
@@ -32,21 +28,27 @@ Get the protocol module for a given version string.
     iex> Anubis.Protocol.Registry.get("unknown")
     :error
 
-## get_features(version)
+## supported_versions/0
 
-Returns the features supported by a given version.
+List all supported versions in preference order (newest first).
 
-Delegates to the version module's `supported_features/0` callback.
-
-## latest_module()
-
-Returns the module for the latest supported protocol version.
-
-## latest_version()
+## latest_version/0
 
 Returns the latest supported protocol version string.
 
-## negotiate(client_version)
+## fallback_version/0
+
+Returns the fallback protocol version for compatibility.
+
+## latest_module/0
+
+Returns the module for the latest supported protocol version.
+
+## supported?/1
+
+Check if a version string is supported.
+
+## negotiate/1
 
 Negotiate the best version given a client's requested version.
 
@@ -62,7 +64,7 @@ with the list of supported versions.
     iex> Anubis.Protocol.Registry.negotiate("9999-01-01")
     {:error, :unsupported_version, ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]}
 
-## negotiate(client_version, server_versions)
+## negotiate/2
 
 Negotiate version between client and server supported version lists.
 
@@ -78,20 +80,18 @@ otherwise server's latest).
     iex> Anubis.Protocol.Registry.negotiate("2024-11-05", ["2025-11-25", "2025-03-26"])
     {:ok, "2025-11-25", Anubis.Protocol.V2025_11_25}
 
-## progress_params_schema(version)
+## get_features/1
+
+Returns the features supported by a given version.
+
+Delegates to the version module's `supported_features/0` callback.
+
+## supports_feature?/2
+
+Checks if a feature is supported by a protocol version.
+
+## progress_params_schema/1
 
 Returns the progress notification params schema for a given version.
 
 Delegates to the version module's `progress_params_schema/0` callback.
-
-## supported?(version)
-
-Check if a version string is supported.
-
-## supported_versions()
-
-List all supported versions in preference order (newest first).
-
-## supports_feature?(version, feature)
-
-Checks if a feature is supported by a protocol version.

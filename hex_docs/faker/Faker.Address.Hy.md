@@ -2,7 +2,7 @@
 
 Functions for generating addresses in Armenian
 
-## building_number()
+## building_number/0
 
 Returns a random building number.
 
@@ -17,46 +17,7 @@ Returns a random building number.
     iex> Faker.Address.Hy.building_number()
     "108"
 
-## city()
-
-Returns city name.
-
-## Examples
-
-    iex> Faker.Address.Hy.city()
-    "Ստեփանավան"
-    iex> Faker.Address.Hy.city()
-    "Մարալիկ"
-    iex> Faker.Address.Hy.city()
-    "Ճամբարակ"
-    iex> Faker.Address.Hy.city()
-    "Մեղրի"
-
-## city_prefix()
-
-Returns city prefix.
-
-## Examples
-
-    iex> Faker.Address.Hy.city_prefix()
-    "ք."
-
-## country()
-
-Returns country.
-
-## Examples
-
-    iex> Faker.Address.Hy.country()
-    "Ֆրանսիա"
-    iex> Faker.Address.Hy.country()
-    "Նիդերլանդներ"
-    iex> Faker.Address.Hy.country()
-    "Ղազախստան"
-    iex> Faker.Address.Hy.country()
-    "Թուրքմենստան"
-
-## secondary_address()
+## secondary_address/0
 
 Returns a random secondary address.
 
@@ -71,37 +32,7 @@ Returns a random secondary address.
     iex> Faker.Address.Hy.secondary_address()
     "բն. 110"
 
-## state()
-
-Returns state.
-
-## Examples
-
-    iex> Faker.Address.Hy.state()
-    "Արագածոտն"
-    iex> Faker.Address.Hy.state()
-    "Արարատ"
-    iex> Faker.Address.Hy.state()
-    "Կոտայք"
-    iex> Faker.Address.Hy.state()
-    "Լոռի"
-
-## state_abbr()
-
-Returns state abbr.
-
-## Examples
-
-    iex> Faker.Address.Hy.state_abbr()
-    "ԱԳ"
-    iex> Faker.Address.Hy.state_abbr()
-    "ԱՐ"
-    iex> Faker.Address.Hy.state_abbr()
-    "ԿՏ"
-    iex> Faker.Address.Hy.state_abbr()
-    "ԼՌ"
-
-## street_address()
+## street_address/0
 
 Returns street address.
 
@@ -116,7 +47,7 @@ Returns street address.
     iex> Faker.Address.Hy.street_address()
     "Հանրապետության 5"
 
-## street_address(arg1)
+## street_address/1
 
 Returns `street_address/0` or if argument is `true` adds `secondary_address/0`.
 
@@ -131,37 +62,7 @@ Returns `street_address/0` or if argument is `true` adds `secondary_address/0`.
     iex> Faker.Address.Hy.street_address(false)
     "Տիգրան Մեծի 35"
 
-## street_name()
-
-Returns street name.
-
-## Examples
-
-    iex> Faker.Address.Hy.street_name()
-    "Սուրբ Հովհաննեսի"
-    iex> Faker.Address.Hy.street_name()
-    "Մոսկովյան"
-    iex> Faker.Address.Hy.street_name()
-    "Սերգեյ Փարաջանովի"
-    iex> Faker.Address.Hy.street_name()
-    "Պրահայի"
-
-## street_suffix()
-
-Returns street suffix.
-
-## Examples
-
-    iex> Faker.Address.Hy.street_suffix()
-    "նրբանցք"
-    iex> Faker.Address.Hy.street_suffix()
-    "պողոտա"
-    iex> Faker.Address.Hy.street_suffix()
-    "փակուղի"
-    iex> Faker.Address.Hy.street_suffix()
-    "փողոց"
-
-## zip_code()
+## zip_code/0
 
 Returns a random postcode.
 

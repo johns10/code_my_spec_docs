@@ -2,25 +2,19 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## config_change(endpoint, changed, removed)
-
-Callback that changes the configuration from the app callback.
-
-## server?(otp_app, endpoint)
-
-Checks if Endpoint's web server has been configured to start.
-
-## start_link(otp_app, mod, opts \\ [])
+## start_link/3
 
 Starts the endpoint supervision tree.
 
-## static_lookup(endpoint, path)
+## server?/2
+
+Checks if Endpoint's web server has been configured to start.
+
+## config_change/3
+
+Callback that changes the configuration from the app callback.
+
+## static_lookup/2
 
 Returns a two item tuple with the first element containing the
 static path of a file in the static root directory
@@ -32,6 +26,6 @@ just the static path is returned.
 The result is wrapped in a `{:cache | :nocache, value}` tuple so
 the `Phoenix.Config` layer knows how to cache it.
 
-## warmup(endpoint)
+## warmup/1
 
 Invoked to warm up caches on start and config change.

@@ -21,28 +21,3 @@ exists and calls these functions internally.
     {:ok, state} = MyTransport.transport_init(opts)
     {:ok, message, state} = MyTransport.parse(raw_data, state)
     {:ok, encoded, state} = MyTransport.encode(response, state)
-
-## encode/2
-
-Encode an MCP message map for this transport's wire format.
-
-Returns the encoded binary ready to be sent.
-
-## extract_metadata/2
-
-Extract transport-specific metadata from raw input.
-
-For HTTP, this extracts session_id from headers, request context, etc.
-For STDIO, this returns basic process metadata.
-
-## parse/2
-
-Parse raw input into decoded MCP message(s).
-
-For STDIO, raw input is newline-delimited JSON.
-For HTTP, raw input is a JSON body string or already-parsed map.
-For SSE, raw input is SSE event data.
-
-## transport_init/1
-
-Initialize transport-specific state (parse options, configure connection).

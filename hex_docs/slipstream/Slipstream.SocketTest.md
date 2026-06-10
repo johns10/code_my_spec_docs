@@ -97,7 +97,7 @@ your service's formatter config for `:import_deps`:
       .. # more configuration
     ]
 
-## accept_connect(client)
+## accept_connect/1
 
 Emulates a server telling the client it has connected
 
@@ -117,16 +117,7 @@ See [Timing Assumptions](#module-timing-assumptions).
       :ok = accept_connect(MyApp.MyClient)
     end
 
-## disconnect(client, reason)
-
-Emulates a server closing a connection to the client
-
-## Examples
-
-    accept_connect(MyClient)
-    disconnect(MyClient, :heartbeat_timeout)
-
-## push(client, topic, event, params)
+## push/4
 
 Emulates a server pushing a message to the client
 
@@ -148,7 +139,7 @@ when passing messages over-the-wire.
       assert Counter.count() == 1
     end
 
-## reply(client, ref, reply)
+## reply/3
 
 Emulates a server replying to a push from the client
 
@@ -165,67 +156,16 @@ client.
     assert_push ^topic, "ping", %{}, ref
     reply(MySocketClient, ref, {:ok, %{"ping" => "pong"}})
 
-## assert_disconnect(timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
+## disconnect/2
 
-Asserts that a client will attempt to disconnect from the server
-
-## Examples
-
-    accept_connect(MyClient)
-    # client will disconnect after 15s of inactivity
-    assert_disconnect 15_000
-
-## assert_join(topic_expr, params_expr, reply, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
-
-Asserts that a client will request to join a topic
-
-`topic_expr` and `params_expr` are interpreted as match expressions, so they
-may be literal values, pinned (`^`) bindings, or partial values such as
-`"msg:" <> _` or `%{}` (which matches any map).
-
-`reply` is meant to simulate the return value of the
-`c:Phoenix.Channel.join/3` callback.
+Emulates a server closing a connection to the client
 
 ## Examples
 
     accept_connect(MyClient)
-    assert_join "rooms:lobby", %{}, :ok
+    disconnect(MyClient, :heartbeat_timeout)
 
-## assert_leave(topic_expr, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
-
-Asserts that a client will request to leave a topic
-
-`topic_expr` is a pattern, so literal values like `"room:lobby"` are valid
-as well as match patterns such as `"room:" <> _`. Existing bindings must be
-pinned with the `^` pin operator.
-
-## Examples
-
-    topic = "rooms:lobby"
-    accept_connect(MyClient)
-    assert_join ^topic, %{}, :ok
-    push(MyClient, topic, "leave", %{})
-    assert_leave ^topic
-
-## assert_push(topic_expr, event_expr, params_expr, ref_expr \\ quote do
-  _
-end, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
-
-Asserts that the client will request to push a message to the server
-
-Note that `topic_expr`, `event_expr`, `params_expr`, and `ref_expr` are all
-pattern expressions. Prior bindings may be used with the `^` pin operator,
-values may be underscored to ignore, and partial values may be matched (e.g.
-`%{}` will match any map).
-
-`ref_expr` can be provided to bind a reference for later use in `reply/3`.
-
-## Examples
-
-    assert_push "rooms:lobby", "msg:new", params, ref
-    reply(MyClient, ref, {:ok, %{status: "ok", received: params}})
-
-## connect_and_assert_join(client, topic_expr, params_expr, reply, timeout \\ Application.fetch_env!(:ex_unit, :assert_receive_timeout))
+## connect_and_assert_join/5
 
 A convenience macro wrapping connection and a join response
 
@@ -247,18 +187,23 @@ and then an `assert_join/5`.
     socket = connect_and_assert_join MySocketClient, "rooms:lobby", %{}, :ok
     push(socket, "rooms:lobby", "initial-hello", %{"hello" => "world"})
 
-## refute_disconnect(timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
+## assert_join/4
 
-Refutes that a client will attempt to disconnect from the server
+Asserts that a client will request to join a topic
 
-The opposite of `assert_disconnect/1`.
+`topic_expr` and `params_expr` are interpreted as match expressions, so they
+may be literal values, pinned (`^`) bindings, or partial values such as
+`"msg:" <> _` or `%{}` (which matches any map).
+
+`reply` is meant to simulate the return value of the
+`c:Phoenix.Channel.join/3` callback.
 
 ## Examples
 
     accept_connect(MyClient)
-    refute_disconnect 10_000
+    assert_join "rooms:lobby", %{}, :ok
 
-## refute_join(topic_expr, params_expr, timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
+## refute_join/3
 
 Refutes that a client will request to join a topic
 
@@ -269,7 +214,23 @@ The opposite of `assert_join/5`.
     accept_connect(MySocketClient)
     refute_join "rooms:" <> _, %{user_id: 5}
 
-## refute_leave(topic_expr, timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
+## assert_leave/2
+
+Asserts that a client will request to leave a topic
+
+`topic_expr` is a pattern, so literal values like `"room:lobby"` are valid
+as well as match patterns such as `"room:" <> _`. Existing bindings must be
+pinned with the `^` pin operator.
+
+## Examples
+
+    topic = "rooms:lobby"
+    accept_connect(MyClient)
+    assert_join ^topic, %{}, :ok
+    push(MyClient, topic, "leave", %{})
+    assert_leave ^topic
+
+## refute_leave/2
 
 Refutes that a client will request to leave a topic
 
@@ -282,7 +243,23 @@ The opposite of `assert_leave/3`.
     push(MyClient, topic, "no-don't-go", %{})
     refute_leave ^topic, 10_000
 
-## refute_push(topic_expr, event_expr, params_expr, timeout \\ Application.fetch_env!(:ex_unit, :refute_receive_timeout))
+## assert_push/5
+
+Asserts that the client will request to push a message to the server
+
+Note that `topic_expr`, `event_expr`, `params_expr`, and `ref_expr` are all
+pattern expressions. Prior bindings may be used with the `^` pin operator,
+values may be underscored to ignore, and partial values may be matched (e.g.
+`%{}` will match any map).
+
+`ref_expr` can be provided to bind a reference for later use in `reply/3`.
+
+## Examples
+
+    assert_push "rooms:lobby", "msg:new", params, ref
+    reply(MyClient, ref, {:ok, %{status: "ok", received: params}})
+
+## refute_push/4
 
 Refutes that a client will push a message to the server
 
@@ -292,10 +269,23 @@ The opposite of `assert_push/4`
 
     refute_push "rooms:lobby", "msg:" <> _, %{user_id: 5}
 
-## client/0
+## assert_disconnect/1
 
-Any Slipstream client
+Asserts that a client will attempt to disconnect from the server
 
-Since Slipstream clients are either GenServer or plain processes, either
-a pid or a GenServer name will work as the `client` argument for any function
-specifying `client` in this module.
+## Examples
+
+    accept_connect(MyClient)
+    # client will disconnect after 15s of inactivity
+    assert_disconnect 15_000
+
+## refute_disconnect/1
+
+Refutes that a client will attempt to disconnect from the server
+
+The opposite of `assert_disconnect/1`.
+
+## Examples
+
+    accept_connect(MyClient)
+    refute_disconnect 10_000

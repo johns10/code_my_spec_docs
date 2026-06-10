@@ -2,32 +2,78 @@
 
 
 
-## component?(module)
+## schema/1
 
-Checks if a module is a valid component.
+Defines the parameter schema for the component.
 
-## Parameters
-  * `module` - The module atom to check
+The schema uses Peri's validation DSL and is automatically validated
+before the component's callback is executed.
 
-## Returns
-  * `true` if the module uses `Anubis.Server.Component`
-  * `false` otherwise
+## output_schema/1
+
+Defines the output schema for a tool component.
+
+This schema describes the expected structure of the tool's output in the
+structuredContent field. Only available for tool components.
+
+## field/3
+
+Defines a field with metadata for JSON Schema generation.
+
+Supports both simple fields and nested objects with their own fields.
 
 ## Examples
 
-    iex> defmodule MyTool do
-    ...>   use Anubis.Server.Component, type: :tool
-    ...> end
-    iex> Anubis.Server.Component.component?(MyTool)
-    true
+    # Simple field
+    field :email, {:required, :string}, format: "email", description: "User's email address"
+    field :age, :integer, description: "Age in years"
+    
+    # Nested field
+    field :user do
+      field :name, {:required, :string}
+      field :email, :string, format: "email"
+    end
 
-    iex> defmodule NotAComponent do
-    ...>   def hello, do: :world
-    ...> end
-    iex> Anubis.Server.Component.component?(NotAComponent)
-    false
+    # Nested field with metadata
+    field :profile, description: "User profile information" do
+      field :bio, :string, description: "Short biography"
+      field :avatar_url, :string, format: "uri"
+    end
 
-## get_description(module)
+## embeds_many/3
+
+Defines a field that embeds many objects (array of objects).
+
+## Examples
+
+    embeds_many :users, description: "List of users" do
+      field :id, :string, required: true, description: "User ID"
+      field :name, :string, description: "User name"
+    end
+
+    embeds_many :tags, required: true do
+      field :name, :string, required: true
+      field :value, :string
+    end
+
+## embeds_one/3
+
+Defines a field that embeds one object.
+
+## Examples
+
+    embeds_one :user, description: "User object" do
+      field :id, :string, required: true, description: "User ID"
+      field :name, :string, description: "User name"
+    end
+
+    embeds_one :address, required: true do
+      field :street, :string, required: true
+      field :city, :string, required: true
+      field :zip, :string
+    end
+
+## get_description/1
 
 Extracts the description from a component module.
 
@@ -56,7 +102,7 @@ Extracts the description from a component module.
     iex> Anubis.Server.Component.get_description(MyToolWithCallback)
     "Custom description from callback"
 
-## get_type(module)
+## get_type/1
 
 Gets the component type (:tool, :prompt, or :resource).
 
@@ -76,73 +122,27 @@ Gets the component type (:tool, :prompt, or :resource).
     iex> Anubis.Server.Component.get_type(MyTool)
     :tool
 
-## embeds_many(name, opts \\ [], list)
+## component?/1
 
-Defines a field that embeds many objects (array of objects).
+Checks if a module is a valid component.
 
-## Examples
+## Parameters
+  * `module` - The module atom to check
 
-    embeds_many :users, description: "List of users" do
-      field :id, :string, required: true, description: "User ID"
-      field :name, :string, description: "User name"
-    end
-
-    embeds_many :tags, required: true do
-      field :name, :string, required: true
-      field :value, :string
-    end
-
-## embeds_one(name, opts \\ [], list)
-
-Defines a field that embeds one object.
+## Returns
+  * `true` if the module uses `Anubis.Server.Component`
+  * `false` otherwise
 
 ## Examples
 
-    embeds_one :user, description: "User object" do
-      field :id, :string, required: true, description: "User ID"
-      field :name, :string, description: "User name"
-    end
+    iex> defmodule MyTool do
+    ...>   use Anubis.Server.Component, type: :tool
+    ...> end
+    iex> Anubis.Server.Component.component?(MyTool)
+    true
 
-    embeds_one :address, required: true do
-      field :street, :string, required: true
-      field :city, :string, required: true
-      field :zip, :string
-    end
-
-## field(name, type, opts \\ [])
-
-Defines a field with metadata for JSON Schema generation.
-
-Supports both simple fields and nested objects with their own fields.
-
-## Examples
-
-    # Simple field
-    field :email, {:required, :string}, format: "email", description: "User's email address"
-    field :age, :integer, description: "Age in years"
-    
-    # Nested field
-    field :user do
-      field :name, {:required, :string}
-      field :email, :string, format: "email"
-    end
-
-    # Nested field with metadata
-    field :profile, description: "User profile information" do
-      field :bio, :string, description: "Short biography"
-      field :avatar_url, :string, format: "uri"
-    end
-
-## output_schema(list)
-
-Defines the output schema for a tool component.
-
-This schema describes the expected structure of the tool's output in the
-structuredContent field. Only available for tool components.
-
-## schema(list)
-
-Defines the parameter schema for the component.
-
-The schema uses Peri's validation DSL and is automatically validated
-before the component's callback is executed.
+    iex> defmodule NotAComponent do
+    ...>   def hello, do: :world
+    ...> end
+    iex> Anubis.Server.Component.component?(NotAComponent)
+    false

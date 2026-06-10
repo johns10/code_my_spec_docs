@@ -2,16 +2,76 @@
 
 Ecto schema for oauth access tokens
 
-## create_application_token(application, attrs \\ %{}, config \\ [])
+## get_by_token/2
 
-Creates an application access token.
+Gets a single access token.
 
 ## Examples
 
-    iex> create_application_token(application, %{scopes: "read write"}, otp_app: :my_app)
-    {:ok, %OauthAccessToken{}}
+    iex> get_by_token("c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
+    %OauthAccessToken{}
 
-## create_token(resource_owner, attrs \\ %{}, config \\ [])
+    iex> get_by_token("75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
+    nil
+
+## get_by_refresh_token/2
+
+Gets an access token by the refresh token.
+
+## Examples
+
+    iex> get_by_refresh_token("c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
+    %OauthAccessToken{}
+
+    iex> get_by_refresh_token("75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
+    nil
+
+## get_by_refresh_token_for/3
+
+Gets an access token by the refresh token belonging to an application.
+
+## Examples
+
+    iex> get_by_refresh_token_for(application, "c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
+    %OauthAccessToken{}
+
+    iex> get_by_refresh_token_for(application, "75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
+    nil
+
+## get_token_for/4
+
+Gets the most recent, acccessible, matching access token for a resource owner.
+
+## Examples
+
+    iex> get_token_for(resource_owner, application, "read write", otp_app: :my_app)
+    %OauthAccessToken{}
+
+    iex> get_token_for(resource_owner, application, "read invalid", otp_app: :my_app)
+    nil
+
+## get_application_token_for/3
+
+Gets the most recent, acccessible, matching access token for an application.
+
+## Examples
+
+    iex> get_application_token_for(application, "read write", otp_app: :my_app)
+    %OauthAccessToken{}
+
+    iex> get_application_token_for(application, "read invalid", otp_app: :my_app)
+    nil
+
+## get_authorized_tokens_for/2
+
+Gets all authorized access tokens for resource owner.
+
+## Examples
+
+    iex> get_authorized_tokens_for(resource_owner, otp_app: :my_app)
+    [%OauthAccessToken{}, ...]
+
+## create_token/3
 
 Creates an access token.
 
@@ -26,88 +86,16 @@ Creates an access token.
     iex> create_token(resource_owner, %{expires_in: "invalid"}, otp_app: :my_app)
     {:error, %Ecto.Changeset{}}
 
-## get_application_token_for(application, scopes, config \\ [])
+## create_application_token/3
 
-Gets the most recent, acccessible, matching access token for an application.
-
-## Examples
-
-    iex> get_application_token_for(application, "read write", otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_application_token_for(application, "read invalid", otp_app: :my_app)
-    nil
-
-## get_authorized_tokens_for(resource_owner, config \\ [])
-
-Gets all authorized access tokens for resource owner.
+Creates an application access token.
 
 ## Examples
 
-    iex> get_authorized_tokens_for(resource_owner, otp_app: :my_app)
-    [%OauthAccessToken{}, ...]
+    iex> create_application_token(application, %{scopes: "read write"}, otp_app: :my_app)
+    {:ok, %OauthAccessToken{}}
 
-## get_by_previous_refresh_token_for(map, config)
-
-Gets an old access token by previous refresh token.
-
-## Examples
-
-    iex> get_by_previous_refresh_token_for(new_access_token, otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_by_previous_refresh_token_for(new_access_token, otp_app: :my_app)
-    nil
-
-## get_by_refresh_token(refresh_token, config \\ [])
-
-Gets an access token by the refresh token.
-
-## Examples
-
-    iex> get_by_refresh_token("c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_by_refresh_token("75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
-    nil
-
-## get_by_refresh_token_for(application, refresh_token, config \\ [])
-
-Gets an access token by the refresh token belonging to an application.
-
-## Examples
-
-    iex> get_by_refresh_token_for(application, "c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_by_refresh_token_for(application, "75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
-    nil
-
-## get_by_token(token, config \\ [])
-
-Gets a single access token.
-
-## Examples
-
-    iex> get_by_token("c341a5c7b331ef076eb4954668d54f590e0009e06b81b100191aa22c93044f3d", otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_by_token("75d72f326a69444a9287ea264617058dbbfe754d7071b8eef8294cbf4e7e0fdc", otp_app: :my_app)
-    nil
-
-## get_token_for(resource_owner, application, scopes, config \\ [])
-
-Gets the most recent, acccessible, matching access token for a resource owner.
-
-## Examples
-
-    iex> get_token_for(resource_owner, application, "read write", otp_app: :my_app)
-    %OauthAccessToken{}
-
-    iex> get_token_for(resource_owner, application, "read invalid", otp_app: :my_app)
-    nil
-
-## is_accessible?(token)
+## is_accessible?/1
 
 Checks if an access token can be accessed.
 
@@ -119,7 +107,19 @@ Checks if an access token can be accessed.
     iex> is_accessible?(inaccessible_token)
     false
 
-## revoke_previous_refresh_token(access_token, config \\ [])
+## get_by_previous_refresh_token_for/2
+
+Gets an old access token by previous refresh token.
+
+## Examples
+
+    iex> get_by_previous_refresh_token_for(new_access_token, otp_app: :my_app)
+    %OauthAccessToken{}
+
+    iex> get_by_previous_refresh_token_for(new_access_token, otp_app: :my_app)
+    nil
+
+## revoke_previous_refresh_token/2
 
 Revokes token with `refresh_token` equal to
 `previous_refresh_token` and clears `:previous_refresh_token`

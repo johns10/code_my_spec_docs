@@ -11,7 +11,3 @@ A definition for a custom metric.
 *   `parameterName` (*type:* `String.t`, *default:* `nil`) - Required. Immutable. Tagging name for this custom metric. If this is an event-scoped metric, then this is the event parameter name. May only contain alphanumeric and underscore charactes, starting with a letter. Max length of 40 characters for event-scoped metrics.
 *   `restrictedMetricType` (*type:* `list(String.t)`, *default:* `nil`) - Optional. Types of restricted data that this metric may contain. Required for metrics with CURRENCY measurement unit. Must be empty for metrics with a non-CURRENCY measurement unit.
 *   `scope` (*type:* `String.t`, *default:* `nil`) - Required. Immutable. The scope of this custom metric.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

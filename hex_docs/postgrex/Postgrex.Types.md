@@ -2,7 +2,7 @@
 
 Encodes and decodes between PostgreSQL protocol and Elixir values.
 
-## define(module, extensions, opts \\ [])
+## define/3
 
 Defines a type module with custom extensions and options.
 
@@ -79,16 +79,3 @@ See `Postgrex.Extension` for more information on extensions.
   * `:interval_decode_type` - The struct that intervals will be decoded
     into. Either `Postgrex.Interval` or `Duration` (Elixir 1.17.0+ only).
     Defaults to `Postgrex.Interval`.
-
-## oid/0
-
-PostgreSQL internal identifier that maps to a type. See
-<https://www.postgresql.org/docs/9.4/static/datatype-oid.html>.
-
-## state/0
-
-State used by the encoder/decoder functions
-
-## type/0
-
-Term used to describe type information

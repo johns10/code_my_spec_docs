@@ -2,11 +2,11 @@
 
 
 
-## request(method, client, url, body, headers, opts)
+## request/6
 
 Makes a request of given type to the given URL using the `OAuth2.AccessToken`.
 
-## request!(method, client, url, body, headers, opts)
+## request!/6
 
 Same as `request/6` but returns `OAuth2.Response` or raises an error if an
 error occurs during the request.

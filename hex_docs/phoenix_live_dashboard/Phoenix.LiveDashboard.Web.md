@@ -2,6 +2,6 @@
 
 
 
-## __using__(which)
+## __using__/1
 
 Convenience helper for using the functions above.

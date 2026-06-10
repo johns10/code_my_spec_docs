@@ -2,7 +2,7 @@
 
 Functions for generate ethereum addresses.
 
-## address()
+## address/0
 
 Return ethereum address
 
@@ -17,7 +17,7 @@ Return ethereum address
     iex> Faker.Blockchain.Ethereum.address()
     "0x264e3bcc9b5c2accb99a3a4993ad56b778dc26ed"
 
-## signature()
+## signature/0
 
 Return ethereum signature
 

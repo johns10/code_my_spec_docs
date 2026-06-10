@@ -2,42 +2,42 @@
 
 
 
-## archive_path(config, target, nif_version)
-
-Returns the full path to the precompiled archive.
-
-## available_target_urls(config, precompiler)
-
-Returns all available {{target, nif_version}, url} pairs available.
-
-## cache_dir()
+## cache_dir/0
 
 Returns user cache directory.
 
-## checksum(basename, contents)
-
-Computes the checksum and artefact for the given contents.
-
-## checksum_algo()
+## checksum_algo/0
 
 Returns the checksum algorithm
 
-## compress(archive_path, paths)
+## checksum/2
 
-Compresses the given files and computes its checksum and artefact.
+Computes the checksum and artefact for the given contents.
 
-## current_target_url(config, precompiler, current_nif_version)
-
-Returns the url for the current target.
-
-## verify_and_decompress(archive_path, app_priv)
-
-Verifies and decompresses the given `archive_path` at `app_priv`.
-
-## write_checksum_for_target!(artefact)
+## write_checksum_for_target!/1
 
 Writes checksum for the target to disk.
 
-## write_checksums!(checksums)
+## write_checksums!/1
 
 Writes checksums to disk.
+
+## archive_path/3
+
+Returns the full path to the precompiled archive.
+
+## compress/2
+
+Compresses the given files and computes its checksum and artefact.
+
+## verify_and_decompress/2
+
+Verifies and decompresses the given `archive_path` at `app_priv`.
+
+## available_target_urls/2
+
+Returns all available {{target, nif_version}, url} pairs available.
+
+## current_target_url/3
+
+Returns the url for the current target.

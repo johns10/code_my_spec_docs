@@ -99,45 +99,7 @@ does not include `Plug.CSRFProtection`.
     plug :fetch_session
     plug Plug.CSRFProtection
 
-## delete_csrf_token()
-
-Deletes the CSRF token from the process dictionary.
-
-This will force the token to be deleted once the response is sent.
-If you want to refresh the CSRF state, you can call `get_csrf_token/0`
-after `delete_csrf_token/0` to ensure a new token is generated.
-
-## dump_state()
-
-Dump CSRF state from the process dictionary.
-
-This allows it to be loaded in another process.
-
-See `load_state/2` for more information.
-
-## dump_state_from_session(session_token)
-
-Dumps the CSRF state from the session token.
-
-It expects the value of `get_session(conn, "_csrf_token")`
-as input. It returns `nil` if the given token is not valid.
-
-## get_csrf_token()
-
-Gets the CSRF token.
-
-Generates a token and stores it in the process
-dictionary if one does not exist.
-
-## get_csrf_token_for(url)
-
-Gets the CSRF token for the associated URL (as a string or a URI struct).
-
-If the URL has a host, a CSRF token that is tied to that
-host will be generated. If it is a relative path URL, a
-simple token emitted with `get_csrf_token/0` will be used.
-
-## load_state(secret_key_base, csrf_state)
+## load_state/2
 
 Load CSRF state into the process dictionary.
 
@@ -164,10 +126,48 @@ current process, you can dump the state from the session:
       Plug.CSRFProtection.load_state(secret_key_base, csrf_state)
     end)
 
-## valid_state_and_csrf_token?(state, csrf_token)
+## dump_state/0
+
+Dump CSRF state from the process dictionary.
+
+This allows it to be loaded in another process.
+
+See `load_state/2` for more information.
+
+## dump_state_from_session/1
+
+Dumps the CSRF state from the session token.
+
+It expects the value of `get_session(conn, "_csrf_token")`
+as input. It returns `nil` if the given token is not valid.
+
+## valid_state_and_csrf_token?/2
 
 Validates the `csrf_token` against the state.
 
 This is the mechanism used by the Plug itself to match the token
 received in the request (via headers or parameters) with the state
 (typically stored in the session).
+
+## get_csrf_token/0
+
+Gets the CSRF token.
+
+Generates a token and stores it in the process
+dictionary if one does not exist.
+
+## get_csrf_token_for/1
+
+Gets the CSRF token for the associated URL (as a string or a URI struct).
+
+If the URL has a host, a CSRF token that is tied to that
+host will be generated. If it is a relative path URL, a
+simple token emitted with `get_csrf_token/0` will be used.
+
+## delete_csrf_token/0
+
+Deletes the CSRF token from the process dictionary.
+
+This will force the token to be deleted once the response is sent.
+If you want to refresh the CSRF state, you can call `get_csrf_token/0`
+after `delete_csrf_token/0` to ensure a new token is generated.

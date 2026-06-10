@@ -1,1 +1,0 @@
-# Ecto.Adapters.SQLite3.Connection

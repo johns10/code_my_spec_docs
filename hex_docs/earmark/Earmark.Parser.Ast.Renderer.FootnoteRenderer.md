@@ -1,1 +1,0 @@
-# Earmark.Parser.Ast.Renderer.FootnoteRenderer

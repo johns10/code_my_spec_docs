@@ -2,21 +2,16 @@
 
 
 
-## nested_render(parent, view, opts)
-
-Renders a nested live view without spawning a server.
-
-  * `parent` - the parent `%Phoenix.LiveView.Socket{}`
-  * `view` - the child LiveView module
-
-Accepts the same options as `render/3`.
-
-## render(_, map)
+## render/2
 
 Acts as a view via put_view to maintain the
 controller render + instrumentation stack.
 
-## render(conn, view, opts)
+## verify_token/2
+
+Verifies a LiveView token.
+
+## render/3
 
 Renders a live view without spawning a LiveView server.
 
@@ -30,10 +25,15 @@ Renders a live view without spawning a LiveView server.
   * `:session` - the required map of session data
   * `:container` - the optional tuple for the HTML tag and DOM attributes
 
-## sign_token(endpoint, data)
+## nested_render/3
+
+Renders a nested live view without spawning a server.
+
+  * `parent` - the parent `%Phoenix.LiveView.Socket{}`
+  * `view` - the child LiveView module
+
+Accepts the same options as `render/3`.
+
+## sign_token/2
 
 Signs a LiveView token.
-
-## verify_token(endpoint, token)
-
-Verifies a LiveView token.

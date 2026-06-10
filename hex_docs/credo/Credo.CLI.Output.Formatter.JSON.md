@@ -1,1 +1,0 @@
-# Credo.CLI.Output.Formatter.JSON

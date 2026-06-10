@@ -93,65 +93,7 @@ delta by passing a tuple of value and a `delta` option (in seconds) to correspon
 
     assert_enqueued worker: MyApp.Worker, scheduled_at: {in_an_hour, delta: 10}
 
-## all_enqueued(opts)
-
-Retrieve all currently enqueued jobs matching a set of options.
-
-Only jobs matching all of the provided arguments will be returned. Additionally, jobs are
-returned in descending order where the most recently enqueued job will be listed first.
-
-## Examples
-
-Assert based on only _some_ of a job's args:
-
-    assert [%{args: %{"id" => 1}}] = all_enqueued(worker: MyWorker)
-
-Assert that exactly one job was inserted for a queue:
-
-    assert [%Oban.Job{}] = all_enqueued(queue: :alpha)
-
-Assert that there aren't any jobs enqueued for any queues or workers:
-
-    assert [] = all_enqueued()
-
-## assert_enqueued(opts)
-
-Assert that a job with matching fields is enqueued.
-
-Only values for the provided fields are checked. For example, an assertion made on `worker:
-"MyWorker"` will match _any_ jobs for that worker, regardless of every other field.
-
-## Examples
-
-Assert that a job is enqueued for a certain worker and args:
-
-    assert_enqueued worker: MyWorker, args: %{id: 1}
-
-Assert that a job is enqueued for a particular queue and priority:
-
-    assert_enqueued queue: :business, priority: 3
-
-Assert that a job's args deeply match:
-
-    assert_enqueued args: %{config: %{enabled: true}}
-
-Use the `:_` wildcard to assert that a job's meta has a key with any value:
-
-    assert_enqueued meta: %{batch_id: :_}
-
-## assert_enqueued(repo, opts)
-
-Assert that a job with particular options is or will be enqueued within a timeout period.
-
-See `assert_enqueued/1` for additional details.
-
-## Examples
-
-Assert that a job will be enqueued in the next 100ms:
-
-    assert_enqueued [worker: MyWorker], 100
-
-## build_job(worker, args, opts)
+## build_job/3
 
 Construct a job from a worker, args, and options.
 
@@ -176,7 +118,7 @@ Build a job with custom options:
 
     assert %{attempt: 5, priority: 9} = build_job(MyWorker, %{}, attempt: 5, priority: 9)
 
-## perform_job(job, conf_opts)
+## perform_job/2
 
 Execute a job using the given config options.
 
@@ -192,7 +134,7 @@ Execute a job with a custom prefix and repo:
 
     assert :ok = perform_job(job, prefix: "private", repo: MyApp.Repo)
 
-## perform_job(worker, args, opts)
+## perform_job/3
 
 Construct a job and execute it with a worker module.
 
@@ -231,7 +173,65 @@ Cause a test failure because the provided worker isn't real:
 
     assert :ok = perform_job(Vorker, %{"id" => 1})
 
-## refute_enqueued(opts)
+## all_enqueued/1
+
+Retrieve all currently enqueued jobs matching a set of options.
+
+Only jobs matching all of the provided arguments will be returned. Additionally, jobs are
+returned in descending order where the most recently enqueued job will be listed first.
+
+## Examples
+
+Assert based on only _some_ of a job's args:
+
+    assert [%{args: %{"id" => 1}}] = all_enqueued(worker: MyWorker)
+
+Assert that exactly one job was inserted for a queue:
+
+    assert [%Oban.Job{}] = all_enqueued(queue: :alpha)
+
+Assert that there aren't any jobs enqueued for any queues or workers:
+
+    assert [] = all_enqueued()
+
+## assert_enqueued/1
+
+Assert that a job with matching fields is enqueued.
+
+Only values for the provided fields are checked. For example, an assertion made on `worker:
+"MyWorker"` will match _any_ jobs for that worker, regardless of every other field.
+
+## Examples
+
+Assert that a job is enqueued for a certain worker and args:
+
+    assert_enqueued worker: MyWorker, args: %{id: 1}
+
+Assert that a job is enqueued for a particular queue and priority:
+
+    assert_enqueued queue: :business, priority: 3
+
+Assert that a job's args deeply match:
+
+    assert_enqueued args: %{config: %{enabled: true}}
+
+Use the `:_` wildcard to assert that a job's meta has a key with any value:
+
+    assert_enqueued meta: %{batch_id: :_}
+
+## assert_enqueued/2
+
+Assert that a job with particular options is or will be enqueued within a timeout period.
+
+See `assert_enqueued/1` for additional details.
+
+## Examples
+
+Assert that a job will be enqueued in the next 100ms:
+
+    assert_enqueued [worker: MyWorker], 100
+
+## refute_enqueued/1
 
 Refute that a job with particular options has been enqueued.
 
@@ -255,7 +255,7 @@ Use the `:_` wildcard to refute that a job's meta has a key with any value:
 
     refute_enqueued meta: %{batch_id: :_}
 
-## refute_enqueued(repo, opts)
+## refute_enqueued/2
 
 Refute that a job with particular options is or will be enqueued within a timeout period.
 
@@ -267,7 +267,7 @@ Refute that a job will be enqueued in the next 100ms:
 
     refute_enqueued [worker: MyWorker], 100
 
-## with_testing_mode(mode, fun)
+## with_testing_mode/2
 
 Change the testing mode within the context of a function.
 

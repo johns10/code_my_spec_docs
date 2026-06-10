@@ -4,16 +4,7 @@ Default implementation for the `Gettext.Interpolation` behaviour.
 
 Replaces `%{binding_name}` with the string value of the `binding_name` binding.
 
-## message_format()
-
-Implementation of `c:Gettext.Interpolation.message_format/0`.
-
-## Examples
-
-    iex> Gettext.Interpolation.Default.message_format()
-    "elixir-format"
-
-## runtime_interpolate(message, bindings)
+## runtime_interpolate/2
 
 Interpolate a message or interpolatable with the given bindings.
 
@@ -44,7 +35,7 @@ and `missing_bindings` is a list of atoms representing bindings that are in
     iex> Gettext.Interpolation.Default.runtime_interpolate(interpolatable, %{name: "José"})
     {:missing_bindings, "Hello José, you have %{count} unread messages", [:count]}
 
-## compile_interpolate(message_type, message, bindings)
+## compile_interpolate/3
 
 Compiles a static message to interpolate with dynamic bindings.
 
@@ -58,8 +49,11 @@ where `incomplete_string` is the string with only the present bindings interpola
 and `missing_bindings` is a list of atoms representing bindings that are in
 `interpolatable` but not in `bindings`.
 
-## interpolatable/0
+## message_format/0
 
-Something that can be interpolated.
+Implementation of `c:Gettext.Interpolation.message_format/0`.
 
-It's either a string (a literal) or an atom (representing a binding name).
+## Examples
+
+    iex> Gettext.Interpolation.Default.message_format()
+    "elixir-format"

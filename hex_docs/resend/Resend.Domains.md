@@ -2,7 +2,7 @@
 
 Manage domains in Resend.
 
-## create(client \\ Resend.client(), opts)
+## create/2
 
 Creates a new domain.
 
@@ -11,18 +11,18 @@ Parameter options:
   * `:name` - The domain name (required)
   * `:region` - Region to deliver emails from, on of: `["us-east-1", "eu-west-1", "sa-east-1"]`
 
-## get(client \\ Resend.client(), domain_id)
+## get/2
 
 Gets a domain given an ID.
 
-## list(client \\ Resend.client())
+## verify/2
+
+Begins the verification process for a domain.
+
+## list/1
 
 Lists all domains.
 
-## remove(client \\ Resend.client(), domain_id)
+## remove/2
 
 Removes a domain. Caution: This can't be undone!
-
-## verify(client \\ Resend.client(), domain_id)
-
-Begins the verification process for a domain.

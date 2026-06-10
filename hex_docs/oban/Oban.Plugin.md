@@ -36,18 +36,3 @@ Defining a basic plugin that satisfies the minimum behaviour:
         end
       end
     end
-
-## format_logger_output/2
-
-Format telemetry event meta emitted by the for inclusion in the default logger.
-
-## start_link/1
-
-Starts a Plugin process linked to the current process.
-
-Plugins are typically started as part of an Oban supervision tree and will receive the current
-configuration as `:conf`, along with a `:name` and any other provided options.
-
-## validate/1
-
-Validate the structure, presence, or values of keyword options.

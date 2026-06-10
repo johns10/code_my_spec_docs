@@ -2,7 +2,7 @@
 
 Functions for generating Lorem Ipsum data
 
-## characters(range_or_length \\ 15..255)
+## characters/1
 
 Returns a character list of the given length.
 
@@ -22,7 +22,7 @@ Defaults to a range between 15 and 255 (inclusive).
     iex> Faker.Lorem.characters(7)
     'jycADSd'
 
-## paragraph(range \\ 2..5)
+## paragraph/1
 
 Returns a string with a given amount of sentences.
 
@@ -42,7 +42,7 @@ Defaults to a range between 2 and 5 (inclusive).
     iex> Faker.Lorem.paragraph(2)
     "Sequi ducimus qui voluptates magni quisquam sed odio. Vel error non impedit tempora minus."
 
-## paragraphs(range \\ 2..5)
+## paragraphs/1
 
 Returns a list with a given amount of paragraphs.
 
@@ -62,7 +62,7 @@ Defaults to a range between 2 and 5 (inclusive)
     iex> Faker.Lorem.paragraphs(2)
     ["Voluptatem natus amet eius eos non dolorum quaerat dolores pariatur. Aliquam rerum ab voluptatem exercitationem nobis enim delectus tempore eos. Ex enim dolore ut consequuntur eaque expedita dicta eius totam. A eveniet ab magni rerum enim consequatur.", "Nihil laudantium ea veniam necessitatibus qui. Minus ad omnis quaerat quidem impedit sint. Id ut repellat qui repudiandae!"]
 
-## sentence(range \\ 4..10)
+## sentence/1
 
 Returns a string with a given amount of words.
 
@@ -82,7 +82,7 @@ Defaults to a range between 4 and 10 (inclusive).
     iex> Faker.Lorem.sentence(5)
     "Possimus soluta asperiores qui vitae."
 
-## sentence(num, mark)
+## sentence/2
 
 Returns a string with an amount of words equal to the parameter provided,
 concatenating the specified mark
@@ -98,7 +98,7 @@ concatenating the specified mark
     iex> Faker.Lorem.sentence(3, ";")
     "Expedita cumque est;"
 
-## sentences(range \\ 2..5)
+## sentences/1
 
 Returns a list of strings of the given length, each representing a sentence.
 
@@ -118,22 +118,7 @@ Defaults to a range between 2 and 5 (inclusive).
     iex> Faker.Lorem.sentences(3)
     ["Dicta dolores at ut delectus magni atque eos beatae nulla.", "Laudantium qui dolorem pariatur voluptatibus sed et enim?", "Minima laudantium voluptate reiciendis repellat."]
 
-## word()
-
-Returns a random word from @data
-
-## Examples
-
-    iex> Faker.Lorem.word()
-    "aliquam"
-    iex> Faker.Lorem.word()
-    "ut"
-    iex> Faker.Lorem.word()
-    "sint"
-    iex> Faker.Lorem.word()
-    "deleniti"
-
-## words(range \\ 3..6)
+## words/1
 
 Returns a list of strings of the given length, each representing a word.
 

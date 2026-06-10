@@ -7,7 +7,7 @@ Credo builds upon four building blocks:
 - `Credo.Check` - the default Credo checks
 - `Credo.Code` - all analysis tools used by Credo during analysis
 
-## run(argv_or_exec)
+## run/1
 
 Runs Credo with the given `argv` and returns its final `Credo.Execution` struct.
 

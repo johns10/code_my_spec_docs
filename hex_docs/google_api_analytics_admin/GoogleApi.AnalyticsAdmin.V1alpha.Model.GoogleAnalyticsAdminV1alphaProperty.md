@@ -17,7 +17,3 @@ A resource message representing a Google Analytics property.
 *   `serviceLevel` (*type:* `String.t`, *default:* `nil`) - Output only. The Google Analytics service level that applies to this property.
 *   `timeZone` (*type:* `String.t`, *default:* `nil`) - Required. Reporting Time Zone, used as the day boundary for reports, regardless of where the data originates. If the time zone honors DST, Analytics will automatically adjust for the changes. NOTE: Changing the time zone only affects data going forward, and is not applied retroactively. Format: https://www.iana.org/time-zones Example: "America/Los_Angeles"
 *   `updateTime` (*type:* `DateTime.t`, *default:* `nil`) - Output only. Time when entity payload fields were last updated.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

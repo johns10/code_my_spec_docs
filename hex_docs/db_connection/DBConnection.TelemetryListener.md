@@ -58,12 +58,6 @@ recommend passing the repository as the tag. In your supervision tree:
   * `:pid` - The connection pid
   * `:tag` - The connection pool tag
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## start_link(opts \\ [])
+## start_link/1
 
 Starts a telemetry listener

@@ -1,1 +1,0 @@
-# Floki.HTML.Tokenizer.CharrefState

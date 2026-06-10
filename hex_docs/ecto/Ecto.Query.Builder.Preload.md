@@ -2,19 +2,7 @@
 
 
 
-## apply(query, preloads, assocs)
-
-The callback applied by `build/4` to build the query.
-
-## build(query, binding, expr, env)
-
-Applies the preloaded value into the query.
-
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
-
-## escape(preloads, vars)
+## escape/2
 
 Escapes a preload.
 
@@ -54,7 +42,27 @@ nested as a rose tree.
     iex> escape([foo: [bar: {:c, [], nil}]], [c: 1])
     ** (Ecto.Query.CompileError) cannot preload join association `:bar` with binding `c` because parent preload is not a join association
 
-## expand(preloads, query)
+## key!/1
+
+Called at runtime to check dynamic preload keys.
+
+## build/4
+
+Applies the preloaded value into the query.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## apply/3
+
+The callback applied by `build/4` to build the query.
+
+## preload!/2
+
+Called at runtime to assemble preload.
+
+## expand/2
 
 Expands preloads at runtime.
 
@@ -88,11 +96,3 @@ Expands preloads at runtime.
     ...>   Ecto.Query.from(a in "a", join: b in "b", on: true, join: c in "c", on: true)
     ...> )
     {[], [b: {1, [c: {2, []}]}]}
-
-## key!(key)
-
-Called at runtime to check dynamic preload keys.
-
-## preload!(query, preload)
-
-Called at runtime to assemble preload.

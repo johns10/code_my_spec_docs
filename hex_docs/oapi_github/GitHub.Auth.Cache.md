@@ -28,20 +28,14 @@ To enable caching, include this module in your application's top-level superviso
       end
     end
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## get(key)
+## get/1
 
 Get a previously stored value if unexpired
 
 Here the key is presumed to be `{:app, app_id}` or `{:installation, installation_id}`, though
 any key will work. Returns `:error` if the key is not found or if the stored value has expired.
 
-## put(key, expiration, value)
+## put/3
 
 Set a value in the cache
 

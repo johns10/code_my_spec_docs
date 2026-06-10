@@ -2,11 +2,11 @@
 
 This module provides helper functions to analyse tokens returned by `Credo.Code.to_tokens/1`.
 
-## eol?(token)
+## eol?/1
 
 Returns `true` if the given `token` contains a line break.
 
-## position(token)
+## position/1
 
 Returns the position of a token in the form
 

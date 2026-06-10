@@ -124,7 +124,26 @@ called:
       end
     end
 
-## compile(env, pipeline, builder_opts)
+## plug/2
+
+A macro that stores a new plug. `opts` will be passed unchanged to the new
+plug.
+
+This macro doesn't add any guards when adding the new plug to the pipeline;
+for more information about adding plugs with guards see `compile/3`.
+
+## Examples
+
+    plug Plug.Logger               # plug module
+    plug :foo, some_options: true  # plug function
+
+## builder_opts/0
+
+Using `builder_opts/0` is deprecated.
+
+Instead use `:copy_opts_to_assign` on `use Plug.Builder`.
+
+## compile/3
 
 Compiles a plug pipeline.
 
@@ -145,22 +164,3 @@ to the connection and the second element being the compiled quoted pipeline.
       {Plug.Logger, [], true}, # no guards, as added by the Plug.Builder.plug/2 macro
       {Plug.Head, [], quote(do: a when is_binary(a))}
     ], [])
-
-## builder_opts()
-
-Using `builder_opts/0` is deprecated.
-
-Instead use `:copy_opts_to_assign` on `use Plug.Builder`.
-
-## plug(plug, opts \\ [])
-
-A macro that stores a new plug. `opts` will be passed unchanged to the new
-plug.
-
-This macro doesn't add any guards when adding the new plug to the pipeline;
-for more information about adding plugs with guards see `compile/3`.
-
-## Examples
-
-    plug Plug.Logger               # plug module
-    plug :foo, some_options: true  # plug function

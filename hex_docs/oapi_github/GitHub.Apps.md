@@ -2,7 +2,7 @@
 
 Provides API endpoints related to apps
 
-## add_repo_to_installation_for_authenticated_user(installation_id, repository_id, opts \\ [])
+## add_repo_to_installation_for_authenticated_user/3
 
 Add a repository to an app installation
 
@@ -12,7 +12,7 @@ Add a single repository to an installation. The authenticated user must have adm
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#add-a-repository-to-an-app-installation)
 
-## check_token(client_id, body, opts \\ [])
+## check_token/3
 
 Check a token
 
@@ -22,7 +22,7 @@ OAuth applications and GitHub applications with OAuth authorizations can use thi
 
   * [API method documentation](https://docs.github.com/rest/apps/oauth-applications#check-a-token)
 
-## create_from_manifest(code, opts \\ [])
+## create_from_manifest/2
 
 Create a GitHub App from a manifest
 
@@ -32,7 +32,7 @@ Use this endpoint to complete the handshake necessary when implementing the [Git
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#create-a-github-app-from-a-manifest)
 
-## create_installation_access_token(installation_id, body, opts \\ [])
+## create_installation_access_token/3
 
 Create an installation access token for an app
 
@@ -50,7 +50,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#create-an-installation-access-token-for-an-app)
 
-## delete_authorization(client_id, body, opts \\ [])
+## delete_authorization/3
 
 Delete an app authorization
 
@@ -61,7 +61,7 @@ Deleting an application's grant will also delete all OAuth tokens associated wit
 
   * [API method documentation](https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization)
 
-## delete_installation(installation_id, opts \\ [])
+## delete_installation/2
 
 Delete an installation for the authenticated app
 
@@ -73,7 +73,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#delete-an-installation-for-the-authenticated-app)
 
-## delete_token(client_id, body, opts \\ [])
+## delete_token/3
 
 Delete an app token
 
@@ -83,7 +83,7 @@ OAuth  or GitHub application owners can revoke a single token for an OAuth appli
 
   * [API method documentation](https://docs.github.com/rest/apps/oauth-applications#delete-an-app-token)
 
-## get_authenticated(opts \\ [])
+## get_authenticated/1
 
 Get the authenticated app
 
@@ -95,7 +95,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-the-authenticated-app)
 
-## get_by_slug(app_slug, opts \\ [])
+## get_by_slug/2
 
 Get an app
 
@@ -105,7 +105,7 @@ Get an app
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-an-app)
 
-## get_installation(installation_id, opts \\ [])
+## get_installation/2
 
 Get an installation for the authenticated app
 
@@ -117,7 +117,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-an-installation-for-the-authenticated-app)
 
-## get_org_installation(org, opts \\ [])
+## get_org_installation/2
 
 Get an organization installation for the authenticated app
 
@@ -129,7 +129,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app)
 
-## get_repo_installation(owner, repo, opts \\ [])
+## get_repo_installation/3
 
 Get a repository installation for the authenticated app
 
@@ -141,7 +141,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-a-repository-installation-for-the-authenticated-app)
 
-## get_subscription_plan_for_account(account_id, opts \\ [])
+## get_subscription_plan_for_account/2
 
 Get a subscription plan for an account
 
@@ -153,7 +153,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#get-a-subscription-plan-for-an-account)
 
-## get_subscription_plan_for_account_stubbed(account_id, opts \\ [])
+## get_subscription_plan_for_account_stubbed/2
 
 Get a subscription plan for an account (stubbed)
 
@@ -165,7 +165,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#get-a-subscription-plan-for-an-account-stubbed)
 
-## get_user_installation(username, opts \\ [])
+## get_user_installation/2
 
 Get a user installation for the authenticated app
 
@@ -177,7 +177,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#get-a-user-installation-for-the-authenticated-app)
 
-## get_webhook_config_for_app(opts \\ [])
+## get_webhook_config_for_app/1
 
 Get a webhook configuration for an app
 
@@ -189,7 +189,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/webhooks#get-a-webhook-configuration-for-an-app)
 
-## get_webhook_delivery(delivery_id, opts \\ [])
+## get_webhook_delivery/2
 
 Get a delivery for an app webhook
 
@@ -201,7 +201,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/webhooks#get-a-delivery-for-an-app-webhook)
 
-## list_accounts_for_plan(plan_id, opts \\ [])
+## list_accounts_for_plan/2
 
 List accounts for a plan
 
@@ -220,7 +220,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-accounts-for-a-plan)
 
-## list_accounts_for_plan_stubbed(plan_id, opts \\ [])
+## list_accounts_for_plan_stubbed/2
 
 List accounts for a plan (stubbed)
 
@@ -239,7 +239,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-accounts-for-a-plan-stubbed)
 
-## list_installation_repos_for_authenticated_user(installation_id, opts \\ [])
+## list_installation_repos_for_authenticated_user/2
 
 List repositories accessible to the user access token
 
@@ -258,7 +258,7 @@ The access the user has to each repository is included in the hash under the `pe
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-user-access-token)
 
-## list_installation_requests_for_authenticated_app(opts \\ [])
+## list_installation_requests_for_authenticated_app/1
 
 List installation requests for the authenticated app
 
@@ -273,7 +273,7 @@ Lists all the pending installation requests for the authenticated GitHub App.
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#list-installation-requests-for-the-authenticated-app)
 
-## list_installations(opts \\ [])
+## list_installations/1
 
 List installations for the authenticated app
 
@@ -292,7 +292,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#list-installations-for-the-authenticated-app)
 
-## list_installations_for_authenticated_user(opts \\ [])
+## list_installations_for_authenticated_user/1
 
 List app installations accessible to the user access token
 
@@ -311,7 +311,7 @@ You can find the permissions for the installation under the `permissions` key.
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#list-app-installations-accessible-to-the-user-access-token)
 
-## list_plans(opts \\ [])
+## list_plans/1
 
 List plans
 
@@ -328,7 +328,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-plans)
 
-## list_plans_stubbed(opts \\ [])
+## list_plans_stubbed/1
 
 List plans (stubbed)
 
@@ -345,7 +345,7 @@ GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/a
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-plans-stubbed)
 
-## list_repos_accessible_to_installation(opts \\ [])
+## list_repos_accessible_to_installation/1
 
 List repositories accessible to the app installation
 
@@ -360,7 +360,7 @@ List repositories that an app installation can access.
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#list-repositories-accessible-to-the-app-installation)
 
-## list_subscriptions_for_authenticated_user(opts \\ [])
+## list_subscriptions_for_authenticated_user/1
 
 List subscriptions for the authenticated user
 
@@ -375,7 +375,7 @@ Lists the active subscriptions for the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-subscriptions-for-the-authenticated-user)
 
-## list_subscriptions_for_authenticated_user_stubbed(opts \\ [])
+## list_subscriptions_for_authenticated_user_stubbed/1
 
 List subscriptions for the authenticated user (stubbed)
 
@@ -390,7 +390,7 @@ Lists the active subscriptions for the authenticated user.
 
   * [API method documentation](https://docs.github.com/rest/apps/marketplace#list-subscriptions-for-the-authenticated-user-stubbed)
 
-## list_webhook_deliveries(opts \\ [])
+## list_webhook_deliveries/1
 
 List deliveries for an app webhook
 
@@ -408,7 +408,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/webhooks#list-deliveries-for-an-app-webhook)
 
-## redeliver_webhook_delivery(delivery_id, opts \\ [])
+## redeliver_webhook_delivery/2
 
 Redeliver a delivery for an app webhook
 
@@ -420,7 +420,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/webhooks#redeliver-a-delivery-for-an-app-webhook)
 
-## remove_repo_from_installation_for_authenticated_user(installation_id, repository_id, opts \\ [])
+## remove_repo_from_installation_for_authenticated_user/3
 
 Remove a repository from an app installation
 
@@ -430,7 +430,7 @@ Remove a single repository from an installation. The authenticated user must hav
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#remove-a-repository-from-an-app-installation)
 
-## reset_token(client_id, body, opts \\ [])
+## reset_token/3
 
 Reset a token
 
@@ -440,7 +440,7 @@ OAuth applications and GitHub applications with OAuth authorizations can use thi
 
   * [API method documentation](https://docs.github.com/rest/apps/oauth-applications#reset-a-token)
 
-## revoke_installation_access_token(opts \\ [])
+## revoke_installation_access_token/1
 
 Revoke an installation access token
 
@@ -452,7 +452,7 @@ Once an installation token is revoked, the token is invalidated and cannot be us
 
   * [API method documentation](https://docs.github.com/rest/apps/installations#revoke-an-installation-access-token)
 
-## scope_token(client_id, body, opts \\ [])
+## scope_token/3
 
 Create a scoped access token
 
@@ -470,7 +470,7 @@ as the username and password.
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#create-a-scoped-access-token)
 
-## suspend_installation(installation_id, opts \\ [])
+## suspend_installation/2
 
 Suspend an app installation
 
@@ -482,7 +482,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#suspend-an-app-installation)
 
-## unsuspend_installation(installation_id, opts \\ [])
+## unsuspend_installation/2
 
 Unsuspend an app installation
 
@@ -494,7 +494,7 @@ You must use a [JWT](https://docs.github.com/apps/building-github-apps/authentic
 
   * [API method documentation](https://docs.github.com/rest/apps/apps#unsuspend-an-app-installation)
 
-## update_webhook_config_for_app(body, opts \\ [])
+## update_webhook_config_for_app/2
 
 Update a webhook configuration for an app
 

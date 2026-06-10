@@ -14,13 +14,7 @@ Implements `ExAws.Operation.perform/2`
 
 See `ExAws.S3.upload/4` for options
 
-## stream_file(path, opts \\ [])
-
-Open a file stream for use in an upload.
-
-Chunk size must be at least 5 MiB. Defaults to 5 MiB
-
-## upload_chunk!(arg, op, config)
+## upload_chunk!/3
 
 Upload a chunk for an operation.
 

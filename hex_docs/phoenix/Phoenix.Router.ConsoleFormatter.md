@@ -2,6 +2,6 @@
 
 
 
-## format(router, endpoint \\ nil)
+## format/2
 
 Format the routes for printing.

@@ -42,21 +42,7 @@ case Anubis.MCP.Response.unwrap(response) do
 end
 ```
 
-## error?(arg1)
-
-Checks if the response has a domain error.
-
-## Examples
-
-    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.error?(response)
-    false
-    
-    iex> error_response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.error?(error_response)
-    true
-
-## from_json_rpc(map)
+## from_json_rpc/1
 
 Creates a Response struct from a JSON-RPC response.
 
@@ -74,44 +60,7 @@ Automatically detects domain errors by checking for the "isError" field.
     iex> Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true}, "id" => "req_123"})
     %Anubis.MCP.Response{result: %{"isError" => true}, id: "req_123", is_error: true}
 
-## get_id(response)
-
-Gets the request ID associated with this response.
-
-## Examples
-
-    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.get_id(response)
-    "req_123"
-
-## get_result(response)
-
-Gets the result data from the response.
-
-This function returns the raw result regardless of whether it represents
-a success or domain error.
-
-## Examples
-
-    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.get_result(response)
-    %{"data" => "value"}
-
-## success?(arg1)
-
-Checks if the response is successful (no domain error).
-
-## Examples
-
-    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.success?(response)
-    true
-    
-    iex> error_response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true}, "id" => "req_123"})
-    iex> Anubis.MCP.Response.success?(error_response)
-    false
-
-## unwrap(response)
+## unwrap/1
 
 Unwraps the response, returning the raw result.
 
@@ -127,3 +76,54 @@ a success or domain error.
     iex> error_response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true, "reason" => "not_found"}, "id" => "req_123"})
     iex> Anubis.MCP.Response.unwrap(error_response)
     %{"isError" => true, "reason" => "not_found"}
+
+## success?/1
+
+Checks if the response is successful (no domain error).
+
+## Examples
+
+    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.success?(response)
+    true
+    
+    iex> error_response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.success?(error_response)
+    false
+
+## error?/1
+
+Checks if the response has a domain error.
+
+## Examples
+
+    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.error?(response)
+    false
+    
+    iex> error_response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"isError" => true}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.error?(error_response)
+    true
+
+## get_result/1
+
+Gets the result data from the response.
+
+This function returns the raw result regardless of whether it represents
+a success or domain error.
+
+## Examples
+
+    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{"data" => "value"}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.get_result(response)
+    %{"data" => "value"}
+
+## get_id/1
+
+Gets the request ID associated with this response.
+
+## Examples
+
+    iex> response = Anubis.MCP.Response.from_json_rpc(%{"result" => %{}, "id" => "req_123"})
+    iex> Anubis.MCP.Response.get_id(response)
+    "req_123"

@@ -106,7 +106,7 @@ This library also supports JWT tokens for client authentication as per
       end
     end
 
-## authorize_url(config)
+## authorize_url/1
 
 Generate authorization URL for request phase.
 
@@ -118,7 +118,7 @@ Generate authorization URL for request phase.
     users to, defaults to `/oauth/authorize`
   - `:authorization_params` - The authorization parameters, defaults to `[]`
 
-## callback(config, params, strategy \\ __MODULE__)
+## callback/3
 
 Callback phase for generating access token with authorization code and fetch
 user data. Returns a map with access token in `:token` and user data in
@@ -132,20 +132,20 @@ user data. Returns a map with access token in `:token` and user data in
   - `:session_params` - The session parameters that was returned from
     `authorize_url/1`, optional
 
-## fetch_user(config, token, params \\ [], headers \\ [])
+## grant_access_token/3
+
+Grants an access token.
+
+## refresh_access_token/3
+
+Refreshes the access token.
+
+## request/6
+
+Performs a HTTP request to the API using the access token.
+
+## fetch_user/4
 
 Fetch user data with the access token.
 
 Uses `request/6` to fetch the user data.
-
-## grant_access_token(config, grant_type, params)
-
-Grants an access token.
-
-## refresh_access_token(config, token, params \\ [])
-
-Refreshes the access token.
-
-## request(config, token, method, url, params \\ [], headers \\ [])
-
-Performs a HTTP request to the API using the access token.

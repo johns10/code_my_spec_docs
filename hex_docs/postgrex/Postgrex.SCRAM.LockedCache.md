@@ -2,17 +2,11 @@
 
 
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## get(key)
+## get/1
 
 Reads the cache key.
 
-## run(key, fun)
+## run/2
 
 Reads cache key or executes the given function if not
 cached yet.

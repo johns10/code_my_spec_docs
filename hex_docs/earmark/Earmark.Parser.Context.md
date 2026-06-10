@@ -2,6 +2,6 @@
 
 
 
-## set_value(ctx, value)
+## set_value/2
 
 Convenience method to prepend to the value list

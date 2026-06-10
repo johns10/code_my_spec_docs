@@ -2,80 +2,80 @@
 
 
 
-## all_attributes(tree, name)
+## filter/2
+
+Filters nodes according to `fun`. Walks the tree in a post-walk manner, visiting children before parents.
+
+## reverse_filter/2
+
+Filters nodes and returns them in reverse order.
+
+## tag/1
+
+Returns the tag name of the node.
+
+## attribute/2
+
+Returns the value of the attribute `key` from the node or nil if not found.
+
+## to_html/1
+
+Returns the HTML representation of the node.
+
+## to_text/2
+
+Returns the text representation of the node, removing extra whitespace.
+
+## by_id!/2
+
+Returns the node with the given `id`, raises an error if not found.
+
+## child_nodes/1
+
+Returns the child nodes of the node.
+
+## attrs/1
+
+Returns all attributes of the node.
+
+## inner_html!/2
+
+Returns the children of the node with the given `id`, raises an error if not found.
+
+## all_attributes/2
 
 Returns all values of the attribute `name` from the node.
 
-## all_values(tree)
+## all_values/1
 
 Returns all values of the attributes from the node.
 
 Handles phx-value-* attributes.
 
-## attribute(node, key)
-
-Returns the value of the attribute `key` from the node or nil if not found.
-
-## attrs(tree)
-
-Returns all attributes of the node.
-
-## by_id!(tree, id)
-
-Returns the node with the given `id`, raises an error if not found.
-
-## child_nodes(tree)
-
-Returns the child nodes of the node.
-
-## filter(node, fun)
-
-Filters nodes according to `fun`. Walks the tree in a post-walk manner, visiting children before parents.
-
-## find_live_views(tree)
-
-Find live views in the given HTML tree.
-
-## inner_html!(tree, id)
-
-Returns the children of the node with the given `id`, raises an error if not found.
-
-## inspect_html(nodes)
-
-Returns an HTML representation of the nodes for showing in error messages.
-
-## normalize_to_tree(html, opts \\ [])
-
-Normalizes the given HTML to a tree with optional sorting of attributes.
-
-## reduce(tree, acc, fun)
+## reduce/3
 
 Reduces the tree with the given function.
 
-## remove_stream_children(html_tree)
+## walk/2
 
-Removes stream children from the given HTML tree.
+Walks the tree and updates nodes based on the given function.
 
-## reverse_filter(tree, fun)
-
-Filters nodes and returns them in reverse order.
-
-## set_attr(el, name, val)
+## set_attr/3
 
 Sets the attribute `name` to the value `val` on the node.
 
-## tag(arg1)
+## inspect_html/1
 
-Returns the tag name of the node.
+Returns an HTML representation of the nodes for showing in error messages.
 
-## to_html(text)
+## find_live_views/1
 
-Returns the HTML representation of the node.
+Find live views in the given HTML tree.
 
-## to_text(tree, trim \\ true)
+## remove_stream_children/1
 
-Returns the text representation of the node, removing extra whitespace.
+Removes stream children from the given HTML tree.
 
-## walk(tree, fun)
+## normalize_to_tree/2
 
-Walks the tree and updates nodes based on the given function.
+Normalizes the given HTML to a tree with optional sorting of attributes.

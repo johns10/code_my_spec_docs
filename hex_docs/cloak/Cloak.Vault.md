@@ -117,34 +117,7 @@ named after the Vault, e.g. `MyApp.Vault.Config`. All encryption and
 decryption is performed in your local process, reading configuration from
 the vault's ETS table.
 
-## decrypt/1
-
-Decrypts a binary with the configured cipher that generated the binary.
-Automatically detects which cipher to use, based on the ciphertext.
-
-## decrypt!/1
-
-Like `decrypt/1`, but raises any errors.
-
-## encrypt/1
-
-Encrypts a binary using the first configured cipher in the vault's
-configured `:ciphers` list.
-
-## encrypt/2
-
-Encrypts a binary using the vault's configured cipher with the
-corresponding label.
-
-## encrypt!/1
-
-Like `encrypt/1`, but raises any errors.
-
-## encrypt!/2
-
-Like `encrypt/2`, but raises any errors.
-
-## json_library/0
+## __using__/1
 
 The JSON library the vault uses to convert maps and lists into
 JSON binaries before encryption.

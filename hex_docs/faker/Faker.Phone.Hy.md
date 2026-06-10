@@ -2,22 +2,22 @@
 
 Functions for generating phone related data in Armenian
 
-## cell_number()
+## number/0
 
-Returns a random cell phone number.
+Returns a random phone number.
 
 ## Examples
 
-    iex> Faker.Phone.Hy.cell_number()
-    "15-426461"
-    iex> Faker.Phone.Hy.cell_number()
+    iex> Faker.Phone.Hy.number()
+    "10.542646"
+    iex> Faker.Phone.Hy.number()
     "83-297052"
-    iex> Faker.Phone.Hy.cell_number()
-    "(57) 020303"
-    iex> Faker.Phone.Hy.cell_number()
-    "09.733760"
+    iex> Faker.Phone.Hy.number()
+    "(70) 203032"
+    iex> Faker.Phone.Hy.number()
+    "(733) 76033"
 
-## landline_number()
+## landline_number/0
 
 Returns a random landline phone number.
 
@@ -32,17 +32,17 @@ Returns a random landline phone number.
     iex> Faker.Phone.Hy.landline_number()
     "097.33760"
 
-## number()
+## cell_number/0
 
-Returns a random phone number.
+Returns a random cell phone number.
 
 ## Examples
 
-    iex> Faker.Phone.Hy.number()
-    "10.542646"
-    iex> Faker.Phone.Hy.number()
+    iex> Faker.Phone.Hy.cell_number()
+    "15-426461"
+    iex> Faker.Phone.Hy.cell_number()
     "83-297052"
-    iex> Faker.Phone.Hy.number()
-    "(70) 203032"
-    iex> Faker.Phone.Hy.number()
-    "(733) 76033"
+    iex> Faker.Phone.Hy.cell_number()
+    "(57) 020303"
+    iex> Faker.Phone.Hy.cell_number()
+    "09.733760"

@@ -28,33 +28,20 @@ For integration with existing Phoenix/Plug applications:
     forward "/mcp", Anubis.Server.Transport.StreamableHTTP.Plug,
       server: MyApp.MCPServer
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## get_sse_handler(transport, session_id)
-
-Returns the SSE handler pid for a session, or `nil` if none is connected.
-
-## register_sse_handler(transport, session_id)
+## register_sse_handler/2
 
 Registers the calling process as the SSE handler for a session.
 
 Called by the Plug when establishing an SSE connection.
 
-## route_to_session(transport, session_id, message)
-
-Routes a message to a specific session's SSE handler for server-to-client push.
-
-## unregister_sse_handler(transport, session_id, expected_pid \\ nil)
+## unregister_sse_handler/3
 
 Unregisters the SSE handler for a session. Called when the SSE connection closes.
 
-## option/0
+## get_sse_handler/2
 
-StreamableHTTP transport options
+Returns the SSE handler pid for a session, or `nil` if none is connected.
 
-- `:server` - The server module (required)
-- `:name` - Name for registering the GenServer (required)
+## route_to_session/3
+
+Routes a message to a specific session's SSE handler for server-to-client push.

@@ -53,44 +53,10 @@ You can also pass the `:caller` option on checkout with a pid and that
 pid will be looked up first, instead of `self()`, and then we fall back
 to `$callers`.
 
-## ownership_allow(manager, owner, allow, opts)
-
-Allows the process given by `allow` to use the connection checked out
-by `owner_or_allowed`.
-
-It may return `:ok` if the connection is checked out.
-`{:already, :owner | :allowed}` if the `allow` process already
-has a connection. `owner_or_allowed` may either be the owner or any
-other allowed process. Returns `:not_found` if the given process
-does not have any connection checked out.
-
-Setting the `unallow_existing` option to `true` will remove the process given by `allow` from
-any existing allowance it may have (this is necessary because a given process can only be
-allowed on a single connection at a time).
-
-## ownership_checkin(manager, opts)
-
-Checks a connection back in.
-
-A connection can only be checked back in by its owner.
-
-## ownership_checkout(manager, opts)
+## ownership_checkout/2
 
 Explicitly checks a connection out from the ownership manager.
 
 It may return `:ok` if the connection is checked out.
 `{:already, :owner | :allowed}` if the caller process already
 has a connection, or raise if there was an error.
-
-## ownership_mode(manager, mode, opts)
-
-Changes the ownership mode.
-
-`mode` may be `:auto`, `:manual` or `{:shared, owner}`.
-
-The operation will always succeed when setting the mode to
-`:auto` or `:manual`. It may fail with reason `:not_owner`
-or `:not_found` when setting `{:shared, pid}` and the
-given pid does not own any connection. May return
-`:already_shared` if another process set the ownership
-mode to `{:shared, _}` and is still alive.

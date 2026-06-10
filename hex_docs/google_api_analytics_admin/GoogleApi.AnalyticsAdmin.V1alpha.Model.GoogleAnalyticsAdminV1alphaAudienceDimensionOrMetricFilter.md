@@ -11,7 +11,3 @@ A specific filter for a single dimension or metric.
 *   `inListFilter` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudienceDimensionOrMetricFilterInListFilter.t`, *default:* `nil`) - A filter for a string dimension that matches a particular list of options.
 *   `numericFilter` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudienceDimensionOrMetricFilterNumericFilter.t`, *default:* `nil`) - A filter for numeric or date values on a dimension or metric.
 *   `stringFilter` (*type:* `GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAudienceDimensionOrMetricFilterStringFilter.t`, *default:* `nil`) - A filter for a string-type dimension that matches a particular pattern.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

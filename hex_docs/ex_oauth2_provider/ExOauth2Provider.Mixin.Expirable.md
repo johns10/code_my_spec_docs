@@ -2,7 +2,7 @@
 
 
 
-## filter_expired(data)
+## filter_expired/1
 
 Filter expired data.
 
@@ -14,7 +14,7 @@ Filter expired data.
     iex> filter_expired(%Data{expires_in: 10, inserted_at: ~N[2017-04-04 19:21:22.292762], ...}}
     nil
 
-## is_expired?(arg1)
+## is_expired?/1
 
 Checks if data has expired.
 

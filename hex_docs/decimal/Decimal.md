@@ -99,7 +99,48 @@ decimals as floats:
     iex> JSON.encode!(%{x: Decimal.new("1.00")}, encoder)
     "{\"x\":1.00}"
 
-## abs(num)
+## nan?/1
+
+Returns `true` if number is NaN, otherwise `false`.
+
+## Examples
+
+    iex> Decimal.nan?(Decimal.new("NaN"))
+    true
+
+    iex> Decimal.nan?(Decimal.new(42))
+    false
+
+## inf?/1
+
+Returns `true` if number is ±Infinity, otherwise `false`.
+
+## Examples
+
+    iex> Decimal.inf?(Decimal.new("+Infinity"))
+    true
+
+    iex> Decimal.inf?(Decimal.new("-Infinity"))
+    true
+
+    iex> Decimal.inf?(Decimal.new("1.5"))
+    false
+
+## is_decimal/1
+
+Returns `true` if argument is a decimal number, otherwise `false`.
+
+## Examples
+
+    iex> Decimal.is_decimal(Decimal.new(42))
+    true
+
+    iex> Decimal.is_decimal(42)
+    false
+
+Allowed in guard tests on OTP 21+.
+
+## abs/1
 
 The absolute value of given number. Sets the number's sign to positive.
 
@@ -114,7 +155,7 @@ The absolute value of given number. Sets the number's sign to positive.
     iex> Decimal.abs(Decimal.new("NaN"))
     Decimal.new("NaN")
 
-## add(num1, num2)
+## add/2
 
 Adds two numbers together.
 
@@ -131,51 +172,25 @@ Adds two numbers together.
     iex> Decimal.add(1, "Inf")
     Decimal.new("Infinity")
 
-## apply_context(num)
+## sub/2
 
-Applies the context to the given number rounding it to specified precision.
+Subtracts second number from the first. Equivalent to `Decimal.add/2` when the
+second number's sign is negated.
 
-## cast(integer)
+## Exceptional conditions
 
-Creates a new decimal number from an integer, string, float, or existing decimal number.
-
-Because conversion from a floating point number is not exact, it's recommended
-to instead use `new/1` or `from_float/1` when the argument's type is certain.
-See `from_float/1`.
+  * If one number is -Infinity and the other +Infinity `:invalid_operation` will
+    be signalled.
 
 ## Examples
 
-    iex> {:ok, decimal} = Decimal.cast(3)
-    iex> decimal
-    Decimal.new("3")
+    iex> Decimal.sub(1, "0.1")
+    Decimal.new("0.9")
 
-    iex> Decimal.cast("bad")
-    :error
+    iex> Decimal.sub(1, "Inf")
+    Decimal.new("-Infinity")
 
-## cast(term, opts)
-
-Creates a new decimal number from an integer, string, float, or existing decimal
-number with parsing limits.
-
-Options are the same as `parse/2`.
-
-## compare(num1, num2)
-
-Compares two numbers numerically. If the first number is greater than the second
-`:gt` is returned, if less than `:lt` is returned, if both numbers are equal
-`:eq` is returned.
-
-Neither number can be a NaN.
-
-## Examples
-
-    iex> Decimal.compare("1.0", 1)
-    :eq
-
-    iex> Decimal.compare("Inf", -1)
-    :gt
-
-## compare(n1, n2, threshold)
+## compare/3
 
 Compares two numbers numerically using a threshold. If the first number added
 to the threshold is greater than the second number, and the first number
@@ -193,60 +208,37 @@ numbers are considered equal.
     iex> Decimal.compare("1.0", "1.2", "0.1")
     :lt
 
-## div(num1, num2)
+## compare/2
 
-Divides two numbers.
+Compares two numbers numerically. If the first number is greater than the second
+`:gt` is returned, if less than `:lt` is returned, if both numbers are equal
+`:eq` is returned.
 
-## Exceptional conditions
-
-  * If both numbers are ±Infinity `:invalid_operation` is signalled.
-  * If both numbers are ±0 `:invalid_operation` is signalled.
-  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+Neither number can be a NaN.
 
 ## Examples
 
-    iex> Decimal.div(3, 4)
-    Decimal.new("0.75")
+    iex> Decimal.compare("1.0", 1)
+    :eq
 
-    iex> Decimal.div("Inf", -1)
-    Decimal.new("-Infinity")
+    iex> Decimal.compare("Inf", -1)
+    :gt
 
-## div_int(num1, num2)
+## equal?/2
 
-Divides two numbers and returns the integer part.
-
-## Exceptional conditions
-
-  * If both numbers are ±Infinity `:invalid_operation` is signalled.
-  * If both numbers are ±0 `:invalid_operation` is signalled.
-  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+Compares two numbers numerically and returns `true` if they are equal,
+otherwise `false`. If one of the operands is a quiet NaN this operation
+will always return `false`.
 
 ## Examples
 
-    iex> Decimal.div_int(5, 2)
-    Decimal.new("2")
+    iex> Decimal.equal?("1.0", 1)
+    true
 
-    iex> Decimal.div_int("Inf", -1)
-    Decimal.new("-Infinity")
+    iex> Decimal.equal?(1, -1)
+    false
 
-## div_rem(num1, num2)
-
-Integer division of two numbers and the remainder. Should be used when both
-`div_int/2` and `rem/2` is needed. Equivalent to: `{Decimal.div_int(x, y),
-Decimal.rem(x, y)}`.
-
-## Exceptional conditions
-
-  * If both numbers are ±Infinity `:invalid_operation` is signalled.
-  * If both numbers are ±0 `:invalid_operation` is signalled.
-  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
-
-## Examples
-
-    iex> Decimal.div_rem(5, 2)
-    {Decimal.new(2), Decimal.new(1)}
-
-## eq?(num1, num2)
+## eq?/2
 
 Compares two numbers numerically and returns `true` if they are equal,
 otherwise `false`. If one of the operands is a quiet NaN this operation
@@ -260,7 +252,7 @@ will always return `false`.
     iex> Decimal.eq?(1, -1)
     false
 
-## eq?(num1, num2, threshold)
+## eq?/3
 
 It compares the equality of two numbers. If the second number is within
 the range of first - threshold and first + threshold, it returns true;
@@ -280,46 +272,7 @@ otherwise, it returns false.
     iex> Decimal.eq?(1, -1, "0.0")
     false
 
-## equal?(num1, num2)
-
-Compares two numbers numerically and returns `true` if they are equal,
-otherwise `false`. If one of the operands is a quiet NaN this operation
-will always return `false`.
-
-## Examples
-
-    iex> Decimal.equal?("1.0", 1)
-    true
-
-    iex> Decimal.equal?(1, -1)
-    false
-
-## from_float(float)
-
-Creates a new decimal number from a floating point number.
-
-Floating point numbers use a fixed number of binary digits to represent
-a decimal number which has inherent inaccuracy as some decimal numbers cannot
-be represented exactly in limited precision binary.
-
-Floating point numbers will be converted to decimal numbers with
-`:io_lib_format.fwrite_g/1`. Since this conversion is not exact and
-because of inherent inaccuracy mentioned above, we may run into counter-intuitive results:
-
-    iex> Enum.reduce([0.1, 0.1, 0.1], &+/2)
-    0.30000000000000004
-
-    iex> Enum.reduce([Decimal.new("0.1"), Decimal.new("0.1"), Decimal.new("0.1")], &Decimal.add/2)
-    Decimal.new("0.3")
-
-For this reason, it's recommended to build decimals with `new/1`, which is always precise, instead.
-
-## Examples
-
-    iex> Decimal.from_float(3.14)
-    Decimal.new("3.14")
-
-## gt?(num1, num2)
+## gt?/2
 
 Compares two numbers numerically and returns `true` if the first argument
 is greater than the second, otherwise `false`. If one the operands is a
@@ -333,7 +286,21 @@ quiet NaN this operation will always return `false`.
     iex> Decimal.gt?("1.2", "1.3")
     false
 
-## gte?(num1, num2)
+## lt?/2
+
+Compares two numbers numerically and returns `true` if the first number is
+less than the second number, otherwise `false`. If one of the operands is a
+quiet NaN this operation will always return `false`.
+
+## Examples
+
+    iex> Decimal.lt?("1.1", "1.2")
+    true
+
+    iex> Decimal.lt?("1.4", "1.2")
+    false
+
+## gte?/2
 
 Compares two numbers numerically and returns `true` if
 the first argument is greater than or equal the second,
@@ -353,48 +320,7 @@ will always return `false`.
     iex> Decimal.gte?("1.2", "1.3")
     false
 
-## inf?(decimal)
-
-Returns `true` if number is ±Infinity, otherwise `false`.
-
-## Examples
-
-    iex> Decimal.inf?(Decimal.new("+Infinity"))
-    true
-
-    iex> Decimal.inf?(Decimal.new("-Infinity"))
-    true
-
-    iex> Decimal.inf?(Decimal.new("1.5"))
-    false
-
-## integer?(num)
-
-Returns `true` when the given `decimal` has no significant digits after the decimal point.
-
-## Examples
-
-    iex> Decimal.integer?("1.00")
-    true
-
-    iex> Decimal.integer?("1.10")
-    false
-
-## lt?(num1, num2)
-
-Compares two numbers numerically and returns `true` if the first number is
-less than the second number, otherwise `false`. If one of the operands is a
-quiet NaN this operation will always return `false`.
-
-## Examples
-
-    iex> Decimal.lt?("1.1", "1.2")
-    true
-
-    iex> Decimal.lt?("1.4", "1.2")
-    false
-
-## lte?(num1, num2)
+## lte?/2
 
 Compares two numbers numerically and returns `true` if
 the first number is less than or equal the second number,
@@ -414,7 +340,76 @@ will always return `false`.
     iex> Decimal.lte?("1.4", "1.2")
     false
 
-## max(num1, num2)
+## div/2
+
+Divides two numbers.
+
+## Exceptional conditions
+
+  * If both numbers are ±Infinity `:invalid_operation` is signalled.
+  * If both numbers are ±0 `:invalid_operation` is signalled.
+  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+
+## Examples
+
+    iex> Decimal.div(3, 4)
+    Decimal.new("0.75")
+
+    iex> Decimal.div("Inf", -1)
+    Decimal.new("-Infinity")
+
+## div_int/2
+
+Divides two numbers and returns the integer part.
+
+## Exceptional conditions
+
+  * If both numbers are ±Infinity `:invalid_operation` is signalled.
+  * If both numbers are ±0 `:invalid_operation` is signalled.
+  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+
+## Examples
+
+    iex> Decimal.div_int(5, 2)
+    Decimal.new("2")
+
+    iex> Decimal.div_int("Inf", -1)
+    Decimal.new("-Infinity")
+
+## rem/2
+
+Remainder of integer division of two numbers. The result will have the sign of
+the first number.
+
+## Exceptional conditions
+
+  * If both numbers are ±Infinity `:invalid_operation` is signalled.
+  * If both numbers are ±0 `:invalid_operation` is signalled.
+  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+
+## Examples
+
+    iex> Decimal.rem(5, 2)
+    Decimal.new("1")
+
+## div_rem/2
+
+Integer division of two numbers and the remainder. Should be used when both
+`div_int/2` and `rem/2` is needed. Equivalent to: `{Decimal.div_int(x, y),
+Decimal.rem(x, y)}`.
+
+## Exceptional conditions
+
+  * If both numbers are ±Infinity `:invalid_operation` is signalled.
+  * If both numbers are ±0 `:invalid_operation` is signalled.
+  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
+
+## Examples
+
+    iex> Decimal.div_rem(5, 2)
+    {Decimal.new(2), Decimal.new(1)}
+
+## max/2
 
 Compares two values numerically and returns the maximum. Unlike most other
 functions in `Decimal` if a number is NaN the result will be the other number.
@@ -431,7 +426,7 @@ Only if both numbers are NaN will NaN be returned.
     iex> Decimal.max("NaN", "NaN")
     Decimal.new("NaN")
 
-## min(num1, num2)
+## min/2
 
 Compares two values numerically and returns the minimum. Unlike most other
 functions in `Decimal` if a number is NaN the result will be the other number.
@@ -448,36 +443,7 @@ Only if both numbers are NaN will NaN be returned.
     iex> Decimal.min("NaN", "NaN")
     Decimal.new("NaN")
 
-## mult(num1, num2)
-
-Multiplies two numbers.
-
-## Exceptional conditions
-
-  * If one number is ±0 and the other is ±Infinity `:invalid_operation` is
-    signalled.
-
-## Examples
-
-    iex> Decimal.mult("0.5", 3)
-    Decimal.new("1.5")
-
-    iex> Decimal.mult("Inf", -1)
-    Decimal.new("-Infinity")
-
-## nan?(decimal)
-
-Returns `true` if number is NaN, otherwise `false`.
-
-## Examples
-
-    iex> Decimal.nan?(Decimal.new("NaN"))
-    true
-
-    iex> Decimal.nan?(Decimal.new(42))
-    false
-
-## negate(num)
+## negate/1
 
 Negates the given number.
 
@@ -489,7 +455,29 @@ Negates the given number.
     iex> Decimal.negate("-Inf")
     Decimal.new("Infinity")
 
-## negative?(decimal)
+## apply_context/1
+
+Applies the context to the given number rounding it to specified precision.
+
+## positive?/1
+
+Returns `true` if given number is positive, otherwise `false`.
+
+## Examples
+
+    iex> Decimal.positive?(Decimal.new("42"))
+    true
+
+    iex> Decimal.positive?(Decimal.new("-42"))
+    false
+
+    iex> Decimal.positive?(Decimal.new("0"))
+    false
+
+    iex> Decimal.positive?(Decimal.new("NaN"))
+    false
+
+## negative?/1
 
 Returns `true` if given number is negative, otherwise `false`.
 
@@ -507,7 +495,62 @@ Returns `true` if given number is negative, otherwise `false`.
     iex> Decimal.negative?(Decimal.new("NaN"))
     false
 
-## new(num)
+## mult/2
+
+Multiplies two numbers.
+
+## Exceptional conditions
+
+  * If one number is ±0 and the other is ±Infinity `:invalid_operation` is
+    signalled.
+
+## Examples
+
+    iex> Decimal.mult("0.5", 3)
+    Decimal.new("1.5")
+
+    iex> Decimal.mult("Inf", -1)
+    Decimal.new("-Infinity")
+
+## normalize/1
+
+Normalizes the given decimal: removes trailing zeros from coefficient while
+keeping the number numerically equivalent by increasing the exponent.
+
+## Examples
+
+    iex> Decimal.normalize(Decimal.new("1.00"))
+    Decimal.new("1")
+
+    iex> Decimal.normalize(Decimal.new("1.01"))
+    Decimal.new("1.01")
+
+## round/3
+
+Rounds the given number to specified decimal places with the given strategy
+(default is to round to nearest one). If places is negative, at least that
+many digits to the left of the decimal point will be zero.
+
+See `Decimal.Context` for more information about rounding algorithms.
+
+## Examples
+
+    iex> Decimal.round("1.234")
+    Decimal.new("1")
+
+    iex> Decimal.round("1.234", 1)
+    Decimal.new("1.2")
+
+## sqrt/1
+
+Finds the square root.
+
+## Examples
+
+    iex> Decimal.sqrt("100")
+    Decimal.new("10")
+
+## new/1
 
 Creates a new decimal number from an integer or a string representation.
 
@@ -545,7 +588,7 @@ See also `from_float/1`.
     iex> Decimal.new("2.22507385850720139e-308")
     Decimal.new("2.22507385850720139e-308")
 
-## new(sign, coef, exp)
+## new/3
 
 Creates a new decimal number from the sign, coefficient and exponent such that
 the number will be: `sign * coefficient * 10 ^ exponent`.
@@ -558,20 +601,56 @@ kept - it will not be rounded with the context.
     iex> Decimal.new(1, 42, 0)
     Decimal.new("42")
 
-## normalize(num)
+## from_float/1
 
-Normalizes the given decimal: removes trailing zeros from coefficient while
-keeping the number numerically equivalent by increasing the exponent.
+Creates a new decimal number from a floating point number.
+
+Floating point numbers use a fixed number of binary digits to represent
+a decimal number which has inherent inaccuracy as some decimal numbers cannot
+be represented exactly in limited precision binary.
+
+Floating point numbers will be converted to decimal numbers with
+`:io_lib_format.fwrite_g/1`. Since this conversion is not exact and
+because of inherent inaccuracy mentioned above, we may run into counter-intuitive results:
+
+    iex> Enum.reduce([0.1, 0.1, 0.1], &+/2)
+    0.30000000000000004
+
+    iex> Enum.reduce([Decimal.new("0.1"), Decimal.new("0.1"), Decimal.new("0.1")], &Decimal.add/2)
+    Decimal.new("0.3")
+
+For this reason, it's recommended to build decimals with `new/1`, which is always precise, instead.
 
 ## Examples
 
-    iex> Decimal.normalize(Decimal.new("1.00"))
-    Decimal.new("1")
+    iex> Decimal.from_float(3.14)
+    Decimal.new("3.14")
 
-    iex> Decimal.normalize(Decimal.new("1.01"))
-    Decimal.new("1.01")
+## cast/1
 
-## parse(binary)
+Creates a new decimal number from an integer, string, float, or existing decimal number.
+
+Because conversion from a floating point number is not exact, it's recommended
+to instead use `new/1` or `from_float/1` when the argument's type is certain.
+See `from_float/1`.
+
+## Examples
+
+    iex> {:ok, decimal} = Decimal.cast(3)
+    iex> decimal
+    Decimal.new("3")
+
+    iex> Decimal.cast("bad")
+    :error
+
+## cast/2
+
+Creates a new decimal number from an integer, string, float, or existing decimal
+number with parsing limits.
+
+Options are the same as `parse/2`.
+
+## parse/1
 
 Parses a binary into a decimal.
 
@@ -592,7 +671,7 @@ otherwise `:error`.
     iex> Decimal.parse("bad")
     :error
 
-## parse(binary, opts)
+## parse/2
 
 Parses a binary into a decimal with optional limits.
 
@@ -609,150 +688,7 @@ The following options are supported:
 
 Returns `:error` when a parsed number exceeds the configured limits.
 
-## positive?(decimal)
-
-Returns `true` if given number is positive, otherwise `false`.
-
-## Examples
-
-    iex> Decimal.positive?(Decimal.new("42"))
-    true
-
-    iex> Decimal.positive?(Decimal.new("-42"))
-    false
-
-    iex> Decimal.positive?(Decimal.new("0"))
-    false
-
-    iex> Decimal.positive?(Decimal.new("NaN"))
-    false
-
-## rem(num1, num2)
-
-Remainder of integer division of two numbers. The result will have the sign of
-the first number.
-
-## Exceptional conditions
-
-  * If both numbers are ±Infinity `:invalid_operation` is signalled.
-  * If both numbers are ±0 `:invalid_operation` is signalled.
-  * If second number (denominator) is ±0 `:division_by_zero` is signalled.
-
-## Examples
-
-    iex> Decimal.rem(5, 2)
-    Decimal.new("1")
-
-## round(num, places \\ 0, mode \\ :half_up)
-
-Rounds the given number to specified decimal places with the given strategy
-(default is to round to nearest one). If places is negative, at least that
-many digits to the left of the decimal point will be zero.
-
-See `Decimal.Context` for more information about rounding algorithms.
-
-## Examples
-
-    iex> Decimal.round("1.234")
-    Decimal.new("1")
-
-    iex> Decimal.round("1.234", 1)
-    Decimal.new("1.2")
-
-## scale(decimal)
-
-Returns the scale of the decimal.
-
-A decimal's scale is the number of digits after the decimal point. This
-includes trailing zeros; see `normalize/1` to remove them.
-
-## Examples
-
-    iex> Decimal.scale(Decimal.new("42"))
-    0
-
-    iex> Decimal.scale(Decimal.new(1, 2, 26))
-    0
-
-    iex> Decimal.scale(Decimal.new("99.12345"))
-    5
-
-    iex> Decimal.scale(Decimal.new("1.50"))
-    2
-
-## sqrt(num)
-
-Finds the square root.
-
-## Examples
-
-    iex> Decimal.sqrt("100")
-    Decimal.new("10")
-
-## sub(num1, num2)
-
-Subtracts second number from the first. Equivalent to `Decimal.add/2` when the
-second number's sign is negated.
-
-## Exceptional conditions
-
-  * If one number is -Infinity and the other +Infinity `:invalid_operation` will
-    be signalled.
-
-## Examples
-
-    iex> Decimal.sub(1, "0.1")
-    Decimal.new("0.9")
-
-    iex> Decimal.sub(1, "Inf")
-    Decimal.new("-Infinity")
-
-## to_float(decimal)
-
-Returns the decimal converted to a float.
-
-The returned float may have lower precision than the decimal.
-
-Raises if the decimal cannot be converted to a float.
-
-## Examples
-
-    iex> Decimal.to_float(Decimal.new("1.5"))
-    1.5
-
-    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
-    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
-
-    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
-    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
-
-    iex> Decimal.to_float(Decimal.new("2.22507385850720139e-308"))
-    ** (Decimal.Error) : number smaller than DBL_MIN: Decimal.new("2.22507385850720139E-308")
-
-    iex> Decimal.to_float(Decimal.new("-2.22507385850720139e-308"))
-    ** (Decimal.Error): negative number bigger than DBL_MIN: Decimal.new("-2.22507385850720139E-308")
-
-    iex> Decimal.to_float(Decimal.new("inf"))
-    ** (ArgumentError) Decimal.new("Infinity") cannot be converted to float
-
-## to_integer(decimal)
-
-Returns the decimal represented as an integer.
-
-Raises when loss of precision will occur.
-
-## Examples
-
-    iex> Decimal.to_integer(Decimal.new("42"))
-    42
-
-    iex> Decimal.to_integer(Decimal.new("1.00"))
-    1
-
-    iex> Decimal.to_integer(Decimal.new("1.10"))
-    ** (ArgumentError) cannot convert Decimal.new("1.1") without losing precision. Use Decimal.round/3 first.
-
-## to_string(num, type \\ :scientific)
+## to_string/2
 
 Converts given number to its string representation.
 
@@ -785,7 +721,7 @@ rendering decimals from untrusted input.
     iex> Decimal.to_string(Decimal.new("4321.768"), :raw)
     "4321768E-3"
 
-## to_string(num, type, opts)
+## to_string/3
 
 Converts given number to its string representation with optional limits.
 
@@ -800,47 +736,80 @@ The following options are supported:
 
 Raises `ArgumentError` when the configured limit would be exceeded.
 
-## is_decimal(term)
+## to_integer/1
 
-Returns `true` if argument is a decimal number, otherwise `false`.
+Returns the decimal represented as an integer.
+
+Raises when loss of precision will occur.
 
 ## Examples
 
-    iex> Decimal.is_decimal(Decimal.new(42))
+    iex> Decimal.to_integer(Decimal.new("42"))
+    42
+
+    iex> Decimal.to_integer(Decimal.new("1.00"))
+    1
+
+    iex> Decimal.to_integer(Decimal.new("1.10"))
+    ** (ArgumentError) cannot convert Decimal.new("1.1") without losing precision. Use Decimal.round/3 first.
+
+## to_float/1
+
+Returns the decimal converted to a float.
+
+The returned float may have lower precision than the decimal.
+
+Raises if the decimal cannot be converted to a float.
+
+## Examples
+
+    iex> Decimal.to_float(Decimal.new("1.5"))
+    1.5
+
+    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
+    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
+
+    iex> Decimal.to_float(Decimal.new("-1.79769313486231581e308"))
+    ** (Decimal.Error) : negative number smaller than DBL_MAX: Decimal.new("-1.79769313486231581E+308")
+
+    iex> Decimal.to_float(Decimal.new("2.22507385850720139e-308"))
+    ** (Decimal.Error) : number smaller than DBL_MIN: Decimal.new("2.22507385850720139E-308")
+
+    iex> Decimal.to_float(Decimal.new("-2.22507385850720139e-308"))
+    ** (Decimal.Error): negative number bigger than DBL_MIN: Decimal.new("-2.22507385850720139E-308")
+
+    iex> Decimal.to_float(Decimal.new("inf"))
+    ** (ArgumentError) Decimal.new("Infinity") cannot be converted to float
+
+## scale/1
+
+Returns the scale of the decimal.
+
+A decimal's scale is the number of digits after the decimal point. This
+includes trailing zeros; see `normalize/1` to remove them.
+
+## Examples
+
+    iex> Decimal.scale(Decimal.new("42"))
+    0
+
+    iex> Decimal.scale(Decimal.new(1, 2, 26))
+    0
+
+    iex> Decimal.scale(Decimal.new("99.12345"))
+    5
+
+    iex> Decimal.scale(Decimal.new("1.50"))
+    2
+
+## integer?/1
+
+Returns `true` when the given `decimal` has no significant digits after the decimal point.
+
+## Examples
+
+    iex> Decimal.integer?("1.00")
     true
 
-    iex> Decimal.is_decimal(42)
+    iex> Decimal.integer?("1.10")
     false
-
-Allowed in guard tests on OTP 21+.
-
-## coefficient/0
-
-The coefficient of the power of `10`. Non-negative because the sign is stored separately in `sign`.
-
-  * `non_neg_integer` - when the `t` represents a number, instead of one of the special values below.
-  * `:NaN` - Not a Number.
-  * `:inf` - Infinity.
-
-## exponent/0
-
-The exponent to which `10` is raised.
-
-## sign/0
-
-* `1` for positive
-  * `-1` for negative
-
-## rounding/0
-
-Rounding algorithm.
-
-See `Decimal.Context` for more information.
-
-## t/0
-
-This implementation models the `sign` as `1` or `-1` such that the complete number will be: `sign * coef * 10 ^ exp`.
-
-  * `coef` - the coefficient of the power of `10`.
-  * `exp` - the exponent of the power of `10`.
-  * `sign` - `1` for positive, `-1` for negative.

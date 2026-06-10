@@ -6,13 +6,7 @@ Job changesets are created by your application code and inserted into the databa
 asynchronous execution. Jobs can be inserted along with other application data as part of a
 transaction, which guarantees that jobs will only be triggered from a successful transaction.
 
-## format_attempt(job)
-
-Normalize, blame, and format a job's `unsaved_error` into the stored error format.
-
-Formatted errors are stored in a job's `errors` field.
-
-## new(args, opts \\ [])
+## new/2
 
 Construct a new job changeset ready for insertion into the database.
 
@@ -93,7 +87,7 @@ Insert a unique job considering only specified keys in the meta:
 
     MyApp.Worker.new(%{id: 1}, meta: %{slug: "unique-key"}, unique: unique)
 
-## states()
+## states/0
 
 A canonical list of all possible job states.
 
@@ -125,7 +119,7 @@ This may be used to build up `:unique` options without duplicating states in app
 
 * `:cancelled`—Jobs that are cancelled intentionally
 
-## to_map(changeset)
+## to_map/1
 
 Convert a Job changeset into a map suitable for database insertion.
 
@@ -136,3 +130,9 @@ Convert a worker generated changeset into a plain map:
     %{id: 123}
     |> MyApp.Worker.new()
     |> Oban.Job.to_map()
+
+## format_attempt/1
+
+Normalize, blame, and format a job's `unsaved_error` into the stored error format.
+
+Formatted errors are stored in a job's `errors` field.

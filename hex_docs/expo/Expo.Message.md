@@ -10,31 +10,7 @@ A message is a single PO singular or plural message. For example:
 Message structs are used both to represent reference messages (where the `msgstr` is empty)
 in POT files as well as actual translations.
 
-## append_flag(message, flag)
-
-Appends the given `flag` to the given `message`.
-
-Keeps the line formatting intact.
-
-### Examples
-
-    iex> message = %Expo.Message.Singular{msgid: [], flags: []}
-    iex> Expo.Message.append_flag(message, "foo")
-    %Expo.Message.Singular{msgid: [], flags: [["foo"]]}
-
-## has_flag?(message, flag)
-
-Tells whether the given `message` has the given `flag` specified.
-
-### Examples
-
-    iex> Expo.Message.has_flag?(%Expo.Message.Singular{msgid: [], flags: [["foo"]]}, "foo")
-    true
-
-    iex> Expo.Message.has_flag?(%Expo.Message.Singular{msgid: [], flags: [["foo"]]}, "bar")
-    false
-
-## key(message)
+## key/1
 
 Returns a "key" that can be used to identify a message.
 
@@ -57,27 +33,7 @@ group or sort messages but where we don't need the whole structs.
     iex> Expo.Message.key(t1) == Expo.Message.key(t2)
     false
 
-## merge(message1, message2)
-
-Merges two messages.
-
-If both messages are `Expo.Message.Singular`, the result is a singular message.
-If one of the two messages is a `Expo.Message.Plural`, the result is a plural message.
-This is consistent with the behavior of GNU Gettext.
-
-## Examples
-
-    iex> msg1 = %Expo.Message.Singular{msgid: ["test"], flags: [["one"]]}
-    ...> msg2 = %Expo.Message.Singular{msgid: ["test"], flags: [["one", "two"]]}
-    ...> Expo.Message.merge(msg1, msg2)
-    %Expo.Message.Singular{msgid: ["test"], flags: [["one", "two"]]}
-
-    iex> msg1 = %Expo.Message.Singular{msgid: ["test"]}
-    ...> msg2 = %Expo.Message.Plural{msgid: ["test"], msgid_plural: ["tests"]}
-    ...> Expo.Message.merge(msg1, msg2)
-    %Expo.Message.Plural{msgid: ["test"], msgid_plural: ["tests"]}
-
-## same?(message1, message2)
+## same?/2
 
 Tells whether two messages are the same message according to their
 `msgid`.
@@ -98,7 +54,31 @@ message, where "the same" means they have the same `msgid` or the same
     iex> Expo.Message.same?(t1, t2)
     false
 
-## source_line_number(message, block, default \\ nil)
+## has_flag?/2
+
+Tells whether the given `message` has the given `flag` specified.
+
+### Examples
+
+    iex> Expo.Message.has_flag?(%Expo.Message.Singular{msgid: [], flags: [["foo"]]}, "foo")
+    true
+
+    iex> Expo.Message.has_flag?(%Expo.Message.Singular{msgid: [], flags: [["foo"]]}, "bar")
+    false
+
+## append_flag/2
+
+Appends the given `flag` to the given `message`.
+
+Keeps the line formatting intact.
+
+### Examples
+
+    iex> message = %Expo.Message.Singular{msgid: [], flags: []}
+    iex> Expo.Message.append_flag(message, "foo")
+    %Expo.Message.Singular{msgid: [], flags: [["foo"]]}
+
+## source_line_number/3
 
 Get the source line number of the message.
 
@@ -111,31 +91,22 @@ Get the source line number of the message.
     iex> Expo.Message.source_line_number(message, :msgid)
     1
 
-## split_string/0
+## merge/2
 
-A list of strings representing *lines*.
+Merges two messages.
 
-This type is used for types such as `t:msgid/0`. The list of strings
-represents the message split into multiple lines, as parsed from a PO(T) file.
+If both messages are `Expo.Message.Singular`, the result is a singular message.
+If one of the two messages is a `Expo.Message.Plural`, the result is a plural message.
+This is consistent with the behavior of GNU Gettext.
 
-## msgid/0
+## Examples
 
-The `msgid` of a message.
+    iex> msg1 = %Expo.Message.Singular{msgid: ["test"], flags: [["one"]]}
+    ...> msg2 = %Expo.Message.Singular{msgid: ["test"], flags: [["one", "two"]]}
+    ...> Expo.Message.merge(msg1, msg2)
+    %Expo.Message.Singular{msgid: ["test"], flags: [["one", "two"]]}
 
-## msgstr/0
-
-The `msgstr` of a message.
-
-## msgctxt/0
-
-The `msgctxt` of a message.
-
-## t/0
-
-A type for either a singular or a plural message.
-
-## key/0
-
-The key that can be used to identify a message.
-
-See `key/1`.
+    iex> msg1 = %Expo.Message.Singular{msgid: ["test"]}
+    ...> msg2 = %Expo.Message.Plural{msgid: ["test"], msgid_plural: ["tests"]}
+    ...> Expo.Message.merge(msg1, msg2)
+    %Expo.Message.Plural{msgid: ["test"], msgid_plural: ["tests"]}

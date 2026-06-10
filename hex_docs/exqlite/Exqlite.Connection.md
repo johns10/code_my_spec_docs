@@ -21,7 +21,7 @@ Notes:
   - sqlite thrives when there are many small conventions, so we may not implement
     some strategies employed by other adapters. See https://sqlite.org/np1queryprob.html
 
-## connect(options)
+## connect/1
 
 Initializes the Ecto Exqlite adapter.
 
@@ -116,7 +116,7 @@ For more information about the options above, see [sqlite documentation][1]
 
 [1]: https://www.sqlite.org/pragma.html
 
-## handle_begin(options, state)
+## handle_begin/2
 
 Begin a transaction.
 
@@ -124,7 +124,7 @@ For full info refer to sqlite docs: https://sqlite.org/lang_transaction.html
 
 Note: default transaction mode is DEFERRED.
 
-## handle_close(query, opts, state)
+## handle_close/3
 
 Close a query prepared by `handle_prepare/3` with the database. Return
 `{:ok, result, state}` on success and to continue,

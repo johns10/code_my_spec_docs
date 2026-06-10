@@ -2,7 +2,7 @@
 
 Manage API keys in Resend.
 
-## create(client \\ Resend.client(), opts)
+## create/2
 
 Creates a new API key.
 
@@ -14,10 +14,10 @@ Parameter options:
 
 The `:token` field in the response struct is the only time you will see the token, keep it somewhere safe.
 
-## list(client \\ Resend.client())
+## list/1
 
 Lists all API keys.
 
-## remove(client \\ Resend.client(), api_key_id)
+## remove/2
 
 Removes an API key. Caution: This can't be undone!

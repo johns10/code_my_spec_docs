@@ -2,6 +2,6 @@
 
 
 
-## post(url, headers \\ %{}, body \\ nil)
+## post/3
 
 Performs a POST request to the given URL.

@@ -76,7 +76,7 @@ Keep in mind that:
     do not use `==/2` or pattern matching. Use `Plug.Crypto.secure_compare/2`
     instead.
 
-## basic_auth(conn, options \\ [])
+## basic_auth/2
 
 Higher level usage of Basic HTTP auth.
 
@@ -90,15 +90,7 @@ See the module docs for examples.
     sanitized, so do not accept user input as the realm and use
     strings with only alphanumeric characters and space
 
-## encode_basic_auth(user, pass)
-
-Encodes a basic authentication header.
-
-This can be used during tests:
-
-    put_req_header(conn, "authorization", encode_basic_auth("hello", "world"))
-
-## parse_basic_auth(conn)
+## parse_basic_auth/1
 
 Parses the request username and password from Basic HTTP auth.
 
@@ -109,7 +101,15 @@ and password with the expected values, be sure to use
 
 See the module docs for examples.
 
-## request_basic_auth(conn, options \\ [])
+## encode_basic_auth/2
+
+Encodes a basic authentication header.
+
+This can be used during tests:
+
+    put_req_header(conn, "authorization", encode_basic_auth("hello", "world"))
+
+## request_basic_auth/2
 
 Requests basic authentication from the client.
 

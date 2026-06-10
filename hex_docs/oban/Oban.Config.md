@@ -7,7 +7,7 @@ on initialization and passes it through to all supervised children with the `:co
 
 To fetch a running Oban supervisor's config, see `Oban.config/1`.
 
-## new(opts)
+## new/1
 
 Generate a Config struct after normalizing and verifying Oban options.
 
@@ -19,7 +19,7 @@ Generate a minimal config with only a `:repo`:
 
     Oban.Config.new(repo: Oban.Test.Repo)
 
-## validate(opts)
+## validate/1
 
 Verify configuration options.
 

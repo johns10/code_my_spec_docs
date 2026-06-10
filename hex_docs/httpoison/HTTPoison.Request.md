@@ -40,7 +40,7 @@
 
   Timeouts can be an integer or `:infinity`
 
-## to_curl(request)
+## to_curl/1
 
 Returns an equivalent `curl` command for the given request.
 

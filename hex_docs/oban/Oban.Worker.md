@@ -325,23 +325,23 @@ it for all jobs is to change the column default through a migration:
       modify :priority, :integer, default: 1, from: {:integer, default: 0}
     end
 
-## from_string(worker_name)
+## __using__/1
 
-Resolve a module from a worker string.
+The `c:perform/1` function is called to execute a job.
 
-## Examples
+Each `c:perform/1` function should return `:ok` or a success tuple. When the return is an error
+tuple, an uncaught exception or a throw then the error is recorded and the job may be retried if
+there are any attempts remaining.
 
-    iex> Oban.Worker.from_string("Oban.Integration.Worker")
-    {:ok, Oban.Integration.Worker}
+> #### `args` Are Stored as JSON {: .info}
+>
+> The `args` map provided to `perform/1` will _always_ have string keys, regardless of
+> the key type when the job was enqueued. The `args` are stored as `jsonb` in PostgreSQL and the
+> serialization process automatically stringifies all keys. Because `args` are always encoded
+> as JSON, you must also ensure that all values are serializable, otherwise you'll have
+> encoding errors when inserting jobs.
 
-    iex> defmodule NotAWorker, do: []
-    ...> Oban.Worker.from_string("NotAWorker")
-    {:error, %RuntimeError{message: "module is not a worker: NotAWorker"}}
-
-    iex> Oban.Worker.from_string("RandomWorker")
-    {:error, %RuntimeError{message: "unknown worker: RandomWorker"}}
-
-## to_string(worker)
+## to_string/1
 
 Return a string representation of a worker module.
 
@@ -358,57 +358,18 @@ This is particularly useful for normalizing worker names when building custom Ec
     iex> Oban.Worker.to_string("Elixir.MyApp.SomeWorker")
     "MyApp.SomeWorker"
 
-## backoff/1
+## from_string/1
 
-Calculate the execution backoff.
+Resolve a module from a worker string.
 
-In this context backoff specifies the number of seconds to wait before retrying a failed job.
+## Examples
 
-Defaults to an exponential algorithm with a minimum delay of 15 seconds and a small amount of
-jitter.
+    iex> Oban.Worker.from_string("Oban.Integration.Worker")
+    {:ok, Oban.Integration.Worker}
 
-## new/2
+    iex> defmodule NotAWorker, do: []
+    ...> Oban.Worker.from_string("NotAWorker")
+    {:error, %RuntimeError{message: "module is not a worker: NotAWorker"}}
 
-Build a job changeset for this worker with optional overrides.
-
-See `Oban.Job.new/2` for the available options.
-
-## perform/1
-
-The `c:perform/1` function is called to execute a job.
-
-Each `c:perform/1` function should return `:ok` or a success tuple. When the return is an error
-tuple, an uncaught exception or a throw then the error is recorded and the job may be retried if
-there are any attempts remaining.
-
-> #### `args` Are Stored as JSON {: .info}
->
-> The `args` map provided to `perform/1` will _always_ have string keys, regardless of
-> the key type when the job was enqueued. The `args` are stored as `jsonb` in PostgreSQL and the
-> serialization process automatically stringifies all keys. Because `args` are always encoded
-> as JSON, you must also ensure that all values are serializable, otherwise you'll have
-> encoding errors when inserting jobs.
-
-## timeout/1
-
-Set a job's maximum execution time in milliseconds.
-
-Jobs that exceed the time limit are considered a failure and may be retried.
-
-Defaults to `:infinity`.
-
-## result/0
-
-Return values control whether a job is treated as a success or a failure.
-
-- `:ok` - the job is successful and marked as `completed`.
-- `{:ok, ignored}` - the job is successful, marked as `completed`, and the return value is ignored.
-- `{:cancel, reason}` - the job is marked as `cancelled` for the provided reason and no longer retried.
-- `{:error, reason}` - the job is marked as `retryable` for the provided reason, or `discarded`
-  if it has  exhausted all attempts.
-- `{:snooze, seconds}` - mark the job as `scheduled` to run again `seconds` in the future.
-
-> #### Deprecated {: .warning}
->
-> - `:discard` - deprecated, use `{:cancel, reason}` instead.
-> - `{:discard, reason}` - deprecated, use `{:cancel, reason}` instead.
+    iex> Oban.Worker.from_string("RandomWorker")
+    {:error, %RuntimeError{message: "unknown worker: RandomWorker"}}

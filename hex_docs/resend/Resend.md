@@ -2,14 +2,14 @@
 
 Documentation for `Resend`.
 
-## client(config \\ config())
+## client/1
 
 Returns a Resend client.
 
 Accepts a keyword list of config opts, though if omitted then it will attempt to load
 them from the application environment.
 
-## config()
+## config/0
 
 Loads config values from the application environment.
 

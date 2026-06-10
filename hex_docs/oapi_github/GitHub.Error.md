@@ -59,14 +59,10 @@ meanings:
   * `:unauthorized`: Valid authentication credentials were given, but the current user does not
     have permission to perform this action.
 
-## new(opts)
+## new/1
 
 Create a new error struct with the given fields
 
 The current stacktrace is automatically filled in to the resulting error. Callers should specify
 the status `code` (if available), a `message`, the original `operation`, the `source` of the
 error, and which `step` or plugin is currently active.
-
-## t/0
-
-GitHub API client error

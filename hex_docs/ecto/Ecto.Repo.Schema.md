@@ -2,38 +2,38 @@
 
 
 
-## delete(repo, name, changeset, tuplet)
-
-Implementation for `Ecto.Repo.delete/2`.
-
-## delete!(repo, name, struct_or_changeset, tuplet)
-
-Implementation for `Ecto.Repo.delete!/2`.
-
-## insert(repo, name, changeset, tuplet)
-
-Implementation for `Ecto.Repo.insert/2`.
-
-## insert!(repo, name, struct_or_changeset, tuplet)
-
-Implementation for `Ecto.Repo.insert!/2`.
-
-## insert_all(repo, name, schema, rows, tuplet)
+## insert_all/5
 
 Implementation for `Ecto.Repo.insert_all/3`.
 
-## insert_or_update(repo, name, changeset, tuplet)
+## insert!/4
 
-Implementation for `Ecto.Repo.insert_or_update/2`.
+Implementation for `Ecto.Repo.insert!/2`.
 
-## insert_or_update!(repo, name, changeset, tuplet)
+## update!/4
 
-Implementation for `Ecto.Repo.insert_or_update!/2`.
+Implementation for `Ecto.Repo.update!/2`.
 
-## update(repo, name, changeset, tuplet)
+## delete!/4
+
+Implementation for `Ecto.Repo.delete!/2`.
+
+## insert/4
+
+Implementation for `Ecto.Repo.insert/2`.
+
+## update/4
 
 Implementation for `Ecto.Repo.update/2`.
 
-## update!(repo, name, struct_or_changeset, tuplet)
+## insert_or_update/4
 
-Implementation for `Ecto.Repo.update!/2`.
+Implementation for `Ecto.Repo.insert_or_update/2`.
+
+## insert_or_update!/4
+
+Implementation for `Ecto.Repo.insert_or_update!/2`.
+
+## delete/4
+
+Implementation for `Ecto.Repo.delete/2`.

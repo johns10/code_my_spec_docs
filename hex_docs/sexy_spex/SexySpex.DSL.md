@@ -66,26 +66,7 @@ Share givens across modules with a normal Elixir `import`:
       end
     end
 
-## and_(description, context_var, list)
-
-Defines additional context or cleanup. Block must return `{:ok, context}`.
-
-## given_(name)
-
-Defines preconditions for a scenario.
-
-Two forms:
-
-    # Invoke a registered given by atom
-    given_ :logged_in_user
-
-    # Inline given — block must return {:ok, context}
-    given_ "user signs up", context do
-      user = sign_up()
-      {:ok, Map.put(context, :user, user)}
-    end
-
-## register_given(name, context_var, list)
+## register_given/3
 
 Registers a reusable given by name.
 
@@ -103,33 +84,7 @@ The block must return `{:ok, context}`.
       {:ok, context}
     end
 
-## scenario(name, list)
-
-Defines a scenario within a specification.
-
-Scenarios group related Given-When-Then steps together.
-Context from ExUnit setup/setup_all is implicitly available as `context`.
-
-## Example
-
-    scenario "user workflow" do
-      given_ "a user", context do
-        user = create_user()
-        {:ok, Map.put(context, :user, user)}
-      end
-
-      when_ "they login", context do
-        session = login(context.user)
-        {:ok, Map.put(context, :session, session)}
-      end
-
-      then_ "they see dashboard", context do
-        assert context.session.valid?
-        {:ok, context}
-      end
-    end
-
-## spex(name, opts \\ [], list)
+## spex/3
 
 Defines a specification.
 
@@ -159,10 +114,55 @@ To disable for a specific spex:
       # This test won't fail on error logs
     end
 
-## then_(description, context_var, list)
+## scenario/2
+
+Defines a scenario within a specification.
+
+Scenarios group related Given-When-Then steps together.
+Context from ExUnit setup/setup_all is implicitly available as `context`.
+
+## Example
+
+    scenario "user workflow" do
+      given_ "a user", context do
+        user = create_user()
+        {:ok, Map.put(context, :user, user)}
+      end
+
+      when_ "they login", context do
+        session = login(context.user)
+        {:ok, Map.put(context, :session, session)}
+      end
+
+      then_ "they see dashboard", context do
+        assert context.session.valid?
+        {:ok, context}
+      end
+    end
+
+## given_/1
+
+Defines preconditions for a scenario.
+
+Two forms:
+
+    # Invoke a registered given by atom
+    given_ :logged_in_user
+
+    # Inline given — block must return {:ok, context}
+    given_ "user signs up", context do
+      user = sign_up()
+      {:ok, Map.put(context, :user, user)}
+    end
+
+## when_/3
+
+Defines the action being tested. Block must return `{:ok, context}`.
+
+## then_/3
 
 Defines the expected outcome. Block must return `{:ok, context}`.
 
-## when_(description, context_var, list)
+## and_/3
 
-Defines the action being tested. Block must return `{:ok, context}`.
+Defines additional context or cleanup. Block must return `{:ok, context}`.

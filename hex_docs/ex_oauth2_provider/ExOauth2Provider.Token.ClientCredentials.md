@@ -2,7 +2,7 @@
 
 Functions for dealing with client credentials strategy.
 
-## grant(request, config \\ [])
+## grant/2
 
 Will grant access token by client credentials.
 

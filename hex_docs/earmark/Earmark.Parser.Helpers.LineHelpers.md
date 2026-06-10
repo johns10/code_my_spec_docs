@@ -1,1 +1,0 @@
-# Earmark.Parser.Helpers.LineHelpers

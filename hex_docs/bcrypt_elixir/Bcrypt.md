@@ -58,7 +58,7 @@ if you need to support the `$2y$` prefix, note that, according to https://www.op
 and so you could use this library for password verification after replacing
 the `$2y$` prefix of the hashes with `$2b$`.
 
-## hash_pwd_salt(password, opts \\ [])
+## hash_pwd_salt/2
 
 Hashes a password with a randomly generated salt.
 
@@ -81,25 +81,7 @@ salt and then verify a password:
     ...> Bcrypt.verify_pass("incorrect", hash)
     false
 
-## no_user_verify(opts \\ [])
-
-Runs the password hash function, but always returns false.
-
-This function is intended to make it more difficult for any potential
-attacker to find valid usernames by using timing attacks. This function
-is only useful if it is used as part of a policy of hiding usernames.
-
-There are concerns about this function using too many resources (CPU and
-memory). An alternative approach is to create a function that adds a sleep
-calculated to make the time spent running the function the same as if the
-hash function was run.
-
-## Options
-
-This function should be called with the same options as those used by
-`hash_pwd_salt/2`.
-
-## verify_pass(password, stored_hash)
+## verify_pass/2
 
 Verifies a password by hashing the password and comparing the hashed value
 with a stored hash.

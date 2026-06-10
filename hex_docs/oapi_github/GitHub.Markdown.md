@@ -2,7 +2,7 @@
 
 Provides API endpoints related to markdown
 
-## render(body, opts \\ [])
+## render/2
 
 Render a Markdown document
 
@@ -10,7 +10,7 @@ Render a Markdown document
 
   * [API method documentation](https://docs.github.com/rest/markdown/markdown#render-a-markdown-document)
 
-## render_raw(body, opts \\ [])
+## render_raw/2
 
 Render a Markdown document in raw mode
 

@@ -151,7 +151,7 @@ Then you may use it as follows:
     config :your_app, YourApp.Repo,
       socket_dir: "/run/postgresql"
 
-## extensions()
+## extensions/0
 
 All Ecto extensions for Postgrex.
 

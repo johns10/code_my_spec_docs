@@ -2,37 +2,22 @@
 
 Functions for generating app specific properties.
 
-## author()
+## version/0
 
-Returns an author name.
-
-## Examples
-
-    iex> Faker.App.author()
-    "Mr. Ozella Sipes"
-    iex> Faker.App.author()
-    "Aniya Schiller"
-    iex> Faker.App.author()
-    "Frederique Murphy"
-    iex> Faker.App.author()
-    "Rutherford Inc"
-
-## name()
-
-Returns an app name.
+Returns a version number.
 
 ## Examples
 
-    iex> Faker.App.name()
-    "Redhold"
-    iex> Faker.App.name()
-    "Tempsoft"
-    iex> Faker.App.name()
-    "Tempsoft"
-    iex> Faker.App.name()
-    "Quo Lux"
+    iex> Faker.App.version()
+    "0.1.5"
+    iex> Faker.App.version()
+    "2.6.4"
+    iex> Faker.App.version()
+    "0.10"
+    iex> Faker.App.version()
+    "3.2"
 
-## semver(opts \\ [])
+## semver/1
 
 Returns a SemVer version.
 
@@ -54,17 +39,17 @@ Returns a SemVer version.
     iex> Faker.App.semver()
     "5.7.0"
 
-## version()
+## author/0
 
-Returns a version number.
+Returns an author name.
 
 ## Examples
 
-    iex> Faker.App.version()
-    "0.1.5"
-    iex> Faker.App.version()
-    "2.6.4"
-    iex> Faker.App.version()
-    "0.10"
-    iex> Faker.App.version()
-    "3.2"
+    iex> Faker.App.author()
+    "Mr. Ozella Sipes"
+    iex> Faker.App.author()
+    "Aniya Schiller"
+    iex> Faker.App.author()
+    "Frederique Murphy"
+    iex> Faker.App.author()
+    "Rutherford Inc"

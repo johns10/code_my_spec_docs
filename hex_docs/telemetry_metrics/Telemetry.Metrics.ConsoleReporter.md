@@ -35,9 +35,3 @@ reports like this:
 In other words, every time there is an event for any of the registered
 metrics, it prints the event measurement and metadata, and then it prints
 information about each metric to the user.
-
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.

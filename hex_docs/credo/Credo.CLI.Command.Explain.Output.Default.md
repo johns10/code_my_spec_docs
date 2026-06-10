@@ -2,10 +2,10 @@
 
 
 
-## print_after_info(explanations, exec, line_no, column)
-
-Called after the analysis has run.
-
-## print_before_info(source_files, exec)
+## print_before_info/2
 
 Called before the analysis is run.
+
+## print_after_info/4
+
+Called after the analysis has run.

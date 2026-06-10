@@ -2,7 +2,7 @@
 
 Helper module to pipe and replace values easily.
 
-## replace(value, regex, new_value)
+## replace/3
 
 Replaces `value` if it matches `regex` with `new_value`.
 

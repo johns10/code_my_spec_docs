@@ -2,7 +2,7 @@
 
 Provides API endpoint related to rate limit
 
-## get(opts \\ [])
+## get/1
 
 Get rate limit status for the authenticated user
 

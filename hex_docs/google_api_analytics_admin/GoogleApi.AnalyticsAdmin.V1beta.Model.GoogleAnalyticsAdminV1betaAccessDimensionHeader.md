@@ -5,7 +5,3 @@ Describes a dimension column in the report. Dimensions requested in a report pro
 ## Attributes
 
 *   `dimensionName` (*type:* `String.t`, *default:* `nil`) - The dimension's name; for example 'userEmail'.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

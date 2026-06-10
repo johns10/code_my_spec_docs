@@ -2,25 +2,25 @@
 
 
 
-## disable()
-
-Disables extraction.
-
-## enable()
+## enable/0
 
 Enables message extraction.
 
-## extract(caller, backend, domain, msgctxt, id, extracted_comments)
+## disable/0
+
+Disables extraction.
+
+## extracting?/0
+
+Tells whether messages are being extracted.
+
+## extract/6
 
 Extracts a message by temporarily storing it in an agent.
 
 Note that this function doesn't perform any operation on the filesystem.
 
-## extracting?()
-
-Tells whether messages are being extracted.
-
-## pot_files(app, gettext_config)
+## pot_files/2
 
 Returns a list of POT files based on the results of the extraction.
 

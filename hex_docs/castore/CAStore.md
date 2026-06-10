@@ -7,7 +7,7 @@ This is why this module only provides one function, `file_path/0`, to access the
 the CA certificate store file. You can then read this file and use its contents for your
 own purposes.
 
-## file_path()
+## file_path/0
 
 Returns the path to the CA certificate store PEM file.
 

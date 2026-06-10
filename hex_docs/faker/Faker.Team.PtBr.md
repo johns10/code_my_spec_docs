@@ -2,22 +2,7 @@
 
 Functions for generating team related data in Brazilian Portuguese
 
-## creature()
-
-Returns a random creature name
-
-## Examples
-
-    iex> Faker.Team.PtBr.creature()
-    "corujas"
-    iex> Faker.Team.PtBr.creature()
-    "ovelha"
-    iex> Faker.Team.PtBr.creature()
-    "vampiros"
-    iex> Faker.Team.PtBr.creature()
-    "macacos"
-
-## name()
+## name/0
 
 Returns a string of the form [state] [creature]
 

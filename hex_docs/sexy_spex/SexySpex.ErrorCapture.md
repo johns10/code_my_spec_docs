@@ -23,40 +23,34 @@ Or start/stop manually:
 Uses an ETS table to store captured errors and a custom Logger handler
 to intercept error-level log messages.
 
-## check_and_raise!()
-
-Checks for errors and raises if any were found.
-
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## clear()
-
-Clears all captured errors.
-
-## error_count()
-
-Returns error count.
-
-## format_errors()
-
-Formats captured errors for display.
-
-## get_errors()
-
-Returns all captured errors.
-
-## has_errors?()
-
-Returns true if any errors were captured.
-
-## start()
+## start/0
 
 Starts the error capture process and installs the Logger handler.
 
-## stop()
+## stop/0
 
 Stops the error capture process and removes the Logger handler.
+
+## clear/0
+
+Clears all captured errors.
+
+## get_errors/0
+
+Returns all captured errors.
+
+## has_errors?/0
+
+Returns true if any errors were captured.
+
+## error_count/0
+
+Returns error count.
+
+## format_errors/0
+
+Formats captured errors for display.
+
+## check_and_raise!/0
+
+Checks for errors and raises if any were found.

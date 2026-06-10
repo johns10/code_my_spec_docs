@@ -2,7 +2,7 @@
 
 
 
-## define(module, extensions, opts)
+## define/3
 
 Creates a module to aid in type processing.
 

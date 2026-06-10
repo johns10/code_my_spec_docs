@@ -2,20 +2,20 @@
 
 
 
-## defhelper(route, exprs)
+## define/2
+
+Generates the helper module for the given environment and routes.
+
+## defhelper/2
 
 Receives a route and returns the quoted definition for its helper function.
 
 In case a helper name was not given, or route is forwarded, returns nil.
 
-## define(env, routes)
-
-Generates the helper module for the given environment and routes.
-
-## encode_param(str)
-
-Callback for properly encoding parameters in routes.
-
-## raise_route_error(mod, fun, arity, action, routes, params)
+## raise_route_error/6
 
 Callback for generate router catch all.
+
+## encode_param/1
+
+Callback for properly encoding parameters in routes.

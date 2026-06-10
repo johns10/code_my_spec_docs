@@ -2,7 +2,7 @@
 
 Provides API endpoint related to emojis
 
-## get(opts \\ [])
+## get/1
 
 Get emojis
 

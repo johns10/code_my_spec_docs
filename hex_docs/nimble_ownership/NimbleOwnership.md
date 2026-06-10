@@ -72,7 +72,7 @@ the test. Without digging too deep, a practical example of this is [Mox][mox] an
 
 [mox]: https://hexdocs.pm/mox/Mox.html
 
-## allow(ownership_server, pid_with_access, pid_to_allow, key, timeout \\ 5000)
+## allow/5
 
 Allows `pid_to_allow` to use `key` through `pid_with_access` (on the given `ownership_server`).
 
@@ -127,48 +127,7 @@ if one needs to allow multiple PIDs that resolve from a single term, such as the
     iex> NimbleOwnership.fetch_owner(server, [pid], :my_key)
     {:ok, self()}
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## cleanup_owner(ownership_server, owner_pid)
-
-Manually cleans up allowances and owned keys associated with `owner_pid`.
-
-This is meant to be used in conjunction with `set_owner_to_manual_cleanup/2`.
-
-See the [*Cleanup* section](#module-cleanup) in the module documentation.
-
-## fetch_owner(ownership_server, callers, key, timeout \\ 5000)
-
-Gets the owner of `key` through one of the `callers`.
-
-If one of the `callers` owns `key` or is allowed access to `key`,
-then this function returns `{:ok, owner_pid}`.
-
-If the ownership server is in [**shared mode**](#module-modes), then this function
-returns `{:shared_owner, shared_owner_pid}` where `shared_owner_pid` is the PID of the
-shared owner. This is regardless of the `callers`.
-
-If none of the callers owns `key` or is allowed access to `key`, then this function
-returns `{:error, reason}`.
-
-## Examples
-
-    iex> pid = spawn(fn -> Process.sleep(:infinity) end)
-    iex> {:ok, server} = NimbleOwnership.start_link()
-    iex> NimbleOwnership.set_mode_to_shared(server, pid)
-    iex> {:shared_owner, owner_pid} = NimbleOwnership.fetch_owner(server, [self()], :whatever_key)
-    iex> pid == owner_pid
-    true
-
-    iex> {:ok, server} = NimbleOwnership.start_link()
-    iex> NimbleOwnership.fetch_owner(server, [self()], :whatever_key)
-    :error
-
-## get_and_update(ownership_server, owner_pid, key, fun, timeout \\ 5000)
+## get_and_update/5
 
 Accesses `key` (owned by `owner_pid`) or initializes the ownership.
 
@@ -246,7 +205,34 @@ Attempting to update the metadata from an allowed process results in an error:
     iex> error.key
     :some_key
 
-## get_owned(ownership_server, owner_pid, default \\ nil, timeout \\ 5000)
+## fetch_owner/4
+
+Gets the owner of `key` through one of the `callers`.
+
+If one of the `callers` owns `key` or is allowed access to `key`,
+then this function returns `{:ok, owner_pid}`.
+
+If the ownership server is in [**shared mode**](#module-modes), then this function
+returns `{:shared_owner, shared_owner_pid}` where `shared_owner_pid` is the PID of the
+shared owner. This is regardless of the `callers`.
+
+If none of the callers owns `key` or is allowed access to `key`, then this function
+returns `{:error, reason}`.
+
+## Examples
+
+    iex> pid = spawn(fn -> Process.sleep(:infinity) end)
+    iex> {:ok, server} = NimbleOwnership.start_link()
+    iex> NimbleOwnership.set_mode_to_shared(server, pid)
+    iex> {:shared_owner, owner_pid} = NimbleOwnership.fetch_owner(server, [self()], :whatever_key)
+    iex> pid == owner_pid
+    true
+
+    iex> {:ok, server} = NimbleOwnership.start_link()
+    iex> NimbleOwnership.fetch_owner(server, [self()], :whatever_key)
+    :error
+
+## get_owned/4
 
 Gets all the keys owned by `owner_pid` with all their associated metadata.
 
@@ -263,19 +249,19 @@ If `owner_pid` doesn't own any keys, then this function returns `default`.
     iex> NimbleOwnership.get_owned(server, self(), :default)
     :default
 
-## set_mode_to_private(ownership_server)
+## set_mode_to_private/1
 
 Sets the ownership server to *private mode*.
 
 See [the module documentation](#module-modes) for more information.
 
-## set_mode_to_shared(ownership_server, shared_owner)
+## set_mode_to_shared/2
 
 Sets the ownership server to *shared mode* and sets `shared_owner` as the shared owner.
 
 See [the module documentation](#module-modes) for more information.
 
-## set_owner_to_manual_cleanup(ownership_server, owner_pid)
+## set_owner_to_manual_cleanup/2
 
 Sets the owner PID to manual cleanup mode.
 
@@ -292,28 +278,10 @@ work as expected.
 
 See the [*Cleanup* section](#module-cleanup) in the module documentation.
 
-## start_link(options \\ [])
+## cleanup_owner/2
 
-Starts an ownership server.
+Manually cleans up allowances and owned keys associated with `owner_pid`.
 
-## Options
+This is meant to be used in conjunction with `set_owner_to_manual_cleanup/2`.
 
-This function supports all the options supported by `GenServer.start_link/3`, namely:
-
-  * `:name`
-  * `:timeout`
-  * `:debug`
-  * `:spawn_opt`
-  * `:hibernate_after`
-
-## server/0
-
-Ownership server.
-
-## key/0
-
-Arbitrary key.
-
-## metadata/0
-
-Arbitrary metadata associated with an owned `t:key/0`.
+See the [*Cleanup* section](#module-cleanup) in the module documentation.

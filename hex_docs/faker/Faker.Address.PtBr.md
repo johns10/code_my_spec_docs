@@ -2,7 +2,7 @@
 
 Functions for generating addresses in Portuguese
 
-## building_number()
+## building_number/0
 
 Return random building number.
 
@@ -17,7 +17,7 @@ Return random building number.
     iex> Faker.Address.PtBr.building_number()
     "0832"
 
-## city()
+## city/0
 
 Return city name.
 
@@ -32,76 +32,7 @@ Return city name.
     iex> Faker.Address.PtBr.city()
     "Kléber"
 
-## city_prefix()
-
-Return city suffixes.
-
-## Examples
-
-    iex> Faker.Address.PtBr.city_prefix()
-    "Santo"
-    iex> Faker.Address.PtBr.city_prefix()
-    "Senador"
-    iex> Faker.Address.PtBr.city_prefix()
-    "Senador"
-    iex> Faker.Address.PtBr.city_prefix()
-    "Alta"
-
-## city_suffixes()
-
-Return city suffixes.
-
-## Examples
-
-    iex> Faker.Address.PtBr.city_suffixes()
-    "da Serra"
-    iex> Faker.Address.PtBr.city_suffixes()
-    "dos Dourados"
-    iex> Faker.Address.PtBr.city_suffixes()
-    "da Serra"
-    iex> Faker.Address.PtBr.city_suffixes()
-    "Paulista"
-
-## country()
-
-Return country.
-
-## Examples
-
-    iex> Faker.Address.PtBr.country()
-    "Ilhas Virgens Britânicas"
-    iex> Faker.Address.PtBr.country()
-    "Coreia do Sul"
-    iex> Faker.Address.PtBr.country()
-    "Bolívia"
-    iex> Faker.Address.PtBr.country()
-    "Mongólia"
-
-## country_code()
-
-Return country code.
-
-## Examples
-
-    iex> Faker.Address.PtBr.country_code()
-    "BR"
-
-## neighborhood()
-
-Return neighborhood.
-
-## Examples
-
-    iex> Faker.Address.PtBr.neighborhood()
-    "Granja De Freitas"
-    iex> Faker.Address.PtBr.neighborhood()
-    "Novo Ouro Preto"
-    iex> Faker.Address.PtBr.neighborhood()
-    "Padre Eustáquio"
-    iex> Faker.Address.PtBr.neighborhood()
-    "Nossa Senhora Aparecida"
-
-## secondary_address()
+## secondary_address/0
 
 Return random secondary address.
 
@@ -116,37 +47,7 @@ Return random secondary address.
     iex> Faker.Address.PtBr.secondary_address()
     "Sala 970"
 
-## state()
-
-Return state.
-
-## Examples
-
-    iex> Faker.Address.PtBr.state()
-    "Rondônia"
-    iex> Faker.Address.PtBr.state()
-    "Rio Grande do Sul"
-    iex> Faker.Address.PtBr.state()
-    "Distrito Federal"
-    iex> Faker.Address.PtBr.state()
-    "Ceará"
-
-## state_abbr()
-
-Return state abbr.
-
-## Examples
-
-    iex> Faker.Address.PtBr.state_abbr()
-    "RO"
-    iex> Faker.Address.PtBr.state_abbr()
-    "RS"
-    iex> Faker.Address.PtBr.state_abbr()
-    "DF"
-    iex> Faker.Address.PtBr.state_abbr()
-    "CE"
-
-## street_address()
+## street_address/0
 
 Return street address.
 
@@ -161,7 +62,7 @@ Return street address.
     iex> Faker.Address.PtBr.street_address()
     "Praia Limeira, 020"
 
-## street_address(arg1)
+## street_address/1
 
 Return `street_address/0` or if argument is `true` adds `secondary_address/0`.
 
@@ -176,7 +77,7 @@ Return `street_address/0` or if argument is `true` adds `secondary_address/0`.
     iex> Faker.Address.PtBr.street_address(false)
     "Sítio Maria Eduarda, 097"
 
-## street_name()
+## street_name/0
 
 Return street name.
 
@@ -191,37 +92,7 @@ Return street name.
     iex> Faker.Address.PtBr.street_name()
     "Condomínio da Maia"
 
-## street_prefix()
-
-Return street prefix.
-
-## Examples
-
-    iex> Faker.Address.PtBr.street_prefix()
-    "Recanto"
-    iex> Faker.Address.PtBr.street_prefix()
-    "Estação"
-    iex> Faker.Address.PtBr.street_prefix()
-    "Feira"
-    iex> Faker.Address.PtBr.street_prefix()
-    "Fazenda"
-
-## time_zone()
-
-Return time zone.
-
-## Examples
-
-    iex> Faker.Address.PtBr.time_zone()
-    "Australia/Sydney"
-    iex> Faker.Address.PtBr.time_zone()
-    "America/Guyana"
-    iex> Faker.Address.PtBr.time_zone()
-    "Asia/Kathmandu"
-    iex> Faker.Address.PtBr.time_zone()
-    "Europa/Vienna"
-
-## zip_code()
+## zip_code/0
 
 Return random postcode.
 

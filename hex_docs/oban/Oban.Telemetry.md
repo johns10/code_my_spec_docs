@@ -293,7 +293,13 @@ end
 
 [honey]: https://honeybadger.io
 
-## attach_default_logger(opts \\ [])
+## default_handler_id/0
+
+The unique id used to attach telemetry logging.
+
+This is the constant `"oban-default-logger"` and exposed for testing purposes.
+
+## attach_default_logger/1
 
 Attaches a default structured JSON Telemetry handler for logging.
 
@@ -383,13 +389,7 @@ Attach a logger with only `:notifier`, `:peer`, and `:stager` events logged:
 
     Oban.Telemetry.attach_default_logger(events: ~w(notifier peer stager)a)
 
-## default_handler_id()
-
-The unique id used to attach telemetry logging.
-
-This is the constant `"oban-default-logger"` and exposed for testing purposes.
-
-## detach_default_logger()
+## detach_default_logger/0
 
 Undoes `Oban.Telemetry.attach_default_logger/1` by detaching the attached logger.
 
@@ -403,12 +403,3 @@ Detach a previously attached logger:
 Attempt to detach when a logger wasn't attached:
 
     {:error, :not_found} = Oban.Telemetry.detach_default_logger()
-
-## event_types/0
-
-The types of telemetry events, essentially the second element of each event list. For example,
-in the event `[:oban, :job, :start]`, the "type" is `:job`.
-
-## logger_opts/0
-
-Available logging options.

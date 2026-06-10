@@ -2,7 +2,7 @@
 
 
 
-## verify_session(endpoint, topic, session_token, static_token)
+## verify_session/4
 
 Verifies the session token.
 

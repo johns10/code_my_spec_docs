@@ -2,7 +2,16 @@
 
 Functions for generating NATO alphabet data
 
-## callsign()
+## stop_code_word/0
+
+Returns the NATO stop code
+
+## Examples
+
+    iex> Faker.Nato.stop_code_word()
+    "STOP"
+
+## callsign/0
 
 Returns a random NATO call sign of the form [alpha]-[alpha]-[digit]
 
@@ -17,22 +26,7 @@ Returns a random NATO call sign of the form [alpha]-[alpha]-[digit]
     iex> Faker.Nato.callsign()
     "INDIA-WHISKEY-FOUR"
 
-## digit_code_word()
-
-Returns a random digit NATO code
-
-## Examples
-
-    iex> Faker.Nato.digit_code_word()
-    "ONE"
-    iex> Faker.Nato.digit_code_word()
-    "TWO"
-    iex> Faker.Nato.digit_code_word()
-    "SIX"
-    iex> Faker.Nato.digit_code_word()
-    "FIVE"
-
-## format(str)
+## format/1
 
 Formats a string using the NATO alphabet.
 
@@ -49,27 +43,3 @@ and `"."` to the stop code.
     "FIVE-GOLF-TWO-STOP"
     iex> Faker.Nato.format("#-?-#-.")
     "ONE-WHISKEY-FOUR-STOP"
-
-## letter_code_word()
-
-Returns a random letter NATO code
-
-## Examples
-
-    iex> Faker.Nato.letter_code_word()
-    "ECHO"
-    iex> Faker.Nato.letter_code_word()
-    "LIMA"
-    iex> Faker.Nato.letter_code_word()
-    "ROMEO"
-    iex> Faker.Nato.letter_code_word()
-    "CHARLIE"
-
-## stop_code_word()
-
-Returns the NATO stop code
-
-## Examples
-
-    iex> Faker.Nato.stop_code_word()
-    "STOP"

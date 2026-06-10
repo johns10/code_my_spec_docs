@@ -34,9 +34,3 @@ The namespace may be any term.
 
 [pg]: https://www.erlang.org/doc/man/pg.html
 [de]: https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html#our-first-distributed-code
-
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.

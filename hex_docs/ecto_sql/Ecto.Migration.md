@@ -407,7 +407,256 @@ among all your migrations.
 
   * The [Safe Ecto Migrations guide](https://github.com/fly-apps/safe-ecto-migrations)
 
-## add(column, type, opts \\ [])
+## __using__/1
+
+Migration code to run immediately before the transaction is closed.
+
+Keep in mind that it is treated like any normal migration code, and should
+consider both the up *and* down cases of the migration.
+
+## create/2
+
+Creates a table.
+
+By default, the table will also include an `:id` primary key field that
+has a type of `:bigserial`. Check the `table/2` docs for more information.
+
+## Examples
+
+    create table(:posts) do
+      add :title, :string, default: "Untitled"
+      add :body,  :text
+
+      timestamps()
+    end
+
+## create_if_not_exists/2
+
+Creates a table if it does not exist.
+
+Works just like `create/2` but does not raise an error when the table
+already exists.
+
+## alter/2
+
+Alters a table.
+
+## Examples
+
+    alter table("posts") do
+      add :summary, :text
+      modify :title, :text
+      remove :views
+    end
+
+## create/1
+
+Creates one of the following:
+
+  * an index
+  * a table with only the :id primary key
+  * a constraint
+
+When reversing (in a `change/0` running backwards), indexes are only dropped
+if they exist, and no errors are raised. To enforce dropping an index, use
+`drop/1`.
+
+## Examples
+
+    create index("posts", [:name])
+    create table("version")
+    create constraint("products", "price_must_be_positive", check: "price > 0")
+
+## create_if_not_exists/1
+
+Creates an index or a table with only `:id` field if one does not yet exist.
+
+## Examples
+
+    create_if_not_exists index("posts", [:name])
+
+    create_if_not_exists table("version")
+
+## drop/2
+
+Drops one of the following:
+
+  * an index
+  * a table
+  * a constraint
+
+## Examples
+
+    drop index("posts", [:name])
+    drop table("posts")
+    drop constraint("products", "price_must_be_positive")
+    drop index("posts", [:name]), mode: :cascade
+    drop table("posts"), mode: :cascade
+
+## Options
+
+  * `:mode` - when set to `:cascade`, automatically drop objects that depend
+    on the index, and in turn all objects that depend on those objects
+    on the table. Default is `:restrict`
+
+## drop_if_exists/2
+
+Drops one of the following if it exists:
+
+  * an index
+  * a table
+  * a constraint
+
+Does not raise an error if the specified table or index does not exist.
+
+## Examples
+
+    drop_if_exists index("posts", [:name])
+    drop_if_exists table("posts")
+    drop_if_exists constraint("products", "price_must_be_positive")
+    drop_if_exists index("posts", [:name]), mode: :cascade
+    drop_if_exists table("posts"), mode: :cascade
+
+## Options
+
+  * `:mode` - when set to `:cascade`, automatically drop objects that depend
+    on the index, and in turn all objects that depend on those objects
+    on the table. Default is `:restrict`
+
+## table/2
+
+Returns a table struct that can be given to `create/2`, `alter/2`, `drop/1`,
+etc.
+
+## Examples
+
+    create table("products") do
+      add :name, :string
+      add :price, :decimal
+    end
+
+    drop table("products")
+
+    create table("products", primary_key: false) do
+      add :name, :string
+      add :price, :decimal
+    end
+
+    create table("daily_prices", primary_key: false, options: "PARTITION BY RANGE (date)") do
+      add :name, :string, primary_key: true
+      add :date, :date, primary_key: true
+      add :price, :decimal
+    end
+
+    create table("users", primary_key: false) do
+      add :id, :identity, primary_key: true, start_value: 100, increment: 20
+    end
+
+## Options
+
+  * `:primary_key` - when `false`, a primary key field is not generated on table
+    creation. Alternatively, a keyword list in the same style of the
+    `:migration_primary_key` repository configuration can be supplied
+    to control the generation of the primary key field. The keyword list
+    must include `:name` and `:type`. See `add/3` for further options.
+  * `:engine` - customizes the table storage for supported databases. For MySQL,
+    the default is InnoDB.
+  * `:prefix` - the prefix for the table. This prefix will automatically be used
+    for all constraints and references defined for this table unless explicitly
+    overridden in said constraints/references.
+  * `:comment` - adds a comment to the table.
+  * `:options` - provide custom options that will be appended after the generated
+    statement. For example, "WITH", "INHERITS", or "ON COMMIT" clauses. "PARTITION BY"
+    can be provided for databases that support table partitioning.
+
+## unique_index/3
+
+Shortcut for creating a unique index.
+
+See `index/3` for more information.
+
+## execute/1
+
+Executes arbitrary SQL, anonymous function or a keyword command.
+
+The argument is typically a string, containing the SQL command to be executed.
+Keyword commands exist for non-SQL adapters and are not used in most
+situations.
+
+You may instead run arbitrary code as part of your migration by supplying an
+anonymous function. This defers execution of the anonymous function until
+the migration callback has terminated (see [Executing and
+flushing](#module-executing-and-flushing)). This is most often used in
+combination with `repo/0` by library authors who want to create high-level
+migration helpers.
+
+Reversible commands can be defined by calling `execute/2`.
+
+## Examples
+
+    execute "CREATE EXTENSION postgres_fdw"
+
+    execute create: "posts", capped: true, size: 1024
+
+    execute(fn -> repo().query!("SELECT $1::integer + $2", [40, 2], [log: :info]) end)
+
+    execute(fn -> repo().update_all("posts", set: [published: true]) end)
+
+## execute/2
+
+Executes reversible SQL commands.
+
+This is useful for database-specific functionality that does not
+warrant special support in Ecto, for example, creating and dropping
+a PostgreSQL extension. The `execute/2` form avoids having to define
+separate `up/0` and `down/0` blocks that each contain an `execute/1`
+expression.
+
+The allowed parameters are explained in `execute/1`.
+
+## Examples
+
+    defmodule MyApp.MyMigration do
+      use Ecto.Migration
+
+      def change do
+        execute "CREATE EXTENSION postgres_fdw", "DROP EXTENSION postgres_fdw"
+        execute(&execute_up/0, &execute_down/0)
+      end
+
+      defp execute_up, do: repo().query!("select 'Up query …';", [], [log: :info])
+      defp execute_down, do: repo().query!("select 'Down query …';", [], [log: :info])
+    end
+
+## execute_file/1
+
+Executes a SQL command from a file.
+
+The argument must be a path to a file containing a SQL command.
+
+Reversible commands can be defined by calling `execute_file/2`.
+
+## execute_file/2
+
+Executes reversible SQL commands from files.
+
+Each argument must be a path to a file containing a SQL command.
+
+See `execute/2` for more information on executing SQL commands.
+
+## direction/0
+
+Gets the migrator direction.
+
+## repo/0
+
+Gets the migrator repo.
+
+## prefix/0
+
+Gets the migrator prefix.
+
+## add/3
 
 Adds a column when creating or altering a table.
 
@@ -480,7 +729,7 @@ as `varchar(255)`.
   * `:fields` - option for `:duration` type. Restricts the set of stored interval fields
     in the database.
 
-## add_if_not_exists(column, type, opts \\ [])
+## add_if_not_exists/3
 
 Adds a column if it does not exist yet when altering a table.
 
@@ -496,199 +745,29 @@ This command is not reversible as Ecto does not know about column existence befo
       add_if_not_exists :title, :string, default: ""
     end
 
-## constraint(table, name, opts \\ [])
+## rename/2
 
-Defines a constraint (either a check constraint or an exclusion constraint)
-to be evaluated by the database when a row is inserted or updated.
-
-## Examples
-
-    create constraint("users", :price_must_be_positive, check: "price > 0")
-    create constraint("size_ranges", :no_overlap, exclude: ~s|gist (int4range("from", "to", '[]') WITH &&)|)
-    drop   constraint("products", "price_must_be_positive")
-
-## Options
-
-  * `:check` - A check constraint expression. Required when creating a check constraint.
-  * `:exclude` - An exclusion constraint expression. Required when creating an exclusion constraint.
-  * `:prefix` - The prefix for the table.
-  * `:validate` - Whether or not to validate the constraint on creation (true by default). See the section below for more information
-  * `:comment` - adds a comment to the constraint.
-
-
-## Using `validate: false`
-
-Validation/Enforcement of a constraint is enabled by default, but disabling on constraint
-creation is supported by PostgreSQL, and MySQL, and can be done by setting `validate: false`.
-
-Setting `validate: false` as an option can be useful, as the creation of a constraint will cause
-a full table scan to check existing rows. The constraint will still be enforced for subsequent
-inserts and updates, but should then be updated in a following command or migration to enforce
-the new constraint.
-
-Validating / Enforcing the constraint in a later command, or migration, can be done like so:
-
-```
-  def change do
-    # PostgreSQL
-    execute "ALTER TABLE products VALIDATE CONSTRAINT price_must_be_positive", ""
-
-    # MySQL
-    execute "ALTER TABLE products ALTER CONSTRAINT price_must_be_positive ENFORCED", ""
-  end
-```
-
-See the [Safe Ecto Migrations guide](https://github.com/fly-apps/safe-ecto-migrations) for an
-in-depth explanation of the benefits of this approach.
-
-## create(index)
-
-Creates one of the following:
-
-  * an index
-  * a table with only the :id primary key
-  * a constraint
-
-When reversing (in a `change/0` running backwards), indexes are only dropped
-if they exist, and no errors are raised. To enforce dropping an index, use
-`drop/1`.
+Renames a table or index.
 
 ## Examples
 
-    create index("posts", [:name])
-    create table("version")
-    create constraint("products", "price_must_be_positive", check: "price > 0")
+    # rename a table
+    rename table("posts"), to: table("new_posts")
 
-## create_if_not_exists(index)
+    # rename an index
+    rename(index(:people, [:name], name: "persons_name_index"), to: "people_name_index")
 
-Creates an index or a table with only `:id` field if one does not yet exist.
+## rename/3
 
-## Examples
+Renames a column.
 
-    create_if_not_exists index("posts", [:name])
-
-    create_if_not_exists table("version")
-
-## direction()
-
-Gets the migrator direction.
-
-## drop(index_or_table_or_constraint, opts \\ [])
-
-Drops one of the following:
-
-  * an index
-  * a table
-  * a constraint
+Note that this occurs outside of the `alter` statement.
 
 ## Examples
 
-    drop index("posts", [:name])
-    drop table("posts")
-    drop constraint("products", "price_must_be_positive")
-    drop index("posts", [:name]), mode: :cascade
-    drop table("posts"), mode: :cascade
+    rename table("posts"), :title, to: :summary
 
-## Options
-
-  * `:mode` - when set to `:cascade`, automatically drop objects that depend
-    on the index, and in turn all objects that depend on those objects
-    on the table. Default is `:restrict`
-
-## drop_if_exists(index_or_table_or_constraint, opts \\ [])
-
-Drops one of the following if it exists:
-
-  * an index
-  * a table
-  * a constraint
-
-Does not raise an error if the specified table or index does not exist.
-
-## Examples
-
-    drop_if_exists index("posts", [:name])
-    drop_if_exists table("posts")
-    drop_if_exists constraint("products", "price_must_be_positive")
-    drop_if_exists index("posts", [:name]), mode: :cascade
-    drop_if_exists table("posts"), mode: :cascade
-
-## Options
-
-  * `:mode` - when set to `:cascade`, automatically drop objects that depend
-    on the index, and in turn all objects that depend on those objects
-    on the table. Default is `:restrict`
-
-## execute(command)
-
-Executes arbitrary SQL, anonymous function or a keyword command.
-
-The argument is typically a string, containing the SQL command to be executed.
-Keyword commands exist for non-SQL adapters and are not used in most
-situations.
-
-You may instead run arbitrary code as part of your migration by supplying an
-anonymous function. This defers execution of the anonymous function until
-the migration callback has terminated (see [Executing and
-flushing](#module-executing-and-flushing)). This is most often used in
-combination with `repo/0` by library authors who want to create high-level
-migration helpers.
-
-Reversible commands can be defined by calling `execute/2`.
-
-## Examples
-
-    execute "CREATE EXTENSION postgres_fdw"
-
-    execute create: "posts", capped: true, size: 1024
-
-    execute(fn -> repo().query!("SELECT $1::integer + $2", [40, 2], [log: :info]) end)
-
-    execute(fn -> repo().update_all("posts", set: [published: true]) end)
-
-## execute(up, down)
-
-Executes reversible SQL commands.
-
-This is useful for database-specific functionality that does not
-warrant special support in Ecto, for example, creating and dropping
-a PostgreSQL extension. The `execute/2` form avoids having to define
-separate `up/0` and `down/0` blocks that each contain an `execute/1`
-expression.
-
-The allowed parameters are explained in `execute/1`.
-
-## Examples
-
-    defmodule MyApp.MyMigration do
-      use Ecto.Migration
-
-      def change do
-        execute "CREATE EXTENSION postgres_fdw", "DROP EXTENSION postgres_fdw"
-        execute(&execute_up/0, &execute_down/0)
-      end
-
-      defp execute_up, do: repo().query!("select 'Up query …';", [], [log: :info])
-      defp execute_down, do: repo().query!("select 'Down query …';", [], [log: :info])
-    end
-
-## execute_file(path)
-
-Executes a SQL command from a file.
-
-The argument must be a path to a file containing a SQL command.
-
-Reversible commands can be defined by calling `execute_file/2`.
-
-## execute_file(up_path, down_path)
-
-Executes reversible SQL commands from files.
-
-Each argument must be a path to a file containing a SQL command.
-
-See `execute/2` for more information on executing SQL commands.
-
-## fragment(expr)
+## fragment/1
 
 Generates a fragment to be used as a default value.
 
@@ -698,183 +777,31 @@ Generates a fragment to be used as a default value.
       add :inserted_at, :naive_datetime, default: fragment("now()")
     end
 
-## index(table, columns, opts \\ [])
+## timestamps/1
 
-Returns an index struct that can be given to `create/1`, `drop/1`, etc.
+Adds `:inserted_at` and `:updated_at` timestamp columns.
 
-Expects the table name as the first argument and the index field(s) as
-the second. The fields can be atoms, representing columns, or strings,
-representing expressions that are sent as-is to the database.
+Those columns are of `:naive_datetime` type. A list of `opts` can be given
+to customize the generated fields.
+
+Following options will override the repo configuration specified by
+`:migration_timestamps` option.
 
 ## Options
 
-  * `:name` - the name of the index. Can be provided as a string or an atom.
-  Defaults to "#{table}_#{column}_index".
-  * `:prefix` - specify an optional prefix for the index.
-  * `:unique` - indicates whether the index should be unique. Defaults to `false`.
-  * `:comment` - adds a comment to the index.
-  * `:using` - configures the index type.
+  * `:inserted_at` - the name of the column for storing insertion times.
+    Setting it to `false` disables the column.
+  * `:updated_at` - the name of the column for storing last-updated-at times.
+    Setting it to `false` disables the column.
+  * `:type` - the type of the `:inserted_at` and `:updated_at` columns.
+    Defaults to `:naive_datetime`.
+  * `:default` - the columns' default value. It can be a string, number, empty
+    list, list of strings, list of numbers, or a fragment generated by
+    `fragment/1`.
+  * `:null` - determines whether the column accepts null values. Defaults to
+    `false`.
 
-Some options are supported only by some databases:
-
-  * `:concurrently` - indicates whether the index should be created/dropped
-    concurrently in MSSQL and PostgreSQL.
-  * `:include` - specify fields for a covering index,
-    [supported by PostgreSQL only](https://www.postgresql.org/docs/current/indexes-index-only-scans.html).
-  * `:nulls_distinct` - specify whether null values should be considered
-    distinct for a unique index. Defaults to `nil`, which will not add the
-    parameter to the generated SQL and thus use the database default.
-    This option is currently only supported by PostgreSQL 15+.
-    For MySQL, it is always false. For MSSQL, it is always true.
-    See the dedicated section on this option for more information.
-  * `:only` - indicates to not recurse creating indexes on partitions.
-    [supported by PostgreSQL only](https://www.postgresql.org/docs/current/ddl-partitioning.html#DDL-PARTITIONING-DECLARATIVE-MAINTENANCE).
-  * `:options` - configures index options (WITH clause) for both PostgreSQL
-    and MSSQL
-  * `:where` - specify conditions for a partial index (PostgreSQL) /
-    filtered index (MSSQL).
-
-## Adding/dropping indexes concurrently
-
-PostgreSQL supports adding/dropping indexes concurrently (see the
-[docs](http://www.postgresql.org/docs/current/static/sql-createindex.html)).
-However, this feature does not work well with the transactions used by
-Ecto to guarantee integrity during migrations.
-
-You can address this with two changes:
-
-  1. Change your repository to use PG advisory locks as the migration lock.
-     Note this may not be supported by Postgres-like databases and proxies.
-
-  2. Disable DDL transactions. Doing this removes the guarantee that all of
-    the changes in the migration will happen at once, so you will want to
-    keep it short.
-
-If the database adapter supports several migration lock strategies, such as
-Postgrex, then review those strategies and consider using a strategy that
-utilizes advisory locks to facilitate running migrations one at a time even
-across multiple nodes. For example:
-
-### Config file (PostgreSQL)
-
-    config MyApp.Repo, migration_lock: :pg_advisory_lock
-
-### Migration file
-
-    defmodule MyRepo.Migrations.CreateIndexes do
-      use Ecto.Migration
-      @disable_ddl_transaction true
-
-      def change do
-        create index("posts", [:slug], concurrently: true)
-      end
-    end
-
-Alternately, you can add `@disable_migration_lock true` to your migration file.
-This would mean that different nodes in a multi-node setup could run the same
-migration at once. It is recommended to isolate your migrations to a single node
-when using concurrent index creation without an advisory lock.
-
-## Index types
-
-When creating an index, the index type can be specified with the `:using`
-option. The `:using` option can be an atom or a string, and its value is
-passed to the generated `USING` clause as-is.
-
-For example, PostgreSQL supports several index types like B-tree (the
-default), Hash, GIN, and GiST. More information on index types can be found
-in the [PostgreSQL docs](http://www.postgresql.org/docs/current/indexes-types.html).
-
-## Partial indexes
-
-Databases like PostgreSQL and MSSQL support partial indexes.
-
-A partial index is an index built over a subset of a table. The subset
-is defined by a conditional expression using the `:where` option.
-The `:where` option can be an atom or a string; its value is passed
-to the generated `WHERE` clause as-is.
-
-More information on partial indexes can be found in the [PostgreSQL
-docs](http://www.postgresql.org/docs/current/indexes-partial.html).
-
-## The `:nulls_distinct` option
-
-A unique index does not prevent multiple null values by default in most databases.
-
-For example, imagine we have a "products" table and need to guarantee that
-sku's are unique within their category, but the category is optional.
-Creating a regular unique index over the sku and category_id fields with:
-
-    create index("products", [:sku, :category_id], unique: true)
-
-will allow products with the same sku to be inserted if their category_id is `nil`.
-The `:nulls_distinct` option can be used to change this behavior by considering
-null values as equal, i.e. not distinct:
-
-    create index("products", [:sku, :category_id], unique: true, nulls_distinct: false)
-
-This option is currently only supported by PostgreSQL 15+.
-As a workaround for older PostgreSQL versions and other databases, an
-additional partial unique index for the sku can be created:
-
-    create index("products", [:sku, :category_id], unique: true)
-    create index("products", [:sku], unique: true, where: "category_id IS NULL")
-
-## Sorting direction
-
-You can specify the sorting direction of the index by using a keyword list:
-
-    create index("products", [desc: sku])
-
-The following keywords are supported:
-
-  * `:asc`
-  * `:asc_nulls_last`
-  * `:asc_nulls_first`
-  * `:desc`
-  * `:desc_nulls_last`
-  * `:desc_nulls_first`
-
-The `*_nulls_first` and `*_nulls_last` variants are not supported by all
-databases.
-
-## Examples
-
-    # With no name provided, the name of the below index defaults to
-    # products_category_id_sku_index
-    create index("products", [:category_id, :sku], unique: true)
-
-    # The name can also be set explicitly
-    create index("products", [:category_id, :sku], name: :my_special_name)
-
-    # Indexes can be added concurrently
-    create index("products", [:category_id, :sku], concurrently: true)
-
-    # The index type can be specified
-    create index("products", [:name], using: :hash)
-
-    # Partial indexes are created by specifying a :where option
-    create index("products", [:user_id], where: "price = 0", name: :free_products_index)
-
-    # Covering indexes are created by specifying a :include option
-    create index("products", [:user_id], include: [:category_id])
-
-Indexes also support custom expressions. Some databases may require the
-index expression to be written between parentheses:
-
-    # Create an index on a custom expression
-    create index("products", ["(lower(name))"], name: :products_lower_name_index)
-
-    # Create a tsvector GIN index on PostgreSQL
-    create index("products", ["(to_tsvector('english', name))"],
-                 name: :products_name_vector, using: "GIN")
-
-If the expression is a column name, it will not be quoted. This may cause issues
-when the column is named after a reserved word. Consider using an atom instead.
-For example, the name `offset` is reserved in many databases so the following
-could produce an error: `create index("products", ["offset"])`.
-
-## modify(column, type, opts \\ [])
+## modify/3
 
 Modifies the type of a column when altering a table.
 
@@ -932,57 +859,7 @@ doesn't change.
   * `:comment` - adds a comment to the modified column.
   * `:collation` - the collation of the text type.
 
-## prefix()
-
-Gets the migrator prefix.
-
-## references(table, opts \\ [])
-
-Defines a foreign key.
-
-By default it assumes you are linking to the referenced table
-via its primary key with name `:id`. If you are using a non-default
-key setup (e.g. using `uuid` type keys) you must ensure you set the
-options, such as `:column` and `:type`, to match your target key.
-
-## Examples
-
-    create table("products") do
-      add :group_id, references("groups")
-    end
-
-    create table("categories") do
-      add :group_id, :integer
-      # A composite foreign that points from categories (product_id, group_id)
-      # to products (id, group_id)
-      add :product_id, references("products", with: [group_id: :group_id])
-    end
-
-## Options
-
-  * `:name` - The name of the underlying reference, which defaults to
-    "#{table}_#{column}_fkey".
-  * `:column` - The column name in the referenced table, which defaults to `:id`.
-  * `:prefix` - The prefix for the reference. Defaults to the prefix
-    defined by the block's `table/2` struct (the "products" table in
-    the example above), or `nil`.
-  * `:type` - The foreign key type, which defaults to `:bigserial`.
-  * `:on_delete` - What to do if the referenced entry is deleted. May be
-    `:nothing` (default), `:delete_all`, `:nilify_all`, `{:nilify, columns}`, `:default_all`, `{:default, columns}`
-    or `:restrict`. `{:nilify, columns}` and `{:default, columns}` expect a list of atoms for `columns`
-    and is not supported by all databases.
-  * `:on_update` - What to do if the referenced entry is updated. May be
-    `:nothing` (default), `:update_all`, `:nilify_all`, or `:restrict`.
-  * `:validate` - Whether or not to validate the foreign key constraint on
-     creation or not. Only available in PostgreSQL, and should be followed by
-     a command to validate the foreign key in a following migration if false.
-  * `:with` - defines additional keys to the foreign key in order to build
-    a composite foreign key
-  * `:match` - select if the match is `:simple`, `:partial`, or `:full`. This is
-    [supported only by PostgreSQL](https://www.postgresql.org/docs/current/sql-createtable.html)
-    at the moment.
-
-## remove(column)
+## remove/1
 
 Removes a column when altering a table.
 
@@ -995,7 +872,7 @@ the column back as. See `remove/3` as a reversible alternative.
       remove :title
     end
 
-## remove(column, type, opts \\ [])
+## remove/3
 
 Removes a column in a reversible way when altering a table.
 
@@ -1010,7 +887,7 @@ If the `type` value is a `%Reference{}`, it is used to remove the constraint.
       remove :title, :string, default: ""
     end
 
-## remove_if_exists(column)
+## remove_if_exists/1
 
 Removes a column if the column exists.
 
@@ -1022,7 +899,7 @@ This command is not reversible as Ecto does not know whether or not the column e
       remove_if_exists :title
     end
 
-## remove_if_exists(column, type)
+## remove_if_exists/2
 
 Removes a column if the column exists.
 
@@ -1036,159 +913,8 @@ This command is not reversible as Ecto does not know whether or not the column e
       remove_if_exists :author_id, references(:authors)
     end
 
-## rename(table_current, list)
-
-Renames a table or index.
-
-## Examples
-
-    # rename a table
-    rename table("posts"), to: table("new_posts")
-
-    # rename an index
-    rename(index(:people, [:name], name: "persons_name_index"), to: "people_name_index")
-
-## rename(table, current_column, list)
-
-Renames a column.
-
-Note that this occurs outside of the `alter` statement.
-
-## Examples
-
-    rename table("posts"), :title, to: :summary
-
-## repo()
-
-Gets the migrator repo.
-
-## table(name, opts \\ [])
-
-Returns a table struct that can be given to `create/2`, `alter/2`, `drop/1`,
-etc.
-
-## Examples
-
-    create table("products") do
-      add :name, :string
-      add :price, :decimal
-    end
-
-    drop table("products")
-
-    create table("products", primary_key: false) do
-      add :name, :string
-      add :price, :decimal
-    end
-
-    create table("daily_prices", primary_key: false, options: "PARTITION BY RANGE (date)") do
-      add :name, :string, primary_key: true
-      add :date, :date, primary_key: true
-      add :price, :decimal
-    end
-
-    create table("users", primary_key: false) do
-      add :id, :identity, primary_key: true, start_value: 100, increment: 20
-    end
-
-## Options
-
-  * `:primary_key` - when `false`, a primary key field is not generated on table
-    creation. Alternatively, a keyword list in the same style of the
-    `:migration_primary_key` repository configuration can be supplied
-    to control the generation of the primary key field. The keyword list
-    must include `:name` and `:type`. See `add/3` for further options.
-  * `:engine` - customizes the table storage for supported databases. For MySQL,
-    the default is InnoDB.
-  * `:prefix` - the prefix for the table. This prefix will automatically be used
-    for all constraints and references defined for this table unless explicitly
-    overridden in said constraints/references.
-  * `:comment` - adds a comment to the table.
-  * `:options` - provide custom options that will be appended after the generated
-    statement. For example, "WITH", "INHERITS", or "ON COMMIT" clauses. "PARTITION BY"
-    can be provided for databases that support table partitioning.
-
-## timestamps(opts \\ [])
-
-Adds `:inserted_at` and `:updated_at` timestamp columns.
-
-Those columns are of `:naive_datetime` type. A list of `opts` can be given
-to customize the generated fields.
-
-Following options will override the repo configuration specified by
-`:migration_timestamps` option.
-
-## Options
-
-  * `:inserted_at` - the name of the column for storing insertion times.
-    Setting it to `false` disables the column.
-  * `:updated_at` - the name of the column for storing last-updated-at times.
-    Setting it to `false` disables the column.
-  * `:type` - the type of the `:inserted_at` and `:updated_at` columns.
-    Defaults to `:naive_datetime`.
-  * `:default` - the columns' default value. It can be a string, number, empty
-    list, list of strings, list of numbers, or a fragment generated by
-    `fragment/1`.
-  * `:null` - determines whether the column accepts null values. Defaults to
-    `false`.
-
-## unique_index(table, columns, opts \\ [])
-
-Shortcut for creating a unique index.
-
-See `index/3` for more information.
-
-## alter(object, list)
-
-Alters a table.
-
-## Examples
-
-    alter table("posts") do
-      add :summary, :text
-      modify :title, :text
-      remove :views
-    end
-
-## create(object, list)
-
-Creates a table.
-
-By default, the table will also include an `:id` primary key field that
-has a type of `:bigserial`. Check the `table/2` docs for more information.
-
-## Examples
-
-    create table(:posts) do
-      add :title, :string, default: "Untitled"
-      add :body,  :text
-
-      timestamps()
-    end
-
-## create_if_not_exists(object, list)
-
-Creates a table if it does not exist.
-
-Works just like `create/2` but does not raise an error when the table
-already exists.
-
-## flush()
+## flush/0
 
 Execute all changes specified by the migration so far.
 
 See [Executing and flushing](#module-executing-and-flushing).
-
-## after_begin/0
-
-Migration code to run immediately after the transaction is opened.
-
-Keep in mind that it is treated like any normal migration code, and should
-consider both the up *and* down cases of the migration.
-
-## before_commit/0
-
-Migration code to run immediately before the transaction is closed.
-
-Keep in mind that it is treated like any normal migration code, and should
-consider both the up *and* down cases of the migration.

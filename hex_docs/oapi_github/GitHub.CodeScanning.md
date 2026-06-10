@@ -2,7 +2,7 @@
 
 Provides API endpoints related to code scanning
 
-## delete_analysis(owner, repo, analysis_id, opts \\ [])
+## delete_analysis/4
 
 Delete a code scanning analysis from a repository
 
@@ -79,7 +79,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#delete-a-code-scanning-analysis-from-a-repository)
 
-## get_alert(owner, repo, alert_number, opts \\ [])
+## get_alert/4
 
 Get a code scanning alert
 
@@ -91,7 +91,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-alert)
 
-## get_analysis(owner, repo, analysis_id, opts \\ [])
+## get_analysis/4
 
 Get a code scanning analysis for a repository
 
@@ -117,7 +117,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)
 
-## get_codeql_database(owner, repo, language, opts \\ [])
+## get_codeql_database/4
 
 Get a CodeQL database for a repository
 
@@ -135,7 +135,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#get-a-codeql-database-for-a-repository)
 
-## get_default_setup(owner, repo, opts \\ [])
+## get_default_setup/3
 
 Get a code scanning default setup configuration
 
@@ -147,7 +147,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration)
 
-## get_sarif(owner, repo, sarif_id, opts \\ [])
+## get_sarif/4
 
 Get information about a SARIF upload
 
@@ -158,7 +158,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload)
 
-## list_alert_instances(owner, repo, alert_number, opts \\ [])
+## list_alert_instances/4
 
 List instances of a code scanning alert
 
@@ -176,7 +176,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert)
 
-## list_alerts_for_org(org, opts \\ [])
+## list_alerts_for_org/2
 
 List code scanning alerts for an organization
 
@@ -203,7 +203,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization)
 
-## list_alerts_for_repo(owner, repo, opts \\ [])
+## list_alerts_for_repo/3
 
 List code scanning alerts for a repository
 
@@ -231,7 +231,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-a-repository)
 
-## list_codeql_databases(owner, repo, opts \\ [])
+## list_codeql_databases/3
 
 List CodeQL databases for a repository
 
@@ -243,7 +243,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#list-codeql-databases-for-a-repository)
 
-## list_recent_analyses(owner, repo, opts \\ [])
+## list_recent_analyses/3
 
 List code scanning analyses for a repository
 
@@ -278,7 +278,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#list-code-scanning-analyses-for-a-repository)
 
-## update_alert(owner, repo, alert_number, body, opts \\ [])
+## update_alert/5
 
 Update a code scanning alert
 
@@ -289,7 +289,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-alert)
 
-## update_default_setup(owner, repo, body, opts \\ [])
+## update_default_setup/4
 
 Update a code scanning default setup configuration
 
@@ -301,7 +301,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/code-scanning/code-scanning#update-a-code-scanning-default-setup-configuration)
 
-## upload_sarif(owner, repo, body, opts \\ [])
+## upload_sarif/4
 
 Upload an analysis as SARIF data
 

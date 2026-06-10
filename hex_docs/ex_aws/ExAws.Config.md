@@ -15,11 +15,7 @@ credentials aren't used, for example, with long running streams.
 This behaviour must be explicitly enabled by passing `refreshable: true` as an option
 to Config.new/2
 
-## http_config(service, opts \\ [])
-
-Builds a minimal HTTP configuration.
-
-## new(service, opts \\ [])
+## new/2
 
 Builds a complete set of config for an operation.
 
@@ -27,3 +23,7 @@ Builds a complete set of config for an operation.
   2. Common values set via e.g `config :ex_aws` are merged in.
   3. Keys set on the individual service e.g `config :ex_aws, :s3` are merged in
   4. Finally, any configuration overrides are merged in
+
+## http_config/2
+
+Builds a minimal HTTP configuration.

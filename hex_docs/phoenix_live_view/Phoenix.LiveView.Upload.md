@@ -2,65 +2,29 @@
 
 
 
-## allow_upload(socket, name, opts)
+## allow_upload/3
 
 Allows an upload.
 
-## cancel_upload(socket, name, entry_ref)
-
-Cancels an upload entry.
-
-## consume_uploaded_entries(socket, name, func)
-
-Consumes the uploaded entries or raises if entries are still in progress.
-
-## consume_uploaded_entry(socket, entry, func)
-
-Consumes an individual entry or raises if it is still in progress.
-
-## disallow_upload(socket, name)
+## disallow_upload/2
 
 Disallows a previously allowed upload.
 
-## drop_upload_entries(socket, conf, entry_refs)
+## cancel_upload/3
 
-Drops all entries from the upload.
+Cancels an upload entry.
 
-## generate_preflight_response(socket, name, cid, refs)
-
-Generates a preflight response by calling the `:external` function.
-
-## get_upload_by_pid(socket, pid)
-
-Returns the `%UploadConfig{}` from the socket for the `Phoenix.LiveView.UploadChannel` pid.
-
-## get_upload_by_ref!(socket, config_ref)
-
-Retrieves the `%UploadConfig{}` from the socket for the provided ref or raises.
-
-## maybe_cancel_uploads(socket)
+## maybe_cancel_uploads/1
 
 Cancels all uploads that exist.
 
 Returns the new socket with the cancelled upload configs.
 
-## put_entries(socket, conf, entries, cid)
+## update_upload_entry_meta/4
 
-Puts the entries into the `%UploadConfig{}`.
+Updates the entry metadata.
 
-## put_upload_error(socket, conf_name, entry_ref, reason)
-
-Populates the errors for a given entry.
-
-## register_entry_upload(socket, conf, pid, entry_ref)
-
-Registers a new entry upload for an `Phoenix.LiveView.UploadChannel` process.
-
-## unregister_completed_entry_upload(socket, conf, entry_ref)
-
-Unregisters a completed entry from an `Phoenix.LiveView.UploadChannel` process.
-
-## update_progress(socket, config_ref, entry_ref, progress)
+## update_progress/4
 
 Updates the entry progress.
 
@@ -68,10 +32,46 @@ Progress is either an integer percently between 0 and 100, or a map
 with an `"error"` key containing the information for a failed upload
 while in progress on the client.
 
-## update_upload_entry_meta(socket, upload_conf_name, entry, meta)
+## put_entries/4
 
-Updates the entry metadata.
+Puts the entries into the `%UploadConfig{}`.
 
-## uploaded_entries(socket, name)
+## unregister_completed_entry_upload/3
+
+Unregisters a completed entry from an `Phoenix.LiveView.UploadChannel` process.
+
+## register_entry_upload/4
+
+Registers a new entry upload for an `Phoenix.LiveView.UploadChannel` process.
+
+## put_upload_error/4
+
+Populates the errors for a given entry.
+
+## get_upload_by_ref!/2
+
+Retrieves the `%UploadConfig{}` from the socket for the provided ref or raises.
+
+## get_upload_by_pid/2
+
+Returns the `%UploadConfig{}` from the socket for the `Phoenix.LiveView.UploadChannel` pid.
+
+## uploaded_entries/2
 
 Returns the completed and in progress entries for the upload.
+
+## consume_uploaded_entries/3
+
+Consumes the uploaded entries or raises if entries are still in progress.
+
+## consume_uploaded_entry/3
+
+Consumes an individual entry or raises if it is still in progress.
+
+## drop_upload_entries/3
+
+Drops all entries from the upload.
+
+## generate_preflight_response/4
+
+Generates a preflight response by calling the `:external` function.

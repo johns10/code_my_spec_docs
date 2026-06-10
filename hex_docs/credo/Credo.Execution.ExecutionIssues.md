@@ -2,28 +2,22 @@
 
 
 
-## append(arg1, issues)
+## append/2
 
 Appends an `issue` for the specified `filename`.
 
-## append(execution, source_file, issue)
+## append/3
 
 Appends an `issue` for the specified `filename`.
 
-## child_spec(init_arg)
-
-Returns a specification to start this module under a supervisor.
-
-See `Supervisor`.
-
-## get(execution, source_file)
+## get/2
 
 Returns the issues for the specified `filename`.
 
-## set(execution, issues)
+## set/2
 
 Sets/overwrites all `issues` for the given Execution struct.
 
-## to_map(execution)
+## to_map/1
 
 Returns all `issues` for the given Execution struct.

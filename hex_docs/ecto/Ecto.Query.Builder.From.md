@@ -2,19 +2,7 @@
 
 
 
-## apply(query, binds, as, prefix, hints)
-
-The callback applied by `build/2` to build the query.
-
-## build(query, env, as, prefix, hints)
-
-Builds a quoted expression.
-
-The quoted expression should evaluate to a query at runtime.
-If possible, it does all calculations at compile time to avoid
-runtime work.
-
-## escape(query, env)
+## escape/2
 
 Handles from expressions.
 
@@ -44,6 +32,18 @@ The right side is always expected to Queryable.
     iex> escape(quote(do: x() in other), __ENV__)
     ** (Ecto.Query.CompileError) binding list should contain only variables or `{as, var}` tuples, got: x()
 
-## hint!(hint)
+## build/5
+
+Builds a quoted expression.
+
+The quoted expression should evaluate to a query at runtime.
+If possible, it does all calculations at compile time to avoid
+runtime work.
+
+## hint!/1
 
 Validates hints at compile time and runtime
+
+## apply/5
+
+The callback applied by `build/2` to build the query.

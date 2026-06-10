@@ -7,7 +7,3 @@ Represents a whole or partial calendar date, such as a birthday. The time of day
 *   `day` (*type:* `integer()`, *default:* `nil`) - Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant.
 *   `month` (*type:* `integer()`, *default:* `nil`) - Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
 *   `year` (*type:* `integer()`, *default:* `nil`) - Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

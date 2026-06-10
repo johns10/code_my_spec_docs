@@ -16,7 +16,3 @@ The request for a Data Access Record Report.
 *   `orderBys` (*type:* `list(GoogleApi.AnalyticsAdmin.V1alpha.Model.GoogleAnalyticsAdminV1alphaAccessOrderBy.t)`, *default:* `nil`) - Specifies how rows are ordered in the response.
 *   `returnEntityQuota` (*type:* `boolean()`, *default:* `nil`) - Toggles whether to return the current state of this Analytics Property's quota. Quota is returned in [AccessQuota](#AccessQuota). For account-level requests, this field must be false.
 *   `timeZone` (*type:* `String.t`, *default:* `nil`) - This request's time zone if specified. If unspecified, the property's time zone is used. The request's time zone is used to interpret the start & end dates of the report. Formatted as strings from the IANA Time Zone database (https://www.iana.org/time-zones); for example "America/New_York" or "Asia/Tokyo".
-
-## decode(value, options)
-
-Unwrap a decoded JSON object into its complex fields.

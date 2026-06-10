@@ -73,18 +73,18 @@ Rounding algorithm | 5.5 | 2.5 | 1.6 | 1.1 | 1.0 | -1.0 | -1.1 | -1.6 | -2.5 | -
 `:half_down`       |   5 |   2 |   2 |   1 |   1 |   -1 |   -1 |   -2 |   -2 |   -5
 `:half_even`       |   6 |   2 |   2 |   1 |   1 |   -1 |   -1 |   -2 |   -2 |   -6
 
-## get()
+## with/2
+
+Runs function with given context.
+
+## get/0
 
 Gets the process' context.
 
-## set(context)
+## set/1
 
 Set the process' context.
 
-## update(fun)
+## update/1
 
 Update the process' context.
-
-## with(context, fun)
-
-Runs function with given context.

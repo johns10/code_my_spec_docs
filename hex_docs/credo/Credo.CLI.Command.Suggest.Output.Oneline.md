@@ -1,1 +1,0 @@
-# Credo.CLI.Command.Suggest.Output.Oneline

@@ -1,1 +1,0 @@
-# String.Chars.MDEx.Highlight

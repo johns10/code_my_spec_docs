@@ -2,7 +2,7 @@
 
 Provides API endpoints related to migrations
 
-## cancel_import(owner, repo, opts \\ [])
+## cancel_import/3
 
 Cancel an import
 
@@ -15,7 +15,7 @@ Stop an import for a repository.
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#cancel-an-import)
 
-## delete_archive_for_authenticated_user(migration_id, opts \\ [])
+## delete_archive_for_authenticated_user/2
 
 Delete a user migration archive
 
@@ -25,7 +25,7 @@ Deletes a previous migration archive. Downloadable migration archives are automa
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#delete-a-user-migration-archive)
 
-## delete_archive_for_org(org, migration_id, opts \\ [])
+## delete_archive_for_org/3
 
 Delete an organization migration archive
 
@@ -35,7 +35,7 @@ Deletes a previous migration archive. Migration archives are automatically delet
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#delete-an-organization-migration-archive)
 
-## download_archive_for_org(org, migration_id, opts \\ [])
+## download_archive_for_org/3
 
 Download an organization migration archive
 
@@ -45,7 +45,7 @@ Fetches the URL to a migration archive.
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#download-an-organization-migration-archive)
 
-## get_archive_for_authenticated_user(migration_id, opts \\ [])
+## get_archive_for_authenticated_user/2
 
 Download a user migration archive
 
@@ -75,7 +75,7 @@ The archive will also contain an `attachments` directory that includes all attac
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#download-a-user-migration-archive)
 
-## get_commit_authors(owner, repo, opts \\ [])
+## get_commit_authors/3
 
 Get commit authors
 
@@ -93,7 +93,7 @@ This endpoint and the [Map a commit author](https://docs.github.com/rest/migrati
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#get-commit-authors)
 
-## get_import_status(owner, repo, opts \\ [])
+## get_import_status/3
 
 Get an import status
 
@@ -138,7 +138,7 @@ This section includes details about Git LFS related fields that may be present i
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#get-an-import-status)
 
-## get_large_files(owner, repo, opts \\ [])
+## get_large_files/3
 
 Get large files
 
@@ -151,7 +151,7 @@ List files larger than 100MB found during the import
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#get-large-files)
 
-## get_status_for_authenticated_user(migration_id, opts \\ [])
+## get_status_for_authenticated_user/2
 
 Get a user migration status
 
@@ -172,7 +172,7 @@ Once the migration has been `exported` you can [download the migration archive](
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#get-a-user-migration-status)
 
-## get_status_for_org(org, migration_id, opts \\ [])
+## get_status_for_org/3
 
 Get an organization migration status
 
@@ -193,7 +193,7 @@ The `state` of a migration can be one of the following values:
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#get-an-organization-migration-status)
 
-## list_for_authenticated_user(opts \\ [])
+## list_for_authenticated_user/1
 
 List user migrations
 
@@ -208,7 +208,7 @@ Lists all migrations a user has started.
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#list-user-migrations)
 
-## list_for_org(org, opts \\ [])
+## list_for_org/2
 
 List organization migrations
 
@@ -226,7 +226,7 @@ A list of `repositories` is only returned for export migrations.
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#list-organization-migrations)
 
-## list_repos_for_authenticated_user(migration_id, opts \\ [])
+## list_repos_for_authenticated_user/2
 
 List repositories for a user migration
 
@@ -241,7 +241,7 @@ Lists all the repositories for this user migration.
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#list-repositories-for-a-user-migration)
 
-## list_repos_for_org(org, migration_id, opts \\ [])
+## list_repos_for_org/3
 
 List repositories in an organization migration
 
@@ -256,7 +256,7 @@ List all the repositories for this organization migration.
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#list-repositories-in-an-organization-migration)
 
-## map_commit_author(owner, repo, author_id, body, opts \\ [])
+## map_commit_author/5
 
 Map a commit author
 
@@ -270,7 +270,7 @@ new commits to the repository.
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#map-a-commit-author)
 
-## set_lfs_preference(owner, repo, body, opts \\ [])
+## set_lfs_preference/4
 
 Update Git LFS preference
 
@@ -287,7 +287,7 @@ site](https://docs.github.com/repositories/working-with-files/managing-large-fil
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#update-git-lfs-preference)
 
-## start_for_authenticated_user(body, opts \\ [])
+## start_for_authenticated_user/2
 
 Start a user migration
 
@@ -297,7 +297,7 @@ Initiates the generation of a user migration archive.
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#start-a-user-migration)
 
-## start_for_org(org, body, opts \\ [])
+## start_for_org/3
 
 Start an organization migration
 
@@ -307,7 +307,7 @@ Initiates the generation of a migration archive.
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#start-an-organization-migration)
 
-## start_import(owner, repo, body, opts \\ [])
+## start_import/4
 
 Start an import
 
@@ -322,7 +322,7 @@ return a status `422 Unprocessable Entity` response.
 
   * [API method documentation](https://docs.github.com/rest/migrations/source-imports#start-an-import)
 
-## unlock_repo_for_authenticated_user(migration_id, repo_name, opts \\ [])
+## unlock_repo_for_authenticated_user/3
 
 Unlock a user repository
 
@@ -332,7 +332,7 @@ Unlocks a repository. You can lock repositories when you [start a user migration
 
   * [API method documentation](https://docs.github.com/rest/migrations/users#unlock-a-user-repository)
 
-## unlock_repo_for_org(org, migration_id, repo_name, opts \\ [])
+## unlock_repo_for_org/4
 
 Unlock an organization repository
 
@@ -342,7 +342,7 @@ Unlocks a repository that was locked for migration. You should unlock each migra
 
   * [API method documentation](https://docs.github.com/rest/migrations/orgs#unlock-an-organization-repository)
 
-## update_import(owner, repo, body, opts \\ [])
+## update_import/4
 
 Update an import
 

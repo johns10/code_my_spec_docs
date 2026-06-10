@@ -76,7 +76,11 @@ Listening for job complete events from another process:
       end
     end
 
-## listen(name_or_conf \\ Oban, channels)
+## child_spec/1
+
+Broadcast a notification to all subscribers of a channel.
+
+## listen/2
 
 Register the current process to receive relayed messages for the provided channels.
 
@@ -100,7 +104,25 @@ Listen for messages when using a custom Oban name:
 
     Oban.Notifier.listen(MyApp.MyOban, [:gossip, :signal])
 
-## notify(name_or_conf \\ Oban, channel, payload)
+## unlisten/2
+
+Unregister the current process from receiving relayed messages on provided channels.
+
+## Example
+
+Stop listening for messages on the `:gossip` channel:
+
+    Oban.Notifier.unlisten(:gossip)
+
+Stop listening for messages on multiple channels:
+
+    Oban.Notifier.unlisten([:insert, :gossip])
+
+Stop listening for messages when using a custom Oban name:
+
+    Oban.Notifier.unlisten(MyApp.MyOban, [:gossip])
+
+## notify/3
 
 Broadcast a notification to listeners on all nodes.
 
@@ -122,7 +144,7 @@ Broadcast using a custom instance name:
 
     Oban.Notifier.notify(MyOban, :my_channel, %{message: "hi!"})
 
-## status(name_or_conf \\ Oban)
+## status/1
 
 Check a notifier's connectivity level to see whether it's able to publish or receive messages
 from other nodes.
@@ -160,37 +182,3 @@ Check the notifier's pubsub status:
 Check the status for a custom instance:
 
     Oban.Notifier.status(MyOban)
-
-## unlisten(name_or_conf \\ Oban, channels)
-
-Unregister the current process from receiving relayed messages on provided channels.
-
-## Example
-
-Stop listening for messages on the `:gossip` channel:
-
-    Oban.Notifier.unlisten(:gossip)
-
-Stop listening for messages on multiple channels:
-
-    Oban.Notifier.unlisten([:insert, :gossip])
-
-Stop listening for messages when using a custom Oban name:
-
-    Oban.Notifier.unlisten(MyApp.MyOban, [:gossip])
-
-## listen/2
-
-Register the current process to receive messages from one or more channels.
-
-## notify/3
-
-Broadcast a notification to all subscribers of a channel.
-
-## start_link/1
-
-Starts a notifier instance.
-
-## unlisten/2
-
-Unregister current process from channels.

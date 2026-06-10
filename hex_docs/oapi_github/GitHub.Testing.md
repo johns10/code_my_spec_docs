@@ -75,7 +75,33 @@ Shared storage uses an ETS table owned by an unsupervised GenServer. To ensure p
 of this process, you may optionally add `GitHub.Testing.Store.ETS` to your application's
 supervisor in test environments.
 
-## generate(schema, key, type)
+## generate_gh/3
+
+Generate a struct for use in a test response
+
+The first argument is the module / schema you would like to generate. If there are multiple
+types available in the module, then the second argument can distinguish which to use (for
+example, `:full` for the type `GitHub.PullRequest.full()`). It is also possible to override
+the generated fields with custom data.
+
+This function uses randomness to help avoid collisions in tests. For more information, see
+`generate/3`.
+
+## Examples
+
+    iex> GitHub.Testing.generate_gh(GitHub.PullRequest)
+    %GitHub.PullRequest{}
+
+    iex> GitHub.Testing.generate_gh(GitHub.User, :private)
+    %GitHub.User{}
+
+    iex> GitHub.Testing.generate_gh(GitHub.User, bio: "This is a custom bio")
+    %GitHub.User{bio: "This is a custom bio"}
+
+    iex> GitHub.Testing.generate_gh(GitHub.User, :private, bio: "This is a custom bio")
+    %GitHub.User{bio: "This is a custom bio"}
+
+## generate/3
 
 Generate random data for use in a test response
 
@@ -116,72 +142,13 @@ for usernames.
     iex> GitHub.Testing.generate(GitHub.Repository, :id, :integer)
     226194162
 
-## generate_gh(schema, type \\ :t, overrides \\ %{})
-
-Generate a struct for use in a test response
-
-The first argument is the module / schema you would like to generate. If there are multiple
-types available in the module, then the second argument can distinguish which to use (for
-example, `:full` for the type `GitHub.PullRequest.full()`). It is also possible to override
-the generated fields with custom data.
-
-This function uses randomness to help avoid collisions in tests. For more information, see
-`generate/3`.
-
-## Examples
-
-    iex> GitHub.Testing.generate_gh(GitHub.PullRequest)
-    %GitHub.PullRequest{}
-
-    iex> GitHub.Testing.generate_gh(GitHub.User, :private)
-    %GitHub.User{}
-
-    iex> GitHub.Testing.generate_gh(GitHub.User, bio: "This is a custom bio")
-    %GitHub.User{bio: "This is a custom bio"}
-
-    iex> GitHub.Testing.generate_gh(GitHub.User, :private, bio: "This is a custom bio")
-    %GitHub.User{bio: "This is a custom bio"}
-
-## to_gh_params(value)
+## to_gh_params/1
 
 Transform a library struct into its string-keyed data equivalent
 
 This is useful for testing scenarios when a piece of generated data has not been decoded.
 
-## assert_gh_called(call, opts \\ [])
-
-Assert the number of times an API endpoint was called
-
-The API endpoint can be passed as a function call or using function capture syntax. If passed
-as a function call, the arguments must match exactly or use the special value `:_` to match any
-value. If passed using function capture syntax, only the arity will be matched. The options
-argument is not considered during these checks.
-
-## Examples
-
-    assert_gh_called GitHub.Repos.get("owner", "repo")
-    assert_gh_called GitHub.Repos.get("owner", :_), times: 2
-    assert_gh_called GitHub.Repos.get(owner, "repo"), min: 2, max: 3
-    assert_gh_called &GitHub.Repos.get/2, times: 0
-
-## Options
-
-  * `max`: Non-negative integer representing the maximum number of times a matching call should
-    have occurred. If unspecified, there is no upper limit on the acceptable number of calls.
-    If none of `times`, `min`, or `max` are specified, the default is to assert at least
-    one matching call.
-
-  * `min`: Non-negative integer representing the minimum number of times a matching call should
-    have occurred. If unspecified, there is no lower limit on the acceptable number of calls.
-    If none of `times`, `min`, or `max` are specified, the default is to assert at least
-    one matching call.
-
-  * `times`: Non-negative integer number of times a matching call should have occurred. Passing
-    zero will assert the endpoint has not been called. This option has precedence over `min` and
-    `max`. If none of `times`, `min`, or `max` are specified, the default is to assert at least
-    one matching call.
-
-## mock_gh(call, return_fn, opts \\ [])
+## mock_gh/3
 
 Mock a response for an API endpoint
 
@@ -251,3 +218,36 @@ In addition, the following pre-defined error responses are available:
       assert opts[:auth] == "gho_token"
       {:ok, %GitHub.Repository{owner: owner, name: name}}
     end
+
+## assert_gh_called/2
+
+Assert the number of times an API endpoint was called
+
+The API endpoint can be passed as a function call or using function capture syntax. If passed
+as a function call, the arguments must match exactly or use the special value `:_` to match any
+value. If passed using function capture syntax, only the arity will be matched. The options
+argument is not considered during these checks.
+
+## Examples
+
+    assert_gh_called GitHub.Repos.get("owner", "repo")
+    assert_gh_called GitHub.Repos.get("owner", :_), times: 2
+    assert_gh_called GitHub.Repos.get(owner, "repo"), min: 2, max: 3
+    assert_gh_called &GitHub.Repos.get/2, times: 0
+
+## Options
+
+  * `max`: Non-negative integer representing the maximum number of times a matching call should
+    have occurred. If unspecified, there is no upper limit on the acceptable number of calls.
+    If none of `times`, `min`, or `max` are specified, the default is to assert at least
+    one matching call.
+
+  * `min`: Non-negative integer representing the minimum number of times a matching call should
+    have occurred. If unspecified, there is no lower limit on the acceptable number of calls.
+    If none of `times`, `min`, or `max` are specified, the default is to assert at least
+    one matching call.
+
+  * `times`: Non-negative integer number of times a matching call should have occurred. Passing
+    zero will assert the endpoint has not been called. This option has precedence over `min` and
+    `max`. If none of `times`, `min`, or `max` are specified, the default is to assert at least
+    one matching call.

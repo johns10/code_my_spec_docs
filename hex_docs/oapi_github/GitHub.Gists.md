@@ -2,7 +2,7 @@
 
 Provides API endpoints related to gists
 
-## check_is_starred(gist_id, opts \\ [])
+## check_is_starred/2
 
 Check if a gist is starred
 
@@ -10,7 +10,7 @@ Check if a gist is starred
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#check-if-a-gist-is-starred)
 
-## create(body, opts \\ [])
+## create/2
 
 Create a gist
 
@@ -22,7 +22,7 @@ Allows you to add a new gist with one or more files.
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#create-a-gist)
 
-## create_comment(gist_id, body, opts \\ [])
+## create_comment/3
 
 Create a gist comment
 
@@ -37,7 +37,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/comments#create-a-gist-comment)
 
-## delete(gist_id, opts \\ [])
+## delete/2
 
 Delete a gist
 
@@ -45,7 +45,7 @@ Delete a gist
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#delete-a-gist)
 
-## delete_comment(gist_id, comment_id, opts \\ [])
+## delete_comment/3
 
 Delete a gist comment
 
@@ -53,7 +53,7 @@ Delete a gist comment
 
   * [API method documentation](https://docs.github.com/rest/gists/comments#delete-a-gist-comment)
 
-## fork(gist_id, opts \\ [])
+## fork/2
 
 Fork a gist
 
@@ -61,7 +61,7 @@ Fork a gist
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#fork-a-gist)
 
-## get(gist_id, opts \\ [])
+## get/2
 
 Get a gist
 
@@ -76,7 +76,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#get-a-gist)
 
-## get_comment(gist_id, comment_id, opts \\ [])
+## get_comment/3
 
 Get a gist comment
 
@@ -91,7 +91,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/comments#get-a-gist-comment)
 
-## get_revision(gist_id, sha, opts \\ [])
+## get_revision/3
 
 Get a gist revision
 
@@ -106,7 +106,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#get-a-gist-revision)
 
-## list(opts \\ [])
+## list/1
 
 List gists for the authenticated user
 
@@ -122,7 +122,7 @@ Lists the authenticated user's gists or if called anonymously, this endpoint ret
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-gists-for-the-authenticated-user)
 
-## list_comments(gist_id, opts \\ [])
+## list_comments/2
 
 List gist comments
 
@@ -142,7 +142,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/comments#list-gist-comments)
 
-## list_commits(gist_id, opts \\ [])
+## list_commits/2
 
 List gist commits
 
@@ -155,7 +155,7 @@ List gist commits
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-gist-commits)
 
-## list_for_user(username, opts \\ [])
+## list_for_user/2
 
 List gists for a user
 
@@ -171,7 +171,7 @@ Lists public gists for the specified user:
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-gists-for-a-user)
 
-## list_forks(gist_id, opts \\ [])
+## list_forks/2
 
 List gist forks
 
@@ -184,7 +184,7 @@ List gist forks
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-gist-forks)
 
-## list_public(opts \\ [])
+## list_public/1
 
 List public gists
 
@@ -202,7 +202,7 @@ Note: With [pagination](https://docs.github.com/rest/guides/using-pagination-in-
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-public-gists)
 
-## list_starred(opts \\ [])
+## list_starred/1
 
 List starred gists
 
@@ -218,7 +218,7 @@ List the authenticated user's starred gists:
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#list-starred-gists)
 
-## star(gist_id, opts \\ [])
+## star/2
 
 Star a gist
 
@@ -228,7 +228,7 @@ Note that you'll need to set `Content-Length` to zero when calling out to this e
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#star-a-gist)
 
-## unstar(gist_id, opts \\ [])
+## unstar/2
 
 Unstar a gist
 
@@ -236,7 +236,7 @@ Unstar a gist
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#unstar-a-gist)
 
-## update(gist_id, body, opts \\ [])
+## update/3
 
 Update a gist
 
@@ -255,7 +255,7 @@ This endpoint supports the following custom media types. For more information, s
 
   * [API method documentation](https://docs.github.com/rest/gists/gists#update-a-gist)
 
-## update_comment(gist_id, comment_id, body, opts \\ [])
+## update_comment/4
 
 Update a gist comment
 

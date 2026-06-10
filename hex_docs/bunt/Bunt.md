@@ -70,15 +70,7 @@ Then you can use these keys instead of the standard colors in your code:
 
 Use this to give your colors semantics. They get easier to change later that way. (A colleague of mine shouted "It's CSS for console applications!" when he saw this and although that is ... well, not true, I really like the sentiment! :+1:)
 
-## format(value)
-
-Formats `value` by converting named ANSI sequences into actual ANSI codes.
-
-## Examples
-
-    Bunt.format([:bright, :cyan, "Info!"])
-
-## puts(value \\ "")
+## puts/1
 
 Formats and writes `value` to `stdout`, similar to `write/1`, but adds a newline at the end.
 
@@ -86,11 +78,7 @@ Formats and writes `value` to `stdout`, similar to `write/1`, but adds a newline
 
     Bunt.puts([:bright, :green, "Success!"])
 
-## version()
-
-Returns the version of Bunt.
-
-## warn(value \\ "")
+## warn/1
 
 Formats and writes `value` to `stderr`.
 
@@ -98,10 +86,22 @@ Formats and writes `value` to `stderr`.
 
     Bunt.puts([:bright, :red, "Warning!"])
 
-## write(value \\ "")
+## write/1
 
 Formats and writes `value` to `stdout`.
 
 ## Examples
 
     Bunt.write([:bright, :cyan, "Info!"])
+
+## format/1
+
+Formats `value` by converting named ANSI sequences into actual ANSI codes.
+
+## Examples
+
+    Bunt.format([:bright, :cyan, "Info!"])
+
+## version/0
+
+Returns the version of Bunt.

@@ -2,7 +2,7 @@
 
 Provides API endpoints related to packages
 
-## delete_package_for_authenticated_user(package_type, package_name, opts \\ [])
+## delete_package_for_authenticated_user/3
 
 Delete a package for the authenticated user
 
@@ -14,7 +14,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-a-package-for-the-authenticated-user)
 
-## delete_package_for_org(package_type, package_name, org, opts \\ [])
+## delete_package_for_org/4
 
 Delete a package for an organization
 
@@ -28,7 +28,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-a-package-for-an-organization)
 
-## delete_package_for_user(package_type, package_name, username, opts \\ [])
+## delete_package_for_user/4
 
 Delete a package for a user
 
@@ -42,7 +42,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-a-package-for-a-user)
 
-## delete_package_version_for_authenticated_user(package_type, package_name, package_version_id, opts \\ [])
+## delete_package_version_for_authenticated_user/4
 
 Delete a package version for the authenticated user
 
@@ -56,7 +56,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-a-package-version-for-the-authenticated-user)
 
-## delete_package_version_for_org(package_type, package_name, org, package_version_id, opts \\ [])
+## delete_package_version_for_org/5
 
 Delete package version for an organization
 
@@ -70,7 +70,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-package-version-for-an-organization)
 
-## delete_package_version_for_user(package_type, package_name, username, package_version_id, opts \\ [])
+## delete_package_version_for_user/5
 
 Delete package version for a user
 
@@ -84,7 +84,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#delete-package-version-for-a-user)
 
-## get_all_package_versions_for_package_owned_by_authenticated_user(package_type, package_name, opts \\ [])
+## get_all_package_versions_for_package_owned_by_authenticated_user/3
 
 List package versions for a package owned by the authenticated user
 
@@ -102,7 +102,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-the-authenticated-user)
 
-## get_all_package_versions_for_package_owned_by_org(package_type, package_name, org, opts \\ [])
+## get_all_package_versions_for_package_owned_by_org/4
 
 List package versions for a package owned by an organization
 
@@ -120,7 +120,7 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-an-organization)
 
-## get_all_package_versions_for_package_owned_by_user(package_type, package_name, username, opts \\ [])
+## get_all_package_versions_for_package_owned_by_user/4
 
 List package versions for a package owned by a user
 
@@ -132,7 +132,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-package-versions-for-a-package-owned-by-a-user)
 
-## get_package_for_authenticated_user(package_type, package_name, opts \\ [])
+## get_package_for_authenticated_user/3
 
 Get a package for the authenticated user
 
@@ -144,7 +144,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-for-the-authenticated-user)
 
-## get_package_for_organization(package_type, package_name, org, opts \\ [])
+## get_package_for_organization/4
 
 Get a package for an organization
 
@@ -156,7 +156,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-for-an-organization)
 
-## get_package_for_user(package_type, package_name, username, opts \\ [])
+## get_package_for_user/4
 
 Get a package for a user
 
@@ -168,7 +168,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-for-a-user)
 
-## get_package_version_for_authenticated_user(package_type, package_name, package_version_id, opts \\ [])
+## get_package_version_for_authenticated_user/4
 
 Get a package version for the authenticated user
 
@@ -180,7 +180,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-version-for-the-authenticated-user)
 
-## get_package_version_for_organization(package_type, package_name, org, package_version_id, opts \\ [])
+## get_package_version_for_organization/5
 
 Get a package version for an organization
 
@@ -192,7 +192,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-version-for-an-organization)
 
-## get_package_version_for_user(package_type, package_name, package_version_id, username, opts \\ [])
+## get_package_version_for_user/5
 
 Get a package version for a user
 
@@ -204,7 +204,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-a-package-version-for-a-user)
 
-## list_docker_migration_conflicting_packages_for_authenticated_user(opts \\ [])
+## list_docker_migration_conflicting_packages_for_authenticated_user/1
 
 Get list of conflicting packages during Docker migration for authenticated-user
 
@@ -216,7 +216,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-authenticated-user)
 
-## list_docker_migration_conflicting_packages_for_organization(org, opts \\ [])
+## list_docker_migration_conflicting_packages_for_organization/2
 
 Get list of conflicting packages during Docker migration for organization
 
@@ -228,7 +228,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-organization)
 
-## list_docker_migration_conflicting_packages_for_user(username, opts \\ [])
+## list_docker_migration_conflicting_packages_for_user/2
 
 Get list of conflicting packages during Docker migration for user
 
@@ -240,7 +240,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#get-list-of-conflicting-packages-during-docker-migration-for-user)
 
-## list_packages_for_authenticated_user(opts \\ [])
+## list_packages_for_authenticated_user/1
 
 List packages for the authenticated user's namespace
 
@@ -262,7 +262,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-packages-for-the-authenticated-users-namespace)
 
-## list_packages_for_organization(org, opts \\ [])
+## list_packages_for_organization/2
 
 List packages for an organization
 
@@ -284,7 +284,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-packages-for-an-organization)
 
-## list_packages_for_user(username, opts \\ [])
+## list_packages_for_user/2
 
 List packages for a user
 
@@ -306,7 +306,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` s
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#list-packages-for-a-user)
 
-## restore_package_for_authenticated_user(package_type, package_name, opts \\ [])
+## restore_package_for_authenticated_user/3
 
 Restore a package for the authenticated user
 
@@ -326,7 +326,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#restore-a-package-for-the-authenticated-user)
 
-## restore_package_for_org(package_type, package_name, org, opts \\ [])
+## restore_package_for_org/4
 
 Restore a package for an organization
 
@@ -348,7 +348,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#restore-a-package-for-an-organization)
 
-## restore_package_for_user(package_type, package_name, username, opts \\ [])
+## restore_package_for_user/4
 
 Restore a package for a user
 
@@ -370,7 +370,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#restore-a-package-for-a-user)
 
-## restore_package_version_for_authenticated_user(package_type, package_name, package_version_id, opts \\ [])
+## restore_package_version_for_authenticated_user/4
 
 Restore a package version for the authenticated user
 
@@ -386,7 +386,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#restore-a-package-version-for-the-authenticated-user)
 
-## restore_package_version_for_org(package_type, package_name, org, package_version_id, opts \\ [])
+## restore_package_version_for_org/5
 
 Restore package version for an organization
 
@@ -404,7 +404,7 @@ OAuth app tokens and personal access tokens (classic) need the `read:packages` a
 
   * [API method documentation](https://docs.github.com/rest/packages/packages#restore-package-version-for-an-organization)
 
-## restore_package_version_for_user(package_type, package_name, username, package_version_id, opts \\ [])
+## restore_package_version_for_user/5
 
 Restore package version for a user
 

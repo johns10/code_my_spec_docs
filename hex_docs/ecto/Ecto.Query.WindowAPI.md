@@ -24,25 +24,85 @@ partitioning over and over again, defining a window will reduce
 the query size. See `Ecto.Query.windows/3` for all possible window
 expressions, such as `:partition_by` and `:order_by`.
 
-## avg(value)
-
-Calculates the average for the given entry.
-
-    from p in Payment, select: avg(p.value)
-
-## count()
+## count/0
 
 Counts the entries in the table.
 
     from p in Post, select: count()
 
-## count(value)
+## count/1
 
 Counts the given entry.
 
     from p in Post, select: count(p.id)
 
-## cume_dist()
+## avg/1
+
+Calculates the average for the given entry.
+
+    from p in Payment, select: avg(p.value)
+
+## sum/1
+
+Calculates the sum for the given entry.
+
+    from p in Payment, select: sum(p.value)
+
+## min/1
+
+Calculates the minimum for the given entry.
+
+    from p in Payment, select: min(p.value)
+
+## max/1
+
+Calculates the maximum for the given entry.
+
+    from p in Payment, select: max(p.value)
+
+## over/2
+
+Defines a value based on the function and the window. See moduledoc for more information.
+
+    from e in Employee, select: over(avg(e.salary), partition_by: e.depname)
+
+## row_number/0
+
+Returns number of the current row within its partition, counting from 1.
+
+    from p in Post,
+         select: row_number() |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## rank/0
+
+Returns rank of the current row with gaps; same as `row_number/0` of its first peer.
+
+    from p in Post,
+         select: rank() |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## dense_rank/0
+
+Returns rank of the current row without gaps; this function counts peer groups.
+
+    from p in Post,
+         select: dense_rank() |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## percent_rank/0
+
+Returns relative rank of the current row: (rank - 1) / (total rows - 1).
+
+    from p in Post,
+         select: percent_rank() |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## cume_dist/0
 
 Returns relative rank of the current row:
 (number of rows preceding or peer with current row) / (total rows).
@@ -52,16 +112,34 @@ Returns relative rank of the current row:
 
 Note that this function must be invoked using window function syntax.
 
-## dense_rank()
+## ntile/1
 
-Returns rank of the current row without gaps; this function counts peer groups.
+Returns integer ranging from 1 to the argument value, dividing the partition as equally as possible.
 
     from p in Post,
-         select: dense_rank() |> over(partition_by: p.category_id, order_by: p.date)
+         select: ntile(10) |> over(partition_by: p.category_id, order_by: p.date)
 
 Note that this function must be invoked using window function syntax.
 
-## filter(value, filter)
+## first_value/1
+
+Returns value evaluated at the row that is the first row of the window frame.
+
+    from p in Post,
+         select: first_value(p.id) |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## last_value/1
+
+Returns value evaluated at the row that is the last row of the window frame.
+
+    from p in Post,
+         select: last_value(p.id) |> over(partition_by: p.category_id, order_by: p.date)
+
+Note that this function must be invoked using window function syntax.
+
+## filter/2
 
 Applies the given expression as a FILTER clause against an
 aggregate. This is currently only supported by Postgres.
@@ -71,16 +149,17 @@ aggregate. This is currently only supported by Postgres.
                  |> filter(p.value > 0 and p.value < 100)
                  |> over(partition_by: p.category_id, order_by: p.date)
 
-## first_value(value)
+## nth_value/2
 
-Returns value evaluated at the row that is the first row of the window frame.
+Returns value evaluated at the row that is the nth row of the window
+frame (counting from 1); `nil` if no such row.
 
     from p in Post,
-         select: first_value(p.id) |> over(partition_by: p.category_id, order_by: p.date)
+         select: nth_value(p.id, 4) |> over(partition_by: p.category_id, order_by: p.date)
 
 Note that this function must be invoked using window function syntax.
 
-## lag(value, offset \\ 1, default \\ nil)
+## lag/3
 
 Returns value evaluated at the row that is offset rows before
 the current row within the partition.
@@ -101,16 +180,7 @@ to the current row. If omitted, offset defaults to 1 and default to `nil`.
 
 Note that this function must be invoked using window function syntax.
 
-## last_value(value)
-
-Returns value evaluated at the row that is the last row of the window frame.
-
-    from p in Post,
-         select: last_value(p.id) |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## lead(value, offset \\ 1, default \\ nil)
+## lead/3
 
 Returns value evaluated at the row that is offset rows after
 the current row within the partition.
@@ -130,73 +200,3 @@ to the current row. If omitted, offset defaults to 1 and default to `nil`.
          }
 
 Note that this function must be invoked using window function syntax.
-
-## max(value)
-
-Calculates the maximum for the given entry.
-
-    from p in Payment, select: max(p.value)
-
-## min(value)
-
-Calculates the minimum for the given entry.
-
-    from p in Payment, select: min(p.value)
-
-## nth_value(value, nth)
-
-Returns value evaluated at the row that is the nth row of the window
-frame (counting from 1); `nil` if no such row.
-
-    from p in Post,
-         select: nth_value(p.id, 4) |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## ntile(num_buckets)
-
-Returns integer ranging from 1 to the argument value, dividing the partition as equally as possible.
-
-    from p in Post,
-         select: ntile(10) |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## over(window_function, window_name)
-
-Defines a value based on the function and the window. See moduledoc for more information.
-
-    from e in Employee, select: over(avg(e.salary), partition_by: e.depname)
-
-## percent_rank()
-
-Returns relative rank of the current row: (rank - 1) / (total rows - 1).
-
-    from p in Post,
-         select: percent_rank() |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## rank()
-
-Returns rank of the current row with gaps; same as `row_number/0` of its first peer.
-
-    from p in Post,
-         select: rank() |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## row_number()
-
-Returns number of the current row within its partition, counting from 1.
-
-    from p in Post,
-         select: row_number() |> over(partition_by: p.category_id, order_by: p.date)
-
-Note that this function must be invoked using window function syntax.
-
-## sum(value)
-
-Calculates the sum for the given entry.
-
-    from p in Payment, select: sum(p.value)

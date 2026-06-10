@@ -2,31 +2,31 @@
 
 
 
-## default_extension?(arg1)
+## default_extension?/1
 
 Checks if a given extension is a default extension.
 
-## default_extensions(opts \\ [])
+## default_extensions/1
 
 List all default extensions.
 
-## default_opts(opts)
+## parse_version/1
+
+Converts pg major.minor.patch (http://www.postgresql.org/support/versioning) version to an integer
+
+## default_opts/1
 
 Fills in the given `opts` with default options.
 Only adds keys extracted via PGHOST if no endpoint-related keys are explicitly provided.
 
-## encode_msg(observed, expected)
+## encode_msg/3
 
 Return encode error message.
 
-## encode_msg(type_info, observed, expected)
+## encode_msg/2
 
 Return encode error message.
 
-## parse_version(version)
-
-Converts pg major.minor.patch (http://www.postgresql.org/support/versioning) version to an integer
-
-## type_msg(type_info, module)
+## type_msg/2
 
 Return type error message.

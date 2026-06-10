@@ -109,50 +109,11 @@ information if you are modifying the connection before the next dispatch:
 Recycling also recycles the "accept" and "authorization" headers,
 as well as peer data information.
 
-## assert_error_sent(status_int_or_atom, func)
-
-Asserts an error was wrapped and sent with the given status.
-
-Useful for testing actions that you expect raise an error and have
-the response wrapped in an HTTP status, with content usually rendered
-by your MyAppWeb.ErrorHTML view.
-
-The function accepts a status either as an integer HTTP status or
-atom, such as `500` or `:internal_server_error`. The list of allowed atoms is available
-in `Plug.Conn.Status`. If an error is raised, a 3-tuple of the wrapped
-response is returned matching the status, headers, and body of the response:
-
-    {500, [{"content-type", "text/html"} | _], "Internal Server Error"}
-
-## Examples
-
-    assert_error_sent :internal_server_error, fn ->
-      get(build_conn(), "/broken/route")
-    end
-
-    response = assert_error_sent 500, fn ->
-      get(build_conn(), "/broken/route")
-    end
-    assert {500, [_h | _t], "Internal Server Error"} = response
-
-This can also be used to test a route resulted in an error that was translated to a
-specific response by the `Plug.Status` protocol, such as `Ecto.NoResultsError`:
-
-    assert_error_sent :not_found, fn ->
-      get(build_conn(), "/something-that-raises-no-results-error")
-    end
-
-*Note*: for routes that don't raise an error, but instead return a status, you should test the
-response directly:
-
-    conn = get(build_conn(), "/users/not-found")
-    assert response(conn, 404)
-
-## build_conn()
+## build_conn/0
 
 Creates a connection to be used in upcoming requests.
 
-## build_conn(method, path, params_or_body \\ nil)
+## build_conn/3
 
 Creates a connection to be used in upcoming requests
 with a preset method, path and body.
@@ -160,7 +121,139 @@ with a preset method, path and body.
 This is useful when a specific connection is required
 for testing a plug or a particular function.
 
-## bypass_through(conn)
+## dispatch/5
+
+Dispatches the connection to the given endpoint.
+
+When invoked via `get/3`, `post/3` and friends, the endpoint
+is automatically retrieved from the `@endpoint` module
+attribute, otherwise it must be given as an argument.
+
+The connection will be configured with the given `method`,
+`path_or_action` and `params_or_body`.
+
+If `path_or_action` is a string, it is considered to be the
+request path and stored as so in the connection. If an atom,
+it is assumed to be an action and the connection is dispatched
+to the given action.
+
+## Parameters and body
+
+This function, as well as `get/3`, `post/3` and friends, accepts the
+request body or parameters as last argument:
+
+      get(build_conn(), "/", some: "param")
+      get(build_conn(), "/", "some=param&url=encoded")
+
+The allowed values are:
+
+  * `nil` - meaning there is no body
+
+  * a binary - containing a request body. For such cases, `:headers`
+    must be given as option with a content-type
+
+  * a map or list - containing the parameters which will automatically
+    set the content-type to multipart. The map or list may contain
+    other lists or maps and all entries will be normalized to string
+    keys
+
+  * a struct - unlike other maps, a struct will be passed through as-is
+    without normalizing its entries
+
+## get_flash/1
+
+Gets the whole flash storage.
+
+## get_flash/2
+
+Gets the given key from the flash storage.
+
+## response_content_type/2
+
+Returns the content type as long as it matches the given format.
+
+## Examples
+
+    # Assert we have an html response with utf-8 charset
+    assert response_content_type(conn, :html) =~ "charset=utf-8"
+
+## response/2
+
+Asserts the given status code and returns the response body
+if one was set or sent.
+
+## Examples
+
+    conn = get(build_conn(), "/")
+    assert response(conn, 200) =~ "hello world"
+
+## html_response/2
+
+Asserts the given status code, that we have an html response and
+returns the response body if one was set or sent.
+
+## Examples
+
+    assert html_response(conn, 200) =~ "<html>"
+
+## text_response/2
+
+Asserts the given status code, that we have a text response and
+returns the response body if one was set or sent.
+
+## Examples
+
+    assert text_response(conn, 200) =~ "hello"
+
+## json_response/2
+
+Asserts the given status code, that we have a json response and
+returns the decoded JSON response if one was set or sent.
+
+## Examples
+
+    body = json_response(conn, 200)
+    assert "can't be blank" in body["errors"]
+
+## redirected_to/2
+
+Returns the location header from the given redirect response.
+
+Raises if the response does not match the redirect status code
+(defaults to 302).
+
+## Examples
+
+    assert redirected_to(conn) =~ "/foo/bar"
+    assert redirected_to(conn, 301) =~ "/foo/bar"
+    assert redirected_to(conn, :moved_permanently) =~ "/foo/bar"
+
+## recycle/2
+
+Recycles the connection.
+
+Recycling receives a connection and returns a new connection,
+containing cookies and relevant information from the given one.
+
+This emulates behaviour performed by browsers where cookies
+returned in the response are available in following requests.
+
+By default, only the headers "accept", "accept-language", and
+"authorization" are recycled. However, a custom set of headers
+can be specified by passing a list of strings representing its
+names as the second argument of the function.
+
+Note `recycle/1` is automatically invoked when dispatching
+to the endpoint, unless the connection has already been
+recycled.
+
+## ensure_recycled/1
+
+Ensures the connection is recycled if it wasn't already.
+
+See `recycle/1` for more information.
+
+## bypass_through/1
 
 Calls the Endpoint and Router pipelines.
 
@@ -208,146 +301,19 @@ Alternatively, you could only invoke the Endpoint's plugs:
 
     assert conn.halted
 
-## bypass_through(conn, router)
+## bypass_through/2
 
 Calls the Endpoint and Router pipelines for the current route.
 
 See `bypass_through/1`.
 
-## bypass_through(conn, router, pipelines)
+## bypass_through/3
 
 Calls the Endpoint and the given Router pipelines.
 
 See `bypass_through/1`.
 
-## clear_flash(conn)
-
-Clears up the flash storage.
-
-## delete_req_cookie(conn, key)
-
-Deletes a request cookie.
-
-## dispatch(conn, endpoint, method, path_or_action, params_or_body \\ nil)
-
-Dispatches the connection to the given endpoint.
-
-When invoked via `get/3`, `post/3` and friends, the endpoint
-is automatically retrieved from the `@endpoint` module
-attribute, otherwise it must be given as an argument.
-
-The connection will be configured with the given `method`,
-`path_or_action` and `params_or_body`.
-
-If `path_or_action` is a string, it is considered to be the
-request path and stored as so in the connection. If an atom,
-it is assumed to be an action and the connection is dispatched
-to the given action.
-
-## Parameters and body
-
-This function, as well as `get/3`, `post/3` and friends, accepts the
-request body or parameters as last argument:
-
-      get(build_conn(), "/", some: "param")
-      get(build_conn(), "/", "some=param&url=encoded")
-
-The allowed values are:
-
-  * `nil` - meaning there is no body
-
-  * a binary - containing a request body. For such cases, `:headers`
-    must be given as option with a content-type
-
-  * a map or list - containing the parameters which will automatically
-    set the content-type to multipart. The map or list may contain
-    other lists or maps and all entries will be normalized to string
-    keys
-
-  * a struct - unlike other maps, a struct will be passed through as-is
-    without normalizing its entries
-
-## ensure_recycled(conn)
-
-Ensures the connection is recycled if it wasn't already.
-
-See `recycle/1` for more information.
-
-## fetch_flash(conn)
-
-Fetches the flash storage.
-
-## get_flash(conn)
-
-Gets the whole flash storage.
-
-## get_flash(conn, key)
-
-Gets the given key from the flash storage.
-
-## html_response(conn, status)
-
-Asserts the given status code, that we have an html response and
-returns the response body if one was set or sent.
-
-## Examples
-
-    assert html_response(conn, 200) =~ "<html>"
-
-## init_test_session(conn, session)
-
-Inits a session used exclusively for testing.
-
-## json_response(conn, status)
-
-Asserts the given status code, that we have a json response and
-returns the decoded JSON response if one was set or sent.
-
-## Examples
-
-    body = json_response(conn, 200)
-    assert "can't be blank" in body["errors"]
-
-## path_params(conn, to)
-
-Returns the matched params of the URL for the `%Plug.Conn{}`'s router.
-
-Useful for extracting path params out of returned URLs, such as those
-returned by `Phoenix.LiveViewTest`'s redirected results.
-
-## Examples
-
-    assert {:error, {:redirect, %{to: "/posts/123" = to}}} = live(conn, "/path")
-    assert %{id: "123"} = path_params(conn, to)
-
-## put_flash(conn, key, value)
-
-Puts the given value under key in the flash storage.
-
-## put_req_cookie(conn, key, value)
-
-Puts a request cookie.
-
-## recycle(conn, headers \\ ~w(accept accept-language authorization))
-
-Recycles the connection.
-
-Recycling receives a connection and returns a new connection,
-containing cookies and relevant information from the given one.
-
-This emulates behaviour performed by browsers where cookies
-returned in the response are available in following requests.
-
-By default, only the headers "accept", "accept-language", and
-"authorization" are recycled. However, a custom set of headers
-can be specified by passing a list of strings representing its
-names as the second argument of the function.
-
-Note `recycle/1` is automatically invoked when dispatching
-to the endpoint, unless the connection has already been
-recycled.
-
-## redirected_params(conn, status \\ 302)
+## redirected_params/2
 
 Returns the matched params from the URL the connection was redirected to.
 
@@ -361,97 +327,53 @@ not match the redirect status code (defaults to 302).
     assert %{id: "123"} = redirected_params(conn)
     assert %{id: "123"} = redirected_params(conn, 303)
 
-## redirected_to(conn, status \\ 302)
+## path_params/2
 
-Returns the location header from the given redirect response.
+Returns the matched params of the URL for the `%Plug.Conn{}`'s router.
 
-Raises if the response does not match the redirect status code
-(defaults to 302).
-
-## Examples
-
-    assert redirected_to(conn) =~ "/foo/bar"
-    assert redirected_to(conn, 301) =~ "/foo/bar"
-    assert redirected_to(conn, :moved_permanently) =~ "/foo/bar"
-
-## response(conn, given)
-
-Asserts the given status code and returns the response body
-if one was set or sent.
+Useful for extracting path params out of returned URLs, such as those
+returned by `Phoenix.LiveViewTest`'s redirected results.
 
 ## Examples
 
-    conn = get(build_conn(), "/")
-    assert response(conn, 200) =~ "hello world"
+    assert {:error, {:redirect, %{to: "/posts/123" = to}}} = live(conn, "/path")
+    assert %{id: "123"} = path_params(conn, to)
 
-## response_content_type(conn, format)
+## assert_error_sent/2
 
-Returns the content type as long as it matches the given format.
+Asserts an error was wrapped and sent with the given status.
+
+Useful for testing actions that you expect raise an error and have
+the response wrapped in an HTTP status, with content usually rendered
+by your MyAppWeb.ErrorHTML view.
+
+The function accepts a status either as an integer HTTP status or
+atom, such as `500` or `:internal_server_error`. The list of allowed atoms is available
+in `Plug.Conn.Status`. If an error is raised, a 3-tuple of the wrapped
+response is returned matching the status, headers, and body of the response:
+
+    {500, [{"content-type", "text/html"} | _], "Internal Server Error"}
 
 ## Examples
 
-    # Assert we have an html response with utf-8 charset
-    assert response_content_type(conn, :html) =~ "charset=utf-8"
+    assert_error_sent :internal_server_error, fn ->
+      get(build_conn(), "/broken/route")
+    end
 
-## text_response(conn, status)
+    response = assert_error_sent 500, fn ->
+      get(build_conn(), "/broken/route")
+    end
+    assert {500, [_h | _t], "Internal Server Error"} = response
 
-Asserts the given status code, that we have a text response and
-returns the response body if one was set or sent.
+This can also be used to test a route resulted in an error that was translated to a
+specific response by the `Plug.Status` protocol, such as `Ecto.NoResultsError`:
 
-## Examples
+    assert_error_sent :not_found, fn ->
+      get(build_conn(), "/something-that-raises-no-results-error")
+    end
 
-    assert text_response(conn, 200) =~ "hello"
+*Note*: for routes that don't raise an error, but instead return a status, you should test the
+response directly:
 
-## connect(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## delete(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## get(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## head(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## options(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## patch(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## post(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## put(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
-
-## trace(conn, path_or_action, params_or_body \\ nil)
-
-Dispatches to the current endpoint.
-
-See `dispatch/5` for more information.
+    conn = get(build_conn(), "/users/not-found")
+    assert response(conn, 404)

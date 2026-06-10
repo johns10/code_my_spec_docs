@@ -1,629 +1,8 @@
 # Ecto.Query
 
-Provides the Query DSL.
 
-Queries are used to retrieve and manipulate data from a repository
-(see `Ecto.Repo`). Ecto queries come in two flavors: keyword-based
-and macro-based. Most examples will use the keyword-based syntax,
-the macro one will be explored in later sections.
 
-Let's see a sample query:
-
-    # Imports only from/2 of Ecto.Query
-    import Ecto.Query, only: [from: 2]
-
-    # Create a query
-    query = from u in "users",
-              where: u.age > 18,
-              select: u.name
-
-    # Send the query to the repository
-    Repo.all(query)
-
-In the example above, we are directly querying the "users" table
-from the database. Queries do not reach out to the data store until
-they are passed as arguments to a function from `Ecto.Repo`.
-
-## Query expressions
-
-Ecto allows a limited set of expressions inside queries. In the
-query below, for example, we use `u.age` to access a field, the
-`>` comparison operator and the literal `0`:
-
-    query = from u in "users", where: u.age > 0, select: u.name
-
-You can find the full list of operations in `Ecto.Query.API`.
-Besides the operations listed there, the following literals are
-supported in queries:
-
-  * Integers: `1`, `2`, `3`
-  * Floats: `1.0`, `2.0`, `3.0`
-  * Booleans: `true`, `false`
-  * Binaries: `<<1, 2, 3>>`
-  * Strings: `"foo bar"`, `~s(this is a string)`
-  * Atoms (other than booleans and `nil`): `:foo`, `:bar`
-  * Arrays: `[1, 2, 3]`, `~w(interpolate words)`
-
-All other types and dynamic values must be passed as a parameter using
-interpolation as explained below.
-
-## Interpolation and casting
-
-External values and Elixir expressions can be injected into a query
-expression with `^`:
-
-    def with_minimum(age, height_ft) do
-      from u in "users",
-        where: u.age > ^age and u.height > ^(height_ft * 3.28),
-        select: u.name
-    end
-
-    with_minimum(18, 5.0)
-
-When interpolating values, you may want to explicitly tell Ecto
-what is the expected type of the value being interpolated:
-
-    age = "18"
-    Repo.all(from u in "users",
-              where: u.age > type(^age, :integer),
-              select: u.name)
-
-In the example above, Ecto will cast the age to type integer. When
-a value cannot be cast, `Ecto.Query.CastError` is raised.
-
-To avoid the repetition of always specifying the types, you may define
-an `Ecto.Schema`. In such cases, Ecto will analyze your queries and
-automatically cast the interpolated "age" when compared to the `u.age`
-field, as long as the age field is defined with type `:integer` in
-your schema:
-
-    age = "18"
-    Repo.all(from u in User, where: u.age > ^age, select: u.name)
-
-Another advantage of using schemas is that we no longer need to specify
-the select option in queries, as by default Ecto will retrieve all
-fields specified in the schema:
-
-    age = "18"
-    Repo.all(from u in User, where: u.age > ^age)
-
-For this reason, we will use schemas on the remaining examples but
-remember Ecto does not require them in order to write queries.
-
-## `nil` comparison
-
-`nil` comparison in filters, such as where and having, is forbidden
-and it will raise an error:
-
-    # Raises if age is nil
-    from u in User, where: u.age == ^age
-
-This is done as a security measure to avoid attacks that attempt
-to traverse entries with nil columns. To check that value is `nil`,
-use `is_nil/1` instead:
-
-    from u in User, where: is_nil(u.age)
-
-## Composition
-
-Ecto queries are composable. For example, the query above can
-actually be defined in two parts:
-
-    # Create a query
-    query = from u in User, where: u.age > 18
-
-    # Extend the query
-    query = from u in query, select: u.name
-
-Composing queries uses the same syntax as creating a query.
-The difference is that, instead of passing a schema like `User`
-on the right-hand side of `in`, we passed the query itself.
-
-Any value can be used on the right-hand side of `in` as long as it implements
-the `Ecto.Queryable` protocol. For now, we know the protocol is
-implemented for both atoms (like `User`) and strings (like "users").
-
-In any case, regardless if a schema has been given or not, Ecto
-queries are always composable thanks to its binding system.
-
-### Positional bindings
-
-On the left-hand side of `in` we specify the query bindings. This is
-done inside `from` and `join` clauses. In the query below `u` is a
-binding and `u.age` is a field access using this binding.
-
-    query = from u in User, where: u.age > 18
-
-Bindings are not exposed from the query. When composing queries, you
-must specify bindings again for each refinement query. For example,
-to further narrow down the above query, we again need to tell Ecto what
-bindings to expect:
-
-    query = from u in query, select: u.city
-
-Bindings in Ecto are positional, and the names do not have to be
-consistent between input and refinement queries. For example, the
-query above could also be written as:
-
-    query = from q in query, select: q.city
-
-It would make no difference to Ecto. This is important because
-it allows developers to compose queries without caring about
-the bindings used in the initial query.
-
-When using joins, the bindings should be matched in the order they
-are specified:
-
-    # Create a query
-    query = from p in Post,
-              join: c in Comment, on: c.post_id == p.id
-
-    # Extend the query
-    query = from [p, c] in query,
-              select: {p.title, c.body}
-
-You are not required to specify all bindings when composing.
-For example, if we would like to order the results above by
-post insertion date, we could further extend it as:
-
-    query = from q in query, order_by: q.inserted_at
-
-The example above will work if the input query has 1 or 10
-bindings. As long as the number of bindings is less than the
-number of `from`s + `join`s, Ecto will match only what you have
-specified. The first binding always matches the source given
-in `from`.
-
-Similarly, if you are interested only in the last binding
-(or the last bindings) in a query, you can use `...` to
-specify "all bindings before" and match on the last one.
-
-For instance, imagine you wrote:
-
-    posts_with_comments =
-      from p in query, join: c in Comment, on: c.post_id == p.id
-
-And now we want to make sure to return both the post title
-and the comment body. Although we may not know how many
-bindings there are in the query, we are sure posts is the
-first binding and comments are the last one, so we can write:
-
-    from [p, ..., c] in posts_with_comments, select: {p.title, c.body}
-
-In other words, `...` will include all the bindings between the
-first and the last, which may be one, many or no bindings at all.
-
-### Named bindings
-
-Another option for flexibly building queries with joins are named
-bindings. Coming back to the previous example, we can use the
-`as: :comment` option to bind the comments join to a concrete name:
-
-    posts_with_comments =
-      from p in Post,
-        join: c in Comment, as: :comment, on: c.post_id == p.id
-
-Now we can refer to it using the following form of a bindings list:
-
-    from [p, comment: c] in posts_with_comments, select: {p.title, c.body}
-
-This approach lets us not worry about keeping track of the position
-of the bindings when composing the query. The `:as` option can be
-given both on joins and on `from`:
-
-    from p in Post, as: :post
-
-Only atoms are accepted for binding names. Named binding references
-must always be placed at the end of the bindings list:
-
-    [positional_binding_1, positional_binding_2, named_1: binding, named_2: binding]
-
-Named bindings can also be used for late binding with the `as/1`
-construct, allowing you to refer to a binding that has not been
-defined yet:
-
-    from c in Comment, where: as(:posts).id == c.post_id
-
-This is especially useful when working with subqueries, where you
-may need to refer to a parent binding with `parent_as`, which is
-not known when writing the subquery:
-
-    child_query = from c in Comment, where: parent_as(:posts).id == c.post_id
-    from p in Post, as: :posts, inner_lateral_join: c in subquery(child_query)
-
-You can also match on a specific binding when building queries. For
-example, let's suppose you want to create a generic sort function
-that will order by a given `field` with a given `as` in `query`:
-
-    # Knowing the name of the binding
-    def sort(query, as, field) do
-      from [{^as, x}] in query, order_by: field(x, ^field)
-    end
-
-### Bindingless operations
-
-Although bindings are extremely useful when working with joins,
-they are not necessary when the query has only the `from` clause.
-For such cases, Ecto supports a way for building queries
-without specifying the binding:
-
-    from Post,
-      where: [category: "fresh and new"],
-      order_by: [desc: :published_at],
-      select: [:id, :title, :body]
-
-The query above will select all posts with category "fresh and new",
-order by the most recently published, and return Post structs with
-only the id, title and body fields set. It is equivalent to:
-
-    from p in Post,
-      where: p.category == "fresh and new",
-      order_by: [desc: p.published_at],
-      select: struct(p, [:id, :title, :body])
-
-One advantage of bindingless queries is that they are data-driven
-and therefore useful for dynamically building queries. For example,
-the query above could also be written as:
-
-    where = [category: "fresh and new"]
-    order_by = [desc: :published_at]
-    select = [:id, :title, :body]
-    from Post, where: ^where, order_by: ^order_by, select: ^select
-
-This feature is very useful when queries need to be built based
-on some user input, like web search forms, CLIs and so on.
-
-## Fragments
-
-If you need an escape hatch, Ecto provides fragments
-(see `Ecto.Query.API.fragment/1`) to inject SQL (and non-SQL)
-fragments into queries.
-
-For example, to get all posts while running the "lower(?)"
-function in the database where `p.title` is interpolated
-in place of `?`, one can write:
-
-    from p in Post,
-      where: is_nil(p.published_at) and
-             fragment("lower(?)", p.title) == ^title
-
-Also, most adapters provide direct APIs for queries, like
-`Ecto.Adapters.SQL.query/4`, allowing developers to
-completely bypass Ecto queries.
-
-## Macro API
-
-In all examples so far we have used the **keywords query syntax** to
-create a query:
-
-    import Ecto.Query
-    from u in "users", where: u.age > 18, select: u.name
-
-Due to the prevalence of the pipe operator in Elixir, Ecto also supports
-a pipe-based syntax:
-
-    "users"
-    |> where([u], u.age > 18)
-    |> select([u], u.name)
-
-The keyword-based and pipe-based examples are equivalent. The downside
-of using macros is that the binding must be specified for every operation.
-However, since keyword-based and pipe-based examples are equivalent, the
-bindingless syntax also works for macros. Please note that the following
-example is not completely equivalent to the previous example,
-as it does not return the name but rather the `User` struct:
-
-    "users"
-    |> where([u], u.age > 18)
-    |> select([:name])
-
-Such a syntax allows developers to write queries using bindings only in more
-complex query expressions.
-
-This module documents each of those macros, providing examples in
-both the keywords query and pipe expression formats.
-
-## Query prefix
-
-It is possible to set a prefix for the queries. For Postgres users,
-this will specify the schema where the table is located, while for
-MySQL users this will specify the database where the table is
-located. When no prefix is set, Postgres queries are assumed to be
-in the public schema, while MySQL queries are assumed to be in the
-database set in the config for the repo.
-
-The query prefix may be set either for the whole query or on each
-individual `from` and `join` expression. If a `prefix` is not given
-to a `from` or a `join`, the prefix of the schema given to the `from`
-or `join` is used. The query prefix is used only if none of the above
-are declared.
-
-Let's see some examples. To set the query prefix globally, the simplest
-mechanism is to pass an option to the repository operation:
-
-    results = Repo.all(query, prefix: "accounts")
-
-You may also set the prefix for the whole query by setting the prefix field:
-
-    results =
-      query # May be User or an Ecto.Query itself
-      |> Ecto.Query.put_query_prefix("accounts")
-      |> Repo.all()
-
-Setting the prefix in the query changes the default prefix of all `from`
-and `join` expressions. You can override the query prefix by either setting
-the `@schema_prefix` in your schema definitions or by passing the prefix
-option:
-
-    from u in User,
-      prefix: "accounts",
-      join: p in assoc(u, :posts),
-      prefix: "public"
-
-Overall, here is the prefix lookup precedence:
-
-  1. The `:prefix` option given to `from`/`join` has the highest precedence
-  2. Then it falls back to the `@schema_prefix` attribute declared in the schema
-    given to `from`/`join`
-  3. Then it falls back to the query prefix. The query prefix may be
-     set either on the query with `put_query_prefix/2` or by passing
-     the `:prefix` option when calling the `Repo` module (where the
-     former wins if both methods are used)
-
-The prefixes set in the query will be preserved when loading data.
-
-## %Ecto.Query{}
-
-The `Ecto.Query` struct.
-
-Users of Ecto must consider this struct as opaque
-and not access its field directly. Authors of adapters
-may read its contents, but never modify them.
-
-## exclude(query, field)
-
-Resets a previously set field or fields on a query.
-
-It can reset many fields except the query source (`from`). When excluding
-a `:join`, it will remove *all* types of joins. If you prefer to remove a
-single type of join, please see paragraph below.
-
-## Examples
-
-    Ecto.Query.exclude(query, :join)
-    Ecto.Query.exclude(query, :where)
-    Ecto.Query.exclude(query, :order_by)
-    Ecto.Query.exclude(query, :group_by)
-    Ecto.Query.exclude(query, :having)
-    Ecto.Query.exclude(query, :distinct)
-    Ecto.Query.exclude(query, :select)
-    Ecto.Query.exclude(query, :combinations)
-    Ecto.Query.exclude(query, :with_ctes)
-    Ecto.Query.exclude(query, :limit)
-    Ecto.Query.exclude(query, :offset)
-    Ecto.Query.exclude(query, :lock)
-    Ecto.Query.exclude(query, :preload)
-    Ecto.Query.exclude(query, :update)
-    Ecto.Query.exclude(query, :windows)
-
-You can remove multiple things at once by passing a list
-
-    Ecto.Query.exclude(query, [:join, :where])
-    Ecto.Query.exclude(query, [:limit, :offset])
-
-You can remove specific joins such as `left_join` and `inner_join`:
-
-    Ecto.Query.exclude(query, :inner_join)
-    Ecto.Query.exclude(query, :cross_join)
-    Ecto.Query.exclude(query, :cross_lateral_join)
-    Ecto.Query.exclude(query, :left_join)
-    Ecto.Query.exclude(query, :right_join)
-    Ecto.Query.exclude(query, :full_join)
-    Ecto.Query.exclude(query, :inner_lateral_join)
-    Ecto.Query.exclude(query, :left_lateral_join)
-
-However, keep in mind that if a join is removed and its bindings
-were referenced elsewhere, the bindings won't be removed, leading
-to a query that won't compile.
-
-You can remove specific windows by name:
-
-  Ecto.Query.exclude(query, {:windows, [name1, name2]})
-
-If a window was referenced elsewhere, for example in `select` or `order_by`,
-it won't be removed. You must recreate the expressions manually.
-
-## first(queryable, order_by \\ nil)
-
-Restricts the query to return the first result ordered by primary key.
-
-The query will be automatically ordered by the primary key
-unless `order_by` is given or `order_by` is set in the query.
-Limit is always set to 1.
-
-## Examples
-
-    Post |> first |> Repo.one
-    query |> first(:inserted_at) |> Repo.one
-
-## has_named_binding?(queryable, key)
-
-Returns `true` if the query has a binding with the given name, otherwise `false`.
-
-For more information on named bindings see ["Named bindings"](#module-named-bindings)
-in this module doc.
-
-## last(queryable, order_by \\ nil)
-
-Restricts the query to return the last result ordered by primary key.
-
-The query ordering will be automatically reversed, with ASC
-columns becoming DESC columns (and vice-versa) and limit is set
-to 1. If there is no ordering, the query will be automatically
-ordered decreasingly by primary key.
-
-## Examples
-
-    Post |> last |> Repo.one
-    query |> last(:inserted_at) |> Repo.one
-
-## put_query_prefix(query, prefix)
-
-Puts the given prefix in a query.
-
-## recursive_ctes(query, value)
-
-Enables or disables recursive mode for CTEs.
-
-According to the SQL standard it affects all CTEs in the query, not individual ones.
-
-See `with_cte/3` on example of how to build a query with a recursive CTE.
-
-## reverse_order(query)
-
-Reverses the ordering of the query.
-
-ASC columns become DESC columns (and vice-versa). If the query
-has no `order_by`s, it orders by the inverse of the primary key.
-
-## Examples
-
-    query |> reverse_order() |> Repo.one()
-    Post |> order_by(asc: :id) |> reverse_order() == Post |> order_by(desc: :id)
-
-## subquery(query, opts \\ [])
-
-Converts a query into a subquery.
-
-If a subquery is given, returns the subquery itself.
-If any other value is given, it is converted to a query via
-`Ecto.Queryable` and wrapped in the `Ecto.SubQuery` struct.
-
-`subquery` is supported in:
-
-  * `from`,
-  * `join`,
-  * `where`, in the form `p.x in subquery(q)`,
-  * `select` and `select_merge`, in the form of `%{field: subquery(...)}`.
-
-## Examples
-
-    # Get the average salary of the top 10 highest salaries
-    query = from Employee, order_by: [desc: :salary], limit: 10
-    from e in subquery(query), select: avg(e.salary)
-
-A prefix can be specified for a subquery, similar to standard repo operations:
-
-    query = from Employee, order_by: [desc: :salary], limit: 10
-    from e in subquery(query, prefix: "my_prefix"), select: avg(e.salary)
-
-
-Subquery can also be used in a `join` expression.
-
-    UPDATE posts
-      SET sync_started_at = $1
-      WHERE id IN (
-        SELECT id FROM posts
-          WHERE synced = false AND (sync_started_at IS NULL OR sync_started_at < $1)
-          LIMIT $2
-      )
-
-We can write it as a join expression:
-
-    subset = from(p in Post,
-      where: p.synced == false and
-               (is_nil(p.sync_started_at) or p.sync_started_at < ^min_sync_started_at),
-      limit: ^batch_size
-    )
-
-    Repo.update_all(
-      from(p in Post, join: s in subquery(subset), on: s.id == p.id),
-      set: [sync_started_at: NaiveDateTime.utc_now()]
-    )
-
-Or as a `where` condition:
-
-    subset_ids = from(p in subset, select: p.id)
-    Repo.update_all(
-      from(p in Post, where: p.id in subquery(subset_ids)),
-      set: [sync_started_at: NaiveDateTime.utc_now()]
-    )
-
-If you need to refer to a parent binding which is not known when writing the subquery,
-you can use `parent_as` as shown in the examples under ["Named bindings"](#module-named-bindings)
-in this module doc.
-
-You can also use subquery directly in `select` and `select_merge`:
-
-    comments_count = from(c in Comment, where: c.post_id == parent_as(:post).id, select: count())
-    from(p in Post, as: :post, select: %{id: p.id, comments: subquery(comments_count)})
-
-## with_named_binding(query, key, fun)
-
-Applies a callback function to a query if it doesn't contain the given named binding.
-Otherwise, returns the original query.
-
-The callback function must accept a queryable and return an `Ecto.Query` struct
-that contains the provided named binding, otherwise an error is raised. It can also
-accept second argument which is the atom representing the name of a binding.
-
-For example, one might use this function as a convenience to conditionally add a new
-named join to a query:
-
-    if has_named_binding?(query, :comments) do
-      query
-    else
-      join(query, :left, [p], c in assoc(p, :comments), as: :comments)
-    end
-
-With this function it can be simplified to:
-
-    with_named_binding(query, :comments, fn query, binding ->
-      join(query, :left, [p], a in assoc(p, ^binding), as: ^binding)
-    end)
-
-For more information on named bindings see ["Named bindings"](#module-named-bindings)
-in this module doc or `has_named_binding?/2`.
-
-## distinct(query, binding \\ [], expr)
-
-A distinct query expression.
-
-When true, only keeps distinct values from the resulting
-select expression.
-
-If supported by your database, you can also pass query expressions
-to distinct and it will generate a query with DISTINCT ON. In such
-cases, `distinct` accepts exactly the same expressions as `order_by`
-and any `distinct` expression will be automatically prepended to the
-`order_by` expressions in case there is any `order_by` expression.
-
-## Keywords examples
-
-    # Returns the list of different categories in the Post schema
-    from(p in Post, distinct: true, select: p.category)
-
-    # If your database supports DISTINCT ON(),
-    # you can pass expressions to distinct too
-    from(p in Post,
-       distinct: p.category,
-       order_by: [p.date])
-
-    # The DISTINCT ON() also supports ordering similar to ORDER BY.
-    from(p in Post,
-       distinct: [desc: p.category],
-       order_by: [p.date])
-
-    # Using atoms
-    from(p in Post, distinct: :category, order_by: :date)
-
-## Expressions example
-
-    Post
-    |> distinct(true)
-    |> order_by([p], [p.category, p.author])
-
-## dynamic(binding \\ [], expr)
+## dynamic/2
 
 Builds a dynamic query expression.
 
@@ -836,144 +215,184 @@ But this will:
       comments: {dynamic_comments, likes: dynamic_likes}
     ]
 
-## except(query, other_query)
+## windows/3
 
-An except (set difference) query expression.
+Defines windows which can be used with `Ecto.Query.WindowAPI`.
 
-Takes the difference of the result sets of multiple queries. The
-`select` of each query must be exactly the same, with the same
-types in the same order.
+Receives a keyword list where keys are names of the windows
+and values are a keyword list with window expressions.
 
-Except expression returns only unique rows as if each query returned
-distinct results. This may cause a performance penalty. If you need
-to take the difference of multiple result sets without
-removing duplicate rows consider using `except_all/2`.
+## Examples
 
-## Combination behaviour
+    # Compare each employee's salary with the average salary in his or her department
+    from e in Employee,
+      select: {e.depname, e.empno, e.salary, over(avg(e.salary), :department)},
+      windows: [department: [partition_by: e.depname]]
 
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
+In the example above, we get the average salary per department.
+`:department` is the window name, partitioned by `e.depname`
+and `avg/1` is the window function. For more information
+on windows functions, see `Ecto.Query.WindowAPI`.
 
-### Order by, limit and offset
+## Window expressions
 
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
+The following keys are allowed when specifying a window.
 
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
+### :partition_by
 
-### Column selection ordering
+A list of fields to partition the window by, for example:
 
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
+    windows: [department: [partition_by: e.depname]]
 
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
+A list of atoms can also be interpolated for dynamic partitioning:
 
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    except(supplier_query, ^customer_query)
+    fields = [:depname, :year]
+    windows: [dynamic_window: [partition_by: ^fields]]
 
-### Selecting literal atoms
+### :order_by
 
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
+A list of fields to order the window by, for example:
 
-## Keywords examples
+    windows: [ordered_names: [order_by: e.name]]
 
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, except: ^supplier_query
+It works exactly as the keyword query version of `order_by/3`.
 
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    except_query = from c in Customer, select: c.city, except: ^supplier_query
-    from s in subquery(except_query), order_by: s.city
+### :frame
 
-## Expressions examples
+A fragment which defines the frame for window functions.
 
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> except(^supplier_query)
+## Examples
 
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    except(customer_query, ^supplier_query)
+    # Compare each employee's salary for each month with his average salary for previous 3 months
+    from p in Payroll,
+      select: {p.empno, p.date, p.salary, over(avg(p.salary), :prev_months)},
+      windows: [prev_months: [partition_by: p.empno, order_by: p.date, frame: fragment("ROWS 3 PRECEDING EXCLUDE CURRENT ROW")]]
 
-## except_all(query, other_query)
+## subquery/2
 
-An except (set difference) query expression.
+Converts a query into a subquery.
 
-Takes the difference of the result sets of multiple queries. The
-`select` of each query must be exactly the same, with the same
-types in the same order.
+If a subquery is given, returns the subquery itself.
+If any other value is given, it is converted to a query via
+`Ecto.Queryable` and wrapped in the `Ecto.SubQuery` struct.
 
-## Combination behaviour
+`subquery` is supported in:
 
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
+  * `from`,
+  * `join`,
+  * `where`, in the form `p.x in subquery(q)`,
+  * `select` and `select_merge`, in the form of `%{field: subquery(...)}`.
 
-### Order by, limit and offset
+## Examples
 
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
+    # Get the average salary of the top 10 highest salaries
+    query = from Employee, order_by: [desc: :salary], limit: 10
+    from e in subquery(query), select: avg(e.salary)
 
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
+A prefix can be specified for a subquery, similar to standard repo operations:
 
-### Column selection ordering
+    query = from Employee, order_by: [desc: :salary], limit: 10
+    from e in subquery(query, prefix: "my_prefix"), select: avg(e.salary)
 
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
 
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
+Subquery can also be used in a `join` expression.
 
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    except_all(supplier_query, ^customer_query)
+    UPDATE posts
+      SET sync_started_at = $1
+      WHERE id IN (
+        SELECT id FROM posts
+          WHERE synced = false AND (sync_started_at IS NULL OR sync_started_at < $1)
+          LIMIT $2
+      )
 
-### Selecting literal atoms
+We can write it as a join expression:
 
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
+    subset = from(p in Post,
+      where: p.synced == false and
+               (is_nil(p.sync_started_at) or p.sync_started_at < ^min_sync_started_at),
+      limit: ^batch_size
+    )
 
-## Keywords examples
+    Repo.update_all(
+      from(p in Post, join: s in subquery(subset), on: s.id == p.id),
+      set: [sync_started_at: NaiveDateTime.utc_now()]
+    )
 
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, except_all: ^supplier_query
+Or as a `where` condition:
 
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    except_all_query = from c in Customer, select: c.city, except_all: ^supplier_query
-    from s in subquery(except_all_query), order_by: s.city
+    subset_ids = from(p in subset, select: p.id)
+    Repo.update_all(
+      from(p in Post, where: p.id in subquery(subset_ids)),
+      set: [sync_started_at: NaiveDateTime.utc_now()]
+    )
 
-## Expressions examples
+If you need to refer to a parent binding which is not known when writing the subquery,
+you can use `parent_as` as shown in the examples under ["Named bindings"](#module-named-bindings)
+in this module doc.
 
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> except_all(^supplier_query)
+You can also use subquery directly in `select` and `select_merge`:
 
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    except_all(customer_query, ^supplier_query)
+    comments_count = from(c in Comment, where: c.post_id == parent_as(:post).id, select: count())
+    from(p in Post, as: :post, select: %{id: p.id, comments: subquery(comments_count)})
 
-## from(expr, kw \\ [])
+## put_query_prefix/2
+
+Puts the given prefix in a query.
+
+## exclude/2
+
+Resets a previously set field or fields on a query.
+
+It can reset many fields except the query source (`from`). When excluding
+a `:join`, it will remove *all* types of joins. If you prefer to remove a
+single type of join, please see paragraph below.
+
+## Examples
+
+    Ecto.Query.exclude(query, :join)
+    Ecto.Query.exclude(query, :where)
+    Ecto.Query.exclude(query, :order_by)
+    Ecto.Query.exclude(query, :group_by)
+    Ecto.Query.exclude(query, :having)
+    Ecto.Query.exclude(query, :distinct)
+    Ecto.Query.exclude(query, :select)
+    Ecto.Query.exclude(query, :combinations)
+    Ecto.Query.exclude(query, :with_ctes)
+    Ecto.Query.exclude(query, :limit)
+    Ecto.Query.exclude(query, :offset)
+    Ecto.Query.exclude(query, :lock)
+    Ecto.Query.exclude(query, :preload)
+    Ecto.Query.exclude(query, :update)
+    Ecto.Query.exclude(query, :windows)
+
+You can remove multiple things at once by passing a list
+
+    Ecto.Query.exclude(query, [:join, :where])
+    Ecto.Query.exclude(query, [:limit, :offset])
+
+You can remove specific joins such as `left_join` and `inner_join`:
+
+    Ecto.Query.exclude(query, :inner_join)
+    Ecto.Query.exclude(query, :cross_join)
+    Ecto.Query.exclude(query, :cross_lateral_join)
+    Ecto.Query.exclude(query, :left_join)
+    Ecto.Query.exclude(query, :right_join)
+    Ecto.Query.exclude(query, :full_join)
+    Ecto.Query.exclude(query, :inner_lateral_join)
+    Ecto.Query.exclude(query, :left_lateral_join)
+
+However, keep in mind that if a join is removed and its bindings
+were referenced elsewhere, the bindings won't be removed, leading
+to a query that won't compile.
+
+You can remove specific windows by name:
+
+  Ecto.Query.exclude(query, {:windows, [name1, name2]})
+
+If a window was referenced elsewhere, for example in `select` or `order_by`,
+it won't be removed. You must recreate the expressions manually.
+
+## from/2
 
 Creates a query.
 
@@ -1079,206 +498,7 @@ positional or named bindings may be used to access the additional sources.
 Note that the variables `p` and `o` can be named whatever you like
 as they have no importance in the query sent to the database.
 
-## group_by(query, binding \\ [], expr)
-
-A group by query expression.
-
-Groups together rows from the schema that have the same values in the given
-fields. Using `group_by` "groups" the query giving it different semantics
-in the `select` expression. If a query is grouped, only fields that were
-referenced in the `group_by` can be used in the `select` or if the field
-is given as an argument to an aggregate function.
-
-`group_by` also accepts a list of atoms where each atom refers to
-a field in source. For more complicated queries you can access fields
-directly instead of atoms.
-
-## Keywords examples
-
-    # Returns the number of posts in each category
-    from(p in Post,
-      group_by: p.category,
-      select: {p.category, count(p.id)})
-
-    # Using atoms
-    from(p in Post, group_by: :category, select: {p.category, count(p.id)})
-
-    # Using direct fields access
-    from(p in Post,
-      join: c in assoc(p, :category),
-      group_by: [p.id, c.name])
-
-## Expressions example
-
-    Post |> group_by([p], p.category) |> select([p], count(p.id))
-
-## having(query, binding \\ [], expr)
-
-An AND having query expression.
-
-Like `where`, `having` filters rows from the schema, but after the grouping is
-performed giving it the same semantics as `select` for a grouped query
-(see `group_by/3`). `having` groups the query even if the query has no
-`group_by` expression.
-
-## Keywords example
-
-    # Returns the number of posts in each category where the
-    # average number of comments is above ten
-    from(p in Post,
-      group_by: p.category,
-      having: avg(p.num_comments) > 10,
-      select: {p.category, count(p.id)})
-
-## Expressions example
-
-    Post
-    |> group_by([p], p.category)
-    |> having([p], avg(p.num_comments) > 10)
-    |> select([p], count(p.id))
-
-## intersect(query, other_query)
-
-An intersect query expression.
-
-Takes the overlap of the result sets of multiple queries. The
-`select` of each query must be exactly the same, with the same
-types in the same order.
-
-Intersect expression returns only unique rows as if each query returned
-distinct results. This may cause a performance penalty. If you need
-to take the intersection of multiple result sets without
-removing duplicate rows consider using `intersect_all/2`.
-
-## Combination behaviour
-
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
-
-### Order by, limit and offset
-
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
-
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
-
-### Column selection ordering
-
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
-
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
-
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    intersect(supplier_query, ^customer_query)
-
-### Selecting literal atoms
-
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
-
-## Keywords examples
-
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, intersect: ^supplier_query
-
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    intersect_query = from c in Customer, select: c.city, intersect: ^supplier_query
-    from s in subquery(intersect_query), order_by: s.city
-
-## Expressions examples
-
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> intersect(^supplier_query)
-
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    intersect(customer_query, ^supplier_query)
-
-## intersect_all(query, other_query)
-
-An intersect query expression.
-
-Takes the overlap of the result sets of multiple queries. The
-`select` of each query must be exactly the same, with the same
-types in the same order.
-
-## Combination behaviour
-
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
-
-### Order by, limit and offset
-
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
-
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
-
-### Column selection ordering
-
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
-
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
-
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    intersect_all(supplier_query, ^customer_query)
-
-### Selecting literal atoms
-
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
-
-## Keywords examples
-
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, intersect_all: ^supplier_query
-
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    intersect_all_query = from c in Customer, select: c.city, intersect_all: ^supplier_query
-    from s in subquery(intersect_all_query), order_by: s.city
-
-## Expressions examples
-
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> intersect_all(^supplier_query)
-
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    intersect_all(customer_query, ^supplier_query)
-
-## is_named_binding(query, name)
-
-The same as `has_named_binding?/2` but allowed in guards.
-
-## join(query, qual, binding \\ [], expr, opts \\ [])
+## join/5
 
 A join query expression.
 
@@ -1439,84 +659,214 @@ disclaimers about such functionality.
 
 Join hints must be static compile-time strings when they are specified as (list of) strings.
 
-## limit(query, binding \\ [], expr)
+## recursive_ctes/2
 
-A limit query expression.
+Enables or disables recursive mode for CTEs.
 
-Limits the number of rows returned from the result. Can be any expression but
-has to evaluate to an integer value and it can't include any field.
+According to the SQL standard it affects all CTEs in the query, not individual ones.
 
-If `limit` is given twice, it overrides the previous value.
+See `with_cte/3` on example of how to build a query with a recursive CTE.
 
-## Keywords example
+## select/3
 
-    from(u in User, where: u.id == ^current_user, limit: 1)
+A select query expression.
+
+Selects which fields will be selected from the schema and any transformations
+that should be performed on the fields. Any expression that is accepted in a
+query can be a select field.
+
+Select also allows each expression to be wrapped in lists, tuples or maps as
+shown in the examples below. A full schema can also be selected.
+
+There can only be one select expression in a query, if the select expression
+is omitted, the query will by default select the full schema. If `select` is
+given more than once, an error is raised. Use `exclude/2` if you would like
+to remove a previous select for overriding or see `select_merge/3` for a
+limited version of `select` that is composable and can be called multiple
+times.
+
+`select` also accepts a list of atoms where each atom refers to a field in
+the source to be selected.
+
+## Keywords examples
+
+    from(c in City, select: c) # returns the schema as a struct
+    from(c in City, select: {c.name, c.population})
+    from(c in City, select: [c.name, c.county])
+    from(c in City, select: %{n: c.name, answer: 42})
+    from(c in City, select: %{c | alternative_name: c.name})
+    from(c in City, select: %Data{name: c.name})
+
+It is also possible to select a struct and limit the returned
+fields at the same time:
+
+    from(City, select: [:name])
+
+The syntax above is equivalent to:
+
+    from(city in City, select: struct(city, [:name]))
+
+You can also write:
+
+    from(city in City, select: map(city, [:name]))
+
+If you want a map with only the selected fields to be returned.
+
+To select a struct but omit only given fields, you can
+override them with `nil` or another default value:
+
+    from(city in City, select: %{city | geojson: nil, text: "<redacted>"})
+
+For more information, read the docs for `Ecto.Query.API.struct/2`
+and `Ecto.Query.API.map/2`.
+
+## Expressions examples
+
+    City |> select([c], c)
+    City |> select([c], {c.name, c.country})
+    City |> select([c], %{"name" => c.name})
+    City |> select([:name])
+    City |> select([c], struct(c, [:name]))
+    City |> select([c], map(c, [:name]))
+    City |> select([c], %{c | geojson: nil, text: "<redacted>"})
+
+## Dynamic parts
+
+Dynamics can be part of a `select` as values in a map that must be interpolated
+at the root level:
+
+    period = if monthly?, do: dynamic([p], p.month), else: dynamic([p], p.date)
+    metric = if distance?, do: dynamic([p], p.distance), else: dynamic([p], p.time)
+
+    from(c in City, select: ^%{period: period, metric: metric})
+
+## select_merge/3
+
+Mergeable select query expression.
+
+This macro is similar to `select/3` except it may be specified
+multiple times as long as every entry is a map. This is useful
+for merging and composing selects. For example:
+
+    query = from p in Post, select: %{}
+
+    query =
+      if include_title? do
+        from p in query, select_merge: %{title: p.title}
+      else
+        query
+      end
+
+    query =
+      if include_visits? do
+        from p in query, select_merge: %{visits: p.visits}
+      else
+        query
+      end
+
+In the example above, the query is built little by little by merging
+into a final map. If both conditions above are true, the final query
+would be equivalent to:
+
+    from p in Post, select: %{title: p.title, visits: p.visits}
+
+If `:select_merge` is called and there is no value selected previously,
+it will default to the source, `p` in the example above.
+
+The argument given to `:select_merge` must always be a map. The value
+being merged on must be a struct or a map. If it is a struct, the fields
+merged later on must be part of the struct, otherwise an error is raised.
+
+If the argument to `:select_merge` is a constructed struct
+(`Ecto.Query.API.struct/2`) or map (`Ecto.Query.API.map/2`) where the source
+to struct or map may be a `nil` value (as in an outer join), the source will
+be returned unmodified.
+
+    query =
+      Post
+      |> join(:left, [p], t in Post.Translation,
+        on: t.post_id == p.id and t.locale == ^"en"
+      )
+      |> select_merge([_p, t], map(t, ^~w(title summary)a))
+
+If there is no English translation for the post, the untranslated post
+`title` will be returned and `summary` will be `nil`. If there is, both
+`title` and `summary` will be the value from `Post.Translation`.
+
+`select_merge` cannot be used to set fields in associations, as
+associations are always loaded later, overriding any previous value.
+
+Dynamics can be part of a `select_merge` as values in a map that must be
+interpolated at the root level. The rules for merging detailed above apply.
+This allows merging dynamic values into previously selected maps and structs.
+
+## distinct/3
+
+A distinct query expression.
+
+When true, only keeps distinct values from the resulting
+select expression.
+
+If supported by your database, you can also pass query expressions
+to distinct and it will generate a query with DISTINCT ON. In such
+cases, `distinct` accepts exactly the same expressions as `order_by`
+and any `distinct` expression will be automatically prepended to the
+`order_by` expressions in case there is any `order_by` expression.
+
+## Keywords examples
+
+    # Returns the list of different categories in the Post schema
+    from(p in Post, distinct: true, select: p.category)
+
+    # If your database supports DISTINCT ON(),
+    # you can pass expressions to distinct too
+    from(p in Post,
+       distinct: p.category,
+       order_by: [p.date])
+
+    # The DISTINCT ON() also supports ordering similar to ORDER BY.
+    from(p in Post,
+       distinct: [desc: p.category],
+       order_by: [p.date])
+
+    # Using atoms
+    from(p in Post, distinct: :category, order_by: :date)
 
 ## Expressions example
 
-    User |> where([u], u.id == ^current_user) |> limit(1)
+    Post
+    |> distinct(true)
+    |> order_by([p], [p.category, p.author])
 
-## lock(query, binding \\ [], expr)
+## where/3
 
-A lock query expression.
+An AND where query expression.
 
-Provides support for row-level pessimistic locking using
-`SELECT ... FOR UPDATE` or other, database-specific, locking clauses.
-`expr` can be any expression but has to evaluate to a boolean value or to a
-string and it can't include any fields.
+`where` expressions are used to filter the result set. If there is more
+than one where expression, they are combined with an `and` operator. All
+where expressions have to evaluate to a boolean value.
 
-If `lock` is used more than once, the last one used takes precedence.
-
-Ecto also supports [optimistic
-locking](https://en.wikipedia.org/wiki/Optimistic_concurrency_control) but not
-through queries. For more information on optimistic locking, have a look at
-the `Ecto.Changeset.optimistic_lock/3` function.
+`where` also accepts a keyword list where the field given as key is going to
+be compared with the given value. The fields will always refer to the source
+given in `from`.
 
 ## Keywords example
 
-    from(u in User, where: u.id == ^current_user, lock: "FOR SHARE NOWAIT")
+    from(c in City, where: c.country == "Sweden")
+    from(c in City, where: [country: "Sweden"])
 
-## Expressions example
+It is also possible to interpolate the whole keyword list, allowing you to
+dynamically filter the source:
 
-    User |> where([u], u.id == ^current_user) |> lock("FOR SHARE NOWAIT")
+    filters = [country: "Sweden"]
+    from(c in City, where: ^filters)
 
-## offset(query, binding \\ [], expr)
+## Expressions examples
 
-An offset query expression.
+    City |> where([c], c.country == "Sweden")
+    City |> where(country: "Sweden")
 
-Offsets the number of rows selected from the result. Can be any expression
-but it must evaluate to an integer value and it can't include any field.
-
-If `offset` is given twice, it overrides the previous value.
-
-## Keywords example
-
-    # Get all posts on page 4
-    from(p in Post, limit: 10, offset: 30)
-
-## Expressions example
-
-    Post |> limit(10) |> offset(30)
-
-## or_having(query, binding \\ [], expr)
-
-An OR having query expression.
-
-Like `having` but combines with the previous expression by using
-`OR`. `or_having` behaves for `having` the same way `or_where`
-behaves for `where`.
-
-## Keywords example
-
-    # Augment a previous group_by with a having condition.
-    from(p in query, or_having: avg(p.num_comments) > 10)
-
-## Expressions example
-
-    # Augment a previous group_by with a having condition.
-    Post |> or_having([p], avg(p.num_comments) > 10)
-
-## or_where(query, binding \\ [], expr)
+## or_where/3
 
 An OR where query expression.
 
@@ -1561,7 +911,7 @@ which will be equivalent to:
 
     City |> where([c], c.country == "Sweden") |> or_where([c], c.country == "Brazil")
 
-## order_by(query, binding \\ [], expr)
+## order_by/3
 
 An order by query expression.
 
@@ -1634,7 +984,569 @@ It's also possible to order by an aliased or calculated column:
     City |> order_by(asc: :name) # Sorts by the cities name
     City |> order_by(^order_by_param) # Keyword list
 
-## preload(query, bindings \\ [], expr)
+## prepend_order_by/3
+
+An order by query expression that is prepended to existing ones.
+
+Accepts the same input as `order_by/3` except the expression will
+come before any previously defined order by expression. This only
+works with the macro-based query syntax and not the keyword-based
+query syntax.
+
+For example, the following will generate a query that orders by `human_population`
+and then `name`:
+
+    City |> order_by([c], c.name) |> prepend_order_by([c], c.human_population)
+
+The corresponding keyword-based syntax will raise an error:
+
+    from c in City, order_by: c.name, prepend_order_by: c.human_population
+
+## union/2
+
+A union query expression.
+
+Combines result sets of multiple queries. The `select` of each query
+must be exactly the same, with the same types in the same order.
+
+Union expression returns only unique rows as if each query returned
+distinct results. This may cause a performance penalty. If you need
+to combine multiple result sets without removing duplicate rows
+consider using `union_all/2`.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    union(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, union: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    union_query = from c in Customer, select: c.city, union: ^supplier_query
+    from s in subquery(union_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> union(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    union(customer_query, ^supplier_query)
+
+## union_all/2
+
+A union all query expression.
+
+Combines result sets of multiple queries. The `select` of each query
+must be exactly the same, with the same types in the same order.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    union_all(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, union_all: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    union_all_query = from c in Customer, select: c.city, union_all: ^supplier_query
+    from s in subquery(union_all_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> union_all(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    union_all(customer_query, ^supplier_query)
+
+## except/2
+
+An except (set difference) query expression.
+
+Takes the difference of the result sets of multiple queries. The
+`select` of each query must be exactly the same, with the same
+types in the same order.
+
+Except expression returns only unique rows as if each query returned
+distinct results. This may cause a performance penalty. If you need
+to take the difference of multiple result sets without
+removing duplicate rows consider using `except_all/2`.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    except(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, except: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    except_query = from c in Customer, select: c.city, except: ^supplier_query
+    from s in subquery(except_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> except(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    except(customer_query, ^supplier_query)
+
+## except_all/2
+
+An except (set difference) query expression.
+
+Takes the difference of the result sets of multiple queries. The
+`select` of each query must be exactly the same, with the same
+types in the same order.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    except_all(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, except_all: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    except_all_query = from c in Customer, select: c.city, except_all: ^supplier_query
+    from s in subquery(except_all_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> except_all(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    except_all(customer_query, ^supplier_query)
+
+## intersect/2
+
+An intersect query expression.
+
+Takes the overlap of the result sets of multiple queries. The
+`select` of each query must be exactly the same, with the same
+types in the same order.
+
+Intersect expression returns only unique rows as if each query returned
+distinct results. This may cause a performance penalty. If you need
+to take the intersection of multiple result sets without
+removing duplicate rows consider using `intersect_all/2`.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    intersect(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, intersect: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    intersect_query = from c in Customer, select: c.city, intersect: ^supplier_query
+    from s in subquery(intersect_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> intersect(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    intersect(customer_query, ^supplier_query)
+
+## intersect_all/2
+
+An intersect query expression.
+
+Takes the overlap of the result sets of multiple queries. The
+`select` of each query must be exactly the same, with the same
+types in the same order.
+
+## Combination behaviour
+
+There are several behaviours of combination queries that must be taken
+into account, otherwise you may unexpectedly return the wrong query result.
+
+### Order by, limit and offset
+
+The `order_by`, `limit` and `offset` expressions of the parent query apply
+to the result of the entire combination. `order_by` must be specified in one
+of the following ways, since the combination of two or more queries is not
+automatically aliased:
+
+  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
+  that directly access the combination fields.
+  - Wrap the combination in a subquery and refer to the binding of the subquery.
+
+### Column selection ordering
+
+The columns of each of the queries in the combination must be specified in
+the exact same order. Otherwise, you may see the values of one column appearing
+in another. This holds for all types of select expressions, including maps.
+
+For example, the following query will interchange the values of the supplier's
+name and city because that is the order the fields are specified in the customer
+query.
+
+    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
+    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
+    intersect_all(supplier_query, ^customer_query)
+
+### Selecting literal atoms
+
+When selecting a literal atom, its value must be the same across all queries.
+Otherwise, the value from the parent query will be applied to all other queries.
+This also holds true for selecting maps with atom keys.
+
+## Keywords examples
+
+    # Unordered result
+    supplier_query = from s in Supplier, select: s.city
+    from c in Customer, select: c.city, intersect_all: ^supplier_query
+
+    # Ordered result
+    supplier_query = from s in Supplier, select: s.city
+    intersect_all_query = from c in Customer, select: c.city, intersect_all: ^supplier_query
+    from s in subquery(intersect_all_query), order_by: s.city
+
+## Expressions examples
+
+    # Unordered result
+    supplier_query = Supplier |> select([s], s.city)
+    Customer |> select([c], c.city) |> intersect_all(^supplier_query)
+
+    # Ordered result
+    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
+    supplier_query = Supplier |> select([s], s.city)
+    intersect_all(customer_query, ^supplier_query)
+
+## limit/3
+
+A limit query expression.
+
+Limits the number of rows returned from the result. Can be any expression but
+has to evaluate to an integer value and it can't include any field.
+
+If `limit` is given twice, it overrides the previous value.
+
+## Keywords example
+
+    from(u in User, where: u.id == ^current_user, limit: 1)
+
+## Expressions example
+
+    User |> where([u], u.id == ^current_user) |> limit(1)
+
+## with_ties/3
+
+Enables or disables ties for limit expressions.
+
+If there are multiple records tied for the last position in an ordered
+limit result, setting this value to `true` will return all of the tied
+records, even if the final result exceeds the specified limit.
+
+Must be a boolean or evaluate to a boolean at runtime. Can only be applied
+to queries with a `limit` expression or an error is raised. If `limit`
+is redefined then `with_ties` must be reapplied.
+
+Not all databases support this option and the ones that do might list it
+under the `FETCH` command. Databases may require a corresponding `order_by`
+statement to evaluate ties.
+
+## Keywords example
+
+    from(p in Post, where: p.author_id == ^current_user, order_by: [desc: p.visits], limit: 10, with_ties: true)
+
+## Expressions example
+
+    Post |> where([p], p.author_id == ^current_user) |> order_by([p], desc: p.visits) |> limit(10) |> with_ties(true)
+
+## offset/3
+
+An offset query expression.
+
+Offsets the number of rows selected from the result. Can be any expression
+but it must evaluate to an integer value and it can't include any field.
+
+If `offset` is given twice, it overrides the previous value.
+
+## Keywords example
+
+    # Get all posts on page 4
+    from(p in Post, limit: 10, offset: 30)
+
+## Expressions example
+
+    Post |> limit(10) |> offset(30)
+
+## group_by/3
+
+A group by query expression.
+
+Groups together rows from the schema that have the same values in the given
+fields. Using `group_by` "groups" the query giving it different semantics
+in the `select` expression. If a query is grouped, only fields that were
+referenced in the `group_by` can be used in the `select` or if the field
+is given as an argument to an aggregate function.
+
+`group_by` also accepts a list of atoms where each atom refers to
+a field in source. For more complicated queries you can access fields
+directly instead of atoms.
+
+## Keywords examples
+
+    # Returns the number of posts in each category
+    from(p in Post,
+      group_by: p.category,
+      select: {p.category, count(p.id)})
+
+    # Using atoms
+    from(p in Post, group_by: :category, select: {p.category, count(p.id)})
+
+    # Using direct fields access
+    from(p in Post,
+      join: c in assoc(p, :category),
+      group_by: [p.id, c.name])
+
+## Expressions example
+
+    Post |> group_by([p], p.category) |> select([p], count(p.id))
+
+## having/3
+
+An AND having query expression.
+
+Like `where`, `having` filters rows from the schema, but after the grouping is
+performed giving it the same semantics as `select` for a grouped query
+(see `group_by/3`). `having` groups the query even if the query has no
+`group_by` expression.
+
+## Keywords example
+
+    # Returns the number of posts in each category where the
+    # average number of comments is above ten
+    from(p in Post,
+      group_by: p.category,
+      having: avg(p.num_comments) > 10,
+      select: {p.category, count(p.id)})
+
+## Expressions example
+
+    Post
+    |> group_by([p], p.category)
+    |> having([p], avg(p.num_comments) > 10)
+    |> select([p], count(p.id))
+
+## or_having/3
+
+An OR having query expression.
+
+Like `having` but combines with the previous expression by using
+`OR`. `or_having` behaves for `having` the same way `or_where`
+behaves for `where`.
+
+## Keywords example
+
+    # Augment a previous group_by with a having condition.
+    from(p in query, or_having: avg(p.num_comments) > 10)
+
+## Expressions example
+
+    # Augment a previous group_by with a having condition.
+    Post |> or_having([p], avg(p.num_comments) > 10)
+
+## preload/3
 
 Preloads the associations into the result set.
 
@@ -1853,593 +1765,75 @@ See `dynamic/2` for more information.
     |> preload([p, c], [:user, comments: c])
     |> select([p], p)
 
-## prepend_order_by(query, binding \\ [], expr)
+## first/2
 
-An order by query expression that is prepended to existing ones.
+Restricts the query to return the first result ordered by primary key.
 
-Accepts the same input as `order_by/3` except the expression will
-come before any previously defined order by expression. This only
-works with the macro-based query syntax and not the keyword-based
-query syntax.
-
-For example, the following will generate a query that orders by `human_population`
-and then `name`:
-
-    City |> order_by([c], c.name) |> prepend_order_by([c], c.human_population)
-
-The corresponding keyword-based syntax will raise an error:
-
-    from c in City, order_by: c.name, prepend_order_by: c.human_population
-
-## select(query, binding \\ [], expr)
-
-A select query expression.
-
-Selects which fields will be selected from the schema and any transformations
-that should be performed on the fields. Any expression that is accepted in a
-query can be a select field.
-
-Select also allows each expression to be wrapped in lists, tuples or maps as
-shown in the examples below. A full schema can also be selected.
-
-There can only be one select expression in a query, if the select expression
-is omitted, the query will by default select the full schema. If `select` is
-given more than once, an error is raised. Use `exclude/2` if you would like
-to remove a previous select for overriding or see `select_merge/3` for a
-limited version of `select` that is composable and can be called multiple
-times.
-
-`select` also accepts a list of atoms where each atom refers to a field in
-the source to be selected.
-
-## Keywords examples
-
-    from(c in City, select: c) # returns the schema as a struct
-    from(c in City, select: {c.name, c.population})
-    from(c in City, select: [c.name, c.county])
-    from(c in City, select: %{n: c.name, answer: 42})
-    from(c in City, select: %{c | alternative_name: c.name})
-    from(c in City, select: %Data{name: c.name})
-
-It is also possible to select a struct and limit the returned
-fields at the same time:
-
-    from(City, select: [:name])
-
-The syntax above is equivalent to:
-
-    from(city in City, select: struct(city, [:name]))
-
-You can also write:
-
-    from(city in City, select: map(city, [:name]))
-
-If you want a map with only the selected fields to be returned.
-
-To select a struct but omit only given fields, you can
-override them with `nil` or another default value:
-
-    from(city in City, select: %{city | geojson: nil, text: "<redacted>"})
-
-For more information, read the docs for `Ecto.Query.API.struct/2`
-and `Ecto.Query.API.map/2`.
-
-## Expressions examples
-
-    City |> select([c], c)
-    City |> select([c], {c.name, c.country})
-    City |> select([c], %{"name" => c.name})
-    City |> select([:name])
-    City |> select([c], struct(c, [:name]))
-    City |> select([c], map(c, [:name]))
-    City |> select([c], %{c | geojson: nil, text: "<redacted>"})
-
-## Dynamic parts
-
-Dynamics can be part of a `select` as values in a map that must be interpolated
-at the root level:
-
-    period = if monthly?, do: dynamic([p], p.month), else: dynamic([p], p.date)
-    metric = if distance?, do: dynamic([p], p.distance), else: dynamic([p], p.time)
-
-    from(c in City, select: ^%{period: period, metric: metric})
-
-## select_merge(query, binding \\ [], expr)
-
-Mergeable select query expression.
-
-This macro is similar to `select/3` except it may be specified
-multiple times as long as every entry is a map. This is useful
-for merging and composing selects. For example:
-
-    query = from p in Post, select: %{}
-
-    query =
-      if include_title? do
-        from p in query, select_merge: %{title: p.title}
-      else
-        query
-      end
-
-    query =
-      if include_visits? do
-        from p in query, select_merge: %{visits: p.visits}
-      else
-        query
-      end
-
-In the example above, the query is built little by little by merging
-into a final map. If both conditions above are true, the final query
-would be equivalent to:
-
-    from p in Post, select: %{title: p.title, visits: p.visits}
-
-If `:select_merge` is called and there is no value selected previously,
-it will default to the source, `p` in the example above.
-
-The argument given to `:select_merge` must always be a map. The value
-being merged on must be a struct or a map. If it is a struct, the fields
-merged later on must be part of the struct, otherwise an error is raised.
-
-If the argument to `:select_merge` is a constructed struct
-(`Ecto.Query.API.struct/2`) or map (`Ecto.Query.API.map/2`) where the source
-to struct or map may be a `nil` value (as in an outer join), the source will
-be returned unmodified.
-
-    query =
-      Post
-      |> join(:left, [p], t in Post.Translation,
-        on: t.post_id == p.id and t.locale == ^"en"
-      )
-      |> select_merge([_p, t], map(t, ^~w(title summary)a))
-
-If there is no English translation for the post, the untranslated post
-`title` will be returned and `summary` will be `nil`. If there is, both
-`title` and `summary` will be the value from `Post.Translation`.
-
-`select_merge` cannot be used to set fields in associations, as
-associations are always loaded later, overriding any previous value.
-
-Dynamics can be part of a `select_merge` as values in a map that must be
-interpolated at the root level. The rules for merging detailed above apply.
-This allows merging dynamic values into previously selected maps and structs.
-
-## union(query, other_query)
-
-A union query expression.
-
-Combines result sets of multiple queries. The `select` of each query
-must be exactly the same, with the same types in the same order.
-
-Union expression returns only unique rows as if each query returned
-distinct results. This may cause a performance penalty. If you need
-to combine multiple result sets without removing duplicate rows
-consider using `union_all/2`.
-
-## Combination behaviour
-
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
-
-### Order by, limit and offset
-
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
-
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
-
-### Column selection ordering
-
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
-
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
-
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    union(supplier_query, ^customer_query)
-
-### Selecting literal atoms
-
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
-
-## Keywords examples
-
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, union: ^supplier_query
-
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    union_query = from c in Customer, select: c.city, union: ^supplier_query
-    from s in subquery(union_query), order_by: s.city
-
-## Expressions examples
-
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> union(^supplier_query)
-
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    union(customer_query, ^supplier_query)
-
-## union_all(query, other_query)
-
-A union all query expression.
-
-Combines result sets of multiple queries. The `select` of each query
-must be exactly the same, with the same types in the same order.
-
-## Combination behaviour
-
-There are several behaviours of combination queries that must be taken
-into account, otherwise you may unexpectedly return the wrong query result.
-
-### Order by, limit and offset
-
-The `order_by`, `limit` and `offset` expressions of the parent query apply
-to the result of the entire combination. `order_by` must be specified in one
-of the following ways, since the combination of two or more queries is not
-automatically aliased:
-
-  - Use `Ecto.Query.API.fragment/1` to pass an `order_by` statement
-  that directly access the combination fields.
-  - Wrap the combination in a subquery and refer to the binding of the subquery.
-
-### Column selection ordering
-
-The columns of each of the queries in the combination must be specified in
-the exact same order. Otherwise, you may see the values of one column appearing
-in another. This holds for all types of select expressions, including maps.
-
-For example, the following query will interchange the values of the supplier's
-name and city because that is the order the fields are specified in the customer
-query.
-
-    supplier_query = from s in Supplier, select: %{city: s.city, name: s.name}
-    customer_query = from c in Customer, select: %{name: c.name, city: c.city}
-    union_all(supplier_query, ^customer_query)
-
-### Selecting literal atoms
-
-When selecting a literal atom, its value must be the same across all queries.
-Otherwise, the value from the parent query will be applied to all other queries.
-This also holds true for selecting maps with atom keys.
-
-## Keywords examples
-
-    # Unordered result
-    supplier_query = from s in Supplier, select: s.city
-    from c in Customer, select: c.city, union_all: ^supplier_query
-
-    # Ordered result
-    supplier_query = from s in Supplier, select: s.city
-    union_all_query = from c in Customer, select: c.city, union_all: ^supplier_query
-    from s in subquery(union_all_query), order_by: s.city
-
-## Expressions examples
-
-    # Unordered result
-    supplier_query = Supplier |> select([s], s.city)
-    Customer |> select([c], c.city) |> union_all(^supplier_query)
-
-    # Ordered result
-    customer_query = Customer |> select([c], c.city) |> order_by(fragment("city"))
-    supplier_query = Supplier |> select([s], s.city)
-    union_all(customer_query, ^supplier_query)
-
-## update(query, binding \\ [], expr)
-
-An update query expression.
-
-Updates are used to update the filtered entries. In order for
-updates to be applied, `c:Ecto.Repo.update_all/3` must be invoked.
-
-## Keywords example
-
-    from(u in User, update: [set: [name: "new name"]])
-
-## Expressions examples
-
-    User |> update([u], set: [name: "new name"])
-    User |> update(set: [name: "new name"])
-
-## Interpolation
-
-    new_name = "new name"
-    from(u in User, update: [set: [name: ^new_name]])
-
-    new_name = "new name"
-    from(u in User, update: [set: [name: fragment("upper(?)", ^new_name)]])
-
-## Operators
-
-The update expression in Ecto supports the following operators:
-
-  * `set` - sets the given field in the table to the given value
-
-        from(u in User, update: [set: [name: "new name"]])
-
-  * `inc` - increments (or decrements if the value is negative) the given field in the table by the given value
-
-        from(u in User, update: [inc: [accesses: 1]])
-
-  * `push` - pushes (appends) the given value to the end of the array field
-
-        from(u in User, update: [push: [tags: "cool"]])
-
-  * `pull` - pulls (removes) the given value from the array field
-
-        from(u in User, update: [pull: [tags: "not cool"]])
-
-## Composable
-
-Remember that all query expressions are composable, so you can use `update`
-multiple times in the same query to merge the update expressions:
-
-    new_name = "new name"
-    User
-    |> update([u], set: [name: fragment("upper(?)", ^new_name)])
-    |> update([u], set: [age: 42])
-
-This can be useful to compose updates from different functions
-or when mixing interpolation, such as `set: ^updates`, with regular
-query expressions, such as `set: [age: u.age + 1]`.
-
-## where(query, binding \\ [], expr)
-
-An AND where query expression.
-
-`where` expressions are used to filter the result set. If there is more
-than one where expression, they are combined with an `and` operator. All
-where expressions have to evaluate to a boolean value.
-
-`where` also accepts a keyword list where the field given as key is going to
-be compared with the given value. The fields will always refer to the source
-given in `from`.
-
-## Keywords example
-
-    from(c in City, where: c.country == "Sweden")
-    from(c in City, where: [country: "Sweden"])
-
-It is also possible to interpolate the whole keyword list, allowing you to
-dynamically filter the source:
-
-    filters = [country: "Sweden"]
-    from(c in City, where: ^filters)
-
-## Expressions examples
-
-    City |> where([c], c.country == "Sweden")
-    City |> where(country: "Sweden")
-
-## windows(query, binding \\ [], expr)
-
-Defines windows which can be used with `Ecto.Query.WindowAPI`.
-
-Receives a keyword list where keys are names of the windows
-and values are a keyword list with window expressions.
+The query will be automatically ordered by the primary key
+unless `order_by` is given or `order_by` is set in the query.
+Limit is always set to 1.
 
 ## Examples
 
-    # Compare each employee's salary with the average salary in his or her department
-    from e in Employee,
-      select: {e.depname, e.empno, e.salary, over(avg(e.salary), :department)},
-      windows: [department: [partition_by: e.depname]]
+    Post |> first |> Repo.one
+    query |> first(:inserted_at) |> Repo.one
 
-In the example above, we get the average salary per department.
-`:department` is the window name, partitioned by `e.depname`
-and `avg/1` is the window function. For more information
-on windows functions, see `Ecto.Query.WindowAPI`.
+## last/2
 
-## Window expressions
+Restricts the query to return the last result ordered by primary key.
 
-The following keys are allowed when specifying a window.
-
-### :partition_by
-
-A list of fields to partition the window by, for example:
-
-    windows: [department: [partition_by: e.depname]]
-
-A list of atoms can also be interpolated for dynamic partitioning:
-
-    fields = [:depname, :year]
-    windows: [dynamic_window: [partition_by: ^fields]]
-
-### :order_by
-
-A list of fields to order the window by, for example:
-
-    windows: [ordered_names: [order_by: e.name]]
-
-It works exactly as the keyword query version of `order_by/3`.
-
-### :frame
-
-A fragment which defines the frame for window functions.
+The query ordering will be automatically reversed, with ASC
+columns becoming DESC columns (and vice-versa) and limit is set
+to 1. If there is no ordering, the query will be automatically
+ordered decreasingly by primary key.
 
 ## Examples
 
-    # Compare each employee's salary for each month with his average salary for previous 3 months
-    from p in Payroll,
-      select: {p.empno, p.date, p.salary, over(avg(p.salary), :prev_months)},
-      windows: [prev_months: [partition_by: p.empno, order_by: p.date, frame: fragment("ROWS 3 PRECEDING EXCLUDE CURRENT ROW")]]
+    Post |> last |> Repo.one
+    query |> last(:inserted_at) |> Repo.one
 
-## with_cte(query, name, opts)
+## has_named_binding?/2
 
-A common table expression (CTE) also known as WITH expression.
+Returns `true` if the query has a binding with the given name, otherwise `false`.
 
-`name` must be a compile-time literal string that is being used
-as the table name to join the CTE in the main query or in the
-recursive CTE.
+For more information on named bindings see ["Named bindings"](#module-named-bindings)
+in this module doc.
 
-**IMPORTANT!** Beware of using CTEs. In raw SQL, CTEs can be
-used as a mechanism to organize queries, but said mechanism
-has no purpose in Ecto since Ecto queries are composable by
-definition. In other words, if you need to break a large query
-into parts, use all of the functionality in Elixir and in this
-module to structure your code. Furthermore, breaking a query
-into CTEs can negatively impact performance, as the database
-may not optimize efficiently across CTEs. The main use case
-for CTEs in Ecto is to provide recursive definitions, which
-we outline in the following section. Non-recursive CTEs can
-often be written as joins or subqueries, which provide better
-performance.
+## with_named_binding/3
 
-## Options
+Applies a callback function to a query if it doesn't contain the given named binding.
+Otherwise, returns the original query.
 
-  * `:as` - the CTE query itself or a fragment
-  * `:materialized` - a boolean indicating whether the CTE should
-  be materialized. If blank, the database's default behaviour
-  will be used (only supported by Postgrex, for the built-in adapters)
-  * `:operation` - one of `:all`, `:update_all`, or `:delete_all`
-  indicating the operation type of the CTE query. If blank, it defaults to `:all`,
-  making the CTE query a SELECT query. (only supported by Postgres built-in adapter)
+The callback function must accept a queryable and return an `Ecto.Query` struct
+that contains the provided named binding, otherwise an error is raised. It can also
+accept second argument which is the atom representing the name of a binding.
 
-## Recursive CTEs
+For example, one might use this function as a convenience to conditionally add a new
+named join to a query:
 
-Use `recursive_ctes/2` to enable recursive mode for CTEs.
+    if has_named_binding?(query, :comments) do
+      query
+    else
+      join(query, :left, [p], c in assoc(p, :comments), as: :comments)
+    end
 
-In the CTE query itself use the same table name to leverage
-recursion that has been passed to the `name` argument. Make sure
-to write a stop condition to avoid an infinite recursion loop.
-Generally speaking, you should only use CTEs in Ecto for
-writing recursive queries.
+With this function it can be simplified to:
 
-## Expression examples
+    with_named_binding(query, :comments, fn query, binding ->
+      join(query, :left, [p], a in assoc(p, ^binding), as: ^binding)
+    end)
 
-Products and their category names for breadcrumbs:
+For more information on named bindings see ["Named bindings"](#module-named-bindings)
+in this module doc or `has_named_binding?/2`.
 
-    category_tree_initial_query =
-      Category
-      |> where([c], is_nil(c.parent_id))
+## reverse_order/1
 
-    category_tree_recursion_query =
-      Category
-      |> join(:inner, [c], ct in "category_tree", on: c.parent_id == ct.id)
+Reverses the ordering of the query.
 
-    category_tree_query =
-      category_tree_initial_query
-      |> union_all(^category_tree_recursion_query)
+ASC columns become DESC columns (and vice-versa). If the query
+has no `order_by`s, it orders by the inverse of the primary key.
 
-    Product
-    |> recursive_ctes(true)
-    |> with_cte("category_tree", as: ^category_tree_query)
-    |> join(:left, [p], c in "category_tree", on: c.id == p.category_id)
-    |> group_by([p], p.id)
-    |> select([p, c], %{p | category_names: fragment("ARRAY_AGG(?)", c.name)})
+## Examples
 
-It's also possible to pass a raw SQL fragment:
-
-    @raw_sql_category_tree """
-    SELECT * FROM categories WHERE c.parent_id IS NULL
-    UNION ALL
-    SELECT * FROM categories AS c, category_tree AS ct WHERE ct.id = c.parent_id
-    """
-
-    Product
-    |> recursive_ctes(true)
-    |> with_cte("category_tree", as: fragment(@raw_sql_category_tree))
-    |> join(:inner, [p], c in "category_tree", on: c.id == p.category_id)
-
-You can also query over the CTE table itself. In such cases, you can pass an
-`m:Ecto.Queryable#module-tuple` module tuple with the CTE table name as the first element
-and an Ecto schema as the second element. This will cast the result rows to Ecto
-structs, as long as the Ecto schema maps over the same fields in the CTE table:
-
-    {"category_tree", Category}
-    |> recursive_ctes(true)
-    |> with_cte("category_tree", as: ^category_tree_query)
-    |> join(:left, [c], p in assoc(c, :products))
-    |> group_by([c], c.id)
-    |> select([c, p], %{c | products_count: count(p.id)})
-
-Keep in mind that this will override the source table name to `"category_tree"` in the
-resulting structs, which will also inherit all other properties from the `Category` schema,
-including a `@schema_prefix` if any is set.
-
-In such cases, you can disable those properties by setting them as options:
-
-    from(cte in {"category_tree", Category}, prefix: nil)
-    |> recursive_ctes(true)
-    |> with_cte("category_tree", as: ^category_tree_query)
-
-or join the CTE's result to the original schema:
-
-    Category
-    |> recursive_ctes(true)
-    |> with_cte("category_tree", as: ^category_tree_query)
-    |> join(:inner, [c], tree in "category_tree", on: c.id == tree.id)
-
-While this requires an additional join, it will allow you to use the structs in further
-data-modifying operations throughout your application without the need to manually reset
-the source table name.
-
-For the Postgres built-in adapter, it is possible to define data-modifying CTE queries:
-
-    update_categories_query =
-      Category
-      |> where([c], is_nil(c.parent_id))
-      |> update([c], set: [name: "Root category"])
-      |> select([c], c)
-
-    {"update_categories", Category}
-    |> with_cte("update_categories", as: ^update_categories_query, operation: :update_all)
-    |> select([c], c)
-
-Note: In order to retrieve the updates rows from a CTE query, the parent query
-must select rows from the CTE table instead of the table referenced by the CTE query.
-For example, `"update_categories"` will return updated rows for `"category"` table, but
-selecting from `"category"` table directly will return unaffected rows.
-For more details see Postgres documentation on data-modifying CTEs and how these work
-with snapshots.
-
-Keyword syntax is not supported for this feature.
-
-## Limitation: CTEs on schemas with source fields
-
-Ecto allows developers to say that a table in their Ecto schema
-maps to a different column in their database:
-
-    field :group_id, :integer, source: :iGroupId
-
-At the moment, using a schema with source fields in CTE may emit
-invalid queries. If you are running into such scenarios, your best
-option is to use a fragment as your CTE.
-
-## with_ties(query, binding \\ [], expr)
-
-Enables or disables ties for limit expressions.
-
-If there are multiple records tied for the last position in an ordered
-limit result, setting this value to `true` will return all of the tied
-records, even if the final result exceeds the specified limit.
-
-Must be a boolean or evaluate to a boolean at runtime. Can only be applied
-to queries with a `limit` expression or an error is raised. If `limit`
-is redefined then `with_ties` must be reapplied.
-
-Not all databases support this option and the ones that do might list it
-under the `FETCH` command. Databases may require a corresponding `order_by`
-statement to evaluate ties.
-
-## Keywords example
-
-    from(p in Post, where: p.author_id == ^current_user, order_by: [desc: p.visits], limit: 10, with_ties: true)
-
-## Expressions example
-
-    Post |> where([p], p.author_id == ^current_user) |> order_by([p], desc: p.visits) |> limit(10) |> with_ties(true)
+    query |> reverse_order() |> Repo.one()
+    Post |> order_by(asc: :id) |> reverse_order() == Post |> order_by(desc: :id)

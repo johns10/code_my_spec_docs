@@ -2,11 +2,7 @@
 
 An Ecto type for UUID strings.
 
-## bingenerate()
-
-Generates a random, version 4 UUID in the binary format.
-
-## cast(uuid)
+## cast/1
 
 Casts either a string in the canonical, human-readable UUID format or a
 16-byte binary to a UUID in its canonical, human-readable UUID format.
@@ -34,34 +30,30 @@ process `raw` UUIDs, which may be a more suitable reverse operation to
     iex> Ecto.UUID.cast("warehouse worker")
     {:ok, "77617265-686f-7573-6520-776f726b6572"}
 
-## cast!(uuid)
+## cast!/1
 
 Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
 
-## dump(uuid_string)
+## dump/1
 
 Converts a string representing a UUID into a raw binary.
 
-## dump!(uuid)
+## dump!/1
 
 Same as `dump/1` but raises `Ecto.ArgumentError` on invalid arguments.
 
-## generate()
-
-Generates a random, version 4 UUID.
-
-## load(raw_uuid)
+## load/1
 
 Converts a binary UUID into a string.
 
-## load!(value)
+## load!/1
 
 Same as `load/1` but raises `Ecto.ArgumentError` on invalid arguments.
 
-## t/0
+## generate/0
 
-A hex-encoded UUID string.
+Generates a random, version 4 UUID.
 
-## raw/0
+## bingenerate/0
 
-A raw binary representation of a UUID.
+Generates a random, version 4 UUID in the binary format.

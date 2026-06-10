@@ -66,7 +66,66 @@ schema:
 The `:embed_as_values` field value will save `:foo` or `:bar`, while the
 `:embed_as_dump` field value will save `1` or `2`.
 
-## cast_value(schema_or_types, field, value)
+## values/2
+
+Returns the possible values for a given schema or types map and field.
+
+These values are the atoms that represent the different possible values
+of the field.
+
+## Examples
+
+Assuming this schema:
+
+    defmodule MySchema do
+      use Ecto.Schema
+
+      schema "my_schema" do
+        field :my_string_enum, Ecto.Enum, values: [:foo, :bar, :baz]
+        field :my_integer_enum, Ecto.Enum, values: [foo: 1, bar: 2, baz: 5]
+      end
+    end
+
+Then:
+
+    Ecto.Enum.values(MySchema, :my_string_enum)
+    #=> [:foo, :bar, :baz]
+
+    Ecto.Enum.values(MySchema, :my_integer_enum)
+    #=> [:foo, :bar, :baz]
+
+## dump_values/2
+
+Returns the possible dump values for a given schema or types map and field
+
+"Dump values" are the values that can be dumped in the database. For enums stored
+as strings, these are the strings that will be dumped in the database. For enums
+stored as integers, these are the integers that will be dumped in the database.
+
+## Examples
+
+Assuming this schema:
+
+    defmodule MySchema do
+      use Ecto.Schema
+
+      schema "my_schema" do
+        field :my_string_enum, Ecto.Enum, values: [:foo, :bar, :baz]
+        field :my_integer_enum, Ecto.Enum, values: [foo: 1, bar: 2, baz: 5]
+      end
+    end
+
+Then:
+
+    Ecto.Enum.dump_values(MySchema, :my_string_enum)
+    #=> ["foo", "bar", "baz"]
+
+    Ecto.Enum.dump_values(MySchema, :my_integer_enum)
+    #=> [1, 2, 5]
+
+`schema_or_types` can also be a types map. See `mappings/2` for more information.
+
+## cast_value/3
 
 Casts a value from the given `schema` and `field`.
 
@@ -105,38 +164,7 @@ Then:
 
 `schema_or_types` can also be a types map. See `mappings/2` for more information.
 
-## dump_values(schema_or_types, field)
-
-Returns the possible dump values for a given schema or types map and field
-
-"Dump values" are the values that can be dumped in the database. For enums stored
-as strings, these are the strings that will be dumped in the database. For enums
-stored as integers, these are the integers that will be dumped in the database.
-
-## Examples
-
-Assuming this schema:
-
-    defmodule MySchema do
-      use Ecto.Schema
-
-      schema "my_schema" do
-        field :my_string_enum, Ecto.Enum, values: [:foo, :bar, :baz]
-        field :my_integer_enum, Ecto.Enum, values: [foo: 1, bar: 2, baz: 5]
-      end
-    end
-
-Then:
-
-    Ecto.Enum.dump_values(MySchema, :my_string_enum)
-    #=> ["foo", "bar", "baz"]
-
-    Ecto.Enum.dump_values(MySchema, :my_integer_enum)
-    #=> [1, 2, 5]
-
-`schema_or_types` can also be a types map. See `mappings/2` for more information.
-
-## mappings(schema_or_types, field)
+## mappings/2
 
 Returns the mappings between values and dumped values.
 
@@ -172,31 +200,3 @@ Examples of calling `mappings/2` with a types map:
     #=> [foo: "foo", bar: "bar", baz: "baz"]
     Ecto.Enum.mappings(schemaless_types, :my_integer_enum)
     #=> [foo: 1, bar: 2, baz: 5]
-
-## values(schema_or_types, field)
-
-Returns the possible values for a given schema or types map and field.
-
-These values are the atoms that represent the different possible values
-of the field.
-
-## Examples
-
-Assuming this schema:
-
-    defmodule MySchema do
-      use Ecto.Schema
-
-      schema "my_schema" do
-        field :my_string_enum, Ecto.Enum, values: [:foo, :bar, :baz]
-        field :my_integer_enum, Ecto.Enum, values: [foo: 1, bar: 2, baz: 5]
-      end
-    end
-
-Then:
-
-    Ecto.Enum.values(MySchema, :my_string_enum)
-    #=> [:foo, :bar, :baz]
-
-    Ecto.Enum.values(MySchema, :my_integer_enum)
-    #=> [:foo, :bar, :baz]

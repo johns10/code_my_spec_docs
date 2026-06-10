@@ -1,1 +1,0 @@
-# Ecto.Queryable.Tuple
