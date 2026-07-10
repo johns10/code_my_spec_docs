@@ -1,3 +1,44 @@
+---
+# Metadata for prevent_slop_elixir_codebases.md
+
+# Required fields
+slug: prevent-slop-elixir-codebases
+type: blog
+title: "How to Prevent Slop in AI-Generated Elixir Codebases"
+
+# Publishing control
+protected: false
+publish_at: 2026-05-25T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "How to Prevent AI Slop in Elixir Codebases"
+meta_description: "AI agents write Elixir fast but the codebase rots. A verification priority order that keeps Phoenix apps maintainable, from working-app down to code quality."
+og_title: "How to Prevent Slop in AI-Generated Elixir Codebases"
+og_description: "Expect the model to fail, then verify in priority order: does it work, does it perform, is it built right, is it clean. The Phoenix superpower is compile-time architecture enforcement."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: Preventing AI Slop in Elixir
+  series_part: 1
+  featured: true
+
+tags:
+  - elixir
+  - phoenix
+  - ai-coding
+  - ai-slop
+  - code-quality
+  - bounded-contexts
+  - boundary
+  - bdd
+  - verification
+  - credo
+---
+
 # How to Prevent Slop in AI-Generated Elixir Codebases
 
 _Part 1 of "Preventing AI Slop in Elixir," a series on the verification priority order that keeps Phoenix codebases maintainable when an LLM writes most of the code._

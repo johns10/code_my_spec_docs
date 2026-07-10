@@ -1,3 +1,37 @@
+---
+# Metadata for spec-driven-development-elixir.md
+
+# Required fields
+slug: spec-driven-development-elixir
+type: blog
+title: "Spec-Driven Development for Elixir and Phoenix"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec-Driven Development for Elixir & Phoenix"
+meta_description: "Generic spec-driven and AI coding tools don't understand Phoenix contexts, LiveView, Ecto, or OTP. Here's what Elixir-native spec-driven development looks like."
+og_title: "Spec-Driven Development for Elixir and Phoenix"
+og_description: "Why stack-neutral SDD tools produce non-idiomatic Elixir, and what spec-driven development looks like when it's built Phoenix-first."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - elixir
+  - phoenix
+---
+
 # Spec-Driven Development for Elixir and Phoenix
 
 Most spec-driven development tools are stack-neutral by design, and that is exactly why they fall short on Elixir. They treat a Phoenix app like any other web project, generate plausible-looking code, and miss everything that makes Elixir Elixir: contexts as boundaries, LiveView's process model, Ecto's changeset discipline, OTP supervision. [Spec-driven development](/blog/spec-driven-development) is a good idea. It makes the spec the source of truth instead of vibe-coding through chat. But point a generic SDD tool at a Phoenix app and you get specs that don't speak the language of the framework, and code I'd rewrite before it ever hit review.

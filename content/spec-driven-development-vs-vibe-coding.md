@@ -1,3 +1,36 @@
+---
+# Metadata for spec-driven-development-vs-vibe-coding.md
+
+# Required fields
+slug: spec-driven-development-vs-vibe-coding
+type: blog
+title: "Spec-Driven Development vs Vibe Coding: When Each One Wins"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec-Driven Development vs Vibe Coding"
+meta_description: "Vibe coding vs spec-driven development: when each wins, why vibe coding fails on maintained code, and why the real fix is a spec that verifies."
+og_title: "Spec-Driven Development vs Vibe Coding"
+og_description: "Vibe coding is great for throwaway work and terrible for anything you have to maintain. Here is when to use each, and why the real fix is a spec that verifies."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - vibe-coding
+---
+
 # Spec-Driven Development vs Vibe Coding: When Each One Wins
 
 Vibe coding is the fastest way to get a working prototype I have ever used, and it is the fastest way to build something I cannot maintain. Both of those are true, and the difference between them is the whole point of this article. Vibe coding means you describe what you want in a chat, the agent writes code, you eyeball the result, and you keep prompting until it looks right. Spec-driven development (SDD) means you write a durable specification first, treat that spec as the source of truth, and derive and verify code against it. The first is great for throwaway work. The second is what you reach for the moment a human has to live with the code.

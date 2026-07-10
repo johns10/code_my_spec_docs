@@ -1,3 +1,19 @@
+---
+slug: retrieval-rag-memory
+type: blog
+title: "Retrieval and RAG: The Category Everyone Reaches for First"
+meta_title: "RAG Memory for AI Coding: Why Most Don't Need It"
+meta_description: "RAG is over-applied to coding. Why retrieval breaks for most coding work, and the failure modes nobody mentions: wrong retrieval, context rot."
+tags:
+  - agent-memory
+  - rag
+  - retrieval
+  - vector-search
+  - memory-systems-series
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport
+---
+
 # Retrieval and RAG: the category everyone reaches for first
 
 Every time someone asks me about agent memory, the first thing they ask is "should I set up RAG?" The answer is almost always no.

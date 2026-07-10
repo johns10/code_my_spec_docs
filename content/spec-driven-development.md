@@ -1,3 +1,42 @@
+---
+# Metadata for spec-driven-development.md
+
+# Required fields
+slug: spec-driven-development
+type: blog
+title: "Spec-Driven Development in 2026: The Complete Guide and Tool Comparison"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec-Driven Development 2026: Guide & Tools"
+meta_description: "What is spec-driven development? A 2026 guide to SDD, the spec-first to spec-as-source rigor spectrum, and the top spec-driven development tools compared."
+og_title: "Spec-Driven Development in 2026: Guide + Tool Comparison"
+og_description: "The complete guide to spec-driven development: definition, rigor spectrum, canonical workflow, and the SDD tools compared (Spec Kit, Kiro, Tessl, OpenSpec, BMAD, Agent OS, CodeMySpec)."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - spec-kit
+  - kiro
+  - openspec
+  - tessl
+  - bmad
+  - agent-os
+  - codemyspec
+---
+
 # Spec-Driven Development in 2026: The Complete Guide and Tool Comparison
 
 AI coding agents are great at producing plausible code fast, and terrible at remembering what you actually asked for across a long session. Spec-driven development (SDD) is the bet that the fix is to stop treating the chat window as the source of truth. You make a written specification the authoritative artifact, and code becomes something derived and verified against it, not the other way around. Instead of vibe coding through a chat, where your intent lives in throwaway conversation history and the agent drifts, hallucinates APIs, and decays as the project grows, you author a structured, behavior-oriented spec first, derive a plan, break it into atomic tasks, and only then generate code that gets checked back against the spec.
@@ -112,6 +151,7 @@ The honest one-line summary of the whole category: most SDD tools generate a spe
 - [Agent OS Review: Standards-First AI Coding](/blog/agent-os-review)
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
 - [CodeMySpec vs Kiro Specs](/blog/codemyspec-vs-kiro-specs)
 - [Spec-Driven Development for Elixir and Phoenix](/blog/spec-driven-development-elixir)

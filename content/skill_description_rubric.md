@@ -1,3 +1,46 @@
+---
+# Metadata for skill_description_rubric.md
+
+# Required fields
+slug: skill-description-rubric
+type: blog
+title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-16T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Why Your Skill Isn't Triggering: The Description Rubric"
+meta_description: "The description is the only routing signal. If your skill isn't triggering, this is why. Failure modes, self-check questions, and anti-patterns to recognize."
+og_title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
+og_description: "I had seven agent tasks with the same orchestrate string. The agent picked them at random. Here's the rubric I rewrote them with."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: Writing Agent Skills
+  series_part: 2
+  featured: true
+
+tags:
+  - agent-skills
+  - claude-code
+  - skills
+  - skill-md
+  - skill-descriptions
+  - skill-design
+  - claude-skills
+  - agentic-coding
+  - tutorial
+  - context-engineering
+  - opencode
+  - codex
+---
+
 # Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)
 
 This week I had seven agent_task modules in CodeMySpec that all shared the same description string. Seven different tasks -- ContextSpec, ContextDesignReview, ComponentSpec, ComponentTest, LiveContextSpec, LiveViewSpec, ControllerSpec -- and every one of them said `Spawn a @spec-writer sub-agent to call start_task...` in the routing signal. The agent picked them basically at random. Sometimes it'd open ControllerSpec when I wanted a context spec. Sometimes it would fire ComponentTest when there were no components to test.

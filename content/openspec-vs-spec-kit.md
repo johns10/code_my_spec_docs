@@ -1,3 +1,39 @@
+---
+# Metadata for openspec-vs-spec-kit.md
+
+# Required fields
+slug: openspec-vs-spec-kit
+type: blog
+title: "OpenSpec vs Spec Kit: Lightweight vs Full Toolkit (2026)"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "OpenSpec vs Spec Kit (2026): Brownfield vs Greenfield"
+meta_description: "OpenSpec vs Spec Kit (2026): lightweight brownfield change-tracker vs the full greenfield toolkit. Table, strengths, and which Spec Kit alternative to pick."
+og_title: "OpenSpec vs Spec Kit (2026)"
+og_description: "Spec Kit is the full, greenfield toolkit with the biggest community. OpenSpec is the lightweight, brownfield change-tracker. Here's how to pick -- plus a fair third option."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - openspec
+  - github-spec-kit
+  - comparison
+  - tools
+---
+
 # OpenSpec vs Spec Kit: Lightweight vs Full Toolkit (2026)
 
 If you are choosing a spec-driven development framework in 2026, the two names you will hit first are GitHub Spec Kit and OpenSpec. They share a thesis (write the spec before the code, keep it in your repo, hand it to whatever AI agent you already use), but they make opposite bets on how much process you should carry. Spec Kit is the heavyweight, greenfield-oriented toolkit with GitHub's brand and the biggest community in the space. OpenSpec is the lightweight, brownfield-first framework built around change tracking, with no API key and no MCP required.
@@ -82,6 +118,7 @@ To be fair to both: repo-resident specs, bring-your-own-agent, and no token mark
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
 - [GitHub Spec Kit: How It Works and When to Use It](/blog/github-spec-kit-guide)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
 
 ## Sources

@@ -1,3 +1,19 @@
+---
+slug: repo-native-memory
+type: blog
+title: "Repo-Native Memory: The Boring Answer That Wins"
+meta_title: "Repo-Native Memory: The Boring Answer That Wins"
+meta_description: "Markdown files in your repo beat MemPalace, mem0, and every dedicated memory system. Cline Memory Bank, Doug's journal, Claude Code auto-memory."
+tags:
+  - agent-memory
+  - repo-native
+  - cline-memory-bank
+  - claude-code
+  - memory-systems-series
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport
+---
+
 # Repo-native memory: the boring answer that wins
 
 I've tried four memory systems for Claude Code in the last six months. The one that actually works is a directory of markdown files in my repo.

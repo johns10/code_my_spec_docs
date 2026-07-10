@@ -1,3 +1,37 @@
+---
+# Metadata for spec-driven-development-with-claude-code.md
+
+# Required fields
+slug: spec-driven-development-with-claude-code
+type: blog
+title: "Spec-Driven Development with Claude Code"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec-Driven Development with Claude Code"
+meta_description: "How to do spec-driven development with Claude Code: CLAUDE.md limits, layering Spec Kit or OpenSpec, and CodeMySpec's enforced BDD gate plus live QA."
+og_title: "Spec-Driven Development with Claude Code"
+og_description: "CLAUDE.md, Spec Kit, OpenSpec, and CodeMySpec: how to add a real spec gate and verification on top of Claude Code."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - claude-code
+  - codemyspec
+---
+
 # Spec-Driven Development with Claude Code
 
 Claude Code is a coding agent, not a spec-driven development tool. It reads your codebase, runs commands, edits files, and follows instructions. What it does not do on its own is hold you to a structured spec, derive code from it, and prove the result. If you want [spec-driven development](/blog/spec-driven-development) (SDD), where the spec is the source of truth and code is the derived artifact, you have to add that discipline on top of Claude Code yourself.

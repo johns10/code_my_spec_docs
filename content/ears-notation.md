@@ -1,3 +1,37 @@
+---
+# Metadata for ears-notation.md
+
+# Required fields
+slug: ears-notation
+type: blog
+title: "EARS Notation Explained: The Easy Approach to Requirements Syntax"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "EARS Notation Explained: Requirements Syntax"
+meta_description: "What EARS notation is, the five patterns with examples, why AI coding revived it, and how the Easy Approach to Requirements Syntax differs from BDD."
+og_title: "EARS Notation Explained"
+og_description: "The Easy Approach to Requirements Syntax: the five patterns, examples, and how EARS differs from BDD for AI-generated code."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - ears-notation
+  - requirements
+---
+
 # EARS Notation Explained: The Easy Approach to Requirements Syntax
 
 EARS stands for Easy Approach to Requirements Syntax, a constrained way of writing requirements in plain English so they come out precise, testable, and free of the usual ambiguity. It is not a new tool or a framework. It is a set of five sentence templates that force you to name the trigger, the system, and the exact required behavior every time. It went quiet for years as an aerospace requirements technique, and it came roaring back in 2025 and 2026 because AI coding agents need unambiguous requirements, and EARS is one of the cleanest ways to write them.

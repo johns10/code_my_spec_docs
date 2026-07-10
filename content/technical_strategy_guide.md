@@ -1,3 +1,39 @@
+---
+# Metadata for technical_strategy_guide.md
+
+# Required fields
+slug: technical-strategy-guide
+type: documentation
+title: "Technical Strategy: Decide Your Stack Before the Agent Does It for You"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Technical Strategy for AI-Assisted Development"
+meta_description: "Write your technology decisions as ADRs before the agent writes code. The agent researches options, you approve."
+og_title: "Technical Strategy: Decide Your Stack Before the Agent Does It for You"
+og_description: "Most vibe coders let the AI pick their stack. That's how you end up with 15 services and surprise bills. Write your decisions down first."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - technical-strategy
+  - adr
+  - architectural-decision-records
+  - agentic-coding
+  - tutorial
+  - ai-development
+---
+
 # Technical Strategy: Decide Your Stack Before the Agent Does It for You
 
 Most people skip straight to "build me an app." The agent picks Express because that's what it saw most in training data. Adds Redis because why not. Reaches for Prisma when you already have a perfectly good ORM. Three days later, 15 dependencies you didn't ask for and $50/month in surprise bills.

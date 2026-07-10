@@ -1,3 +1,38 @@
+---
+# Metadata for kiro-specs-explained.md
+
+# Required fields
+slug: kiro-specs-explained
+type: blog
+title: "Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Kiro Specs Explained: EARS, Spec Mode & Trade-offs"
+meta_description: "What is Kiro? AWS's spec-first IDE and Q Developer successor. How spec mode, EARS notation, and hooks work, plus the pricing and lock-in trade-offs."
+og_title: "Kiro Specs Explained"
+og_description: "AWS's spec-driven IDE and CLI: how Kiro's spec workflow, EARS notation, and Agent Hooks work, and the lock-in and pricing trade-offs to know."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - kiro
+  - ears
+  - aws
+---
+
 # Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs
 
 Kiro is Amazon's spec-first agentic IDE and CLI, and as of mid-2026 it's AWS's flagship dev-AI bet. AWS is winding down Amazon Q Developer: new Q signups are blocked starting May 15, 2026, full end of support lands April 30, 2027, and the deprecated Q plugins point users at Kiro as the successor. If you used Q Developer, the migration path is Kiro. So it's worth understanding what Kiro's spec system actually does, where EARS notation comes from, and what you give up to use it.
@@ -106,6 +141,7 @@ Kiro is a strong choice if you're an AWS-native or enterprise team planning larg
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [CodeMySpec vs Kiro EARS: Two Approaches to Spec-Driven AI Development](/blog/codemyspec-vs-kiro-specs)
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec](/products/code-my-spec)
 
 ## Sources

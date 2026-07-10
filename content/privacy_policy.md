@@ -1,3 +1,25 @@
+---
+slug: privacy-policy
+type: page
+title: Privacy Policy
+
+protected: false
+publish_at: 2026-04-04T00:00:00Z
+expires_at: null
+
+meta_title: Privacy Policy - CodeMySpec
+meta_description: How CodeMySpec collects, uses, and protects your data. We use Google Analytics for usage data and cookies for session management.
+og_title: Privacy Policy - CodeMySpec
+og_description: How CodeMySpec collects, uses, and protects your data.
+og_image: null
+
+metadata:
+
+tags:
+  - legal
+  - privacy
+---
+
 # Privacy Policy
 
 **Last updated:** April 4, 2026

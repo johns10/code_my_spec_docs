@@ -1,3 +1,41 @@
+---
+# Metadata for bdd_specs_for_ai_generated_code.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: bdd-specs-for-ai-generated-code
+type: blog  # Options: blog, page, landing
+title: BDD Specs for AI-Generated Code
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: "2026-03-10T00:00:00Z"
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: "BDD Specs for AI-Generated Code - CodeMySpec"
+meta_description: Unit tests verify your code works. BDD specs verify your app does what users actually want. One scenario per acceptance criterion, traced to user stories.
+og_title: "BDD Specs for AI-Generated Code"
+og_description: "AI-generated tests confirm the AI's assumptions, not yours. BDD specs tied to acceptance criteria break the self-confirming loop."
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: CodeMySpec Team
+  category: AI Development
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - testing
+  - bdd
+  - verification
+  - user-stories
+  - acceptance-criteria
+---
+
 # BDD Specs for AI-Generated Code
 
 BDD was supposed to be dead. Tricentis killed SpecFlow. SmartBear donated Cucumber to the community and walked away. Developers complained for years that Gherkin specs were ceremony for ceremony's sake.

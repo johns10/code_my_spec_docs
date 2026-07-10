@@ -1,3 +1,35 @@
+---
+slug: markdown-api-for-llms
+type: blog
+title: "Building a Markdown API for LLM Collaboration"
+
+protected: false
+publish_at: 2026-03-23T00:00:00Z
+expires_at: null
+
+meta_title: "Building a Markdown API for LLM Collaboration - CodeMySpec"
+meta_description: "A web server returning navigable markdown replaces CLAUDE.md stuffing, MCP proliferation, and filesystem sync problems."
+og_title: "Building a Markdown API for LLM Collaboration"
+og_description: "From files to shell scripts to a full markdown web server. How I solved the problem of giving an LLM access to knowledge, tools, and database state without burning context."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - architecture
+  - progressive-disclosure
+  - mcp
+  - claude-code
+  - markdown
+  - web-server
+  - llm-tooling
+---
+
 # Building a Markdown API for LLM Collaboration
 
 Giving an LLM access to a large project with knowledge, tools, status, files, and database state without stuffing your context full or losing the ability to discover everything is actually very challenging. You can't stuff everything into CLAUDE.md without making a mess. You have to be very careful with MCP servers or you'll proliferate the context window. And putting everything in the filesystem is great until you start mixing dynamic data with static data, because then you have to project everything to the filesystem and your state management becomes messy.

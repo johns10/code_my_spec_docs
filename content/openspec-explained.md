@@ -1,3 +1,37 @@
+---
+# Metadata for openspec-explained.md
+
+# Required fields
+slug: openspec-explained
+type: blog
+title: "OpenSpec Explained: Repo-Native Spec-Driven Development"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "OpenSpec Explained (2026): Delta Tracking + Brownfield"
+meta_description: "What is OpenSpec? Fission AI's free, brownfield-first spec-driven framework: delta tracking, the propose-apply-archive workflow, and how it compares to CodeMySpec."
+og_title: "OpenSpec Explained"
+og_description: "How OpenSpec does repo-native spec-driven development: delta tracking, optional scenarios, and where it fits versus CodeMySpec."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - openspec
+  - fission-ai
+---
+
 # OpenSpec Explained: Repo-Native Spec-Driven Development
 
 OpenSpec is a free, MIT-licensed spec-driven development framework from Fission AI that adds a lightweight spec layer to your repository so you and your AI coding agent agree on what to build before any code is written. Its defining idea is delta tracking: every change to your system is captured as a scoped diff against a source-of-truth spec, which makes it unusually well suited to evolving existing codebases rather than starting from scratch.
@@ -122,6 +156,7 @@ The fair framing: OpenSpec gives you an optional behavior contract and a manual 
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [GitHub Spec Kit: How It Works and When to Use It](/blog/github-spec-kit-guide)
 - [CodeMySpec](/products/code-my-spec)
 

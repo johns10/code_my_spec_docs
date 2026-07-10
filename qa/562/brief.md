@@ -14,20 +14,27 @@ No seeds required — testing against the live CodeMySpec project graph which al
 
 ## What To Test
 
-- Navigate to `http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true` and verify the page renders with a sigma.js canvas and graph data embedded in `#sigma-graph[data-graph]`
+**Graph LiveView surface** (`http://127.0.0.1:4004/projects/code-my-spec/requirements/graph?preload=true`):
+
+- Navigate to the requirements graph and verify the page renders with a sigma.js canvas and graph data embedded in `#sigma-graph[data-graph]`
 - Extract the `data-graph` JSON and verify every edge's `source` and `target` keys exist in the node list (no dangling edges — criterion 5597)
-- Check that rendered node attributes include an `orphan_reference` field (criterion 5598 — expect this to fail as the current projector silently drops broken edges rather than flagging them)
-- Verify `spec_file` nodes for components whose files exist on disk render satisfied (color `#ff3838`), while deeper requirements like `tests_passing` on a parent context remain unsatisfied when children's chains are incomplete (criterion 5599)
-- Verify the fan-in shape: for each child component, at least one edge runs from a child-owned node into a parent-context node, confirming `tests_passing` depends on every child's terminal requirement (criterion 5603)
-- Verify a context's `tests_passing` stays unsatisfied when any child implementation file is missing (criterion 5604)
-- Identify two sibling schemas under the same parent context and confirm no edges run between them (no false serialization — criterion 5607)
-- For a component with an explicit dependency on a sibling, verify a prerequisite edge exists in the graph while unrelated siblings have no cross-edges (criterion 5608)
+- Verify orphan reference indicator: check whether orphan_reference field appears in node attributes, or whether dangling prereq edges surface as flagged (criterion 5598)
+- Verify satisfied nodes stay red regardless of upstream state — a locally-satisfied node whose upstream prereq is unsatisfied should still render as satisfied (criterion 5620 leaf-truth)
+- Verify `tests_passing` at a context level depends on all children's terminal requirements (criterion 5603)
+- Verify a context `tests_passing` stays unsatisfied when any child implementation file is missing (criterion 5604)
+- Identify two sibling schemas under the same parent context and confirm no edges run between them (independent siblings actionable simultaneously — criterion 5607)
+- Confirm a sibling with an explicit dep on another sibling has a blocking edge while unrelated siblings are independently actionable (criterion 5608)
 - Traverse every node via undirected BFS and confirm each node shares a connected component with at least one project-typed node (fully connected graph — criterion 5611)
-- If an orphan component (no parent context, no story link) appears in the graph, verify its connected component does not include a project node (criterion 5612)
-- Find a story linked to a surface with a cross-context dependency: verify `bdd_specs_exist` has an outgoing edge to the dep's `spec_file` and no direct edge to the surface's `spec_file` (criterion 5649)
-- Find a story linked to a standalone surface with no cross-context deps: verify `bdd_specs_exist` has exactly one component-bound outgoing edge, landing on the parent context's first requirement (criterion 5651)
-- Verify that when a child's `tests_passing` provides a longer path to the parent's `implementation_file`, the direct shortcut child-`implementation_file` → parent-`implementation_file` edge is elided by transitive reduction (criterion 5646)
-- Verify that edges in a strictly linear chain (no parallel alternative path) are preserved by transitive reduction (criterion 5647)
+- Verify ~207 orphan components in the live graph appear as disconnected islands (no path to project root), confirming criterion 5612 is met
+- Verify story kickoff resolves to the correct surface dep: find a story with a cross-context dep, confirm `bdd_specs_exist` edge targets that dep (criterion 5649)
+- Verify standalone surface kickoff lands on surface directly when there are no cross-context deps (criterion 5651)
+- Verify transitive reduction elides child-`implementation_file` → parent-`implementation_file` shortcut when child's `tests_passing` provides a longer path (criterion 5646)
+- Verify linear chain edges are preserved when no alternative path exists (criterion 5647)
+
+**get_next_requirement MCP surface** (criteria 6494-6497):
+
+- Using `get_next_requirement` on the live project, confirm the current response is coherent (returns a valid requirement, not a component requirement that's gated by an unsatisfied project chain — criterion 6494 principle verified via current state)
+- Verify the graph legend and visual indicators (satisfied/actionable/blocked color coding visible, debug node/edge counts present)
 
 ## Result Path
 

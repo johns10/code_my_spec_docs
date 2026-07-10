@@ -1,3 +1,38 @@
+---
+# Metadata for ai_agent_skill_trajectory.md
+
+# Required fields
+slug: ai-agent-skill-trajectory
+type: blog
+title: "The Skill Trajectory for Working with AI Agents"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-11T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Prompt, Context, Harness, Environment Engineering: 5 Levels"
+meta_description: "Five levels of working with AI agents: prompt, agent interaction, context engineering, harness engineering, environment engineering. Where the leverage is."
+og_title: "The 5 Levels of Working with AI Agents"
+og_description: "Prompt engineering is level 1. Harness engineering is level 3. Environment engineering is level 4. Most devs are at 1 and don't know 3-4 exist."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - harness-engineering
+  - prompt-engineering
+  - context-engineering
+  - ai-agents
+  - agentic-coding
+  - skill-development
+---
+
 # The Skill Trajectory for Working with AI Agents
 
 I've been saying this in Reddit comments for weeks: if you're a professional software engineer, you need to understand the trajectory of agentic development and how it leads to harness engineering.

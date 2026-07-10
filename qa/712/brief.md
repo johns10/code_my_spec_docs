@@ -4,119 +4,70 @@ Story 712: Local-first content publishing — CLI parses, validates, uploads to 
 
 ## Tool
 
-web
+web (Vibium MCP browser tools for LiveView at `http://localhost:4004`) + curl for the consumer pull API at `https://dev.codemyspec.com`
 
 ## Auth
 
-Log in via Vibium browser tools at `http://127.0.0.1:4000/users/log-in` using the password form:
-- Email: `qa@codemyspec.local`
-- Password: `qa-password-123!`
+Local web (port 4004) requires no authentication — `LocalOnly` plug accepts all loopback requests directly. Navigate to `http://localhost:4004/projects/code-my-spec/content`.
 
-Use the password form (the second form on the login page). The scope selector
-`form[action="/users/log-in"] input[name='user[email]']` disambiguates from
-the magic-link form.
-
-After login, navigate to `/app` to confirm authentication and verify an active
-account and project are in scope before testing the content admin routes.
+The consumer pull API at `https://dev.codemyspec.com/api/content/pull` requires `Authorization: Bearer <deploy_key>`. The deploy key is stored encrypted in the project config (visible in the admin UI under "Source & publishing settings" after expanding the `<details>` element).
 
 ## Seeds
 
-Run base QA seeds:
-
-```
-mix run priv/repo/qa_seeds.exs
-```
-
-This creates the QA user, account, and project (id `11111111-1111-4111-8111-111111111111`).
-
-No story-specific content admin seeds are needed — the "Sync from Git" button
-can be triggered from the UI, but requires a `docs_repo` configured on the
-active project. Absence of `docs_repo` is itself a testable error path.
-
-## What To Test
-
-The testable surface for this story is the hosted `ContentAdminLive` UI at
-`http://127.0.0.1:4000/app/content_admin`, which is in the
-`require_active_project` live session on the hosted Phoenix endpoint (port 4000).
-
-The story's local-first CLI pipeline (S3 upload, image ingest, CF purge,
-manifest publish, pull trigger) has no corresponding route in the local web
-router (port 4003/4004) and no CLI command surface to exercise via these
-tools — those capabilities are out of scope for this QA pass and will be
-noted as implementation gaps.
-
-### Scenario 1: Admin LiveView loads and shows empty state
-
-- Navigate to `http://127.0.0.1:4000/app/content_admin`
-- Confirm the page renders the ContentAdmin header
-- Confirm status badge counts (Published / Errors) are visible
-- Confirm the empty state message "No content_admin synced yet" appears when no records exist
-- Confirm type and status filter dropdowns are present
-- Capture screenshot
-
-### Scenario 2: Auth gate — unauthenticated redirect
-
-- Without a session, GET `http://127.0.0.1:4000/app/content_admin`
-- Confirm redirect to `/users/log-in` (302 or LiveView redirect)
-- Capture screenshot of redirected page
-
-### Scenario 3: Sync from Git button — no docs_repo configured
-
-- While logged in on `/app/content_admin`, click "Sync from Git"
-- Confirm flash error message: "Project has no docs repository configured"
-  (this maps to the `:error, :no_docs_repo` branch in `ContentSync.sync_to_content_admin/1`)
-- Capture screenshot of the error state
-
-### Scenario 4: Push to Client button — no client config
-
-- While on `/app/content_admin`, click "Push to Client"
-- Confirm an error modal appears (the push-error-modal dialog)
-- Confirm the modal shows "Missing Client Configuration" error type and a message
-  about configuring Client API URL and Deploy Key
-- Confirm the modal can be closed via the X button
-- Capture screenshot of the error modal
-
-### Scenario 5: Type and status filter UI interaction
-
-- On `/app/content_admin`, interact with the "Type" filter dropdown
-- Select "Blog" from the filter — confirm the filter is applied (list may be empty, that is OK)
-- Select "All Types" to clear — confirm filter clears
-- Interact with the "Status" filter — select "Error"
-- Confirm the "Clear Filters" button appears when a filter is active
-- Click "Clear Filters" — confirm it resets both filters
-- Capture screenshot
-
-### Scenario 6: Individual content show route — non-existent item
-
-- Navigate to `http://127.0.0.1:4000/app/content_admin/99999999`
-- Confirm the app raises an error or redirects (not a blank page crash)
-- Capture screenshot
-
-### Scenario 7: Local port 4003 — no content admin route
-
-- Navigate to `http://127.0.0.1:4003/admin/content`
-- Confirm a 404 / no-route error (this route is not in the local web router)
-- This confirms the acceptance criterion "Admin LiveView renders parse status
-  without hitting the SaaS" is NOT yet implemented on the local port
-- Capture screenshot as evidence of the gap
+No seed scripts needed. The project "Code My Spec" is already configured with 116 posts synced and published:
+- `content_source_path`: `.code_my_spec/content`
+- `client_api_url`: `https://dev.codemyspec.com`
+- `content_bucket`: `content.codemyspec.com`
+- `image_bucket`: `images.codemyspec.com`
+- `images_host`: `https://images.codemyspec.com`
 
 ## Setup Notes
 
-The acceptance criteria reference several capabilities that require infrastructure
-not present in the current implementation:
+The "Source & publishing settings" section lives inside a `<details>` collapsible at the top of the page. Click its `<summary>` to expand it before interacting with `[data-test='content-source-form']` or `[data-test='content-settings-form']`.
 
-- S3/R2 bucket configuration, image upload, Cloudflare cache purge — no
-  corresponding code paths found in the hosted or local web routers
-- Local CLI commands for content sync/publish — the local web router
-  (`CodeMySpecLocalWeb.Router`) has no content admin or content publish routes
-- "Admin LiveView renders parse status without hitting the SaaS" — the local
-  port (4003) has no `/admin/content` route; this criterion is unmet
-- Manifest JSON + S3 blob write + HTTP pull trigger — not present in the
-  content sync pipeline reviewed (`ContentSync.push_to_client/1` POSTs
-  directly to `/api/content/sync`, not a manifest-based pull flow)
+## What To Test
 
-These gaps should be documented as issues in the result.
+### Scenario 1: Admin LiveView renders parse status without SaaS (AC: Admin LiveView renders parse status without hitting the SaaS)
+- Navigate to `http://localhost:4004/projects/code-my-spec/content`
+- Verify the page loads and shows data from the local snapshot (not a remote call)
+- Verify `[data-test='last-sync-at']` renders a timestamp
+- Verify `[data-test='sync-button']` is present
+- Verify `[data-test='publish-button']` is present
+- Verify `[data-test^='content-row-']` elements are present with `data-parse-status` attributes
+- Capture screenshot of the full page
+
+### Scenario 2: Sync runs end-to-end on plain folder (AC: Sam syncs a plain non-Git folder and the pipeline runs end-to-end; One malformed frontmatter doesn't abort the sync)
+- Click `[data-test='sync-button']`
+- Wait for sync to complete
+- Verify success/error summary text (e.g. "116 success, 0 error")
+- Verify no git clone/fetch/pull errors appear
+- Capture screenshot of post-sync state
+
+### Scenario 3: Per-row data attributes and detail page (AC: Admin LiveView renders parse status without hitting the SaaS)
+- From the content list, verify at least one row has `data-parse-status='success'`
+- Click a "View" link to the detail page
+- Verify whether `[data-test='processed-content-<slug>']` renders (or file issue if page crashes)
+- Capture screenshot
+
+### Scenario 4: Publish button — clean snapshot publishes (AC: Publish writes manifest + blob to user's content bucket; Client gets pull trigger)
+- With a clean snapshot (no parse errors), click `[data-test='publish-button']`
+- Wait for publish to complete
+- Verify a publish toast/summary appears showing counts
+- Verify no `[data-test='publish-error']` appears
+- If a `[data-test='publish-sync-id']` element appears, capture it as evidence the client was triggered
+- Capture screenshot
+
+### Scenario 5: Consumer pull API — auth and contract (AC: Client gets pull trigger and fetches the manifest from S3)
+- Test `POST https://dev.codemyspec.com/api/content/pull` without auth — expect 401 or 400
+- Test with invalid bearer — expect 401
+- Test without `manifest_url` param (valid bearer if available) — expect 400
+- Capture curl responses as evidence
+
+### Scenario 6: Published consumer content routes (AC: Client gets pull trigger and fetches manifest from S3)
+- `curl -s -o /dev/null -w "%{http_code}" https://dev.codemyspec.com/blog/about` — expect 200
+- `curl -s -o /dev/null -w "%{http_code}" https://dev.codemyspec.com/blog/nonexistent-slug-xyz` — expect 404
+- Capture responses
 
 ## Result Path
 
-`.code_my_spec/qa/712/result.md`
+`.code_my_spec/qa/712/`

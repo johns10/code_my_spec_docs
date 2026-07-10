@@ -1,3 +1,39 @@
+---
+# Metadata for bmad-method-explained.md
+
+# Required fields
+slug: bmad-method-explained
+type: blog
+title: "The BMAD Method Explained: Multi-Agent Agile for AI Coding"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "The BMAD Method Explained: Multi-Agent AI Agile"
+meta_description: "What is the BMAD method? How BMAD-METHOD's two-phase, multi-agent agile framework works for AI coding, its strengths and weaknesses, and where it fits in SDD."
+og_title: "The BMAD Method Explained"
+og_description: "BMAD is the biggest name in spec-driven AI coding -- and the one that least resembles the others. A look at its multi-agent agile approach, its costs, and where it fits."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - bmad
+  - bmad-method
+  - multi-agent
+  - agile
+---
+
 # The BMAD Method Explained: Multi-Agent Agile for AI Coding
 
 If you have spent any time reading about spec-driven development, you have run into BMAD. It is the biggest name in the category by raw popularity, and it is also the one that least resembles the others. Where Spec Kit, OpenSpec, and Kiro are spec formats with tooling around them, BMAD is a whole simulated agile team. The spec is something it produces along the way, not the thing it is built around.

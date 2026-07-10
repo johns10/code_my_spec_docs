@@ -1,3 +1,40 @@
+---
+# Metadata for five_levels_of_ai_coding.md
+
+# Required fields
+slug: five-levels-of-ai-coding
+type: blog
+title: The Five Levels of AI-Assisted Development
+
+# Publishing control
+protected: false
+publish_at: 2026-03-15T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Five Levels of AI-Assisted Development - CodeMySpec"
+meta_description: From autocomplete to fully autonomous development. A framework for understanding where you are with AI coding tools and where the real leverage is.
+og_title: The Five Levels of AI-Assisted Development
+og_description: YouTube didn't kill Hollywood. It expanded video into everything. The same thing is happening with code. Here's the framework for understanding where the leverage is.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - five-levels
+  - vibe-coding
+  - automation
+  - methodology
+  - software-development
+  - verification
+---
+
 # The Five Levels of AI-Assisted Development
 
 When YouTube launched, professional videographers said the same things experienced developers are saying about AI coding tools. "These people aren't filmmakers. They don't understand lighting, composition, narrative structure." They were right.

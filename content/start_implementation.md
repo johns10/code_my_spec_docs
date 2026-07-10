@@ -1,3 +1,40 @@
+---
+# Metadata for start_implementation.md
+
+# Required fields
+slug: start-implementation
+type: documentation
+title: "Start Implementation: The Full Cycle"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-15T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Start Implementation - Full Dev Cycle"
+meta_description: The graph-driven orchestrator that walks stories to deployed software. How CodeMySpec dispatches architecture, implementation, and QA tasks autonomously.
+og_title: "Start Implementation: The Full Cycle"
+og_description: Define your stories. The system designs architecture, generates specs, implements code, runs QA, and triages issues. One loop until everything passes.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: true
+
+tags:
+  - documentation
+  - automation
+  - orchestration
+  - full-cycle
+  - dark-factory
+  - fuellytics
+  - case-study
+  - level-5
+---
+
 # Start Implementation: The Full Cycle
 
 In the five levels article, I described Level 5 as the "dark factory" -- specs in, software out. The full autonomous cycle where you define stories and the system handles everything between those stories and running software.

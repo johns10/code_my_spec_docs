@@ -1,3 +1,37 @@
+---
+# Metadata for github-spec-kit-guide.md
+
+# Required fields
+slug: github-spec-kit-guide
+type: blog
+title: "GitHub Spec Kit: How It Works and When to Use It (2026)"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "GitHub Spec Kit: How It Works (2026 Guide)"
+meta_description: "What is GitHub Spec Kit? A 2026 guide to the /specify -> /plan -> /tasks -> implement workflow, its strengths, the sea-of-markdown critique, and where it stops."
+og_title: "GitHub Spec Kit: How It Works and When to Use It"
+og_description: "A hands-on guide to GitHub's spec-driven toolkit -- the workflow, strengths, the reinvented-waterfall critiques, and how it stacks up against an enforced harness."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - github-spec-kit
+  - spec-kit
+---
+
 # GitHub Spec Kit: How It Works and When to Use It (2026)
 
 Spec Kit is the most visible thing in [spec-driven development](/blog/spec-driven-development) right now, and most of that is GitHub's brand and a very large, fast-growing repo doing the talking. The tool itself is good at one job and stops dead at another, and the gap between those two is the whole story.

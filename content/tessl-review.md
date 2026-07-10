@@ -1,3 +1,39 @@
+---
+# Metadata for tessl-review.md
+
+# Required fields
+slug: tessl-review
+type: blog
+title: "Tessl Review (2026): The Spec-as-Source Bet"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Tessl Review (2026): The Spec-as-Source Bet"
+meta_description: "A fair Tessl review: Guy Podjarny's $125M spec-driven bet, the Tessl Framework and skill registry, the non-deterministic compiler problem, and what ships today."
+og_title: "Tessl Review (2026): The Spec-as-Source Bet"
+og_description: "Tessl raised ~$125M on the boldest spec-driven vision in AI coding. Here's what's actually shipped, what's still beta, and where it lands on the rigor spectrum."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - tessl
+  - guy-podjarny
+  - review
+  - tools
+---
+
 # Tessl Review (2026): The Spec-as-Source Bet
 
 Tessl is the most aggressive spec-driven development vision in the market, and it is also the least proven. The thesis is radical: the spec, not the code, becomes the artifact you maintain, and the code becomes a regenerable output stamped `// GENERATED FROM SPEC - DO NOT EDIT`. If that works, you stop editing code at all. You edit intent, and a machine recompiles your application from it. That is the boldest claim anyone in this category is making, and as of mid-2026 it is still mostly a thesis.

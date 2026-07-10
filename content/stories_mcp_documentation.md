@@ -1,3 +1,38 @@
+---
+# Metadata for stories_mcp_server.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: stories-mcp-server
+type: page  # Options: blog, page, landing
+title: Stories MCP Server - Project Manager AI Assistant
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: "2025-11-13T00:00:00Z"
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Stories MCP Server - AI-Powered Project Manager for Claude
+meta_description: CodeMySpec's Stories MCP Server - AI project manager that helps you refine ideas into well-structured user stories through interactive interviews.
+og_title: Stories MCP Server - Project Manager AI Assistant
+og_description: Transform product ideas into actionable user stories with AI-guided requirement gathering and quality reviews
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - mcp
+  - model-context-protocol
+  - user-stories
+  - requirements
+  - project-management
+  - ai-assistant
+  - claude
+  - documentation
+---
+
 # Stories MCP Server - Technical Reference
 
 ## Overview

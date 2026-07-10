@@ -1,3 +1,40 @@
+---
+# Metadata for agent_profile_claude_code.md
+
+# Required fields
+slug: claude-code-review-2026
+type: blog
+title: "Claude Code in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-25T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Claude Code Review 2026: Pricing, Benchmarks, Community"
+meta_description: "Claude Code deep dive: highest-rated for code quality, Agent Teams, MCP ecosystem, and what Reddit developers actually think. Pricing and weaknesses."
+og_title: "Claude Code in 2026"
+og_description: "4% of all GitHub commits and climbing. Here's what developers love, hate, and wish they knew about Claude Code."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - claude-code
+  - anthropic
+  - cli-agents
+  - review
+  - mcp
+  - agent-teams
+---
+
 # Claude Code in 2026: Features, Pricing, Benchmarks, and Community Sentiment
 
 ## Overview

@@ -1,3 +1,37 @@
+---
+# Metadata for codemyspec-vs-openspec.md
+
+# Required fields
+slug: codemyspec-vs-openspec
+type: blog
+title: "CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "CodeMySpec vs OpenSpec: Enforced Specs vs Docs"
+meta_description: "CodeMySpec vs OpenSpec: both are repo-resident and BYO-agent. The split is enforcement and live verification. An honest, specific comparison."
+og_title: "CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs"
+og_description: "Both keep specs in your repo with no lock-in. The difference: OpenSpec's behavior spec is optional, CodeMySpec enforces it and verifies against the running app."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - openspec
+  - codemyspec
+---
+
 # CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs
 
 OpenSpec and CodeMySpec agree on more than they disagree on: repo-resident specs, bring-your-own-agent, no lock-in, no token markup, specs before code. The split is enforcement and verification. OpenSpec gives you an optional behavior contract and a manual living changelog across any stack, while CodeMySpec makes the behavior spec a mandatory gate, boots the real app to verify it, and goes framework-native in Phoenix.

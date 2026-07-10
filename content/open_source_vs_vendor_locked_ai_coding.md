@@ -1,3 +1,40 @@
+---
+# Metadata for open_source_vs_vendor_locked_ai_coding.md
+
+# Required fields
+slug: open-source-vs-vendor-locked-ai-coding-tools
+type: blog
+title: "Open Source vs Vendor-Locked AI Coding Tools: The Tradeoffs That Matter"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-24T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Open Source vs Vendor-Locked AI Coding Tools"
+meta_description: "The most-loved tool (Claude Code) is fully closed. The most-starred (OpenCode, 117K) is fully open. Analysis of 21 tools shows when to choose which."
+og_title: "Open Source vs Vendor-Locked AI Coding Tools"
+og_description: "Aider uses 4.2x fewer tokens. Claude Code is the community quality leader. Data from 21 tools shows the real tradeoffs between open and proprietary AI coding."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - open-source
+  - vendor-lock-in
+  - aider
+  - claude-code
+  - comparison
+  - tools
+---
+
 # Open Source vs Vendor-Locked AI Coding Tools: The Tradeoffs That Matter
 
 The open/closed question in AI coding isn't binary, and the honest answer is annoying: the most-loved tool (Claude Code, 46% in dev surveys) is fully closed, and the most-starred tool (OpenCode, 117K stars) is fully open. Pick your poison.

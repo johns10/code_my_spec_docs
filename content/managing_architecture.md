@@ -1,3 +1,42 @@
+---
+# Metadata for managing_architecture.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: managing-architecture
+type: blog  # Options: blog, page, landing
+title: How to design architecture that keeps AI on track
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: "2025-11-07T00:00:00Z"
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: Architecture Design for AI Code Generation
+meta_description: Learn to design Phoenix contexts and vertical slice architecture to keep AI-generated code consistent.
+og_title: How to design architecture that keeps AI on track
+og_description: A structured process for designing Phoenix contexts with AI conversations. Map requirements to bounded contexts, maintain architectural control, and prevent AI from creating chaos.
+og_image: null  # URL to Open Graph image
+
+metadata:
+
+# Tags (optional, list of tag names)
+tags:
+  - architecture
+  - phoenix-contexts
+  - vertical-slice
+  - context-mapping
+  - llm
+  - ai
+  - design
+  - elixir
+  - ddd
+  - domain-driven-design
+  - best-practices
+  - requirements
+---
+
 # How to design architecture that keeps AI on track
 
 > **Part of the [CodeMySpec Methodology](/methodology)** — Phase 2: Architecture & Design.

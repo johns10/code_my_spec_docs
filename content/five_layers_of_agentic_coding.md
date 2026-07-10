@@ -1,3 +1,46 @@
+---
+# Metadata for five_layers_of_agentic_coding.md
+
+# Required fields
+slug: five-layers-of-agentic-coding
+type: blog
+title: "The Five Layers of an Agentic Coding System"
+
+# Publishing control
+protected: false
+publish_at: "2026-03-31T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "The Five Layers of an Agentic Coding System"
+meta_description: Most developers treat their AI coding tool as one thing. It's five layers. Here's the framework that changes how you evaluate and build with them.
+og_title: "The Five Layers of an Agentic Coding System"
+og_description: Claude Code, Cursor, Copilot - they're not one thing. They're five layers. Understanding the layers changes how you use these tools, evaluate them, and build with them.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Anatomy of Agentic Coding Systems
+  series_part: 1
+  featured: true
+
+tags:
+  - ai
+  - ai-coding
+  - agentic-coding
+  - five-layers
+  - model-layer
+  - agent-layer
+  - harness-layer
+  - environment-layer
+  - orchestration-layer
+  - claude-code
+  - cursor
+  - copilot
+---
+
 # The Five Layers of an Agentic Coding System
 
 _Part 1 of "The Anatomy of Agentic Coding Systems," a series breaking down how AI coding tools actually work._

@@ -1,3 +1,19 @@
+---
+slug: transcript-derived-memory
+type: blog
+title: "Transcript-Derived Memory: The Category Nobody's Writing About"
+meta_title: "Transcript-Derived Memory for AI Coding"
+meta_description: "Process Claude Code transcripts into durable memory. session-kit, claude-mem, claude-memory-compiler, autoDream. The under-discussed third leg."
+tags:
+  - agent-memory
+  - transcript-derived
+  - claude-code-hooks
+  - autodream
+  - memory-systems-series
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport
+---
+
 # Transcript-derived memory: the category nobody's writing about
 
 A colleague at work built a tool called [session-kit](https://github.com/jstoobz/session-kit) that processes Claude Code session transcripts into durable memory artifacts. It's the cleverest pattern I've seen in months. It has 0 stars and 12 commits. Nobody is writing about this category.

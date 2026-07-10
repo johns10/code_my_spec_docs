@@ -1,3 +1,40 @@
+---
+# Metadata for spec-kit-vs-kiro.md
+
+# Required fields
+slug: spec-kit-vs-kiro
+type: blog
+title: "Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Spec Kit vs Kiro (2026): AWS IDE vs Open CLI"
+meta_description: "Spec Kit vs Kiro (2026): open agent-agnostic CLI vs AWS's integrated spec-first IDE with EARS and credit metering. Side-by-side table, pricing, and which to choose."
+og_title: "Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?"
+og_description: "GitHub Spec Kit is an open, portable CLI you bolt onto any agent. Kiro is AWS's integrated spec-first IDE with EARS and credit metering. Here's the honest comparison."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - github-spec-kit
+  - kiro
+  - aws
+  - comparison
+  - tools
+---
+
 # Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?
 
 Both GitHub Spec Kit and AWS Kiro put a specification at the center of AI coding instead of letting the agent free-associate from a chat prompt. That is where the resemblance ends. Spec Kit is an open, MIT-licensed CLI toolkit you bolt onto whatever agent you already use. Kiro is Amazon's integrated, spec-first IDE (and CLI) where the spec, the model, and the billing all live inside the AWS perimeter. If you are searching "spec kit vs kiro," the real decision is not "which one has specs." It is openness and portability versus an integrated, opinionated environment.
@@ -62,6 +99,7 @@ To be fair: portability is not unique to CodeMySpec. Spec Kit is also BYO-agent,
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [GitHub Spec Kit: How It Works and When to Use It (2026)](/blog/github-spec-kit-guide)
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec](/products/code-my-spec)
 
 ## Sources

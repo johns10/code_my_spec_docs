@@ -1,3 +1,38 @@
+---
+# Metadata for cursor_3_agent_first.md
+
+# Required fields
+slug: cursor-3-agent-first
+type: blog
+title: "Cursor 3 Isn't an IDE Anymore. It's an Agent Switchboard."
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Cursor 3.0 Review: Agents Window, 8 Parallel Agents, $20/mo"
+meta_description: "Cursor 3.0 shipped April 2 with an Agents Window running 8 parallel workers across local, worktree, cloud, and SSH. Pro stays $20/mo. A week of real use."
+og_title: "Cursor 3.0: Agents Window, 8 Parallel Agents, Pro $20/mo"
+og_description: "Cursor 3.0 rebuilt the interface around managing 8 parallel agents instead of writing code. Release date, pricing, and what worked after a week."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - cursor
+  - ide
+  - agentic-coding
+  - agent-first
+  - parallel-agents
+---
+
 # Cursor 3 Isn't an IDE Anymore. It's an Agent Switchboard.
 
 Cursor shipped version 3 on April 2, and I've been poking at it for a couple days now. This is not a point release. They rebuilt the entire interface from scratch under the codename "Glass," and the result is a bet that you're going to manage agents, not write code.

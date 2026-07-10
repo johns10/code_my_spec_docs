@@ -1,3 +1,19 @@
+---
+slug: its-not-memory-if-you-wrote-it
+type: blog
+title: "It's Not Memory If You Wrote It: The CLAUDE.md Confusion"
+meta_title: "It's Not Memory If You Wrote It: The CLAUDE.md Confusion"
+meta_description: "The most-starred memory system in AI coding has 87k+ stars and isn't actually memory. Why the CLAUDE.md conflation costs you wrong tool choices."
+tags:
+  - agent-memory
+  - claude-md
+  - harness-engineering
+  - memory-systems-series
+  - context-engineering
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport
+---
+
 # It's not memory if you wrote it: the CLAUDE.md confusion
 
 The [most-starred "memory system" in AI coding](https://github.com/forrestchang/andrej-karpathy-skills/stargazers) right now is `forrestchang/andrej-karpathy-skills`. 87k+ stars as of today. It's a single CLAUDE.md file. It's not a memory system. It's four prescriptive principles for how Claude Code should behave: think before coding, simplicity first, surgical changes, goal-driven execution.

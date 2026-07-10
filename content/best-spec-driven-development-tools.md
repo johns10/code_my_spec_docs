@@ -1,3 +1,43 @@
+---
+# Metadata for best-spec-driven-development-tools.md
+
+# Required fields
+slug: best-spec-driven-development-tools
+type: blog
+title: "Best Spec-Driven Development Tools (2026): Ranked and Compared"
+
+# Publishing control
+protected: false
+publish_at: 2026-06-03T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Best Spec-Driven Development Tools (2026)"
+meta_description: "Best spec-driven development tools in 2026, ranked by use case: Spec Kit, Kiro, OpenSpec, BMAD, Tessl, CodeMySpec, and the top Spec Kit alternatives compared."
+og_title: "Best Spec-Driven Development Tools (2026)"
+og_description: "Seven spec-driven development tools, picked by who should use what. Comparison table on enforcement, verification, lock-in, and pricing, plus a one-minute guide to choosing."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - spec-driven-development
+  - github-spec-kit
+  - kiro
+  - openspec
+  - bmad
+  - agent-os
+  - tessl
+  - comparison
+  - tools
+---
+
 # Best Spec-Driven Development Tools (2026)
 
 I build with a spec-driven development tool every day, so I have opinions about which ones earn their place and which ones are mostly a pile of markdown. This is a ranked, grouped pick of the seven SDD tools worth knowing in 2026, sorted by who should actually use each one. For the definitions and the taxonomy, read my [full guide to spec-driven development](/blog/spec-driven-development). For what to install, stay here.
@@ -99,6 +139,7 @@ The one-line version of the whole category: most SDD tools generate a spec and h
 - [Agent OS Review: Standards-First AI Coding](/blog/agent-os-review)
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
+- [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
 - [CodeMySpec vs Kiro Specs](/blog/codemyspec-vs-kiro-specs)
 - [CodeMySpec](/products/code-my-spec)

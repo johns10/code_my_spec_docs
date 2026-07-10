@@ -1,3 +1,39 @@
+---
+# Metadata for agent_profile_aider.md
+
+# Required fields
+slug: aider-review-2026
+type: blog
+title: "Aider in 2026: Features, Pricing, Benchmarks, and Community Sentiment"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-29T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Aider 2026: Polyglot Leaderboard, Pricing & Review"
+meta_description: "Aider in 2026: Polyglot leaderboard standing, pricing (~$60/mo vs $200 Claude Code), 50+ model support, and the best git integration in its class."
+og_title: "Aider 2026: Leaderboard, Pricing & Review"
+og_description: "The OG open-source coding agent. 50+ models, best git integration, and the benchmark everyone else measures against."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  featured: false
+
+tags:
+  - ai
+  - ai-coding
+  - aider
+  - open-source
+  - cli-agents
+  - model-agnostic
+  - review
+---
+
 # Aider in 2026: Features, Pricing, Benchmarks, and Community Sentiment
 
 ## Overview

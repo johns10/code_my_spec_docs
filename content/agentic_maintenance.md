@@ -1,3 +1,42 @@
+---
+# Metadata for agentic_maintenance.md
+
+# Required fields
+slug: agentic-maintenance
+type: blog
+title: "Maintenance: Where Agents Actually Earn Their Keep"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Agentic Maintenance: Where AI Agents Earn Their Keep"
+meta_description: "Bug fixes, dependency updates, security patches, tech debt. Maintenance is 60-80% of software cost and it's where agents deliver the most proven value."
+og_title: "Maintenance: Where Agents Actually Earn Their Keep"
+og_description: "OpenAI's garbage collection pattern, Anthropic's multi-agent code review, and the maintenance equilibrium. Where agents stop being demos and start being useful."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 8
+  featured: false
+
+tags:
+  - ai
+  - maintenance
+  - agentic-coding
+  - technical-debt
+  - code-review
+  - security
+  - dependabot
+  - harness-engineering
+---
+
 # Maintenance: Where Agents Actually Earn Their Keep
 
 Software maintenance eats [60-80% of total software cost](https://flairstech.com/blog/ai-software-maintenance-support). Always has. It's the unglamorous work: bug fixes, dependency updates, security patches, refactoring, keeping the lights on. And it's exactly where agentic tools deliver measurable value today.

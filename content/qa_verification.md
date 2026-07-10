@@ -1,3 +1,40 @@
+---
+# Metadata for qa_verification.md
+
+# Required fields
+slug: qa-verification
+type: documentation
+title: "QA Verification: Testing What the System Actually Does"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-15T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "QA Verification - Story and Journey Testing"
+meta_description: How CodeMySpec runs story QA, journey testing, and issue triage with AI doing the testing and procedural state machines controlling the flow.
+og_title: "QA Verification: Testing What the System Actually Does"
+og_description: Story QA, journey testing, and automated issue triage. AI tests the running application. Procedural code ensures every phase completes with validated artifacts.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - qa
+  - testing
+  - verification
+  - browser-testing
+  - issue-triage
+  - state-machine
+  - level-4
+---
+
 # QA Verification: Testing What the System Actually Does
 
 Architecture commands define what the system should be. QA commands verify what the system actually does. They're not the same problem.

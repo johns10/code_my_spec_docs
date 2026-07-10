@@ -1,3 +1,39 @@
+---
+# Metadata for component_development.md
+
+# Required fields
+slug: component-development
+type: documentation
+title: "Component Development: One File at a Time"
+
+# Publishing control
+protected: false
+publish_at: 2026-03-15T00:00:00Z
+expires_at: null
+
+# SEO Metadata
+meta_title: "Component Development - Spec, Code, Test"
+meta_description: How CodeMySpec generates individual components with guardrails. Write a spec, generate code from it, generate tests. Each step validates against the last.
+og_title: "Component Development: One File at a Time"
+og_description: The 1:1:1 principle in practice. One spec, one code file, one test file. Each with schema validation, artifact checking, and BDD alignment.
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: Documentation
+  featured: false
+
+tags:
+  - documentation
+  - components
+  - specs
+  - testing
+  - bdd
+  - code-generation
+  - level-2
+---
+
 # Component Development: One File at a Time
 
 > **Part of the [Five Levels of AI-Assisted Development](/blog/five-levels-of-ai-coding)** -- Level 2: Pair Programming.

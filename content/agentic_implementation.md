@@ -1,3 +1,43 @@
+---
+# Metadata for agentic_implementation.md
+
+# Required fields
+slug: agentic-implementation
+type: blog
+title: "The Implementation Phase: AI Writes the Code, But Who's Actually Driving?"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-02T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "AI Writes the Code, But Who's Driving?"
+meta_description: "Devs are 19% slower with AI but perceive 20% faster. Vibe coding has 2.74x more security vulns. Here's what the implementation phase actually looks like."
+og_title: "The Implementation Phase: AI Writes the Code, But Who's Actually Driving?"
+og_description: "Copilot has 20M users. Cursor hit $2B ARR. The adoption question is settled. The reality is the interesting part."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  series_part: 4
+  featured: false
+
+tags:
+  - ai
+  - implementation
+  - agentic-coding
+  - vibe-coding
+  - harness-engineering
+  - code-generation
+  - cursor
+  - copilot
+  - claude-code
+---
+
 # The Implementation Phase: AI Writes the Code, But Who's Actually Driving?
 
 Everyone's talking about AI code generation like it's a solved problem. Copilot has [20 million users](https://www.getpanto.ai/blog/github-copilot-statistics). Cursor hit [$2B in annualized revenue](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/) and doubled it in three months. Claude Code reached [$1B ARR faster than ChatGPT did](https://www.uncoveralpha.com/p/anthropics-claude-code-is-having). The tools are generating [41% of all code](https://www.netcorpsoftwaredevelopment.com/blog/ai-generated-code-statistics) and Gartner thinks that number hits [60% by end of 2026](https://www.armorcode.com/report/gartner-predicts-2026-ai-potential-and-risks-emerge-in-software-engineering-technologies). Microsoft says [20-30% of their internal code](https://www.tomshardware.com/tech-industry/artificial-intelligence/microsofts-ceo-reveals-that-ai-writes-up-to-30-percent-of-its-code-some-projects-may-have-all-of-its-code-written-by-ai) is now AI-written. Google's at [25%+](https://www.entrepreneur.com/business-news/ai-is-taking-over-coding-at-microsoft-google-and-meta/490896).

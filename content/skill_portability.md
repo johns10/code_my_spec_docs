@@ -1,3 +1,46 @@
+---
+# Metadata for skill_portability.md
+
+# Required fields
+slug: skill-portability
+type: blog
+title: "One Skill, Three Platforms"
+
+# Publishing control
+protected: false
+publish_at: "2026-05-17T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Cross-Platform Agent Skills: Claude Code, OpenCode, Codex"
+meta_description: "Write one SKILL.md that works on Claude Code, OpenCode, and Codex. Compatibility matrix, portable frontmatter subset, recommended layout."
+og_title: "One Skill, Three Platforms"
+og_description: "The three biggest CLI agents converged on the same skill convention. Here's the compatibility matrix, what's portable, and the template I use."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: Writing Agent Skills
+  series_part: 3
+  featured: true
+
+tags:
+  - agent-skills
+  - claude-code
+  - opencode
+  - codex
+  - skills
+  - skill-md
+  - skill-portability
+  - cross-platform
+  - mcp
+  - claude-skills
+  - agentic-coding
+  - tutorial
+---
+
 # One Skill, Three Platforms
 
 When I write a new skill, it goes in `.claude/skills/<name>/`. Not because I only run Claude Code -- because OpenCode reads that directory natively, and a single symlink from `.agents/skills/` makes Codex find it too. One source of truth, three platforms, one place to edit.

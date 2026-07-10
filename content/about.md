@@ -1,3 +1,26 @@
+---
+slug: about
+type: page
+title: About CodeMySpec
+
+protected: false
+publish_at: 2026-04-04T00:00:00Z
+expires_at: null
+
+meta_title: About CodeMySpec - AI-Assisted Phoenix Development
+meta_description: Built by John Davenport. 15 years in enterprise systems, 2 years building LLM-assisted dev tooling for Phoenix.
+og_title: About CodeMySpec
+og_description: The story behind CodeMySpec and the developer who built it.
+og_image: null
+
+metadata:
+
+tags:
+  - about
+  - team
+  - company
+---
+
 # About CodeMySpec
 
 ## What CodeMySpec Does

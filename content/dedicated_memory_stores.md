@@ -1,3 +1,19 @@
+---
+slug: dedicated-memory-stores
+type: blog
+title: "Dedicated Memory Stores: Most Marketing, Messiest Tradeoffs"
+meta_title: "Dedicated Memory Stores for AI Agents: When to Use Them"
+meta_description: "MemPalace, mem0, Letta, vendor memory features. Why contamination, opacity, and lock-in outweigh the convenience for coding work. What actually breaks."
+tags:
+  - agent-memory
+  - mempalace
+  - mem0
+  - letta
+  - memory-systems-series
+publish_at: "2026-04-25T00:00:00Z"
+author: John Davenport
+---
+
 # Dedicated memory stores: the category with the most marketing and the messiest tradeoffs
 
 [MemPalace](https://github.com/mempalace/mempalace/stargazers) has 49.6k stars on GitHub. mem0 powers production agents at AWS. Letta has the cleanest abstraction for agent-managed memory in the OSS world. They're all impressive. I tried them. I went back to markdown.

@@ -1,3 +1,40 @@
+---
+# Metadata for architectural_decision_records.md
+
+# Required fields
+slug: architectural-decision-records
+type: blog
+title: "ADRs Are the Best Thing You Can Give Your AI Agent"
+
+# Publishing control
+protected: false
+publish_at: "2026-04-08T00:00:00Z"
+expires_at: null
+
+# SEO Metadata
+meta_title: "Architecture Decision Records for AI Coding Agents (ADRs)"
+meta_description: "AI coding agents drift without ADRs. The Nygard format, the pre-made decisions pattern, and Archgate as durable architectural memory for AI agents."
+og_title: "Architecture Decision Records for AI Coding Agents"
+og_description: "Your agent picks Express when you standardized on Phoenix. Give it ADRs. The Nygard format, pre-made stack decisions, and Archgate as agent-readable memory."
+og_image: null
+
+metadata:
+  template: article
+  author: John Davenport
+  category: AI Development
+  series: The Agentic Software Development Process
+  featured: false
+
+tags:
+  - ai
+  - architecture
+  - adr
+  - architectural-decision-records
+  - agentic-coding
+  - harness-engineering
+  - claude-code
+---
+
 # ADRs Are the Best Thing You Can Give Your AI Agent
 
 Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. When an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent. They become the durable memory of why your codebase looks the way it does.

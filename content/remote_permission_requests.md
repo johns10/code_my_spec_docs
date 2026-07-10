@@ -1,3 +1,41 @@
+---
+# Metadata for remote_permission_requests.md
+# This file defines metadata for content that will be synced to the database
+
+# Required fields
+slug: remote-permission-requests
+type: blog  # Options: blog, page, landing
+title: "Remote Permission Approval: Building Trust Boundaries for Autonomous AI Agents"
+
+# Publishing control
+protected: false  # Set to true to require authentication (routes to /private/*)
+publish_at: "2026-03-08T00:00:00Z"
+expires_at: null  # ISO 8601 datetime or null for never expires
+
+# SEO Metadata
+meta_title: "Remote Permission Approval for AI Coding Agents - CodeMySpec"
+meta_description: How we built a full-stack permission approval system for Claude Code that lets you approve tool calls from your phone with Web Push and Phoenix Channels.
+og_title: "Remote Permission Approval: Trust Boundaries for AI Agents"
+og_description: A deep dive into building human-in-the-loop permission systems for autonomous AI coding agents
+og_image: null  # URL to Open Graph image
+
+# Additional metadata (custom key-value pairs)
+metadata:
+  template: article  # Options: default, article, tutorial
+  author: John Davenport
+  category: AI Development
+  featured: true
+
+# Tags (optional, list of tag names)
+tags:
+  - ai
+  - claude-code
+  - phoenix
+  - human-in-the-loop
+  - agentic-systems
+  - permissions
+---
+
 # Remote Permission Approval for AI Coding Agents
 
 Once your AI coding agent runs for more than about ten minutes, you hit a problem: it needs your permission to do something, and you're not at your computer.
