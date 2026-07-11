@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Why AI-Built Apps Break in Production (2026)"
-meta_description: "AI app builders nail the prototype, then break in production: data loss, security holes, runaway credit costs, code you can't own. Why it happens and what to do."
+meta_description: "AI app builders nail the prototype, then break in production: data loss, security holes, credit costs, code you can't own. Why it happens and what to do."
 og_title: "Why AI-Built Apps Break in Production"
 og_description: "Lovable, Replit, Bolt and v0 are brilliant at the prototype and weak at the graduation wall. The five ways AI-built apps break, with sources, and what production-ready actually takes."
 og_image: null
@@ -95,11 +95,11 @@ You can get there from a vibe-coded prototype. The common path is to prototype i
 
 ## The graduation path
 
-[CodeMySpec](/products/code-my-spec) is built for exactly that graduation, and it is honest about who it is for. It is a spec-driven development platform for Phoenix and Elixir that runs as a Claude Code plugin with a hosted server. Instead of a chat loop that ends when the agent stops, it walks a requirement graph where each piece of work has to pass a chain of gates ending in behavioral specs and live QA. BDD specs are mandatory, not a setting, so the build cannot advance past a gate it fails. A QA subagent then boots the real app, drives a real browser, and files issues by severity. Unit tests pass, the behavioral specs pass, and then the QA agent clicks the button and finds the bug anyway. That is the verification the category lacks.
+[CodeMySpec](/developers) is built for exactly that graduation, and it is honest about who it is for. It is a spec-driven development platform for Phoenix and Elixir that runs as a Claude Code plugin with a hosted server. Instead of a chat loop that ends when the agent stops, it walks a requirement graph where each piece of work has to pass a chain of gates ending in behavioral specs and live QA. BDD specs are mandatory, not a setting, so the build cannot advance past a gate it fails. A QA subagent then boots the real app, drives a real browser, and files issues by severity. Unit tests pass, the behavioral specs pass, and then the QA agent clicks the button and finds the bug anyway. That is the verification the category lacks.
 
 It also addresses the other failures directly: you get a real, deployable Phoenix app you own (auth, database, UI, background jobs), with no closed SDK to be trapped in, and it runs on your own Claude Code with your own keys and no token markup, which removes the credit-burn meter entirely. Around the app, the hosted side gives the operator tooling most builders do not bundle: a support inbox for your deployed app, send-and-receive email on your own domain, and Google Ads, Search Console, and Analytics wired into your own Claude Code for growth work. These are operator-facing tools you use to run and grow the app, not features injected into the generated code.
 
-Now the honest part, because the wall has two sides. CodeMySpec is not a one-click, point-and-click builder, and it is not for someone choosing their first prototyping tool. It is Phoenix and Elixir only, so if you need React it is the wrong tool. It expects you to use Claude Code, connect MCP servers over OAuth, run a CLI, and verify a domain for email. That is the same power-user setup the builders deliberately removed, and it is a real barrier. CodeMySpec is more process, not less, on purpose. The reward for that process is an app that survives customers; the price is that you have to be past the demo stage and willing to clear the setup. If you want a fast prototype, use one of the builders above and come back when it breaks.
+Now the honest part, because the wall has two sides. CodeMySpec is not a one-click, point-and-click builder, and it is not for someone choosing their first prototyping tool. It is Phoenix and Elixir only, so if you need React it is the wrong tool. It expects you to use Claude Code, connect MCP servers over OAuth, run a CLI, and verify a domain for email. That is the same power-user setup the builders deliberately removed, and it is a real barrier. CodeMySpec is more process, not less, on purpose. The reward for that process is an app that survives customers; the price is that you have to be past the demo stage and willing to clear the setup. If you want a fast prototype, use one of the builders above and come back when it breaks. If it already broke and you would rather not drive the rebuild yourself, the [vibe coding rebuild service](/landing/vibe-coding-rebuild) reverse-engineers what you shipped into behavioral specs and rebuilds it on a stack you own.
 
 ## Who this is for
 
@@ -113,7 +113,7 @@ If you are validating an idea this weekend, an AI app builder is the right call,
 - [v0 vs Lovable (2026)](/blog/v0-vs-lovable)
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [What Is a Spec? The Most Overloaded Word in Software](/blog/what-is-a-spec)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 
