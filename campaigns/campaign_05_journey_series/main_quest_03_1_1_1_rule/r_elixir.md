@@ -390,7 +390,7 @@ The validation is built around Phoenix patternsensures contexts define proper b
 
 But honestly, 80% of the value comes from the discipline of writing designs first. The tooling just removes repetitive work.
 
-Repo: https://github.com/johns10/code_my_spec
+Repo: https://github.com/Code-My-Spec/code_my_spec
 CodeMySpec site: https://codemyspec.com?utm_source=reddit&utm_medium=comment&utm_campaign=journey_series&utm_content=main_quest_03_1_1_1_rule
 ```
 
