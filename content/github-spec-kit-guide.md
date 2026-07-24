@@ -130,7 +130,7 @@ Spec Kit is a strong fit if you are a developer or team using AI agents who want
 
 Both Spec Kit and CodeMySpec are BYO-agent and keep specs in your own repo, and both reject pure vibe coding. That shared ground is real; portability is table stakes here, not a CodeMySpec exclusive. The differences are enforcement, spec structure, verification, and vertical focus.
 
-Most SDD tools, Spec Kit included, are spec-first scaffolding: they generate a spec and hand off to a separate agent, and the spec governs by convention. [CodeMySpec](/products/code-my-spec) is a full-lifecycle harness (spec, code, tests, and live verification on one requirement graph) where BDD specs are a mandatory gate, not optional documents.
+Most SDD tools, Spec Kit included, are spec-first scaffolding: they generate a spec and hand off to a separate agent, and the spec governs by convention. [CodeMySpec](/developers) is a full-lifecycle harness (spec, code, tests, and live verification on one requirement graph) where BDD specs are a mandatory gate, not optional documents.
 
 | Dimension | GitHub Spec Kit | CodeMySpec |
 |---|---|---|
@@ -154,7 +154,7 @@ Spec Kit's success is the best validation the spec-driven thesis has. CodeMySpec
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

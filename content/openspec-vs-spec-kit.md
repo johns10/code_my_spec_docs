@@ -15,7 +15,7 @@ expires_at: null
 meta_title: "OpenSpec vs Spec Kit (2026): Brownfield vs Greenfield"
 meta_description: "OpenSpec vs Spec Kit (2026): lightweight brownfield change-tracker vs the full greenfield toolkit. Table, strengths, and which Spec Kit alternative to pick."
 og_title: "OpenSpec vs Spec Kit (2026)"
-og_description: "Spec Kit is the full, greenfield toolkit with the biggest community. OpenSpec is the lightweight, brownfield change-tracker. Here's how to pick -- plus a fair third option."
+og_description: "Spec Kit is the full, greenfield toolkit with the biggest community. OpenSpec is the lightweight, brownfield change-tracker. Here's how to pick, plus a fair third option."
 og_image: null
 
 metadata:
@@ -108,7 +108,7 @@ The dividing line is clean: Spec Kit is the full toolkit for building new; OpenS
 
 Both Spec Kit and OpenSpec stop at the same place. They are spec tools (they help you write a good spec and hand it to an agent), but neither enforces a behavioral spec as a mandatory gate, and neither verifies that the code the agent produced actually does what the spec says. Spec Kit's clarify/analyze steps are advisory. OpenSpec's `verify` "won't block archive." In both, the spec governs the code by convention, not by enforcement, and nothing closes the loop between spec and running software.
 
-[CodeMySpec](/products/code-my-spec) makes a different bet on those two gaps. BDD specs are a mandatory gate: you cannot pass work without them (module specs, reviews, and tests are configurable knobs on top). And verification is built in: a QA agent boots the real app, drives a live browser, screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. No other tool in this comparison runs the live app to confirm the spec held. It is also Phoenix/Elixir-native, where Spec Kit and OpenSpec are deliberately stack-neutral, a depth trade-off (theirs is breadth across stacks; CodeMySpec's is depth in one).
+[CodeMySpec](/developers) makes a different bet on those two gaps. BDD specs are a mandatory gate: you cannot pass work without them (module specs, reviews, and tests are configurable knobs on top). And verification is built in: a QA agent boots the real app, drives a live browser, screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. No other tool in this comparison runs the live app to confirm the spec held. It is also Phoenix/Elixir-native, where Spec Kit and OpenSpec are deliberately stack-neutral, a depth trade-off (theirs is breadth across stacks; CodeMySpec's is depth in one).
 
 To be fair to both: repo-resident specs, bring-your-own-agent, and no token markup are not unique to CodeMySpec, since OpenSpec and Spec Kit meet that bar too. The honest difference is the combination of a mandatory behavioral gate plus live verification plus framework-native depth. If you want a lightweight changelog across any stack, OpenSpec fits. If you want structured greenfield planning with the biggest community, Spec Kit fits. If you want the spec to be an enforced contract the running app is checked against, that is the wedge CodeMySpec is built on.
 
@@ -120,6 +120,8 @@ To be fair to both: repo-resident specs, bring-your-own-agent, and no token mark
 - [GitHub Spec Kit: How It Works and When to Use It](/blog/github-spec-kit-guide)
 - [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
+- [The Harness Layer: Harness vs Wrapper in AI Coding](/blog/the-harness-layer)
+- [Tessl Review 2026: Framework, Pricing, Skills and Funding](/blog/tessl-review)
 
 ## Sources
 

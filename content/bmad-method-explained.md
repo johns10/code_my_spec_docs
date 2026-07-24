@@ -15,7 +15,7 @@ expires_at: null
 meta_title: "The BMAD Method Explained: Multi-Agent AI Agile"
 meta_description: "What is the BMAD method? How BMAD-METHOD's two-phase, multi-agent agile framework works for AI coding, its strengths and weaknesses, and where it fits in SDD."
 og_title: "The BMAD Method Explained"
-og_description: "BMAD is the biggest name in spec-driven AI coding -- and the one that least resembles the others. A look at its multi-agent agile approach, its costs, and where it fits."
+og_description: "BMAD is the biggest name in spec-driven AI coding, and the one that least resembles the others. A look at its multi-agent agile approach, its costs, and where it fits."
 og_image: null
 
 metadata:
@@ -113,7 +113,7 @@ That difference cascades into everything else.
 | Weight | Heavyweight: 6-7 personas, high token spend, weeks to learn | Lighter: the harness produces the spec, you run any agent |
 | Pricing | Free, MIT, BYO model | Free in early access, BYO agent/model/keys |
 
-BMAD bundles roles, handoffs, and stories into a method. [CodeMySpec](/products/code-my-spec) does the opposite: it isolates the spec as a portable, BDD-grounded protocol and stays out of the agent's way. Specs are markdown, tests are ExUnit, and any agent (Claude Code, Codex, Gemini CLI) can consume them via MCP or generated context files. Bring your own agent, your own model, your own keys. We don't arbitrage tokens.
+BMAD bundles roles, handoffs, and stories into a method. [CodeMySpec](/developers) does the opposite: it isolates the spec as a portable, BDD-grounded protocol and stays out of the agent's way. Specs are markdown, tests are ExUnit, and any agent (Claude Code, Codex, Gemini CLI) can consume them via MCP or generated context files. Bring your own agent, your own model, your own keys. We don't arbitrage tokens.
 
 The other gap is verification. BMAD's quality gate is a multi-agent QA review of the story output, agents checking agents, which is exactly where the error-propagation criticism bites. CodeMySpec's gate is different in kind: every spec produces BDD acceptance criteria and generated tests, and then a QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass. BDD specs pass. Then the QA agent clicks the button and finds the bug anyway. Prompting is praying; verification is a guarantee.
 
@@ -128,6 +128,8 @@ If you want to orchestrate a full AI product team and you have a greenfield proj
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
 - [Spec-Driven Development for Elixir and Phoenix](/blog/spec-driven-development-elixir)
+- [Kiro vs Zed vs Cursor vs Windsurf: 2026 AI IDE Comparison](/blog/ai-ides-compared-2026)
+- [Claude Code vs Codex vs Aider: 2026 CLI Agent Benchmarks](/blog/cli-agents-compared-2026)
 
 ## Sources
 

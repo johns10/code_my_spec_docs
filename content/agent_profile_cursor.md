@@ -40,6 +40,8 @@ tags:
 
 Cursor is the AI IDE category, full stop. $2B ARR as of February 2026, doubled in 3 months, valued at $29.3B after a $2.3B raise. Fastest-scaling SaaS in history. 60% of revenue now comes from corporate buyers.
 
+**Updated July 10, 2026.** The independence era ended: SpaceX announced a $60 billion all-stock acquisition of Anysphere on June 16, expected to close around Q3 (CNBC, Forbes). Cursor also acquired and archived Continue.dev, and shipped its in-house Composer 2.5 model in May. The product story below stands; the ownership story changed completely.
+
 It's a VS Code fork with AI wired into every surface: tab completion, inline edits, multi-file Composer, Background Agents, and Automations (event-driven triggers from code changes, Slack, or timers). The Supermaven acquisition (Nov 2025) brought autocomplete in-house. The June 2025 switch to credit-based billing aligned pricing with compute and set off a still-burning fire with heavy users.
 
 Cursor 3 (April 2, 2026, "Glass") is a bet. The IDE is now secondary to an Agents Window running up to 8 agents in parallel across local worktrees, cloud VMs, and remote SSH. Either this is where the category is going, or Cursor just handed Claude Code and Codex more market share. Cursor 3.1 (April 13) added tiled layout and cut dropped frames ~87%.
@@ -176,6 +178,7 @@ The user base makes Cursor a high-value integration target even if it's not the 
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [AI IDEs Compared in 2026](/blog/ai-ides-compared-2026)
 - [Open Source vs Vendor-Locked AI Coding Tools](/blog/open-source-vs-vendor-locked-ai-coding-tools)
 

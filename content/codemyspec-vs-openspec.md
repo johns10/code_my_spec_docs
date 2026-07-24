@@ -135,7 +135,7 @@ And the honest caveat in the other direction: CodeMySpec is early access with to
 
 Both tools believe the same thing the rest of the field is converging on: the spec is a portable protocol the agent consumes, and it belongs in your repo where any agent, any reviewer, and any pipeline can read it. OpenSpec treats that protocol as a living changelog you maintain. CodeMySpec treats it as a contract the system enforces and then verifies against the running app.
 
-Most SDD tools are spec-only: they generate a spec and hand off to a separate agent. CodeMySpec is spec, code, test, and live verification in one system, tracked on a requirement graph. If you want a lightweight, stack-neutral way to keep specs and code roughly in step, OpenSpec is an excellent default. If you want the spec to be a guarantee rather than a convention, and you are building in Phoenix, that is [CodeMySpec](/products/code-my-spec).
+Most SDD tools are spec-only: they generate a spec and hand off to a separate agent. CodeMySpec is spec, code, test, and live verification in one system, tracked on a requirement graph. If you want a lightweight, stack-neutral way to keep specs and code roughly in step, OpenSpec is an excellent default. If you want the spec to be a guarantee rather than a convention, and you are building in Phoenix, that is [CodeMySpec](/developers).
 
 ## Related Articles
 
@@ -144,7 +144,7 @@ Most SDD tools are spec-only: they generate a spec and hand off to a separate ag
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
 - [CodeMySpec Specs vs Kiro EARS: Two Approaches to Spec-Driven AI Development](/blog/codemyspec-vs-kiro-specs)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

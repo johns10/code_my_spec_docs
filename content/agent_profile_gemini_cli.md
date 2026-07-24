@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Gemini CLI Pricing & Free Tier 2026: 1,000 Requests/Day"
-meta_description: "Gemini CLI free tier: 1,000 Flash requests/day, no card. Pro models went paid March 25. Available models, 1M context, Jules, and 429 complaints."
+meta_description: "Gemini CLI is sunsetting into Antigravity CLI: free tier ended June 18, 2026. What happened, what remains for paid users, and where to go instead."
 og_title: "Gemini CLI Pricing & Free Tier in 2026"
 og_description: "1,000 free Flash requests per day. Pro models went paid March 25, 2026. What you get free, what costs money, and what the community actually says."
 og_image: null
@@ -39,15 +39,17 @@ tags:
 
 ## Overview
 
-Google quietly turned Gemini 3 Pro into a paid-only feature on March 25, 2026. The free tier is Flash-only now. If you were riding the free tier for the Pro-quality experience, that's gone.
+**Updated July 10, 2026: Gemini CLI is sunsetting.** On June 18 Google announced the transition to Antigravity CLI: free and consumer-plan (AI Pro/Ultra) users lose Gemini CLI access, and only paid Cloud, API-key, and Code Assist customers keep full support. The review below documents what Gemini CLI was; if you're arriving fresh, evaluate Antigravity CLI (default model Gemini 3.5 Flash) instead.
 
-What's left is still the most generous free tier in the category (1,000 Flash requests per day with a personal Google account), and that's genuinely useful. Gemini 3.1 Pro is a real upgrade when you pay for it, competitive with Claude on a good day and a coin toss on a bad one. The community is pretty clear: good for free and prototyping, Claude still wins for production.
+Google had already quietly turned Gemini 3 Pro into a paid-only feature on March 25, 2026, making the free tier Flash-only. The June announcement finished the job.
+
+Until June 18, what remained was still the most generous free tier in the category (1,000 Flash requests per day with a personal Google account). Gemini 3.1 Pro is a real upgrade when you pay for it, competitive with Claude on a good day and a coin toss on a bad one. The community is pretty clear: good for free and prototyping, Claude still wins for production.
 
 The rest of the package is solid: Jules for async background work, Conductor for Markdown-based project plans and automated reviews, Plan Mode on by default, native Google Workspace hooks. 102K GitHub stars, 100+ contributors, Apache 2.0. Actually open source, not "source-available open."
 
 ## Key Differentiators
 
-- **Biggest free tier in the category:** 1,000 Flash requests/day, no credit card. Pro models now cost money (since March 25, 2026).
+- **Biggest free tier in the category** (historical): 1,000 Flash requests/day, no credit card. Ended June 18, 2026 with the Antigravity CLI transition.
 - **Jules:** Async agent that clones the repo, works in a VM, submits PRs. Fire-and-forget for bugs and refactors.
 - **Conductor:** Markdown plans + specs, automated reviews (guidelines, tests, security). Closest thing to spec-driven workflow in a vendor CLI.
 - **1M token context:** Tied for largest in the category.
@@ -165,6 +167,7 @@ The free tier and Conductor make Gemini CLI a strong fit for anyone exploring sp
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
 - [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)
 - [Free and Open Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)

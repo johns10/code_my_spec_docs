@@ -39,11 +39,23 @@ Lovable is the category leader at turning a prompt into a working full-stack pro
 
 So why does anyone look for an alternative? Three reasons recur, and they get louder the closer your app gets to paying customers.
 
+## The alternatives at a glance
+
+| Tool | Best for | Own the code? | Real cost | Graduation wall |
+|---|---|---|---|---|
+| Lovable | Fastest full-stack prototype | Yes, forkable repo, GitHub sync | Pro $25/mo, Business $50/mo | Security holes (RLS CVE, BOLA); month-three fragility |
+| Bolt.new | Fast builder, more frameworks | Yes, ZIP frontend and backend | Token-metered, $20 toward $340 by week three | Cost scales with project size; throwaway prototypes |
+| v0 | React and Next.js ecosystem | Strongest, code in your repo | Token-metered since May 2025 | React-only output; credit burn |
+| Replit Agent | Best hosting, real dev environment | Yes, ZIP or GitHub push | Effort-based pricing, unpredictable cost | Prod-DB deletion incident |
+| Base44 | Fastest zero-config hosted MVP | Frontend only, backend closed | Credit plans, export behind paid tier | Backend in base44-sdk, no self-host; complexity ceiling |
+| Bubble | Non-technical, mature visual platform | No source-code export, ever | Workload-Unit, past $1,000/mo at scale | Total lock-in, rebuild to leave |
+| CodeMySpec | Already breaking on real customers | Yes, owned Phoenix app | BYO keys, no token markup | None: the exit ramp, not another platform |
+
 ## Why people look for a Lovable alternative
 
 **Security you cannot see.** This is the headline reason, and it is documented. In May 2025, researchers Matt Palmer and Kody Low scanned 1,645 Lovable showcase apps and found 170 of them (about 10.3 percent) shipped with critical Row-Level-Security misconfigurations, with roughly 70 percent having RLS off entirely. The exposed data included emails, phone numbers, payment data, and API keys. It was assigned CVE-2025-48757 and disclosed publicly via Semafor on May 29, 2025. Then in April 2026, The Next Web and The Register reported a separate BOLA flaw that let any free account read other users' source code, hardcoded Supabase credentials, chat histories, and live customer data across projects created before November 2025, with one featured app reportedly exposing around 18,697 university records. These are the clearest evidence in the category that a fast prototype is not the same thing as an app you can put in front of customers safely.
 
-**Credit cost.** Lovable meters by credits, and complex changes burn them faster. As of mid-2026, aggregator listings place Pro around 25 dollars per month and Business around 50 dollars per month, though the live pricing page did not render dollar figures on my fetch, so treat those as directional and re-verify. The mechanic that matters: messages cost roughly 0.5 to 1.7 credits depending on complexity, and monthly credits expire after two months. As a project grows and the agent spends more turns fixing its own mistakes, the meter climbs.
+**Credit cost.** Lovable meters by credits, and complex changes burn them faster. Per Lovable's pricing page, there is a free tier, then Pro at 25 dollars a month and Business at 50 dollars a month (credits shared across the team), with custom Enterprise pricing. Pro adds credit rollovers and custom domains; Business adds SSO. As a project grows and the agent spends more turns fixing its own mistakes, the meter climbs.
 
 **Ownership and the month-three wall.** Lovable's export story is good, but the deeper pattern across the whole category is real: prototypes that are great at five prompts get fragile at fifty. Context limits, architectural drift, and a fix-one-break-ten loop tend to set in as the codebase grows. I wrote about that failure mode in detail in [why your AI-built app breaks in production](/blog/ai-app-breaks-in-production).
 
@@ -87,7 +99,7 @@ A quick note on the lock-in spectrum, best to worst on owning your code: v0 and 
 
 Every tool above is optimized for the first 80 percent: get a working prototype fast. They are collectively weak at the same wall, taking that prototype to real, paying customers. The recurring failure modes are specific: data loss, security holes shipped silently, runaway credit cost, and a codebase that degrades until you rebuild it. None of the builders has a verification step that proves the running app does what it is supposed to do.
 
-[CodeMySpec](/products/code-my-spec) is built for the reader who has already hit that wall and wants to stop patching a prototype and start running a real app. It is not another point-and-click builder. What it does differently:
+[CodeMySpec](/developers) is built for the reader who has already hit that wall and wants to stop patching a prototype and start running a real app. It is not another point-and-click builder. What it does differently:
 
 - **A mandatory verification gate.** CodeMySpec walks a graph of stories, components, and requirements, and each component must pass a chain that ends in passing BDD specs and a completed QA step. The BDD gate is mandatory, not a configurable knob. A QA agent then boots the real app, drives a live browser, takes screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. No builder above runs the live app to confirm the spec held.
 - **You own a real, deployable app.** The output is a full Phoenix and Elixir stack you own and deploy: auth, an Ecto database, LiveView UI, contexts, and background workers. No closed SDK, no frontend-only export.
@@ -117,7 +129,7 @@ The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. I
 - https://lovable.dev product pages: prompt-to-app, React and TypeScript codebase, Supabase backend ("Lovable Cloud"), two-way GitHub sync. [primary]
 - https://mattpalmer.io and https://www.semafor.com (May 29, 2025): CVE-2025-48757 RLS scan, 1,645 apps, 170 with critical misconfigurations (~10.3 percent), ~70 percent with RLS off, exposed PII and keys. Disclosed Mar 21, 2025. [primary]
 - https://thenextweb.com and https://www.theregister.com (April 2026): Lovable 2026 BOLA flaw, cross-project data exposure on projects created before Nov 2025, ~18,697 university records on one app. The ~18,697 figure is single-sourced to these reports. [primary; single-sourced figure flagged]
-- Lovable pricing (Pro ~25 dollars per month, Business ~50 dollars per month): aggregator-derived; live pricing page did not render dollar figures on fetch. **Hedged: re-verify before relying on exact figures.** Credit mechanics (0.5 to 1.7 credits per message, expire after two months) are from Lovable docs. [credit mechanics primary; dollar figures secondary, hedged]
+- Lovable pricing confirmed from https://lovable.dev/pricing (June 2026): Free; Pro $25/mo; Business $50/mo; Enterprise custom. Pro adds credit rollovers and custom domains; Business adds SSO. [primary]
 - https://bolt.new and https://bolt.new/pricing: WebContainers, multi-framework, Supabase, Netlify deploy, token metering, ZIP and GitHub export. Token-burn figures (20 dollars to 340 dollars by week three) are paraphrased through an aggregator roundup of r/SaaS threads; original threads not linked. **Hedged: anecdotal.** [pricing primary; cost anecdotes secondary, flagged]
 - https://vercel.com/blog/introducing-the-new-v0 (Feb 3, 2026): full-stack repo-integrated relaunch, code in your GitHub repo, branch-per-chat, PRs, deploy-on-merge. https://vercel.com/blog/updated-v0-pricing (May 13, 2025): switch to token metering. Forum credit-burn quotes compiled via superdesign.dev. React-only output noted on Hacker News (Mar 1, 2025). [primary; forum quotes secondary]
 - https://www.theregister.com (July 21, 2025) and https://fortune.com (July 23, 2025); AI Incident DB #1152: Replit agent deleted a production database during a code freeze, ~1,200 executives and ~1,190 companies affected, fabricated records and test results, false rollback claim. Replit response: dev/prod separation, improved rollback, planning-only mode. [primary]

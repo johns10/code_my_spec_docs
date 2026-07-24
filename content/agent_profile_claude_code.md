@@ -39,7 +39,9 @@ tags:
 
 ## Overview
 
-Claude Code is Anthropic's CLI agent, and as of Opus 4.7 it's the one I reach for when code quality has to be right the first time. It runs in your shell, reads your codebase, edits files, runs commands, and handles git.
+Claude Code is Anthropic's CLI agent, and it's the one I reach for when code quality has to be right the first time. It runs in your shell, reads your codebase, edits files, runs commands, and handles git.
+
+**Updated July 10, 2026.** Two things changed since the April version of this review: the default model is now Opus 4.8 (May 28), with effort controls up to `/effort xhigh` and a Dynamic Workflows preview for parallel subagents. And the April 4 third-party harness ban was reversed: since June 15, third-party and SDK usage draws from your normal subscription limits again.
 
 The numbers are absurd. 4% of all public GitHub commits (~135K/day) as of March 2026, projected to hit 20%+ by year-end. Zero to #1 developer tool in eight months. Estimated $2.5B run-rate by early 2026, 18.9M MAU, 300K+ business customers.
 
@@ -84,7 +86,7 @@ Around it: Agent Teams (multi-agent with worktree isolation), Code Review for PR
 - Pro usage limits are brutal for heavy users ("$20 plan that runs out after 12 prompts")
 - Autocompact drops important context mid-session
 - Gets expensive fast. Max+ is $200/mo, API can hit $200/dev/month
-- **Third-party harness ban (April 4, 2026)**: if you built on OpenClaw-style tools, your subscription no longer covers them. Pay-as-you-go or direct API key only
+- **Policy whiplash**: the April 4 third-party harness ban was reversed June 15 (subscriptions cover third-party usage again), but the episode showed Anthropic will move this boundary when it wants to
 - **Silent cache TTL regression** (March 2026): dropped from 1h to 5m with no announcement. Community measured 15-53% cost impact. Env var workaround added in v2.1.108+, but the trust damage sticks
 - **KYC requirement** (April 2026): government ID + selfie for select users. Users who picked Claude for privacy reasons are not happy
 
@@ -142,7 +144,8 @@ Closest tool-level data is HAL/CORE-Bench:
 
 - **Opus 4.7** (April 16): new recommended model. xhigh effort level, adaptive thinking (`budget_tokens` removed). Up to 35% more tokens per request at the same per-token price
 - **Claude Managed Agents** (public beta, April 8): hosted agent runtime. Anthropic now sells the harness as infrastructure. Three-tier stack: Messages API -> Agent SDK -> Managed Agents. $0.08/session-hour plus standard tokens
-- **Third-party harness ban** (April 4): subscriptions no longer cover OpenClaw and similar. Pay-as-you-go or API key. Anthropic cites cache efficiency. Competitively, it kneecaps rival harnesses
+- **Third-party harness ban** (April 4): subscriptions stopped covering OpenClaw and similar. Reversed May 13, and the planned credit split was paused June 15: third-party usage draws from subscription limits again
+- **Opus 4.8** (May 28): new default model, high effort default, Dynamic Workflows preview
 - **KYC identity verification** (April 14-16): government ID + selfie for select users via Persona. First major AI company to ship this. Big privacy backlash
 - **Cache TTL regression** (regression ~March 8, discovered April): prompt cache silently dropped from 1h to 5m. Community measured 15-53% API cost impact. Env var workaround in v2.1.108+
 - **Auto mode on Max** (April 16): model selects Opus vs Sonnet per request
@@ -177,6 +180,7 @@ Claude Code has the deepest CodeMySpec integration potential of any tool I looke
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
 - [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)
 - [Open Source vs Vendor-Locked AI Coding Tools](/blog/open-source-vs-vendor-locked-ai-coding-tools)

@@ -7,8 +7,8 @@ protected: false
 publish_at: 2026-04-04T00:00:00Z
 expires_at: null
 
-meta_title: About CodeMySpec - AI-Assisted Phoenix Development
-meta_description: Built by John Davenport. 15 years in enterprise systems, 2 years building LLM-assisted dev tooling for Phoenix.
+meta_title: "About CodeMySpec: Build, Sell, and Support Software with AI"
+meta_description: Built by John Davenport. 15 years in enterprise systems, now building the AI harnesses that let one person build, sell, and support real software.
 og_title: About CodeMySpec
 og_description: The story behind CodeMySpec and the developer who built it.
 og_image: null
@@ -25,9 +25,9 @@ tags:
 
 ## What CodeMySpec Does
 
-CodeMySpec is a development platform for building production Phoenix applications with AI assistance. Instead of unstructured prompting, it enforces a six-phase process: user stories, architecture design, BDD specifications, implementation, verification, and application QA.
+CodeMySpec is a set of AI harnesses that help one person build, sell, and support real software. You steer, the model does the labor, and the harness keeps the work honest.
 
-Every feature traces from a user story through testable acceptance criteria to verified, shipped code. The AI generates. You architect. The process catches problems before they compound.
+The build harness replaces unstructured prompting with a six-phase engineering process: user stories, architecture design, BDD specifications, implementation, verification, and application QA. Every feature traces from a user story through testable acceptance criteria to verified, shipped code. The content harness gets your site and marketing live, often before the app exists. And once your software is running, the hosted Operate and Grow layer carries the email, live chat, and content your customers actually touch.
 
 ## Who Built It
 

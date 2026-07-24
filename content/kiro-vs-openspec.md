@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Kiro vs OpenSpec (2026): AWS IDE vs Lightweight CLI"
-meta_description: "Kiro vs OpenSpec (2026): AWS's metered spec-first IDE with EARS vs the free, repo-native brownfield tracker with delta tracking. Side-by-side table and how to choose."
+meta_description: "Kiro vs OpenSpec (2026): AWS's metered spec-first IDE with EARS vs the free, repo-native brownfield delta tracker. Table and how to choose."
 og_title: "Kiro vs OpenSpec (2026)"
 og_description: "Kiro is AWS's integrated, credit-metered spec IDE. OpenSpec is the free, repo-resident change tracker you bolt onto any agent. Here's the honest comparison."
 og_image: null
@@ -95,7 +95,7 @@ The dividing line is clean: Kiro is the integrated, opinionated environment that
 
 Here is what both tools share, and where both leave a gap. Both are spec-first, and neither verifies the generated code against the live, running app. Kiro's Agent Hooks can run tests, but unit tests passing is not the same as the button actually working. OpenSpec's `verify` "won't block archive," and its scenarios are optional. In both, the spec governs the code by convention, not by enforcement.
 
-[CodeMySpec](/products/code-my-spec) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
+[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
 
 - **A mandatory BDD gate.** BDD scenarios (Given/When/Then) are required, not optional documents the agent should follow, and they are behavioral contracts rather than requirement phrasing. Module specs, reviews, and tests are configurable knobs; the BDD gate is not.
 - **Built-in live verification.** A QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. Neither Kiro nor OpenSpec runs the live app to confirm the spec held.
@@ -111,7 +111,8 @@ To be fair: repo-resident specs and bring-your-own-agent portability are not uni
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
 - [CodeMySpec vs OpenSpec: Enforced Specs vs Living Docs](/blog/codemyspec-vs-openspec)
-- [CodeMySpec](/products/code-my-spec)
+- [Kiro vs Zed vs Cursor vs Windsurf: 2026 AI IDE Comparison](/blog/ai-ides-compared-2026)
+- [CodeMySpec for Developers](/developers)
 
 ## Sources
 

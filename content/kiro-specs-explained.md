@@ -131,7 +131,7 @@ I build CodeMySpec, a full-lifecycle, specification-driven AI development harnes
 
 **Bedrock metering with markup vs BYO-model with no markup.** Kiro routes inference through Bedrock and bills credits. CodeMySpec is bring-your-own-agent, bring-your-own-model, bring-your-own-keys, with no token arbitrage. You pay your model provider directly.
 
-The shorthand: most spec tools, Kiro included, own the spec phase. CodeMySpec runs spec, code, test, and live verification end to end on a requirement graph, built Elixir-first. If you want the full side-by-side, see [CodeMySpec vs Kiro EARS](/blog/codemyspec-vs-kiro-specs), and you can see the harness itself at [CodeMySpec](/products/code-my-spec).
+The shorthand: most spec tools, Kiro included, own the spec phase. CodeMySpec runs spec, code, test, and live verification end to end on a requirement graph, built Elixir-first. If you want the full side-by-side, see [CodeMySpec vs Kiro EARS](/blog/codemyspec-vs-kiro-specs), and you can see the harness itself at [CodeMySpec](/developers).
 
 Kiro is a strong choice if you're an AWS-native or enterprise team planning large features and you're comfortable inside AWS billing and tooling. If you want your specs to outlive any one editor, or you work in Elixir and Phoenix, or you want verification that goes past unit tests, the trade-offs cut the other way.
 
@@ -142,7 +142,7 @@ Kiro is a strong choice if you're an AWS-native or enterprise team planning larg
 - [CodeMySpec vs Kiro EARS: Two Approaches to Spec-Driven AI Development](/blog/codemyspec-vs-kiro-specs)
 - [Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?](/blog/spec-kit-vs-kiro)
 - [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

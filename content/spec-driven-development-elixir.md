@@ -68,7 +68,7 @@ None of this is exotic. It is just what a senior Elixir engineer already does by
 
 ## How CodeMySpec does Elixir-native SDD
 
-[CodeMySpec](/products/code-my-spec) is the full-lifecycle, spec-driven AI development harness I built Phoenix-first. It ships as a Claude Code plugin with a local MCP server and a web app, and Elixir and Phoenix are not a supported target bolted on after the fact. They are the design center.
+[CodeMySpec](/developers) is the full-lifecycle, spec-driven AI development harness I built Phoenix-first. It ships as a Claude Code plugin with a local MCP server and a web app, and Elixir and Phoenix are not a supported target bolted on after the fact. They are the design center.
 
 The pieces map directly onto the four requirements above:
 
@@ -107,7 +107,7 @@ If that is you, the bet is simple: an enforced, verified, Phoenix-native harness
 - [Why Phoenix Contexts Are Great for LLMs](/blog/why-phoenix-contexts-are-great-for-llms)
 - [GitHub Spec Kit: How It Works and When to Use It (2026)](/blog/github-spec-kit-guide)
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 - [The CodeMySpec Methodology](/methodology)
 
 ## Sources

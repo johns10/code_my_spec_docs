@@ -120,7 +120,7 @@ In CodeMySpec, the **rules and standards layer is subordinate to a mandatory BDD
 | Agent lock-in | None (Claude Code optimized; degrades elsewhere) | None (MCP + CLAUDE.md, .cursorrules, GEMINI.md); no token markup |
 | Pricing | Free, MIT (+ paid workshops) | Free (early access) |
 
-The fair framing is not "CMS does standards better." Agent OS's Discover is a genuinely strong capability that CMS does not foreground, and the two share the BYO-agent, no-markup, portable-artifact philosophy. These are **different jobs.** Agent OS is a standards-injection layer that makes your agent write more like you. CodeMySpec is a spec-gated, full-lifecycle harness that makes a behavioral spec mandatory and verifies the result against it. If you want to learn how the gated-spec model works in practice, [CodeMySpec](/products/code-my-spec) is built around exactly that contract. Agent OS injects standards and hopes the agent follows them; CMS makes the spec the gate.
+The fair framing is not "CMS does standards better." Agent OS's Discover is a genuinely strong capability that CMS does not foreground, and the two share the BYO-agent, no-markup, portable-artifact philosophy. These are **different jobs.** Agent OS is a standards-injection layer that makes your agent write more like you. CodeMySpec is a spec-gated, full-lifecycle harness that makes a behavioral spec mandatory and verifies the result against it. If you want to learn how the gated-spec model works in practice, [CodeMySpec](/developers) is built around exactly that contract. Agent OS injects standards and hopes the agent follows them; CMS makes the spec the gate.
 
 ## Related Articles
 
@@ -128,7 +128,7 @@ The fair framing is not "CMS does standards better." Agent OS's Discover is a ge
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
 - [The BMAD Method Explained: Multi-Agent Agile for AI Coding](/blog/bmad-method-explained)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

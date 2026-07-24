@@ -91,7 +91,7 @@ For small or exploratory work, that trust is fine. For a feature you are going t
 
 ## CodeMySpec: SDD inside Claude Code with an enforced gate
 
-[CodeMySpec](/products/code-my-spec) is the full-lifecycle, spec-driven AI development harness I built for Phoenix and Elixir, and it is distributed as a Claude Code plugin (with a local MCP server and a web app). The point of difference is not that it generates specs. Spec Kit and OpenSpec do that too. The point is that it enforces a behavioral spec as a gate and then verifies the running app, neither of which the others do.
+[CodeMySpec](/developers) is the full-lifecycle, spec-driven AI development harness I built for Phoenix and Elixir, and it is distributed as a Claude Code plugin (with a local MCP server and a web app). The point of difference is not that it generates specs. Spec Kit and OpenSpec do that too. The point is that it enforces a behavioral spec as a gate and then verifies the running app, neither of which the others do.
 
 Working inside Claude Code, the pieces are:
 
@@ -117,7 +117,7 @@ What does your `CLAUDE.md` look like, and how far does it actually get you befor
 - [GitHub Spec Kit: How It Works and When to Use It (2026)](/blog/github-spec-kit-guide)
 - [OpenSpec Explained: Repo-Native Spec-Driven Development](/blog/openspec-explained)
 - [Spec-Driven Development for Elixir and Phoenix](/blog/spec-driven-development-elixir)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

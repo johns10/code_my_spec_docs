@@ -12,8 +12,8 @@ publish_at: 2026-06-03T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "Tessl Review (2026): The Spec-as-Source Bet"
-meta_description: "A fair Tessl review: Guy Podjarny's $125M spec-driven bet, the Tessl Framework and skill registry, the non-deterministic compiler problem, and what ships today."
+meta_title: "Tessl Review 2026: Framework, Pricing, Skills & Funding"
+meta_description: "A detailed Tessl review: the Tessl Framework and skill registry, pricing, the $125M raise, and what actually ships today vs still in beta."
 og_title: "Tessl Review (2026): The Spec-as-Source Bet"
 og_description: "Tessl raised ~$125M on the boldest spec-driven vision in AI coding. Here's what's actually shipped, what's still beta, and where it lands on the rigor spectrum."
 og_image: null
@@ -108,7 +108,7 @@ As a shipped product, the honest assessment is "truest vision, least-proven exec
 
 ## How it compares to CodeMySpec
 
-[CodeMySpec](/products/code-my-spec) takes the opposite bet. Where Tessl wants the spec to *replace* code as the source of truth, CodeMySpec holds that spec quality *determines* code quality, and that the code stays real, human-owned source. Specs are a portable protocol layer that feeds whatever coding agent you already use, not a compiler that regenerates your app from scratch. Nothing depends on a non-deterministic regeneration engine, because nothing gets regenerated from zero.
+[CodeMySpec](/developers) takes the opposite bet. Where Tessl wants the spec to *replace* code as the source of truth, CodeMySpec holds that spec quality *determines* code quality, and that the code stays real, human-owned source. Specs are a portable protocol layer that feeds whatever coding agent you already use, not a compiler that regenerates your app from scratch. Nothing depends on a non-deterministic regeneration engine, because nothing gets regenerated from zero.
 
 | Dimension | Tessl | CodeMySpec |
 |---|---|---|
@@ -133,7 +133,7 @@ If the spec-as-source bet pays off, Tessl will have built something genuinely ne
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
 - [GitHub Spec Kit: How It Works and When to Use It (2026)](/blog/github-spec-kit-guide)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

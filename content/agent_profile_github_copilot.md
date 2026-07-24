@@ -44,6 +44,8 @@ Copilot is still the incumbent. First mainstream AI coding tool, biggest install
 
 For teams already on GitHub it's still the "don't change anything" option. Issues, PRs, Actions, code search all feed the agent. But the April 20 move lines up with the JetBrains AI Survey pegging Copilot adoption as "growth stalled" at 29% while Claude Code is at 18% with 6x growth in nine months. Copilot's not dying, but the scoreboard is moving.
 
+**Updated July 10, 2026.** The billing system described below was replaced on June 1: premium requests became GitHub AI Credits (1 credit = $0.01), with completions and Next Edit staying off the meter. Auto model selection is now the default, and the model list added the GPT-5.6 family plus Kimi K2.7 Code, the first open-weight model in Copilot (GA July 1). Current tiers: Free, Pro $10, Pro+ $39, Max $100, Business $19 and Enterprise $39 per seat. The April-era table below is preserved for history; check github.com/features/copilot/plans for live numbers.
+
 ## Key Differentiators
 
 - **Widest editor support**: VS Code, JetBrains, Eclipse, Xcode, Neovim, Visual Studio, GitHub.com, GitHub Mobile, Windows Terminal. Nothing else comes close.
@@ -54,7 +56,7 @@ For teams already on GitHub it's still the "don't change anything" option. Issue
 - **GitHub-native workflow**: Issues trigger the cloud agent, Code Review on PRs, Actions for execution, code search for RAG.
 - **60M+ code reviews**: Agentic architecture, 10X growth since launch, 1 in 5 reviews on GitHub.
 - **Copilot Memory on by default**: Persistent repo-level understanding.
-- **Transparent usage counter**: You see exactly how many premium requests you've burned. (Though exact Pro limits are no longer published post-April 2026.)
+- **Transparent usage counter**: You see exactly what you've burned. (Billing moved from premium requests to GitHub AI Credits on June 1, 2026: 1 credit = $0.01, completions stay off the meter.)
 
 ## Pricing
 
@@ -179,6 +181,7 @@ Copilot's installed base and native GitHub integration make it a high-reach targ
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [AI IDEs Compared in 2026](/blog/ai-ides-compared-2026)
 - [Free and Open Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)
 - [Open Source vs Vendor-Locked AI Coding Tools](/blog/open-source-vs-vendor-locked-ai-coding-tools)

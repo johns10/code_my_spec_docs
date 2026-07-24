@@ -12,7 +12,7 @@ publish_at: 2026-06-03T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "Spec-Driven Development 2026: Guide & Tools"
+meta_title: "What Is Spec-Driven Development? 2026 Guide and Tools"
 meta_description: "What is spec-driven development? A 2026 guide to SDD, the spec-first to spec-as-source rigor spectrum, and the top spec-driven development tools compared."
 og_title: "Spec-Driven Development in 2026: Guide + Tool Comparison"
 og_description: "The complete guide to spec-driven development: definition, rigor spectrum, canonical workflow, and the SDD tools compared (Spec Kit, Kiro, Tessl, OpenSpec, BMAD, Agent OS, CodeMySpec)."
@@ -41,9 +41,11 @@ tags:
 
 AI coding agents are great at producing plausible code fast, and terrible at remembering what you actually asked for across a long session. Spec-driven development (SDD) is the bet that the fix is to stop treating the chat window as the source of truth. You make a written specification the authoritative artifact, and code becomes something derived and verified against it, not the other way around. Instead of vibe coding through a chat, where your intent lives in throwaway conversation history and the agent drifts, hallucinates APIs, and decays as the project grows, you author a structured, behavior-oriented spec first, derive a plan, break it into atomic tasks, and only then generate code that gets checked back against the spec.
 
-That spec is the durable memory that survives context windows, model swaps, and the months between when a feature was built and when someone has to change it. By mid-2026 SDD is a real category with a Martin Fowler article, a DeepLearning.AI course, an arXiv paper, and at least seven serious tools fighting over the term. This guide defines the category, lays out the rigor spectrum, walks the canonical workflow, classifies the tools, compares them in one table, and gives you a way to choose. I build with one of these tools daily (CodeMySpec, which I make), so I will flag my bias where it shows up and try to be fair to the rest.
+That spec is the durable memory that survives context windows, model swaps, and the months between when a feature was built and when someone has to change it. By mid-2026 SDD is a real category with a Martin Fowler article, a DeepLearning.AI course, an arXiv paper, and at least seven serious tools fighting over the term. It is also one of the few durable ideas in a churning market: the spring 2026 consolidation wave (acquisitions, rebrands, and sunsets across the [broader AI coding tool landscape](/blog/best-ai-coding-tools-2026)) strengthened the case for keeping your intent in specs you own rather than in any one vendor's chat history. This guide defines the category, lays out the rigor spectrum, walks the canonical workflow, classifies the tools, compares them in one table, and gives you a way to choose. I build with one of these tools daily (CodeMySpec, which I make), so I will flag my bias where it shows up and try to be fair to the rest.
 
 ## What is spec-driven development?
+
+**Spec-driven development is a software methodology where a written specification, not the code, is the source of truth: humans author and maintain the spec, and AI agents generate, verify, and update code against it.**
 
 The core idea is an inversion. In traditional development, code is the source of truth and any spec is a stale document describing what the code used to do. SDD flips that: the spec is what you maintain, and code is generated or reconciled against it. GitHub's own toolkit puts it bluntly: "Specifications don't serve code; code serves specifications."
 
@@ -84,7 +86,7 @@ The cleanest way to map the field is to ask two questions of each tool: what rol
 
 **Bucket C, agentic-agile orchestration.** Spec-producing, but the differentiator is a multi-role agent team (analyst, PM, architect, dev, QA) running an agile-style lifecycle. The unit that drives code is a context-packed story, not a minimal portable spec. Members: BMAD-METHOD is the archetype; Agent OS overlaps Buckets B and C.
 
-**Bucket D, adjacent but not SDD.** Tools that share the word "spec," support context files, or do planning, but where the spec is not the governing source of truth. General agents like Cursor, Windsurf, Claude Code, and Devin live here: they support context files, but a plan made in Plan Mode is discarded after use. Orchestration libraries (CrewAI, LangGraph, AutoGen) are infrastructure, not SDD. And API-contract tools that collide on the word "spec" (OpenAPI, Swagger, AsyncAPI) are unrelated to AI SDD entirely.
+**Bucket D, adjacent but not SDD.** Tools that share the word "spec," support context files, or do planning, but where the spec is not the governing source of truth. General agents like Cursor, Claude Code, and Devin Desktop (formerly Windsurf) live here: they support context files, but a plan made in Plan Mode is discarded after use. Orchestration libraries (CrewAI, LangGraph, AutoGen) are infrastructure, not SDD. And API-contract tools that collide on the word "spec" (OpenAPI, Swagger, AsyncAPI) are unrelated to AI SDD entirely.
 
 ## The tools compared
 
@@ -136,7 +138,7 @@ No single tool wins outright; the right one depends on your situation.
 - **You are running a complex, high-stakes greenfield build and want a full simulated team plus a compliance paper trail.** BMAD-METHOD, if you can absorb the learning curve and token cost.
 - **You want your agent to stop reinventing your house conventions on an existing codebase.** Agent OS, for standards injection, not for durable specs.
 - **You are betting on a radical spec-as-source future and want to track it.** Watch Tessl, but do not build production on a closed beta.
-- **You build in Phoenix and Elixir and you want specs that actually gate the code and a QA agent that verifies the running app.** That is the CodeMySpec wedge: [see the product](/products/code-my-spec).
+- **You build in Phoenix and Elixir and you want specs that actually gate the code and a QA agent that verifies the running app.** That is the CodeMySpec wedge: [see the product](/developers).
 
 The honest one-line summary of the whole category: most SDD tools generate a spec and hand off to a separate agent. The harder, more useful problem is making the spec govern the code and verifying the result, end to end. That is the bet worth understanding before you pick a tool.
 
@@ -159,7 +161,8 @@ The honest one-line summary of the whole category: most SDD tools generate a spe
 - [Spec-Driven Development with Claude Code](/blog/spec-driven-development-with-claude-code)
 - [Best Spec-Driven Development Tools (2026)](/blog/best-spec-driven-development-tools)
 - [EARS Notation Explained](/blog/ears-notation)
-- [CodeMySpec](/products/code-my-spec)
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
+- [CodeMySpec](/developers)
 - [Our methodology](/methodology)
 
 ## Sources

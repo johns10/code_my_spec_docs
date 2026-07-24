@@ -131,7 +131,7 @@ Rank what you want out of your codebase, then verify it mechanically in that ord
 
 The agent provides intent. The harness provides the guarantee. The model is free to fail at every step, because the checks catch it before the failure reaches production.
 
-This priority order is the spine of [CodeMySpec](https://codemyspec.com/products/code-my-spec?utm_source=blog&utm_medium=inline&utm_campaign=prevent-slop-elixir), the Phoenix-native harness I build with. But the order stands on its own whether you adopt the harness or assemble the pieces yourself. Rank your outcomes and verify them mechanically, instead of prompting harder and hoping.
+This priority order is the spine of [CodeMySpec](https://codemyspec.com/developers?utm_source=blog&utm_medium=inline&utm_campaign=prevent-slop-elixir), the Phoenix-native harness I build with. But the order stands on its own whether you adopt the harness or assemble the pieces yourself. Rank your outcomes and verify them mechanically, instead of prompting harder and hoping.
 
 What's your verification priority order? If you're shipping Phoenix with agents, I'd bet it looks similar. If it doesn't, I want to know why.
 

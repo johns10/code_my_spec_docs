@@ -1,6 +1,16 @@
 # Stop-hook stale-problems: a synchronicity bug
 
-**Status:** root-caused, not yet fixed
+**Status:** FIXED (2026-07-09) — superseded by the async Analysis run service.
+The fix went further than the plan below: instead of Task.Supervisor +
+yield-inside-the-request, the stop hook is now **fully async** — analyzers run
+as supervised background jobs through `CodeMySpec.Analysis` (per-project
+single-flight queue + run ledger keyed on input fingerprints), Problems
+reconcile atomically (`Problems.reconcile_problems_for_source/4`, one
+transaction) regardless of the HTTP connection's lifetime, and the stop
+decision reads persisted Problems immediately. Stranded `:running` rows from a
+dead server are failed at boot. `mix test`/`mix spex` from the agent are
+rewritten (PreToolUse) into the same service, so model and system share one
+run record. See stories 554/555/856/857.
 **Related issues:** `af2711ff` (high, incoming), `5b3a05b6` (closed prematurely), `validation-pipeline-redesign`
 **Severity:** high — makes the stop-hook evaluation (a flagship feature) unreliable; recurs constantly when dogfooding CodeMySpec on itself.
 

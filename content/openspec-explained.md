@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "OpenSpec Explained (2026): Delta Tracking + Brownfield"
-meta_description: "What is OpenSpec? Fission AI's free, brownfield-first spec-driven framework: delta tracking, the propose-apply-archive workflow, and how it compares to CodeMySpec."
+meta_description: "What is OpenSpec? Fission AI's free, brownfield-first spec framework: delta tracking, the propose-apply-archive workflow, and how it compares to CodeMySpec."
 og_title: "OpenSpec Explained"
 og_description: "How OpenSpec does repo-native spec-driven development: delta tracking, optional scenarios, and where it fits versus CodeMySpec."
 og_image: null
@@ -146,7 +146,7 @@ The first row is the one that matters. OpenSpec asks for a behavior contract; Co
 
 The second difference is verification. OpenSpec's spec is a compounding documentation trail whose accuracy depends on manual sync, which is exactly the drift practitioners self-report. CodeMySpec treats the spec as a contract the code must satisfy, then goes further: its QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. That live-app verification has no equivalent in OpenSpec.
 
-The third is depth. OpenSpec is stack-neutral by design, which buys it reach across 20+ agents and every language. CodeMySpec trades that breadth for depth in one ecosystem: it is [Phoenix and Elixir-native](/products/code-my-spec), generating specs that understand contexts, LiveView, Ecto, and OTP.
+The third is depth. OpenSpec is stack-neutral by design, which buys it reach across 20+ agents and every language. CodeMySpec trades that breadth for depth in one ecosystem: it is [Phoenix and Elixir-native](/developers), generating specs that understand contexts, LiveView, Ecto, and OTP.
 
 The fair framing: OpenSpec gives you an optional behavior contract and a manual living changelog that works across any stack. CodeMySpec makes the behavior spec a mandatory gate, adds live verification, and goes framework-native in Phoenix. If you want maximum reach with minimum friction, OpenSpec is excellent. If you want the spec enforced and the result verified, that is a different tool.
 
@@ -158,7 +158,7 @@ The fair framing: OpenSpec gives you an optional behavior contract and a manual 
 - [OpenSpec vs Spec Kit: Lightweight vs Full Toolkit](/blog/openspec-vs-spec-kit)
 - [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
 - [GitHub Spec Kit: How It Works and When to Use It](/blog/github-spec-kit-guide)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

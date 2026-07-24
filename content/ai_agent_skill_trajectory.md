@@ -106,7 +106,7 @@ Managing state across sessions is also context engineering. When you hit the win
 
 ### Level 3: Harness Engineering
 
-You stop curating what the agent knows and start designing the constraints, guardrails, and feedback loops it operates within. [My Phoenix-specific take is CodeMySpec](/products/code-my-spec?utm_source=ai-agent-skill-trajectory&utm_medium=internal&utm_campaign=cta-mid).
+You stop curating what the agent knows and start designing the constraints, guardrails, and feedback loops it operates within. [My Phoenix-specific take is CodeMySpec](/developers?utm_source=ai-agent-skill-trajectory&utm_medium=internal&utm_campaign=cta-mid).
 
 Soto's definition: "the discipline of designing the systems, architectural constraints, execution environments, and automated feedback loops that wrap around AI agents to make them reliable in production."
 

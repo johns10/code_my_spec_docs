@@ -40,6 +40,8 @@ tags:
 
 Codex CLI is OpenAI's CLI agent, and it's the one I'd hand a cost-conscious developer doing terminal-heavy work. Unlike Claude Code, it's open source: Apache 2.0, written in Rust, 62K+ GitHub stars, 365 contributors. Ships with GPT-5.3-Codex, codex-mini, and now GPT-5.4.
 
+**Updated July 10, 2026.** Since the April version of this review: the GPT-5.6 model family started rolling out July 9, billing moved to token credits in April, Codex Remote (the async offering) went GA June 25, and the desktop app merged into the ChatGPT app on July 9. Model-specific complaints below reference the GPT-5.4 era.
+
 $20/mo via ChatGPT Plus with generous limits. Users consistently report 2-3x token efficiency over Claude Code. Community consensus: go-to for DevOps, infra, and CI/CD. The Codex App (macOS + Windows) runs parallel agent threads across projects.
 
 The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in alpha, and Codex-Spark on Cerebras WSE-3 at 1,000+ tokens/sec.
@@ -168,6 +170,7 @@ Open source and the biggest plugin ecosystem make Codex a natural target for spe
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
 - [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)
 - [Free and Open Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)

@@ -117,7 +117,7 @@ The newer base is AI-assisted development. Kiro and the now-deprecated Amazon Q 
 
 ## How This Relates to CodeMySpec
 
-I build [CodeMySpec](/products/code-my-spec), a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir, so my view on EARS is shaped by where it sits in a real build pipeline.
+I build [CodeMySpec](/developers), a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir, so my view on EARS is shaped by where it sits in a real build pipeline.
 
 EARS is a fine way to write requirements, and CodeMySpec agrees with its core instinct that precise, behavior-oriented requirements beat vague prose. But CodeMySpec's specs are mandatory BDD scenarios (written in a DSL called Spex) plus configurable module specs, not EARS requirement syntax. The reason is the gap above. EARS phrases the requirement; a BDD scenario phrases it and is executable as a test. In CodeMySpec the BDD specs are a mandatory gate, they generate acceptance criteria and tests, and then a QA step boots the real app and drives a real browser to check the behavior in practice. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. EARS, by design, has no equivalent of that last step.
 
@@ -130,7 +130,7 @@ The cleaner way to say it: EARS standardizes how you say what the system should 
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
 - [CodeMySpec vs Kiro EARS: Two Approaches to Spec-Driven AI Development](/blog/codemyspec-vs-kiro-specs)
 - [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code)
-- [CodeMySpec](/products/code-my-spec)
+- [CodeMySpec](/developers)
 
 ## Sources
 

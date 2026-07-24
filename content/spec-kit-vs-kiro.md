@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Spec Kit vs Kiro (2026): AWS IDE vs Open CLI"
-meta_description: "Spec Kit vs Kiro (2026): open agent-agnostic CLI vs AWS's integrated spec-first IDE with EARS and credit metering. Side-by-side table, pricing, and which to choose."
+meta_description: "Spec Kit vs Kiro (2026): open agent-agnostic CLI vs AWS's integrated spec-first IDE with EARS and credit metering. Table, pricing, and which to choose."
 og_title: "Spec Kit vs Kiro: Which Spec-Driven Tool in 2026?"
 og_description: "GitHub Spec Kit is an open, portable CLI you bolt onto any agent. Kiro is AWS's integrated spec-first IDE with EARS and credit metering. Here's the honest comparison."
 og_image: null
@@ -85,7 +85,7 @@ The honest summary: Spec Kit trades guidance for freedom, Kiro trades freedom fo
 
 Here is what both tools share, and where both leave a gap. Spec Kit and Kiro are both spec-first, and both can drift. Spec Kit's prose specs drive the first generation but do not durably govern the codebase, because the authority is convention. Kiro's specs are more structured, but EARS phrasing is not an executable contract, and "vibe mode" sits right alongside spec mode as an escape hatch. Critically, neither tool verifies the generated code against the live, running app. Spec Kit has no verification loop at all; Kiro's Hooks can run tests, but unit tests passing is not the same as the button actually working.
 
-[CodeMySpec](/products/code-my-spec) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
+[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
 
 - **A mandatory BDD gate.** BDD scenarios (Given/When/Then) are not optional documents the agent should follow. They are required, and they are behavioral contracts, not requirement phrasing. Module specs, reviews, and tests are configurable knobs; the BDD gate is not.
 - **Built-in live verification.** A QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. No spec-first tool in this space does live-app verification.
@@ -100,7 +100,8 @@ To be fair: portability is not unique to CodeMySpec. Spec Kit is also BYO-agent,
 - [GitHub Spec Kit: How It Works and When to Use It (2026)](/blog/github-spec-kit-guide)
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
 - [Kiro vs OpenSpec: Integrated AWS IDE vs Lightweight Spec Tool](/blog/kiro-vs-openspec)
-- [CodeMySpec](/products/code-my-spec)
+- [Kiro vs Zed vs Cursor vs Windsurf: 2026 AI IDE Comparison](/blog/ai-ides-compared-2026)
+- [CodeMySpec for Developers](/developers)
 
 ## Sources
 

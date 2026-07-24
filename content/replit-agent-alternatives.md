@@ -41,6 +41,18 @@ But two worries keep showing up from people who tried to take a Replit-built app
 
 This is a fair ranked list of the real alternatives, who each one is for, and then an honest account of a different approach for readers who have outgrown the point-and-click category entirely.
 
+## The alternatives at a glance
+
+| Tool | Best for | Own the code? | Real cost | Graduation wall |
+|---|---|---|---|---|
+| Replit Agent | Idea to live URL, best hosting | Yes, ZIP or GitHub export | Starter free, Core $25/mo, Pro $100/mo | Prod-DB deletion incident; effort-based cost jumps |
+| Lovable | Best ownership, portable code | Yes, forkable repo, GitHub sync | Pro $25/mo, credit-metered | Security history (RLS CVE, data exposure) |
+| Bolt.new | Fastest scaffold | Yes, export is solid | Token-metered, cost grows with complexity | Cost growth; throwaway demos not long-lived |
+| v0 | Vercel and Next.js teams | Strongest, code in your repo | Token-metered since May 2025 | React and Next only; credit burn |
+| Base44 | Fastest all-in-one hosted MVP | Frontend only, proprietary SDK | Credit plans, export behind paid tier | Backend on Base44 servers, no self-host |
+| Bubble | Mature no-code, non-technical | No source-code export | Workload-Unit pricing pain at scale | No export, lock-in forever |
+| CodeMySpec | Prototype breaking on customers | Yes, owned Phoenix repo | BYO keys, no token markup | None: the exit ramp, not another platform |
+
 ## The two worries, stated plainly
 
 I want to cite the safety incident soberly, because it is the strongest single data point in this whole conversation and it deserves to be reported, not dramatized.
@@ -49,7 +61,7 @@ In July 2025, SaaStr founder Jason Lemkin documented that Replit's agent ran des
 
 That is the honest version. Replit responded with real guardrails, and an autonomous agent touching a live database is a risk that exists across this entire category, not just one vendor. The Lemkin incident is the most documented case, which is exactly why it is worth knowing about.
 
-The second worry is cost. Replit shifted from a flat per-checkpoint price to effort-based pricing, where each request costs time plus computation. Simple tasks can land under a quarter, complex ones run higher, and some users reported sharp jumps after the switch. Re-verify current pricing on Replit's page before you decide, because these models change often.
+The second worry is cost. Replit shifted from a flat per-checkpoint price to effort-based pricing, where each request costs time plus computation, so per-task cost varies. Per Replit's pricing page, the plans are Starter (free), Core at 25 dollars a month, and Pro at 100 dollars a month; some users reported sharp jumps in spend after the effort-based switch.
 
 If neither of those is a dealbreaker for you, Replit Agent is a strong choice and you can stop reading. If they are, here are the alternatives.
 
@@ -101,7 +113,7 @@ Best for: non-technical founders who want a mature visual platform and never pla
 
 Every tool above shares one structural gap, and it is the same gap that produced the Replit incident in the first place: there is no verification step that proves the running app does what you meant before it touches real data. The agent ships, you find out in production. That is fine for a prototype. It is the exact thing that breaks when real customers arrive. I wrote about that pattern in [Why Your AI-Built App Breaks in Production](/blog/ai-app-breaks-in-production).
 
-[CodeMySpec](/products/code-my-spec) takes a different bet on that gap, and I want to be precise about what it is and is not.
+[CodeMySpec](/developers) takes a different bet on that gap, and I want to be precise about what it is and is not.
 
 It builds a real, full-stack Phoenix application (auth, an Ecto database, LiveView UI, contexts, background jobs) that you own as a normal repo. The difference is the loop it runs to get there. BDD specs are a mandatory gate: work cannot advance past a behavioral spec it fails. Then a QA agent boots the real app, drives a live browser, screenshots the result, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. That live-app verification is the structural answer to "the agent broke prod." It is also why the loop is slower than describe-it-and-ship, by design.
 
@@ -127,7 +139,7 @@ So CodeMySpec is not a drop-in Replit replacement for a non-technical builder. I
 
 - https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/ The Register (July 21 2025): Replit agent deleted a production database during a code freeze, fabricated records and fake test results, and misreported the rollback. Primary anchor for the Lemkin incident.
 - https://fortune.com/2025/07/23/ Fortune (July 23 2025): corroborating coverage of the Replit incident and the "catastrophic error of judgement" CEO response. Confirm exact article URL at read time.
-- https://replit.com/pricing and https://replit.com/blog/effort-based-pricing Replit's effort-based pricing model (time plus computation per request). Re-verify current tiers and figures before publishing; pricing changes often.
+- https://replit.com/pricing Replit pricing confirmed (June 2026): Starter free, Core $25/mo, Pro $100/mo, effort-based credit model. https://replit.com/blog/effort-based-pricing the effort-based model.
 - Replit user reports of cost increases after the effort-based pricing switch are single-sourced and aggregator-paraphrased. Hedged; verify directly if load-bearing.
 - https://mattpalmer.io and https://www.semafor.com (May 29 2025) CVE-2025-48757: Row-Level-Security misconfigurations across a sample of Lovable showcase apps. Primary disclosure plus press.
 - https://thenextweb.com and https://www.theregister.com (April 2026) Lovable 2026 data-exposure disclosure. Primary press; specific record counts are as reported by those outlets.

@@ -12,8 +12,8 @@ publish_at: 2026-03-19T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "Kiro vs Cursor vs Windsurf vs Zed: 2026 AI IDE Comparison"
-meta_description: "Four AI IDEs compared April 2026: Cursor 3 Agents Window, Windsurf $20/mo, Zed 1M context BYOK, Kiro spec-driven. Pricing, models, ownership risk."
+meta_title: "Kiro vs Zed vs Cursor vs Windsurf: 2026 AI IDE Comparison"
+meta_description: "Kiro vs Zed head to head, plus Cursor and Devin Desktop (ex-Windsurf): spec-driven vs 1M context, BYOK pricing, and lock-in risk. Updated July 2026."
 og_title: "Cursor vs Windsurf vs Zed vs Kiro: 2026 AI IDE Comparison"
 og_description: "Cursor pivoted to Agents Window. Windsurf killed the $15 plan. Zed unlocked 1M context. Kiro stays spec-driven. April 2026 comparison of all four."
 og_image: null
@@ -53,6 +53,8 @@ The last six weeks reshuffled the deck. Cursor 3 rebuilt the product around agen
 
 The category is bifurcating. Cursor is repositioning as an agent orchestration dashboard. Zed and Kiro are staying closer to traditional IDE-with-AI. Windsurf is in the middle.
 
+**Updated July 10, 2026.** The spring rewrote this comparison's cast list, so read the April details below with these corrections: SpaceX announced a $60 billion all-stock acquisition of Cursor's maker Anysphere on June 16 (closing around Q3), and Cursor separately acquired and archived Continue.dev. Windsurf no longer exists as a name: Cognition rebranded it Devin Desktop on June 2 and retired the Cascade agent on July 1 in favor of Devin Local, with the in-house model now SWE-1.6. Kiro went GA in early May, replacing Amazon Q Developer, with credit tiers from free to a $200 Power plan. Anthropic's third-party harness ban was reversed (moot for these first-party IDEs, but the walling-up read softened). And Claude Code style model refs below predate Opus 4.8, which landed May 28 in Cursor and Zed BYOK. Kiro's Bedrock model list still stops at the Opus 4.7 generation.
+
 ## Quick Comparison Table
 
 | | Cursor | Windsurf | Zed | Kiro |
@@ -61,11 +63,11 @@ The category is bifurcating. Cursor is repositioning as an agent orchestration d
 | **Base** | VS Code fork | VS Code fork | Custom (Rust/GPUI) | VS Code fork |
 | **Open Source** | No | No | Yes (GPL) | No |
 | **Free Tier** | Limited | 25 credits/mo | Yes (editor free) | 50 credits/mo |
-| **Entry Price** | $16/mo annual ($20 monthly) | $20/mo (was $15; existing grandfathered) | $10/mo + tokens | $19/user/mo |
+| **Entry Price** | $16/mo annual ($20 monthly) | $20/mo (Devin Desktop) | $10/mo + tokens | $20/mo (GA tiers) |
 | **ARR** | ~$2B | ~$82M | -- | -- |
 | **LLM Backends** | Claude (incl. Opus 4.7), GPT, Gemini, own | SWE-1, SWE-1.5, Claude Sonnet 4.6, GPT-5, Gemini 3.1 Pro | BYO (Claude w/ 1M, Gemini, Ollama, Bedrock, Vercel AI Gateway) | Claude only (Sonnet 4.6, Opus 4.6 GA; Opus 4.7 experimental) |
 | **Key Differentiator** | Agents Window + parallel orchestration | Flow awareness + enterprise | 120fps performance + openness | Spec-driven development |
-| **Ownership Risk** | Stable (private, $29.3B) | Uncertain (Cognition pivot?) | Stable (independent, open source) | Amazon-backed |
+| **Ownership Risk** | Being acquired by SpaceX ($60B, announced June 16) | Rebranded Devin Desktop under Cognition | Stable (independent, open source) | Amazon-backed |
 
 ## Detailed Comparison
 
@@ -108,9 +110,9 @@ On benchmarks: the models behind these tools score differently depending on whic
 | | Free | Entry | Mid | Power |
 |---|---|---|---|---|
 | **Cursor** | Limited | $16/mo annual / $20 monthly (Pro) | $48/mo annual / $60 monthly (Pro+) | $160/mo annual / $200 monthly (Ultra) |
-| **Windsurf** | 25 credits | $20/mo (Pro; $15 grandfathered) | $40/user/mo (Teams) | Max tier (price [unverified]) |
-| **Zed** | Editor free | $10/mo + $5 token credit | $20/mo cap | Custom |
-| **Kiro** | 50 credits/mo | $19/user/mo (Pro) | $40/mo | $200/mo |
+| **Devin Desktop (ex-Windsurf)** | Free tier | $20/mo (Pro) | $40/user/mo (Teams) | $200/mo (Max) |
+| **Zed** | Editor free | $10/mo + $5 token credit | $30/mo (Business, per seat) | Custom |
+| **Kiro** | 50 credits/mo | $20/mo (Pro, 1k credits) | $40/mo (Pro+) / $100/mo (Pro Max) | $200/mo (Power, 10k credits; $0.04/credit overage) |
 
 Zed is the cheapest entry at $10/mo, or free if you BYO API key and skip Zed's AI features entirely.
 
@@ -144,9 +146,9 @@ Kiro is early. The spec-driven approach has real fans ("This actually feels like
 
 Matters more than features if you're picking a daily driver:
 
-- **Cursor:** Stable and growing. $29.3B valuation, ~$2B ARR, clear market leader. Cursor 3 is a bet, not a retreat.
+- **Cursor:** Update: "stable and private" lasted until June 16, when SpaceX announced a $60 billion all-stock acquisition of Anysphere (closing around Q3). The product keeps shipping (in-house Composer 2.5 landed in May), but if your workflow lives inside Cursor you now hold a dependency on a rocket company's integration roadmap.
 - **Zed:** Stable. Independent, open source, community-driven. Even if the company stumbles, the code survives.
-- **Windsurf:** Way more stable than it looked in March. Windsurf 2.0 embedded Devin into the IDE. Cognition is investing, not winding down. $82M ARR and 350+ enterprise customers buy runway. The pricing bump is a downside for new users.
+- **Windsurf:** Update: the name itself didn't survive. Cognition rebranded the product Devin Desktop on June 2 and retired Cascade on July 1 in favor of Devin Local. Cognition is investing, not winding down, but users have now absorbed a failed OpenAI deal, a Google talent raid, a rebrand, and an agent migration inside twelve months.
 - **Kiro:** Early but active. Amazon-backed means funding stability. CLI 2.0 and Opus 4.7 say sustained investment. But "a good idea that becomes someone's promo and dies when they burn out and leave" is a real pattern at big tech, and I've seen it play out too many times to pretend it can't happen here.
 
 ## Who Should Use What
@@ -154,9 +156,9 @@ Matters more than features if you're picking a daily driver:
 Here's how I'd actually pick:
 
 - **Cursor** if running multiple agents in parallel is your main workflow, not an occasional assist. You want the biggest ecosystem and you're fine with the Agents Window being your default surface instead of the editor. Annual billing makes it the cheapest mainstream option.
-- **Windsurf** if you need enterprise compliance (FedRAMP, HIPAA, ZDR). You value deep context awareness and Flow Awareness more than raw iteration speed. Quota-based billing appeals to you more than Cursor's parallel-agent approach. You can live with corporate ownership risk.
+- **Devin Desktop (ex-Windsurf)** if you need enterprise compliance (FedRAMP, HIPAA, ZDR) and you buy Cognition's one-agent-brand vision. Know what you're signing up for: the product was renamed in June and the Cascade agent you may have read about was retired July 1 in favor of Devin Local.
 - **Zed** if editor performance actually matters to you. You want open source and real model freedom, including Claude's 1M context window via BYOK. You care about collaboration (CRDTs, shared cursors). You want AI as a tool on top of a great editor, not the foundation of the product.
-- **Kiro** if you build complex features that benefit from upfront design. You want structured requirements before code. You're on AWS and can use AWS Transform for migrations. You want the spec-driven bet validated by a hyperscaler, and you're okay being on an experimental Opus 4.7 tier for now.
+- **Kiro** if you build complex features that benefit from upfront design. You want structured requirements before code. You're on AWS and can use AWS Transform for migrations. It went GA in May with tiers from free to $200, so the waitlist era is over; the trade-offs now are the credit meter and a Bedrock model list that stops a generation behind the frontier.
 
 ## The CodeMySpec Angle
 
@@ -177,6 +179,7 @@ Cross-reference: ["BDD Specs for AI-Generated Code"](/blog/bdd-specs-for-ai-gene
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
 - [Kiro Specs Explained: EARS, Spec Mode, and the Trade-offs](/blog/kiro-specs-explained)
 - [Kiro Specs vs CodeMySpec: EARS Notation vs BDD](/blog/codemyspec-vs-kiro-specs)

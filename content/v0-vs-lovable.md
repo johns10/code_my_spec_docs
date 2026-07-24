@@ -58,7 +58,7 @@ v0 generates an opinionated React, Next.js, Tailwind, and shadcn/ui frontend, an
 | Code ownership | Strongest: code in your own repo | Strong: two-way GitHub sync plus ZIP |
 | Signature wall | Credit burn, long-session regression, React-only | Security (RLS leak, 2026 BOLA breach), prototype-not-production drift |
 
-Pricing and user numbers below move fast and several are single-sourced. Treat them as directional and re-verify before you commit.
+User counts and valuations below are vendor-reported and move fast; treat them as directional. Pricing is from each vendor's current pricing page.
 
 ## How v0 works
 
@@ -102,7 +102,7 @@ The dividing line is clean. v0 is the UI-first, repo-owned builder for developer
 
 Both tools share the same ceiling. They are brilliant at the first 80 percent (describe an app, get a working prototype), and they are weak at the last mile: taking that prototype to real, paying customers without data leaks, runaway credit bills, or a codebase that degrades until you rebuild it. Neither runs a behavioral specification as a mandatory gate, and neither boots the finished app to confirm it actually behaves the way you asked. That is the graduation wall, and it is where the failure modes above live.
 
-[CodeMySpec](/products/code-my-spec) is built for the reader standing at that wall. It walks a spec-driven loop where BDD specs are a mandatory gate (you cannot pass work without them), then a QA agent boots the real app, drives a live browser, screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. The output is a real, owned, deployable Phoenix app (auth, database, LiveView UI, contexts, background jobs), and it runs in your own Claude Code with your own keys, so there is no per-token resale meter to burn through. That directly answers the two walls above: the verification gap behind Lovable's security record, and the credit burn behind v0's bills.
+[CodeMySpec](/developers) is built for the reader standing at that wall. It walks a spec-driven loop where BDD specs are a mandatory gate (you cannot pass work without them), then a QA agent boots the real app, drives a live browser, screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. The output is a real, owned, deployable Phoenix app (auth, database, LiveView UI, contexts, background jobs), and it runs in your own Claude Code with your own keys, so there is no per-token resale meter to burn through. That directly answers the two walls above: the verification gap behind Lovable's security record, and the credit burn behind v0's bills.
 
 Be honest about the threshold, because it is real. CodeMySpec is the opposite of point-and-click. It is Elixir and Phoenix only, and it ships as a Claude Code plugin plus MCP servers behind OAuth plus a CLI, with DNS setup for custom-domain email. v0 and Lovable deliberately removed all that friction, and for a first prototype that friction-free path is the right call. If your stack is React, or you need a demo fast, pick v0 or Lovable and come back when the prototype starts breaking on real customers. CodeMySpec is the graduation option: more process, not less, for an app you actually own and can verify before you ship it.
 
@@ -124,5 +124,5 @@ Be honest about the threshold, because it is real. CodeMySpec is the opposite of
 - https://lovable.dev official product pages: Vite, React, TypeScript output; Lovable Cloud (Supabase backend); two-way GitHub sync.
 - https://mattpalmer.io and https://semafor.com (May 29, 2025) CVE-2025-48757: 1,645 apps scanned, 170 (about 10 percent) with critical RLS misconfigurations, roughly 70 percent with RLS off entirely. [Researcher disclosure plus press; figures from primary disclosure.]
 - https://thenextweb.com (Apr 21, 2026) and https://theregister.com (Apr 20, 2026) Lovable 2026 BOLA breach: cross-account source-code and customer-data exposure, ~18,697 university records in one app, initial denial. [Press-corroborated.]
-- Lovable maturity, adoption, valuation, and "prototype-not-production" community consensus: vendor-PR-derived and aggregator-sourced. [Directional; ARR, valuation, and user counts are single-sourced or vendor-stated, hedged as "as of mid-2026," re-verify before publishing.]
+- Lovable maturity, adoption, valuation, and "prototype-not-production" community consensus: vendor-PR-derived and aggregator-sourced. [Directional; ARR, valuation, and user counts are vendor-stated or single-sourced, not independently verified.]
 - v0 ~4M users figure: single-source. [FLAG: treat exact number as soft.]

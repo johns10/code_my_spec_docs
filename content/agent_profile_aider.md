@@ -138,6 +138,8 @@ The Polyglot leaderboard has become the de facto standard for evaluating coding 
 
 - **v0.82.0** (April 14, 2026): GPT-4.1 mini/nano, Grok-3, new "patch" edit format, better architect mode compatibility.
 - **v0.81.0** (April 4, 2026): Quasar-alpha support (free on OpenRouter); stops retrying when providers report insufficient credits.
+
+**Updated July 10, 2026:** the release train stopped. PyPI shows nothing substantial since v0.86.0 (August 2025) plus one February patch, and the Polyglot leaderboard hasn't been refreshed for the current model generation. Aider still works (BYOK doesn't rot), but treat it as dormant: fine to keep using, hard to recommend starting on. OpenCode covers the same open-source ground and ships weekly.
 - **v0.80.0** (March 31, 2026): OpenRouter OAuth, Scala support, external editor via Ctrl-X Ctrl-E.
 - **Model additions:** GPT-5.1/5.2, GPT-5-pro, Claude Sonnet 4/Opus 4 series, Gemini 2.5 Pro/Flash with thinking tokens, o3-pro.
 - **Prompt caching:** real cost savings on repeated context.
@@ -166,6 +168,7 @@ Aider's model flexibility and git-first workflow make it a natural fit for spec-
 
 ## Related Articles
 
+- [The Best AI Coding Tools in 2026: CLI Agents, IDEs, and the Great Consolidation](/blog/best-ai-coding-tools-2026)
 - [The Best CLI Coding Agents in 2026](/blog/cli-agents-compared-2026)
 - [The Rise of CLI Coding Agents](/blog/rise-of-cli-coding-agents)
 - [Free and Open Source AI Coding Tools in 2026](/blog/free-open-source-ai-coding-tools-2026)
