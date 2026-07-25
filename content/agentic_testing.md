@@ -61,7 +61,7 @@ But here's where it gets counterintuitive. The [TDAD research](https://arxiv.org
 
 ## How Do BDD Specs From Acceptance Criteria Break the Self-Confirming Loop?
 
-The self-confirming loop breaks when tests come from a different source than the implementation. BDD does this by construction. Every acceptance criterion on every [user story](/pages/stories-feature) becomes an executable scenario. The tests come from what you told the system to build, not from what it decided to build.
+The self-confirming loop breaks when tests come from a different source than the implementation. BDD does this by construction. Every acceptance criterion on every [user story](/blog/managing-user-stories) becomes an executable scenario. The tests come from what you told the system to build, not from what it decided to build.
 
 AI makes BDD cheap enough to actually do consistently. Product managers write scenarios in natural language, and AI translates them into executable tests. [Thoughtworks calls spec-driven development](https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices) "one of the most important practices to emerge in 2025."
 

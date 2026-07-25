@@ -71,7 +71,7 @@ Here's my favorite pattern: MCP servers that connect your AI agent directly to y
 
 [Atlassian launched an official MCP server](https://www.atlassian.com/platform/remote-mcp-server) for Jira and Confluence. Your coding agent can read tickets, check requirements, and reference documentation without you copy-pasting anything. [DX Heroes built a unified MCP server](https://playbooks.com/mcp/dxheroes-jira-linear) that works with both Jira and Linear for teams split across tools.
 
-The pattern I find most interesting is the [Stories MCP Server approach](/pages/stories-feature). Instead of requirements living in a document that gets stale, they live in a structured system that your coding agent queries in real time. The agent reads the story, understands the acceptance criteria, writes the code, and verifies against the criteria. No copy-paste. No context getting lost between tools.
+The pattern I find most interesting is [managing stories as structured data](/blog/managing-user-stories). Instead of requirements living in a document that gets stale, they live in a structured system that your coding agent queries in real time. The agent reads the story, understands the acceptance criteria, writes the code, and verifies against the criteria. No copy-paste. No context getting lost between tools.
 
 Dean Peters built [Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills) with 65 skills and 36 chained workflows that cover the full PM lifecycle inside Claude Code. You can run a discovery chain that goes from brainstorming ideas to identifying assumptions to prioritizing experiments. This isn't science fiction. People are doing this now.
 

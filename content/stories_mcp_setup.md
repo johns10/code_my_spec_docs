@@ -137,7 +137,7 @@ All MCP calls from your client use those as scope until you change them.
 
 ## Available tools
 
-The server exposes 17 tools covering story CRUD, acceptance criteria, tagging, guided sessions, and issue triage. See the [Stories MCP tool reference](/pages/stories-mcp-server) for full parameter details.
+The server exposes tools covering story CRUD, acceptance criteria, tagging, guided sessions, and issue triage.
 
 ## Troubleshooting
 
