@@ -110,7 +110,7 @@ To be fair about what is shared: repo-resident specs, bring-your-own-agent, and 
 
 ## The one-line version
 
-Vibe coding is fine until someone has to maintain what it produced. Spec-driven development is the answer when they do, but only the kind of SDD where the spec actually gates and verifies the code. Everything short of that is vibe coding with more ceremony. If you want to understand the methodology end to end, start with the [pillar guide](/blog/spec-driven-development); if you want to see the verifying-spec model in practice, that is [CodeMySpec](/developers). If your vibe-coded app is already breaking and you want it rebuilt rather than lectured about, that is the [vibe coding rebuild service](/landing/vibe-coding-rebuild).
+Vibe coding is fine until someone has to maintain what it produced. Spec-driven development is the answer when they do, but only the kind of SDD where the spec actually gates and verifies the code. Everything short of that is vibe coding with more ceremony. If you want to understand the methodology end to end, start with the [pillar guide](/blog/spec-driven-development); if you want to see the verifying-spec model in practice, that is [CodeMySpec](/developers). If your vibe-coded app is already breaking and you want it rebuilt rather than lectured about, that is the [vibe coding rebuild service](/vibe-coding-rebuild).
 
 ## Related Articles
 
