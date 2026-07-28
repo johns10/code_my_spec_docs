@@ -112,7 +112,7 @@ The dominant complaint about OpenSpec is spec drift, and it follows directly fro
 
 The sharpest version comes from a Hacker News practitioner who abandoned sync entirely:
 
-> When you do the sync process, it just keeps drifting and drifting until you have duplication and contradictions across specs.
+> “When you do the sync process, it just keeps drifting and drifting until you have duplication and contradictions across specs.”
 
 That same practitioner stopped syncing entirely ("I've stopped doing it entirely and just archive directly after implementation") because, in their words, "maintaining the main specs is not worth it." Archiving directly after implementation discards the living-spec benefit that is the whole point of the delta model. The same thread flags a related problem on large or legacy repos: when a spec changes, "AI needs to find the relevant code to change it. It's pretty easy to miss something in large codebase (especially when there is lots of legacy stuff)."
 
