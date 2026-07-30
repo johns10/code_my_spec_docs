@@ -167,6 +167,8 @@ A component can't be "implementation complete" until its spec file exists and is
 
 22 requirement checkers, arranged in a dependency graph, tracking progress per component. When the validation pipeline updates problems, requirements recalculate automatically. You always know exactly where every component stands — not because someone updated a tracker, but because the system computed it from actual validation results.
 
+{{verification_gate_cta headline="Nobody reads seven validation stages for fun." sub="They read them because an agent shipped something broken last week." campaign="verification-pipeline"}}
+
 ## What Does This Look Like During a Real Implementation Session?
 
 I run multi-hour implementation sessions. The agent works through a task, the hook fires, validation runs, problems update, requirements recalculate. If something breaks, the agent gets specific feedback. If everything passes, the next task begins.

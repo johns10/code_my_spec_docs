@@ -140,6 +140,8 @@ Because contexts follow predictable patterns, we can validate design decisions p
 
 You're not trying to validate spaghetti. You're validating well-defined modules with clear responsibilities and explicit boundaries.
 
+{{enforced_boundary_cta body="22 requirement checkers run over every context an agent touches, so a violated boundary stops the pipeline instead of landing in review." campaign="why-phoenix-contexts-are-great-for-llms"}}
+
 ## How Do Phoenix Contexts Compare to Other Architectural Patterns?
 
 **vs. Traditional MVC**: Business logic scatters. Models bloat. Controllers implement business rules. Phoenix contexts prevent this with a dedicated layer separated from web concerns (`MyApp` vs `MyAppWeb`).

@@ -99,6 +99,8 @@ Accepted issues feed back into the development backlog. A different agent picks 
 
 On Fuellytics, over 100 issues went through this pipeline across 30+ stories. The QA campaign ran as a concentrated push: a day of story QA producing briefs, results, screenshots, and issues that fed directly into the next round of development.
 
+{{verification_gate_cta headline="Eight BDD scenarios passed on that story." sub="QA opened the running app and found drivers clearing their own fraud flags." body="Your suite is green right now for the same reason that one was." label="Point the QA agent at your app" campaign="agentic-qa"}}
+
 ## What This Makes Possible
 
 We submitted Fuellytics for Stripe Treasury production access. That's a serious approval process: they review your fraud controls, compliance handling, and financial operations.

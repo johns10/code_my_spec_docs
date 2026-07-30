@@ -124,6 +124,8 @@ For larger features (5+ components), use bulk generation. Have the AI draft all 
 
 Save to `.code_my_spec/spec/`. The design is now your source of truth.
 
+{{design_gate_cta campaign="writing-design-documents"}}
+
 ## Real Example: Stories Context
 
 ```markdown

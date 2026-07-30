@@ -14,7 +14,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: Getting Started with CodeMySpec - Project Setup Guide
-meta_description: Complete guide to setting up a new project with CodeMySpec, including Phoenix installation, authentication, dependencies, and submodule configuration
+meta_description: Set up a Phoenix project on CodeMySpec in about 10 minutes. Install the server and plugin, sign in, and start the requirement loop.
 og_title: Getting Started with CodeMySpec
 og_description: Learn how to set up a new Phoenix project with CodeMySpec for AI-driven development
 og_image: null  # URL to Open Graph image
@@ -41,34 +41,35 @@ Get a Phoenix project running on CodeMySpec in about 10 minutes.
 
 ## Prerequisites
 
-- Elixir 1.18+, Phoenix 1.8+, PostgreSQL
-- [Claude Code](https://docs.claude.com/claude-code) CLI
+- macOS (Apple Silicon) or Windows (x64)
+- A Phoenix project: Elixir 1.18+, Phoenix 1.8+, PostgreSQL
+- A coding agent: [Claude Code](https://docs.claude.com/claude-code) is the deepest integration; Codex and Antigravity are supported early
 - A [CodeMySpec account](https://www.codemyspec.com/users/register)
 
-## 1. Install the extension
+## 1. Install
 
-Clone the extension repo, run the installer, and register it with Claude Code:
+Follow **[/install](/install)**. It is the canonical, per-platform source for both pieces and it carries the copy buttons.
 
-```bash
-git clone https://github.com/Code-My-Spec/code_my_spec_claude_code_extension
-cd code_my_spec_claude_code_extension
-./install.sh
-claude extension add $(pwd)
-```
+In short, there are two pieces:
 
-The installer detects your OS and architecture, then downloads the `cms` binary from the latest GitHub release. Starting the extension launches a local Phoenix app on port **4003** with an admin UI, the MCP server, the skill suite, and hooks wired into Claude Code's lifecycle.
+1. **The server.** A local `cms` process that hosts the tools. On macOS, `brew install Code-My-Spec/tap/codemyspec` then `brew services start codemyspec`. On Windows, the `cms-setup-x64.msi` from the [latest release](https://github.com/Code-My-Spec/plugins/releases). It runs in the background on `localhost:4003` and restarts on boot.
+2. **The plugin.** In Claude Code: `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install codemyspec@codemyspec`. Codex and Antigravity have their own commands, listed on the install page.
+
+The server hosts the admin UI, the MCP server, the skill suite, and the hooks wired into your agent's lifecycle.
 
 ## 2. Sign in
 
-Inside Claude Code, with your Phoenix project as `$PWD`:
+Inside your agent, with your Phoenix project as `$PWD`:
 
 ```
 /codemyspec:init auth
 ```
 
-The skill opens `http://localhost:4003/auth` in your browser. Click **Sign in** — OAuth PKCE runs against the CodeMySpec server and the token is stored locally. You only do this once (tokens refresh automatically).
+The skill checks whether you are already authenticated, then opens a sign-in URL in your browser. OAuth PKCE runs against the CodeMySpec server and the token is stored locally. You only do this once (tokens refresh automatically).
 
-Without a token, every MCP tool returns `not_authenticated` and stops. If you skip the skill you can hit the URL directly; the result is the same.
+Without a token, every MCP tool returns `not_authenticated` and stops.
+
+On Codex, run the `init` skill from `/skills`. On Antigravity, run `/init auth`.
 
 ## 3. Initialize the project
 
@@ -110,7 +111,7 @@ The graph computes what to work on next based on prerequisites: specs before tes
 
 ## The local admin UI
 
-Beyond `/auth` and `/projects`, the extension's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
+Beyond `/auth` and `/projects`, the local server's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
 
 - **Init checklist** at `/projects/:project_name/init` — the 6-step pre-setup checklist (Auth, Elixir, Phoenix installer, PostgreSQL, Phoenix project, CLI config) with per-step instructions. Same data `get_next_requirement` walks the agent through, rendered for humans.
 - Requirements list and graph view
@@ -125,14 +126,18 @@ If you're not using Claude Code and only want to interview stories with AI, add 
 
 ## Troubleshooting
 
-**Extension server not running.** Claude Code starts the extension via the `SessionStart` hook. Check:
+**Server not running.** The `cms` server runs as a background service, so check it directly:
 
 ```bash
 curl http://localhost:4003/health
 ```
 
-**`not_authenticated` error.** Visit `http://localhost:4003/auth` and sign in before calling any MCP tool.
+On macOS, restart it with `brew services restart codemyspec`. If the port is already taken, something else is on 4003; stop that first.
 
-**macOS blocks the binary.** Allow it under System Preferences &rarr; Security & Privacy.
+**`not_authenticated` error.** Run `/codemyspec:init auth` and complete sign-in before calling any MCP tool. Every tool returns this until you do.
 
-**Auth token expired.** Revisit `http://localhost:4003/auth` and sign in again.
+**macOS blocks the binary.** Allow it under System Settings &rarr; Privacy & Security.
+
+**Auth token expired.** Run `/codemyspec:init auth` again.
+
+**Install questions.** [/install](/install) is the canonical source for per-platform steps and stays current with the shipped release.

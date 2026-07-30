@@ -61,6 +61,8 @@ So why does anyone look for an alternative? Three reasons recur, and they get lo
 
 If one of those is your reason for leaving, here is a fair, ranked list grouped by who each tool is actually for.
 
+{{nontechnical_founder_cta headline="10% of scanned Lovable apps shipped with the database wide open." sub="CodeMySpec catches that before it ships." campaign="lovable-alternatives"}}
+
 ## The best Lovable alternatives, ranked by who they fit
 
 ### If you want another fast full-stack builder: Bolt.new
@@ -105,7 +107,7 @@ Every tool above is optimized for the first 80 percent: get a working prototype 
 - **You own a real, deployable app.** The output is a full Phoenix and Elixir stack you own and deploy: auth, an Ecto database, LiveView UI, contexts, and background workers. No closed SDK, no frontend-only export.
 - **Bring your own agent, model, and keys, with no token markup.** It runs inside your Claude Code with your keys, so there is no per-token resale meter. That directly answers the credit-burn complaint that dominates builder sentiment.
 
-The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. It is delivered as a Claude Code plugin plus remote MCP servers behind OAuth plus a CLI, and it is Elixir and Phoenix only. It is more process by design, not less. If you are a non-technical builder who wants to describe an app and ship it from a browser, one of the tools above is your answer, and you should use it. CodeMySpec is for the person willing to work in Claude Code (or bring an engineer) who needs the app to be real, owned, and verifiable. The same argument, applied to the build loop itself, lives in [spec-driven development](/blog/spec-driven-development).
+The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. It is delivered as a Claude Code plugin plus remote MCP servers behind OAuth plus a CLI, and it is Elixir and Phoenix only. It is more process by design, not less. What that threshold is not is a technical one. The people running it hardest today are not engineers, and the verification step is the reason it holds up for them: you do not have to be able to read the code to trust a QA agent that opens the app and reports what broke. If you want to describe an app and ship it from a browser this afternoon, one of the tools above is your answer, and you should use it. CodeMySpec is for the person who needs the app to be real, owned, and verifiable, and will trade a setup afternoon to get there. The same argument, applied to the build loop itself, lives in [spec-driven development](/blog/spec-driven-development).
 
 ## How to pick
 

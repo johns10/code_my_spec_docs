@@ -143,6 +143,8 @@ If you see specs as a feature of an agent, Kiro is the better-integrated answer.
 - **Specs are a team artifact.** Code review, stakeholder sign-off, compliance audits -- specs that live as files in your repo integrate with existing team workflows.
 - **You already have a spec practice.** If you write BDD scenarios, acceptance criteria, or design docs, CodeMySpec extends that. Kiro replaces it with EARS.
 
+{{portable_spec_cta headline="Kiro's specs live in Kiro." campaign="codemyspec-vs-kiro-specs"}}
+
 ## The "Spec Overhead" Problem
 
 Both approaches hit the same wall: specs add friction. For a typo fix or a one-line change, generating requirements, design docs, and task plans is overkill.

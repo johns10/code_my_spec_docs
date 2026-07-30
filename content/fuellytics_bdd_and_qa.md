@@ -117,6 +117,8 @@ Each layer catches a different category of bug. Skip one and that category ships
 
 The agent generates code at a pace that makes all of this necessary. Not optional. Not nice-to-have. The verification system is how you keep up with the velocity. It's how you turn "the AI built something" into "the AI built the right thing."
 
+{{build_speed_cta headline="55 commits, 5 active days, 100k lines." sub="Also 100+ issues that only surfaced because something went looking." campaign="fuellytics-bdd-and-qa"}}
+
 ## Where Does the Project Stand Now?
 
 Fuellytics is in UAT. We submitted for Stripe Treasury production access — they review fraud controls, compliance handling, and financial operations before approving.

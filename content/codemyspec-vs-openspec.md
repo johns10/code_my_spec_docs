@@ -121,6 +121,8 @@ CodeMySpec inverts that. The behavior spec is the gate, and a live-app QA pass o
 - **You want the full lifecycle on one graph.** Requirements, specs, architecture, code, tests, and QA results are all nodes with prerequisites, and the system tells you what to build next. OpenSpec covers the propose-to-archive change loop, not the whole graph.
 - **You are building in Phoenix or Elixir.** Framework-native depth across contexts, LiveView, Ecto, and OTP is something a deliberately stack-generic tool cannot match.
 
+{{portable_spec_cta headline="An advisory spec is a document." sub="A spec that blocks the build is a contract." body="The difference is whether anything happens when the code stops matching the spec." label="See it enforce on your own code" campaign="codemyspec-vs-openspec"}}
+
 ## The Drift Question
 
 The dominant community complaint about OpenSpec is spec drift. The specs do not self-update during implementation, so when the agent diverges, you resync by hand. One Hacker News practitioner reported giving up on sync entirely: "it just keeps drifting and drifting until you have duplication and contradictions across specs... maintaining the main specs is not worth it." They now archive specs straight after implementation, discarding the living-spec benefit that is the whole point.
