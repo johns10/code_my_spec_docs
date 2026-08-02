@@ -112,6 +112,8 @@ Open-source without sustained funding or a corporate sponsor doesn't keep up. "B
 
 Either massive corporate backing, pioneer advantage with community, or genuinely different technology. "Another VS Code fork with AI" is not a position.
 
+{{portable_spec_cta shape="aside" headline="Supermaven got acquired, Aide sunsetted, and Void went quiet with 28K stars on a stale repo." sub="The tools churn, so the thing worth owning is the specification, not the editor." body="CodeMySpec keeps specs in your repo and enforces them through Claude Code, so a dead vendor costs you a tool and not your work." label="Keep your specs in the repo" campaign="dead-ai-coding-tools-supermaven-aide-void"}}
+
 ## How I'd Evaluate a Tool Today
 
 1. **Who's funding it?** $2B+ ARR (Cursor) or a major corporate parent isn't going anywhere soon. Enthusiasm-funded might.

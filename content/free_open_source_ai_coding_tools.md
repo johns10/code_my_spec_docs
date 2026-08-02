@@ -238,6 +238,8 @@ If a friend asked me:
 
 **"I want extensibility."** Goose.
 
+{{portable_spec_cta shape="aside" headline="Free and open source did not mean immortal: Roo Code archived, Continue.dev wound down, Aider dormant." sub="If you bring your own key and your own model, bring your own specification too." body="CodeMySpec is free to install, runs through Claude Code on your keys, and keeps the specs in your repo as a build gate." label="Install it with your own keys" campaign="free-open-source-ai-coding-tools-2026"}}
+
 ## The CodeMySpec Angle
 
 Free and open-source tools are the natural home for spec-driven work. When you're not locked into a vendor's workflow, you can bring your own specification format, including CodeMySpec's.

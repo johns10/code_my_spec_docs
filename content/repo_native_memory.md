@@ -95,6 +95,8 @@ Repo-native works best as a foundation, with selective use of other categories o
 - **Pair sparingly with dedicated memory stores.** Vendor memory features can capture cross-project preferences ("I use 4-space indentation"). Project-scoped knowledge belongs in the repo.
 - **Skip graph/structured for most projects.** Unless you genuinely have a graph-shaped problem, the maintenance cost of a knowledge graph isn't worth the marginal precision.
 
+{{repo_native_memory_cta shape="aside" headline="Four memory systems later, the one that worked was a directory of markdown files in the repo." sub="It has one failure mode: files that describe how the codebase used to work, followed confidently." body="CodeMySpec derives its context from the repo instead of asking anyone to keep it current." label="Derive the context from the repo instead" campaign="repo-native-memory"}}
+
 ## The honest verdict
 
 Use repo-native if you're doing serious coding work in a single repo over weeks or months and you want the simplest pattern that survives vendor churn. The Cline Memory Bank shape is a great starting template. Doug's journal pattern is the simplest credible version. Pick one, commit to writing in it for a week, see if your agent's coherence improves.

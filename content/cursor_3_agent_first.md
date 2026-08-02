@@ -77,6 +77,8 @@ Pro is still [$20/month](https://devtoolpicks.com/blog/cursor-3-agents-window-re
 
 The tier lineup: Hobby (free), Pro ($20/month), Pro+ ($60/month, 3x credits), Ultra ($200/month, 20x credits), and Teams ($40/user/month).
 
+{{harness_not_model_cta shape="aside" headline="Cursor 3 bet its whole interface on you managing agents instead of writing code." sub="Running 8 agents in parallel raises the obvious follow up: what checks the code they produce." body="CodeMySpec answers with specs the build enforces and a QA agent that drives the running app and files issues." label="Check what enforces the output" campaign="cursor-3-agent-first"}}
+
 ## What This Means for the Landscape
 
 The three lanes of agentic coding are now locked in:

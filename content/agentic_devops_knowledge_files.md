@@ -81,6 +81,8 @@ I tell Claude "set up a UAT environment following the deployment docs." It reads
 
 For debugging: "UAT isn't responding" leads Claude to check Caddy config, verify Docker containers, check tunnel status, all from the documented patterns.
 
+{{verification_gate_cta shape="aside" headline="78% of enterprises have agent pilots running and under 15% of them reach production." sub="The last mile is not generation, it is everything that has to be true before code is allowed to ship." body="The gate in CodeMySpec is the spec itself: the build blocks on drift and a QA agent tests the app while it runs." label="See what blocks a bad build" campaign="agentic-devops-knowledge-files"}}
+
 ## Where is the future of AI agents and infrastructure heading?
 
 Knowledge files and MCP infrastructure servers aren't mutually exclusive. [Pulumi's Review mode](https://www.pulumi.com/blog/ai-predictions-2026-devops-guide/) and [Harness's OPA gates](https://www.harness.io/blog/agentic-ai-in-devops-the-architects-guide-to-autonomous-infrastructure) point toward a middle ground where agents can act but guardrails prevent catastrophic mistakes. [Pulumi published 8 Claude skills for DevOps](https://www.pulumi.com/blog/top-8-claude-skills-devops-2026/) that are basically knowledge files installed in `.claude/skills/`.

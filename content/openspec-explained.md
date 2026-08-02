@@ -124,6 +124,8 @@ Reach for OpenSpec if you are iterating on an existing codebase, you want lightw
 
 It is a weaker fit if you need a hard quality gate, enforced behavioral specs, test execution, multi-agent orchestration, or deep knowledge of a specific framework's idioms. OpenSpec is deliberately stack-neutral, which is a strength for reach and a limitation for depth.
 
+{{portable_spec_cta headline="Specs drift until they contradict each other." sub="That is what happens when nothing enforces them." body="Same repo-native philosophy, with a gate that actually blocks." label="See enforced specs on your code" campaign="openspec-explained"}}
+
 ## How it compares to CodeMySpec
 
 This is the comparison worth taking seriously, because OpenSpec is the closest thing CodeMySpec has to a peer, and the overlap is real.

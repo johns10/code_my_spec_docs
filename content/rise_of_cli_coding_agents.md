@@ -127,6 +127,8 @@ Cursor will keep growing. Copilot will keep shipping. But the default assumption
 
 The terminal is proving that the best interface for an AI agent isn't a visual editor with inline diffs. It's a conversation with a tool that can read your codebase, edit your files, run your tests, and manage your git workflow -- from the same terminal where you already do everything else.
 
+{{portable_spec_cta shape="aside" headline="The biggest complaint about every CLI agent is that it did not do what you meant." sub="Better specs address that, but only if something checks the code still matches them later." body="CodeMySpec keeps specs as markdown in your repo, feeds them to whatever agent you run, and blocks the build on drift." label="See the portable spec layer" campaign="rise-of-cli-coding-agents"}}
+
 ## What Comes Next
 
 Three things I'm watching:

@@ -120,6 +120,8 @@ One direction I find particularly promising: using specifications as the orchest
 
 This pattern has the advantage of being inspectable and debuggable by humans. When something goes wrong, you look at the spec and see exactly where the contract was violated.
 
+{{harness_not_model_cta shape="aside" headline="Nearly 79 percent of multi-agent failures trace back to specification and coordination, not code." sub="Agents do not need to talk to each other if they can all read the same enforced contract." body="CodeMySpec puts every spec, test, and QA result on one requirement graph and computes what to work on next." label="See the requirement graph" campaign="the-orchestration-layer"}}
+
 ## What this means for your stack
 
 **Solo developer:** Sub-agents within your existing tool (Claude Code's Agent tool, Cursor's parallel agents) give you most of the benefit. Start here.

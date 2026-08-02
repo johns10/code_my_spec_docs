@@ -167,6 +167,8 @@ Closest tool-level data is HAL/CORE-Bench:
 - **CI/CD:** official GitHub Action (`claude-code-action`), headless mode (`-p` flag) for any CI/CD pipeline. Supports `@claude` mentions, issue assignments.
 - **IDE:** VS Code extension, Claude Desktop app, works alongside any editor.
 
+{{harness_not_model_cta shape="aside" headline="Claude Code has hooks, subagents, memory, and MCP, and still nothing that stops a wrong build." sub="Every one of those is a way to run more work, not a check on whether the work was right." body="CodeMySpec adds the missing half: a BDD spec that gates the build and a QA agent that drives the running app." label="See how the gate works in Claude Code" campaign="claude-code-review-2026"}}
+
 ## CodeMySpec Integration
 
 Claude Code has the deepest CodeMySpec integration potential of any tool I looked at.

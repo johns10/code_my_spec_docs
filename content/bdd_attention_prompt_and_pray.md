@@ -99,6 +99,8 @@ At some point I realized my methodology was the problem. I kept treating a chat 
 
 That was the first time I started writing things down outside the chat.
 
+{{verification_gate_cta shape="aside" headline="Every new instruction you give a model deprioritizes every prior one." sub="Which makes the architectural rules from turn 1 the first ones to go." body="CodeMySpec keeps them out of the chat: specs in the repo, enforced as a gate the build has to pass." label="Move the rules out of the chat" campaign="bdd-attention-prompt-and-pray"}}
+
 ## Coming next
 
 I started writing things down outside the chat (a development guidelines file, a todo list, a memory file). A prompt that loaded all three at the start of every session. That helped. Until it didn't, in two specific ways I didn't see coming.

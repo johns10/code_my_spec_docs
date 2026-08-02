@@ -90,6 +90,8 @@ None of this is a knock on Spec Kit, Kiro, or OpenSpec. They are good at what th
 
 If your work spans many stacks, that breadth is the right trade. If your work is Phoenix, depth beats breadth.
 
+{{enforced_boundary_cta headline="Stack-neutral Elixir is non-idiomatic Elixir wearing an .ex extension." sub="Contexts and boundaries are what make generated code reviewable." body="Requirement checkers run over every context an agent touches." label="Set it up on your Phoenix project" campaign="spec-driven-development-elixir"}}
+
 ## Who this is for
 
 This page is for two groups.

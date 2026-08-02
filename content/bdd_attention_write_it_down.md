@@ -107,6 +107,8 @@ The problem it didn't solve was verification. "Done" in a task list is a judgmen
 
 That's a different kind of artifact.
 
+{{verification_gate_cta shape="aside" headline="By session five, the memory file I loaded at startup was not the state the project was in." sub="It was written by the model I was relying on it to keep honest." body="CodeMySpec tracks state from the repo and a build gate, not from a progress note the agent authored." label="Track state from the repo instead" campaign="bdd-attention-write-it-down"}}
+
 ## Coming next
 
 I stopped writing tasks and started writing specs: one per module, with function signatures, step-by-step process, and test assertions co-located in the same document. That was closer to what I needed. Then the unit tests passed and the features were still broken.

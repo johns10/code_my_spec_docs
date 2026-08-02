@@ -154,6 +154,8 @@ The rest of the package is solid: Jules for async background work, Conductor for
 - **Sandboxing:** Docker with gVisor (runsc), experimental LXC/LXD containers
 - **Skills:** Experimental support in recent versions
 
+{{harness_not_model_cta shape="aside" headline="Gemini CLI is sunsetting into Antigravity CLI, and your specs should outlive the tool that read them." sub="Requirements that live only inside a vendor CLI leave with it when the product transitions." body="Specs in CodeMySpec are versioned files any agent reads, the build gates on them, and QA tests the running app." label="See how portable specs work" campaign="gemini-cli-review-2026"}}
+
 ## CodeMySpec Integration
 
 The free tier and Conductor make Gemini CLI a strong fit for anyone exploring spec-driven development without opening a wallet.

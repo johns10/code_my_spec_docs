@@ -89,6 +89,8 @@ Default order to consider: repo-native first. Add transcript-derived if sessions
 
 Most coding setups never need anything beyond the first two.
 
+{{repo_native_memory_cta shape="aside" headline="The most starred memory system in AI coding is a CLAUDE.md file, which does not remember anything." sub="Operating instructions flow from you to the agent. Memory has to come back the other way." body="CodeMySpec derives its context from the repo, so what the agent reads comes from the code itself." label="See what repo-derived context looks like" campaign="its-not-memory-if-you-wrote-it"}}
+
 ## What's in the rest of the series
 
 Each category gets one post. Each names real implementations, surfaces honest failure modes, and ends with a recommendation about when to use it (or not).

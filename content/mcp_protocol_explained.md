@@ -144,6 +144,8 @@ If REST APIs connected web services to frontends, MCP connects data sources to A
 
 MCP is firmly in stage 3, and the AAIF donation pushes it toward stage 4. By then, you won't "configure an MCP server" -- your tools will just know how to talk to your data.
 
+{{verification_gate_cta headline="MCP went from proposal to Linux Foundation standard in 17 months." sub="Connecting an agent to your tools is solved. Checking its output is not." body="CodeMySpec exposes its gates over MCP." label="Wire the gates into your agent" campaign="mcp-protocol-explained"}}
+
 ## What to Watch
 
 1. **AAIF governance.** MCP is now under Linux Foundation stewardship. Expect a more formal spec process, more cross-vendor interop testing, less unilateral change.

@@ -70,6 +70,8 @@ Elixir puts examples inside documentation with the `@doc` attribute, and those e
 
 A typical Phoenix application is the framework plus a database. Concurrency, publish-subscribe, and distribution ship inside the BEAM, so an agent is not reasoning about Redis, plus a message queue, plus three serverless functions to make sense of a single bug. Fewer moving parts means a smaller area to search when something breaks, and a smaller area to search means the agent spends its turns fixing the problem rather than locating it.
 
+{{enforced_boundary_cta shape="aside" headline="Compiling clean tells you nothing about whether the feature is the one you asked for." sub="Fast local feedback ends exactly where the interesting failures begin." body="CodeMySpec adds the second half: specs the build has to satisfy, then a QA agent that drives the real app and files the bugs." label="Close the rest of the loop" campaign="elixir-agent-feedback-loop"}}
+
 ## Where the loop still needs help
 
 Fast feedback tells the agent a great deal. It tells the agent whether the code compiles, whether the types line up, and whether the unit tests pass. It does not tell the agent whether the feature is the one you actually asked for, and it does not tell the agent whether the running application behaves correctly when a real person clicks through it. Those are different questions, and a green compile answers neither.

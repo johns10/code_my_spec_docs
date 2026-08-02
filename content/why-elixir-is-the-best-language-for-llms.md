@@ -114,6 +114,8 @@ Here is the part that matters if you are deciding what to build with. A better l
 
 It is also not the whole job. A cleaner first draft is not a correct application. The model still writes code that looks right and is subtly wrong. It still needs a target, a written definition of what "done" means for the feature at hand, and it still needs a check that the running application actually behaves the way you intended. The language makes the draft better. It does not make the system correct. That gap exists whether you write Python or Elixir. Elixir hands you a better draft to start closing it from.
 
+{{enforced_boundary_cta shape="aside" headline="Elixir tops AutoCodeBench at 97.5 percent while Python, with the most training data, lands last." sub="A better first draft is not a correct application, and the language cannot tell the model what done means." body="CodeMySpec makes BDD scenarios a required gate on Phoenix contexts, then a QA agent drives the running app." label="See how the boundary is enforced" campaign="why-elixir-is-the-best-language-for-llms"}}
+
 ## How CodeMySpec compounds the advantage
 
 Closing that gap is where CodeMySpec sits. CodeMySpec is a specification-driven AI development harness built for Phoenix and Elixir, and it is Elixir-native in the literal sense: Phoenix contexts, LiveView, Ecto, and OTP are first-class, not a generic template with an Elixir mode bolted on. Stack-generic tools cannot stand on the AutoCodeBench floor, because they are not built on it. This is also the through-line of [spec-driven development for Elixir](/blog/spec-driven-development-elixir).

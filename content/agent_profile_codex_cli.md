@@ -157,6 +157,8 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 - **Open Source:** Apache 2.0, 62K+ stars, 365 contributors, 553 releases
 - **Community Tools:** codex-cli-best-practice, voice hooks, remote approvals (Greenlight AI), acp-loop scheduler, multi-agent MCPs
 
+{{harness_not_model_cta shape="aside" headline="Codex users keep reporting the same failure: it implements its interpretation instead of your instruction." sub="Codex has no hook system, so the gap between instruction and implementation goes uncaught." body="CodeMySpec puts a BDD spec in the path: the build blocks on drift and a QA agent tests the running app." label="See how the spec blocks drift" campaign="codex-cli-review-2026"}}
+
 ## CodeMySpec Integration
 
 Open source and the biggest plugin ecosystem make Codex a natural target for spec consumption.

@@ -144,6 +144,8 @@ Design-driven development fits when you're building production systems where arc
 
 It's overkill for throwaway prototypes and quick experiments. I won't pretend otherwise.
 
+{{design_gate_cta headline="By review time the architectural mistake is already in thousands of lines." sub="You can build the wrong thing very quickly." body="A design gate is cheaper than the rewrite." label="Put the gate before the code" campaign="design-driven-code-generation"}}
+
 ## What is the bottom line on AI code generation for production systems?
 
 AI code generation isn't going away. The question is how to use it for production systems without creating a mess.

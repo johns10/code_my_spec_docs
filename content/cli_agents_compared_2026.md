@@ -165,6 +165,8 @@ Here's how I'd actually pick. Worth noting that running [a harness layer](/devel
 - **OpenCode** if you want a fast-growing open-source option, with a desktop app and model flexibility.
 - **Goose** if you're building custom workflows and care about extensibility. Block's engineering pedigree and Apache 2.0 licensing are the draw.
 
+{{harness_not_model_cta shape="aside" headline="All six tools sharpen the session." sub="A harness compounds across sessions." body="Which CLI you pick matters less than whether anything is checking the output." label="Run one above the CLI you already use" campaign="cli-agents-compared-2026"}}
+
 ## The CodeMySpec Angle
 
 All six tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality. True whether you're on Opus 4.8 or a local model through Aider.

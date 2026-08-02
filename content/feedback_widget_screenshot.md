@@ -186,6 +186,8 @@ Three files:
 
 Drop the component in your root layout, install `html-to-image`, configure OAuth. Done.
 
+{{build_speed_cta shape="aside" headline="A bug report with a picture of the screen gets you 80% of the way to reproducing it." sub="Better still is nobody having to file it, because the bug was caught before shipping." body="CodeMySpec runs a QA agent against your running app that files issues with evidence while you are still building." label="Watch a QA agent file issues" campaign="feedback-widget-screenshot"}}
+
 ## Why I'm Proud of This
 
 I've spent years reading bug reports that say "the button doesn't work." Now they say "the button doesn't work" plus a picture of exactly what the user was looking at. Gets you 80% of the way to reproducing the issue before you even open the code.

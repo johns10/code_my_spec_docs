@@ -120,6 +120,8 @@ Instead of copy-pasting context into every chat, MCP servers give AI direct acce
 
 The workflow principles haven't changed. I still use them every day. CodeMySpec just removed the tedium that made them hard to sustain.
 
+{{build_speed_cta shape="aside" headline="Six months in, the thing that changed was not a better model. It was a better plan." sub="The plan still ran on hope at one point: hoping the model actually ran the tests." body="CodeMySpec sequences the work off a dependency graph and enforces the checks instead of hoping." label="Run the loop on your project" campaign="my-first-serious-coding-workflow"}}
+
 ## What Is the Most Important Lesson for AI-Assisted Development?
 
 Back up from the technology, the tooling, the hype. Being good at AI-assisted development means going back to first principles of software design. Critically inspect your workflows. Constantly improve them.

@@ -126,6 +126,8 @@ In practice, though, it is closer to **spec-first scaffolding than generative SD
 
 Spec Kit is a strong fit if you are a developer or team using AI agents who wants a repeatable, structured workflow and you value being able to switch agents freely. It suits greenfield work, adding features to existing systems, and enterprise environments that need offline or firewalled operation. It is a poor fit for tiny exploratory changes where the spec would be longer than the diff, and you should expect to supply your own discipline at the review checkpoints; skip them and the value collapses.
 
+{{portable_spec_cta headline="One plan phase produced over 2,000 lines of markdown." sub="Volume of spec is not the same as enforcement of spec." body="A gate that blocks is worth more than a document that describes." label="See what enforcement looks like" campaign="github-spec-kit-guide"}}
+
 ## How it compares to CodeMySpec
 
 Both Spec Kit and CodeMySpec are BYO-agent and keep specs in your own repo, and both reject pure vibe coding. That shared ground is real; portability is table stakes here, not a CodeMySpec exclusive. The differences are enforcement, spec structure, verification, and vertical focus.

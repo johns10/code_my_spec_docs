@@ -124,6 +124,8 @@ The paradox: AI agents are generating technical debt faster than they're cleanin
 
 **[Full article: Maintenance: Where Agents Actually Earn Their Keep](/blog/agentic-maintenance)**
 
+{{verification_gate_cta headline="Most teams do step 4 and skip the other seven." sub="That is why AI codebases fall apart at month three." body="CodeMySpec walks the whole graph, and will not advance past a failing gate." label="Run the full loop on your repo" campaign="agentic-software-development-process"}}
+
 ## Why Does the Development Process Matter More Than the AI Tools You Choose?
 
 The tools change every month. The process doesn't. Define what to build, design how it fits together, specify the contracts, generate the code, test it from multiple angles, verify the running application, deploy with documented knowledge, and maintain with the same rigor you built with. Most teams are doing step 4 (implementation) and skipping the other seven. That's why AI-generated codebases fall apart at month three. The code was generated fine; everything around the code was missing. The agentic software development process isn't about finding the best AI coding tool. It's about building the full lifecycle so the tool has something to work with.

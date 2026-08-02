@@ -47,7 +47,7 @@ Every coding agent eventually contradicts you. The architectural rule you set in
 
 The model isn't getting dumber. It's doing exactly what it was trained to do, and the math is on its side, not yours. Every new token in the context redistributes attention away from every token before it. The rules you set first are the rules most likely to be ignored last.
 
-This series is about the five-step evolution I went through to stop that collapse. Each step was a response to a specific failure I hit in real production work, including a thirteen-day Phoenix LiveView build (MetricFlow) that produced fifty-plus passing BDD specs over completely broken integrations. The pattern that finally held isn't one trick. It's a stack of externalized constraints, each one closing a gap the previous one couldn't.
+This series is about the five-step evolution I went through to stop that collapse. Each step was a response to a specific failure I hit in real production work, including a thirteen-day Phoenix LiveView build ([MetricFlow](/case-studies/metric-flow)) that produced fifty-plus passing BDD specs over completely broken integrations. The pattern that finally held isn't one trick. It's a stack of externalized constraints, each one closing a gap the previous one couldn't.
 
 ## The five steps
 
@@ -111,6 +111,8 @@ The gate had to be at the front. Three Amigos is BDD's original answer for that:
 But good scenarios aren't enough on their own. A spec can still cheat to answer the right question: calling context functions directly, asserting database state instead of user-visible state. The fix is enforcing the boundary at compile time. Specs live in a sealed module that can't import the core app. The only thing a spec is allowed to do is what a real user can do.
 
 **[Read the full article: Three Amigos](/blog/bdd-attention-three-amigos)**
+
+{{verification_gate_cta shape="aside" headline="Six installments, one claim: it holds only if the model re-reads it from a place it did not author." sub="A chat log fails that test. So does a memory file the model gets to rewrite." body="CodeMySpec keeps specs in the repo and blocks the build when the code stops matching them." label="Put the rules somewhere it has to read" campaign="bdd-attention-thesis"}}
 
 ## The thesis
 

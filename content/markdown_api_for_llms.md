@@ -60,6 +60,8 @@ This keeps things in sync automatically. It harmonizes both static information f
 
 CLAUDE.md still matters -- it should be explaining the context of the system and helping the LLM get started. It just doesn't need to contain the system anymore. It points to it.
 
+{{verification_gate_cta shape="aside" headline="The agent browses the app the same way you do, and you both read the same markdown." sub="Seeing the same state is not the same as knowing it works." body="CodeMySpec drives the running app with a QA agent and files what it finds as issues." label="Point a QA agent at your app" campaign="markdown-api-for-llms"}}
+
 ## What is the best pattern for building LLM-collaborative applications?
 
 I've gone through several iterations of how to structure applications for use by large language models at this point. Started with files and progressive disclosure, moved to shell scripts wrapping HTTP calls, and landed on a full web server returning navigable markdown. Each step solved the previous step's biggest limitation -- static files couldn't handle dynamic state, scripts couldn't aggregate, and now the web server does both.

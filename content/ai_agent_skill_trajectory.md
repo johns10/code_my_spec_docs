@@ -146,6 +146,8 @@ Soto's Amazon example: 100+ PRs per month, fully autonomous, zero structural cor
 
 Most people are at 0-1. The leverage is at 3. Most people don't know 3-4 exist.
 
+{{harness_not_model_cta shape="aside" headline="Most people are at level 1. The leverage is at level 3." sub="Level 3 is not a mindset. It is linters, hooks, and gates somebody has to build." body="CodeMySpec is that layer for Phoenix: specs that block the build, and a QA agent that drives the app." label="Start from a harness that exists" campaign="ai-agent-skill-trajectory"}}
+
 ## What to Do About It
 
 **At level 0-1:** Start writing skills and curating your CLAUDE.md. Understand the agent loop. That's level 2.

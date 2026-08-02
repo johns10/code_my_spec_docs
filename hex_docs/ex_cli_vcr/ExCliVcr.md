@@ -44,12 +44,16 @@ For Port operations, you must use the ExCliVcr wrapper functions because
 Configure ExCliVcr in your `config/test.exs`:
 
     config :ex_cli_vcr,
-      cassette_dir: "test/fixtures/cassettes",
-      record_mode: :once
+      cassette_dir: "test/fixtures/cassettes"
+
+## Default Behavior
+
+By default, the first time a cassette is used, commands are recorded. On
+subsequent runs, recorded responses are replayed and any unrecognized
+command will raise an error.
 
 ## Record Modes
 
-- `:once` - Record if cassette doesn't exist, replay if it does (default)
 - `:new` - Always record, overwriting existing cassettes
 - `:none` - Never record, only replay (raises if cassette missing)
 - `:all` - Record all calls even if cassette exists

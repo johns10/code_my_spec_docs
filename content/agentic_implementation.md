@@ -105,6 +105,8 @@ The developers getting the most out of these tools aren't the ones with the best
 
 I learned this the hard way. Early on, I'd start a session, give the agent a big task, and watch it go. An hour later I'd have a pile of code that looked right but had subtle issues everywhere. Now I break everything into small, verifiable steps. Write one module. Run the tests. Commit. Move on. The agent stays on track because I never let it drift far enough to get lost.
 
+{{verification_gate_cta headline="METR measured experienced developers 19% slower with AI." sub="They believed they had been 20% faster." body="You cannot feel your way to whether this is working. Something has to measure it." label="Put a gate in the loop" campaign="agentic-implementation"}}
+
 ## Where Does AI Code Generation Stand in 2026?
 
 [84% of developers](https://survey.stackoverflow.co/2025/ai) are using or planning to use AI tools. The adoption curve is over. But trust is declining, [positive sentiment dropped from 70%+ to 60%](https://survey.stackoverflow.co/2025/ai) in a year.

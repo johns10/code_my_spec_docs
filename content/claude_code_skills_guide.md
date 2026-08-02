@@ -232,6 +232,8 @@ If you've used CLAUDE.md to give Claude context about your project, you've alrea
 
 The end state isn't a single clever prompt. It's a system of skills, tools, and constraints that together make an agent reliably productive at complex, multi-step work. That's what writing apps for agents looks like.
 
+{{skill_as_software_cta shape="aside" headline="Skills are not prompts, they are applications whose user happens to be an agent." sub="The interesting part is not the markdown file, it is the system that generates what the agent reads." body="CodeMySpec ships skills that read your project state, then hold the build to specs the code has to satisfy." label="Try the build skills" campaign="claude-code-skills-guide"}}
+
 ## Getting Started
 
 Create your first skill:

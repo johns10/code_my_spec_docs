@@ -81,6 +81,8 @@ Meta is taking a different approach. [Just-in-Time Tests](https://engineering.fb
 
 This eliminates the mounting costs of traditional test suites: maintenance burden, false positives, flaky tests, slow CI. JiTTests reduced human review load by [70%](https://engineering.fb.com/2026/02/11/developer-tools/the-death-of-traditional-testing-agentic-development-jit-testing-revival/). They don't replace regression suites for critical paths, but they catch change-specific regressions without adding permanent maintenance burden.
 
+{{verification_gate_cta shape="aside" headline="Eight BDD scenarios passed on that story while a QA agent found four bugs in the running app." sub="One of them was a fraud vulnerability, and no unit test was ever going to catch it." body="CodeMySpec runs both: BDD specs gate the build, then a QA agent drives the running app and files what it finds." label="Run QA against the running app" campaign="agentic-testing"}}
+
 ## What Is the Best Testing Strategy for AI-Generated Code?
 
 After digging through 35+ sources on this, here's the stack that works:

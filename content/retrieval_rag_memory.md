@@ -95,6 +95,8 @@ Retrieval is most useful as a *fallback* when other categories can't cover the c
 - **Pair with structural retrieval (Aider-style repo map) for code-shaped questions.** Vector retrieval misses code's structure; structural retrieval respects it. Use both.
 - **Skip pairing with dedicated memory stores over the same content.** Two systems that both decide "what's relevant" disagree at the worst moments.
 
+{{repo_native_memory_cta shape="aside" headline="RAG turns a definite question about your codebase into a probabilistic one." sub="The context a coding agent is missing is not similar text, it is a written definition of done." body="CodeMySpec keeps that definition in your repo as a gate, and the build blocks when the code stops matching it." label="Read how the spec gate works" campaign="retrieval-rag-memory"}}
+
 ## The honest verdict
 
 RAG is over-applied to coding and the right tool for general-purpose document-search use cases.

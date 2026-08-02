@@ -113,6 +113,8 @@ You don't need to learn to code. But you need to know what the pieces are so whe
 
 That's the whole point of this series. Not to turn you into a developer. Just to give you enough vocabulary to stop feeling lost when your AI throws jargon at you, and to point at the right piece when something goes wrong.
 
+{{nontechnical_founder_cta campaign="what-is-code"}}
+
 ## What to Tell Your AI
 
 Next time you start a project, before you build anything, try this:

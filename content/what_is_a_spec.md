@@ -134,6 +134,8 @@ Unit tests are close, but they fail on human readability. `test "returns {:error
 
 Contract specs also come close. The VibeContract research showed that preconditions and postconditions dramatically improve AI code generation -- an LLM-generated ATM system without contracts lacked basic input validation; with contracts, it handled edge cases correctly. But contracts require a developer to write them. BDD scenarios can be co-authored with non-technical stakeholders. The accessibility gap matters when the whole point of SDD is letting non-developers drive the process.
 
+{{enforced_spec_cta shape="aside" headline="A guidance spec tells the agent what to build." sub="It never checks that it did." body="A BDD spec is the requirement and the test, so it cannot quietly go stale." label="Run executable specs on your project" campaign="what-is-a-spec"}}
+
 ## My Take
 
 If I'd understood this taxonomy a year ago, I would have skipped months of trying to make markdown specs work and gone straight to BDD. I wrote requirements docs. I wrote CLAUDE.md files. I wrote detailed design specs. The agent still built things wrong, and I didn't catch it until manual testing.

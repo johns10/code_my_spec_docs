@@ -97,6 +97,8 @@ ADRs that agents read are good. ADRs that CI enforces are better.
 
 This is where ADRs graduate from "guidelines the agent should follow" to "constraints the pipeline enforces." The agent reads the ADR and tries to comply. The CI pipeline verifies it actually did. Belt and suspenders.
 
+{{verification_gate_cta shape="aside" headline="Your agent reaches for Express on a project that standardized on Phoenix." sub="An ADR it can read is still an ADR it can skim past." body="CodeMySpec enforces specs as a gate, so the build blocks when the code stops matching what you decided." label="Wire the decision into a gate" campaign="architectural-decision-records"}}
+
 ## Where This Fits in Agentic Development
 
 Architecture decisions sit between requirements and implementation. You know what you're building. Now you decide how. ADRs are that decision layer, and they feed directly into everything downstream. The agent writing your specs reads them. The agent writing your code reads them. The agent writing your tests reads them. One set of decisions, consumed everywhere, enforced automatically.

@@ -105,6 +105,8 @@ When your AI sets up Vercel, it's picking a computer to run your code. When it s
 
 Once you understand that these are all just computers doing jobs, you can start making choices instead of just accepting whatever your AI picks.
 
+{{nontechnical_founder_cta headline="Nobody plans to pay $50 a month. It just accumulates." sub="Claude Code is the coder. CodeMySpec is the engineering manager." campaign="what-is-a-server"}}
+
 ## What to Tell Your AI
 
 > "List every external service this project depends on. For each one, tell me what it does, what it costs after the free tier, and whether we could do the same thing on our own server."

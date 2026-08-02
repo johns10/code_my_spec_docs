@@ -98,6 +98,8 @@ Pick **Lovable** if you are non-technical, you want a complete full-stack app (f
 
 The dividing line is clean. v0 is the UI-first, repo-owned builder for developers on React and Next. Lovable is the full-stack, fastest-to-live builder for non-technical founders, with a security wall you have to clear before launch.
 
+{{owned_code_cta headline="Owning the code is not the same as knowing it works." sub="CodeMySpec gives you a Phoenix app you own, and a QA agent that checks it." campaign="v0-vs-lovable"}}
+
 ## A third option, when you have outgrown both
 
 Both tools share the same ceiling. They are brilliant at the first 80 percent (describe an app, get a working prototype), and they are weak at the last mile: taking that prototype to real, paying customers without data leaks, runaway credit bills, or a codebase that degrades until you rebuild it. Neither runs a behavioral specification as a mandatory gate, and neither boots the finished app to confirm it actually behaves the way you asked. That is the graduation wall, and it is where the failure modes above live.

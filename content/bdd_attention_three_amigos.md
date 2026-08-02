@@ -46,7 +46,7 @@ _Part 6 of the [BDD Attention Thesis](/blog/bdd-attention-thesis). Previous: [Pa
 
 The gate needed to be at the beginning. Not "review the output" but "define what the output should be, in enough detail that there's nothing left to interpret."
 
-MetricFlow taught me this. The BDD format was right, running specs against a real browser was right, and I was still debugging a broken app through three layers of accumulated ambiguity, because by the time I showed up to review, the specs were written, the code was generated, and the tests were already passing.
+[MetricFlow](/case-studies/metric-flow) taught me this. The BDD format was right, running specs against a real browser was right, and I was still debugging a broken app through three layers of accumulated ambiguity, because by the time I showed up to review, the specs were written, the code was generated, and the tests were already passing.
 
 That process already existed. It's been part of BDD since the beginning. It's called Three Amigos.
 
@@ -111,6 +111,8 @@ This is what closes the MetricFlow Potemkin village. Not just better scenario ti
 Those are four different features. "Connect Google Analytics" described one of them, loosely.
 
 The model didn't write those scenarios. The PM confirmed them. The model then generated Gherkin from confirmed scenario titles, with the PM-approved intent as the anchor. The gate held.
+
+{{verification_gate_cta shape="aside" headline="Connect Google Analytics turned out to be four different features, not one." sub="Nobody finds that out reviewing the spec after the code is already green." body="CodeMySpec runs the interview before scenarios exist, then checks the result against the running app." label="Run the gate before code exists" campaign="bdd-attention-three-amigos"}}
 
 ## Where the thesis lands
 

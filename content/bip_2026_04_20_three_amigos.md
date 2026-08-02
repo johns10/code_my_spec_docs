@@ -55,9 +55,11 @@ A good BDD spec exercises the full application with realistic I/O at these bound
 
 The spec infrastructure is harder to build than the application code. But you only build it once per project, and every spec you write after that benefits from it.
 
+{{build_speed_cta shape="aside" headline="A bad prompt produces bad code you can see." sub="A bad spec produces incomplete code that passes its own tests." body="CodeMySpec gates the spec first with a Three Amigos interview, then runs QA against what comes out." label="Run it on your next story" campaign="bip-three-amigos"}}
+
 ## MetricFlow Case Study
 
-Releasing the MetricFlow case study whether the process is perfect or not. Analytics reporting platform built entirely with spec-driven development. Multiple integrations. Full hands-off dev cycle.
+Releasing the [MetricFlow case study](/case-studies/metric-flow) whether the process is perfect or not. Analytics reporting platform built entirely with spec-driven development. Multiple integrations. Full hands-off dev cycle.
 
 It has big misses. The agent hit the broad strokes but missed glaring things. Comes down to two things: specs weren't specific enough, and I gave the agent too much freedom writing them.
 

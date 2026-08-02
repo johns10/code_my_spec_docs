@@ -155,6 +155,8 @@ The Polyglot leaderboard has become the de facto standard for evaluating coding 
 - **IDE:** Terminal-based, works alongside any editor
 - **Install:** `pip install aider-chat`
 
+{{harness_not_model_cta shape="aside" headline="Aider's Polyglot leaderboard measures the model, not whether the app you shipped actually works." sub="A benchmark score tells you nothing about the feature you just merged." body="CodeMySpec gates the build on a BDD spec and sends a QA agent through the running app to file real issues." label="See what a build gate catches" campaign="aider-review-2026"}}
+
 ## CodeMySpec Integration
 
 Aider's model flexibility and git-first workflow make it a natural fit for spec-driven development, especially if you're watching costs.

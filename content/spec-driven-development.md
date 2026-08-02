@@ -128,6 +128,8 @@ Both failure modes share the same root: nothing enforces the spec as a gate, and
 
 To be fair about what is shared: repo-resident specs, bring-your-own-agent, no token markup, and specs-before-code are not unique to CodeMySpec. OpenSpec, Spec Kit, Agent OS, and BMAD all meet some of those bars, and portability in particular is table stakes, not a moat. The defensible combination is the mandatory BDD gate, built-in live verification, full lifecycle on one requirement graph, and framework-native depth in Phoenix. No competitor combines all four. You can see how that combination plays out against the closest no-lock-in peer in [CodeMySpec vs OpenSpec](/blog/codemyspec-vs-openspec), and against the closest spec-first IDE in [CodeMySpec vs Kiro Specs](/blog/codemyspec-vs-kiro-specs).
 
+{{enforced_spec_cta shape="aside" headline="Most SDD tools generate a spec, then hand off and stop watching." sub="The harder problem is making the spec govern the code." body="CodeMySpec blocks the build when they disagree." label="See it enforce on your own repo" campaign="spec-driven-development"}}
+
 ## How to choose
 
 No single tool wins outright; the right one depends on your situation.

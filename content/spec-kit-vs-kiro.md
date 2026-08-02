@@ -81,6 +81,8 @@ Spec Kit is a methodology plus scaffolding: a Python CLI (`specify`) drops Markd
 
 The honest summary: Spec Kit trades guidance for freedom, Kiro trades freedom for an integrated, opinionated experience. Pick the constraint you can live with.
 
+{{portable_spec_cta shape="aside" headline="Spec Kit has no verification loop and Kiro's hooks stop at unit tests passing." sub="Neither one checks the running app, which is where the button either works or does not." body="CodeMySpec makes BDD scenarios a required gate, then a QA agent drives the real app in a browser and files issues." label="See what an enforced gate adds" campaign="spec-kit-vs-kiro"}}
+
 ## A third option: CodeMySpec
 
 Here is what both tools share, and where both leave a gap. Spec Kit and Kiro are both spec-first, and both can drift. Spec Kit's prose specs drive the first generation but do not durably govern the codebase, because the authority is convention. Kiro's specs are more structured, but EARS phrasing is not an executable contract, and "vibe mode" sits right alongside spec mode as an escape hatch. Critically, neither tool verifies the generated code against the live, running app. Spec Kit has no verification loop at all; Kiro's Hooks can run tests, but unit tests passing is not the same as the button actually working.

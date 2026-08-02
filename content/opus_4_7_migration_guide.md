@@ -159,6 +159,8 @@ New protections trigger false positive refusals on legitimate security work. If 
 - [ ] Try `xhigh` effort for coding tasks
 - [ ] Update model string to `claude-opus-4-7-20260415`
 
+{{harness_not_model_cta shape="aside" headline="Opus 4.7 brought a 10 point jump on SWE-bench Pro, three hard failures, and up to 35% more tokens." sub="Every model release moves the ground under you. The layer that absorbs it is the one you control." body="CodeMySpec is that layer: specs, gates, and QA that hold when the model underneath changes." label="Build on a harness that outlives the model" campaign="opus-4-7-migration-guide"}}
+
 ## My Take
 
 The performance gains are real. 10 points on SWE-bench Pro translates to practical coding tasks, not just benchmark gaming.

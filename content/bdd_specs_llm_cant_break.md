@@ -293,6 +293,8 @@ end
 
 Specs reach it as `given_ :on_configuration_page` and pick up `context.config_live` for use in their `when_` step. The given establishes state by driving the real surface, returns a key the rest of the scenario uses, and never asserts. Pattern-match failures blow up at the point of failure. Assertions live in `then_`.
 
+{{enforced_boundary_cta shape="aside" headline="A spec that reaches into the context proves a database row changed, not that the user saw it." sub="A convention cannot stop that. A compiler can." body="CodeMySpec seals the spec namespace with Boundary plus Credo rules, so the shortcut fails the build." label="Seal the boundary on your Phoenix app" campaign="bdd-specs-llm-cant-break"}}
+
 ## What still leaks past the gate
 
 Sealed boundary plus recorded outbound surface closes the per-story gate. It doesn't close every gate.

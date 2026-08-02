@@ -87,6 +87,8 @@ When your app is **expensive**: "Is this hitting the server every interaction wh
 
 Most problems in vibe-coded apps come down to things in the wrong place.
 
+{{nontechnical_founder_cta campaign="where-does-it-belong"}}
+
 ## What to Tell Your AI
 
 > "For this feature, should the logic run on the client or the server? What are the tradeoffs?"

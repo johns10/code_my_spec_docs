@@ -94,6 +94,8 @@ First, treat language as a variable you can tune, not a fixed cost. If you are s
 
 Second, get literate about which benchmark number you are being shown. "Model X scores 82 percent on AutoCodeBench" is meaningless without knowing the variant, the language, and the mode. A frontier model's Elixir score and its JavaScript score can differ by 40 points on the same benchmark. Averages hide that, and averages are what get quoted in headlines.
 
+{{enforced_boundary_cta shape="aside" headline="Elixir tops AutoCodeBench at 97.5 percent. Python finishes last at 63.3." sub="Both numbers come from self-contained functions, not from an application with architecture." body="CodeMySpec enforces context boundaries in Phoenix, so a violation fails the build instead of landing in review." label="Set it up on a Phoenix project you have" campaign="autocodebench-explained"}}
+
 ## Where AutoCodeBench stops
 
 No benchmark is the last word, and this one has honest limits.

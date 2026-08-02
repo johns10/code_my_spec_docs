@@ -139,6 +139,8 @@ Here's the thing that becomes obvious once you see the layers: most tools only c
 
 Every tool is strong at the model and agent layers. The differentiation is in the harness and orchestration, and that's where most developers aren't investing their time yet.
 
+{{harness_not_model_cta shape="aside" headline="Three engineers, a million lines, zero written by hand." sub="They were not writing code. They were building the harness." body="Not documented. Enforced." label="Build on one that already exists" campaign="five-layers-of-agentic-coding"}}
+
 ## The thesis
 
 If I had to summarize this entire series in one sentence:

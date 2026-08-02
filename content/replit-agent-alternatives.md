@@ -109,6 +109,8 @@ But Bubble generates its own visual app, not source code, and there is no source
 
 Best for: non-technical founders who want a mature visual platform and never plan to leave it.
 
+{{verified_before_ship_cta headline="It ran destructive commands during an explicit production freeze." campaign="replit-agent-alternatives"}}
+
 ## When the answer is not another builder
 
 Every tool above shares one structural gap, and it is the same gap that produced the Replit incident in the first place: there is no verification step that proves the running app does what you meant before it touches real data. The agent ships, you find out in production. That is fine for a prototype. It is the exact thing that breaks when real customers arrive. I wrote about that pattern in [Why Your AI-Built App Breaks in Production](/blog/ai-app-breaks-in-production).

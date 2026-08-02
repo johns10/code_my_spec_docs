@@ -120,6 +120,8 @@ Code quality matters least, and it costs little labor because you hand it back t
 
 Point the agent at the violations and let it resolve them. The result isn't perfect, but the labor cost is minimal, which is what the lowest-priority concern deserves.
 
+{{enforced_boundary_cta shape="aside" headline="GitClear looked at 211 million lines and found copy-paste outpacing refactoring for the first time." sub="Prompting harder does not fix that. A boundary the compiler rejects does." body="CodeMySpec installs the boundary and Credo checks, so a crossed context fails the build." label="Set it up on a Phoenix project you already have" campaign="prevent-slop-elixir-codebases"}}
+
 ## Intent from the model, guarantees from the harness
 
 Rank what you want out of your codebase, then verify it mechanically in that order:

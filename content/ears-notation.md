@@ -115,6 +115,8 @@ EARS has two distinct user bases. The original one is systems and safety-critica
 
 The newer base is AI-assisted development. Kiro and the now-deprecated Amazon Q Developer brought EARS to a much larger audience by generating requirements docs in it, and a wave of 2026 articles and tutorials frame EARS as a way to write better prompts and specs for coding agents. If you have used Kiro's spec mode, you have used EARS whether you noticed the name or not.
 
+{{enforced_spec_cta shape="aside" headline="EARS makes a requirement well formed, not well chosen, and nothing in it runs." sub="A precise sentence about behavior is worth exactly as much as the check standing behind it." body="In CodeMySpec the BDD spec is a mandatory gate, and a QA agent boots the app and drives a browser to confirm the behavior." label="See the gate run against the app" campaign="ears-notation"}}
+
 ## How This Relates to CodeMySpec
 
 I build [CodeMySpec](/developers), a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir, so my view on EARS is shaped by where it sits in a real build pipeline.

@@ -200,6 +200,8 @@ BDD specs catch requirement misunderstandings and regressions. They catch the ca
 
 They don't catch everything. They don't catch UX issues, performance problems, or edge cases you didn't think to specify. That's [agentic QA](/blog/agentic-qa), a different verification layer. BDD specs reduce how much QA has to catch. They don't eliminate it.
 
+{{verification_gate_cta headline="BDD was supposed to be dead, then agents showed up." sub="The ceremony turned out to be exactly what they needed." body="Specs at the boundary, enforced at compile time." label="Write specs the agent cannot game" campaign="bdd-specs-for-ai-generated-code"}}
+
 ## What to Tell Your AI
 
 1. **Write the spec first.** Three to five Gherkin scenarios. Happy path and critical edge cases.

@@ -298,6 +298,8 @@ It triggers reliably, costs roughly 100 tokens at session start, and only loads 
 
 The same shape scales up. My ~30 CodeMySpec agent_tasks aren't markdown files -- they're Phoenix modules that generate prompts dynamically from project state -- but they follow the same rules. Slim body. Procedural detail in a `workflow.md` next door. MCP tools named in the prompt. Routing signal that says "Use when X." Sixty-line marketing skill and three-hundred-line Phoenix module follow the same three tiers. The shape is what scales.
 
+{{skill_as_software_cta shape="aside" headline="Your skill worked in the session you wrote it in, then quietly never triggered again." sub="Skills are software, and most of them ship with nothing checking them at all." body="CodeMySpec runs specs, tests, and a QA agent over what the agent produces." label="Put gates around your agent" campaign="how-to-write-your-first-skill"}}
+
 ## Where to go next
 
 You've now got a working skill. The two posts that pick up from here:

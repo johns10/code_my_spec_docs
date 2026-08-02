@@ -123,6 +123,8 @@ Stories live in the database, not markdown files. The AI accesses them directly 
 
 **Team alignment.** New team members read the stories and understand what the application does. Everyone uses the same requirements.
 
+{{verification_gate_cta shape="aside" headline="Tickets get closed. Nobody goes back to check the application still does what the story said." sub="A story linked to a component is traceability. It is not proof the behavior shipped." body="CodeMySpec runs a QA agent against the running app and files issues when the story does not hold." label="Check the stories against a running app" campaign="managing-user-stories"}}
+
 ## The Philosophy
 
 This is not about speed. It's about having a tool that makes it *feasible* to do things the right way.

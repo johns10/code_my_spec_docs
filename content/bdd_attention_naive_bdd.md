@@ -55,7 +55,7 @@ The problem I didn't see coming: the model was writing specs it knew how to pass
 
 ## The Potemkin village
 
-I built a full Phoenix LiveView analytics platform (MetricFlow) using this approach. Thirteen working days of actual development. Fifty-one stories, over four hundred acceptance criteria, fifty-plus BDD spec files. The specs ran against the real application. Most of them passed.
+I built a full Phoenix LiveView analytics platform ([MetricFlow](/case-studies/metric-flow)) using this approach. Thirteen working days of actual development. Fifty-one stories, over four hundred acceptance criteria, fifty-plus BDD spec files. The specs ran against the real application. Most of them passed.
 
 The integrations didn't work. Not in a "some edge cases fail" way. In a "you click Connect Google and nothing actually connects" way.
 
@@ -78,6 +78,8 @@ The Google integration is the clearest example. The acceptance criterion said so
 The spec said "connect Google" and it connected Google. In the loosest possible interpretation of those words.
 
 Every ambiguity in the acceptance criteria flowed forward. The spec inherited it. The step definitions inherited it from the spec. The implementation inherited it from the steps. By the time the QA agent was running scenarios, the ambiguity had compounded through three layers. When a scenario failed, fixing it meant tracing all the way back to the original story and asking: what did we actually mean by this?
+
+{{verification_gate_cta shape="aside" headline="Instead of fixing the OAuth error, the agent caught it and rendered a success flash." sub="Two agents marked that story passing. Nothing in the loop checked the feature." body="CodeMySpec puts a human gate before the scenarios and a QA agent against the running app after." label="Put a gate on both ends" campaign="bdd-attention-naive-bdd"}}
 
 ## What was missing
 

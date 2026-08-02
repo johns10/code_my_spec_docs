@@ -117,6 +117,8 @@ But here's what you get: **predictability**. When a controlled workflow complete
 
 I've found that predictability beats speed every time in production systems.
 
+{{verification_gate_cta shape="aside" headline="Autonomy without constraints is technical debt with a faster commit rate." sub="The fix is not a better prompt, it is a step the agent is not allowed to skip." body="CodeMySpec makes the spec that step: the build stops when the code no longer matches, and a QA agent tests the running app." label="Put a gate on your build" campaign="control-over-prompts"}}
+
 ## How should you rethink your approach to AI code generation?
 
 Stop optimizing prompts. They'll always be fragile. Ask instead: what workflow constraints would make bad outputs impossible?

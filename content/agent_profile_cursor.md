@@ -165,6 +165,8 @@ Cursor 3 (April 2, 2026, "Glass") is a bet. The IDE is now secondary to an Agent
 - **BugBot:** PR review agent with autofix (76% resolution, 35% merged unmodified)
 - **Automations:** Event-driven triggers from codebase changes, Slack, timers
 
+{{harness_not_model_cta shape="aside" headline="Cursor 3 made the Agents Window the primary surface, and left correctness entirely up to you." sub="Cursor's own CEO warned that this way of building leaves foundations that eventually crumble." body="CodeMySpec puts the check back: a BDD spec gates the build and a QA agent drives the running app to find bugs." label="See what gates the build" campaign="cursor-review-2026"}}
+
 ## CodeMySpec Integration
 
 The user base makes Cursor a high-value integration target even if it's not the deepest fit.

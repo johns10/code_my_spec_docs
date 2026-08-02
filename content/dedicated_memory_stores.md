@@ -97,6 +97,8 @@ If you're using these for coding work:
 - **Pair with transcript-derived as a quality check.** A post-hoc process can catch contamination the in-session curator missed.
 - **Don't pair with retrieval/RAG over the same content.** Two systems that both decide "what's relevant" disagree at the worst moments.
 
+{{repo_native_memory_cta shape="aside" headline="An independent evaluation found raw ChromaDB beat every mode MemPalace layers on top of it." sub="Which is why coding work keeps returning to files that live in the repo and get reviewed like code." body="CodeMySpec puts the specs in your repo and makes them a build gate, so the agent reads a target instead of recalling one." label="Make the spec the gate" campaign="dedicated-memory-stores"}}
+
 ## The honest verdict
 
 For non-coding agents — customer-facing chatbots, personal assistants, SaaS products that learn user preferences — dedicated memory stores are real infrastructure. mem0 and Letta are the strongest OSS options.

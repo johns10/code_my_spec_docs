@@ -94,6 +94,8 @@ Immutability is not free, and pretending otherwise would be dishonest. Building 
 
 The claim is not that immutability is free. The claim is that it makes code easier to reason about, and that a coding agent, with no persistent memory of your system and a hard limit on what it can read at once, benefits from that even more than a human does.
 
+{{enforced_boundary_cta shape="aside" headline="Immutability closes off hidden mutation, but a function can still be locally sensible and globally wrong." sub="A better draft is not a finished application, and the language cannot tell the difference." body="CodeMySpec supplies the written target and the verification pass: specs gate the build, a QA agent tests the running app." label="Set a target the build enforces" campaign="elixir-immutability-llm-code-generation"}}
+
 ## Why it matters if you build with AI
 
 Fewer hidden effects means fewer of the nastiest bugs, the ones where generated code looks correct and quietly does the wrong thing to shared state. It does not remove them. A model can still write a function that is locally sensible and globally wrong. That residue is why a written specification to aim at, and a verification pass to catch what slips through, still earn their place on top of a good language. Immutability gives the agent a better draft. It does not hand you a finished, correct application. [CodeMySpec](/developers) is built for the gap between those two.

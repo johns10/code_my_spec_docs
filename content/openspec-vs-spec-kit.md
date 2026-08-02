@@ -104,6 +104,8 @@ Pick **OpenSpec** if you are iterating on an existing codebase, want a lightweig
 
 The dividing line is clean: Spec Kit is the full toolkit for building new; OpenSpec is the lightweight tracker for changing what exists.
 
+{{portable_spec_cta shape="aside" headline="One tool writes about 800 lines per change, the other about 250. Neither one blocks anything." sub="Volume of spec and enforcement of spec are separate axes, and only one of them keeps code honest." body="CodeMySpec makes the BDD spec a required gate, so the build stops when the code stops matching." label="See what an enforced spec does" campaign="openspec-vs-spec-kit"}}
+
 ## A third option: CodeMySpec
 
 Both Spec Kit and OpenSpec stop at the same place. They are spec tools (they help you write a good spec and hand it to an agent), but neither enforces a behavioral spec as a mandatory gate, and neither verifies that the code the agent produced actually does what the spec says. Spec Kit's clarify/analyze steps are advisory. OpenSpec's `verify` "won't block archive." In both, the spec governs the code by convention, not by enforcement, and nothing closes the loop between spec and running software.

@@ -81,6 +81,8 @@ Here's an opinion I'll defend: the traditional testing pyramid (many unit tests 
 
 I'm prioritizing E2E tests with browser agents over unit tests. Integration tests with real dependencies over mocked unit tests. Requirements-based validation over implementation-based testing. The code is disposable. The behavior is what matters.
 
+{{verification_gate_cta headline="96% of developers do not fully trust AI-generated code." sub="They commit it anyway." body="Trust is not the fix. A gate that runs whether or not anyone remembers is." label="Force the check" campaign="agentic-qa-verification"}}
+
 ## How Do You Force AI Agents to Verify Their Own Work?
 
 The real solution isn't hoping the agent verifies its own work. It's forcing verification through the [harness](/blog/the-harness-layer). [Claude Code's hook system](https://platform.claude.com/docs/en/agent-sdk/hooks) provides lifecycle hooks that fire at specific points in the agent loop. The Stop hook runs when the agent declares it's done. You wire up formatters, linters, and type checks to that hook. If errors exist, they're raised back to the agent, which is forced to keep working until it resolves them. The agent literally cannot stop until the code passes quality gates. That's harness-enforced verification: the agent doesn't get to decide when quality is sufficient, the harness does.

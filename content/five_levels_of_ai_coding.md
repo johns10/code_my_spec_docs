@@ -109,6 +109,8 @@ This is where the YouTube analogy matters most. At Level 4, you're not just givi
 
 A full financial services platform -- fuel cards, Stripe Treasury, fraud detection, compliance -- went from empty repository to UAT in six weeks. One person defining requirements. The system handling implementation.
 
+{{harness_not_model_cta shape="aside" headline="Human code review stops scaling at Level 3, which is where most teams are stuck." sub="Level 4 moves the work to defining correctness and letting machinery do the checking." body="CodeMySpec is that machinery for Phoenix: specs gate the build, and a QA agent tests the running app and files issues." label="Move up to Level 4" campaign="five-levels-of-ai-coding"}}
+
 ## Where You Can Go
 
 If you built something useful at Level 1 -- that's real. You solved a problem.

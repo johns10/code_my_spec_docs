@@ -115,6 +115,8 @@ graph LR
     end
 ```
 
+{{nontechnical_founder_cta campaign="what-is-the-client"}}
+
 ## What to Tell Your AI
 
 > "What kind of client are we building? Browser app, PWA, mobile app, or desktop app? What are the tradeoffs for my use case?"

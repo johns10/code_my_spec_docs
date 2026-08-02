@@ -204,6 +204,8 @@ That's the same reason this blog keeps arguing for [specs as the durable artifac
 - **You're an AWS shop that wants spec-driven**: Kiro, eyes open about the credit meter and model lag.
 - **You want background chores handled**: Jules today, Factory if you're an enterprise.
 
+{{harness_not_model_cta campaign="best-ai-coding-tools-2026"}}
+
 ## The CodeMySpec angle
 
 All sixteen tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality, on Opus 4.8 and on a local model alike.

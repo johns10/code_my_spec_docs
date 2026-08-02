@@ -109,6 +109,8 @@ What I needed wasn't better unit tests. I needed something that verified the fea
 
 It turns out that format already exists.
 
+{{verification_gate_cta shape="aside" headline="Green unit tests, and the registration form still wiped the email on a duplicate." sub="Unit tests prove the functions match the spec. They say nothing about the application." body="CodeMySpec runs a QA agent through the running app, so a bug that only appears in the browser gets filed." label="Verify it in the running app" campaign="bdd-attention-spec-files"}}
+
 ## Coming next
 
 Given/When/Then was invented in 2006. It wasn't designed for AI agents. It was designed because human developers, testers, and product managers couldn't agree on what "done" meant either. Someone figured out that if you wrote behaviors in a tight enough format, the spec could be executed directly. No translation step. The spec is the test.

@@ -160,6 +160,8 @@ Here's how I'd actually pick:
 - **Zed** if editor performance actually matters to you. You want open source and real model freedom, including Claude's 1M context window via BYOK. You care about collaboration (CRDTs, shared cursors). You want AI as a tool on top of a great editor, not the foundation of the product.
 - **Kiro** if you build complex features that benefit from upfront design. You want structured requirements before code. You're on AWS and can use AWS Transform for migrations. It went GA in May with tiers from free to $200, so the waitlist era is over; the trade-offs now are the credit meter and a Bedrock model list that stops a generation behind the frontier.
 
+{{harness_not_model_cta shape="aside" headline="Scaffold choice alone swings SWE-bench 10 to 22 points on the same model." sub="Which makes any 'best IDE for coding' claim marketing." body="The layer above the editor is the one you control." label="Run a harness above whichever IDE you picked" campaign="ai-ides-compared-2026"}}
+
 ## The CodeMySpec Angle
 
 Kiro is the most directly relevant tool here. The EARS-notation spec generation validates the core thesis of spec-driven development, and Amazon is putting real resources behind proving the market exists. The April updates (AWS Transform in Kiro IDE, Opus 4.7 experimental) say they're not slowing down.

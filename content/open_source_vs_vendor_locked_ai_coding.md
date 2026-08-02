@@ -150,6 +150,8 @@ You get vendor-tool quality where it matters and open-tool flexibility where it 
 | You want to avoid abandonment risk | You want the largest ecosystem |
 | You want tools you can audit | You'll pay for deep model integration |
 
+{{portable_spec_cta shape="aside" headline="On April 4 a policy change cut third party harnesses off from Claude subscription plans." sub="You do not own the model. What you can own is the spec that says what you are building." body="CodeMySpec keeps that spec in your repo and runs on your own agent, model, and keys." label="Keep the spec when the tool moves" campaign="open-source-vs-vendor-locked-ai-coding-tools"}}
+
 ## The CodeMySpec Angle
 
 Here's what I think the April 4 harness ban really signals: the model is not the thing you own. The vendor owns the model. What you can own is the specification -- the artifact that describes what you're building, independent of which tool consumes it.

@@ -106,6 +106,8 @@ Tessl aspires to the highest-rigor position available: spec-as-source, where cor
 
 As a shipped product, the honest assessment is "truest vision, least-proven execution." What is GA is a spec and skill registry, governance, and a spec-first workflow tile. The regeneration engine the whole thesis depends on is closed beta, JavaScript-only, 1:1 spec-to-file, and demonstrably non-deterministic. Tessl is true spec-driven development in aspiration and spec-first-with-a-registry in practice today.
 
+{{harness_not_model_cta shape="aside" headline="Tessl raised $125M on the bet that specs replace code, and its engine is still closed beta." sub="Regenerating an app from a spec depends on a non-deterministic compiler, so the code never settles." body="CodeMySpec keeps code human owned and uses the spec as a gate, plus a QA agent that tests the running app." label="Compare the harness approach" campaign="tessl-review"}}
+
 ## How it compares to CodeMySpec
 
 [CodeMySpec](/developers) takes the opposite bet. Where Tessl wants the spec to *replace* code as the source of truth, CodeMySpec holds that spec quality *determines* code quality, and that the code stays real, human-owned source. Specs are a portable protocol layer that feeds whatever coding agent you already use, not a compiler that regenerates your app from scratch. Nothing depends on a non-deterministic regeneration engine, because nothing gets regenerated from zero.

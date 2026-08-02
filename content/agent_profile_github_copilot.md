@@ -168,6 +168,8 @@ For teams already on GitHub it's still the "don't change anything" option. Issue
 - **Skills:** Custom skills, community skills (github/awesome-copilot, anthropics/skills)
 - **Metrics:** Copilot Metrics dashboard for team adoption tracking
 
+{{harness_not_model_cta shape="aside" headline="Copilot's cloud agent works best on well tested codebases, which is a quiet admission about the rest." sub="The agent is only as safe as the checks already sitting in your repo." body="CodeMySpec builds those checks in: a BDD spec that gates the build and a QA agent that drives the running app." label="See what a spec gate blocks" campaign="github-copilot-review-2026"}}
+
 ## CodeMySpec Integration
 
 Copilot's installed base and native GitHub integration make it a high-reach target for CodeMySpec, even with the April signup pause.

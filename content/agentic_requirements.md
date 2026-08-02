@@ -85,6 +85,8 @@ When your spec says "build a login page," the AI builds a login page. It doesn't
 
 Vectorian claims 90% of agent output is correct on first attempt when you use their framework of Context Curation, Externalized Memory, and Atomic Scoping. I can't verify that number, but the direction is right. Better specs produce dramatically better agent output.
 
+{{verification_gate_cta shape="aside" headline="Given When Then criteria give an agent something to verify against; a vague story gives it room to guess." sub="Writing them down is only half of it, because nothing forces the agent to honor what you wrote." body="CodeMySpec turns acceptance criteria into a gate: the build blocks on drift and a QA agent tests the running app." label="See criteria become a build gate" campaign="agentic-requirements"}}
+
 ## What Makes Requirements Work for AI Agents?
 
 After doing this for a while, here's what I've learned about requirements for AI agents:

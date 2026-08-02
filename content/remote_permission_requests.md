@@ -125,6 +125,8 @@ A fair question. Tools like claude-remote-approver are maybe 200 lines of code a
 
 **Authentication.** Web Push subscriptions are tied to authenticated users. The approval page requires login. There's no shared secret or public topic that someone else could respond to.
 
+{{build_speed_cta shape="aside" headline="A 45 minute agent session stalls the moment it needs a permission you are not there to give." sub="Unblocking the agent faster only helps if something checks what it built while you were away." body="CodeMySpec runs a QA agent against the running app and files issues with severity." label="Run it on your project" campaign="remote-permission-requests"}}
+
 ## Why Is Phoenix Ideal for Building an Agent Permission System?
 
 Phoenix is almost unfairly good at this. The stack I needed was:

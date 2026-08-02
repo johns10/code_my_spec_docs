@@ -75,6 +75,8 @@ The model is NOT available to the public. It's restricted to this consortium for
 
 Nothing official. Based on current Opus 4.6 pricing ($5/$25 per M tokens), analysts estimate 2-3x: roughly $30-45 per M input, $150-225 per M output. That's expensive enough that context management and token efficiency matter even more.
 
+{{harness_not_model_cta shape="aside" headline="On SWE-bench Verified the same model swings nearly 5 points depending on the scaffold around it." sub="Which means the next model makes your harness better and does not replace it." body="CodeMySpec is that harness for Phoenix and Elixir: specs block the build when code drifts, and a QA agent checks the running app." label="Run it on Phoenix and Elixir" campaign="claude-mythos-preview"}}
+
 ## What This Means for Agentic Coding
 
 Here's my take: a better model raises the ceiling. It does not change the process.

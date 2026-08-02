@@ -118,6 +118,8 @@ Remember the "is a / has a" breakdown from the last article? Now you can sort th
 
 When something breaks, the first question is always: is this a client problem or a server problem? Is the broken thing running on the user's device, or in the cloud?
 
+{{nontechnical_founder_cta headline="A Reddit post hit 608 upvotes because an app put its whole waitlist in the browser." sub="Claude Code is the coder. CodeMySpec is the engineering manager that checks." campaign="your-app-has-two-halves"}}
+
 ## What to Tell Your AI
 
 Two prompts that will save you:

@@ -89,6 +89,8 @@ The practical applications for maintenance are obvious: multi-day refactoring ca
 
 Letting an agent restart a pod at 3am is a solved problem. Letting an agent rewrite your authentication logic at 3am because a test failed is how you end up on the news. Know where your danger line is.
 
+{{verification_gate_cta shape="aside" headline="An agent can turn a test green while the fix underneath it stays semantically wrong." sub="That is why the checks that count run against the app, not against the tests the agent wrote." body="CodeMySpec runs a QA agent against the running app, files issues with severity, and blocks the build when code leaves the spec." label="See what QA finds after tests pass" campaign="agentic-maintenance"}}
+
 ## Are AI Agents Creating Technical Debt Faster Than They Can Clean It Up?
 
 Nobody wants to say it out loud: AI agents are generating technical debt faster than they're cleaning it up, and most teams don't realize it yet. [Cumulative AI-introduced issues exceeded 110,000 by February 2026](https://arxiv.org/html/2603.28592v1). Developers are leaving TODO comments that literally say ["fix the mess Gemini created"](https://arxiv.org/html/2601.07786v1).

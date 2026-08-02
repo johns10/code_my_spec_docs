@@ -102,6 +102,8 @@ Direct, attributable critiques of Agent OS on Hacker News and Reddit are thin, a
 
 Agent OS fits indie hackers, solo founders, and small pro-dev teams (Builder Methods' audience) who already have a codebase and want their agent to stop fighting the house style. It is at its best on brownfield work where Discover has real conventions to mine, on Claude Code where the full feature set lights up, and as a lightweight layer you bolt onto an existing workflow rather than a platform you adopt wholesale. If you want a stack-neutral, MIT-licensed way to make an agent code more like your team already codes, it is a strong pick.
 
+{{harness_not_model_cta shape="aside" headline="Agent OS v3 injects your standards as context, then hopes the agent actually follows them." sub="Advisory context is not a gate, and nothing checks the generated code against what you asked for." body="CodeMySpec makes the BDD spec mandatory, blocks the build when code drifts, and runs a QA agent against the running app." label="See how the spec gate works" campaign="agent-os-review"}}
+
 ## How it compares to CodeMySpec
 
 The two tools overlap on one axis and diverge completely on another. Both Agent OS and CodeMySpec inject coding standards into an agent's context. CMS did not invent that. Agent OS, OpenSpec, Spec Kit, and others all do portable, repo-resident standards. The difference is the **role and authority** of those standards.

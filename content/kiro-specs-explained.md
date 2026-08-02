@@ -121,6 +121,8 @@ That's the part that would keep me out. I want to know what a feature costs befo
 
 **Lock-in.** This is the one I'd weigh most heavily. Your specs and steering live in `.kiro/`, your models run through Bedrock, and your billing is AWS credits. Kiro is not BYO-model or BYO-key, so the credit is the markup surface. The spec's value is realized inside Kiro and AWS, not as a portable artifact you can hand to an arbitrary agent. And since the IDE is a VS Code / Code OSS fork, you adopt Kiro's editor too.
 
+{{portable_spec_cta campaign="kiro-specs-explained"}}
+
 ## How It Compares to CodeMySpec
 
 I build CodeMySpec, a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir. Kiro and CodeMySpec agree on the premise that better specs beat better models. We diverge on three axes that matter.

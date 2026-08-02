@@ -125,6 +125,8 @@ The leads, the touchpoints, the content, the strategy docs, the analytics baseli
 
 Marketing advice for founders usually falls into "just put yourself out there" (useless) or "hire a marketer" (expensive). What actually works is treating it like engineering. Define inputs. Build a process. Create feedback loops. Iterate on data. You don't need a marketing degree. You need Claude Code, a few MCP servers, and the willingness to show up where your users talk.
 
+{{build_speed_cta shape="aside" headline="Six months of marketing work compressed into a loop that runs in 30 minutes a day." sub="The same move works on the build side: put it on rails so you stop deciding from zero every morning." body="CodeMySpec runs Phoenix builds through Claude Code, gates them on specs, and sends a QA agent through the running app." label="Install the build harness" campaign="agentic-marketing-with-mcp"}}
+
 ## Want this without the six-month buildup?
 
 I packaged the whole loop as a Claude Code plugin: MarketMySpec. Three skills:

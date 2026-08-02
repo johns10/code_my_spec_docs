@@ -68,9 +68,11 @@ The non-technical vibecoders who got good results from models optimized for zero
 
 The model is getting better at being steered. That only helps you if you're steering.
 
+{{build_speed_cta shape="aside" headline="Eight months and over 580 commits, and the harness still produced incomplete apps." sub="The model was fine. I was specifying the solution instead of the problem." body="CodeMySpec runs the spec, the code, the tests, and live QA on one graph, so speed comes with a check." label="Run the loop on your project" campaign="why-my-harness-produced-incomplete-apps"}}
+
 ## What's Next
 
-I'm working on [MetricFlow](https://github.com/Code-My-Spec/metric_flow) as the test case. It's open source -- specs, generated code, where things break.
+I'm working on [MetricFlow](https://github.com/Code-My-Spec/metric_flow) as the test case, and the [case study](/case-studies/metric-flow) is now written up. It's open source -- specs, generated code, where things break.
 
 The meta thing about building a harness is that the [harness itself needs a harness](/blog/the-harness-layer). My BDD specs for CodeMySpec have to handle the fact that the system under test is a system that writes and tests other systems.
 

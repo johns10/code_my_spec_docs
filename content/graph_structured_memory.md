@@ -89,6 +89,8 @@ Graph is most useful as a specialized layer for graph-shaped queries, with simpl
 - **Pair with transcript-derived as the ingestion pipeline.** Conversations get summarized; summaries get parsed for entities and relationships; the graph absorbs the structured facts. Don't try to ingest raw conversation directly into a graph — too noisy.
 - **Skip pairing with dedicated memory stores.** Two systems both deciding "what's important to remember" produce inconsistent state.
 
+{{repo_native_memory_cta shape="aside" headline="Graph rot is the most common failure mode: nobody updates the edges when the code changes." sub="Any memory a human has to maintain by hand eventually describes a codebase that no longer exists." body="CodeMySpec derives its context from the repo, so there is nothing separate to keep in sync." label="See context that cannot drift" campaign="graph-structured-memory"}}
+
 ## The honest verdict
 
 For coding work specifically, I haven't found a graph-based memory system that earns its complexity. The exception is Aider's repo map, which uses graph structure for retrieval scoring rather than as a memory store — a clever pattern that doesn't require maintaining a separate graph.

@@ -175,6 +175,8 @@ What to avoid:
 
 If you find yourself writing a paragraph of description, stop. The body is for nuance. The description is for matching.
 
+{{skill_as_software_cta shape="aside" headline="Seven agent tasks shared one description string, so the agent picked between them at random." sub="A rubric you apply by hand holds only while someone is watching." body="CodeMySpec makes the check automatic: the build blocks when code stops matching its spec." label="Make the check automatic" campaign="skill-description-rubric"}}
+
 ## Where to go next
 
 If your description passes the seven self-check questions, the rest is body shape, reference structure, and script discipline -- covered in [how to write your first agent skill](/blog/how-to-write-your-first-skill).

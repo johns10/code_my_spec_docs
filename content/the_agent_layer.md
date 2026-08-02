@@ -154,6 +154,8 @@ This pattern is universal. Claude Code's sub-agents [cannot spawn their own sub-
 
 In mid-2025, the industry started calling this shift [context engineering](https://www.firecrawl.dev/blog/context-engineering). The distinction: prompt engineering is about what you ask. Context engineering is about [what the model already knows when you ask it](https://neo4j.com/blog/agentic-ai/context-engineering-vs-prompt-engineering/). When you're building agents that chain dozens of tool calls across long sessions, the overall information architecture matters more than any individual prompt.
 
+{{harness_not_model_cta shape="aside" headline="An agent loop reads, edits, and runs commands, and enforces nothing about what it produces." sub="Nothing in that loop refuses work that fails the spec, because there is no spec to fail." body="CodeMySpec adds that gate around Claude Code, plus a QA agent that boots the app and files issues on what it finds." label="Add the missing gate" campaign="the-agent-layer"}}
+
 ## Why the agent layer is necessary but not sufficient
 
 The agent layer gives a model the ability to act. Read code, make changes, run tests, iterate. This is genuinely powerful, the difference between a chatbot and a coding tool.

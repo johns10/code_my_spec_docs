@@ -190,6 +190,8 @@ If you're choosing an AI coding tool:
 
 ---
 
+{{harness_not_model_cta shape="aside" headline="LangChain moved Terminal-Bench by 13.7 points without changing the model, only the harness." sub="If the wrapper is where the gains are, the wrapper is the thing worth choosing carefully." body="CodeMySpec is that wrapper: specs are a required gate, and a QA agent tests the running app before work counts as done." label="Look at the harness, not the model" campaign="the-model-layer"}}
+
 ## Next in the series
 
 The model is just a token predictor. It can't do anything in the real world. So how does "predict the next token" turn into "read a file, run a test, fix a bug, commit the change"?

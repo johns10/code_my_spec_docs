@@ -89,6 +89,8 @@ The mechanism works through function calling. OpenAPI specs get converted to fun
 
 The broader pattern applies everywhere: JSON Schema for data validation, Protocol Buffers for service contracts, GraphQL schemas for queries, TypeScript types for code-level contracts. Formal, machine-readable specifications constrain AI output to valid values. That's the whole game.
 
+{{verification_gate_cta shape="aside" headline="The loan endpoint in that paper created records correctly and skipped every mandatory approval step." sub="Tests passed because they only checked what the agent built, never what the spec required." body="In CodeMySpec the spec stays authoritative: the build blocks when code stops matching and a QA agent drives the app." label="See how the spec gates the build" campaign="agentic-specifications"}}
+
 ## How Do You Write Specifications That AI Agents Can Execute Correctly?
 
 After working with spec-driven development across multiple projects, here's what I've learned makes the difference:

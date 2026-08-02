@@ -91,6 +91,8 @@ OpenSpec is a thinner layer that calls no model of its own. You run `openspec in
 
 The dividing line is clean: Kiro is the integrated, opinionated environment that owns your editor and your model; OpenSpec is the lightweight tracker that owns nothing and rides whatever you already use. Pick the constraint you can live with.
 
+{{portable_spec_cta shape="aside" headline="Kiro's specs live inside Kiro, billed by the credit. OpenSpec's live in your repo and drift." sub="Portability and enforcement are different problems, and neither tool solves the second one." body="CodeMySpec keeps specs in your repo and blocks the build when the code stops matching them." label="See enforced specs on your own repo" campaign="kiro-vs-openspec"}}
+
 ## A third option: CodeMySpec
 
 Here is what both tools share, and where both leave a gap. Both are spec-first, and neither verifies the generated code against the live, running app. Kiro's Agent Hooks can run tests, but unit tests passing is not the same as the button actually working. OpenSpec's `verify` "won't block archive," and its scenarios are optional. In both, the spec governs the code by convention, not by enforcement.

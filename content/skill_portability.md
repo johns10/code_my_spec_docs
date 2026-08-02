@@ -266,6 +266,8 @@ Default to Claude Code-specific when:
 
 The cost of going portable is mostly the loss of `allowed-tools`. Everything else is recoverable through the body. If you can live with permission prompts on tool calls, portability is free.
 
+{{skill_as_software_cta shape="aside" headline="Two frontmatter fields survive the trip across Claude Code, OpenCode, and Codex: name and description." sub="Everything else is silently dropped, which is what happens to any convention nothing checks." body="CodeMySpec keeps specs as plain markdown in your repo and makes them a gate the build actually checks." label="Put specs where the build checks them" campaign="skill-portability"}}
+
 ## Where to go next
 
 That's the cross-platform layer. Open three sessions, one on each platform, and confirm the skill triggers on each. Then forget you wrote it. The shape is what scales.

@@ -96,6 +96,8 @@ The honest summary: vibe coding optimizes for speed to first working version; SD
 | Time-to-first-result | Fastest | Slower up front |
 | Cost over time | Grows fast as it scales | Front-loaded, flatter later |
 
+{{enforced_spec_cta campaign="spec-driven-development-vs-vibe-coding"}}
+
 ## The real fix is not more markdown
 
 Here is where most "stop vibe coding" advice goes wrong. The prescription is usually "write a spec first," and people do, and then they are surprised when the agent still drifts. It always does. Writing the spec was never the hard part. Making the spec govern the code is.

@@ -93,6 +93,8 @@ The criticisms are real and well-documented, and most of them come from people w
 
 BMAD is stack-generic by design. A community port, `mkreyman/bmad-elixir`, adapts the method for Elixir, Phoenix, and the BEAM with quality gates layered on. I read that port as a signal rather than a solution: the Phoenix audience wants stack-native spec tooling, and they want it badly enough to fork a generic framework to get it. The port exists because BMAD itself does not speak Phoenix.
 
+{{portable_spec_cta shape="aside" headline="One BMAD user spent over nine hours on an auth system that was marked complete and did not work." sub="Agents reviewing agents is not verification, it is the same optimism twice." body="CodeMySpec keeps specs in your repo and gates them, then boots the real app and drives a browser through it." label="See what an enforced spec does" campaign="bmad-method-explained"}}
+
 ## How It Compares to CodeMySpec
 
 BMAD and CodeMySpec are solving different problems, and the cleanest way to see the difference is to state each tool's central question.

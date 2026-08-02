@@ -164,6 +164,8 @@ Same embedding service under the hood, different source filter.
 
 Everything runs in the same BEAM VM. No sidecar services. No Docker containers for vector databases. No API keys. The whole thing packages into a Burrito desktop app.
 
+{{enforced_boundary_cta shape="aside" headline="The whole pipeline runs inside one BEAM VM with no sidecars, no vector database, and no API keys." sub="Building a component like this is the easy half; keeping it aligned with its spec over time is not." body="CodeMySpec specifies each Phoenix component up front and blocks the build when the code stops matching the spec." label="Walk the component workflow" campaign="elixir-embedding-pipeline"}}
+
 ## What I'd Do Differently
 
 The chunking is naive - character count with overlap. I'd rather chunk on markdown headers so each chunk is a semantically complete section. Right now a function doc can split across two chunks.

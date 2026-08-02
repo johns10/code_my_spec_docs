@@ -104,6 +104,8 @@ And it stays portable. Specs are markdown, tests are ExUnit, and the artifacts a
 
 The honest framing: portability and repo-resident specs are table stakes here, and Spec Kit and OpenSpec meet them too. The combination CodeMySpec rests on is the wedge: a mandatory BDD gate, built-in live verification, the full lifecycle on one graph, and Phoenix-native depth a stack-neutral tool cannot match. CodeMySpec is in early access and free during that period, so the practical move is to run it on a real feature and tell me where it falls short.
 
+{{portable_spec_cta shape="aside" headline="CLAUDE.md is a prompt the agent reads, not a contract the system enforces." sub="Spec Kit and OpenSpec organize the intent better, and still nothing proves the code kept it." body="CodeMySpec runs as a Claude Code plugin, makes BDD scenarios a required gate, and boots the real app to verify it." label="Run it on a real feature" campaign="spec-driven-development-with-claude-code"}}
+
 ## What to use when
 
 If you are exploring or doing small changes, a disciplined `CLAUDE.md` plus a `specs/` folder you point Claude Code at is enough, and it costs you nothing. When you want a repeatable workflow with checkpoints and a paper trail, add Spec Kit for the full toolkit or OpenSpec for the lighter, brownfield-friendly version; both treat Claude Code as a first-class agent. When the work has to be enforced and verified, and especially when the work is Phoenix, that is where a harness with a mandatory gate and live QA earns its place. Prompting is praying. Verification is a guarantee.

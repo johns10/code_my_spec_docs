@@ -215,6 +215,8 @@ Without defined architecture, AI makes up structure as it goes. With defined arc
 
 Your stories define *what*. Your architecture defines *how*. Together, they give AI everything needed to generate maintainable code.
 
+{{verification_gate_cta shape="aside" headline="Without a defined architecture the model invents one every conversation, and none of them agree." sub="A document that describes the design is not the same as something that rejects code violating it." body="CodeMySpec turns the dependency graph into a gate, so a violated boundary stops the build." label="Put the architecture behind a gate" campaign="managing-architecture"}}
+
 ## Additional Resources
 
 - [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](#) - Deep dive on contexts and AI

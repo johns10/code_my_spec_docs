@@ -88,6 +88,8 @@ Transcript-derived is great as a *feeder* into other categories:
 - **Pair with retrieval/RAG when summaries pile up.** Once you have 100+ session summaries, a vector index becomes useful. The summarizer fills the corpus; retrieval finds what's relevant later.
 - **Skip pairing with dedicated memory stores.** Two curators (the in-session model and the post-session summarizer) produce memory that disagrees.
 
+{{repo_native_memory_cta shape="aside" headline="Summarize the summary enough times and your memory is a copy of a copy with the detail gone." sub="Artifacts you wrote on purpose do not drift that way, because they are the source rather than a derivative." body="CodeMySpec builds on that: specs live in the repo as the contract, and the build blocks when code stops matching." label="Keep the contract in the repo" campaign="transcript-derived-memory"}}
+
 ## The honest verdict
 
 Transcript-derived is the most under-rated category. The implementations are real (claude-mem, claude-memory-compiler, session-kit, Anthropic's own autoDream). The pattern is well-supported by Anthropic's hook infrastructure. The failure modes are gentler than dedicated memory stores. For software engineering specifically I went a different direction — [CodeMySpec is built around structured artifacts](/developers?utm_source=transcript-derived-memory&utm_medium=internal&utm_campaign=cta-mid) — but the transcript pattern is the right call for general workflows. The main reason it's under-discussed is that it doesn't have "memory product" branding the curated stores have. It's plumbing. Plumbing isn't sexy.

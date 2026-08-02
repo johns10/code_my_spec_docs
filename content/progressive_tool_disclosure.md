@@ -197,6 +197,8 @@ Here's what to actually do. These patterns work right now, today, with Claude Co
 
 Both [Anthropic](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) and [OpenAI](https://openai.com/index/harness-engineering/) now recommend progressive disclosure as a core harness engineering technique. This isn't one vendor's opinion. It's industry consensus.
 
+{{verification_gate_cta headline="200 tool definitions and the model picks wrong seven times out of eight." sub="15 relevant ones and it works fine." body="Disclosure is a harness problem, not a prompting problem." label="Put a harness around your agent" campaign="progressive-disclosure"}}
+
 ## What to Tell Your AI
 
 If you want to implement progressive disclosure in your project today, here's the checklist:

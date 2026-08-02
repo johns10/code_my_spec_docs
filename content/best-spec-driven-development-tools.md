@@ -113,6 +113,8 @@ Here are the seven tools on the dimensions that actually separate them.
 
 Read the two middle columns top to bottom and the category's whole story shows up: almost everything is "none" on enforcement and verification. That is the gap worth understanding before you pick, and it is the thesis behind [what a spec actually is](/blog/what-is-a-spec): a spec that nothing enforces is documentation, and documentation drifts.
 
+{{portable_spec_cta shape="aside" headline="Read the enforcement and verification columns down the table. Almost every row says none." sub="Which means most of these specs stop governing anything after the first generation." body="CodeMySpec keeps specs in your repo, makes the BDD gate mandatory, and verifies the running app." label="Install it on a repo you already have" campaign="best-spec-driven-development-tools"}}
+
 ## How to choose in one minute
 
 No tool wins outright. Match your situation to the list:

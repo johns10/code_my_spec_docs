@@ -121,6 +121,8 @@ But the two activities stay distinct even as they grow together. You're always d
 | Analogy | The textbook you give the intern | The process the intern must follow |
 | Probabilistic or deterministic | Probabilistic. The LLM decides what to use. | Deterministic. Runs every time. |
 
+{{harness_not_model_cta shape="aside" headline="Skills are suggestions the agent may skip, hooks are middleware it cannot bypass." sub="Most teams are still hand rolling that enforcement layer one hook at a time." body="CodeMySpec is the assembled version for Phoenix: a spec gate that blocks the build and a QA agent on the running app." label="Skip the hand rolled version" campaign="writing-applications-for-llms"}}
+
 ## What This Means
 
 If what you build around an AI coding agent is software, then the skills that matter are software engineering skills. Not prompt engineering. Not "talking to AI." Architecture. Domain modeling. Validation pipelines. State management. The same things that have always mattered in software.

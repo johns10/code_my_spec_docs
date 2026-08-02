@@ -79,6 +79,8 @@ Worked example from the docs: a one-hour Opus 4.6 session consuming 50K input + 
 
 No batch mode, no fast mode, no data residency multiplier. Those are Messages API features. Managed Agents is its own thing.
 
+{{harness_not_model_cta shape="aside" headline="Anthropic now sells the harness itself, which settles the argument about where the value sits." sub="A hosted runtime still leaves open the question of what stops the agent shipping the wrong thing." body="CodeMySpec is a harness you run yourself: specs gate the build, and a QA agent tests the running app and files what it finds." label="Install the harness" campaign="claude-managed-agents"}}
+
 ## Why This Matters
 
 Here's my take. For the last year, every serious agentic coding effort has converged on the same architecture: model + harness + tools + environment. OpenAI coined "harness engineering." Anthropic built the harness into Claude Code. Now they're selling it as infrastructure.

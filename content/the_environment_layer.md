@@ -116,6 +116,8 @@ Git is not just version control in agentic coding. It's environment infrastructu
 
 **Branches as isolation.** Every cloud agent creates a branch for its work. Copilot creates a branch per issue. Devin per task. Cursor's background agents each get their own. The agent's work stays isolated until a human reviews and merges. And existing branch protection rules apply automatically: require CI to pass, require review approval, the agent's code gets the same quality gates as human code.
 
+{{harness_not_model_cta shape="aside" headline="Infrastructure setup alone swings Terminal-Bench 2.0 by 6 percentage points, more than most model gaps." sub="Where the agent runs is a real decision, and it still says nothing about whether the output is correct." body="CodeMySpec gates the build on BDD specs and runs a QA agent against the app while it is actually running." label="See what runs after the tests pass" campaign="the-environment-layer"}}
+
 ## The environment shapes what's possible
 
 This is the point most people miss. The environment isn't plumbing. It determines what kinds of work an agent can do.
