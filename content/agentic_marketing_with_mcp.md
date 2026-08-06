@@ -164,6 +164,7 @@ Free during early access. BYOK: it runs on your Claude, your tokens, your enviro
 
 ## Related Articles
 
+- [Market My Spec Case Study: 10 Days, Zero Prompts](/case-studies/market-my-spec)
 - [The Agentic Software Development Process](/blog/agentic-software-development-process)
 - [Teaching AI Agents to Deploy: Knowledge Files vs. Direct Access](/blog/agentic-devops-knowledge-files)
 - [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)

@@ -125,6 +125,7 @@ That's what YouTube proved about video. The bottleneck was never operating a cam
 
 ## Related Articles
 
+- [Cleaner CRM Case Study: Two Prompts, Three Days](/case-studies/cleaner-crm)
 - [The Five Layers of an Agentic Coding System](/blog/five-layers-of-agentic-coding)
 - [The Harness Layer: Why the Wrapper Matters More Than the Model](/blog/the-harness-layer)
 - [The Skill Trajectory for Working with AI Agents](/blog/ai-agent-skill-trajectory)

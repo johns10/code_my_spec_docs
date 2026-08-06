@@ -1,3 +1,0 @@
-# GitHub.DependencyGraph.SpdxSbomSbomPackagesExternalRefs
-
-Provides struct and type for a DependencyGraph.SpdxSbomSbomPackagesExternalRefs

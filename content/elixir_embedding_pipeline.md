@@ -176,6 +176,7 @@ And I want automatic re-embedding on file watch. Right now I trigger it manually
 
 ## Related Articles
 
+- [EarWitness: A Local-First Build by the Harness](/case-studies/ear-witness)
 - [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
 - [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
 - [My first serious coding workflow with AI](/blog/my-first-serious-coding-workflow)

@@ -132,6 +132,7 @@ Elixir is why the model gets the draft right. The harness is why the app is righ
 
 ## Related Articles
 
+- [EarWitness: A Local-First Build by the Harness](/case-studies/ear-witness)
 - [Why Phoenix Contexts Are Great for LLMs](/blog/why-phoenix-contexts-are-great-for-llms)
 - [Spec-Driven Development for Elixir and Phoenix](/blog/spec-driven-development-elixir)
 - [Spec-Driven Development in 2026: The Complete Guide](/blog/spec-driven-development)

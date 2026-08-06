@@ -1,3 +1,0 @@
-# GitHub.SecurityAndAnalysisAdvancedSecurity
-
-Provides struct and type for a SecurityAndAnalysisAdvancedSecurity

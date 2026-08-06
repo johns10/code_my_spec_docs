@@ -1,3 +1,0 @@
-# GitHub.SecurityAndAnalysisSecretScanningPushProtection
-
-Provides struct and type for a SecurityAndAnalysisSecretScanningPushProtection

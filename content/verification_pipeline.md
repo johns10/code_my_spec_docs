@@ -69,6 +69,8 @@ If any step fails, the agent gets specific feedback about what broke and why. No
 
 The agent doesn't decide whether to address the feedback. It must.
 
+This is not theoretical. Running the pipeline against my own books in [Keel](/case-studies/keel) surfaced $227,736 of phantom income across 9,225 transactions, with a database-level constraint making unbalanced transactions impossible to commit.
+
 ## How Does Dirty Tracking Avoid Validating the Entire Codebase Every Time?
 
 Running seven validation tools across an entire codebase after every change would be slow and wasteful. So we don't.

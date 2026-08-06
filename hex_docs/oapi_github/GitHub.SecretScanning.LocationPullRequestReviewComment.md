@@ -1,3 +1,0 @@
-# GitHub.SecretScanning.LocationPullRequestReviewComment
-
-Provides struct and type for a SecretScanning.LocationPullRequestReviewComment

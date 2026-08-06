@@ -1,3 +1,0 @@
-# GitHub.Marketplace.PurchaseMarketplacePendingChange
-
-Provides struct and type for a Marketplace.PurchaseMarketplacePendingChange

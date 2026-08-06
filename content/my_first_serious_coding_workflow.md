@@ -140,6 +140,7 @@ Not even good engineers get good at coding with AI overnight. A good plan and a 
 
 ## Related Articles
 
+- [Market My Spec Case Study: 10 Days, Zero Prompts](/case-studies/market-my-spec)
 - [How to Prevent Slop in AI-Generated Elixir Codebases](/blog/prevent-slop-elixir-codebases)
 - [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](/blog/why-phoenix-contexts-are-great-for-llms)
 - [How CodeMySpec Built and Verified a Fuel Card App in 5 Days](/blog/fuellytics-bdd-and-qa)

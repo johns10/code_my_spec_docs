@@ -164,6 +164,8 @@ Visual sameness is one decision nobody made. Slop code is the opposite: hundreds
 
 Plenty of sites have both at once. If yours does, the path from prototype to something you can sell runs through [rebuilding a vibe-coded app](/vibe-coding-rebuild).
 
+{{enforced_spec_cta shape="aside" headline="Every vibe-coded site converges on the same three sections because nothing wrote down what this one is." sub="A design decision nobody recorded is a design decision the next generation quietly discards." body="CodeMySpec keeps the decision in the repo as a spec, and the build blocks when the code stops matching it." label="Write the decision down where it holds" campaign="vibe-coded-websites-look-the-same"}}
+
 ## Where to start
 
 Open your site on a phone and count the tells. Then answer the five questions, put the answers in one file, and make the next page you build reference that file. One afternoon of deciding pays for itself on every page you have not built yet, and it is the cheapest work in the project, because nothing has to be torn down to do it.

@@ -27,6 +27,16 @@ This function doesn't support proxying.
      will not be validated. You might want this if you deal with non standard-
      conforming URIs but need to preserve them. The default is to validate the request
      target. *Available since v1.7.0*.
+  * `:optional_responses` - (list of atoms) a list of optional responses to return.
+    Defaults to `[]`. The allowed values in the list are:
+     * `:status_reason`: includes the
+        [reason-phrase](https://datatracker.ietf.org/doc/html/rfc9112#name-status-line)
+        for the status code if it is returned by the server in the status-line.
+        This is only available for HTTP/1.1 connections. *Available since v1.8.0*.
+
+  * `:max_header_list_size` - (`t:pos_integer/0` or `:infinity`) the maximum number of
+    bytes allowed in a response header section or chunked trailer section. This includes
+    header names, values, and line delimiters. Defaults to 256 KiB. *Available since 1.9.2*.
 
 ## close/1
 
@@ -112,3 +122,7 @@ See `Mint.HTTP.put_log/2`.
 ## get_proxy_headers/1
 
 See `Mint.HTTP.get_proxy_headers/1`.
+
+## request_body_window/2
+
+See `Mint.HTTP.request_body_window/2`.

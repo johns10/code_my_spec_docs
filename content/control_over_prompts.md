@@ -145,6 +145,7 @@ The future of AI-assisted development isn't smarter agents. It's better engineer
 
 ## Related Articles
 
+- [Legwork Case Study: A Weekend Build](/case-studies/legwork)
 - [Design-Driven Code Generation](/blog/design-driven-code-generation)
 - [Writing Applications for LLMs](/blog/writing-applications-for-llms)
 - [How to write design documents that keep AI from going off the rails](/blog/writing-design-documents)

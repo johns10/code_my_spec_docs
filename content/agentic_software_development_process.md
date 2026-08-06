@@ -144,6 +144,7 @@ The tools change every month. The process doesn't. Define what to build, design 
 
 ## Related Articles
 
+- [Cleaner CRM Case Study: Two Prompts, Three Days](/case-studies/cleaner-crm)
 - [Bad Requirements Are Why Your AI Agent Writes Bad Code](/blog/agentic-requirements)
 - [Your AI Agent Is Only as Good as Your Spec](/blog/agentic-specifications)
 - [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)

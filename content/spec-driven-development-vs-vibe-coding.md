@@ -116,6 +116,7 @@ Vibe coding is fine until someone has to maintain what it produced. Spec-driven 
 
 ## Related Articles
 
+- [Cleaner CRM Case Study: Two Prompts, Three Days](/case-studies/cleaner-crm)
 - [Spec-Driven Development in 2026: The Complete Guide and Tool Comparison](/blog/spec-driven-development)
 - [What Is a Spec? The Most Overloaded Word in Software](/blog/what-is-a-spec)
 - [BDD Specs for AI-Generated Code](/blog/bdd-specs-for-ai-generated-code)

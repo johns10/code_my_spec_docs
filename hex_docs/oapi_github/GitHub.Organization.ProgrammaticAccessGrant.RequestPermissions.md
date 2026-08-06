@@ -1,3 +1,0 @@
-# GitHub.Organization.ProgrammaticAccessGrant.RequestPermissions
-
-Provides struct and type for a Organization.ProgrammaticAccessGrant.RequestPermissions

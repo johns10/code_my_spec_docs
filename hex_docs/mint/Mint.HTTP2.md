@@ -288,11 +288,21 @@ the updated connection. If there's an error, `{:error, conn, reason}` is returne
 
 ## get_window_size/2
 
-Returns the window size of the connection or of a single request.
+Returns the client **send** window size for the connection or a request.
 
-This function is HTTP/2 specific. It returns the window size of
-either the connection if `connection_or_request` is `:connection` or of a single
-request if `connection_or_request` is `{:request, request_ref}`.
+> #### Send vs receive windows {: .warning}
+>
+> This function returns the *send* window — how much body data this client
+> is still permitted to send to the server before being throttled. It is
+> decremented by `request/5` and `stream_request_body/3` and refilled by
+> the server, which `stream/2` handles transparently.
+>
+> It does **not** return the client *receive* window (how much the server
+> is permitted to send us). To influence that, use `set_window_size/3`.
+
+This function is HTTP/2 specific. It returns the send window of either the
+connection if `connection_or_request` is `:connection` or of a single request
+if `connection_or_request` is `{:request, request_ref}`.
 
 Use this function to check the window size of the connection before sending a
 full request. Also use this function to check the window size of both the
@@ -303,21 +313,23 @@ below.
 
 ## HTTP/2 Flow Control
 
-In HTTP/2, flow control is implemented through a
-window size. When the client sends data to the server, the window size is decreased
-and the server needs to "refill" it on the client side. You don't need to take care of
-the refilling of the client window as it happens behind the scenes in `stream/2`.
+In HTTP/2, flow control is implemented through a window size. When the client
+sends data to the server, the window size is decreased and the server needs
+to "refill" it on the client side, which `stream/2` handles transparently.
+Symmetrically, the server's outbound flow toward the client is bounded by a
+receive window the client advertises and refills — see `set_window_size/3`.
 
-A window size is kept for the entire connection and all requests affect this window
-size. A window size is also kept per request.
+A window size is kept for the entire connection and all requests affect this
+window size. A window size is also kept per request.
 
-The only thing that affects the window size is the body of a request, regardless of
-if it's a full request sent with `request/5` or body chunks sent through
-`stream_request_body/3`. That means that if we make a request with a body that is
-five bytes long, like `"hello"`, the window size of the connection and the window size
-of that particular request will decrease by five bytes.
+The only thing that affects the send window size is the body of a request,
+regardless of whether it's a full request sent with `request/5` or body chunks
+sent through `stream_request_body/3`. That means that if we make a request with
+a body that is five bytes long, like `"hello"`, the send window size of the
+connection and the send window size of that particular request will decrease
+by five bytes.
 
-If we use all the window size before the server refills it, functions like
+If we use all the send window size before the server refills it, functions like
 `request/5` will return an error.
 
 ## Examples
@@ -336,6 +348,69 @@ On a single streamed request:
     {:ok, conn} = HTTP2.stream_request_body(conn, request_ref, "hello")
     HTTP2.get_window_size(conn, {:request, request_ref})
     #=> 65_531
+
+## set_window_size/3
+
+Advertises a larger client **receive** window to the server.
+
+> #### Receive vs send windows {: .warning}
+>
+> This function sets the *receive* window — the peak amount of body data
+> the server is permitted to send us before being throttled. It does
+> **not** set the *send* window (how much body data we're permitted to
+> send to the server) — the server controls that. See `get_window_size/2`
+> for the send window.
+
+Without calling this, `stream/2` refills the receive window in small
+increments as response body data is consumed. Each refill costs a
+round-trip before the server can send more, so bulk throughput is capped
+at roughly `window / RTT`; on higher-latency links the default 64 KB
+window makes that cap well below the link bandwidth. Raising the window
+removes those pauses and is the main HTTP/2 tuning knob for bulk or
+highly parallel downloads.
+
+Mint exposes the per-stream initial window as the `:initial_window_size`
+client setting passed to `connect/4`, but there is no connection-level
+equivalent — use this function for the connection window, and for any
+per-stream adjustment after a request has started.
+
+`connection_or_request` is `:connection` for the whole connection or
+`{:request, request_ref}` for a single request. `new_size` must be in
+`1..2_147_483_647`. Windows can only grow: `new_size` smaller than the
+current receive window returns
+`{:error, conn, %Mint.HTTPError{reason: :window_size_too_small}}`, and
+`new_size` equal to the current window is a no-op.
+
+For more information on flow control and window sizes in HTTP/2, see the
+section below.
+
+## HTTP/2 Flow Control
+
+See `get_window_size/2` for a description of the client *send* window.
+The client *receive* window is the symmetric bound on the server's
+outbound flow: it starts at 64 KB for the connection and for each new
+request, is decremented by response body bytes, and is refilled by
+`stream/2` as the body is consumed. A window size is kept for the entire
+connection and all responses affect this window size; a window size is
+also kept per request.
+
+This function raises the *advertised* receive window — the peak the
+server is allowed to fill before pausing. It does not pre-allocate any
+buffers; it only permits the server to send further ahead of the
+client's reads.
+
+## Examples
+
+Bump the connection-level receive window right after connect so the server
+can stream multi-MB bodies without flow-control pauses:
+
+    {:ok, conn} = Mint.HTTP2.connect(:https, host, 443)
+    {:ok, conn} = Mint.HTTP2.set_window_size(conn, :connection, 8_000_000)
+
+Give one specific request a bigger window than the per-stream default:
+
+    {:ok, conn, ref} = Mint.HTTP2.request(conn, "GET", "/huge", [], nil)
+    {:ok, conn} = Mint.HTTP2.set_window_size(conn, {:request, ref}, 16_000_000)
 
 ## stream/2
 
@@ -389,3 +464,7 @@ See `Mint.HTTP.get_socket/1`.
 ## get_proxy_headers/1
 
 See `Mint.HTTP.get_proxy_headers/1`.
+
+## request_body_window/2
+
+See `Mint.HTTP.request_body_window/2`.

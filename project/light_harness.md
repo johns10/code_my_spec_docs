@@ -275,6 +275,244 @@ big-bang.
 7. **A drill.** A full unattended sprite run on the new shape. Today's run
    validated a harness that is being replaced; this is the one that counts.
 
+## Status
+
+Phases 1–6 are built; **phase 7, the drill, has never run.** The tree is green
+(3,018 server tests, 46 harness, 12 cms_scan) and the whole path works end to end
+against a real server and from inside a container — but two things stand between
+here and a drill anyone should believe.
+
+| # | Phase | State |
+|---|---|---|
+| 1 | Project identity | Done. `:project_id` app-env → `config.yml` → path lookup. A config naming an unknown project is `{:error, :not_found}`, deliberately not a fall-through, so a wrong id is loud. `init_project` *prepends* the key, because `description` is a multi-line quoted scalar and round-tripping the file mangles it. |
+| 2 | Tools on the server | Done. `LocalServer` forwarded at `/mcp/harness`. Exercised for the first time only in this session — 83 tools, `list_stories` answering for the right project. |
+| 3 | The hook seam | Done. `CodeMySpec.Hooks.*`, its own top-level Boundary, because the stop decision reaches into `McpServers` and `CodeMySpec` deliberately does not. |
+| 4 | The harness API | Done. `HarnessProjectChannel`: join takes the lease, `read_model`, `observations`, `hook_decision`. |
+| 5 | The harness | Done. `../cms_harness`, `../cms_scan`. Supervision tree is three children, built up rather than trimmed. Analyzer execution verified blocking a broken project and allowing a fixed one. |
+| 6 | Dependencies & embeddings | Half. Dependencies are recorded and the `mix.lock` settle-timer is gone. The harness ships no vectors — blocked on a packaging decision, not on code. |
+| 7 | A drill | **Never run.** Blocked. |
+
+### Blocked, and on whom
+
+- **A headless Claude Code credential — John.** Claude Code in the container
+  reports "Not logged in". On macOS credentials are Keychain-backed, not in
+  `~/.claude`, so copying that directory carries config but no auth. The sprite
+  scripts contain no credential mechanism at all, so whatever made earlier drills
+  work was supplied by hand and never written down. `claude setup-token` →
+  `CLAUDE_CODE_OAUTH_TOKEN` is probably the answer, and it then belongs in
+  `sprite.sh`: a drill that needs a human to log it in is not an unattended drill.
+- **`cms_scan` stays a pinned copy — attempted adoption, backed out.** Tried and
+  measured rather than reasoned about, and the answer reversed twice.
+
+  The overlap with `cms_core` looked encouraging: 6 shared files, and exactly the
+  DB-free filesystem layer, suggesting `cms_scan` is the bottom layer of the
+  three-way split rather than a competitor to it. That still holds.
+
+  What kills adoption is **Boundary**, which this project runs as a compiler.
+  `cms_scan` deliberately uses the `CodeMySpec.*` namespace so adoption would be
+  "a mix.exs line and a delete, zero call-site churn". But a module can only
+  belong to one boundary, and `CodeMySpec.Paths` — owned by app `:cms_scan`, as
+  `:application.get_application/1` confirms — sits inside the namespace boundary
+  `CodeMySpec` claims. Adoption produced 188 violations, and declaring the
+  modules as deps produced a violation *on the declaration line itself*: boundary
+  `CodeMySpec` may not depend on something the namespace says is already inside
+  it.
+
+  So adoption requires renaming to `CmsScan.*`, which touches **392 files** in
+  code_my_spec — precisely the churn the shared namespace existed to avoid. The
+  namespace choice bought a cheap adoption that Boundary then made impossible.
+
+  Recommendation: **do not adopt.** Keep the copy and the drift tripwire, which
+  is verified to fail on divergence. Duplication that is guarded beats a 392-file
+  rename that fights a tool the project uses on purpose. Revisit only if the
+  three-way split makes the rename worth doing for its own reasons.
+
+  Kept from the attempt, because both are right regardless: `read_model/1` moved
+  off `Scanner` to `Files` (Scanner's own moduledoc said it did not belong), and
+  the requirement-definition lookups moved off `Components.Registry` to
+  `Requirements.Registry`.
+
+- **How the harness gets the embedding model — John.** Phase 6's second half and
+  the last build item. Inference stays local so file content never crosses the
+  wire; what is undecided is how the harness gets the 86 MB ONNX model. Vendor it
+  (86 MB in a repo), download on first run (needs network, and a harness that
+  cannot reach it is a new failure mode), or point at the copy already in the
+  image via a configurable path (lowest regret, unblocks the sprite, leaves the
+  laptop open). Not required for a drill.
+- **Nothing else of mine.** Analyzer execution is done and verified.
+
+### The analyzer gap — closed, and verified both ways
+
+**The defect.** A file that cannot compile was written into a project the harness
+was serving; the stop hook answered `{}` — you may stop — with zero problems
+recorded. Nothing in `cms_harness` shelled out. `Stop.decide/2` consults persisted
+Problems, so with nothing writing them it correctly reported that nothing blocks,
+from facts nobody had gathered.
+
+That corrected an earlier entry here: "answered a stop hook with `{}` — allowed,
+over the wire" had been recorded as a success. The *transport* worked; the
+decision was vacuous. Reading it as a passing turn is exactly the mistake this
+project is about.
+
+**The fix.** The harness runs the tools and sends what they printed as raw data;
+the server converts it with the same `ProblemConverter` a local run uses, so both
+paths produce Problems by one code path rather than two that must agree. Ecto
+never enters the harness. `Compile`, `Tests` and `Spex` are vendored into
+`cms_scan` and pinned by its drift test — they alias only `Environments`, which is
+what made them movable. Dispatch is server-driven: the server owns the run ledger
+so it knows what is stale and pushes `run_analysis`; the harness owns the disk so
+it runs it.
+
+It also closed a clause that was an unconditional allow. `validate_stop` for a
+scope with no `cwd` returned `{:ok, …}` — no analysis, no blocking check. Right
+while the only way to reach it was a caller with no working copy anywhere; wrong
+the moment a harness held the disk on the other end of a channel, because then the
+stop hook arrived there on every agent turn and got an answer computed from
+nothing.
+
+**Verified end to end against a real server, both directions:**
+
+| | Result |
+|---|---|
+| Project that cannot compile | `decision: block`, quoting the actual compiler errors |
+| After removing the broken file | Allowed; compiler problems back to zero |
+
+Both directions matter. A hook that always blocks would pass the first test alone.
+
+**Two things that made this hard to test, worth remembering.** The first attempt
+reported the broken project as *allowed*, and neither cause was the code. Runs in
+the table were from an earlier session and were being memoized as fresh — clearing
+them made dispatch fire immediately. And the fixture was a bare `mix` project with
+no `:diagnostics` compiler, so `Compile` had no diagnostics file to read and
+reported clean. **A fixture that is not a real CodeMySpec project cannot exercise
+the compiler path at all.**
+
+That second one leaves a narrow pre-existing hole, byte-identical between server
+and `cms_scan` so it predates this work: a non-zero exit with no diagnostics file
+is recorded `completed`, i.e. clean. It only bites projects missing the
+`:diagnostics` compiler, which `ProjectSetup` requires — but it is the green-light
+family and it is still there.
+
+### The defect log, grouped by what could see them
+
+Ten defects, and the grouping is the transferable part: **nothing found by a
+later category was visible to an earlier one.**
+
+**Only a real socket could see these** — `Phoenix.ChannelTest` builds sockets by
+hand and compares replies as terms:
+
+1. **A UI preference stood in for authorization.** `authorize/2` compared the topic
+   against `scope.active_project_id`, which `Scope.for_user/1` fills from the
+   user's saved *UI preference*. A laptop could serve exactly one project — the
+   one last clicked in the web app. Sprites were refused outright: the deploy-key
+   connect assigns `:deploy_key_project_id` and the channel never read it.
+2. **`read_model` could not be encoded.** It carried whole `%Component{}` rows,
+   which have no `@derive Jason.Encoder`, so the serializer raised and the harness
+   never received a read model — it could never scan. The test asserted on the
+   reply *term*, in-process, which never touches the serializer.
+3. **Refusals could not name the checkout** — the one property the lease design
+   claims. `label_for/1` read assigns nothing ever sets. The test passed because it
+   injected the assign by hand.
+4. **`hook_decision` did not exist.** The harness pushed it for the whole of phase
+   5; the catch-all returned `{:noreply, socket}`, so it got no reply and sat out
+   its full timeout on every hook. Both suites green throughout — the server did
+   not know the event existed, the harness tested against a fake that implemented
+   it.
+
+**Only the built release could see these:**
+
+5. **The stop hook blocked every clean turn.** Slipstream collapses an empty reply
+   to the bare atom `:ok`, and an empty decision map is the *most common* answer a
+   hook gets. The harness called it unreadable and refused. Worse than it first
+   looked: `post_tool_use`, `notification` and `ask_user_question` all answer
+   `{200, %{}}`, so on post-tool-use this fired on **every tool call**.
+6. **A missing credential was reported as a dead channel** — the refusal told the
+   reader to check the network when the fix was an environment variable. Every
+   reason's *wording* was tested; which reason gets picked was not.
+
+**Only running it in a container could see this:**
+
+7. **The sprite patched the wrong plugin manifest.** `find -path '*codemyspec*'`
+   matches two files, because the *marketplace* directory is also named
+   `codemyspec`. The symptom would have been "the agent has no MCP tools", with
+   nothing tying it to a glob.
+
+**Found by reading, then proven:**
+
+8. **A sprite could sync but not act.** The socket accepts a deploy key;
+   `/mcp/harness` requires OAuth. Verified with a 401. Fixed by *exchange* rather
+   than by widening the key — `DeployKeyOrOAuth` argues against that in its own
+   moduledoc, and a `client_credentials` grant carries no resource owner, which
+   `require_oauth_token` needs.
+9. **The launcher queried the database** it was the launcher for, to resolve a
+   module name. Now carried on the token exchange the sprite already makes.
+10. **No analyzers at all**, above.
+
+Two more that were mine, caught before shipping: a token that expired in an hour
+against runs that take longer, with a comment claiming something refreshed it
+(nothing does); and an underscore conversion written in shell that got
+`ABCWidget` wrong, now done server-side by `Macro.underscore`.
+
+### Rules earned, not assumed
+
+- **An in-process test cannot see a wire.** Four of the above, for two reasons: a
+  hand-built socket carries assigns production never sets, and a reply asserted as
+  a term is never serialized.
+- **A test that builds its own socket is not testing the socket.** Three of the
+  four passed *because* of the test helper.
+- **Verify against the release, not just `mix run`.** Two more.
+- **Prove the test fails without the fix.** Caught two tests that passed for the
+  wrong reason.
+- **Do not paper over a race with a sleep and a comment.** The sync flake was
+  rationalised in a comment as an OS-level settle; it was a `cast` where a `call`
+  was needed, and separately a test asserting on arrival order rather than content.
+
+### Ratified deviations from this document
+
+- **No PubSub in the harness.** Nothing subscribes; the registry covers process
+  discovery. "Add only when something fails without it", applied honestly.
+- **The stop hook blocks once, then allows loudly.** This document said refuse,
+  full stop. Claude Code re-fires Stop after a block, so unconditional refusal
+  livelocks and an unattended sprite burns its budget. A stop carrying
+  `stop_hook_active: true` is allowed with a `systemMessage` saying nothing was
+  checked. Allowed-and-labelled stays distinguishable from verified-and-clean;
+  allowed-and-silent would not. Better than what was written here.
+- **Sync is one shot, not a manifest diff.** The doc specifies three steps. What
+  is built sends full detail once. The verifiability that motivated the full
+  manifest is intact — the server still sees the whole set and can tell a deletion
+  from an omission. What is given up is steady-state bandwidth, ~650 KB against
+  ~260 KB, which does not yet justify a three-step protocol.
+
+### Two rejections that were not in the plan
+
+Both the "green light" failure mode, caught while building:
+
+- **An empty manifest is refused.** `reconcile/2` deletes every row whose path is
+  absent, so an empty list wipes the project — and over a wire "found nothing" and
+  "did not run" arrive identically. A genuinely empty project has no rows to lose.
+- **An unknown role or unparseable mtime rejects the whole manifest.** Both are
+  load-bearing: role decides how a file enters the graph, mtime is compared
+  directly in `stale_paths/2` so a nil crashes rather than degrades.
+
+### Known, and not yet resolved
+
+- **`cms_scan` is a pinned copy, not an extraction.** Guarded, but duplicated.
+  Blocked on the decision above. The dependency was also bigger than this document
+  said: `observe/2` transitively needs `Paths`, the whole `Documents` tree (3,177
+  lines plus parsers), `Components.Registry`, and `SpecAlignment` — and that last
+  uses `%Problems.Problem{}` and `%Users.Scope{}` as struct literals, so it cannot
+  be copied, only split. That is what turned "vendor or extract" into a project.
+- **`cms_scan` carries broken copied code.** `Components.Registry` came without
+  `Requirements.RequirementDefinitionData`, so two of its functions call an absent
+  module. Not reachable from `Scanner`, but it makes `--warnings-as-errors`
+  unusable there.
+- **Nothing tests the harness against the real server automatically.** The contract
+  test is a hand-maintained list of event names. It would have caught #4 and will
+  catch the next missing handler, but it does not verify payload shapes.
+- **The harness ships no embeddings.** Phase 6's second half.
+- **One unexplained harness test failure**, seen once, not reproduced in fourteen
+  subsequent runs, no log kept. Recorded rather than called fixed.
+
 ## Risks
 
 **A sync that silently does not happen looks exactly like a project with nothing

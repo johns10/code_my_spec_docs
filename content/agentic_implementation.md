@@ -131,6 +131,7 @@ Are you actually faster with AI tools, or does it just feel that way?
 
 ## Related Articles
 
+- [Legwork Case Study: A Weekend Build](/case-studies/legwork)
 - [The Agentic Software Development Process](/blog/agentic-software-development-process)
 - [Architecture for AI Agents: Which Patterns Actually Work?](/blog/agentic-architecture)
 - [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)

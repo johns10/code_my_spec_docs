@@ -59,6 +59,8 @@ The [Superpowers framework](https://github.com/obra/superpowers) takes this furt
 
 But here's where it gets counterintuitive. The [TDAD research](https://arxiv.org/abs/2603.17973) found that adding TDD instructions to agents WITHOUT telling them which specific tests to check actually INCREASED regressions from 6.08% to 9.94%. Read that again. Telling the agent "do TDD" made things worse. The fix was building a dependency graph between source code and tests, then telling the agent which tests to verify. That reduced regressions by 70%, down to 1.82%. Agents don't need to be told HOW to do TDD. They need to be told WHICH tests to check.
 
+The cost of not breaking that loop is measurable. On Keel, a double-entry accounting system built with the harness, verification against real data found $227,736 of phantom income that the passing test suite never flagged. See the [Keel case study](/case-studies/keel).
+
 ## How Do BDD Specs From Acceptance Criteria Break the Self-Confirming Loop?
 
 The self-confirming loop breaks when tests come from a different source than the implementation. BDD does this by construction. Every acceptance criterion on every [user story](/blog/managing-user-stories) becomes an executable scenario. The tests come from what you told the system to build, not from what it decided to build.

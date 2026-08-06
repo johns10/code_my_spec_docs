@@ -102,6 +102,8 @@ Fewer hidden effects means fewer of the nastiest bugs, the ones where generated 
 
 ## Related Articles
 
+
+- [The Elixir Feedback Loop: Why Coding Agents Self-Correct Faster](/blog/elixir-agent-feedback-loop)
 - [Why Elixir Is the Best Language for LLMs](/blog/why-elixir-is-the-best-language-for-llms)
 - [Why Phoenix Contexts Are Great for LLMs](/blog/why-phoenix-contexts-are-great-for-llms)
 - [AutoCodeBench Explained](/blog/autocodebench-explained)

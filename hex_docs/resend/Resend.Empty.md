@@ -1,3 +1,0 @@
-# Resend.Empty
-
-Empty response.

@@ -2,4 +2,5 @@
 
 An HTTP error.
 
-This exception struct is used to represent errors of all sorts for the HTTP/2 protocol.
+This exception struct is used to represent errors returned by Finch that are not
+transport or HTTP protocol errors.

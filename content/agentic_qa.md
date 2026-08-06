@@ -111,6 +111,7 @@ That's the difference between "it should work" and "here's the proof."
 
 ## Related Articles
 
+- [Keel Case Study: The Agent Found $227,736 of Phantom Income](/case-studies/keel)
 - [The Agentic Software Development Process](/blog/agentic-software-development-process)
 - [Testing AI-Generated Code: The Self-Confirming Loop and How to Break It](/blog/agentic-testing)
 - [The Verification Gap: Why Agents Ship Broken Code and What to Do About It](/blog/agentic-qa-verification)
