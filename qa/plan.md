@@ -95,10 +95,11 @@ mcp__vibium__browser_screenshot { filename: "4003_requirements.png" }
 
 **Screenshot caveat:** `browser_screenshot` writes to `~/Pictures/Vibium/<filename>`. The `filename` parameter is treated as a basename — relative paths like `.code_my_spec/qa/{story}/foo.png` are silently ignored. Either name files with port + scenario prefix (`4003_requirements.png`, `4000_login.png`) and copy them into the QA artifact dir at the end of the run, or shell-out a `cp` step.
 
-**Hosted login (port 4000):** the `/users/log-in` page renders **two stacked forms** — a magic-link form on top and a password form on the bottom — and **both** use the same input names `user[email]` and `user[password]` (no `id="login_email"`). Disambiguate by scoping to the form, e.g. `form[action="/users/log-in"] input[name='user[email]']` for the password form. Two viable paths:
+**Hosted login (port 4000):** the `/users/log-in` page renders **one form**, containing `_csrf_token` and `user[email]`. There is no password field — magic link is the only path. This section used to describe two stacked forms and a password login; that cost every QA session the same detour, because the documented selector times out with "element not found" and the agent then re-maps the DOM to discover the real flow.
 
-1. **Password login** — fill both fields in the password form, submit, persist with `browser_storage_state`.
-2. **Magic-link login** — fill `user[email]` in the magic-link form, click "Log in with email", then read the swoosh mailbox at `http://127.0.0.1:4000/dev/mailbox` (banner on the login page links to it) to grab the token and visit `/users/log-in/:token`. Useful when you don't want to bake passwords into the seed script.
+**Magic-link login** — fill `user[email]`, click "Log in with email", then read the swoosh mailbox at `http://127.0.0.1:4000/dev/mailbox` (banner on the login page links to it) to grab the token and visit `/users/log-in/:token`. Persist with `browser_storage_state`.
+
+The seed user is **pre-confirmed**, which matters: an account with a password set and no confirmation is refused a magic link on purpose — allowing it is a session-fixation vulnerability — and with no password form on the page that account has no way in at all. `qa_seeds.exs` now confirms the user it creates, and confirms an existing one that predates that. If you meet "Confirm your email address before signing in with a link", the user is in that state; re-run the seed.
 
 Quick smoke test of auth gating: GET `/app` while unauthenticated → 302 to `/users/log-in`.
 
