@@ -165,8 +165,25 @@ Idempotent. Creates user + personal account + member + project. Run with:
 mix run priv/repo/qa_seeds.exs
 ```
 
+> **Only with the dev server stopped.** The server on 4000 holds the compile
+> lock, so a `mix run` under `MIX_ENV=dev` mid-session 500s the app you are
+> testing. To check seed state while it is up, read Postgres directly:
+> `psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"`
+
 Outputs:
-- Email `qa@codemyspec.local`, password `qa-password-123!`
+- Email `qa@codemyspec.local` — **passwordless; there is no password login.** The
+  seed still calls `update_user_password/2`, but `/users/log-in` offers only
+  GitHub, Google, and a magic link. Log in like this:
+
+  1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]`
+     with `qa@codemyspec.local` → click "Email me a login link".
+  2. `http://127.0.0.1:4000/dev/mailbox` — the local mail adapter catches it.
+  3. The link is minted with the configured host
+     (`https://dev.codemyspec.com/users/log-in/<token>`). **Rewrite the origin
+     to `http://127.0.0.1:4000` before navigating** — following it as-is leaves
+     the local app. This is the step people miss.
+  4. It lands on `/app` with the fixture project active. Single-use token; a
+     re-run needs a fresh link.
 - Account slug `qa-account` (UUID printed at end)
 - Project `QA Fixture Project` (id `11111111-1111-4111-8111-111111111111`),
   `local_path` always rewritten to the script's working dir so QA from any
