@@ -6,95 +6,103 @@ web
 
 ## Auth
 
-Magic link only — the password form no longer exists (issue `6deeee2c`). The user
-must already be confirmed or the link 500s (issue `58d4ec98`).
+Browser session against port 4000, `:browser` pipeline behind
+`:require_authenticated`.
 
-Log in as the **owner**, not the QA fixture user: provider integrations are
-user-scoped (`integrations.user_id`), and only `johns10@gmail.com` has GitHub,
-Cloudflare and Resend connected. The fixture user has none, so on that account
-every credential reads "not connected" and nothing about this story is testable.
+**Passwordless** — the plan's old `qa-password-123!` does not exist (filed
+`3acee570`, plan since corrected):
 
-    vibium cookies clear
-    vibium go "http://127.0.0.1:4000/users/log-in"
-    vibium fill "input[name='user[email]']" "johns10@gmail.com"
-    vibium eval "(()=>{const b=Array.from(document.querySelectorAll('button')).find(x=>x.textContent.includes('Email me a login link')); b.click(); return 'clicked';})()"
-    LINK=$(curl -s "http://127.0.0.1:4000/dev/mailbox" | grep -oE '/dev/mailbox/[a-f0-9]{32}' | head -1)
-    TOKEN=$(curl -s "http://127.0.0.1:4000${LINK}/html" | grep -oE '/users/log-in/[A-Za-z0-9._~+/=-]{10,}' | head -1)
-    vibium go "http://127.0.0.1:4000${TOKEN}"
+1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]`
+   with `qa@codemyspec.local` → click "Email me a login link".
+2. `http://127.0.0.1:4000/dev/mailbox` → read the message.
+3. The link is minted as `https://dev.codemyspec.com/users/log-in/<token>`.
+   **Rewrite the origin to `http://127.0.0.1:4000`.**
+4. Lands on `/app`. Single-use token.
 
 ## Seeds
 
-No seed run needed; the projects below already exist. Do not run
-`mix run priv/repo/qa_seeds.exs` while the dev server is up — it takes the dev
-compile lock and 500s the running server.
+Already applied. Verify with psql — do not run `mix run` while the dev server
+on 4000 holds the compile lock.
 
-- `QA Fixture Project` — `11111111-1111-4111-8111-111111111111`, has real Hetzner
-  credentials stored (used as the "populated" side of the isolation check)
-- `Todo` — `502cac9f-3809-46f3-8644-89d9769f7a96`, a real project with no Hetzner
-  credentials (the "empty" side)
+```
+psql -qtA code_my_spec_dev -c "select setup_options from projects where id='11111111-1111-4111-8111-111111111111';"
+psql -qtA code_my_spec_dev -c "select key from project_secrets where project_id='11111111-1111-4111-8111-111111111111' order by key;"
+```
 
-Real credential values come from `envs/.env`. Fill them with output suppressed
-(`vibium fill ... >/dev/null 2>&1`) so secrets never reach a transcript.
+Project: `11111111-1111-4111-8111-111111111111`
+Page: `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/provisioning`
 
-For anything that needs a disposable project, create one at `/app/projects/new`
-and delete it afterwards from `/app/projects` — the Delete button opens a modal by
-adding `modal-open` to `#confirm-delete-project-<id>`; click the modal's own
-Delete, not the row's.
+Expected fixture state — options `backups content domain email inbound
+storage`; stored secrets include `hetzner_api_token`,
+`hetzner_s3_access_key_id`, `hetzner_s3_secret_access_key`; GitHub, Cloudflare
+and Resend are account-level connections and are **not** connected.
+
+So a correct page shows **six** credential rows, three of them stored and
+three missing.
+
+For the isolation test you need a project in an account the QA user is not a
+member of. `47d78148-6b92-4d9c-bfa9-6dbed5057ddd` ("Week View", account
+`acme-salons`) works. Do **not** use `ee33ba64-...` (`devops-drill`) — it is in
+`code-my-spec`, which the QA user *is* a member of, so it is legitimately
+visible and proves nothing.
 
 ## What To Test
 
-URL: `http://127.0.0.1:4000/app/projects/<id>/provisioning`
+Selectors from the story's spex: `credentials-form`, `credential-field`,
+`credential-directions`, `check-credentials`, `start-setup`, `project-form`,
+`project-row`, `setup-step`. Read `data-credential`, `data-state` and
+`data-stored` off each field rather than matching on label text.
 
-- **One sitting covers every credential (7981)** — `[data-test="provider-credentials"]`
-  lists every credential the enabled options need, each with `data-state` and its own
-  `[data-test="credential-directions"]`. No second page, no per-provider detour.
-- **An option turned off does not ask for its credential (7982)** — untick `storage`,
-  `backups`, `content`, `widget`; **reload**; the `hetzner_s3_*` fields must be gone.
-  Reloading is required, which is itself the defect in `e881966a` — the panel does not
-  re-render on toggle.
-- **A credential is proven by a real call (7983)** — paste a syntactically plausible but
-  invalid Hetzner token and save. Expect `data-state="rejected"` and a
-  `[data-test="credential-rejection"]` naming the permission, not a format complaint.
-- **An under-scoped token names the permission it lacks (7984)** — needs a genuinely
-  read-only Hetzner token to test properly. An invalid token produces the right shape of
-  message ("Missing: Read & Write on Hetzner Cloud") but does not prove the under-scoped
-  path.
-- **A missing credential stops the run before it starts (7985)** — on a project with no
-  Hetzner token, click `[data-test="start-setup"]`. Every step must remain
-  `not_started`. Do this on a disposable project, never a real one: if the gate ever
-  fails, the click provisions real infrastructure.
-- **The console-only key pair is asked for with directions (7986)** — the
-  `hetzner_s3_*` fields must carry directions naming the console path, since these keys
-  cannot be minted through an API.
-- **The repo stays clean of credential values (7987)** — grep the project's `local_path`
-  working copy for the actual token values from `envs/.env`.
-- **Credentials follow the project (8050)** — values live in `project_secrets` keyed by
-  `project_id`, so any agent resolving that project sees them.
-- **Another project's credentials are not reachable (8051)** — with credentials stored on
-  the fixture project, open Todo's provisioning page: `hetzner_api_token` must read
-  `data-stored="false" data-state="missing"`, and the stored value must not appear
-  anywhere in the page HTML. GitHub/Cloudflare/Resend reading `stored=true` on both is
-  correct — those are user-level OAuth, not project credentials.
+- **7981 — one sitting covers every credential.** On a *fresh* mount, assert
+  all six rows render. **Then toggle any option and re-count.** Testing only
+  the fresh load misses the defect entirely; the count is the assertion.
+- **7982 — an option turned off does not ask for its credential.** Turn
+  `storage` off and assert the two S3 rows go, then turn it back on and assert
+  they **return**. The return leg is the one that matters — the current
+  implementation only ever filters the list down, so it cannot restore a row.
+- **7983 — proven by a real call, not by looking right.** Click
+  `check-credentials`. Stored credentials should move `unchecked` → `verified`
+  and missing ones stay missing. Read-only calls; safe to run.
+- **7984 — an under-scoped token names the permission it lacks.** Needs a
+  deliberately under-scoped Hetzner token. Not obtainable without minting one
+  in the console; record `partial` rather than inventing a pass.
+- **7985 — a missing credential stops the run before it starts.** Safe to
+  exercise: with GitHub/Cloudflare/Resend missing, snapshot every step's
+  `updated_at`, click `start-setup`, wait, and diff. Nothing should move. This
+  is the one `start-setup` click that is safe, because the guard refuses
+  before `run_async` is reached.
+- **7986 — the console-only key pair is asked for with directions.** The two
+  S3 rows must carry `credential-directions` explaining that the pair exists
+  only in the Hetzner console and the secret half is shown once. Check they
+  are present *and* that they survive an option toggle.
+- **7987 — the repo stays clean of credential values.** In
+  `code_my_spec_test_repos/qa_sandbox`, assert `envs/*.enc.env` values are
+  `ENC[AES256_GCM,...]`. The `age1...` string in `.sops.yaml` is a **public**
+  recipient and is supposed to be committed — do not report it.
+- **8050 — credentials follow the project wherever the agent runs.** Secrets
+  are per-project (`project_secrets`), connections per-account. Fully proving
+  the "wherever the agent runs" half needs the CLI surface; record `partial`.
+- **8051 — another project's credentials are not reachable.** Navigate to the
+  `acme-salons` project's provisioning URL as the QA user. Expect a redirect
+  to `/app/projects` with zero steps and zero credential fields.
+
+**Do not click `start-setup` with credentials complete.** The only sanctioned
+click is the 7985 guard test above, which cannot start a run.
 
 ## Result Path
 
-Findings are filed via `create_issue` and submitted with `submit_qa_result`.
-This directory holds screenshots only.
+Findings via `create_issue` as found; ends with `submit_qa_result` on task
+`e9fe9786-373c-4086-be79-04b008f5f079`. Screenshots to
+`.code_my_spec/qa/964/screenshots/`.
 
 ## Setup Notes
 
-**Clean up after yourself on real projects.** Testing 7983 requires pasting a bad
-credential; do it on a project you can restore. If you use a real one, delete the row
-afterwards (`delete from project_secrets where project_id = ... and key = ...`) and
-re-tick any options you turned off — back the table up to
-`~/.codemyspec/db_backups/` first.
+This story is mostly surface, so unlike 966 and 963 it does not need a live
+provisioning run — seven of nine criteria are fully checkable from a browser.
 
-**`mix test` wedges the running dev server** — the TestAdapter compiles the dev
-environment for static analysis, invalidating `_build/dev/lib/code_my_spec/.mix/compile.lock`,
-after which every route 500s with a `CompileError`. Recover with
-`kill <varlock pid>; varlock run -- mix compile; nohup varlock run -- mix phx.server &`.
-Batch test runs away from browser QA.
-
-**The credential panel goes stale** (`e881966a`). When a reading looks wrong after you
-have changed options, reload before concluding anything — I filed a wrong diagnosis
-(`e9b6c32a`, since dismissed) by trusting a stale panel across several interactions.
+One trap, learned the hard way: **the credential list goes stale after an
+option toggle** (filed `6b22ed0a`). If you arrive at the page mid-session and
+see two rows instead of six, you are looking at a corrupted list, not the
+fixture. Navigate away and back to get a clean mount before asserting
+anything. That staleness is itself the story's biggest defect, so reproduce it
+deliberately rather than working around it.
