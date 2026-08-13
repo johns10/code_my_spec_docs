@@ -18,7 +18,7 @@
 #
 #   qa_agents.sh up 2      mint two agents and print their ids and roots
 #   qa_agents.sh list      show what this fixture has minted
-#   qa_agents.sh serve 1   run agent 1's harness in the foreground on a free port
+#   qa_agents.sh touch 1   make agent 1 live: a hook makes the harness serve and scan it
 #   qa_agents.sh down      remove the scratch directories
 #
 # Credentials, in preference order: CMS_TOKEN, then CMS_DEPLOY_KEY, then
@@ -32,14 +32,17 @@
 # server forever, reporting whatever files they last saw. That residue is not
 # cosmetic — a retired agent's file rows keep components alive for every other
 # agent (issue 3c6b6b63), which is how a phantom orphan context survived four
-# days. Until a delete exists, clean up deliberately:
+# days. Until a delete exists, clean up deliberately — BY ROOT, not by label:
 #
 #   psql -d code_my_spec_dev -c \
-#     "delete from files where harness_id in (select id from harnesses where label like 'qa-fixture-%');
-#      delete from harnesses where label like 'qa-fixture-%';"
+#     "delete from files where harness_id in (select id from harnesses where root like '/tmp/cms-qa-agents%');
+#      delete from harnesses where root like '/tmp/cms-qa-agents%';"
 #
-# Every agent this script mints is labelled `qa-fixture-<n>` so that query can
-# find them and nothing else.
+# The label posted at onboarding does NOT survive. The server rewrites it to
+# "the harness at <root> on <host>" the moment the agent goes live, so a
+# cleanup query keyed on `qa-fixture-%` silently matches nothing and reports
+# success — which is how a first version of this script left rows behind while
+# claiming to have removed them. The root is the stable handle.
 
 set -euo pipefail
 
@@ -129,19 +132,33 @@ list() {
   column -t "$MANIFEST" 2>/dev/null || cat "$MANIFEST"
 }
 
-# Runs in the foreground so the caller sees the banner and can stop it. The
-# port is explicit because two harnesses on one machine cannot share one, and
-# a collision reads as :eaddrinuse rather than as anything about agents.
-serve() {
-  local n="${1:?which agent}" port="${2:-$((4020 + ${1:-0}))}" root repo
-  root=$(awk -v n="qa-fixture-$n" '$1==n {print $3}' "$MANIFEST" 2>/dev/null || true)
-  [ -n "$root" ] || die "no agent $n — run `up` first"
-  repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+# Make an agent live: fire a hook naming its root at a running harness, which
+# registers the copy and scans it. The file rows then land under that agent's
+# own id, because `WorkingCopies.entry/1` reads each root's own
+# `.cms_harness.json` rather than assuming the harness's identity.
+#
+# This is not how I first wrote it. The obvious approach — start a harness
+# process per agent — cannot work: `WorkingCopies.known/0` is
+# `[File.cwd!() | Projects.list()]`, so a harness serves the copy it was
+# started in, and a scratch directory has no mix project to start one from.
+# There is no CMS_HARNESS_ROOT; nothing in the codebase reads such a variable.
+# One harness serving many copies is the real design, and a hook is how a copy
+# joins it.
+#
+# The reply may say "the harness is not connected" while the scan happens
+# anyway — the hook decision and the registration are separate paths. Check
+# harness.log, not the HTTP body.
+touch_agent() {
+  local n="${1:?which agent}" root id
+  root=$(awk -v n="$n" 'NR==n {print $3}' "$MANIFEST" 2>/dev/null || true)
+  [ -n "$root" ] || die "no agent $n — run 'up' first"
+  id=$(sed -n 's/.*"harness_id": "\([^"]*\)".*/\1/p' "$root/.cms_harness.json")
 
-  echo "serving $root on :$port (ctrl-c to stop)"
-  cd "$repo"
-  CMS_HARNESS=1 CMS_HARNESS_PORT="$port" CMS_SERVER_URL="$SERVER" \
-    CMS_HARNESS_ROOT="$root" MIX_ENV=dev_cli elixir -S mix run --no-halt
+  curl -sS -X POST "${CMS_HARNESS_URL:-http://localhost:4004}/api/harnesses/$id/hooks/post-tool-use" \
+    -H 'content-type: application/json' --max-time 20 \
+    -d "{\"cwd\":\"$root\",\"hook_event_name\":\"PostToolUse\",\"session_id\":\"qa-fixture\",\"tool_name\":\"Write\"}" \
+    > /dev/null
+  echo "asked the harness to serve $root (id $id) — confirm in ~/.codemyspec/harness.log"
 }
 
 down() {
@@ -156,7 +173,7 @@ down() {
 case "${1:-}" in
   up)    shift; up "$@" ;;
   list)  list ;;
-  serve) shift; serve "$@" ;;
+  touch) shift; touch_agent "$@" ;;
   down)  down ;;
-  *)     echo "usage: qa_agents.sh {up [n] | list | serve <n> [port] | down}" >&2; exit 2 ;;
+  *)     echo "usage: qa_agents.sh {up [n] | list | touch <n> | down}" >&2; exit 2 ;;
 esac
