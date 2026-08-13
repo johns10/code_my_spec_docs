@@ -1,4 +1,4 @@
-# Four Surfaces — Quick Reference
+# Five Surfaces — Quick Reference
 
 Spex drive exactly one of these. Pick the one that matches the real user action.
 
@@ -6,6 +6,7 @@ Spex drive exactly one of these. Pick the one that matches the real user action.
 |---|---|---|---|
 | Agent calls an MCP tool | MCP tool | `Tool.execute(params, %Frame{assigns: %{current_scope: context.scope}})` | No |
 | Stop hook / hook endpoint | HTTP | `post(~p"/api/hooks/stop", body)` with `x-working-dir` header | Yes — ExCliVcr if shell-out |
+| A working copy talks to the server | Channel | `socket(UserSocket, …) \|> subscribe_and_join(HarnessProjectChannel, topic, params)` | No |
 | OAuth / outbound HTTP | HTTP | `OAuthHelpers.do_google_callback/3` or `do_github_callback/3` | Yes — ReqCassette (via OAuthHelpers) |
 | Engineer uses local app (port 4003) | LiveView | `live(context.conn, ~p"/projects/...")` | No |
 | Engineer uses cloud SaaS (/app) | LiveView | `live(context.conn, "/app/...")` + `@endpoint CodeMySpecWeb.Endpoint` | No |
@@ -55,6 +56,61 @@ No shell-out scenario (config, block decision, etc.): omit `use ExCliVcr`
 and `use_cmd_cassette`; pass only `test_output_files` if needed.
 
 Deeper: [surfaces.md — HTTP / hook endpoints](surfaces.md#2-http--hook-endpoints), [cassettes.md](cassettes.md)
+
+---
+
+## Channel — 30-second skeleton
+
+The harness's surface. A working copy joins `harness_project:<project_id>`, and
+**join is where identity is issued and where the lease is taken** — so anything
+about which agent a checkout is, or about a second agent being refused, is a
+join reply and cannot be reached over HTTP.
+
+```elixir
+import Phoenix.ChannelTest          # already in CodeMySpecSpex.Case
+@endpoint CodeMySpecWeb.Endpoint    # required, and see the caveat below
+
+alias CodeMySpecWeb.{HarnessProjectChannel, UserSocket}
+
+setup do
+  # The channel is another process; an owner-only connection is invisible to it.
+  Ecto.Adapters.SQL.Sandbox.mode(CodeMySpec.Repo, {:shared, self()})
+  :ok
+end
+
+{:ok, reply, socket} =
+  UserSocket
+  |> socket("harness_test", %{scope: context.scope})
+  |> subscribe_and_join(
+    HarnessProjectChannel,
+    "harness_project:#{context.project.id}",
+    %{"harness_id" => nil, "root" => "/workspace/app", "label" => "the harness at /workspace/app"}
+  )
+
+assert %{"harness_id" => id} = reply       # issued on first join, echoed after
+```
+
+Refusal arrives as `{:error, payload}` from `subscribe_and_join`, which is how
+"a second agent on a working copy already being served is refused" is observed.
+
+Push an event and assert the reply:
+
+```elixir
+ref = push(socket, "observations", %{"observations" => [...]})
+assert_reply ref, :ok, summary
+```
+
+**Assign only what `UserSocket.connect/2` really assigns** — a `:scope`, plus
+`:deploy_key_project_id` for a sprite. Hand-injecting an assign production never
+sets is how a channel test passed while every real refusal said "an unknown
+host".
+
+**Endpoint caveat:** `@endpoint CodeMySpecWeb.Endpoint` is what makes channels
+work, and it is also what makes `~p` hook posts go to the wrong router — hooks
+are on `CodeMySpecLocalWeb`. A spec needing both must dispatch one explicitly
+with `Phoenix.ConnTest.dispatch(conn, Endpoint, :post, "/path", params)`.
+
+Deeper: `CodeMySpecWeb.HarnessProjectChannelTest` is the reference.
 
 ---
 
