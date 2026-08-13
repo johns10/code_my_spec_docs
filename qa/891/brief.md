@@ -29,6 +29,13 @@ A second copy for the never-onboarded case:
     F=<scratchpad>/qa891-fresh
     mkdir -p "$F" && git -C "$F" init --quiet
 
+And a **generated application** — depends on client_utils, not on CodeMySpec —
+which is what criterion 2351 actually claims:
+
+    T=<scratchpad>/target_app
+    mix.exs: deps: [{:client_utils, "~> 0.1.24"}]
+    mix deps.get && git -C "$T" init --quiet
+
 ## What To Test
 
 - **One command configures a fresh copy** (2350). Run `mix cms.harness.onboard "$Q"`.
@@ -49,6 +56,17 @@ A second copy for the never-onboarded case:
   partition are unchanged.
 - **Not-onboarded reports itself** (2357). Run `--check` against `$F` and against
   `$Q` and compare what an operator sees.
+- **The printed name is the database the command creates** (2355). Run the guard
+  under the same partition and compare:
+
+      MIX_TEST_PARTITION=<p> MIX_ENV=test mix cms.check_test_migrations
+
+  The name it refuses on must be the name onboarding printed, character for
+  character. This is the check that was missing through two rounds of QA, and
+  both times a real defect passed because onboarding's output was only ever
+  compared to onboarding's output.
+- **A generated application gets its own name** (2351). In `$T`, the databases
+  must be `target_app_test<p>`, not `code_my_spec_*`.
 
 ## Result Path
 
