@@ -11,11 +11,19 @@ Our solution: **record external boundaries** and **pool pre-built fixture repos*
 
 | What you need | Where to look |
 |---|---|
+| **Which seam a test wants, and which ones will hurt you** | [Choosing a Test Seam](choosing_a_test_seam.md) |
 | How to set up a test that needs a project | [Test Patterns](test_patterns.md#standard-setup) |
 | How CLI recording/replay works | [Recording System](recording_system.md) |
 | How fixture repos are managed | [Test Adapter & Pool](test_adapter_pool.md) |
 | What fixtures exist and their formats | [Fixtures Reference](fixtures.md) |
 | How scope and environment work in tests | [Test Patterns](test_patterns.md#scope-and-environment) |
+| A block of `** (EXIT …) killed` findings | [Choosing a Test Seam](choosing_a_test_seam.md#killed-is-the-machine-not-the-code) |
+
+The documents below describe the mechanisms. **Read [Choosing a Test Seam](choosing_a_test_seam.md)
+first** — it answers which of them you actually want. Reaching for the most powerful
+mechanism available is the recurring mistake here, and it is expensive: a cassette used in
+a unit test broke nine unrelated ones, because `use_cmd_cassette` patches `System.cmd/3`
+for the whole node.
 
 ## Architecture Overview
 
