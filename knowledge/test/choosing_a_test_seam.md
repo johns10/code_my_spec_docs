@@ -123,26 +123,59 @@ payload, which was never in doubt. The rules that keep it affordable:
 - Keep the count small. These are also what *produce* the fixtures the pipeline layer
   consumes.
 
-## `killed` is the machine, not the code
+## `killed` findings have three causes, and load is only one
 
-`** (EXIT from #PID<…>) killed` is a process being terminated — never an assertion. Under
-load the suite reports a handful of these, naming **different tests each run**, all of
-which pass standalone. Measured across three full runs: 5, 5 and 4 failures with almost no
-overlap; dropping `--max-cases` from 20 to 4 took it from four to one without touching a
-line of test code.
+`** (EXIT from #PID<…>) killed` is a process being terminated — never an assertion. What
+terminated it is the question, and there are three answers. Reaching for the first one and
+stopping cost two agents an afternoon.
 
-**The suite is not flaky. It is contended.** On 2026-08-14 two agents spent hours
-diagnosing these independently, each unable to see that the other was running full suites
-against the same `_build`. The moment one stopped, the other got `4389 tests, 0 failures`
-— the first clean run either had seen. Each had been the other's load the whole time.
+### 1. A global mock, patched or unpatched under a concurrent test
 
-So the first question is not "which test is broken" but **"is anyone else running a
-suite?"** Check `uptime`, and check for other agents in this or a sibling worktree.
+**This is the one that reads exactly like load and is not.** `use_cmd_cassette`
+meck-patches `System.cmd/3` **process-globally**. When that patch loads or unloads while
+another async test is inside `System.cmd`, that test's process dies — and `Task.async`
+links, so a patched-out task takes its caller with it, reported as `killed`, naming
+nothing.
 
-If a stop-hook block is all `killed`: run those files directly to confirm (seconds), then
-`clear_problems` with their paths. Do **not** re-run the full suite — that is what
-produces them. The renderer says this itself now; the underlying cause lives in issues
-`0bc611c9` and `c8264c1f`.
+Deterministic. Two files, 3.6 seconds, on an idle box:
+
+    mix test test/code_my_spec/analysis/runners_test.exs \
+             test/code_my_spec/validation/blocking_on_recorded_findings_test.exs
+    ** (EXIT from #PID<0.6323.0>) killed
+
+`async: false` on the cassette user, and the same pair is 22/22.
+
+The most consistent victim was whichever test spent longest inside a shell-out —
+`OnboardRelayGateTest` probes a `sleep 120` through a 10-second `Task.yield`, by far the
+widest window in the suite. The victim set changing run to run is not evidence of load; it
+is whoever happened to be shelling out when the patch moved.
+
+**So: a cassette user must be `async: false`. There is no safe async cassette.**
+
+### 2. A shared directory two suites both build in
+
+`../code_my_spec_test_repos` is one directory every worktree reaches by symlink. Tests that
+rsync a copy and run `mix` inside it collide across worktrees, and `ensure_fixture_fresh`
+used to `git pull` there on every `mix test`. Both are gone from the default suite — the
+recordings are committed, and the four tests that need a real project are
+`@moduletag :analyzer`.
+
+### 3. Actual load
+
+Real, and it does kill processes: three full runs at `--max-cases 20` gave 5, 5 and 4
+failures with almost no overlap; dropping to 4 took it to one. Two agents running suites
+against one box doubles it.
+
+But **do not stop here.** After the mock and directory causes were fixed, three consecutive
+full runs came back 4312/0 *at load 8–12 with a second suite running* — the load that had
+been blamed for everything.
+
+### What to do when you see them
+
+Ask, in order: is any cassette user `async: true`? is anything building in a shared
+directory? is another suite running? Then run the named files directly — seconds — and
+`clear_problems` with their paths. Do **not** re-run the full suite; that is what produces
+the load variety. Issues `0bc611c9`, `c8264c1f`.
 
 ## Never leave a live shell-out in a test
 
