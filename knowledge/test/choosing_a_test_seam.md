@@ -170,12 +170,33 @@ But **do not stop here.** After the mock and directory causes were fixed, three 
 full runs came back 4312/0 *at load 8–12 with a second suite running* — the load that had
 been blamed for everything.
 
+### The variant that never says `killed`
+
+Worse than all three, because it produces no `killed` finding at all.
+
+`Task.Supervisor.start_child/2` leaves the task **unlinked**. So a test that kills
+something it did not start — `Task.Supervisor.children(CodeMySpec.TaskSupervisor) |>
+Enum.each(&Process.exit(&1, :kill))` was doing exactly that, over an application-wide
+supervisor — does not crash its victim. It removes a *result*. What surfaces is an
+assertion failing in a file with no connection to the one that fired, at whatever point
+something later expected work that silently never finished.
+
+Fixed in `6cb1ae9e` by snapshotting the children at setup and killing only the difference.
+The general rule it stands for: **never kill, reset or clear something application-wide
+from a test.** Scope it to what the test created. If the pid is not reachable — production
+code hands it to nobody — a window-bounded difference is the available approximation, and
+its limits are worth stating out loud rather than assuming away.
+
 ### What to do when you see them
 
 Ask, in order: is any cassette user `async: true`? is anything building in a shared
 directory? is another suite running? Then run the named files directly — seconds — and
 `clear_problems` with their paths. Do **not** re-run the full suite; that is what produces
 the load variety. Issues `0bc611c9`, `c8264c1f`.
+
+And if a test fails on an assertion with no plausible connection to what you changed,
+check whether something application-wide is being reset from a test before you go looking
+at your own diff.
 
 ## Never leave a live shell-out in a test
 
