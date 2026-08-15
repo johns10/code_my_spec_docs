@@ -268,6 +268,31 @@ wrong once before in the other direction. `f198b227` carries three options; I
 lean on inferring from `use Ecto.Schema` while an explicit `## Type` still wins,
 so nothing already correct changes.
 
+**Measured the consequence, and it changes that lean.** Module-typed components
+carry one requirement (`implementation_file`, satisfied by 722 of 724); the
+schema graph carries three (`spec_file`, `spec_valid`, `implementation_file`).
+So correcting the type adds two requirements each — and:
+
+    Ecto schemas typed `module`:      59
+      ...that have a spec file:       10
+      ...whose spec has a ## Type:     0
+      ...with NO spec file at all:    49
+
+Adding `## Type: schema` to the specs reaches **10 of 59** — the rest have no
+spec to put it in. Inference reaches all 59 and immediately opens **49
+unsatisfied `spec_file` requirements**, with `spec_valid` behind them.
+
+So the real question is not "fix a mistyping" but **do you want 49 schema
+specs?** If yes, inference is the mechanism and the backlog is the point. If no,
+the type stays wrong and the cycle detector keeps counting Ecto associations as
+architectural cycles — the cheaper problem, and the one this question is already
+living with.
+
+Third path, if neither appeals: infer the type *and* exempt schemas from
+`spec_file`/`spec_valid` until someone opts in. Cycle detector correct, graph
+honest about what a schema is, no new tasks. It needs your view on whether an
+Ecto schema warrants its own specification at all.
+
 ---
 
 ## 6. Do components move to the agent grain, or stay project-scoped? (`3c6b6b63`)
