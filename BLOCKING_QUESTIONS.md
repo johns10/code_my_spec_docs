@@ -292,4 +292,51 @@ story. Not a change to make on a hunch while you are away.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~01:25)_
+## 7. Is `NoControlFlowInTests` meant to cover helpers and stubs? (`358799d7`)
+
+**Not blocking anything** — nothing is failing and I changed no behaviour. It is
+here because it is one line from you and it is 80% of this working copy's
+blocking-severity credo backlog, so the answer is worth more than the question.
+
+**104 of 130 error-severity credo findings** on this checkout are this one rule.
+It walks the whole file (`Credo.Code.prewalk`) and flags every `case`, `if`,
+`unless`, `cond` and `try` anywhere in a `_test.exs` or `_spex.exs` — including
+inside `defp` helpers and stub plugs. Its message argues something narrower:
+"A branch means the test is reacting to state it should control."
+
+I read 7 of 12 randomly sampled findings. None was a test reacting to state it
+should control:
+
+- **Stub routing** — `case conn.request_path` inside a `Req.Test.stub`. That is
+  the fake server's job.
+- **Extraction that raises otherwise** — `case Regex.run(…) do [_, id] -> id;
+  _ -> raise …`, which makes the test fail loudly rather than branch around a
+  problem.
+- **Teardown helpers** — a `defp delete_ssh_key/1` handling present and absent.
+
+The moduledoc says "inside test files … and BDD spec files", so file-level scope
+looks intended rather than accidental, and a blanket rule is consistent with how
+strict the spex rules are elsewhere. Which is exactly why I did not touch it.
+
+Two answers, and they are opposites:
+
+1. **The rule is right, the message is wrong.** Say plainly that no control flow
+   is permitted anywhere in these files, helpers and stubs included. The 104
+   become a backlog instead of a puzzle. Cheapest.
+2. **The message is right, the rule is too broad.** Scope the walk to `test` /
+   `given_` / `when_` / `then_` bodies and leave `defp` and `setup` alone. Clears
+   most of the 104.
+
+A third, narrower option is to exempt stub functions specifically, which targets
+the shape that is least arguably a test smell.
+
+Separately and already done (`44b68a5d`): `priv/credo_checks/` — what
+`install_credo_checks` copies into every project — had been stale since
+2026-05-19, so its copy of this check carried a thinner explanation than the one
+this project has. Installing would have regressed the text. Behaviour was
+identical in both copies; I diffed `run/2`, `test_or_spex?/1` and all five
+`walk/2` clauses before touching it, so no findings changed.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~02:55)_
