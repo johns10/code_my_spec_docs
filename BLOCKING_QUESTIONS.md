@@ -493,6 +493,21 @@ Amigos session rather than an edit.
 So question 9 reduces to: park the affected stories now (1), give stories an
 owner/area (3), or accept it (4). Not "change the gate".
 
+**One dead end, checked so nobody else spends the time.** 14 of the 21 remaining
+blockers share a single message — `cannot find mock/stub
+CodeMySpec.Provisioning.Resend in process #PID<…>` — which looks like one
+test-plumbing fix would clear the lot. It would not. `23d3c71c` already measured
+it: adding `Req.Test.set_req_test_to_shared(%{})` (the pattern 22 other spex use,
+"so the LiveView process sees the stub") changes the error from `cannot find
+mock/stub … in process` to `no mock or stub for …` — from a per-process lookup
+failure to "there is no stub anywhere". Same failure count. The honest blocker
+is the missing recordings, not process scoping.
+
+Worth knowing anyway, and `23d3c71c` says so: without it the failure **names the
+wrong cause**, so a spex author reading it goes looking for process scoping when
+the stub does not exist at all. That is a message problem worth fixing whenever
+someone owns those spex — just not a way past this gate.
+
 ---
 
-_(nothing else blocking as of 2026-08-15 ~06:20)_
+_(nothing else blocking as of 2026-08-15 ~06:30)_
