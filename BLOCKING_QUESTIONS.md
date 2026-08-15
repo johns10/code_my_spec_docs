@@ -339,103 +339,50 @@ identical in both copies; I diffed `run/2`, `test_or_spex?/1` and all five
 
 ---
 
-## 8. Ten async tests mutate globals that `lib/` reads at runtime — fix them, or build the check? (`f6badea0`)
+## 8. ~~Ten async tests mutate globals…~~ — **answered by tracing, no decision needed** (`f6badea0`)
 
-**Not blocking** — nothing is red. Asking because the alternative is me changing
-ten files' concurrency on my own judgement while you are away, and that is the
-wrong call to make unattended.
+Left in place because it was a question for three hours and the answer is worth
+more than the question. **Resolved, nothing needed from you.**
 
-Tonight's advisory exunit failure turned out to be real and precisely caused:
-`content_sync_controller_test.exs` was `async: true` and rewrote
-`Application.env(:code_my_spec, :deploy_key)`, which `/api/cms/users` reads at
-*request* time. Overlap it with `app_credential_test.exs` — also async, sending
-the compile-time literal — and you get `left: 401, right: 200`. It passes 20
-consecutive standalone runs and five full suites, because the window is the
-milliseconds between one file's `put_env` and its restore. Fixed by making the
-mutating file sync (`07c2c511`).
+I traced all eight reachable candidates. **Three were real and all are fixed:**
 
-That is the **fourth** instance of one class: meck patching `System.cmd/3`,
-`EnvironmentsTest` rewriting `PATH`, `TempFile` colliding on `unique_integer`,
-now `put_env` on a key a live endpoint reads. Each cost a separate
-investigation, each presented as an unrelated test failing for reasons nobody
-could reproduce.
+    deploy_key            07c2c511   the one actually observed failing
+    harness_fs_transport  30e22f47
+    embeddings_backend    17c4b260
 
-**So I audited for the rest, and there are ten**, all async, all mutating a key
-`lib/` reads at runtime — worst-looking first:
+Five were false: `resend_webhook_secret` (only its own test hits the endpoint),
+`code_my_spec_project_id` (outcome cannot flip without a UUID coincidence),
+`git_impl_module`, `project_id` and `provisioning_step_opts` (all flagged by
+tests that merely *mention* the module and never call the reading function).
+Three more — the `chat_*` keys, `harness_transport*`, `task_help_dir` — have no
+other async test referencing their readers at all.
 
-    resend_webhook_controller_test.exs   resend_webhook_secret
-    plugs/project_scope_override_test.exs code_my_spec_project_id
-    chat/runner_live_test.exs            chat_llm, chat_provider, chat_tool_registry
-    channel_client_transport_test.exs    harness_transport, harness_transport_owner
-    embeddings_test.exs                  embeddings_backend, framework_knowledge_dir
-    projects_test.exs                    project_id
-    live/provisioning_live_test.exs      provisioning_step_opts
-    git_test.exs                         git_impl_module
-    task_help_test.exs                   task_help_dir
-    spec_alignment_test.exs              harness_fs_transport
+**`embeddings_backend` is worth thirty seconds of your time.** The file already
+had this at the top, above a `use` line saying `async: true`:
 
-A lower bound: the probe only catches literal `:code_my_spec, :atom` pairs, and
-21 async modules mutate *something*.
+    # async: false because `sync_framework_knowledge` reads
+    # `Application.get_env(:code_my_spec, :framework_knowledge_dir)` —
+    # tests put a per-test value via `Application.put_env` and
+    # concurrent tests would race on the global.
 
-**Then I checked the two I had called worst, and both are fine.** Recording that
-because it changes the answer:
+Someone worked it out and it never got applied. The race also reached further
+than that comment: the file `delete_env`s `:embeddings_backend`, and
+`file_sync_test.exs:643` writes `{:ok, results} = Embeddings.search(…)`, so an
+overlap raises **MatchError inside a test about file syncing**.
 
-- `resend_webhook_secret` — only `resend_webhook_controller_test.exs` exercises
-  that endpoint. Nothing else can observe the mutation.
-- `code_my_spec_project_id` — genuinely read concurrently
-  (`issues_controller_test.exs` is async and POSTs `/api/issues`, and the key
-  read sits *before* the `framework_scoped?` guard in the `and` chain). But the
-  comparison is `project_id == code_my_spec_project_id()`, so the outcome only
-  changes if the mutated value coincidentally equals the concurrent request's
-  project UUID. It cannot.
+**I am no longer proposing the credo check**, and the audit is why: eight traced,
+three real. A static check sees condition 1, approximates condition 2 by module
+name — which produced three of the five false positives — and cannot see
+condition 3 at all. At `error` severity that is ~2 spurious blocks per real bug,
+which is question 7's problem rebuilt.
 
-So matching the pattern is not the same as being reachable, and I would have
-made two pointless concurrency changes if I had trusted the ranking.
-
-**I then traced five of the ten. Two are real and both are now fixed.**
-
-    deploy_key           REAL   07c2c511  (the one actually observed failing)
-    harness_fs_transport REAL   30e22f47
-    resend_webhook_secret   false  only its own test exercises the endpoint
-    code_my_spec_project_id false  read concurrently, but the comparison
-                                   cannot flip without a UUID coincidence
-    git_impl_module         false  flagged tests match on names like `GitHub`;
-                                   none calls `CodeMySpec.Git`
-
-`harness_fs_transport` is worth a line because it is exactly the same defect as
-`deploy_key`: `spec_alignment_test.exs` swaps the key for a stub that answers
-`{:error, :harness_unreachable}`, while `environments/harness_test.exs` — also
-async — asserts `{:error, {:harness_not_registered, …}}` from the configured
-`CodeMySpec.Analysis`. Overlap and the assertion gets the wrong error.
-
-**Five untraced**: the three `chat_*` keys, the two `harness_transport*` keys,
-`embeddings_backend`/`framework_knowledge_dir`, `project_id`,
-`provisioning_step_opts`, `task_help_dir`. The `chat_*`, `harness_transport*`
-and `task_help_dir` groups showed no other async test touching their reader at
-all, so they are probably fine.
-
-**The three-condition test**, which is what made this tractable and is the real
-output of the exercise:
+**The three-condition test** is the durable output, and is what made eight traces
+cheap:
 
 1. the key is read at **runtime** by `lib/` (not `compile_env`),
-2. another **async** test actually *calls* the reading path — not merely
-   mentions the module name,
+2. another **async** test actually *calls* the reading path,
 3. the swapped value **changes that test's outcome**.
-
-Condition 2 killed `git_impl_module`; condition 3 killed `code_my_spec_project_id`.
-
-So the remaining question is narrower than it was:
-
-1. **Trace the last five.** Maybe half an hour. I stopped because the pattern
-   had stabilised and two fixes is a reasonable place to hand over.
-2. **Build `NoGlobalMutationInAsyncTests`.** I am now against it as stated: a
-   static check sees condition 1, approximates 2 badly, and cannot see 3 at all.
-   On this evidence it reports ~4 false alarms per real bug, at a severity that
-   blocks stops on files nobody needs to touch — question 7's problem, minted
-   fresh.
-3. **Do nothing further.** Defensible: both observed-or-provable races are
-   fixed, and the rest are latent at worst.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~03:55)_
+_(nothing else blocking as of 2026-08-15 ~04:15)_
