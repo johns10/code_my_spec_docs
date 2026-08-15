@@ -339,4 +339,61 @@ identical in both copies; I diffed `run/2`, `test_or_spex?/1` and all five
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~02:55)_
+## 8. Ten async tests mutate globals that `lib/` reads at runtime — fix them, or build the check? (`f6badea0`)
+
+**Not blocking** — nothing is red. Asking because the alternative is me changing
+ten files' concurrency on my own judgement while you are away, and that is the
+wrong call to make unattended.
+
+Tonight's advisory exunit failure turned out to be real and precisely caused:
+`content_sync_controller_test.exs` was `async: true` and rewrote
+`Application.env(:code_my_spec, :deploy_key)`, which `/api/cms/users` reads at
+*request* time. Overlap it with `app_credential_test.exs` — also async, sending
+the compile-time literal — and you get `left: 401, right: 200`. It passes 20
+consecutive standalone runs and five full suites, because the window is the
+milliseconds between one file's `put_env` and its restore. Fixed by making the
+mutating file sync (`07c2c511`).
+
+That is the **fourth** instance of one class: meck patching `System.cmd/3`,
+`EnvironmentsTest` rewriting `PATH`, `TempFile` colliding on `unique_integer`,
+now `put_env` on a key a live endpoint reads. Each cost a separate
+investigation, each presented as an unrelated test failing for reasons nobody
+could reproduce.
+
+**So I audited for the rest, and there are ten**, all async, all mutating a key
+`lib/` reads at runtime — worst-looking first:
+
+    resend_webhook_controller_test.exs   resend_webhook_secret
+    plugs/project_scope_override_test.exs code_my_spec_project_id
+    chat/runner_live_test.exs            chat_llm, chat_provider, chat_tool_registry
+    channel_client_transport_test.exs    harness_transport, harness_transport_owner
+    embeddings_test.exs                  embeddings_backend, framework_knowledge_dir
+    projects_test.exs                    project_id
+    live/provisioning_live_test.exs      provisioning_step_opts
+    git_test.exs                         git_impl_module
+    task_help_test.exs                   task_help_dir
+    spec_alignment_test.exs              harness_fs_transport
+
+A lower bound: the probe only catches literal `:code_my_spec, :atom` pairs, and
+21 async modules mutate *something*. The first two look worst because both keys
+are read on a web request path, which is the shape that just failed and the one
+many async tests exercise.
+
+Three ways to go:
+
+1. **Make all ten sync.** Safe and dull. Costs suite parallelism on ten files,
+   some of which are probably fine, and buys certainty.
+2. **Build `NoGlobalMutationInAsyncTests`** as a framework credo check. It would
+   have ten hits on day one and caught its own known positive, so it is not
+   speculative. But it ships to every generated project, which is entangled with
+   question 7 — if that answer narrows the existing checks, this one should be
+   written to the same rule.
+3. **Fix the two web-path ones and leave the rest.** Cheapest thing that
+   addresses the demonstrated failure mode without eight judgement calls.
+
+I lean 3 now and 2 once question 7 is settled. What I did *not* do is 1, because
+ten unexplained concurrency changes is a worse artifact than the bug.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~03:35)_
