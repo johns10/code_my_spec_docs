@@ -103,6 +103,47 @@ sources rather than with the interactive session.
 changes which database an agent's tests run against — not a thing to change
 under you while you're away.
 
+## 3. Story 983 needs a criterion for the spex-attribution rule (Three Amigos)
+
+**Issue `638f6df4`.** Two changes altered what the spex gate does without
+touching a criterion, so 983's specs pass while describing behaviour the system
+no longer has:
+
+- `ae0a8537` exempted spex from attribution demotion, so a spex failure on a
+  latched story blocks any agent, not just the one who wrote it.
+- The `specs_ready` latch was flipped across 88 stories, closing the second of
+  two independent reasons the gate had never fired.
+
+983's criteria cover *which stories* a failure blocks (the latch, freshness,
+partial-green). Nothing covers whether a finding on a latched story blocks an
+agent who did not touch it — which now has an answer, is load-bearing, and is
+pinned only by `test/code_my_spec/validation/demotion_wiring_test.exs`.
+
+**Why I did not do it.** The issue says so itself — "983 has passing specs, so
+changing what it asserts is a Three Amigos decision, not an edit" — and that
+matches your standing rule about not running Three Amigos unilaterally. The
+right move is `start_three_amigos_session` on 983 with you in it.
+
+**The shape the issue suggests**, so the session starts from something: one rule
+with two scenarios, because the pair is what makes it honest — a spex failure on
+a latched story blocks an agent who did not write it, *and* a credo/exunit
+finding on an untouched file still does not, because those sources have no
+per-story mandate test. Without the second, the first reads as "we reverted the
+fix".
+
+**One thing in that issue I did not act on and would not without you.** It notes
+a database restore reverted the latch flips from 88 stories to 10, and that they
+"need redoing". Flipping 78 stories to `specs_ready: true` makes their spex
+failures start blocking every agent in the working copy — the exact mechanism
+that hammered four unrelated sessions in `b9a9f9bc`. Not something to do
+unattended.
+
+**Meanwhile:** shipped `3e1c14d2`, which makes the stop response *explain* the
+rule when it fires — that an agent is blocked by a foreign spex, why attribution
+does not demote it, and that parking the story clears the latch. That is the
+user-facing half of what the missing criterion would assert, and it does not
+change what 983 claims.
+
 ---
 
 _(nothing else blocking as of 2026-08-14 ~21:25)_
