@@ -323,14 +323,44 @@ Left in place rather than deleted because it was cited as a blocker — story 81
 recorded all seven criteria as unexercisable and fell back to source inspection, and a
 reader who finds that report needs to know this entry was the reason and was mistaken.
 
-### CLI dev DB has pending unrelated migrations
+### ~~CLI dev DB has pending unrelated migrations~~ — resolved 2026-08-15
 
-`MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs` currently fails because
+~~`MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs` currently fails because
 auto-migrate hits a pre-existing migration (`stories_account_id_index` from
 `fix_stories_account_id_type`) that errors out — unrelated to QA. Until that
 chain is resolved, the local CLI seed only runs cleanly against `:prod_cli`
 (the bundled CLI binary). The script itself is correct; its first invocation
-in a clean `:dev_cli` env is gated on the migration fix.
+in a clean `:dev_cli` env is gated on the migration fix.~~
+
+**No longer true. `:dev_cli` boots.** Verified three ways on 2026-08-15:
+
+- `fix_stories_account_id_type` (version `20260424170000`) **is** applied in
+  `~/.codemyspec/cli_dev.db`.
+- Nothing in `priv/repo/cli_migrations/` is newer than that database's highest
+  applied version (`20260813230000`), so there is no pending chain to fail on.
+- `NO_SERVER=true MIX_ENV=dev_cli mix run -e 'IO.puts("BOOTED OK")'` boots the
+  app — which runs `CodeMySpecLocalWeb.Migrator` in the supervision tree — and
+  prints `BOOTED OK`.
+
+Struck through rather than deleted, for the same reason as the curl entry above:
+it was cited as a blocker (issue `8b94f6df` could not measure a serialized graph
+context because of it), and a reader who finds that report needs to see what it
+was relying on.
+
+**Two things learned while checking, worth keeping:**
+
+`MIX_ENV=dev_cli mix ecto.migrate` is **not** how the CLI migrates and will fail
+confusingly. It runs the *Postgres* set in `priv/repo/migrations`, whose first
+statement is `CREATE EXTENSION IF NOT EXISTS citext`, and SQLite answers
+`(Exqlite.Error) near "EXTENSION": syntax error` — which reads as a broken
+migration rather than as the wrong command. The CLI migrates itself at boot from
+`priv/repo/cli_migrations` via `CodeMySpecLocalWeb.Migrator`; there is nothing to
+run by hand. (Filed as `02ff6d6b`.)
+
+Booting `:dev_cli` **starts a Cloudflare quick tunnel** for `127.0.0.1:4004` and
+connects a Presence client to `wss://dev.codemyspec.com`. Both stop when the
+process exits, but a boot is not the inert local action it looks like — worth
+knowing before running one to test something.
 
 ### OAuth discovery on dev points at production
 
