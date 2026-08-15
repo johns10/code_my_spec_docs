@@ -420,22 +420,45 @@ clear the latch is not my call.
 
 **So, one of:**
 
-1. **Park 816** (and any other latched story whose spex are red for reasons the
-   harness agent cannot fix). One `update_story` each; clears the latch and the
-   block.
-2. **Hand the 37 to whoever owns mail/devops.** They are real failures that were
+1. **Park the latched stories whose spex are red for reasons the harness agent
+   cannot fix.** One `update_story` each; clears the latch and the block.
+2. **Hand them to whoever owns mail/devops.** They are real failures that were
    invisible until tonight, so somebody wanting them is plausible.
 3. **Tell me to work them anyway**, overriding "stick with harness bugs, don't
    drift into devops".
 
-I lean 1 for 816 specifically so the harness backlog stays workable, and 2 for
-the rest.
+I lean 1 so the harness backlog stays workable, and 2 for the substance.
 
-**Worth saying plainly:** this is a fix making things *look* worse. The analyzer
-was silently broken, so the gate has been running without spex for some time.
-Nothing regressed — 37 failures were always there, and the number is what an
-honest sweep reports.
+**Update — I fixed the four that were mine, and the rest are not.** Confirmed
+breakdown from the read model rather than by eye:
+
+    (none)  14   domain / certificate / mail — die in `setup` on a missing
+                 Resend stub, so ExUnit cannot attribute a file
+    992      6   image builders
+    841      5   devops setup
+    995      2   devops
+    963      1   setup routine
+    964      1   provider credentials
+    ----
+    812      1   mine — fixed (90761f35)
+    726      1   mine — fixed (90761f35)
+    677/711  —   mine — fixed (5e9c4ef9), already cleared from the read model
+
+None of the four was a code regression. Each was a spec that had drifted from
+what the system does, invisible for as long as the analyzer could not run:
+
+- 677/711 asserted `{:ok, []}` — "exists and is empty" — under step titles
+  saying the directory does not exist.
+- 726 refuted the bare word `brief`, so `Qa.Evidence`'s unrelated "…where the
+  brief was written" sentence tripped it.
+- 812 captured logs at `:info` while the trace it follows spans `:info` and
+  `:debug`, the delivery line having been moved down deliberately because at
+  warning it emitted 2,190 lines per suite run.
+
+So after my four, **everything left is devops or mail.** That makes this a clean
+handover rather than a mixed pile, and it is the whole of what question 9 needs
+answering for.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~05:05)_
+_(nothing else blocking as of 2026-08-15 ~05:35)_
