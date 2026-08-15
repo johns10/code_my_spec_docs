@@ -243,6 +243,31 @@ with two contexts; and four of the long chains converge on
 `Stories → Components → Requirements`, so breaking one edge there likely takes
 several with it. Say the word and I will take those three rather than the policy.
 
+**Update — I traced `Member ↔ Account` and it is not a cycle at all
+(`f198b227`).** `validate_dependency_graph/1` already excludes schemas on both
+ends, because a `belongs_to`/`has_many` pair is an Ecto association rather than
+an architectural cycle. Both files are `use Ecto.Schema` on disk and both are
+typed **`module`** in the components table, so the exclusion never applies.
+
+The cause is not local: **59 components on this project are typed `module` while
+their implementation is an Ecto schema** — `Analysis.Run`, `Components.Component`,
+`Content.Content`, `Billing.StripeEvent` among them. `ComponentSync` reads the
+type from the spec's `## Type` section, and a spec without one falls back to the
+changeset default `"module"`. `member.spec.md` opens "Ecto schema managing the
+many-to-many relationship…" and has no such section.
+
+Two things follow, and they change this question. The count is softer than 21 —
+at least one is not a cycle, so nobody should read that figure as 21
+architectural problems. And the bigger consequence is not the count: those 59 are
+getting the module requirement graph where `graph_for_type("schema")` returns a
+genuinely different one, so 59 components are being asked for the wrong artifacts.
+
+I did not fix it. Correcting the type reshapes the requirement graph for 59
+components, and `ComponentSync`'s own comment records that exact reshaping going
+wrong once before in the other direction. `f198b227` carries three options; I
+lean on inferring from `use Ecto.Schema` while an explicit `## Type` still wins,
+so nothing already correct changes.
+
 ---
 
 ## 6. Do components move to the agent grain, or stay project-scoped? (`3c6b6b63`)
