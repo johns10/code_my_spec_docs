@@ -31,8 +31,9 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 
 **Local auth (port 4004 dev / 4003 published):**
 - `Plugs.LocalOnly` rejects non-loopback IPs with `403 {"error": "Localhost only"}`.
-- No user auth — the binary trusts whoever is on the box. Project scope comes from the **`X-Working-Dir` header** via `Plugs.WorkingDir` → `Plugs.WorkingDirScope`, which looks up `Project.local_path` and builds a scope.
-- Hook endpoints (`/api/hooks/*`) and skill endpoints (`/api/agent-tasks/*`, `/api/skills/*`) all use the `:hook` pipeline (`LocalOnly + WorkingDir + WorkingDirScope`).
+- No user auth — the binary trusts whoever is on the box. Project scope comes from the **harness id**, sent as an `X-Harness-Id` header or a `?harness=<id>` query parameter, via `Plugs.HarnessScope`. The harness record says which project it serves and where its working copy is.
+- Hook endpoints (`/api/hooks/*`) and skill endpoints (`/api/agent-tasks/*`, `/api/skills/*`) all use the `:hook` pipeline (`LocalOnly + HarnessScope`).
+- **No directory travels on the wire.** `X-Working-Dir` and `?dir=` are gone, along with `Plugs.WorkingDir` and `WorkingDirScope`: resolving a checkout from an announced path succeeded against the wrong disk rather than failing when it was wrong. A request naming no harness is refused with a 400 that says where the id lives. The one exception is `/api/skills/init`, which runs before anything is onboarded and so has no id to send.
 
 **Key route map:**
 - `4000/` — marketing pages, `/users/log-in`, `/users/register`
@@ -115,15 +116,46 @@ Use for `:api` and `:mcp` pipelines (JSON, SSE). Everything in `.code_my_spec/fr
 
 **Local hooks / skills / API (no auth, working-dir header):**
 ```
-curl -sSf -X POST http://127.0.0.1:4004/api/hooks/session-start -H "Content-Type: application/json" -H "X-Working-Dir: $PWD" -d '{"session_id":"qa-probe","cwd":"'$PWD'"}'
+curl -sSf -X POST http://127.0.0.1:4004/api/hooks/session-start -H "Content-Type: application/json" -H "X-Harness-Id: $(grep -o '"harness_id"[[:space:]]*:[[:space:]]*"[^"]*"' .cms_harness.json | head -1 | cut -d'"' -f4)" -d '{"session_id":"qa-probe"}'
 ```
 
-**MCP servers — DO NOT curl tool calls.** The local MCP server (Anubis Streamable HTTP) returns `202 Accepted` with empty body for `tools/call` and `tools/list`; the actual JSON-RPC response comes back over the **`initialize` request's open SSE channel**, which a one-shot curl tears down before it can read. Confirmed empirically — `init` returns 200 + inline SSE with the server info, but every subsequent request returns `202` with no body. A correct curl wrapper would have to run the init stream as a background process and tail it; not worth the complexity.
+**MCP servers — curl works, and it is a first-class result.** This section used to say
+the opposite, on the strength of an empirical test that was missing one header.
+
+Send `Accept: application/json, text/event-stream` and the JSON-RPC response arrives
+inline on the POST:
+
+```bash
+ID=$(grep -o '"harness_id"[[:space:]]*:[[:space:]]*"[^"]*"' .cms_harness.json | head -1 | cut -d'"' -f4)
+curl -s -X POST http://localhost:4004/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "X-Harness-Id: $ID" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+
+id: 0
+event: message
+data: {"id":1,"jsonrpc":"2.0","result":{"tools":[…
+```
+
+Omit that header and the server answers **406 with a body that says exactly why** —
+`"Not Acceptable: Client must accept application/json"`. It is not a silent `202`, and
+there is no background process to run or init stream to tail.
+
+The cost of the old claim was real: story 817's QA reported all seven criteria as
+unexercisable and fell back to source inspection, citing this paragraph as one of three
+blockers (`83291e9f`).
 
 For QA, use:
-- **The agent's own MCP client tools** (`mcp__plugin_codemyspec_local__*`) — they handle the SSE channel correctly and are available to every QA agent.
+- **`curl`** — for any MCP surface, including servers whose typed tools are not in the
+  QA agent's frontmatter. Drive the handshake in order: `initialize`, then
+  `notifications/initialized`, then `tools/call`, echoing the `Mcp-Session-Id` the
+  server returns. See `plugins/claude/agents/qa.md`, which documents this.
+- **The agent's own MCP client tools** (`mcp__plugin_codemyspec_local__*`) — more
+  ergonomic where they exist, with schema validation. Only the servers in the agent's
+  frontmatter are reachable this way; allowlists are static and there is no runtime
+  discovery.
 - **`mix test test/code_my_spec/mcp_servers/*_test.exs`** for the server logic itself.
-- **Plain curl** only for endpoints that genuinely return synchronous JSON: `/health`, `/api/bootstrap/*`, `/api/hooks/*`, `/api/skills/*`, `/api/agent-tasks/*`, and `/api/projects/:project_name/*`.
 
 **Hosted API (OAuth bearer):** No curl wrapper exists. The dev box's OAuth discovery
 points at the production hostname (`dev.codemyspec.com`), so minting a fresh local
@@ -208,9 +240,9 @@ MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
 NO_SERVER=true MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
 ```
 
-The local schema has no accounts/members table — `WorkingDirScope` only needs
-the `Project.local_path` to match `PWD` (or the `X-Working-Dir` header) on
-each request to resolve a scope.
+The local schema has no accounts/members table — `HarnessScope` resolves the
+harness id on each request, and the harness record carries both the project and
+the working copy's root.
 
 ### Sandbox project for MCP-surface SC tests — `code_my_spec_test_repos/qa_sandbox/`
 
@@ -229,22 +261,38 @@ The QA Fixture Project (id `11111111-1111-4111-8111-111111111111`) has its
 /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
 ```
 
-To direct MCP calls there, either:
+To direct MCP calls there, send **the sandbox's own harness id** — the working
+copy is named by id now, not by the directory a request announces, so `cd`-ing
+somewhere no longer changes which project answers.
 
-1. **`cd` into the sandbox** before MCP-surface SC steps — the
-   `X-Working-Dir` header (or process cwd) carries that path, and
-   `WorkingDirScope` resolves to the QA Fixture Project.
+1. **Onboard the sandbox once** (`mix cms.harness.onboard` in it) so it has an
+   id. That writes `.cms_harness.json` at its root and `CMS_HARNESS_ID` into its
+   `.claude/settings.local.json`.
 
-2. **Pass `X-Working-Dir`** explicitly when curling a local endpoint:
-   `-H "X-Working-Dir: /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox"`
+2. **Send that id** when curling a local endpoint:
+
+   ```bash
+   SANDBOX=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
+   ID=$(grep -o '"harness_id"[[:space:]]*:[[:space:]]*"[^"]*"' "$SANDBOX/.cms_harness.json" | head -1 | cut -d'"' -f4)
+   curl -s -X POST http://localhost:4004/mcp \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/json, text/event-stream" \
+     -H "X-Harness-Id: $ID" \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+   ```
+
+   This is the part that changed: pointing at the sandbox used to be a matter of
+   where you stood, and is now a matter of which id you send. That is the whole
+   point — two checkouts of one project are two harnesses whatever their paths
+   say, and a path could not tell them apart.
 
 App-surface QA (Vibium against ports 4000 / 4003, exercising live LiveViews
 and controllers) still hits the dev databases — only the agent-surface
 mutation tests need the sandbox swap.
 
 The sandbox project has only the minimal Phoenix shape (`mix.exs`, `lib/`,
-`test/`, `config/`, `.code_my_spec/`) needed for `WorkingDirScope`
-resolution. It is intentionally empty so SC tests can create their own
+`test/`, `config/`, `.code_my_spec/`) needed to be a working copy a harness
+can be onboarded into. It is intentionally empty so SC tests can create their own
 stories/personas/issues without colliding with real data.
 
 To reset the sandbox between major QA passes, re-run the cli_qa_seeds
@@ -261,14 +309,19 @@ on the server; QA seeds do **not** duplicate that.
 
 ## System Issues
 
-### Local MCP can't be QA'd via plain curl
+### ~~Local MCP can't be QA'd via plain curl~~ — withdrawn, it can
 
-The Anubis Streamable HTTP transport returns `202 Accepted` with empty body for
-`tools/call`/`tools/list` and writes the actual response to the SSE channel that the
-`initialize` request opened. A one-shot curl can't see that response unless it keeps
-the init stream alive in a background process. Plan: don't try. Use the agent's
-`mcp__plugin_codemyspec_local__*` tools for ad-hoc probing and `mix test` against the
-server modules for unit/integration coverage.
+This said the Anubis Streamable HTTP transport returns `202 Accepted` with an empty
+body and delivers the response over the `initialize` request's SSE channel, so a
+one-shot curl could never read it.
+
+That is wrong. With `Accept: application/json, text/event-stream` the response comes
+back inline on the POST; without it the server returns 406 and says so. Verified
+against `localhost:4004/mcp` on 2026-08-14. See the curl section above.
+
+Left in place rather than deleted because it was cited as a blocker — story 817's QA
+recorded all seven criteria as unexercisable and fell back to source inspection, and a
+reader who finds that report needs to know this entry was the reason and was mistaken.
 
 ### CLI dev DB has pending unrelated migrations
 
