@@ -59,6 +59,21 @@ nothing.
   requirement graph. Fixing it opens 49 spec-writing tasks, so it is a decision
   about work you want, not a cleanup.
 
+**One thing worth knowing that is not a question.** The spex error leak
+(`23d3c71c`, open across three investigations and twice closed as
+unreproducible) is diagnosed. `criterion_8221` configures a workspace that is
+alive but never healthy with `boot_timeout: 60_000`, finishes in milliseconds,
+and its `on_exit` deletes the config without stopping the boot task. That task
+polls for a minute and then logs `Task.Supervisor, :terminating` into whichever
+spex is running by then.
+
+Every previous reproduction attempt was **too short to reach the timeout** —
+8221 alone, its neighbours, and all thirteen of story 990 together take 0.6
+seconds. Only a full sweep runs long enough, which is exactly where it was
+always seen. The fix is cleanup rather than the timeout, which is deliberate;
+I did not write it because confirming it needs a ~6-minute sweep and I would
+rather hand over a diagnosis I trust than a change I could not verify.
+
 ---
 
 ## 1. Test implementations for the analyzers — how far?
