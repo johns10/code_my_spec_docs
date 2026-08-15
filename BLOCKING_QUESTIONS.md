@@ -375,25 +375,41 @@ could reproduce.
     spec_alignment_test.exs              harness_fs_transport
 
 A lower bound: the probe only catches literal `:code_my_spec, :atom` pairs, and
-21 async modules mutate *something*. The first two look worst because both keys
-are read on a web request path, which is the shape that just failed and the one
-many async tests exercise.
+21 async modules mutate *something*.
+
+**Then I checked the two I had called worst, and both are fine.** Recording that
+because it changes the answer:
+
+- `resend_webhook_secret` — only `resend_webhook_controller_test.exs` exercises
+  that endpoint. Nothing else can observe the mutation.
+- `code_my_spec_project_id` — genuinely read concurrently
+  (`issues_controller_test.exs` is async and POSTs `/api/issues`, and the key
+  read sits *before* the `framework_scoped?` guard in the `and` chain). But the
+  comparison is `project_id == code_my_spec_project_id()`, so the outcome only
+  changes if the mutated value coincidentally equals the concurrent request's
+  project UUID. It cannot.
+
+So matching the pattern is not the same as being reachable, and I would have
+made two pointless concurrency changes if I had trusted the ranking. Whether the
+remaining eight are reachable I have not checked — each needs the same tracing.
 
 Three ways to go:
 
 1. **Make all ten sync.** Safe and dull. Costs suite parallelism on ten files,
-   some of which are probably fine, and buys certainty.
+   at least two of which are demonstrably fine, and buys certainty.
 2. **Build `NoGlobalMutationInAsyncTests`** as a framework credo check. It would
-   have ten hits on day one and caught its own known positive, so it is not
-   speculative. But it ships to every generated project, which is entangled with
-   question 7 — if that answer narrows the existing checks, this one should be
-   written to the same rule.
-3. **Fix the two web-path ones and leave the rest.** Cheapest thing that
-   addresses the demonstrated failure mode without eight judgement calls.
+   have caught the real one on the day it was written. But the audit's own
+   result is the argument against a naive version: it flagged 21, I traced 2,
+   and both were false. A check that cries wolf 19 times is the credo-noise
+   problem in question 7, freshly minted.
+3. **Trace the remaining eight and fix only what is reachable.** The honest one,
+   and it is maybe an hour of the same work I just did twice.
 
-I lean 3 now and 2 once question 7 is settled. What I did *not* do is 1, because
-ten unexplained concurrency changes is a worse artifact than the bug.
+I no longer lean 3-as-quick-fix, because there was no quick fix — the two
+candidates I would have taken were the wrong ones. Between 1 and 3 I lean 3, and
+2 only if it can be written to flag *reachable* mutations rather than all of
+them, which may not be tractable statically.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~03:35)_
+_(nothing else blocking as of 2026-08-15 ~03:45)_
