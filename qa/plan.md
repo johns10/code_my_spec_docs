@@ -370,6 +370,42 @@ same feature (e.g. story creation has a hosted form *and* a local viewer). Name
 screenshots with the port prefix (`4000_story_form.png`, `4003_story_view.png`) so
 result.md is unambiguous.
 
+### Stop-hook pipeline scenarios need a real file write, not a fixture
+
+Criteria about what the validation pipeline *does* — a compile error blocking
+evaluation, an invalid test file re-firing with diagnostics — are not reachable
+by posting a stop hook with `test_output_files` and nothing else. `f12a5c2a`
+recorded two of them (story 669, criteria 5565 and 5568) as unexercisable in
+pure curl+MCP QA, and that conclusion still holds. The mechanism has moved
+since it was filed, and the current one is worth knowing because it decides
+what *is* reachable.
+
+**Then:** `run_pipeline/5` short-circuited with `:ok` on empty `changed_files`,
+so the compile step was never called at all and the fixture fed nothing.
+
+**Now:** a quiet stop calls `Analysis.ensure_stale_runs/3` with
+`only_failed: true`, always including `compiler` among the candidates, and the
+caller's opts — including `compile_output_file` — reach the dispatched job. So
+a fixture *can* feed a run from a quiet stop. What gates it is `only_failed`:
+it enqueues a source whose last run failed, crashed or timed out, and one that
+has never run ("a source that has never run is stale, not current"), and
+nothing else.
+
+The practical consequence for QA: on the live project, whose compiler has run
+and succeeded, a quiet stop enqueues nothing and the fixture is inert. On a
+project or source with no completed run it would fire. Neither is a reliable
+lever, so the criteria stay spex-covered.
+
+To exercise these live you need a real file write inside the task window —
+PostToolUse attribution is what puts a path in `changed_files` — which means a
+real agent edit or a `mix`-driven write, not a curl. The spex do exactly that:
+`Environments.write_file` plus `use_cmd_cassette`, which is why they cover
+these two and QA does not.
+
+If this becomes worth reaching from QA, the two routes are a seed that
+pre-populates `FileEdits` attribution rows, or a fixture endpoint that bypasses
+the `changed_files` gate. Neither exists.
+
 ## Notes
 
 - **Don't run `mix phx.server` if these ports are in use.** Both endpoints already auto-start under the dev release; check `lsof -i -P -n | grep LISTEN | grep -E ':4000|:4001|:4003'` first.
