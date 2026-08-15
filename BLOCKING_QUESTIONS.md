@@ -245,4 +245,51 @@ several with it. Say the word and I will take those three rather than the policy
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~01:10)_
+## 6. Do components move to the agent grain, or stay project-scoped? (`3c6b6b63`)
+
+**Story 892 already decided this on paper** — "Components follow files. They are
+file projections, so they sit at the same grain. This is the authored/derived
+line." The schema does not:
+
+    files.harness_id       present
+    problems.harness_id    present
+    components             project_id only
+
+Two passes have now declined to make this call from the queue, and I am the
+second, so it should be a decision rather than a thing that keeps getting
+deferred. A components migration touches the architecture pipeline,
+`ComponentSync`, and every checker that reads components by project.
+
+**The incident is closed and stays closed.** Verified again just now — the only
+two harnesses holding file rows on this project are both live (`phx-new-generator`
+4,061 files, `devops-qa` 4,002, both seen within two minutes). The Aug-9 harnesses
+from the original report hold none. `Harnesses.reclaim_quiet/1` deletes a quiet
+harness's files, `ComponentSync` then prunes components with no remaining source,
+and that is suggestion 2 — "prune on the source side" — arrived at without a
+migration.
+
+**The residual is a window, not a hole.** A harness that has gone quiet but not
+crossed `harness_idle_hours` (default 2, and in practice shorter because reclaim
+runs on every local stop) still holds its files, and so still holds components
+alive for every other agent. The original failure — an orphan no edit in any
+checkout could clear — needed the *unbounded* version of that.
+
+So the question is whether a bounded window is acceptable:
+
+- **Accept it.** Close the issue, keep components project-scoped, and treat 892's
+  sentence as satisfied in effect rather than in schema.
+- **Do the migration.** Removes the window entirely and matches what the story
+  says. This is the expensive one.
+
+I did **not** implement suggestion 3 ("the orphan rule should ignore file rows
+from retired agents"), and it is worth saying why, because it sounds cheap and is
+not. The orphan rule (`list_orphaned_contexts/1`) reads stories and dependencies
+and never looks at file rows at all — what holds a component alive is
+`ComponentSync`'s prune. Teaching that prune about idle thresholds would put the
+same cutoff logic in a second place, and pruning too eagerly is exactly the
+regression that took ten spex across stories 555, 669 and 983 red on this same
+story. Not a change to make on a hunch while you are away.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~01:25)_
