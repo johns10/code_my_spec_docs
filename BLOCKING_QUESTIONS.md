@@ -469,12 +469,30 @@ in total (677, 711, 726, 812, 995 ×2).
 Everything still blocking is 816, 964, 972, 974, 992 ×6 and the 14
 setup-failures — all devops or mail.
 
-`a735ad1d` records the structural half so it outlives this file: the spex gate's
-two remedies are "fix it" or "park the story", and an agent working outside the
-owning area has neither. It is `c7c86260` again — ownership enforced by
-instruction and recorded nowhere in the data — but blocking rather than merely
-recommending.
+`a735ad1d` records the structural half so it outlives this file — **but read its
+correction before acting on it.** After filing I found `d3fa4dc1`, dismissed,
+which asked for exactly this. Attribution *was* extended to spex to answer it and
+was **reversed** in `ae0a8537`, because it left `spex: :block_all` with no effect
+whatsoever — every finding demoted to advisory across an evening, while the mode
+had read `:block_all` for months and nothing had ever blocked.
+
+So the blocking behaviour is **intended**, and the option I proposed (demote
+foreign spex) is a cure already tried and rolled back. I have struck it.
+
+What survives is narrower and, I think, still real: `d3fa4dc1`'s dismissal gives
+the escapes as "fix the regression, or unlatch the story" and treats that as
+sufficient. It assumes the stopping agent owns the story. On a project worked by
+several agents with standing areas, an agent outside the owning area can take
+neither — unlatching changes shared state for everybody, and fixing is the drift
+it was told to avoid. That constraint is not in `d3fa4dc1`.
+
+Its dismissal also names where to reopen the argument: **story 983's criteria**,
+which under-describe the shipped gate — already question 3 above, and a Three
+Amigos session rather than an edit.
+
+So question 9 reduces to: park the affected stories now (1), give stories an
+owner/area (3), or accept it (4). Not "change the gate".
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~06:05)_
+_(nothing else blocking as of 2026-08-15 ~06:20)_
