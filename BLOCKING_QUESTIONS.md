@@ -33,6 +33,19 @@ I also did not message that session. Routing the work to its owner is the right
 shape, but an idle five-day-old session will not read it before you do, and
 asking another agent to take on twenty-one failures is not mine to initiate.
 
+**One diagnosis to hand on, so whoever takes 992 does not spend the first hour
+where I did.** Its six failures all reduce to `the deploy recorded no image at
+all` — the spex mounts `ProvisioningLive`, clicks start-setup, waits, and finds
+no `[data-test='published-image']`. That is **not** the missing-test-hook shape
+that story 995's failures turned out to be: the marker exists
+(`provisioning_live.ex:718`, rendered for resources of kind `published_image`)
+and so does the resource kind (`steps.ex:2034`). So the run genuinely produced no
+such resource. Worth knowing too that `steps.ex:2043` records a `published_image`
+with `identifier: "built=false"`, so "recorded nothing" is a different state from
+"recorded an unbuilt image" — the assertion would pass on the latter. I stopped
+there: which of the deploy step's paths ran is devops logic, and reading further
+risks a confident wrong answer in someone else's area.
+
 **The rest are not urgent.** Questions 1–7 are design calls I reached and
 deliberately did not make. Question 8 answered itself under tracing and needs
 nothing.
