@@ -11,6 +11,33 @@ Format: what I need, why it blocks, what I did in the meantime.
 
 ---
 
+## Read this first
+
+**You will hit a blocked stop.** 25 spex are red and every one is devops or mail
+— 816, 964, 969, 972, 992, plus a group that dies in `setup` on a missing Resend
+stub. Spex is exempt from attribution demotion by design, so they block whoever
+stops next regardless of who wrote them. That is **question 9**, and it is the
+only one holding anything up.
+
+**One-line unblock, if you want it now:** park the latched stories among those
+(`update_story` with `ready_for_dev: false`) — it clears the earned latch and
+they stop blocking. I did not, because it changes shared state for every agent.
+
+**The rest are not urgent.** Questions 1–7 are design calls I reached and
+deliberately did not make. Question 8 answered itself under tracing and needs
+nothing.
+
+**If you read only two:**
+
+- **9** — the blocked stop, above.
+- **5** — because it grew a finding worth more than the question it started as:
+  59 Ecto schemas are typed `module`, which is why the cycle detector counts Ecto
+  associations as architectural cycles, *and* why 59 components get the wrong
+  requirement graph. Fixing it opens 49 spec-writing tasks, so it is a decision
+  about work you want, not a cleanup.
+
+---
+
 ## 1. Test implementations for the analyzers — how far?
 
 **Your steer, twice:** "we actually have fixtures for the analyzers now, so in
