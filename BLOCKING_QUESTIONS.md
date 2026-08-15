@@ -23,6 +23,16 @@ only one holding anything up.
 (`update_story` with `ready_for_dev: false`) — it clears the earned latch and
 they stop blocking. I did not, because it changes shared state for every agent.
 
+**One fact that bears on that choice:** the `devops-qa` session has been idle for
+**five days**. So these are not spex somebody is mid-way through — nobody is
+working them right now, which makes "genuinely mid-rework" (the hook's own
+condition for parking) a harder claim than it looks. Whether that argues for
+parking them or for fixing them is yours; I only measured that nobody is there.
+
+I also did not message that session. Routing the work to its owner is the right
+shape, but an idle five-day-old session will not read it before you do, and
+asking another agent to take on twenty-one failures is not mine to initiate.
+
 **The rest are not urgent.** Questions 1–7 are design calls I reached and
 deliberately did not make. Question 8 answered itself under tracing and needs
 nothing.
