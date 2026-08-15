@@ -649,4 +649,40 @@ someone owns those spex — just not a way past this gate.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~06:30)_
+## 10. Does an issue need an owner/area, or do we accept the wrong recommendation? (`c7c86260`)
+
+**Not blocking me** — I have been working the harness backlog directly rather
+than through `issues_triaged`. Recorded because the structural half of
+`c7c86260` is a design call and question 9 only covers its symptom.
+
+`issues_triaged` is **project-scoped** over a queue whose items have **per-area
+ownership**, and no axis in the model expresses ownership. So it is permanently
+unsatisfiable for whichever agent does not own most of the queue, and
+`get_next_requirement` returns it anyway. An agent that follows the harness
+faithfully is directed at work it has been told not to do.
+
+Measured again tonight: **19 incoming, 13 of them devops** (teardown, DNS,
+registry, inbound probes, backups, builders, sops). I triaged what was mine and
+the requirement is still unsatisfiable.
+
+`scope` is not the axis and I checked: it is `app | qa | docs | framework` and
+cuts *across* ownership. The devops issues are all `scope: app`, and so are
+harness issues like `77aa93b0`. Filtering `app` would exclude half the harness
+backlog and include all of devops.
+
+The options are in the issue. The reporter leaned 4 or 1 and declined to guess,
+and so do I, for the same reason: the pull toward an owner field is that "who
+owns this" is a fact the queue does not record and every reader reconstructs;
+the pull toward doing nothing is that a field nobody maintains is worse than a
+recommendation people learn to skip. Cost of inaction is bounded — one
+confusing recommendation per call.
+
+**Three of tonight's remaining harness issues are in this same state** — the
+reporter reached a fork and stopped rather than guess: this one, `358799d7`
+(question 7) and `f198b227` (question 5). That is most of what is left in the
+harness queue that is not devops, which is why the queue looks fuller than the
+work actually available to me.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~18:30)_
