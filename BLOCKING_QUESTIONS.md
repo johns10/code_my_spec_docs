@@ -459,6 +459,22 @@ So after my four, **everything left is devops or mail.** That makes this a clean
 handover rather than a mixed pile, and it is the whole of what question 9 needs
 answering for.
 
+**Later: two more were mine, and now filed as `a735ad1d`.** Story 995's pair
+turned out to be app code rather than spec drift — a tool result that carried no
+`data-tool-call-id` though the call did and the data had it, and a call with
+`data-answered` where the criterion asks for `data-state` running/done, which is
+the convention the rest of the app uses. Fixed in `46129624`. Six of mine fixed
+in total (677, 711, 726, 812, 995 ×2).
+
+Everything still blocking is 816, 964, 972, 974, 992 ×6 and the 14
+setup-failures — all devops or mail.
+
+`a735ad1d` records the structural half so it outlives this file: the spex gate's
+two remedies are "fix it" or "park the story", and an agent working outside the
+owning area has neither. It is `c7c86260` again — ownership enforced by
+instruction and recorded nowhere in the data — but blocking rather than merely
+recommending.
+
 ---
 
-_(nothing else blocking as of 2026-08-15 ~05:35)_
+_(nothing else blocking as of 2026-08-15 ~06:05)_
