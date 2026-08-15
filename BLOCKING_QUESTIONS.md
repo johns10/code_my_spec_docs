@@ -204,4 +204,45 @@ explains why it blocks and names parking the story as the one legitimate escape
 
 ---
 
-_(nothing else blocking as of 2026-08-14 ~21:25)_
+## 5. Where should a growing circular-dependency count surface? (`73ff202b`)
+
+**Not blocking any work** — the reporting half is done (`a2478e5c`:
+`get_architecture_summary` now returns `circular_dependency_count`, and
+`validate_dependency_graph` / `architecture_health_summary` already carried the
+full list). What is left is the question the issue actually reserves, and it is
+yours because every answer has a cost I would be guessing at.
+
+Confirmed live tonight: **21 cycles**, up from 4 when `d10f65e8` was filed.
+Performance is not the problem — 1.85s cold, 0.31s warm with all 21 present.
+The problem is that it grew five-fold and nothing said so.
+
+Three shapes, in increasing intrusiveness:
+
+1. **Nothing further.** The count is now in the summary; anyone reading
+   architecture health sees it. Cheapest, and honest — but it is what we have
+   had all along one level down, and 4→21 is what that produced.
+2. **A ratchet.** Store the count, report only when it *increases*. Fires zero
+   times today, once on the next regression, and names the new cycle. Needs a
+   home for the baseline (a checked-in file, most likely) and a surface to
+   report on — session start is the natural one, alongside the co-occupancy
+   warning.
+3. **A gate.** A requirement that blocks. At 21 this wedges every agent
+   immediately, so it would need the baseline anyway, which makes it option 2
+   with a refusal instead of a sentence.
+
+I lean to **2**, because an always-on warning about 21 pre-existing cycles is
+the "warning that is always on is one nobody reads" failure — the same argument
+that made the co-occupancy check a warning rather than a refusal. But a ratchet
+also quietly blesses the 21, and if the intent is to drive them down, that is
+the wrong default.
+
+Separately, three of them look like mistakes rather than design tensions and
+could be fixed without a policy at all: `Member ↔ Account` is two schemas inside
+`Accounts`; `Utils → Sessions → AgentTasks` puts a `logic` component in a cycle
+with two contexts; and four of the long chains converge on
+`Stories → Components → Requirements`, so breaking one edge there likely takes
+several with it. Say the word and I will take those three rather than the policy.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~01:10)_
