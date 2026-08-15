@@ -385,4 +385,57 @@ cheap:
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~04:15)_
+## 9. The spex analyzer works again, and now blocks on mail/devops spex (`c7c86260` in practice)
+
+**This one may actually block me**, unlike 5–8. Recording it before stopping,
+because the stop hook is about to tell me and the answer is yours either way.
+
+**What I fixed.** The spex analyzer has been failing on every sweep — `spex:
+failed` in every `analysis/wait` all night — and nothing said why. Three layers
+hid it:
+
+1. `Spex.execute` matched `{_raw_output, exit_code}` and discarded everything
+   `mix spex` printed (`3d6e5a68`).
+2. `error_excerpt/1` took the last three lines, which for a mix crash is always
+   the same boilerplate while the line naming the fault sits above (`6468832a`).
+3. With those fixed, the reason arrived:
+
+       ** (RuntimeError) The test database `code_my_spec_testh789652afs`
+          is 3 migration(s) behind.
+
+The **spex** partition — the one with the `s` suffix — was stale. I had migrated
+dev and the agent's own test partition when I added `add_qa_script_to_file_role`
+and never that one. Migrated it; the suite now runs (160s) and the server
+**accepts** the result for the first time.
+
+**The consequence.** 6 frozen stale problems became **37 real ones**. Most are
+mail and devops: stories 841, 964, 969, 972, plus 14 that failed in `setup` so
+ExUnit could not attribute a file. And `816` — "Sam sends and receives email on
+his own domain" — is **`specs_ready: true`**, so its 2 failures block, and spex
+is deliberately exempt from attribution demotion (`ae0a8537`), which means they
+block *me* rather than whoever wrote them.
+
+I cannot clear them: mail and devops are not my area, and parking a story to
+clear the latch is not my call.
+
+**So, one of:**
+
+1. **Park 816** (and any other latched story whose spex are red for reasons the
+   harness agent cannot fix). One `update_story` each; clears the latch and the
+   block.
+2. **Hand the 37 to whoever owns mail/devops.** They are real failures that were
+   invisible until tonight, so somebody wanting them is plausible.
+3. **Tell me to work them anyway**, overriding "stick with harness bugs, don't
+   drift into devops".
+
+I lean 1 for 816 specifically so the harness backlog stays workable, and 2 for
+the rest.
+
+**Worth saying plainly:** this is a fix making things *look* worse. The analyzer
+was silently broken, so the gate has been running without spex for some time.
+Nothing regressed — 37 failures were always there, and the number is what an
+honest sweep reports.
+
+---
+
+_(nothing else blocking as of 2026-08-15 ~05:05)_
