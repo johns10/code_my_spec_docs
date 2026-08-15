@@ -390,26 +390,52 @@ because it changes the answer:
   project UUID. It cannot.
 
 So matching the pattern is not the same as being reachable, and I would have
-made two pointless concurrency changes if I had trusted the ranking. Whether the
-remaining eight are reachable I have not checked — each needs the same tracing.
+made two pointless concurrency changes if I had trusted the ranking.
 
-Three ways to go:
+**I then traced five of the ten. Two are real and both are now fixed.**
 
-1. **Make all ten sync.** Safe and dull. Costs suite parallelism on ten files,
-   at least two of which are demonstrably fine, and buys certainty.
-2. **Build `NoGlobalMutationInAsyncTests`** as a framework credo check. It would
-   have caught the real one on the day it was written. But the audit's own
-   result is the argument against a naive version: it flagged 21, I traced 2,
-   and both were false. A check that cries wolf 19 times is the credo-noise
-   problem in question 7, freshly minted.
-3. **Trace the remaining eight and fix only what is reachable.** The honest one,
-   and it is maybe an hour of the same work I just did twice.
+    deploy_key           REAL   07c2c511  (the one actually observed failing)
+    harness_fs_transport REAL   30e22f47
+    resend_webhook_secret   false  only its own test exercises the endpoint
+    code_my_spec_project_id false  read concurrently, but the comparison
+                                   cannot flip without a UUID coincidence
+    git_impl_module         false  flagged tests match on names like `GitHub`;
+                                   none calls `CodeMySpec.Git`
 
-I no longer lean 3-as-quick-fix, because there was no quick fix — the two
-candidates I would have taken were the wrong ones. Between 1 and 3 I lean 3, and
-2 only if it can be written to flag *reachable* mutations rather than all of
-them, which may not be tractable statically.
+`harness_fs_transport` is worth a line because it is exactly the same defect as
+`deploy_key`: `spec_alignment_test.exs` swaps the key for a stub that answers
+`{:error, :harness_unreachable}`, while `environments/harness_test.exs` — also
+async — asserts `{:error, {:harness_not_registered, …}}` from the configured
+`CodeMySpec.Analysis`. Overlap and the assertion gets the wrong error.
+
+**Five untraced**: the three `chat_*` keys, the two `harness_transport*` keys,
+`embeddings_backend`/`framework_knowledge_dir`, `project_id`,
+`provisioning_step_opts`, `task_help_dir`. The `chat_*`, `harness_transport*`
+and `task_help_dir` groups showed no other async test touching their reader at
+all, so they are probably fine.
+
+**The three-condition test**, which is what made this tractable and is the real
+output of the exercise:
+
+1. the key is read at **runtime** by `lib/` (not `compile_env`),
+2. another **async** test actually *calls* the reading path — not merely
+   mentions the module name,
+3. the swapped value **changes that test's outcome**.
+
+Condition 2 killed `git_impl_module`; condition 3 killed `code_my_spec_project_id`.
+
+So the remaining question is narrower than it was:
+
+1. **Trace the last five.** Maybe half an hour. I stopped because the pattern
+   had stabilised and two fixes is a reasonable place to hand over.
+2. **Build `NoGlobalMutationInAsyncTests`.** I am now against it as stated: a
+   static check sees condition 1, approximates 2 badly, and cannot see 3 at all.
+   On this evidence it reports ~4 false alarms per real bug, at a severity that
+   blocks stops on files nobody needs to touch — question 7's problem, minted
+   fresh.
+3. **Do nothing further.** Defensible: both observed-or-provable races are
+   fixed, and the rest are latent at worst.
 
 ---
 
-_(nothing else blocking as of 2026-08-15 ~03:45)_
+_(nothing else blocking as of 2026-08-15 ~03:55)_
