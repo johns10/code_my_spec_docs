@@ -59,20 +59,44 @@ nothing.
   requirement graph. Fixing it opens 49 spec-writing tasks, so it is a decision
   about work you want, not a cleanup.
 
-**One thing worth knowing that is not a question.** The spex error leak
-(`23d3c71c`, open across three investigations and twice closed as
-unreproducible) is diagnosed. `criterion_8221` configures a workspace that is
-alive but never healthy with `boot_timeout: 60_000`, finishes in milliseconds,
-and its `on_exit` deletes the config without stopping the boot task. That task
-polls for a minute and then logs `Task.Supervisor, :terminating` into whichever
-spex is running by then.
+**One thing worth knowing that is not a question — and it is a retraction.**
+An earlier version of this section claimed the spex error leak (`23d3c71c`)
+was diagnosed: a 60-second `boot_timeout` in `criterion_8221` outliving a spex
+that takes milliseconds. **That is wrong, I shipped a fix on it, and I have
+reverted the fix (`e0568217`) and withdrawn the resolution.**
 
-Every previous reproduction attempt was **too short to reach the timeout** —
-8221 alone, its neighbours, and all thirteen of story 990 together take 0.6
-seconds. Only a full sweep runs long enough, which is exactly where it was
-always seen. The fix is cleanup rather than the timeout, which is deliberate;
-I did not write it because confirming it needs a ~6-minute sweep and I would
-rather hand over a diagnosis I trust than a change I could not verify.
+`Boot.watch`'s expiry path calls `Workspaces.mark_failed` and returns
+normally, so nothing crashes when the deadline passes — and a task that
+returns normally never makes `Task.Supervisor` log `:terminating`. The only
+abnormal exits available in that module are calls into something already gone
+(a torn-down runner GenServer, a checked-in DB connection), which fire on the
+next poll after a spex ends — bounded by `poll_interval`, 20 ms here. "A
+minute later" was never an available timing. I had read the module before
+writing that; I had not read the function.
+
+The change was also aimed at the wrong end: the recorded instance shows the
+error landing **on** 8221, and the same report establishes it does not
+originate in 990. I added cleanup to the victim.
+
+And I never had a baseline. I resolved on a sweep showing zero without
+checking that the previous sweep showed the leak — `problems` rows carry no
+run id and are replaced per run, so it no longer exists. That gap is now
+filed as `08d3f858`; it is the reason the claim went in unchallenged.
+
+Two reproduction attempts with the fix disabled, both negative: 990 plus a
+70-second sleeper (14 tests, 0 failures), and 886 + 990 + the sleeper (22
+tests, 0 failures).
+
+The one thing worth keeping: `poll/2` reloads first and returns
+`{:ok, workspace}` when the row is gone, so a leaked task whose data was
+rolled back exits **cleanly**. That is the likeliest reason this almost never
+fires, and it means the leak is timing-dependent rather than
+duration-dependent — so "run it for longer" is not the lever I said it was.
+
+The issue stays resolved with the withdrawal attached, deliberately. Its own
+body warns twice that this trap has caught three prior passes and asks for a
+reproduction before theorising again; I theorised a fourth time. It carries a
+standing re-raise criterion for whoever gets a real one.
 
 ---
 
