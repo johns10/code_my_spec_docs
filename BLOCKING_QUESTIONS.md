@@ -146,4 +146,62 @@ change what 983 claims.
 
 ---
 
+## 4. Should a finding be acknowledgeable — and if so, with what expiry?
+
+**Issue `fb41eff7`.** The stop hook blocked five consecutive turns on 15 spex
+findings, none clearable in that session. Five were cassette mismatches caused
+by a behaviour change you approved; ten were pre-existing devops criteria. The
+correct fix — re-record the cassettes — was deferred *by your explicit
+decision*, because recording requires tearing down a drill sitting at 13/14
+waiting on Resend's asynchronous SPF verification.
+
+So the hook had no affordance for "known, attributed, deliberately sequenced",
+and the only ways to quieten it were to revert an approved change or destroy a
+working environment against your stated wish.
+
+**Why I did not build it.** An acknowledge-with-reason mechanism is a gate
+escape hatch, and this codebase has paid repeatedly for gates that quietly stop
+blocking — the spex attribution demotion that made `spex: :block_all` a no-op
+for months, `reclaim_quiet`'s nil-`last_seen_at` clause that reclaimed every
+default harness, `plan_runs`/`fresh_sources` disagreeing into a livelock. The
+principle is written in `split_unattributed/2`: "a gate that quietly stops
+blocking is worse than one that blocks too much, and it is invisible." It is
+also close to the `@tag :pending` stubs your own guidance rules out.
+
+**The shape I would build, if you want it:**
+
+- An `acknowledgement` on a Problem — reason (required), issue or story link
+  (required), and who.
+- **Expires on change, not on time.** It holds until the file or its
+  dependencies change, which is the report's own wording and the right trigger:
+  an acknowledgement is a claim about a specific finding on a specific tree, and
+  an edit invalidates it.
+- **Loudly present in the response.** The stop message names every acknowledged
+  finding and its reason, so "the gate is quiet because someone silenced it" can
+  never look like "the gate is quiet because the code is clean". That is the one
+  property that makes this survivable.
+- The MCP tool takes the problem id and refuses without a link, the way
+  `submit_qa_result` refuses a non-pass with no `issue_ids`.
+
+**The questions I actually need answered:**
+
+1. Is a per-finding acknowledgement the right grain, or should it be per source
+   per story — closer to how `specs_ready` already gates spex?
+2. Should acknowledging require an issue that is *open*, so the deferral has a
+   place to be resolved from? That is stricter and I think better, but it makes
+   the tool refuse more often.
+3. Does an acknowledgement survive a rebase that does not touch the file? By
+   "expires on change" it would, and that is the case where it is most likely to
+   go stale unnoticed.
+
+**Meanwhile:** two mechanisms that were contributing turns to loops of this
+shape are fixed — a sweep no longer drops a rerun for a busy source
+(`c97c52c4`), and a finding whose source is stale *and* re-running is now
+advisory (`0967844a`). Neither addresses deliberate deferral. And since the
+report, a blocking spex group in files this session did not touch at least
+explains why it blocks and names parking the story as the one legitimate escape
+(`3e1c14d2`).
+
+---
+
 _(nothing else blocking as of 2026-08-14 ~21:25)_
