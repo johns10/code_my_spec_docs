@@ -32,17 +32,20 @@ All eight commits are ancestors of `28d24fed` — verified with `git merge-base
 
 **What is confirmed working, and what is only live:**
 
-- **No absolute paths remain in `problems`** — 33 relative, 12 unknown, 0
-  absolute, against a sweep that completed at 05:37Z *after* the restart. Before
-  the fix there were 4.
-- But the `EXIT`-shape failures that produced those 4 did not occur in that
-  sweep, so this is *consistent with* `fa76604b` working rather than a
-  demonstration of it. A zero from a case that did not arise is not proof —
-  which is the same trap this session kept meeting, so it is worth not
-  overclaiming on the last one.
-- `72f3161e` (supersede logged as a fact) is live but unexercised: the only
-  rejections since the restart are `unmatched topic` and `unknown_run`, which
-  are genuine and which the fix correctly leaves loud.
+- **`fa76604b` is now demonstrated, not merely consistent.** I hedged this
+  earlier and was right to: the first post-restart sweep had zero absolute paths
+  but none of the `EXIT`-shape failures that produce them, so it proved nothing.
+  A later sweep produced **10 of that exact shape, every one relative, zero
+  absolute** — against 4, all absolute, before the fix. The case arrived and the
+  fix held.
+- `72f3161e` (supersede logged as a fact) is live but still unexercised: the
+  only rejections since the restart are `unmatched topic` and `unknown_run`,
+  which are genuine and which the fix correctly leaves loud.
+- **Two newer commits are NOT live**, and the stop hook shows it — it still
+  prints "which is a regression in this working copy", the wording `e6968de7`
+  removed. The main checkout is at `28d24fed`; `e6968de7` (precondition notice)
+  and `f2e82896` (drift fallback) are behind it. Same mechanism as before, now
+  affecting a smaller set.
 
 The section below is kept because the *mechanism* it describes is permanent —
 both processes serve the main checkout whatever launched them, so a worktree
