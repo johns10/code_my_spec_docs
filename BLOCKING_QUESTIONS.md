@@ -11,6 +11,68 @@ Format: what I need, why it blocks, what I did in the meantime.
 
 ---
 
+## Answered 2026-08-16 — four decisions, one of which kills work
+
+Asked directly and answered in one pass. Recorded here because three of them
+close sections below that still read as open.
+
+**Q5 (cycles) — dropped entirely, not just the reporting.** "I'm unsure we
+should even care about analyzing circular dependencies anymore... they don't
+seem to have any material effect on anything." The reason is in the mechanism:
+cycles are computed from the dependencies the *specs* declare, not from what
+the code calls, so the number tracks spec drift rather than architecture. That
+is why 4 -> 21 produced no symptom. Not building the ratchet, not fixing the
+three "obvious" cycles. `73ff202b` resolved on that basis. The count stays
+available in `get_architecture_summary`; nothing warns or gates.
+
+**Q2 (shared test database) — give the analyzer's exunit its own suffix**
+(`h<sha8>a`, as spex got `s`), and this contradicts `CmsHarness.TestDatabase`'s
+comment deliberately. **But it is explicitly a stopgap**: "my ultimate aim is to
+subsume this into the library — we already have our own analyzer and our
+analyzer writes to problems, and there's no reason we couldn't arbitrate `mix
+test` calls instead of allowing client_utils to arbitrate them. Roadmap, very
+soon after the stop hook story." So build the suffix, but do not build anything
+*around* it that would be expensive to unwind.
+
+**Q1 (analyzer test implementation) — build the real thing.** One module
+implementing the analyzer behaviour, swapped by config, returning recorded
+results. Replaces `test_output_files`, `use_cmd_cassette` and the
+`InMemoryEnvironment` shell passthrough for test purposes. Touches
+`Analysis.Runners`, `Compile`, `Tests`, `StaticRunner` and every test threading
+a fixture path. Note this and the item above converge — both end at "the
+analyzer owns how tests are invoked".
+
+**The spex fork — reset `main` to `feature/reusable-givens`.** Safe: `main`'s
+one commit is the squash-merge of the same work, so nothing unique is lost.
+After that `mix.exs` can track `main` without losing the `write_missing`
+backstop.
+
+**Q4 (acknowledgeable findings) — answered by the assignment model below, and
+not being built.** See story 894: if a finding is on a story assigned to another
+working copy it never blocked you, so there is nothing to acknowledge. That
+avoids adding a gate escape hatch, which was the whole objection.
+
+### And the reframe that matters more than any of them
+
+I put the scope problem as a choice between filtering the menu and leaving it
+unfiltered. Both were wrong. John: *"the working copy should surface all the
+failures about it, but what we should be able to do is say this working copy
+should be working on these stories. It's an assignment problem, not a demotion
+problem — the devops agent should be getting blocked on those stories and you
+should not be."*
+
+Demotion hides findings, which is how `spex: :block_all` became a no-op for
+months. Assignment routes them: the gate stays fully loud and refuses the
+*right* agent. Every scope failure in this file is an instance — the hook always
+knew, and told the wrong agent.
+
+The axis does not exist yet. `files` and `problems` carry `harness_id`; stories
+carry nothing. Whether it lands in 894 or its own story is parked as question
+`387cf96e` on that story — John: "I don't know that we want to tackle that
+here."
+
+---
+
 ## Read this first
 
 **One correction to a decision you made.** You approved the schema-type
