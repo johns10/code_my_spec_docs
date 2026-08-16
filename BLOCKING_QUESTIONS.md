@@ -93,6 +93,13 @@ and is missing an input: the spec's own file is known to the formatter at that
 moment and never leaves it, so a failure fully identified to a human is
 unattributable to the system.
 
+**Why searching harder is not an alternative.** All 20 stack frames are Req
+library code and the message is `cannot find mock/stub … in process #PID<…>` —
+the exception is raised in a **LiveView process**, so the recorded stack is that
+process's and the spex's frames are on a different one. No improvement to the
+stacktrace search could find the spec, because the spec is not on that stack.
+The file has to be carried alongside the failure or it is unrecoverable.
+
 Fix is two commits in order — the formatter (`Code-My-Spec/spex`, a git dep, not
 vendored here) emits the spec file as a separate field, then `spex_location/1`
 gains a final clause. I can write the second half, and it is dead code without
