@@ -55,25 +55,42 @@ predates them.
 
 ---
 
-### The framework queue is empty, except one filed in a repo I cannot reach
+### The framework queue is empty, except two filed against repos I cannot reach
 
-Every `scope: framework` issue is resolved bar `ff04e638`, which is filed and
-unfixed on purpose: `CodeMySpec.LocalServer` was factored out to the CLI project
-(`e3a8802a`) and no `defmodule CodeMySpec.LocalServer` exists under `lib/` here.
+Every `scope: framework` issue is resolved bar two, both filed and unfixed on
+purpose because the code is not in this checkout.
 
-It is worth someone's time. Running a `cms` command while the `cms` service is
-up kills the CLI at boot — 19 occurrences in `cli.log` — and the shape is the
-one this session kept finding: the code *detects* the collision and logs
+**`ff04e638` — a `cms` command run while the `cms` service is up dies at boot.**
+19 occurrences in `cli.log`. The code detects the collision and logs
 `[LocalServer] Port 4002 already in use` at warning level, then the supervisor
-fails anyway with `** (EXIT) :eaddrinuse`. A reader who sees the warning
-concludes it coped. It did not. And the `:epipe` on the next line means the
-operator may see nothing at all.
+fails anyway with `** (EXIT) :eaddrinuse`, and the `:epipe` on the next line
+means the operator may see nothing. Since `cms` is packaged as a service, the
+service holding 4002 is the *normal* state. `CodeMySpec.LocalServer` was
+factored out to the CLI project (`e3a8802a`); no `defmodule` for it exists under
+`lib/` here, which I checked before filing.
 
-Since `cms` is packaged to run as a service, the service holding 4002 is the
-*normal* state, so this is the ordinary case rather than an edge one.
+**`cd2a0db4` — the 14 `unknown` spex, diagnosed.** Measured with `--jsonl`
+rather than guessed:
 
-Also checked so nobody chases them: the `ValidateEdits` errors in the same log
-are stale — that module was deleted in `a18f3391`.
+    816/6580 (attributed)  scenario: None            error.file: …_spex.exs
+    969/8024 (unknown)     scenario: present         error.file: lib/req/test.ex
+
+The backstop path sets `error.file` to the spec's own file; the *scenario* path
+sets it to the raise site. `spec_file_fallback/1` then refuses `lib/req/test.ex`
+— **correctly**, since that guard is what stopped failures being filed against
+`req_cassette/plug.ex` and blocking whoever touched the plug. The rule is right
+and is missing an input: the spec's own file is known to the formatter at that
+moment and never leaves it, so a failure fully identified to a human is
+unattributable to the system.
+
+Fix is two commits in order — the formatter (`Code-My-Spec/spex`, a git dep, not
+vendored here) emits the spec file as a separate field, then `spex_location/1`
+gains a final clause. I can write the second half, and it is dead code without
+the first.
+
+Also checked so nobody chases them: the `ValidateEdits` errors in `cli.log` are
+stale — that module was deleted in `a18f3391` — and `cli.log` carries no dates,
+so they look current.
 
 ### What is left in the incoming queue
 
