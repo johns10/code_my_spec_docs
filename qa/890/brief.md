@@ -112,7 +112,7 @@ side-effect-free: an unrecognized `session_id` just means `mark_active` and
 - **The age is on the line** (2348). Any alert-bearing response's
   `systemMessage` must match `~r/ago|just now|seconds?|minutes?|hours?/i`.
 
-## list_problems (MCP tool)
+### list_problems (MCP tool)
 
 Call `mcp__plugin_codemyspec_local__list_problems` (no args, or
 `severity: "error"`) from the agent's own MCP session and confirm: (a) it
