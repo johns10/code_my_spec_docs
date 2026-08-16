@@ -100,6 +100,19 @@ process's and the spex's frames are on a different one. No improvement to the
 stacktrace search could find the spec, because the spec is not on that stack.
 The file has to be carried alongside the failure or it is unrecoverable.
 
+**The upstream cause, from `devops-qa` who owns those files:**
+`ProvisioningLive.load/2` lists Resend's domains at mount whenever the project
+has a domain, and the mount sits outside every cassette by design — so the
+LiveView reaches a provider before any `with_provider_cassette` block is
+entered. That is a **separate defect from this one**, still open in its general
+form (`510a07a9` fixed `8039` specifically). Neither fix subsumes the other:
+once the mount is fixed those spex go green, but any *future* failure raised in
+a LiveView process still lands on `unknown`.
+
+They are also **not** the linked-LiveView `EXIT` shape `cc643bf3` addressed —
+`fa76604b` is in their tree and these persist. Same symptom family, different
+defect, and I grouped them wrongly once before separating them.
+
 Fix is two commits in order — the formatter (`Code-My-Spec/spex`, a git dep, not
 vendored here) emits the spec file as a separate field, then `spex_location/1`
 gains a final clause. I can write the second half, and it is dead code without
