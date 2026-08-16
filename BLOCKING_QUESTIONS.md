@@ -31,13 +31,23 @@ matters: *analysis* follows the target working copy, but the harness's **own**
 code comes from whichever checkout launched the process.
 
 So everything shipped tonight that runs inside those two processes is on
-`origin/main` and not yet running:
+`origin/main` and not yet running — **8 commits**, recounted at the end of the
+session rather than left at the figure it was when I first noticed:
 
-    8169ffcb  hook decisions off the channel process   (server, :4000)
-    72f3161e  superseded analysis logged as a fact     (harness, :4004)
-    fa76604b  spex failure paths relativized           (harness, :4004)
-    3bd7f81f  absolute-path warning                    (server, :4000)
-    b44105f3  sweep signatures / baseline              (server, :4000)
+    69eaefe1  "pull" named as the remedy when restart cannot help
+    bc4615e7  drift notices code that arrived without the checkout moving
+    79d6ebbd  the second shape error.file can carry
+    3bd7f81f  absolute-path warning
+    fa76604b  spex failure paths relativized
+    8169ffcb  hook decisions off the channel process
+    72f3161e  superseded analysis logged as a fact
+    b44105f3  sweep signatures / baseline
+
+Reproduce the count with:
+
+    git log --oneline <main-checkout-HEAD>..origin/main -- \
+      lib/cms_harness lib/code_my_spec_web/channels lib/code_my_spec/analysis \
+      lib/code_my_spec/boot_version.ex lib/code_my_spec/bdd_specs
 
 The evidence is visible in the stop hook: the four absolute-path spex problems
 came back on a sweep 27 seconds after `fa76604b` was pushed, still absolute.
@@ -135,9 +145,9 @@ process` to `no mock or stub for …` and leaves the count identical. The honest
 blocker is the missing recordings (`b323f1c3`). Worth applying anyway whenever
 someone owns those files, because without it the message names the wrong cause.
 
-**What remains open here.** Questions 1, 2, 3, 4, 6 are design calls I reached
-and deliberately did not make; the cycle-reporting half of 5 is still open. 8
-answered itself under tracing and needs nothing. 7 and 10 are done.
+**What remains open here.** Questions 1, 2, 3, 4 and 6 are design calls I
+reached and deliberately did not make; the cycle-reporting half of 5 is still
+open. 7, 8, 9 and 10 are done — 8 answered itself under tracing.
 
 **One thing worth knowing that is not a question — and it is a retraction.**
 An earlier version of this section claimed the spex error leak (`23d3c71c`)
@@ -627,7 +637,17 @@ cheap:
 
 ---
 
-## 9. The spex analyzer works again, and now blocks on mail/devops spex (`c7c86260` in practice)
+## 9. ~~The spex analyzer works again, and now blocks on mail/devops spex~~ — **ANSWERED, both halves** (`c7c86260` in practice)
+
+**Answered 2026-08-15.** Who works them: hand to the devops owner —
+`devops-qa-b9` has all 21 with the breakdown and two already-checked dead ends.
+Whether they block me: keep working and do not stop; park only if genuinely
+hung. Nothing is parked.
+
+The section below is the original, kept because its measurements and the two
+dead ends are the part worth not re-deriving.
+
+### Original question
 
 **This one may actually block me**, unlike 5–8. Recording it before stopping,
 because the stop hook is about to tell me and the answer is yours either way.
