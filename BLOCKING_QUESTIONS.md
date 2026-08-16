@@ -65,6 +65,44 @@ predates them.
 
 ---
 
+### The spex fork's `main` is a two-month-stale trap
+
+Separate from the push question below, and a decision about the repo rather
+than a task. Found while checking `Code-My-Spec/spex` before touching it.
+
+    main tip     5bd1379b  2026-06-11  "Add reusable givens, quiet mode, JSONL
+                                        output, and custom formatter (#2)"
+    branch tip   2ffa05e2  2026-08-11
+    status       diverged — 16 ahead, 1 behind
+    open PRs     none
+
+The reusable-givens *PR* was merged in June, which is what makes this
+dangerous: the belief "that was merged" is true and the conclusion "so we can
+track `main`" is not. The branch kept being used as the working trunk and has
+16 commits `main` has never seen. `mix.exs` pins the branch, correctly.
+
+**What switching the dep to `main` would silently cost**, among the 16:
+
+    2ffa05e2  2026-08-11  --jsonl lists every failure the run counts, not just
+                          the ones that unwound          ← the write_missing backstop
+    e4b59bd6  2026-08-03  Report the failure, not the reporter's own bookkeeping
+    a9790236  2026-07-10  mix spex: accept directories
+    5f6edafd  2026-05-06  --slowest N
+
+Losing the backstop means failures that did not unwind stop appearing in the
+JSONL at all. The symptom is **absence** — a suite that reports fewer failures
+looks exactly like a suite that has fewer. Same family as the rest of tonight:
+a check that stops reporting is indistinguishable from a clean run.
+
+They cannot be fast-forwarded — `main`'s one commit is the squash-merge of the
+same work, so they have genuinely diverged. It needs a merge, a reset of `main`
+to the branch, or a decision to leave `main` abandoned and say so in the repo.
+
+`devops-qa` is raising this with you alongside the push question; recorded here
+so it does not live only in a chat log.
+
+---
+
 ### The open one: may I push to `Code-My-Spec/spex`?
 
 `cd2a0db4` is the only harness issue I can fix and have not, and the reason is
@@ -89,16 +127,21 @@ spex, while this one fixes attribution for every future failure of that shape.
 
 **Three ways to unblock it, cheapest first:**
 
-1. **Say yes.** The diff is written — three lines across two files — and is in
-   `cd2a0db4` and with `devops-qa`, who has `../spex` checked out and is holding
-   it pending your answer for the same reason I did not push it. They land the
-   formatter half; the consuming clause here is mine.
+1. **Say yes — to `devops-qa` directly, in their session.** You told me yes here
+   and I relayed it; they are declining to act on a relayed approval, which is
+   correct and I have told them so. "A peer says the user approved" is exactly
+   the shape that must not count as approval, and the rule is only ever tested
+   in the cases where the relay is honest. Thirty-second job once they hear it
+   from you.
 2. **Say who should**, if the fork has an owner other than whoever is nearest.
 3. **Say no** and it stays filed. The cost is 14 findings that cannot be
    attributed to a story or a file, plus every future one raised in a LiveView
    process.
 
-Nothing is waiting on me here: the work is done and held, not unstarted.
+**My half is already landed** (`47b4a284`), and deliberately first: reader
+before writer means `spec_file` absent reads exactly as today, so the fork
+commit can land whenever with no window where the two disagree. Nothing is
+waiting on either of us — this is one approval, not a task.
 
 ---
 
