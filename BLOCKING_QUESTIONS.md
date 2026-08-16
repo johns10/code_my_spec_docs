@@ -17,34 +17,26 @@ Format: what I need, why it blocks, what I did in the meantime.
 "who works them" half of 9. What each became is recorded in its own section
 below. Only one thing is still open, and it is new:
 
-### The open one: handing the spex off did not unblock me
+### The framework queue is empty
 
-You chose "hand them to the devops owner" over parking. I did — `devops-qa-b9`
-has the 21 failures with the breakdown and the two dead ends already checked.
+Every `scope: framework` issue is resolved. What is left in the incoming queue
+is 13 devops issues, all now carrying a devops `story_id` and handed to
+`devops-qa-b9`, plus `77aa93b0` — an app-scope, low-severity refactor to move
+integration status into a table, which its own report calls "performance and
+tidiness, not correctness".
 
-**But handing off does not clear the latch.** `specs_ready` is what makes a red
-spex block, and only a green run or parking the story clears it. So the stop
-hook still gates me on work that is now explicitly someone else's, and the only
-lever I have is the option you declined.
+**I did not do `77aa93b0`.** It needs a table, a schema and a migration across
+three databases, for a low-priority tidiness change its author marked not
+urgent. That is a poor trade to make unattended on shared infrastructure. Its
+*correctness* half is fixed and shipped separately (`8cbe1dfb`): the check
+substring-matched the whole document, so an integration marked `unverified`
+satisfied the gate, because "unverified" contains "verified".
 
-I did not park them. You picked the other option knowing parking existed, and
-parking changes shared state for every agent — not something to do on my own
-reading of a follow-on consequence you were not asked about.
+### The spex latch — answered, no longer open
 
-**The three ways out, when you get to it:**
-
-1. **Park them too.** Parking is about what *blocks*, not who *owns* — devops-qa
-   keeps the work and unparks as it fixes each. This is the one I would pick,
-   and the reason I did not is only that it reverses a choice you made.
-2. **Leave the latch.** I stop when I hit it. Fine if devops-qa is picking them
-   up promptly; it has been idle five days, so that is the thing to check.
-3. **Let devops-qa park what it takes**, so parking is done by the owner rather
-   than by me. Cleanest by ownership, slowest to happen.
-
-**One measurement that bears on it:** the sweep 20 minutes ago put story 990 at
-**zero** problems and `criterion_8221` off the list entirely — so the spex error
-leak did not land this time, and reverting my wrong fix regressed nothing.
-Everything blocking is devops/mail.
+You said: keep working and do not stop; the harness does not block work, only
+stopping; park if genuinely hung. So the third remedy was the one the issue
+never considered, and `a735ad1d` is closed on that basis. Nothing is parked.
 
 ---
 
