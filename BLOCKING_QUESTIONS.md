@@ -89,13 +89,16 @@ spex, while this one fixes attribution for every future failure of that shape.
 
 **Three ways to unblock it, cheapest first:**
 
-1. **Say yes** and I push the formatter change with a test, then the consuming
-   clause here.
-2. **Say who should**, if the fork has an owner — I will hand over the exact
-   diff and the measurements.
+1. **Say yes.** The diff is written — three lines across two files — and is in
+   `cd2a0db4` and with `devops-qa`, who has `../spex` checked out and is holding
+   it pending your answer for the same reason I did not push it. They land the
+   formatter half; the consuming clause here is mine.
+2. **Say who should**, if the fork has an owner other than whoever is nearest.
 3. **Say no** and it stays filed. The cost is 14 findings that cannot be
    attributed to a story or a file, plus every future one raised in a LiveView
    process.
+
+Nothing is waiting on me here: the work is done and held, not unstarted.
 
 ---
 
