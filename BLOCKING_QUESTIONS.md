@@ -203,7 +203,24 @@ waiting on either of us — this is one approval, not a task.
 Every `scope: framework` issue is resolved, including the two that spent most of
 the night recorded here as out of reach. **Neither was.**
 
-`cd2a0db4` landed once you approved the push — see above.
+`cd2a0db4` landed once you approved the push — see above. **Demonstrated in
+production**, not just tested: after a full sweep with both halves running,
+
+    before          after
+    unknown   ~14   →   0
+    absolute    4   →   0
+    relative   ~25  →  69
+
+Every spex problem in the table now carries a path. The 32 Resend-stub failures
+that were the bulk of the `unknown` set arrive naming their own spex —
+`965/criterion_7991`, `966/criterion_8006` and the rest — where they previously
+read `unknown — <criterion title>` and could be traced to no story and cleared
+by no edit.
+
+They are still red, and attributing them does not fix them: their cause is
+`ProvisioningLive.load/2` reaching Resend at mount outside every cassette, which
+is `devops-qa`'s open defect. What changed is that they are now findable,
+story-linked, and clearable by the person who owns them.
 
 **`ff04e638` I filed against deleted code.** `CodeMySpec.LocalServer` was removed
 in `ca2df492` ("Delete local_server — fully replaced by local_web + MCP tools"),
