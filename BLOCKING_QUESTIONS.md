@@ -55,10 +55,29 @@ predates them.
 
 ---
 
-### The framework queue is empty
+### The framework queue is empty, except one filed in a repo I cannot reach
 
-Every `scope: framework` issue is resolved. What is left in the incoming queue
-is 13 devops issues, all now carrying a devops `story_id` and handed to
+Every `scope: framework` issue is resolved bar `ff04e638`, which is filed and
+unfixed on purpose: `CodeMySpec.LocalServer` was factored out to the CLI project
+(`e3a8802a`) and no `defmodule CodeMySpec.LocalServer` exists under `lib/` here.
+
+It is worth someone's time. Running a `cms` command while the `cms` service is
+up kills the CLI at boot — 19 occurrences in `cli.log` — and the shape is the
+one this session kept finding: the code *detects* the collision and logs
+`[LocalServer] Port 4002 already in use` at warning level, then the supervisor
+fails anyway with `** (EXIT) :eaddrinuse`. A reader who sees the warning
+concludes it coped. It did not. And the `:epipe` on the next line means the
+operator may see nothing at all.
+
+Since `cms` is packaged to run as a service, the service holding 4002 is the
+*normal* state, so this is the ordinary case rather than an edge one.
+
+Also checked so nobody chases them: the `ValidateEdits` errors in the same log
+are stale — that module was deleted in `a18f3391`.
+
+### What is left in the incoming queue
+
+13 devops issues, all now carrying a devops `story_id` and handed to
 `devops-qa-b9`, plus `77aa93b0` — an app-scope, low-severity refactor to move
 integration status into a table, which its own report calls "performance and
 tidiness, not correctness".
