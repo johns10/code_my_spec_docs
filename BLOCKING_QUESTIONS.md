@@ -17,6 +17,44 @@ Format: what I need, why it blocks, what I did in the meantime.
 "who works them" half of 9. What each became is recorded in its own section
 below. Only one thing is still open, and it is new:
 
+### Tonight's harness and server fixes are pushed but NOT live
+
+Verified rather than assumed: both long-running processes serve from the **main
+checkout**, not from this worktree.
+
+    :4000  beam cwd = /Users/johndavenport/Documents/github/code_my_spec
+    :4004  beam cwd = /Users/johndavenport/Documents/github/code_my_spec   (pid 85083)
+
+`just refresh-harness` says the same thing in prose — "launched from the main
+checkout, whatever directory you run this in" — and adds the distinction that
+matters: *analysis* follows the target working copy, but the harness's **own**
+code comes from whichever checkout launched the process.
+
+So everything shipped tonight that runs inside those two processes is on
+`origin/main` and not yet running:
+
+    8169ffcb  hook decisions off the channel process   (server, :4000)
+    72f3161e  superseded analysis logged as a fact     (harness, :4004)
+    fa76604b  spex failure paths relativized           (harness, :4004)
+    3bd7f81f  absolute-path warning                    (server, :4000)
+    b44105f3  sweep signatures / baseline              (server, :4000)
+
+The evidence is visible in the stop hook: the four absolute-path spex problems
+came back on a sweep 27 seconds after `fa76604b` was pushed, still absolute.
+
+**I did not pull or restart.** Restarting from here relaunches the main
+checkout's *current* code, which does not contain these commits, so it would
+cost every other agent their in-flight sweeps for no gain. Pulling the main
+checkout changes code under other running agents' feet and is not mine to do
+unattended.
+
+**What it needs:** a `git pull` in the main checkout, then `just refresh` and
+`just refresh-harness`. Worth doing before judging any of tonight's fixes by
+what the harness reports, because right now it is reporting on code that
+predates them.
+
+---
+
 ### The framework queue is empty
 
 Every `scope: framework` issue is resolved. What is left in the incoming queue
