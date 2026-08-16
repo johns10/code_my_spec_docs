@@ -13,51 +13,65 @@ Format: what I need, why it blocks, what I did in the meantime.
 
 ## Read this first
 
-**You will hit a blocked stop.** 25 spex are red and every one is devops or mail
-— 816, 964, 969, 972, 992, plus a group that dies in `setup` on a missing Resend
-stub. Spex is exempt from attribution demotion by design, so they block whoever
-stops next regardless of who wrote them. That is **question 9**, and it is the
-only one holding anything up.
+**Four of these were answered on 2026-08-15 and are done** — 5, 7, 10 and the
+"who works them" half of 9. What each became is recorded in its own section
+below. Only one thing is still open, and it is new:
 
-**One-line unblock, if you want it now:** park the latched stories among those
-(`update_story` with `ready_for_dev: false`) — it clears the earned latch and
-they stop blocking. I did not, because it changes shared state for every agent.
+### The open one: handing the spex off did not unblock me
 
-**One fact that bears on that choice:** the `devops-qa` session has been idle for
-**five days**. So these are not spex somebody is mid-way through — nobody is
-working them right now, which makes "genuinely mid-rework" (the hook's own
-condition for parking) a harder claim than it looks. Whether that argues for
-parking them or for fixing them is yours; I only measured that nobody is there.
+You chose "hand them to the devops owner" over parking. I did — `devops-qa-b9`
+has the 21 failures with the breakdown and the two dead ends already checked.
 
-I also did not message that session. Routing the work to its owner is the right
-shape, but an idle five-day-old session will not read it before you do, and
-asking another agent to take on twenty-one failures is not mine to initiate.
+**But handing off does not clear the latch.** `specs_ready` is what makes a red
+spex block, and only a green run or parking the story clears it. So the stop
+hook still gates me on work that is now explicitly someone else's, and the only
+lever I have is the option you declined.
 
-**One diagnosis to hand on, so whoever takes 992 does not spend the first hour
-where I did.** Its six failures all reduce to `the deploy recorded no image at
-all` — the spex mounts `ProvisioningLive`, clicks start-setup, waits, and finds
-no `[data-test='published-image']`. That is **not** the missing-test-hook shape
-that story 995's failures turned out to be: the marker exists
-(`provisioning_live.ex:718`, rendered for resources of kind `published_image`)
-and so does the resource kind (`steps.ex:2034`). So the run genuinely produced no
-such resource. Worth knowing too that `steps.ex:2043` records a `published_image`
-with `identifier: "built=false"`, so "recorded nothing" is a different state from
-"recorded an unbuilt image" — the assertion would pass on the latter. I stopped
-there: which of the deploy step's paths ran is devops logic, and reading further
-risks a confident wrong answer in someone else's area.
+I did not park them. You picked the other option knowing parking existed, and
+parking changes shared state for every agent — not something to do on my own
+reading of a follow-on consequence you were not asked about.
 
-**The rest are not urgent.** Questions 1–7 are design calls I reached and
-deliberately did not make. Question 8 answered itself under tracing and needs
-nothing.
+**The three ways out, when you get to it:**
 
-**If you read only two:**
+1. **Park them too.** Parking is about what *blocks*, not who *owns* — devops-qa
+   keeps the work and unparks as it fixes each. This is the one I would pick,
+   and the reason I did not is only that it reverses a choice you made.
+2. **Leave the latch.** I stop when I hit it. Fine if devops-qa is picking them
+   up promptly; it has been idle five days, so that is the thing to check.
+3. **Let devops-qa park what it takes**, so parking is done by the owner rather
+   than by me. Cleanest by ownership, slowest to happen.
 
-- **9** — the blocked stop, above.
-- **5** — because it grew a finding worth more than the question it started as:
-  59 Ecto schemas are typed `module`, which is why the cycle detector counts Ecto
-  associations as architectural cycles, *and* why 59 components get the wrong
-  requirement graph. Fixing it opens 49 spec-writing tasks, so it is a decision
-  about work you want, not a cleanup.
+**One measurement that bears on it:** the sweep 20 minutes ago put story 990 at
+**zero** problems and `criterion_8221` off the list entirely — so the spex error
+leak did not land this time, and reverting my wrong fix regressed nothing.
+Everything blocking is devops/mail.
+
+---
+
+**The diagnosis handed to devops-qa with them, so whoever takes 992 does not
+spend the first hour where I did.** Its six failures all reduce to `the deploy
+recorded no image at all` — the spex mounts `ProvisioningLive`, clicks
+start-setup, waits, and finds no `[data-test='published-image']`. That is
+**not** the missing-test-hook shape that story 995's failures turned out to be:
+the marker exists (`provisioning_live.ex:718`, rendered for resources of kind
+`published_image`) and so does the resource kind (`steps.ex:2034`). So the run
+genuinely produced no such resource. Worth knowing too that `steps.ex:2043`
+records a `published_image` with `identifier: "built=false"`, so "recorded
+nothing" is a different state from "recorded an unbuilt image" — the assertion
+would pass on the latter. I stopped there: which of the deploy step's paths ran
+is devops logic, and reading further risks a confident wrong answer in someone
+else's area.
+
+**Also handed over: the 14 identical Resend-stub failures are not one fix.**
+`23d3c71c` measured it — adding `Req.Test.set_req_test_to_shared(%{})`, the
+pattern 22 other spex use, changes the error from `cannot find mock/stub … in
+process` to `no mock or stub for …` and leaves the count identical. The honest
+blocker is the missing recordings (`b323f1c3`). Worth applying anyway whenever
+someone owns those files, because without it the message names the wrong cause.
+
+**What remains open here.** Questions 1, 2, 3, 4, 6 are design calls I reached
+and deliberately did not make; the cycle-reporting half of 5 is still open. 8
+answered itself under tracing and needs nothing. 7 and 10 are done.
 
 **One thing worth knowing that is not a question — and it is a retraction.**
 An earlier version of this section claimed the spex error leak (`23d3c71c`)
@@ -293,7 +307,21 @@ explains why it blocks and names parking the story as the one legitimate escape
 
 ---
 
-## 5. Where should a growing circular-dependency count surface? (`73ff202b`)
+## 5. ~~Where should a growing circular-dependency count surface?~~ — **the schema half is ANSWERED and shipped** (`73ff202b`, `f198b227`)
+
+**Answered 2026-08-15: infer the type, and take the 49 specs.** Shipped in
+`59b14f94`. `ComponentExtract.ecto_schema?/1` detects `use Ecto.Schema`, the
+scanner records it beside `module_name`, and an explicit `## Type` still wins —
+so inference only fills a gap. Dry-run over the real tree: 59 flip, the 20
+already typed `schema` are untouched, the one `schema (non-persisted)` keeps its
+declared type. Expect ~49 new `spec_file` requirements on the next full sync;
+that is the accepted cost. It also softens the cycle count — `Member ↔ Account`
+was never a cycle, just two schemas the exclusion could not see.
+
+**Still open below: where a growing cycle count should surface.** Unchanged, and
+not blocking anything.
+
+### Original question
 
 **Not blocking any work** — the reporting half is done (`a2478e5c`:
 `get_architecture_summary` now returns `circular_dependency_count`, and
@@ -431,7 +459,16 @@ story. Not a change to make on a hunch while you are away.
 
 ---
 
-## 7. Is `NoControlFlowInTests` meant to cover helpers and stubs? (`358799d7`)
+## 7. ~~Is `NoControlFlowInTests` meant to cover helpers and stubs?~~ — **ANSWERED, shipped** (`358799d7`)
+
+**Answered 2026-08-15: the rule is right, the message is wrong.** Shipped in
+`1065eab1` and `74f7256`. The breadth is confirmed deliberate — no control flow
+anywhere in a `_test.exs` / `_spex.exs`, helpers, setup and stubs included. The
+message now says that first and gives a remedy per shape, because "no branching
+anywhere" without one for stub routing is a rule you cannot follow. 104 findings
+before and after; this changes what a reader does with them, not which they get.
+
+### Original question
 
 **Not blocking anything** — nothing is failing and I changed no behaviour. It is
 here because it is one line from you and it is 80% of this working copy's
@@ -649,7 +686,19 @@ someone owns those spex — just not a way past this gate.
 
 ---
 
-## 10. Does an issue need an owner/area, or do we accept the wrong recommendation? (`c7c86260`)
+## 10. ~~Does an issue need an owner/area?~~ — **ANSWERED, done** (`c7c86260`)
+
+**Answered 2026-08-15: derive area from the story link, and set the missing
+story ids.** Seven issues now carry one. Assigned to the convention already in
+the data — the devops sequence sits on 841 regardless of provider — with three
+going elsewhere because the story owns the subject outright (857, 850, 854).
+
+**One trap recorded for anyone else using this axis:** spex directory numbers
+are **not** story ids. `964_my_provider_credentials…` is story **850**,
+`974_i_can_receive_mail…` is **860**, `992_my_images…` is **877**. Only some
+coincide (841 does). Map by title, not by directory number.
+
+### Original question
 
 **Not blocking me** — I have been working the harness backlog directly rather
 than through `issues_triaged`. Recorded because the structural half of
