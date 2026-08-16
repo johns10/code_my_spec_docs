@@ -65,7 +65,41 @@ predates them.
 
 ---
 
-### The framework queue is empty, except two filed against repos I cannot reach
+### The open one: may I push to `Code-My-Spec/spex`?
+
+`cd2a0db4` is the only harness issue I can fix and have not, and the reason is
+not technical. The fix is two commits in order:
+
+1. `SexySpex.JsonlFormatter` emits the spec's own file as a separate field on
+   the failure — a few lines, in `Code-My-Spec/spex` (branch
+   `feature/reusable-givens`), which is a **git dependency, not vendored here**.
+2. `Runners.spex_location/1` gains a final clause reading it — a few lines, in
+   this repo, and dead code without the first.
+
+I can write both. I have not written either, because landing the first means
+pushing to a repo two projects depend on and that I was not asked to modify.
+That is outward-facing and shared, so it is a decision rather than a step —
+`deps/sexy_spex` is consumed by this repo and by the spex fork's other consumer,
+and a bad commit there breaks both suites at once.
+
+**`devops-qa` independently rates it the more valuable of the two open
+defects**, on the grounds that it pays off whatever the underlying cause: their
+half (a LiveView reaching a provider outside any cassette) fixes those specific
+spex, while this one fixes attribution for every future failure of that shape.
+
+**Three ways to unblock it, cheapest first:**
+
+1. **Say yes** and I push the formatter change with a test, then the consuming
+   clause here.
+2. **Say who should**, if the fork has an owner — I will hand over the exact
+   diff and the measurements.
+3. **Say no** and it stays filed. The cost is 14 findings that cannot be
+   attributed to a story or a file, plus every future one raised in a LiveView
+   process.
+
+---
+
+### Two issues filed against repos not in this checkout
 
 Every `scope: framework` issue is resolved bar two, both filed and unfixed on
 purpose because the code is not in this checkout.
