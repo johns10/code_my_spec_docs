@@ -13,6 +13,20 @@ Format: what I need, why it blocks, what I did in the meantime.
 
 ## Read this first
 
+**One correction to a decision you made.** You approved the schema-type
+inference on the basis that it would open 49 spec-writing tasks — "infer the
+type, and take the 49 specs". **That cost does not exist on this project.**
+`project_configurations.require_specs` is `false`, and the graph strips every
+`:specification` requirement from every component, so schema-typed components
+carry only `implementation_file`. The 49 never appeared and will not until that
+setting changes.
+
+So the change was pure upside: the cycle detector now excludes Ecto
+associations correctly — `Member ↔ Account` gone, 21 cycles → 20 — and no work
+opened. The decision holds either way, but the trade-off I put to you was
+really "do you want the cycle detector fixed", which has no downside. Detail on
+`bcefa306` and `f198b227`.
+
 **Four of these were answered on 2026-08-15 and are done** — 5, 7, 10 and the
 "who works them" half of 9. What each became is recorded in its own section
 below. Only one thing is still open, and it is new:
