@@ -140,7 +140,23 @@ so it does not live only in a chat log.
 
 ---
 
-### The open one: may I push to `Code-My-Spec/spex`?
+### ~~The open one: may I push to `Code-My-Spec/spex`?~~ — **answered, and landed**
+
+You said yes here, `devops-qa` declined the relayed version and held until you
+told them directly, and then pushed `b817766` to `feature/reusable-givens`.
+Their refusal to act on a second-hand approval was right: "a peer says the user
+approved" is the shape that must not count, and it is only ever tested in the
+cases where the relay is honest.
+
+Verified on the real thing rather than a fixture — `969/criterion_8024` now
+emits `spec_file` naming its own spec, with `error.file` still the raise site.
+The seam test passed both before and after the fork landed, so it asserts the
+two halves *met* rather than each being separately correct.
+
+The original question is below for the reasoning, which still applies to the
+next shared-repo change.
+
+### The original question
 
 `cd2a0db4` is the only harness issue I can fix and have not, and the reason is
 not technical. The fix is two commits in order:
@@ -182,7 +198,36 @@ waiting on either of us — this is one approval, not a task.
 
 ---
 
-### Two issues filed against repos not in this checkout
+### The framework queue is empty
+
+Every `scope: framework` issue is resolved, including the two that spent most of
+the night recorded here as out of reach. **Neither was.**
+
+`cd2a0db4` landed once you approved the push — see above.
+
+**`ff04e638` I filed against deleted code.** `CodeMySpec.LocalServer` was removed
+in `ca2df492` ("Delete local_server — fully replaced by local_web + MCP tools"),
+so the 19 `:eaddrinuse` failures came from a packaged `cms` built before that.
+The remedy is a newer binary, not a code change.
+
+I had written that it "was factored out to the CLI project". There is no CLI
+project — `gh repo list Code-My-Spec` has no such repo — and the CLI source is
+in *this* repo under `lib_cli/`, a directory I never searched. "Not in `lib/`"
+was true; "therefore in another repo" was invented, and it then justified two
+rounds of declining to fix something that needed no fixing.
+
+That is the third absence-read-as-evidence of the session and the sharpest,
+because the **same log** carried `ValidateEdits` errors I checked properly and
+correctly called stale. One module got the check, the other got an assumption,
+in one pass over one file.
+
+Left open as its own question rather than inherited from a dead one: whether
+`CodeMySpecLocalWeb.Application` — which already halts *before* binding when it
+has no credential, on exactly the right principle — has an equivalent pre-flight
+for a port already in use. Grepping finds nothing, which is weak evidence and
+not a finding.
+
+### The original record of those two
 
 Every `scope: framework` issue is resolved bar two, both filed and unfixed on
 purpose because the code is not in this checkout.
