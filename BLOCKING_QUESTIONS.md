@@ -203,6 +203,23 @@ waiting on either of us — this is one approval, not a task.
 Every `scope: framework` issue is resolved, including the two that spent most of
 the night recorded here as out of reach. **Neither was.**
 
+**What the harness recommends now, having run out of my own work.** I asked it:
+
+    get_next_requirement
+    → TriageIssues — issues_triaged, entity_type=project
+
+The incoming queue is 13 devops issues and `77aa93b0`. So the single
+recommendation, to an agent with nothing left in its area, is to triage thirteen
+issues belonging to another agent. That is `c7c86260` exactly — resolved by
+adding the story links, which made ownership *visible* without changing what the
+requirement asks. Recorded there with this instance, because it happened at the
+one moment there was no competing work, which is when a bad recommendation is
+most likely to be taken.
+
+Not a blocker and nothing needed from you unless you want the requirement
+scoped. Noted so the next agent to hit it knows it is documented rather than
+new.
+
 `cd2a0db4` landed once you approved the push — see above. **Demonstrated in
 production**, not just tested: after a full sweep with both halves running,
 
