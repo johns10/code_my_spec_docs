@@ -17,7 +17,41 @@ Format: what I need, why it blocks, what I did in the meantime.
 "who works them" half of 9. What each became is recorded in its own section
 below. Only one thing is still open, and it is new:
 
-### Tonight's harness and server fixes are pushed but NOT live
+### ~~Tonight's harness and server fixes are pushed but NOT live~~ — **they are live now**
+
+**Resolved 2026-08-16 ~01:30, and no longer something you need to do.**
+`devops-qa` restarted the harness (its booted contract was older than the
+server's, giving `unmatched topic` on every stop), and that moved the main
+checkout to `28d24fed`. Both processes then came up from it:
+
+    :4000  server   pid 97907  started 01:22:51  cwd = main checkout
+    :4004  harness  pid 5846   started 01:29:50  (inst=5846 in harness.log)
+
+All eight commits are ancestors of `28d24fed` — verified with `git merge-base
+--is-ancestor`, not assumed.
+
+**What is confirmed working, and what is only live:**
+
+- **No absolute paths remain in `problems`** — 33 relative, 12 unknown, 0
+  absolute, against a sweep that completed at 05:37Z *after* the restart. Before
+  the fix there were 4.
+- But the `EXIT`-shape failures that produced those 4 did not occur in that
+  sweep, so this is *consistent with* `fa76604b` working rather than a
+  demonstration of it. A zero from a case that did not arise is not proof —
+  which is the same trap this session kept meeting, so it is worth not
+  overclaiming on the last one.
+- `72f3161e` (supersede logged as a fact) is live but unexercised: the only
+  rejections since the restart are `unmatched topic` and `unknown_run`, which
+  are genuine and which the fix correctly leaves loud.
+
+The section below is kept because the *mechanism* it describes is permanent —
+both processes serve the main checkout whatever launched them, so a worktree
+still cannot verify its own harness or server fixes. `lsof -p <pid> | grep cwd`
+is how to check. What has changed is that this particular backlog is cleared.
+
+---
+
+### The original record, kept for the mechanism
 
 Verified rather than assumed: both long-running processes serve from the **main
 checkout**, not from this worktree.
