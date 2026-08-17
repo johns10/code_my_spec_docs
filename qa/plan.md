@@ -309,6 +309,58 @@ on the server; QA seeds do **not** duplicate that.
 
 ## System Issues
 
+### Onboarding the sandbox says `:no_credential` while the credential is in the repo
+
+`mix cms.harness.onboard` — step 1 of the sandbox section above — fails with
+`{:error, :no_credential}` unless `CMS_TOKEN` or `CMS_DEPLOY_KEY` is in the
+**shell** environment. Two QA cycles have stopped here and concluded no
+credential exists.
+
+One is in the repo. `envs/dev.env` and `envs/test.env` both carry `DEPLOY_KEY`
+(dev also has the Stripe set: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`,
+`STRIPE_WEBHOOK_SECRET`, and both price ids). Whether `DEPLOY_KEY` is the one
+`onboard` wants or a git deploy key sharing the name is **not yet confirmed** —
+check before relying on it.
+
+The reason it reads as absent: `envs/*.env` are Dotenvy files loaded by the app
+at boot and **never exported to the shell**. So `System.get_env` is empty in
+anything you shell out to, and both statements are true at once — the value is
+right there, and the tool correctly reports it has none. Nothing in the error
+says where to look.
+
+Export it for the command rather than assuming it is missing:
+
+```
+CMS_DEPLOY_KEY=$(grep '^DEPLOY_KEY=' envs/dev.env | cut -d= -f2-) mix cms.harness.onboard <sandbox-path>
+```
+
+Confirm the result with `mix cms.harness.onboard --check <sandbox-path>`, which
+as of `c3cae092` asserts the keys onboarding writes (`CMS_HARNESS_ID`,
+`MIX_TEST_PARTITION`, an `ANTHROPIC_BASE_URL` **with an id on it**) and names
+which are missing. Before that commit it answered `onboarded:` from the file's
+existence alone, so a half-onboarded copy reported success — do not trust a bare
+`onboarded:` from an older build.
+
+### An agent's own typed MCP tools cannot be pointed at the sandbox
+
+The section above says mutating scenarios **MUST** target the sandbox. Worth
+stating how, because the obvious route does not work: a QA agent's typed
+`mcp__plugin_codemyspec_local__*` tools are bound to whichever harness its Claude
+Code session serves. Inside a worktree of the real repo that is the real dev
+harness, and there is no parameter to redirect a call. Only curl against the
+sandbox's MCP endpoint, carrying its `X-Harness-Id`, actually isolates.
+
+This bit two cycles of story 896 before anyone noticed, because the failure is
+invisible: the call succeeds, and the row simply lands in the real project
+owner's data. `ask_user` was the first tool where that was both visible and
+irreversible — story 896 gives questions no dismiss and no expiry, so two probe
+questions are permanently in the owner's `/app` inbox and only he can clear them.
+
+Issue `08d4d7bd` tracks it. It will recur for **any** writing MCP tool, not just
+`ask_user` — check before exercising one from your own tool list. Read-only calls
+(`list_problems`, `list_requirements`, `list_user_questions`, `check_answer`) are
+safe against the real harness.
+
 ### ~~Local MCP can't be QA'd via plain curl~~ — withdrawn, it can
 
 This said the Anubis Streamable HTTP transport returns `202 Accepted` with an empty
