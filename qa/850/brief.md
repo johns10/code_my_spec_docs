@@ -1,13 +1,4 @@
-# Qa Story Brief
-
-Story 850 — My provider credentials go in once and get checked.
-
-Second pass. The first (attempt `3210d3df`, 2026-08-03) came back **partial** on
-three criteria and filed two real issues, both since **resolved**: `06883742`
-(the panel not re-rendering when an option is toggled) and `51255335` (the spex
-driving a `/credentials` route that does not exist). This pass re-tests what
-those issues broke, closes the one criterion that was never exercised, and
-re-confirms the six that passed.
+# QA Brief — Story 850: My provider credentials go in once and get checked
 
 ## Tool
 
@@ -15,71 +6,109 @@ web
 
 ## Auth
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]` with
-   `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → open the **newest message addressed to
-   that address specifically**. The mailbox is shared across QA users, so the
-   newest message overall may log you in as somebody else.
-3. Follow the link.
+Two logins are needed this cycle — one for the ordinary panel checks, one for
+the rejection test. The dev mailbox is shared, so confirm the message you open
+is addressed to the user you asked for before clicking it.
+
+**Owner (for the panel, and for anything touching the real Code My Spec account):**
+
+1. `http://127.0.0.1:4000/users/log-in`
+2. Fill `input[name="user[email]"]` with `johns10@gmail.com`
+3. Click **Email me a login link** (the submit button is `form button.btn-secondary`)
+4. `http://127.0.0.1:4000/dev/mailbox` — open the message addressed to that user
+5. The link is issued for `dev.codemyspec.com`; swap the host to `127.0.0.1:4000`
+
+**QA user (for the rejection test — see Setup Notes for why it must be a
+different account):** same flow with `qa@codemyspec.local`. Its accounts are
+`QA Team 605`, `QA Second Account` and `QA Team 605 Scope Test`, none of which
+hold a real Hetzner token.
+
+If the email field renders `readonly`, a session is already open — log out via
+the `a[href="/users/log-out"]` link (it is `data-method="delete"`, so navigating
+to the URL does nothing) and start again.
+
+Switch accounts at `/app/accounts/picker`; the entries are
+`a[phx-value-account-id=...]`.
 
 ## Seeds
 
-Base seeds only — do not re-run them with the server up (the compile lock 500s
-the app under test):
+No story-specific seeding.
 
-```
-mix run priv/repo/qa_seeds.exs
-```
-
-Read seed state while the server runs with:
-
-```
-psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"
-```
-
-Story-specific state: two projects, one with real Hetzner credentials stored and
-one without, and the harness serving **two working copies** of this repo
-(`devops-qa` and `phx-new-generator`) — `curl -sS localhost:4004/health` lists
-them. Both resolve the same project, which is what 8050 needs.
+- QA Fixture Project: `11111111-1111-4111-8111-111111111111`, in the
+  `Code My Spec` account (`0f27281c-240b-4d6d-8e52-9c5972329522`)
+- Provisioning page:
+  `http://127.0.0.1:4000/app/projects/<project_id>/provisioning`
+- For the rejection test, create a throwaway project under a QA account via
+  `/app` → **Create project**
 
 ## What To Test
 
-- **7982 — an option turned off does not ask for its credential.** On the
-  provisioning page, untick every option that uses object storage (storage,
-  backups, content, widget) and read the credential panel **without reloading**.
-  The two `hetzner_s3_*` fields must disappear as the options change. This is
-  the exact defect `06883742` fixed; before it, the panel was correct only
-  after a reload.
-- **8050 — credentials follow the project, wherever the agent runs.** The prior
-  pass could not exercise this from a single working copy. Resolve the same
-  project through each of the two harness ids on `:4004` and confirm both see
-  the same stored credentials, and that nothing credential-shaped lives in
-  either working copy.
-- **7981** — one panel lists every credential the enabled options need.
-- **7983** — paste a syntactically valid but wrong Hetzner token; the field must
-  reach `data-state="rejected"` with the provider's own message.
-- **7985** — on a project missing Hetzner credentials, the gate names what is
-  still needed and `[data-test='start-setup']` provisions nothing when clicked.
-- **7986** — the `hetzner_s3_*` fields carry console directions.
-- **7987** — grep the working copy for the stored values; they must appear
-  nowhere outside `.git`.
-- **8051** — a second project's page does not show the first project's stored
-  credentials.
+- **One sitting covers every credential the run will need (7981).** One
+  `[data-test="provider-credentials"]` panel listing every credential the
+  enabled options need, each with `data-credential`, `data-credential-kind`,
+  `data-stored` and `data-state`. No second page, no per-provider detour.
+- **An option turned off does not ask for its credential (7982).** Untick
+  storage: the `hetzner_s3_*` fields should stay, because backups and content
+  also consume object storage. Untick the last consumer and they should
+  disappear **without a reload**. Re-tick and they return.
+- **A credential is proven by a real call, not by looking right (7983).** On a
+  throwaway project under a QA account, paste a syntactically plausible but
+  invalid Hetzner API token and save. Expect `data-state="rejected"` naming the
+  permission, not `verified`. This is the criterion that failed last cycle
+  (`bcd2b2b4`) — read Setup Notes before running it.
+- **An under-scoped token names the permission it lacks (7984).** Accepted as
+  structurally verified on the owner's decision of 2026-08-17. Proving it needs
+  a genuinely read-only Hetzner token, which only the owner can mint. Do not
+  mint one; record it as structural.
+- **A missing credential stops the run before it starts (7985).** On a project
+  missing credentials, the gate should name what is still needed, and clicking
+  `[data-test="start-setup"]` should start nothing — verify server-side by
+  confirming no step enters `running` and the done count is unchanged, not just
+  by reading the page.
+- **The console-only key pair is asked for with directions (7986).** The
+  `hetzner_s3_*` fields should carry the console path in their own text, and the
+  API token field should name the read-only trap.
+- **The repo stays clean of credential values (7987).** Grep the working copy
+  for the literal values from `envs/.env`, excluding `.git`, `_build`, `deps`
+  and `node_modules`. Print filenames only — never the values.
+- **Credentials follow the project, wherever the agent runs (8050).** Call
+  `devops_status` through the local MCP endpoint scoped to two different harness
+  ids that resolve the same project, and compare the responses.
+- **Another project's credentials are not reachable (8051).** Must be tested
+  **cross-account** — see Setup Notes.
 
 ## Setup Notes
 
-**7984 (an under-scoped token names the permission it lacks) is accepted as
-structurally verified**, on the owner's decision of 2026-08-17. Proving it
-needs a genuinely read-only Hetzner token, which only the account owner can
-mint; the rejection *message* was demonstrated in the first pass by an invalid
-token, and the code path that produces it is the same one. What remains
-unproven is that Hetzner answers a read-only token the way the page says it
-will.
+**The Hetzner API token is account-grain now, and that changes two tests.**
+`Credentials` marks `hetzner_api_token` as `grain: :account`; the S3 pair stays
+project-grain because `Storage.credentials/2` reads it there.
 
-No provisioning happens in this story — it is the credential gate, before
-anything is built. Nothing here creates or destroys real resources.
+- **7983 needs a disposable *account*, not just a disposable project.** Pasting a
+  bad token under `Code My Spec` would overwrite the owner's real Hetzner token
+  for every project in that account. Use a QA account, which holds none.
+- **8051 means cross-account.** An account-grain credential is reachable from
+  every project in its account by design — that is what account grain means. The
+  isolation claim is that another *account* cannot reach it. Confirmed with the
+  owner on 2026-08-17.
+
+**What changed since the failing attempt.**
+
+- `bcd2b2b4` is resolved. The check resolved the account credential while the
+  field being typed into was the project one, so a garbage value read as
+  `verified` — the value under test was never sent anywhere. The catalogue is
+  grain-aware now and a migration lifted the stray project-grain rows.
+- `b1d87f01` is partly addressed. The two cassettes carrying live S3 keys are
+  gone with the whole cassette directory, and the working copy is verified clean.
+  The values remain in git history at `5a85216b` and `0cc186d0`, so the key pair
+  should still be treated as exposed until rotated — console-only, owner's
+  action. Report 7987 on the working-copy standard both prior attempts used, and
+  state the history exposure explicitly rather than letting a pass imply it is
+  gone.
+- `85e91bf8` stays open only for whether the refusal flash reaches someone who
+  presses the header button. Do **not** disable `[data-test="start-setup"]` — the
+  964/7985 spex clicks it to prove the refusal is enforced server-side, and
+  disabling it breaks that proof.
 
 ## Result Path
 
-Findings are filed with `create_issue` as they are found, and the session ends
-with `submit_qa_result`. Screenshots go in `.code_my_spec/qa/850/screenshots/`.
+`.code_my_spec/qa/850/result.md`
