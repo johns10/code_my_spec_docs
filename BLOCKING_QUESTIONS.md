@@ -25,14 +25,27 @@ is why 4 -> 21 produced no symptom. Not building the ratchet, not fixing the
 three "obvious" cycles. `73ff202b` resolved on that basis. The count stays
 available in `get_architecture_summary`; nothing warns or gates.
 
-**Q2 (shared test database) — give the analyzer's exunit its own suffix**
-(`h<sha8>a`, as spex got `s`), and this contradicts `CmsHarness.TestDatabase`'s
-comment deliberately. **But it is explicitly a stopgap**: "my ultimate aim is to
-subsume this into the library — we already have our own analyzer and our
-analyzer writes to problems, and there's no reason we couldn't arbitrate `mix
-test` calls instead of allowing client_utils to arbitrate them. Roadmap, very
-soon after the stop hook story." So build the suffix, but do not build anything
-*around* it that would be expensive to unwind.
+**Q2 (shared test database) — answered, shipped, and this entry is closed.**
+
+The answer was the suffix (`h<sha8>a`, as spex got `s`), contradicting
+`CmsHarness.TestDatabase`'s comment deliberately, and explicitly a stopgap: "my
+ultimate aim is to subsume this into the library — we already have our own
+analyzer and our analyzer writes to problems, and there's no reason we couldn't
+arbitrate `mix test` calls instead of allowing client_utils to arbitrate them."
+That aim is stories 839/840, both parked on 2026-08-18 as a performance
+improvement not worth the churn yet.
+
+**Shipped 2026-08-16 in `c51c893d`.** Three partitions now: the bare one for the
+interactive session, `s` for the analyzer's spex, `a` for the analyzer's exunit.
+Section 2 below is the state *before* that commit and is left as written, since
+it is the evidence; read it as history.
+
+I re-asked this on 2026-08-18 having read section 2 and this entry without
+checking `test_database.ex`, and got a second answer to a solved problem. The
+tell was available and I did not take it: `c51c893d`'s message records the
+reasoning that supersedes the costing here — the old one "compared the
+analyzer's two suites to each other, where spex moving was enough. The collision
+it could not see was with a process outside the analyzer entirely."
 
 **Q1 (analyzer test implementation) — build the real thing.** One module
 implementing the analyzer behaviour, swapped by config, returning recorded
@@ -573,6 +586,23 @@ sources rather than with the interactive session.
 **Meanwhile:** nothing. It is not blocking anything I'm doing, and every fix
 changes which database an agent's tests run against — not a thing to change
 under you while you're away.
+
+**Fixed 2026-08-16 in `c51c893d` — everything above is history.** Option 2: the
+analyzer's exunit run got the `a` suffix, so all three suites have their own
+database. `c51c893d` also makes `client_utils` a git dependency in the same
+commit, deliberately, because `Onboarding.databases/2` is the only thing that
+tells anyone a database exists and nothing creates them — a release boundary
+between the two would be a window where a partition is used here and absent
+there, i.e. a database nobody is told to create.
+
+Left in place rather than deleted because it is the measurement, and because the
+"why I did not just fix it" paragraph is the reasoning `c51c893d` had to
+overturn: it costed the change correctly while answering a narrower question,
+comparing the analyzer's two suites to each other and missing the collision with
+a process outside the analyzer entirely.
+
+A later reader (me, 2026-08-18) took this section as current, re-asked it, and
+got a second answer to a solved problem. Hence the header above.
 
 ## 3. Story 983 needs a criterion for the spex-attribution rule (Three Amigos)
 

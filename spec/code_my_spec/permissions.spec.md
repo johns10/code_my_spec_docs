@@ -8,8 +8,6 @@ continuous mode cannot clear `session.continuous` itself — that is the point o
 the flag — so it raises a request, a human approves or rejects it on their
 phone, and the decision comes back over a socket and is applied to the session.
 
-## Why a context, when three modules already do the work
-
 `TapOut`, `TapOutWaiter` and `PermissionSocket` existed first and callers reached
 straight into them: the `tap_out` MCP tool, both permission controllers, a spex
 and the fixtures bridge — five consumers, all naming an internal. That is the
@@ -21,11 +19,22 @@ connects to the production server's permission channel and waits for a
 decision", which is `PermissionSocket`'s job written one level up. That made the
 context look like a namespace anchor rather than an API, and the requirement
 graph asked for an implementation nobody could justify writing. The description
-above is what the context is actually for; the socket is one of its parts.
+above is what the context is actually for; the socket is one of its parts, stays
+internal, and the two controllers naming it should move here when they next
+change.
+
+Everything below delegates — the behaviour stays in the modules that have it and
+are already tested through it.
 
 ## Type
 
 context
+
+## Delegates
+
+- request/2: Permissions.TapOut.request/2
+- respond/4: Permissions.TapOut.respond/4
+- topic/0: Permissions.TapOut.topic/0
 
 ## Dependencies
 
@@ -35,17 +44,20 @@ context
 - CodeMySpec.Users
 - Phoenix.PubSub
 
-## Public API
+## Components
 
-Delegating, deliberately — the behaviour stays in the modules that have it and
-are already tested through it.
+### Permissions.TapOut
 
-- `request/2` — register a tap-out request on a session. Returns `{:ok, request_id}`
-  immediately; the decision arrives later.
-- `respond/4` — apply a human's `:approve` or `:reject` to a pending request.
-- `topic/0` — the PubSub topic carrying `{:tap_out_requested, …}` and
-  `{:tap_out_decision, …}`.
+Registers a tap-out request against a session and applies the decision when it
+arrives. Owns the PubSub topic both halves talk over.
 
-`PermissionSocket` stays internal. It is a supervised client the application
-starts, not something a caller reaches for, and the two controllers that name it
-today should move to this context when they next change.
+### Permissions.TapOutWaiter
+
+Holds a pending request until a human answers it, so the agent that raised it is
+never blocked on a person.
+
+### Permissions.PermissionSocket
+
+Slipstream client connected to the server's permission channel — how a decision
+made on a phone reaches this working copy. Supervised by the application, not
+called by anything.
