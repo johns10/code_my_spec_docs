@@ -1,53 +1,81 @@
 # QA Brief — Story 727: Agents working the same project do not collide
 
 Second pass. Builds on attempt `43cc9af8-7645-4ac8-b32d-cbb261909bec` (2026-08-13,
-`partial`, one issue filed: `3c6b6b63`). That issue is now **resolved** — components
-stay project-scoped by identity (deliberate design: 112 stories / 4048 requirements
-reference stable component ids); per-harness *presence*/orphan-detection is handled
-separately by `ComponentSync` + `ArchitectureChecker.orphans/1` once
-`Harnesses.reclaim_quiet/1` (story 892) prunes an idle harness's Files. The
-resolution names story 727 directly: its notes still read "Components follow
-files... same grain," which is now superseded by the shipped design — that
-sentence is stale documentation, not an open bug.
+`partial`, one issue filed: `3c6b6b63`, now resolved — components stay
+project-scoped by identity, per-harness by presence via `ComponentSync` +
+`ArchitectureChecker.orphans/1`; the story's own notes were updated 2026-08-15
+to reflect that, so the stale-doc caveat that made criterion 732 partial last
+time no longer applies).
 
-## Constraints this pass
+## Tool
 
-Team-lead instruction: no browser. This story's 13 criteria are agent identity /
-per-agent projection / lease refusal — no meaningful page surface, and Vibium is a
-single shared instance across concurrent QA agents (measured, issue `0963f90f`:
-three 1800s hangs, ~90 min lost). Surfaces used instead: writing files into this
-working copy and reading the live harness's reaction from `harness.log`; MCP read
-tools; `curl` against `:4004/mcp` with an explicit `X-Harness-Id` for a different
-worktree; source-reading for mechanisms too destructive to trigger live (killing
-another live agent's identity, or spawning a rival process against a working copy
-another session is relying on right now).
+No `web` — this story's 13 criteria are agent identity / per-agent projection /
+lease refusal, with no meaningful page surface (team-lead instruction, learned
+from burning QA agents on the neighbouring story 873). Tools instead: writing
+files into this working copy and reading the reaction in
+`~/.codemyspec/harness.log`; MCP read tools bound to this worktree's own
+harness; `curl` against `localhost:4004/mcp` with an explicit `X-Harness-Id`
+header for a *different* worktree; source-reading for mechanisms too
+destructive to trigger deliberately (killing another live agent's identity
+file, or spawning a rival process against a working copy another session
+depends on right now).
 
-This harness: root `.../phx-new-generator`, `harness_id
-6bc4851f-f735-4590-bb1c-c660619b4019`, project `708492f9-454e-482f-a2eb-be64f0356b87`
-(inst 15609). Baseline scan before writing this file: 4141 files, manifest accepted
-at 04:31:10.327803Z.
+## Auth
 
-## Plan
+None needed. The local harness endpoints (`:4004`, loopback-only) are scoped
+entirely by the `X-Harness-Id` header / `?harness=` param, not by login —
+`Harnesses.fetch(id)` preloads `.project`, so no project id or session is ever
+supplied on the wire. This session's own MCP tools already carry an
+authenticated context; the cross-harness `curl` calls reuse the same MCP
+session-id handshake (`initialize` → `notifications/initialized` →
+`tools/call`) with a different `X-Harness-Id`.
 
-- 732/738/741: this brief.md itself is the probe (`Scanner.classify_qa/1` maps
-  `.code_my_spec/qa/<id>/brief.md` → role `:qa_brief`, so it is a legitimate
-  observation, not a fabricated artifact). Baseline/after file count in
-  `harness.log` ties the write to this session's harness.
-- 734: create a throwaway story via my own `create_story`, read it back over
-  `curl` using a *different* worktree's `X-Harness-Id` (web-ui:
-  `f9bcf3d8-677f-4ac1-9f0c-002a51c47e2a`), delete it after.
-- 739: source-verify only. `harness_picker` import + `<.harness_picker>` call
-  confirmed present in both `files_live.ex` and `problems_live.ex` this session
-  (mirrors prior attempt's finding, re-confirmed 6 days later, no browser needed).
-- 736/744: source-verified only, matching the prior attempt's own restraint —
-  triggering either requires destroying another live agent's `.cms_harness.json`
-  or starting a rival process against a working copy this session is relying on.
-  Not a safe trade on a shared machine.
-- 732 scoring: the criterion text is about *files*, not components. Files/Problems
-  do carry `harness_id` (confirmed via migration). Score the literal criterion on
-  that basis; note the stale story-notes sentence as a documentation finding
-  distinct from — and not a re-file of — `3c6b6b63`.
-- 742: `get_next_requirement()` (no story scope) returns a project-level item
-  (`TriageIssues`), consistent with the story's own "Open" note that
-  authored-work sequencing stays project-level rather than per-agent — this
-  reads as an intentional scope boundary, not a defect.
+## Seeds
+
+None needed. Fixtures are the repo's own worktrees — 9 of them, each with its
+own `.cms_harness.json` (distinct `harness_id`, some sharing project
+`708492f9-454e-482f-a2eb-be64f0356b87`) — and this project's own real backlog
+(stories, issues) as authored-data fixtures for the project-scoped-vs-harness-
+scoped distinction the story is built around.
+
+## What To Test
+
+- 732/738/741 — write/delete a file inside this working copy, confirm the file
+  count in `harness.log` moves and comes back (`.code_my_spec/qa/scripts/` is
+  a real, role-classified probe location — not fabricated)
+- 733 — two harnesses at different worktree paths hold distinct `harness_id`s
+  despite some sharing one project (source + `.cms_harness.json` comparison)
+- 734 — create a throwaway story via this worktree's own MCP tools, read it
+  back over `curl` using a different worktree's `X-Harness-Id`, delete it
+- 735 — a restarted harness process resumes the same harness_id's state with
+  no data loss (opportunistic: watch for a natural process handoff during the
+  session)
+- 736 — source only: identity is always server-minted, never derived from
+  path/host, so a lost identity cannot coincide with another's by
+  construction. Not safely triggerable live (would require destroying a live
+  peer's `.cms_harness.json`)
+- 737 — source: `HarnessScope` resolves purely from `X-Harness-Id`, no code
+  path accepts a client-supplied project id; corroborated by every MCP call
+  this session
+- 739 — no browser this pass: grep `files_live.ex` / `problems_live.ex` for
+  `<.harness_picker>` + `Harnesses.viewing/1` wiring
+- 740 — source only: sync is push-based from an active harness process; there
+  is no passive path for an unwatched edit to produce file state
+- 742 — compare `get_next_requirement()` (project-level) against the story's
+  own "Open" note that next-work must stay per-project for authored work
+- 743 — source only: sprite-volume recreation is out of scope to trigger live
+  this pass
+- 744 — source-verified mechanism (`take_working_copy/2`,
+  `ChannelClient.log_refusal/3`); live-trigger only if a second process
+  naturally joins this working copy during the session — do not engineer it
+
+## Result Path
+
+`.code_my_spec/qa/727/result_complete.md`
+
+## Setup Notes
+
+Disk at 96% — keep artifacts small, no screenshots, delete every probe file
+and throwaway story before submitting. The QA sandbox project is not isolated
+from the real backlog (issue `ee058c95`), so anything created here (stories,
+issues, files) lands in the real project — clean up accordingly.
