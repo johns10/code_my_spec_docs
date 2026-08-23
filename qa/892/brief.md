@@ -1,131 +1,133 @@
-# QA Brief — Story 892: An agent that has gone quiet stops holding state for everyone else
+# QA Brief — Story 892: A working copy that vanished warns until I offboard it
 
 ## Tool
 
-curl for `POST /api/hooks/stop`; web (Vibium) for the components LiveView — both on the same endpoint.
+web (Vibium) for `CodeMySpecWeb.WorkingCopyLive.Index` (`/app/projects/:project_id/working-copies`) —
+the only surface that removes a working copy. curl for the two HTTP endpoints
+a harness itself uses to establish and report on a working copy:
+`POST /api/harnesses` (mint/recognise, `CodeMySpecWeb.HarnessLookupController`)
+and `POST /api/devices` (machine announce + path observation,
+`CodeMySpecWeb.DeviceController`).
 
-Both surfaces belong to `CodeMySpecLocalWeb`, which is why this story can be
-tested from one running app: the hook is what triggers a reclaim and the
-components page is where its effect is visible. Testing either alone proves
-nothing — a reclaim with no observer, or an observer with nothing to observe.
+Attaching a `device_id` to a working copy (what makes `observe_paths/2` able to
+flip it missing/present) only happens inside the `harness_project:<project_id>`
+Phoenix channel join — there is no HTTP-only way to do it. See Setup Notes.
 
 ## Auth
 
-None. `CodeMySpecLocalWeb` runs `Plugs.LocalOnly`, which rejects anything
-off-loopback with `403 {"error": "Localhost only"}` and trusts whoever is on
-the box. Requests must originate from `127.0.0.1`.
+Hosted app (`:4000`): magic-link login as `qa@codemyspec.local` per
+`.code_my_spec/qa/plan.md` — rewrite the mailed link's origin to
+`http://127.0.0.1:4000` before following it.
 
-The hook identifies its working copy rather than its user:
-
-    curl -sS -X POST localhost:4014/api/hooks/stop \
-      -H 'content-type: application/json' \
-      -H "x-harness-id: <HARNESS_ID>" \
-      -d '{"session_id":"qa-892"}'
-
-`x-harness-id` is the whole of the request's identity — `Plugs.HarnessScope`
-resolves the project, the working copy's root, and the environment from it, and
-ignores anything the request says about where it is.
+`/api/harnesses` and `/api/devices` take a project deploy key or a token
+exchanged for one at `POST /api/sprite/token`. The QA Fixture Project's key is
+`dk_qa_codemyspec_local` — use only this key for anything under this brief.
+**Never** pass the real `code-my-spec` project's own `DEPLOY_KEY` (from
+`envs/dev.env`) to these scripts; it mutates the live project every other
+agent in this session is working against.
 
 ## Seeds
 
-The QA instance is a second copy of the app on its own port and its own
-database, so nothing here can touch `~/.codemyspec/cli.db`, the dev Postgres, or
-another agent's working copy:
+No seed script needed — the QA Fixture Project (`11111111-1111-4111-8111-111111111111`)
+already exists. Mint a scratch working copy row with:
 
-    CMS_PORT=4014 \
-    CMS_DB_PATH=<scratch>/qa892/qa.db \
-    MIX_ENV=dev_cli elixir -S mix phx.server
+    TOKEN=$(curl -sS -X POST http://localhost:4000/api/sprite/token \
+      -H 'authorization: Bearer dk_qa_codemyspec_local' -H 'content-type: application/json' \
+      | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
-Seed with:
+    curl -sS -X POST http://localhost:4000/api/harnesses \
+      -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' \
+      -d '{"project_id":"11111111-1111-4111-8111-111111111111","root":"/tmp/<scratch-root>","label":"<label>"}'
 
-    NO_SERVER=true CMS_DB_PATH=<scratch>/qa892/qa.db MIX_ENV=dev_cli \
-      elixir -S mix run <scratch>/qa892/seed.exs
-
-The seed builds the two-agent situation the story is about:
-
-- a project, with `harness_idle_hours` left at its default of 2
-- **harness A** — "the agent that left": `last_seen_at` 96 hours ago, holding
-  file rows for a spec and an implementation, which project a component
-  `QaOrphanContext`
-- **harness B** — "the agent still working": `last_seen_at` now, its own root,
-  no files
-- **`QaAuthoredContext`** — a component with a story pointing at it, whose only
-  files also belong to A. It is the control: authored links are not derived
-  state and must survive the same sweep that takes the orphan.
-
-It prints `PROJECT_ID`, `HARNESS_A`, `HARNESS_B` for the steps below.
+The reply's `working_copy_id` is the row's id. Point `root` at a real directory
+if you want an on-disk check (criterion 2865); a nonexistent path is fine for
+everything else.
 
 ## What To Test
 
-Before the hook, at `http://localhost:4014/app/projects/<PROJECT_ID>/components`:
+At `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/working-copies`:
 
-- Both `QaOrphanContext` and `QaAuthoredContext` are listed. This is the
-  premise, and it is worth checking rather than assuming — a page that lists
-  neither would make every later step pass for the wrong reason.
+- **2863 / 2865** — mint a working copy at a real scratch directory. Click
+  **Offboard**, confirm the `<.confirm_dialog>` names the copy and states files
+  + problems + orphaned components are removed and the checkout is not
+  touched. Confirm. The row disappears, the flash states real counts, and the
+  directory (and its `.cms_harness.json`) are untouched on disk.
+- **2864** — `grep -rn "WorkingCopies.offboard" lib/` has exactly one call
+  site: this button's `handle_event`. No scheduled job, hook, or sync path
+  calls it — confirms nothing offboards a copy without a click.
+- **2868** — re-POST `/api/harnesses` presenting the id of a working copy you
+  just offboarded (same root, same id in the body). The reply carries a
+  **different** `working_copy_id` — a returning checkout is issued a new
+  identity, never repaired into the old row.
+- **2859 / 2862 (UI)** — `UPDATE working_copies SET path_missing_since = now()
+  WHERE id = '<id>'` on a copy you own, reload the page: "Checkout gone" badge
+  and warning text render. Set it back to `NULL`: badge disappears. This
+  proves the render path; the detection path (`observe_paths/2` stamping the
+  column from a real report) is channel-only — see Setup Notes and the spex
+  list below.
+- **2866 (partial live)** — offboarding a working copy with orphaned
+  components in the project removes them; the flash names the count. Verified
+  live during this pass (8 orphaned components removed alongside qa-739-beta).
 
-Fire the live agent's stop hook (criterion 2384 — the sync is the trigger, so
-an ordinary stop is the whole interaction; there is no sweep endpoint to call):
+Always clean up rows you mint: `DELETE FROM working_copies WHERE id = '<id>'`
+(only after confirming it has no files/problems, or offboard it through the UI
+instead — that's the real deletion path and leaves no residue to clean by
+hand).
 
-    curl -sS -X POST localhost:4014/api/hooks/stop \
-      -H 'content-type: application/json' -H "x-harness-id: <HARNESS_B>" \
-      -d '{"session_id":"qa-892"}'
+## Not reachable outside the app — verified via `mix spex` instead
 
-Then reload the components page and check:
+Every one of the 11 criteria has a dedicated, substantive spex file at
+`test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/`, and
+the story's `bdd_specs_passing` requirement is satisfied (green as of this QA
+pass). These use `join_working_copy`/`harness`/`report` helpers that call the
+real channel-join and `observe_paths` code in-process — not a fixture standing
+in for the mechanism.
 
-- `QaOrphanContext` is **gone** — criterion 2379. Its files belonged only to a
-  checkout nobody is running, and no story points at it, so nothing an agent
-  does in any working copy could have cleared what the graph demanded of it.
-- `QaAuthoredContext` is **still listed** — criterion 2380. Someone decided that
-  link; it is not regenerable, and spending it to reclaim a derived row is the
-  bad trade.
-- A's file rows are gone and B's remain — criterion 2385. The sweep is not
-  scoped to the agent doing the syncing; if it were, B would sweep itself, find
-  nothing, and reclaim nothing forever while looking correct.
+- **2860** (offline device isolation), **2861** (device-scoped path
+  authority — two working copies at one path, two devices), **2867**
+  (authored links survive an offboard), **2872** (a restarted harness asks the
+  server what it's carrying) — genuinely need either two independent device
+  identities or a harness-process restart. Neither is reachable from outside
+  the BEAM without running a second, independently-credentialed `cms harness`
+  process, which hit an unresolved local blocker — see Setup Notes.
+- **2859 / 2862** (detection/clearing on the server side, as opposed to the UI
+  render checked live above) fall in the same bucket, since they also need a
+  device-attached working copy plus a real path observation.
 
-Then, without re-seeding:
-
-- Fire the hook again as B. Nothing further is reclaimed, and the page is
-  unchanged — a second sweep has nothing to find.
-- Fire the hook as **A**, the agent that was reclaimed, and check the response
-  carries no error — criterion 2378. A returning agent presents the id from its
-  own checkout and is served as the same harness; only its derived state was
-  taken. Then confirm B's component is untouched — criterion 2377, a working
-  agent is never reclaimed out from under itself.
-
-Configuration, on `http://localhost:4014/app/projects/<PROJECT_ID>/configuration`:
-
-- Set **harness idle hours** to `0` and save. Re-seed, then fire B's hook
-  immediately, with A only seconds old rather than days. `QaOrphanContext`
-  disappears without any waiting — `0` means a harness that is not the caller is
-  quiet at once.
-- Set it to a large value (`720`). Re-seed and fire B's hook. `QaOrphanContext`
-  survives: A is 96 hours idle, well inside a 720-hour window — criterion 2381,
-  an unswept checkout is not a quiet agent.
-
-Not testable from outside the app, and left to the spex that already cover them:
-
-- criterion 2382 (idle time is measured in UTC) — reproducing it needs the
-  machine's timezone changed under a running server.
-- criterion 2383 (coming back is onboarding, not recovery) — needs a real
-  harness process re-onboarding a root.
+Code-read alongside the spex for each: `WorkingCopies.observe_paths/2` scopes
+every write to `w.device_id == ^device_id` (the security boundary 2861 is
+about), and `reclaim_orphan_components/1` in `working_copies.ex` excludes
+anything a file or a story still points to project-wide (2867).
 
 ## Result Path
 
-Findings are filed with `create_issue` as they are found and submitted via
-`submit_qa_result`; the harness does not read a result file. Screenshots:
-`.code_my_spec/qa/892/`.
+Findings filed with `create_issue` as found, submitted via `submit_qa_result`.
+Screenshots: `.code_my_spec/qa/892/screenshots/`.
 
 ## Setup Notes
 
-The QA rig needed two fixes before it would start at all, both filed as
-critical framework issues:
+**A second harness process could not join the QA Fixture project's channel on
+this machine.** Started via `CMS_HARNESS=1 CMS_DEPLOY_KEY=dk_qa_codemyspec_local
+cms start` (the published binary, on a free port via `CMS_HARNESS_PORT` +
+`CMS_NODE_NAME` to dodge the sname collision with the already-running dev
+harness) — the socket still connected using the **real `code-my-spec`
+project's** deploy key (verbatim, confirmed byte-for-byte against
+`envs/dev.env`'s `DEPLOY_KEY`) regardless of the process's own `CMS_DEPLOY_KEY`
+env var, and every join to `harness_project:11111111-...` was refused. Same
+result from the already-running dev harness via `qa_agents.sh touch`. Filed as
+a framework issue — this blocks any future QA needing a second, independently
+credentialed harness identity on this box, which is exactly the case
+`CmsHarness.Credentials`'s moduledoc says the per-working-copy credential
+resolution exists to support.
 
-- `61351c19` — CLI migration `20260810220000` carried Postgres `split_part` and
-  `::integer` into SQLite.
-- `ca46f606` — CLI migration `20260813210000` altered `question_requests`, a
-  table the CLI set never creates.
+`/codemyspec:qa story <id>` (the documented skill shortcut) is also broken
+right now: `SkillRouter`'s topic-task path builds `%{requirement_name: topic}`
+but `QaStory.get_story_id/1` pattern-matches on `%{story_id: story_id}`, so
+every invocation fails with "QaStory requires a story ID argument" regardless
+of the id passed. Worked around by calling the `start_task` MCP tool directly
+with `requirement_name: "qa_complete", entity_type: "story", entity_id: "892"`.
+Filed as a framework issue.
 
-Neither had ever run: both local databases sit behind them, so the next release
-carrying either would have failed to boot for every existing user, not only for
-fresh installs. `CodeMySpecLocalWeb.Migrator` is a supervision-tree child, so a
-failing migration stops the application rather than being skipped.
+The story 739 fixture rows (`qa-739-alpha`, `qa-739-beta`) pre-existed in the
+QA Fixture project with `device_id` already `NULL` — the same channel-join
+limitation likely blocked that QA pass too, for the same underlying reason.
