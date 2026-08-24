@@ -1,3 +1,7 @@
 .DS_Store
 internal/
 hex_docs/
+
+# Harness identity and its deploy key. Untracked here but not ignored, so a
+# `git add -A` would have committed a credential into the spec repo.
+.cms_harness.json
