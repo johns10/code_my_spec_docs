@@ -1,4 +1,6 @@
-# QA Brief — Story 966: My app answers on my own server over HTTPS
+# Qa Story Brief
+
+Story 966 — I watch my project and talk to its agent on one screen.
 
 ## Tool
 
@@ -6,131 +8,101 @@ web
 
 ## Auth
 
-Browser session against the hosted endpoint on port 4000. Log in through the
-UI — this is a `:browser` pipeline route behind `:require_authenticated`, so
-curl with a cookie is not an option.
+Passwordless. There is no password login for the QA user; `/users/log-in` offers
+GitHub, Google and a magic link only.
 
-**Passwordless.** The plan's `qa-password-123!` is dead — there is no password
-field (filed as `3acee570`). Magic link instead:
+1. `http://127.0.0.1:4000/users/log-in` — fill `input[name="user[email]"]` with
+   `qa@codemyspec.local`, click "Email me a login link".
+2. `http://127.0.0.1:4000/dev/mailbox` — the local mail adapter catches it. Open
+   the newest message.
+3. The link is minted with the configured host,
+   `https://dev.codemyspec.com/users/log-in/<token>`. **Rewrite the origin to
+   `http://127.0.0.1:4000` before navigating.** Following it as-is leaves the app
+   under test. This is the step people miss.
+4. Lands on `/app` with the fixture project active. The token is single-use — a
+   second attempt needs a fresh link.
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]`
-   with `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → read the message.
-3. The link is minted as `https://dev.codemyspec.com/users/log-in/<token>`.
-   **Rewrite the origin to `http://127.0.0.1:4000`** before navigating.
-4. Lands on `/app` with the fixture project active. Token is single-use.
-
-The account is `qa-account` and the user is stamped `Member{role: :owner}`, so
-no further elevation is needed.
+`/dev/mailbox` is shared across QA sessions. Take the newest message only;
+an older one logs you in as somebody else's fixture user.
 
 ## Seeds
 
-Already applied — verify rather than re-run, because the dev server on 4000
-holds the compile lock and a `mix run` under `MIX_ENV=dev` will 500 the app
-mid-session.
+Already present — do not re-run seeds with the dev server up. `mix run` under
+`MIX_ENV=dev` takes the compile lock and 500s the app being tested.
 
-Verify with psql directly:
+Verify instead, read-only:
 
 ```
 psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"
-psql -qtA code_my_spec_dev -c "select id, name from projects where id='11111111-1111-4111-8111-111111111111';"
-psql -qtA code_my_spec_dev -c "select key, state from provisioning_steps where project_id='11111111-1111-4111-8111-111111111111' order by key;"
 ```
 
-If the user or project row is missing, stop the dev server first, then run
-`mix run priv/repo/qa_seeds.exs`, then restart it.
+Values this session needs:
 
-Project under test: `11111111-1111-4111-8111-111111111111` ("QA Fixture
-Project"). Page: `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/provisioning`
+- Project `QA Fixture Project` — `11111111-1111-4111-8111-111111111111`
+- Conversation with an agent — `62d3f01c-68ac-4c36-a7d1-4467a8da25a6`
+- Designated main working copy — `d1540d93-f639-448a-9dac-5317665e513f` (rooted, 1 agent)
 
-The fixture already carries a mixed provisioning state, which is what makes it
-worth testing rather than a blank project:
+Target screen:
 
-| state | steps |
-|---|---|
-| `done` | callback_credential, domain, server, storage |
-| `errored` | backups, content, deploy, email, repository, tls |
-| `not_started` | dns, inbound, secrets |
-| no row at all | monitoring |
+```
+http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/agent-conversation/62d3f01c-68ac-4c36-a7d1-4467a8da25a6
+```
 
 ## What To Test
 
-Selectors are taken from the story's own spex, so a rename breaks QA and the
-BDD layer together rather than silently passing here: `setup-step`,
-`run-step`, `deploy-phase`, `live-version`, `deployed-version`,
-`deploy-failure`, `deploy-downtime`, `uptime-monitor`, `environment`,
-`environment-verification`, `provisioned-resource`, `firewall-scope`,
-`firewall-rule`, `start-setup`, `add-environment-form`.
+Both halves and the header (criteria 2944, 2943):
 
-- **Page loads and reports true state.** Visit the provisioning URL. Every
-  step in the table above renders with `data-state` matching what psql says.
-  A step the DB calls `errored` must not render as anything else. Screenshot.
-- **The server shows up (criterion 8003).** *Corrected after execution:* the
-  step is not `done` by the time the page renders. `mount/3` calls
-  `Provisioning.reverify/3`, which asks Hetzner, finds the box gone (an
-  earlier drill tore it down) and downgrades the row to `not_started` during
-  the page load. So the DB snapshot taken before loading the page does not
-  match the DB after — that is correct behaviour (criteria 7964, 7970), not a
-  bug, and the reverify is worth expecting rather than being surprised by.
-  What is testable here is the negative: the page must not keep claiming a
-  server that no longer answers. It does stop claiming the state, but it
-  still lists the vanished resource (filed as `7ba220b6`).
-- **Database is not reachable from outside (8004).** Look for
-  `firewall-scope` / `firewall-rule` on the server step's resources. Assert
-  the rule set is rendered and that it scopes Postgres to something narrower
-  than the public internet.
-- **Deployed image is the one the repo built (8005).** The `deploy` step is
-  `errored`, so check the negative: `deployed-version` must NOT claim a live
-  version, and `deploy-failure` must be present and legible. An errored deploy
-  that still shows a live version is the bug.
-- **Valid certificate (8006).** `tls` is `errored`. Confirm the page says so
-  and gives a reason rather than a bare red state. Note that `tls` follows
-  `deploy` in the sequence — a tls failure downstream of a failed deploy
-  should read as blocked-by, not as an independent certificate problem.
-- **Migrations land before the swap (8007) / failed migration leaves the old
-  version serving (8008) / unhealthy deploy does not go live (8009).** These
-  are `deploy-phase` orderings. With deploy errored, assert the phases render
-  in sequence and that no phase after the failure is marked complete.
-  `deploy-downtime` should not claim zero downtime for a run that failed.
-- **Sam finds out when the site stops answering (8010).** `monitoring` has no
-  row at all. *Corrected after execution:* the step is legitimately absent
-  from the page because the `monitoring` option is off, which is criterion
-  7968's documented behaviour ("steps his options exclude are absent, not
-  present-and-skipped"). `widget` is off and absent for the same reason. The
-  assertion is therefore the opposite of what this bullet first said: with the
-  option off, absence is correct. To exercise 8010, turn `monitoring` on first
-  and confirm the step then appears as `not_started`.
-- **UAT stands alone, prod on its own box (8156).** Check `environment` rows
-  and `environment-verification`. Add a `prod` environment via
-  `add-environment-form` and confirm it appears without disturbing the
-  existing `uat` server. Remove it again afterwards.
-- **Explore.** Reload mid-state, try `run-step` on an errored step and confirm
-  the button is offered with a retry affordance, and check the page does not
-  fire provider calls on every render (watch for latency spikes or errors in
-  the console).
+- Load the target screen at a desktop window size. Both the conversation and the
+  panel accordion are present at once, with no navigation between them.
+- The timeline header is visible above them. Scroll the conversation to the
+  bottom and back up — the header stays put rather than scrolling away.
 
-Do not click `start-setup`. A full run provisions real infrastructure on live
-provider accounts and is a drill, not a QA pass.
+Layout by width (2945, 2946):
+
+- At a desktop width (≥1024), the conversation is on the **left** and the
+  accordion on the **right**.
+- Resize to a phone width (≈390). The accordion moves **above** the
+  conversation. This is a real reflow driven by the client reporting its width,
+  so give the page a moment after the resize.
+
+Panels (2949, 2948, 2947):
+
+- The accordion has exactly **three** tabs: preview, project (the dynamic one),
+  activity. Opening and closing them does not change how many there are.
+- Open the preview tab on a project with nothing deployed. It says no preview is
+  running **and** what would start one — not an empty box.
+- Type a message into the composer but do **not** send it. Open a panel. The
+  text is still in the box afterwards.
+
+Phone exclusivity (2951, 2952):
+
+- At phone width, open the preview, then open activity. The preview closes —
+  only one panel is open at a time.
+- At desktop width open two panels, then resize to phone width. Exactly one
+  remains open and it is the **preview**.
+
+Attention (2953, 2954):
+
+- With the activity tab closed, have an agent in another working copy ask a
+  question. The activity tab header shows an attention mark without the tab
+  being opened. Opening it shows the question and which copy asked.
+- Ordinary progress must **not** raise that mark. This is the half that keeps it
+  worth reading.
 
 ## Result Path
 
-Findings are filed via `create_issue` as they are found, and the run ends with
-`submit_qa_result` on task `f2ed8527-665d-4313-9321-23d14366a408`. Screenshots
-go to `.code_my_spec/qa/966/screenshots/`.
+`.code_my_spec/qa/966/result.md`
 
 ## Setup Notes
 
-**Scope boundary, stated up front so the result is not oversold.** Four of the
-nine criteria assert outcomes in the world — a box in Hetzner's console, a
-closed Postgres port, a certificate a browser accepts, an alert that fires.
-The running app cannot be made to prove those from a browser session; the spex
-prove them against real providers, and the drills prove them end to end. What
-QA can hold this page to is that it reports those outcomes truthfully and does
-not claim success it has no evidence for. Every scenario above is written as
-that second thing.
+The story is the **shell**, not the panels' contents. The preview panel has no
+provisioned instance behind it and the dynamic tab renders a placeholder — that
+is the designed state for this story, not a defect. Judge the frame: does it
+lay out correctly, does it hold state, does it say what it cannot show.
 
-Where a criterion cannot be exercised without a live run, the scenario is
-recorded `partial` with the reason, not passed on the strength of the spex.
+Two of the criteria describe behaviour that differs by viewport. That is not CSS
+— the client reports its width to the server, which decides. So a resize is a
+round trip, and testing it by inspecting stylesheets proves nothing.
 
-Servers `fuellytics` and `fuellytics-prod` are real and must never be deleted.
-Nothing in this brief touches them, and nothing here targets codemyspec.com.
+Do not use `mix spex` as evidence here. The suite is green and that establishes
+the contract; it does not establish that a person can see this screen.
