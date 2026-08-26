@@ -1,4 +1,6 @@
-# QA Brief — Story 967: My secrets live encrypted in my own repo
+# Qa Story Brief
+
+Story 967 — The agent steers what I am looking at.
 
 ## Tool
 
@@ -6,80 +8,92 @@ web
 
 ## Auth
 
-Magic link as the owner (`johns10@gmail.com`).
+Passwordless. `/users/log-in` offers GitHub, Google and a magic link only.
 
-    vibium cookies clear
-    vibium go "http://127.0.0.1:4000/users/log-in"
-    vibium fill "input[name='user[email]']" "johns10@gmail.com"
-    vibium eval "(()=>{const b=Array.from(document.querySelectorAll('button')).find(x=>x.textContent.includes('Email me a login link')); b.click(); return 'clicked';})()"
-    LINK=$(curl -s "http://127.0.0.1:4000/dev/mailbox" | grep -oE '/dev/mailbox/[a-f0-9]{32}' | head -1)
-    TOKEN=$(curl -s "http://127.0.0.1:4000${LINK}/html" | grep -oE '/users/log-in/[A-Za-z0-9._~+/=-]{10,}' | head -1)
-    vibium go "http://127.0.0.1:4000${TOKEN}"
+1. `http://127.0.0.1:4000/users/log-in` — fill `input[name="user[email]"]` with
+   `qa@codemyspec.local`, submit `#login_form_magic button`.
+2. `curl -s -L http://127.0.0.1:4000/dev/mailbox` and take the newest
+   `https://dev.codemyspec.com/users/log-in/<token>`.
+3. **Rewrite the origin to `http://127.0.0.1:4000` before navigating.** Following
+   it as minted leaves the app under test. This is the step people miss.
+4. Lands on `/app`. Single-use token — a second attempt needs a fresh link.
+
+The session does not survive a `just refresh`; the server restart drops it. If
+a page suddenly renders the login form, log in again rather than diagnosing the
+feature.
 
 ## Seeds
 
-`QA Fixture Project` — `11111111-1111-4111-8111-111111111111`.
+Already present. Do not run seeds with the dev server up — `mix run` under
+`MIX_ENV=dev` takes the compile lock and 500s the app being tested.
 
-**Its `local_path` is this checkout** (issue `b400d0d3`), so everything the
-secrets step writes lands in the real repo: `.sops.yaml` is a *tracked* file and
-`envs/*.enc.env` are untracked. Plan to restore both when you finish.
+- Project `QA Fixture Project` — `11111111-1111-4111-8111-111111111111`
+- Conversation with a running agent — `62d3f01c-68ac-4c36-a7d1-4467a8da25a6`
+- The project has 25 stories, so the dynamic tab has real content to show.
 
-`sops` and `age` must be installed (`brew install sops age`) or the secrets step
-pauses rather than running.
+Target screen:
 
-Secrets live in `project_secrets`, keyed `age_private_key_<environment>`. Reading
-one needs a scope with **`active_project_id`** set — `active_project` alone is not
-enough, `ProjectSecretRepository.fetch/3` matches on the id field.
+```
+http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/agent-conversation/62d3f01c-68ac-4c36-a7d1-4467a8da25a6
+```
+
+The agent's side of this story has no caller yet — nothing in the product calls
+`ScreenState.show/2`. Drive it the way the agent will, from `iex` against the
+running node, or accept that the two agent-steering criteria are unreachable
+from the browser alone and say so rather than passing them.
 
 ## What To Test
 
-URL: `http://127.0.0.1:4000/app/projects/<id>/provisioning`
+Remembering (2955):
 
-- **A new secret lands in the repo unreadable (7997)** — enter a key/value in
-  `[data-test="secret-form"]`, pick an environment, save. The value in
-  `envs/<env>.enc.env` must be `ENC[AES256_GCM,...]`, never the plaintext.
-- **The repo alone is not enough (7998)** — `sops decrypt envs/<env>.enc.env`
-  with no key must fail with "Failed to get the data key".
-- **An agent working in the repo sees only ciphertext (8049)** — grep the whole
-  tree for the plaintext value you just stored; it must appear nowhere outside
-  `.git`.
-- **A UAT key will not open production's secrets (8053)** — create a second
-  environment, store a secret in each, then cross-decrypt with each private key.
-  Each key must open its own file (exit 0) and fail on the other (exit 128).
-  Use a non-`prod` name: `prod` maps to the domain apex (issue `ae37f523`).
-- **A missing secret refuses the boot by name (8000)** — run the deploy step
-  with an environment lacking required values. It must name them:
-  "uat is missing SECRET_KEY_BASE, DATABASE_URL".
-- **The deploy carries the key, Sam does not (7999)** — the age private key must
-  appear neither in the rendered page HTML nor anywhere in the working tree.
-- **Rotating a key is a re-encrypt and a redeploy (8001)** — delete the stored
-  `age_private_key_<env>` row and the `.enc.env` file, then store a secret. A new
-  recipient must be generated *and* written into `.sops.yaml` in the same pass.
-- **One set of files serves the laptop and the server (8002)** — the same
-  `envs/*.enc.env` are what the deploy ships; there is no second store.
+- Open the screen, open the dynamic tab, and leave it showing a single story.
+- Navigate away and come back. The dynamic tab is open on that same story —
+  not shut, and not reset to the list.
+- Reload rather than only re-navigating. The claim is that it is written down,
+  and a value held in the socket survives a navigation but not a reload.
+
+Steering (2956, 2957):
+
+- With the screen open on a desk width, have the agent point the dynamic tab at
+  a story. It appears without any interaction.
+- The preview stays open. Nothing had to close to make room, which is the whole
+  reason this applies on a desk.
+
+Offering (2958):
+
+- At 390px with the preview open, have the agent point the dynamic tab at a
+  story. The preview must still be the open panel.
+- The dynamic tab shows a mark saying it has something.
+- Tapping it shows the story the agent chose, and the mark clears.
+
+Isolation (2959):
+
+- Leave one project's dynamic tab on one of its stories.
+- Open a different project's agent conversation. It must not be showing the
+  first project's story.
+- Go back. The first project's screen is as it was left.
+
+Survival (2960):
+
+- Leave the dynamic tab showing a story, delete that story, reload.
+- The page still renders — conversation and composer both present.
+- The dynamic tab says the story is gone or falls back to the list. A crash
+  here takes the conversation with it, which is why this one matters most.
 
 ## Result Path
 
-Findings are filed via `create_issue` and submitted with `submit_qa_result`.
+`.code_my_spec/qa/967/result.md`
 
 ## Setup Notes
 
-**Restore both halves of the key pair together, or not at all.** The recipient
-lives in tracked `.sops.yaml` and the private key in the database. Reverting one
-without the other silently breaks every decrypt, the secrets step keeps reporting
-`done`, and the failure surfaces two steps later in deploy (issue `7a6a5d6f` — I
-caused exactly this with a stray `git checkout` during unrelated recovery).
+This story is state and steering, not layout. 966 owns the shell and is already
+QA'd; do not re-test tabs, breakpoints or the attention mark here.
 
-Cleanup that leaves no half-pair:
+Two criteria describe behaviour that differs by screen width. That is not CSS —
+the client reports its width and the server decides — so a resize is a round
+trip. Give the page a moment after resizing, and read `data-layout` on
+`[data-test="conversation-layout"]` to confirm which mode is actually in play
+before judging what you see.
 
-    psql -d code_my_spec_dev -c "delete from project_secrets where project_id='...' and key like 'age_private_key_%';"
-    rm -f envs/*.enc.env
-    git checkout -- .sops.yaml
-
-**A plaintext file at the `.enc.env` path used to be accepted forever**
-(issue `536e9691`, fixed in `64341808`). If you see "sops metadata not found",
-check whether the file is genuinely encrypted before assuming a key problem.
-
-**`mix run` is safe against the live dev server; `mix test` is not** — the
-TestAdapter recompiles the dev environment and every route then 500s until the
-server is restarted.
+Known and not a defect: the preview panel says nothing is running. Story 968
+covers giving it an address; the panel's empty state is correct until then.
