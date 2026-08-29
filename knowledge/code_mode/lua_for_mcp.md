@@ -1,8 +1,19 @@
 # Code mode: running MCP tools from a Lua sandbox
 
-Research for story 970 — *I script the tools instead of calling them one at a
-time*. Done 2026-08-28. Everything here was read from source or measured
-against the running system; nothing is from memory.
+Research behind two stories, done 2026-08-28. Everything here was read from
+source or measured against the running system; nothing is from memory.
+
+- **970** — *I script the tools instead of calling them one at a time.* The
+  runtime: what a script can do and what it cannot.
+- **971** — *I connect with a short tool list.* The surgery on the tool list,
+  which depends on 970.
+
+They were one story until the seam showed. The runtime is buildable and
+verifiable without changing what any agent sees — build the sandbox, expose it
+as one extra tool, prove the contract. Shortening the list is what changes every
+connected agent, and a client caches its tool list at connect, so a session that
+connected earlier gets "No such tool available" no matter what the server has
+loaded (`b2d9c616`). Different risk, different delivery.
 
 ## The problem, measured
 
@@ -130,19 +141,19 @@ CPU-bound loop.
 
 ## Decisions taken in the Three Amigos session
 
-Story 970, John's calls:
+John's calls, each tagged with the story it lands in:
 
-- **Hybrid surface.** The workflow spine stays as direct tools; the rest is
+- **Hybrid surface** *(971)*. The workflow spine stays as direct tools; the rest is
   scripted. Spine ≈ the four workflow tools (`get_next_requirement`,
   `start_task`, `evaluate_task`, `sync_project`), the six that block or spawn,
   and the two code-mode tools.
 - **Everything is callable from a script except tools that block on a person or
-  spawn work** — `ask_user`, `check_answer`, `start_agent`, `assign_subagent`,
+  spawn work** *(970)* — `ask_user`, `check_answer`, `start_agent`, `assign_subagent`,
   `tap_out`, `show_in_panel`. A loop around those means something different
   from a loop around `get_story`.
-- **Consequence, worth stating:** the excluded set must be a subset of the
+- **Consequence, worth stating** *(971)*: the excluded set must be a subset of the
   spine, or those tools become unreachable entirely.
-- **No transaction.** A script that fails on its fourth call leaves the first
+- **No transaction** *(970)*. A script that fails on its fourth call leaves the first
   three standing and reports which failed. Our tools call GitHub, Cloudflare
   and Resend; a database transaction cannot roll those back, and wrapping an
   agent-written script in one holds a long lock.
