@@ -1,82 +1,85 @@
-# QA Brief — Story 970: My new project ships deploy-ready
+# QA Brief — Story 970: I script the tools instead of calling them one at a time
 
 ## Tool
 
-web
+`.code_my_spec/qa/scripts/qa_code_mode.sh`
 
 ## Auth
 
-Magic link as the owner (`johns10@gmail.com`).
+No login. This is the local MCP endpoint on the dev port, scoped by harness id
+rather than by session — the same door an agent comes through.
 
-    vibium cookies clear
-    vibium go "http://127.0.0.1:4000/users/log-in"
-    vibium fill "input[name='user[email]']" "johns10@gmail.com"
-    vibium eval "(()=>{const b=Array.from(document.querySelectorAll('button')).find(x=>x.textContent.includes('Email me a login link')); b.click(); return 'clicked';})()"
-    LINK=$(curl -s "http://127.0.0.1:4000/dev/mailbox" | grep -oE '/dev/mailbox/[a-f0-9]{32}' | head -1)
-    TOKEN=$(curl -s "http://127.0.0.1:4000${LINK}/html" | grep -oE '/users/log-in/[A-Za-z0-9._~+/=-]{10,}' | head -1)
-    vibium go "http://127.0.0.1:4000${TOKEN}"
+```
+URL:  http://localhost:4004/mcp
+Header: X-Harness-Id: <harness_id from .cms_harness.json in the working copy>
+```
+
+Read the id with:
+
+```
+python3 -c "import json;print(json.load(open('.cms_harness.json'))['harness_id'])"
+```
+
+The MCP handshake is three calls and the third is easy to miss: `initialize`,
+then the **`notifications/initialized`** notification, then `tools/call`.
+Without the notification every call answers `Server not initialized`, which
+reads like a broken tool rather than an incomplete handshake.
 
 ## Seeds
 
-`QA Fixture Project` — `11111111-1111-4111-8111-111111111111`.
+None. Every criterion is about the runtime's behaviour rather than about
+project data, and the two that touch stories (`create_story`, list) make and
+read their own inside the test.
 
-**Check `local_path` before generating anything.** It must point at a disposable
-directory:
-
-    /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
-
-It previously pointed at the CodeMySpec checkout itself (issue `b400d0d3`), in
-which case `[data-test="generate-project"]` writes `.github/workflows/build.yml`,
-`Dockerfile`, `bin/`, `config/` and `envs/` **into the live repository**.
-
-The project needs a `domain` set for the deploy configs to render hosts, and its
-environments decide which config files appear (`config/deploy.yml` for prod,
-`config/deploy.<env>.yml` for the rest).
+The one thing to know: `create_story` requires **both** `title` and `story`,
+though its schema marks only `title` required. A script passing just a title
+gets `story: can't be blank`.
 
 ## What To Test
 
-Click `[data-test="generate-project"]` on the provisioning page, then inspect the
-generated tree — this story is about artifacts, not about the running app.
+Against `http://localhost:4004/mcp`, using `run_script` and `tool_docs`.
 
-- **Each environment has its own deploy configuration (7976)** — expect
-  `config/deploy.yml` and `config/deploy.<env>.yml`. Diff them: `service`, `host`,
-  `APP_ENV` and `PHX_HOST` must all differ per environment, not just a name.
-- **The project already contains everything a build needs** — expect
-  `Dockerfile`, `.github/workflows/build.yml`, `bin/deploy`, `bin/backup`,
-  `config/runtime.exs`, `envs/<env>.enc.env`, `.sops.yaml`.
-- **No unrendered template markers** — `grep -rn "<%=" config/ bin/ Dockerfile .github/`
-  must be empty. **Currently fails** (issue `4400616e`): the `servers.web` entry is
-  emitted as a literal `<%= prod_host %>`.
-- **The health check answers without session, auth or database (7977)** — the
-  generator writes `get "/health", <Web>.HealthController, :show` and a controller.
-  Verifying it actually answers needs a generated project booted with no database
-  reachable; the artifacts alone only show the wiring.
-- **Forced SSL does not redirect the proxy's probe (7978)** — `config/runtime.exs`
-  must carry `force_ssl: [rewrite_on: [:x_forwarded_proto], exclude: ["/health"]]`.
-  A 301 on the probe reads as unhealthy and stalls the deploy.
-- **A generated project is safe to push as-is (7979)** — `envs/<env>.enc.env` are
-  scaffolding holding comments and no values. Confirm no real secret is present,
-  and that no plaintext `.env` was created alongside.
+**Documentation is looked up, not carried**
+- `tool_docs` with no arguments → an index of ~100 tools, one line each, and
+  well under the ~82 KB the full tool list costs. No argument detail.
+- `tool_docs` with `name: "get_story"` → that tool's arguments and a runnable
+  example, and *not* the other hundred.
+- `tool_docs` with `search: "epic"` → the epic tools, one line each.
+- `tool_docs` with `name: "get_stories"` (a near miss) → suggests `get_story`.
+
+**Scripts call real tools**
+- `run_script` returning `list_story_titles()` → the project's stories.
+- A script that prints twice and returns a value → both printed lines come
+  back, in order, alongside the value.
+- A script that creates three stories then one invalid → the answer names the
+  fourth as failed and the first three are still listed afterwards.
+
+**What a script cannot do**
+- `pcall(os.execute, ...)` and `pcall(io.open, ...)` → both refused as
+  sandboxed. Assert on the *call*: `io` is still a table, so `io == nil` would
+  pass against a VM where `io.open` works.
+- `while true do end` → stops itself with "instruction budget exceeded", and a
+  second call straight after still answers.
+- `string.rep("x", 100000000)` → refused as too large, and the response is
+  small.
+- `ask_user({...})` and a loop over `start_agent` → both fail; neither is bound
+  into a script.
+- `run_script` calling `run_script` → not bound either, so a script cannot
+  nest VMs inside itself.
+
+**Scope**
+- A script only sees the project the connection names. There is no argument by
+  which it reaches another.
 
 ## Result Path
 
-Findings are filed via `create_issue` and submitted with `submit_qa_result`.
+`.code_my_spec/qa/970/result.md`
 
 ## Setup Notes
 
-**The `.enc.env` scaffolding is deliberately plaintext.** It ships with the
-encrypted *name* and a comment explaining why — so there is never a moment when
-the easy path is an unencrypted file. Do not report it as a leak; it holds no
-values.
+The tools only exist on a server that has been restarted since they were
+registered, and any agent that connected earlier holds a cached tool list —
+`/mcp` in Claude Code to refresh it. `just refresh` does the restart.
 
-It does, however, mean every generated project starts with a plaintext file at the
-`.enc.env` path, which is exactly the condition that made `Sops.ensure_file/2`
-skip encryption forever (issue `536e9691`, fixed in `64341808`). Before that fix
-the first secret write on any generated project would have failed with "sops
-metadata not found". Re-test the first secret write on a freshly generated project
-whenever that code changes.
-
-**The image and registry are placeholders** — `ghcr.io/your-org/<app>`, from
-`Keyword.get(opts, :owner, "your-org")`, which nothing overrides on the generate
-path. That also points at GitHub's registry, which story 992 decided against
-(criterion 8240). Noted inside `4400616e`; the two stories need reconciling.
+Evidence for this brief was captured against the dev port 4004 on build
+`19cc7b68`.
