@@ -1,119 +1,124 @@
-# QA Brief — Story 963: Setup runs as a routine I can watch
+# QA Brief — Story 963: A main agent runs my project and explains it to me
 
 ## Tool
 
-web
+`web` for every page, `curl` against `http://localhost:4004/mcp` for
+`start_agent` / `stop_agent`, which have no web control.
 
 ## Auth
 
-Browser session against the hosted endpoint on port 4000. `:browser` pipeline
-behind `:require_authenticated`, so curl with a cookie is not an option.
+Magic link, port 4000. There is no password field.
 
-**Passwordless** — the plan's old `qa-password-123!` does not exist (filed as
-`3acee570`, plan since corrected):
+- Open `http://127.0.0.1:4000/users/log-in`
+- Fill `user[email]` with `qa@codemyspec.local`, submit `#login_form_magic`
+- Read `http://127.0.0.1:4000/dev/mailbox`, take the newest message **whose
+  recipient matches** — the mailbox is shared and the top one is often
+  somebody else's — and visit its `/users/log-in/:token` link
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]`
-   with `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → read the message.
-3. The link is minted as `https://dev.codemyspec.com/users/log-in/<token>`.
-   **Rewrite the origin to `http://127.0.0.1:4000`** before navigating.
-4. Lands on `/app`. Token is single-use.
+Clear cookies before switching users. A logged-in session turns the login page
+into a re-authentication form whose email field is readonly, and a fill against
+it fails in a way that looks like a broken selector.
+
+For MCP, no login: `X-Harness-Id` from `.cms_harness.json`, `initialize`, then
+the `notifications/initialized` notification, then `tools/call`.
 
 ## Seeds
 
-Already applied. Verify with psql rather than re-running — the dev server on
-4000 holds the compile lock and `mix run` under `MIX_ENV=dev` will 500 the app
-mid-session.
-
 ```
-psql -qtA code_my_spec_dev -c "select key, state, coalesce(left(provider_error,60),'-') from provisioning_steps where project_id='11111111-1111-4111-8111-111111111111' order by key;"
+mix run priv/repo/qa_seeds.exs
 ```
 
-Project: `11111111-1111-4111-8111-111111111111`
-Page: `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/provisioning`
+**The base seeds are not enough for this story and that is the main thing to
+get right before testing.** Everything here is about a *running* main agent,
+which needs three things at once:
 
-This fixture is unusually good for *this* story, because it is a real halted
-run rather than a blank slate. Six steps carry genuine provider errors:
+1. **A provider on the testing user.** `qa@codemyspec.local` holds an `openai`
+   integration (ChatGPT). Without one, `ensure_main_agent/1` refuses with
+   `:not_connected` before any agent exists.
+2. **A main working copy that a harness is actually serving.** An agent in a
+   root no harness holds records `:starting` and is never confirmed — an
+   honest state, and useless for asking the agent anything.
+3. **That copy must not be the checkout you are working in.** A main agent
+   edits files in its root.
 
-| step | state | recorded reason |
-|---|---|---|
-| repository | errored | push rejected — not empty |
-| server | not_started | *was* done; reverify found the box gone |
-| deploy | errored | uat missing SECRET_KEY_BASE, DATABASE_URL |
-| tls | errored | uat.astralbi.com did not answer over HTTPS |
-| email | errored | sending domain did not verify |
-| backups | errored | pg_dump failed (exit 1) |
-| content | errored | publishing not configured |
-| domain / storage / callback_credential | done | — |
-| secrets / dns / inbound | not_started | — |
+The checkout prepared for this run is
+`/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox` — a
+real Phoenix app with `lib/` code, disposable, registered to project
+`708492f9-454e-482f-a2eb-be64f0356b87` as working copy `c75f9ad9`. Its stale
+config is at `.cms_harness.json.stale`; the live one was minted by
+`mix cms.harness.onboard <path>`, which **crashes after minting** (issue
+`ec56e75c`) — the id and the row land before it dies, so check for them rather
+than trusting the exit code.
 
-Options: `domain email inbound storage backups content` on; `widget monitoring`
-off.
+A harness picks a root up on first contact. To make it serve one:
+
+```
+curl -s -X POST http://localhost:4004/api/hooks/session_start \
+  -H 'content-type: application/json' \
+  -d '{"cwd":"<root>","session_id":"qa963","hook_event_name":"SessionStart"}'
+```
+
+The reply is an error about the hook name; ignore it. Confirm with
+`curl -s localhost:4004/health` — the root should appear with
+`"connected": true`.
 
 ## What To Test
 
-Selectors from the story's own spex: `setup-step`, `start-setup`, `run-step`,
-`retry-step`, `resume-setup`, `escalation`, `paused-instructions`,
-`provisioned-resource`, `setup-record`. Note the step key attribute is
-`data-step`, not `data-key`.
+**Finding the agent** — `/app/projects/708492f9-454e-482f-a2eb-be64f0356b87/agent-conversation`
 
-- **7959 — the whole plan before anything runs.** Every enabled step renders
-  with its label, `why` line and `data-position`, including steps that have
-  never run. Assert positions are contiguous and ordered, and that
-  `not_started` steps are present rather than hidden.
-- **7968 — an option turned off never appears.** `widget` and `monitoring` are
-  off; assert no `setup-step` carries those keys. Then toggle `monitoring` on
-  and assert it appears as `not_started`, and toggle it back off. This is the
-  criterion, both directions — testing only the "absent" half would pass on a
-  page that never renders the step at all.
-- **7961 — a failing step halts rather than pressing on.** `repository` is
-  errored at position 0. Assert the page presents the run as stopped there
-  rather than showing later steps as skipped-but-fine.
-- **7962 — the provider's own error reaches the session.** Each errored step's
-  `escalation` must carry the provider's actual words, not a generic
-  "step failed". Check all six against the `provider_error` column above —
-  the page text should match what psql holds.
-- **7969 — Sam reads back what he now owns.** `provisioned-resource` entries
-  under done steps name real things (bucket, repository, commit sha, firewall,
-  ssh key fingerprint). A done step with no resource is the failure.
-- **7970 — state is checked against the provider, not remembered.** Already
-  observed during 966 QA: `mount/3` calls `Provisioning.reverify/3`, and the
-  `server` step went `done` → `not_started` mid-load once Hetzner reported the
-  box gone. Re-confirm by comparing `updated_at` before and after a reload.
-- **7964 — a deleted resource is rebuilt, not skipped.** Same server row: it
-  is `not_started` with its resources still recorded, so a re-run would
-  rebuild rather than skip. Assert the step offers `run-step` rather than
-  presenting as complete.
-- **7971 — retry one errored step without re-running the rest.** Click
-  `retry-step` on **tls only**. Chosen deliberately: its work is an outbound
-  HTTPS probe to `uat.astralbi.com`, which will refuse the connection and
-  change nothing anywhere. Before clicking, snapshot every step's state and
-  `updated_at`; after, assert only `tls` moved.
-- **Explore.** Reload and confirm state survives. Check `setup-record`.
-  Confirm `paused-instructions` / `resume-setup` render only where a step is
-  actually paused.
+- Opening the page finds or starts the project's main agent, without anyone
+  supplying a provider, a checkout or a role.
+- The page names which checkout it is in, so "it runs in the copy you
+  designated" can be checked without going elsewhere.
+- The status reads as a sentence a non-technical person could follow, not as a
+  build log.
+- A project with **no** main working copy says so, and says what to do about
+  it, rather than failing quietly.
 
-**Do not click `start-setup`.** A full run provisions real infrastructure on
-live provider accounts. That is a drill, not a QA pass.
+**One main agent, in one place**
+
+- Starting other agents (`start_agent` with any role) does not produce a second
+  agent claiming to be the main one.
+- A second agent cannot be started in the main checkout — the refusal should
+  name the root.
+
+**Designation** — `/app/projects/:id/working-copies`
+
+- A checkout becomes the main one because somebody said so, on that page.
+- Naming a *different* copy as main **moves** the agent rather than starting a
+  second one. Count agents before and after; this is the criterion most likely
+  to look right and be wrong.
+
+**The conversation**
+
+- It survives leaving and coming back — the same transcript, not a new one.
+- It survives the agent being stopped and started again.
+
+**What the agent knows** (needs a confirmed, running agent)
+
+- It answers about the code actually in its checkout.
+- It answers about the project rather than about a directory.
+- Stories it creates appear in the project, not only in the chat.
+- A subagent's work reports back through it.
+- It hands over rather than designing.
+- It can check work rather than take somebody's word for it.
 
 ## Result Path
 
-Findings filed via `create_issue` as found; run ends with `submit_qa_result`
-on task `25841e41-9b1c-48b5-bc6f-eb05856606ef`. Screenshots to
-`.code_my_spec/qa/963/screenshots/`.
+`.code_my_spec/qa/963/result.md`
 
 ## Setup Notes
 
-Unlike story 966, most of this story's criteria are claims about the page
-itself — what it shows, in what order, and whether it keeps telling the truth
-about a run that stopped. Those are exactly what a browser session can hold it
-to, so this story is expected to reach a real pass rather than a partial.
+Requires a server restarted since `68579640`.
 
-The three criteria that genuinely need a live run are 7960 (state changing
-under Sam's eyes), 7963 (a re-run picking up where it stopped) and 7966/7967
-(the domain purchase round-trip). Their spex cover them against recorded
-providers. Record those `partial` with the reason rather than passing them on
-the strength of the spex.
+Tear down what the run starts: every agent stopped, and the main working copy
+put back to
+`/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator`
+at the end. Re-designating is itself one of the criteria, so the restore and
+the test are the same action — do it deliberately and record what it showed.
 
-Servers `fuellytics` and `fuellytics-prod` are real and must never be touched.
-Nothing here targets codemyspec.com.
+The distinction this story turns on, and the one to hold on to while testing:
+`agents.role` defaults to `"main"`, so every agent ever started carries that
+word. What makes *the* main agent unique is **where it is** — the checkout the
+project designated. A test that checks the role rather than the copy will pass
+on an agent that is not the one being talked about.
