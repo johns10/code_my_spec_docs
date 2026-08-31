@@ -6,8 +6,9 @@ partial
 
 Re-test after 982 gave the agent its tools. The previous attempt failed on
 `c3bca42a` — the main agent had `bash` and file access and nothing else, so six
-criteria could not be exercised at all. Five of those six now pass. Two things
-remain, and neither is the old one.
+criteria could not be exercised at all. Five of those six now pass. One thing
+remains, and it is not the old one. A second thing I reported turned out to be
+my own mis-measurement and is dismissed below.
 
 Getting here needed two fixes first, both mine, both from 982, and both found in
 the first minutes of this run:
@@ -146,18 +147,27 @@ Filed `8062ccba`.
 
 ### reaching_the_conversation_at_all
 
-**FAIL.** Every link that offers an agent's transcript points at the list page
-it is already on — the running agent's "Open", and "Open amber-nimbus" under a
-heading promising "its own transcript, which is where you watch it work and talk
-back to it". Both emit
-`/app/projects/:id/agent-conversation`.
+PASS, after a false alarm of mine that is worth keeping in the record.
 
-The route exists and works (`router.ex:576`). Typed by hand it renders the
-transcript and the "say something to this agent" box, and the agent answers —
-which is how every scenario above was tested. Only the links are wrong, so the
-feature is built and unreachable at once.
+I first reported that every link offering an agent's transcript pointed at the
+list page, and filed `c7f61e35`. Re-measured against a running agent, both are
+correct:
 
-Filed `c7f61e35`.
+    /app/projects/708492f9-.../agent-conversation/81632abf-...
+
+on the project's "Open" button (`index.ex:231`) and on the working copy page's
+"Open <name>" (`show.ex:292`). The bare index href I had seen is the layout's
+"Agent chat" nav item, which belongs there.
+
+I measured during the window when no agent could start — the two bugs below.
+With no usable agent the page falls back to the index path, and that fallback is
+deliberate and documented at `index.ex:42`: *"an agent with no conversation is a
+state the page must not render a link for — it would go to a transcript that
+does not exist."*
+
+So the page behaved correctly and I read the correct behaviour as a broken link,
+because the state it was written for was the state I had accidentally created.
+`c7f61e35` is dismissed.
 
 ## Not Tested
 
@@ -169,12 +179,13 @@ Two criteria from the brief, named rather than quietly dropped:
   reachable only by unsetting `main` on the project under test, and this run had
   just restored that state. Not worth leaving the project wrong for.
 
-Neither would change the verdict: two criteria fail regardless.
+Neither would change the verdict: 2919 fails regardless, and 2921 is
+partial.
 
 ## Issues
 
 - `8062ccba` — new, high. The main agent cannot start or assign anyone.
-- `c7f61e35` — new, high. Every transcript link points at the list page.
+- `c7f61e35` — filed, then **dismissed as wrong**. See above.
 - `dc5129c7` — new, critical, filed against 982 and **fixed** in `f1cb93e9`. No
   agent could start on any machine.
 - `c3bca42a` — the previous run's blocker, **resolved**: the agent has its
