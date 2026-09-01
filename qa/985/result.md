@@ -2,145 +2,132 @@
 
 ## Status
 
-fail
+pass
 
-Tested against harness/server build `5f6dc226`, through
-`http://localhost:4004/mcp` with this worktree's harness id, plus the
-transcript page at
-`/app/projects/708492f9-…/agent-conversation/6148be6a-…` in a browser. One
-agent (`b649a3dd`, `warm-badger`) was started for this run and stopped at the
-end.
+Second attempt. Tested against harness/server build `74f1e2ed`, through
+`http://localhost:4004/mcp` and `POST :4004/api/hooks/stop` with this
+worktree's harness id, reading the transcript at
+`/app/projects/708492f9-…/agent-conversation/be4fc02d-…` in a browser. One
+agent (`a3cf32cb`) was started for this pass and stopped at the end; the
+`stories_exist` task raised to produce a hand-over was cancelled after.
 
-Two defects, both in what an action *says* rather than in whether it appears.
-The story's premise holds: the orchestrator's acts reach the agent's transcript
-through the running app, they are not drawn as the agent's own, and nothing
-closes a task on the agent's behalf.
+The first attempt (`cd29414f`, `fail`) found two defects, both in what an
+action *says* rather than in whether it appears. Both are fixed in `74f1e2ed`
+and both were re-tested live here rather than trusted from a green suite.
 
 ## Scenarios
 
 ### the_action_is_there_at_all
 
-PASS, and this was the one worth checking. The brief flagged it because every
-spex builds its own scope while the app resolves one from `X-Harness-Id`, and
-the recorder is deliberately silent for an agent with no conversation — so
-"nothing recorded" and "nothing to record against" look identical from the page.
-
-Started `b649a3dd` on this worktree, fired a real stop hook against
-`:4004/api/hooks/stop` with the checkout's harness id, opened the transcript.
-Eight `[data-test="orchestrator-action"]` entries, all of them produced by this
-session's own stops and task calls. The header path works.
+PASS. Six actions on a fresh conversation, every one produced by a real stop
+hook or `start_task` through the running app. The header-resolved scope reaches
+the recorder — the brief's highest risk, because a spex builds its own scope and
+the recorder is deliberately silent for an agent with no conversation.
 
 ### one_decision_is_one_entry (3034)
 
-PASS. After the stops, `[data-action-kind="decision"]` counts six — one per
-stop hook fired, never one per analyzer. The two remaining entries are a
-`handover` and a `nudge`, which are different acts and not repeats.
-
-The kind attribute is what makes this checkable by a reader rather than only by
-a regex, and it is the reason the count is honest: without it, "one decision is
-one action" reads as "one action per stop", which was never the rule.
+PASS. Four `[data-action-kind="decision"]` entries for four stop hooks, never
+one per analyzer. The other two are a `handover` and a `nudge` — different acts,
+not repeats, and now distinguishable by a reader rather than only by a regex.
 
 ### the_count_and_the_tool (3035, 3036)
 
-**FAIL** on the count. Every decision carries one, and it is the project's
-standing problem backlog rather than what that decision found:
+PASS, re-tested. This is where the first attempt failed.
 
-    Ran the analyzers and let you stop.  476 problems  — run list_problems…
+Paired the hook's own answer against what the transcript drew. One stop
+returned:
 
-The stop **allowed**. It found nothing blocking. `476` is what
-`Problems.list_project_problems/1` returns for the working copy — ambient, and
-nothing to do with this decision. It read `500` an hour later, for the same
-reason. A person reading that line concludes the stop found 476 problems and
-was waved through anyway.
+    "decision": "block"
+    per-source: [('compiler', '7')]  → total 7
 
-Filed `bae56fe8`.
+and the entry it produced reads **`7 problems`**. Another, taken when the tree
+held one more, reads `8 problems`. The two stops that *allowed* carry **no
+count at all**:
 
-The tool half is right: six counts, seven tools, no link to a problems page
-inside any action's own markup. (The sidebar's Problems link is the page's, not
-the action's — checked the action subtree, which is where an earlier version of
-the spex went wrong.)
+    Ran the analyzers and let you stop.  — run list_problems for the detail
+
+Before the fix every one of those four would have read the same number: 476,
+then 500, the project's standing backlog. The number is now the decision's own
+claim, and an allow's claim is that nothing stopped the agent.
+
+`list_problems` is still named on every decision, so a reader with no number
+still has somewhere to go.
 
 ### not_the_agent's_doing (3037)
 
-PASS. Zero entries match `[data-test="orchestrator-action"][data-role="assistant"]`,
-and none render through the `tool_call` component — the orchestrator clause is
-its own `turn/1` head with `data-role="orchestrator"`. Reading the transcript,
-the stop does not present as the agent's own judgement.
+PASS. Every action carries `data-role="orchestrator"`; none carries
+`assistant`, and none renders through the `tool_call` component.
 
 ### a_requirement_handed_over (3038)
 
-PASS, including the negative half. `start_task` for `stories_exist` with
-`agent_id` set to this agent produced one entry — "Gave you the next
-requirement: stories_exist." Calling `start_task` again for the *same*
-requirement produced **no** second entry, because re-reading the prompt for an
-active task is not a hand-over.
+PASS. `start_task` for `stories_exist` against agent `a3cf32cb` produced one
+entry — "Gave you the next requirement: stories_exist." — and re-reading an
+active task's prompt produces no second one.
 
 ### the_nudge_and_what_must_not_happen (3039)
 
-PASS on the behaviour, **FAIL** on the wording.
+PASS, re-tested. This is the other first-attempt failure.
 
-The nudge fires and the task stays open. `list_tasks` after the stop:
+    You stopped with qa_complete still open. Close it yourself when it is
+    done — nothing will do it for you.
+      — call evaluate_task task_id: "fe196562-9038-4cce-ac2b-c7c9f10a0940"
 
-    ● stories_exist — [active] agent=b649a3dd…
+Three things changed and all three matter. It says **call**, not "run". It has
+no "for the detail" tail, because the tool there is the act and not the
+reference. And it carries the task id, per John: "you should be able to send it
+the precise evaluate task call with the task id."
 
-Nothing completed it. That is the whole of John's call — "it should always be
-at the agent's discretion" — and it is an absence, which is the easiest thing
-for a spec to assert wrongly, so it was checked against the task record rather
-than against the transcript's silence.
-
-The wording is wrong. The nudge renders:
-
-    You stopped with stories_exist still open. Close it yourself when it is
-    done — nothing will do it for you.  — run evaluate_task for the detail
-
-`evaluate_task` is not "for the detail" there; it is the thing to do. One
-sentence template — "run X for the detail" — is serving two different
-relationships between an action and a tool. On a decision it is correct; on a
-nudge it tells an agent its own next move is somewhere to go reading.
-
-Filed `d7cbbf60`. John's direction on the fix: send the precise call, with the
-task id, and the precedent is already in the code — `TasksMapper` footers a
-started task with ``Task ID: `#{task.id}` ``.
+`fe196562` is a real task, and `list_tasks` after the stop still shows it
+`[active]`. Nothing completed it. That absence is the whole of the criterion and
+was checked against the task record rather than against the transcript's
+silence.
 
 ### the_empty_case
 
-PASS on the half that has teeth. A missing part draws nothing, not an empty
-one — the handover's markup:
+PASS. The handover carries neither a count nor a tool, and draws neither:
 
     <div class="min-w-0">
       <span>Gave you the next requirement: stories_exist.</span>
     </div>
 
-No count span, no tool span, no stray "— run  for the detail". Across the whole
-transcript, `[data-test="orchestrator-action-count"]:empty` and
-`…-tool:empty` are both zero.
+An allowed decision carries a tool and no count, and draws exactly that. Across
+the transcript, `[data-test="orchestrator-action-count"]:empty` and
+`…-tool:empty` are both zero. A missing part is absent, not blank.
 
-The other half — a conversation with orchestrator activity absent entirely —
-could only be checked vacuously. The project chat at
-`/app/projects/…/chat` renders zero turns of any kind, so "no orchestrator
-entries" there is true of a page with nothing on it. Recording that rather than
-claiming a test I did not run.
+The zero-activity half remains checkable only vacuously — the project chat
+renders no turns at all — and is recorded as such rather than claimed.
 
 ## Issues
 
-- `bae56fe8` — new, medium. A stop decision reports the whole project's problem
-  count instead of its own.
-- `d7cbbf60` — new, low. The nudge tells an agent its own next action is "for
-  the detail"; it should carry the precise `evaluate_task` call including the
-  task id.
+Both first-attempt defects are resolved:
+
+- `bae56fe8` — resolved. `decision_count/1` sums the per-source counts off the
+  block's own reason, sharing `blocking_counts/1` with the log line; an allow
+  returns nil.
+- `d7cbbf60` — resolved. The nudge carries the whole call; `tool_lead/1` and
+  `tool_tail/1` key the label off the action's kind.
+
+Filed and left open, on John's call to ship 985 anyway:
+
+- `f0cc65ab` — medium. Only the hand-over is shared between external and
+  internal agents. The decision and the nudge are both produced inside
+  `Hooks.Stop.decide/2`, reached only by an external agent POSTing
+  `/api/hooks/stop`; `CmsHarness.Agents.Engine` never calls
+  `Validation.validate_stop/3`, so an Alloy agent ending a turn with an open
+  task is never told to close it. John's direction is on the issue: abstract the
+  transport rather than duplicating the hook — "for external agents we deliver
+  via queueing to the stop hook, for the internal one we use messaging."
 
 ## Note On The Evidence
 
-I wrote both the implementation and the spex for this story in the same
-session, and said so in the brief. Both defects are in the class that pairing
-produces: the spex assert that a count is *present*, so
-`data-test="orchestrator-action-count"` rendering is enough to pass, and the
-number inside it was never anybody's claim. Neither defect is reachable from a
-green suite — the suite is green and both are real.
+The brief said to treat a green spex as weak evidence here, because I wrote the
+implementation and the spex in the same session. That was the right warning:
+both defects were invisible to a passing suite, and one of them was invisible
+*because* of it — criterion 3035 asserted a count was present, and it also never
+blocked, feeding the compile fixture without writing the file so the diagnostic
+was out of scope and the stop allowed. The assertion passed on the backlog.
 
-Also on the record, because it cost somebody else time: `57054285` put a
-knowingly-red 985 spex on main. The devops worktree pulled it and its agent was
-blocked five times over fifteen minutes by criterion 3039 before the stop
-hook's own escape hatch released it. Fixed one commit later at `5f6dc226`,
-which devops-q has not pulled. Not a defect in 985 — a defect in how I landed
-it.
+3035 now writes the broken file the way 5099 does, asserts the block, asserts
+the count is 1, and carries a second scenario for the allow case that fails
+against the old code. Both new assertions were run against the reverted
+implementation before being kept.
