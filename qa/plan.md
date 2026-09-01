@@ -108,6 +108,33 @@ Quick smoke test of auth gating: GET `/app` while unauthenticated → 302 to `/u
 
 **LiveView click reliability:** card-link clicks on `/projects/:project_name` occasionally do not navigate (URL doesn't change). Direct `browser_navigate` to the destination URL is more reliable; reserve clicks for in-page interactions where you're already mounted.
 
+**One browser, shared by everyone — serialize browser work.** Vibium has no
+per-caller isolation. `browser_new_page` opens a **tab**, not a browser context:
+the cookie jar is shared, and `browser_switch_page` moves one global "current
+page" pointer that every other call acts against. There is no per-call page
+targeting anywhere in the tool surface.
+
+What that costs, measured by three agents independently during a 6-way QA
+fan-out (issue `9fe95b42`):
+
+- `browser_get_url` answered correctly and the very next `browser_get_html`
+  returned a different agent's page — another caller's tab switch landed
+  between the two calls. **A `get_url` answer is stale for the call after it.**
+- `browser_delete_cookies` is global. Clearing cookies to break a stale
+  re-auth logs out every concurrent agent.
+- Logging into a second account while another is active silently failed the
+  submit — it read as a wrong password — and left the page on the other
+  account.
+
+So: **only one caller touches the browser at a time.** Others do non-browser
+prep and wait. "Re-verify carefully between steps" is not a mitigation; it was
+tested and another caller can flip the shared login state between your own two
+steps. Anything needing two simultaneously-authenticated accounts cannot run
+correctly at all while another vibium session is live.
+
+The risk this is really guarding against is a QA agent recording a **false
+PASS** against evidence gathered from somebody else's session.
+
 See `.code_my_spec/framework/qa-tooling/vibium_reference.md` for the full tool table.
 
 ### curl — single-line, never multi-line
