@@ -168,7 +168,7 @@ to the LiveView surface where browser-session auth Just Works via Vibium.
 Use for setup that needs the app's contexts (creating users, accounts, projects through the supervised pipeline).
 
 ```
-mix run priv/repo/qa_seeds.exs                       # server (Postgres) QA fixture
+mix cms.seed priv/repo/qa_seeds.exs                  # server (Postgres) QA fixture
 MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs   # local CLI (SQLite) QA fixture
 mix run priv/repo/seeds.exs                          # OAuth MCP connector app
 mix run priv/repo/seeds/math_test_project.exs        # demo project content
@@ -265,11 +265,46 @@ To direct MCP calls there, send **the sandbox's own harness id** — the working
 copy is named by id now, not by the directory a request announces, so `cd`-ing
 somewhere no longer changes which project answers.
 
-1. **Onboard the sandbox once** (`mix cms.harness.onboard` in it) so it has an
-   id. That writes `.cms_harness.json` at its root and `CMS_HARNESS_ID` into its
-   `.claude/settings.local.json`.
+1. **Onboard the sandbox against the fixture project**, naming it explicitly:
 
-2. **Send that id** when curling a local endpoint:
+   ```bash
+   SANDBOX=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
+   mix cms.harness.onboard "$SANDBOX" --project 11111111-1111-4111-8111-111111111111
+   ```
+
+   `--project` is not optional and its absence is why this was wrong for weeks.
+   Onboarding mints the id **from the server**, and the server reads the project
+   off the credential presenting it — so a bare `mix cms.harness.onboard` mints
+   the sandbox onto whichever project the calling checkout's key belongs to,
+   which is the real CodeMySpec. Setting the fixture project's `local_path` does
+   not help: the path is a property of the project record, not an input to
+   onboarding. The section below says the same thing about `cd`, and it defeats
+   this step too.
+
+   **Re-running it on an already-onboarded sandbox changes nothing**, including
+   the project. `.cms_harness.json` already names an id, so no mint happens and
+   `--project` never reaches the server. To re-point it, delete that file first:
+
+   ```bash
+   rm "$SANDBOX/.cms_harness.json"
+   mix cms.harness.onboard "$SANDBOX" --project 11111111-1111-4111-8111-111111111111
+   ```
+
+2. **Prove the isolation before mutating anything.** Not optional, and not by
+   reading titles — the fixture project holds copies of real stories, so a
+   familiar-looking list proves nothing. Count them:
+
+   ```bash
+   # 25-ish means the fixture project. ~120 means you are about to write into
+   # the real backlog.
+   ```
+
+   Call `list_story_titles` through the sandbox's id (step 3 shows how) and check
+   the count against `.code_my_spec/config.yml`'s project. If it comes back with
+   the real project's stories, stop — the guarantee this section makes is void
+   until the onboard above is redone.
+
+3. **Send that id** when curling a local endpoint:
 
    ```bash
    SANDBOX=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
