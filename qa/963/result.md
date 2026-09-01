@@ -1,5 +1,30 @@
 # Qa Result
 
+> **Superseded — third attempt, 2026-09-01, build `45d840b4`.** The canonical
+> record is the QA attempt in the database (`d109fca1`), not this file; the task
+> prompt moved findings there. Kept for the method notes and the `c7f61e35`
+> correction, which are still true. What changed:
+>
+> - **`a_subagents_work_reports_back` now passes.** The blocker below —
+>   `8062ccba`, "the agent cannot start or assign anyone" — was resolved on 964
+>   with a deliberate decision, and the *agent-side* half of it remained:
+>   `start_agent`, `stop_agent` and `assign_subagent` are excluded from scripts
+>   and an Alloy agent carried no direct tool that was one of them. Filed
+>   `bea21433`, fixed in `45d840b4`, and proven live: the main agent started an
+>   agent on another checkout, messaged it, reported its answer, then stopped it
+>   on request.
+> - **`handing_over` now passes** for the same reason — it attempts the
+>   hand-over rather than describing one it cannot make.
+> - **Both "Not Tested" criteria were tested.** A project with no main working
+>   copy says so, plainly. A new project offers a conversation with nothing
+>   started by hand, but its first message is refused — filed `1da05ada`, and
+>   the reason is genuinely undetermined between the missing project deploy key
+>   and my bare-directory checkout. That is why this attempt is `partial`.
+> - **`moving_the_main_copy_moves_the_agent` re-confirmed by id**: agent
+>   `88e5c45d` moved from qa_sandbox to phx-new-generator; nothing was
+>   duplicated.
+
+
 ## Status
 
 partial
