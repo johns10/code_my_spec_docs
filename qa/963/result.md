@@ -1,5 +1,23 @@
 # Qa Result
 
+> **Fourth attempt, 2026-09-01, build `256a4aac` — pass** (`5fd7eb10`). The one
+> criterion the third attempt could not finish, 2904, was re-run clean after
+> fixing what it found:
+>
+> - `28320475` — `create_project/2` mints the deploy key. A key is what a
+>   harness presents to join a project's channel; without one a project's first
+>   checkout cannot join at all, and nothing on the way named it.
+> - `ee50f48a` — the delivery message stopped asserting the machine was
+>   unreachable, which sent a reader to the one place nothing was wrong.
+>
+> The clean run: a project made through the form carried a key with nobody
+> clicking Generate; a bare checkout onboarded onto it took that key on the
+> first run; the harness joined `connected: true` first try; opening the
+> conversation started the agent with nothing named; and the message was
+> delivered and answered. Every step of that chain failed somewhere on the
+> previous attempt.
+
+
 > **Superseded — third attempt, 2026-09-01, build `45d840b4`.** The canonical
 > record is the QA attempt in the database (`d109fca1`), not this file; the task
 > prompt moved findings there. Kept for the method notes and the `c7f61e35`
