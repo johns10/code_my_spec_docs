@@ -96,9 +96,28 @@ resolve() {
   esac
 }
 
+# Which machine the minted copies belong to.
+#
+# `working_copies.device_id` is NOT NULL and `WorkingCopies.create/3` refuses a
+# copy that names no device — "a client too old to know about devices, and the
+# useful thing to tell it is to update". This script was that client and failed
+# every mint with `:no_device` (issue 1be864ea).
+#
+# Read from `~/.codemyspec/device.json`, which is where the real harness keeps
+# the identity this machine already holds, so a fixture copy belongs to the same
+# machine as everything else here rather than inventing a second one.
+device() {
+  local file="$HOME/.codemyspec/device.json" id
+  [ -f "$file" ] || die "no $file — start a harness once so this machine has an identity"
+  id=$(sed -n 's/.*"device_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$file")
+  [ -n "$id" ] || die "$file names no device_id"
+  echo "$id"
+}
+
 up() {
-  local count="${1:-2}" token project root label id body
+  local count="${1:-2}" token project root label id body device
   IFS=$'\t' read -r token project < <(resolve)
+  device="$(device)"
   mkdir -p "$FIXTURE_DIR"
 
   echo "project $project on $SERVER"
@@ -115,7 +134,7 @@ up() {
     body=$(curl -sS -X POST "$SERVER/api/harnesses" \
              -H "authorization: Bearer $token" -H 'content-type: application/json' \
              --max-time 20 \
-             -d "{\"project_id\":\"$project\",\"root\":\"$root\",\"label\":\"$label\"}")
+             -d "{\"project_id\":\"$project\",\"root\":\"$root\",\"label\":\"$label\",\"device_id\":\"$device\"}")
     id=$(echo "$body" | sed -n 's/.*"harness_id":"\([^"]*\)".*/\1/p')
     [ -n "$id" ] || die "onboarding $label failed: $body"
 
