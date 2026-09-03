@@ -2,106 +2,91 @@
 
 ## Tool
 
-curl
+`mcp__plugin_codemyspec_local__*` (`start_agent`, `message_agent`, `stop_agent`,
+`list_agents`) driven through `run_script`, with
+`curl localhost:4004/api/harnesses/<id>/analysis/run` to land a run on demand,
+`psql -d code_my_spec_dev` to read the agent's conversation back, and
+`~/.codemyspec/harness.log` for the analyzer side.
+
+The surface is an agent's conversation, and there is no page for it, so
+`qa/plan.md`'s table routes this to the MCP column rather than the browser.
 
 ## Auth
 
-The story's user is an agent, not a person, so there is no page to log into.
-Every call goes at the MCP endpoint carrying a working copy's own id.
+Local MCP on `4004` takes no user auth; scope comes from the harness id the
+plugin's mount already sends. Postgres needs no credentials on this box.
 
-**Use a disposable working copy, not a live one.** A QA agent's typed
-`mcp__plugin_codemyspec_local__*` tools are bound to whichever harness its own
-session serves — in a worktree of this repo that is the real dev harness, and no
-parameter redirects a call. Issue `08d4d7bd`. Only curl with an explicit
-`X-Harness-Id` isolates, and this story needs a *writable* working copy because
-a finding has to land in it.
-
-Mint one:
-
-    /Users/johndavenport/Documents/github/code_my_spec/.code_my_spec/qa/scripts/qa_agents.sh up 1
-    /Users/johndavenport/Documents/github/code_my_spec/.code_my_spec/qa/scripts/qa_agents.sh touch 1
-
-`up` prints the root and the server-issued harness id. Hold that id — it is the
-`X-Harness-Id` for every call below, and using any other one tests the wrong
-checkout.
-
-    curl -sS -X POST "$SERVER/mcp/harness" \
-      -H "content-type: application/json" \
-      -H "X-Harness-Id: $QA_HARNESS_ID" \
-      -H "Authorization: Bearer $CMS_TOKEN" \
-      -d '{...}'
-
-`CMS_TOKEN` as `qa_agents.sh` resolves it: `CMS_TOKEN`, then `CMS_DEPLOY_KEY`,
-then whichever is in `envs/.env`.
-
-### The model credential
-
-The agent runs on a real provider, from the database rather than a fixture.
-`Agents.Credential.fetch/2` reads `Integrations` for the scope's user, so an
-agent started with `provider: "openai"` picks up the stored token with no extra
-plumbing. Two are live:
-
-    user 14  qa@codemyspec.local   expires 2026-09-05
-    user 1   johns10@gmail.com     expires 2026-09-12
-
-Prefer the QA account. John's is the fallback if the QA one has lapsed — his
-words, that these are free to use on the harness.
+For the direct probes, the QA copy's harness id is
+`16bce3db-8212-469b-a6dd-c6a4a4b3a499`.
 
 ## Seeds
 
-Base seeds, only with the dev server stopped:
+No seed script. The bench is built during the run:
 
-    mix run priv/repo/qa_seeds.exs
+    /tmp/cms-qa-agents/agent-1
 
-Story-specific, and the part that matters: a finding has to exist in the
-disposable copy before the agent is asked to do anything, because the alert is
-about a landing. There is no page for that — post analyzer output the way the
-harness does, against the disposable copy's id:
+A credo-capable copy of the QA sandbox project, minted by
+`.code_my_spec/qa/scripts/qa_agents.sh` and populated from
+`code_my_spec_test_repos/qa_sandbox` — which exists precisely so QA can run
+`mix credo` without touching the framework's own checkout.
 
-    curl -sS -X POST "localhost:4004/api/harnesses/$QA_HARNESS_ID/analysis/run" \
-      -H 'content-type: application/json' -d '{"source":"credo"}'
+**Use this root and not `qa_sandbox` itself.** `start_agent` resolves a named
+root through `WorkingCopies.by_root`, which matches project *and device* and
+root; qa_sandbox's Code-My-Spec row sits on a stale device, so naming it
+records the agent against the main checkout instead (issue `af85efc7`). This
+root resolves correctly. Confirm before trusting anything:
 
-If the disposable copy has nothing to find, write one broken file into its root
-first — `qa_agents.sh up` prints it — and re-run. Confirm the finding landed
-before testing delivery, or a silent result reads as the feature failing when
-the premise never held:
+    psql -d code_my_spec_dev -t -c "select working_copy_id from agents where id='<agent id>';"
 
-    psql -qtA code_my_spec_dev -c \
-      "select source, count(*) from problems where working_copy_id='$QA_HARNESS_ID' group by 1;"
+must print `16bce3db-8212-469b-a6dd-c6a4a4b3a499`.
+
+Wake the copy on the harness first — a copy is picked up on its first contact,
+and a just-restarted harness holds a lease on the others for up to a minute:
+
+    curl -sS -X POST localhost:4004/api/hooks/session-start \
+      -H "X-Harness-Id: 16bce3db-8212-469b-a6dd-c6a4a4b3a499" \
+      -H 'content-type: application/json' -d '{"session_id":"qa-987"}'
+
+Read what the agent was told with:
+
+    psql -d code_my_spec_dev -t -A -c "select m.role, m.inserted_at, m.content::text \
+      from conversation_messages m join conversations c on c.id = m.conversation_id \
+      where c.agent_id = '<agent id>' order by m.inserted_at;"
 
 ## What To Test
 
-Each maps to one acceptance criterion. The surface is the agent's own tool
-result — start it, make it call something, read what comes back.
+- **An Alloy agent is told its own turn broke something.** Ask the agent to
+  write a module with no `@moduledoc`, then let a credo run land. Expect an
+  alert in its conversation naming the finding, arriving *because the run
+  completed* — not because a turn ended and not because the agent asked.
 
-- **An Alloy agent is told its own turn broke something.** With a finding
-  outstanding in the disposable copy, start an agent on it (`start_agent`,
-  `provider: "openai"`), then message it so it makes a tool call. The reply
-  should carry a line naming the analyzer, a count and an age. Expect
-  `credo: N failing in this working copy, as of Xs ago. list_problems for detail`.
-- **The same landing produces the same words for either agent.** Against the
-  same landing, POST `/api/hooks/post-tool-use` with a `session_id` and compare
-  its `systemMessage` to what the agent got. The two should agree — assert they
-  match each other, not a phrase, so a reworded alert does not read as a defect.
-- **A clean run says nothing to either agent.** Mint a second disposable copy
-  with nothing broken, start an agent, message it. The reply should carry no
-  alert at all. This is the criterion most likely to regress quietly.
-- **An agent that fires no hooks is still told.** Same as the first, and the
-  thing to check is that no hook was involved: the disposable agent has no
-  Claude Code session, so nothing could have fired `PostToolUse` for it.
-- **Being told does not silence the other agent.** Fire the hook first for an
-  external session, then message the Alloy agent. It must still be told. Then
-  the reverse order. Dedup is per agent — issue `927c2b78` is this exact bug on
-  the external side and it shipped, so test both directions.
-- **A stopped agent is a stopped agent, not a lost message.** Stop the agent
-  (`stop_agent`), then land another finding. Nothing should be delivered and
-  nothing should be logged as an error — check `~/.codemyspec/web.log` for the
-  window. "Nobody to tell" is a state, not a fault.
-- **Being alerted mid-work does not cost the agent its stop decision.** After
-  the agent has been alerted, confirm the findings are still outstanding — ask
-  again from another surface and see them. The alert must not consume them. The
-  full interaction with an internal stop decision belongs to story 988, which
-  has no turn-end seam yet; do not fail 987 for it.
+- **An agent that fires no hooks is still told.** Confirm no
+  `/api/hooks/stop` was POSTed for this agent, so the only route the alert
+  could have taken is the internal one. `web.log` distinguishes them: the hook
+  path carries `cms_hook=stop cms_session=...`, the internal path carries
+  neither.
+
+- **A clean run says nothing to either agent.** Remove the offending module,
+  land another credo run, and expect no new message. An agent woken to be told
+  its tree is clean has been charged a turn for no information.
+
+- **The same landing produces the same words for either agent.** Compare the
+  alert text against what the same finding renders for an external agent.
+  Different accounts of one tree is the failure.
+
+- **Being told does not silence the other agent.** With more than one agent on
+  the project, an alert delivered to one must not consume the finding: the
+  other is still owed it. Check both conversations after a single landing.
+
+- **A stopped agent is a stopped agent, not a lost message.** Stop the agent,
+  land a run, and expect the delivery to be recorded as undeliverable at info
+  rather than raising — a halted agent has nobody to tell, which is a state and
+  not a fault.
+
+- **Being alerted mid-work does not cost the agent its stop decision.** Land a
+  run while the agent is mid-turn, then end the turn. The stop decision must
+  still arrive; the alert must not have consumed or replaced it. Story 988's
+  path is the one to watch here, and the two must both land.
 
 ## Result Path
 
@@ -109,23 +94,18 @@ result — start it, make it call something, read what comes back.
 
 ## Setup Notes
 
-**Tear down by root, deliberately.** `qa_agents.sh down` removes the scratch
-directories and leaves the server rows, and a retired copy's file rows keep
-components alive for every other agent — issue `3c6b6b63`, which cost four days
-of a phantom orphan context. After the session:
-
-    psql -d code_my_spec_dev -c \
-      "delete from files where working_copy_id in (select id from working_copies where root like '/tmp/cms-qa-agents%');
-       delete from working_copies where root like '/tmp/cms-qa-agents%';"
-
-The label does not survive — the server rewrites it once the copy goes live, so
-a cleanup keyed on the label matches nothing and reports success. The root is
-the stable handle.
-
-**Never point a live agent at a real checkout.** This story needs a broken file
-to exist, and the agent has a real model credential and real edit tools. A
-disposable root is not tidiness here, it is the only safe place to do it.
-
-**The alert is deduped per agent per landing.** An agent is told once and stays
-quiet until the problems move, so a second tool call in the same state answering
-nothing is correct, not a miss. To see it again, land a different finding.
+- The code under test must be **live**, not merely committed: `:4000` and
+  `:4004` both run the main checkout whatever worktree pushed. Confirm with
+  `grep -hoE '\[Boot\][^"]{0,40}' ~/.codemyspec/web.log | tail -1` before
+  trusting a negative result, and check the harness's own build at
+  `curl -sS localhost:4004/health`.
+- A harness restart leaves agent rows reading `running` with no process behind
+  them. `list_agents` straight after a restart is residue; stop it before
+  starting a fresh agent.
+- Silence is the expected answer in two of these scenarios and the failure in
+  another, so never read "no message" as a result without first proving the
+  finding was real and enforceable — `analysis/wait` reporting
+  `credo: fresh, N problem(s)` is that proof. Three of story 988's criteria
+  passed for months by counting zero against zero.
+- Teardown: delete the seeded modules, stop every agent started, and land a
+  final clean credo run so no finding is left standing against the project.
