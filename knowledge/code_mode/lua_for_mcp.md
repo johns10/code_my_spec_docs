@@ -81,15 +81,25 @@ LLM → eval({ script = """
 ## The stack, and which layer we want
 
 ```
-luerl      Lua 5.3 VM, pure Erlang, rebar3          ← the engine
-lua        tv-labs Elixir wrapper, ~> 0.4           ← what we use
+lua        Lua 5.3 VM written in Elixir, ~> 1.0     ← what we use
 ash_lua    Ash bridge, ~5,600 lines                 ← not applicable
 ```
+
+**Not luerl.** Amber's lock has `lua 0.4.0` sitting on `luerl 1.5.1`, and
+reading the two together gives the wrong stack. `lua` 1.0 is its own VM — luerl
+is a `:benchmark`-only dependency now, kept for cross-version comparisons. The
+source calls 0.4 "the old Luerl-backed implementation" and the README leads with
+"no NIFs, no C, no Erlang runtime dependency". One layer, not two.
 
 `ash_lua` is mostly Ash resource introspection — `fields.ex` (804),
 `docs.ex` (1,436), `runtime.ex` (1,081), `encoder.ex` (560), `surface.ex` (414)
 walk attributes, relationships and filter predicates. We are not on Ash and
 need none of it.
+
+**Version.** `lua` is at **1.0.2** (Apache-2.0, ~6,900 downloads/week).
+Amber's lock pins `0.4.0`, so do not copy its version constraint: the limits
+below arrived in 1.0, and 0.4 is a different architecture. Verified the limits
+are in the released 1.0.2 and not only on git main.
 
 **The layer we want is `lua`.** Bindings are one call:
 
@@ -105,11 +115,12 @@ already a uniform entry point, for all 111. Both the Lua bindings and the
 documentation generate from the modules that exist. `ash_lua` had to *build* an
 introspection layer; ours is the tool registry.
 
-### Pure Erlang, which matters here
+### No NIFs, which matters here
 
-`luerl` has no NIFs. We ship a Burrito binary and have been bitten by a NIF
-crashing the BEAM on Windows (MDEx). A Lua VM that is pure Erlang carries none
-of that risk.
+We ship a Burrito binary and have been bitten by a NIF crashing the BEAM on
+Windows (MDEx). `lua` is Elixir all the way down — no NIFs, no C, and since 1.0
+not even an Erlang dependency underneath — so there is no native code to
+re-check per platform.
 
 ## Sandbox and limits
 
@@ -121,21 +132,35 @@ says so:
 ** (Lua.RuntimeException) Lua runtime error: os.execute(_) is sandboxed
 ```
 
-Two options give deterministic limits without wrapping each evaluation in a
-Task:
+Three options give deterministic limits without wrapping each evaluation in a
+Task. All raise **catchable** errors, so `pcall` recovers in-band.
 
-- `:max_call_depth` — caps nested call depth, raises `"stack overflow"`.
-- `:max_instructions` — caps VM instructions, raises
-  `"instruction budget exceeded"`.
+- `:max_call_depth` (default `:infinity`) — nested call depth, raises
+  `"stack overflow"`.
+- `:max_instructions` (default `:infinity`) — VM instructions per top-level
+  evaluation, raises `"instruction budget exceeded"`. Enforced at loop
+  back-edges and call boundaries, so the `:infinity` path costs nothing. Budget
+  is fresh per evaluation.
+- `:max_string_bytes` (**default 256 MiB**) — ceiling on any single string the
+  VM will build, via `..`, `string.rep`, or a `load` reader. Raises
+  `"resulting string too large"`, and the size is computed *before* allocating,
+  so a bomb is refused rather than detected afterwards.
 
-Both default to `:infinity`, both raise **catchable** errors, so `pcall`
-recovers in-band. A `while true do end` under a budget returns an error instead
-of spinning a scheduler.
+**`:max_string_bytes` is the one that is easy to miss, and its default is not
+safe for us.** 256 MiB is a string this process will happily build and then try
+to put in an MCP response. `string.rep("x", 2^28)` is not an infinite loop and
+not a blocked host call, so neither of the other two limits sees it. Set it low
+— kilobytes, not megabytes; a script's *answer* is going into an agent's
+context, where anything past a few tens of KB is already useless.
 
-These bound the *VM*. They do not bound a host function that blocks — and our
-tools hit the database and external providers — so a wall-clock timeout around
-the evaluation is still needed on top. `lua`'s sandboxing guide has the shape:
-a `Task` plus separate `receive` arms for timeout and `:killed`, because
+The library's own note: when the VM runs inside a process capped with
+`:max_heap_size`, keep `:max_string_bytes` comfortably below the heap cap,
+or the kill depends on GC timing instead of being a deterministic refusal.
+
+These three bound the *VM*. They do not bound a host function that blocks — and
+our tools hit the database and external providers — so a wall-clock timeout
+around the evaluation is still needed on top. `lua`'s sandboxing guide has the
+shape: a `Task` plus separate `receive` arms for timeout and `:killed`, because
 `Task.yield || Task.shutdown(:brutal_kill)` collapses the two and misreports a
 CPU-bound loop.
 
@@ -163,5 +188,5 @@ John's calls, each tagged with the story it lands in:
 - `github.com/ChristianAlexander/amber` — the demo, and the video it companions
 - `ash-lua.hexdocs.pm` — the docs API shape: `index_doc`, `callable_doc`,
   `type_doc`, `search`, `full_doc`
-- `github.com/tv-labs/lua` — the wrapper; see its `guides/sandboxing.md`
-- `luerl` — the VM
+- `github.com/tv-labs/lua` — the VM; see its `guides/sandboxing.md`
+- `luerl` — the Erlang VM `lua` 0.4 sat on, and no longer does

@@ -1,4 +1,6 @@
-# QA Brief — Story 965: My domain is registered and pointed at my app
+# Qa Story Brief
+
+Story 965 — A timeline across the top says where my project is.
 
 ## Tool
 
@@ -6,82 +8,71 @@ web
 
 ## Auth
 
-Magic link as the owner (`johns10@gmail.com`) — provider integrations are
-user-scoped and only that account has Cloudflare connected.
+The QA user is passwordless; `/users/log-in` offers only GitHub, Google and a
+magic link.
 
-    vibium cookies clear
-    vibium go "http://127.0.0.1:4000/users/log-in"
-    vibium fill "input[name='user[email]']" "johns10@gmail.com"
-    vibium eval "(()=>{const b=Array.from(document.querySelectorAll('button')).find(x=>x.textContent.includes('Email me a login link')); b.click(); return 'clicked';})()"
-    LINK=$(curl -s "http://127.0.0.1:4000/dev/mailbox" | grep -oE '/dev/mailbox/[a-f0-9]{32}' | head -1)
-    TOKEN=$(curl -s "http://127.0.0.1:4000${LINK}/html" | grep -oE '/users/log-in/[A-Za-z0-9._~+/=-]{10,}' | head -1)
-    vibium go "http://127.0.0.1:4000${TOKEN}"
+1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]` with
+   `qa@codemyspec.local` → click "Email me a login link".
+2. `http://127.0.0.1:4000/dev/mailbox` → open the newest message **addressed to
+   this user**; the mailbox is shared with every other QA session on this box.
+3. The link is minted with the configured host
+   (`https://dev.codemyspec.com/users/log-in/<token>`). **Rewrite the origin to
+   `http://127.0.0.1:4000` before navigating.**
+4. Lands on `/app` with the fixture project active. Single-use token.
 
 ## Seeds
 
-No seed run needed.
+None beyond the base fixture, and nothing to run. Verify it is present without
+`mix run` — the dev server on 4000 holds the compile lock and a `mix run` under
+`MIX_ENV=dev` would 500 the app under test:
 
-- `QA Fixture Project` — `11111111-1111-4111-8111-111111111111`, domain
-  `astralbi.com` (owned, so the domain step adopts), environment `uat` with a
-  provisioned server.
-- **Checking a name writes it onto the project.** For availability probes, create a
-  disposable project at `/app/projects/new` and delete it afterwards, or you will
-  overwrite the fixture's domain.
+```
+psql -U postgres -h localhost -d code_my_spec_dev -t \
+  -c "select email from users where email='qa@codemyspec.local';"
+```
 
-`astralbi.com` is live — its apex serves a real site behind Cloudflare
-(172.64.80.1). Never let a run point the apex anywhere: keep the project scoped to
-subdomain environments only, and note the default `prod` environment maps to the
-apex (issue `ae37f523`).
+Entity: project `QA Fixture Project`, id `11111111-1111-4111-8111-111111111111`.
+
+This story needs no provider, no harness and no agent. The timeline is drawn
+from the project's own requirement graph, which every project has.
 
 ## What To Test
 
-URL: `http://127.0.0.1:4000/app/projects/<id>/provisioning`
+Base URL `http://127.0.0.1:4000`, project `11111111-1111-4111-8111-111111111111`.
 
-Reachable today:
+- **It is there without being asked for.** Open `/stories`, `/issues` and
+  `/working-copies` on the project. The timeline is on all three, above the
+  page's own content — not on a page of its own. *(2929)*
+- **One step is current.** Exactly one step carries the current marker; the
+  others read as done or not-started. *(2925)*
+- **All the story work is one step.** The fixture project has stories; the
+  timeline shows a single Building step regardless of how many. *(2924)*
+- **The whole graph is on the line.** Fourteen steps — the project's thirteen
+  own requirements plus story work — none dropped. *(2940)*
+- **One phase expanded, the rest collapsed.** Exactly one phase is expanded and
+  every other is collapsed. *(2940)*
+- **The detail reads as sentences.** The current step carries about two
+  sentences of plain language containing no module name, file path, id or count
+  of internals. Read it as a non-technical person would. *(2927)*
+- **A step is a way in.** Click a step; it opens the page that answers for it
+  rather than dead-ending. *(2928)*
+- **Idle still says where it stands.** The fixture project has nothing in
+  flight; the timeline must still mark a step rather than going blank. This is
+  the one that matters most — a timeline marking nothing is indistinguishable
+  from one that failed to load. *(2926)*
 
-- **An existing domain is an ordinary way in (8052)** — enter `astralbi.com` and
-  Check. Expect "astralbi.com (already yours)" and the domain step reaching `done`
-  with resource `domain — cloudflare/astralbi.com`, not an error.
-- **A retried step does not buy a second domain (7991)** — re-run the domain step;
-  exactly one domain resource, project `domain` column unchanged.
-- **Sam finds the domain in his own account (7992)** — the zone and the records the
-  run creates live in the user's own Cloudflare account.
-- **An unsupported extension becomes a dashboard errand (7993)** — check
-  `something.gov` or `.museum`. Expect `[data-test="domain-unsupported"]` reading
-  "extension is not one the Registrar API can sell", distinct from the
-  supported-but-unpriceable wording.
-- **Each environment resolves to its own server (7995)** — add a second environment,
-  run `server` then `dns`. Each host must resolve to a different IP, each matching
-  that environment's own `server_name`. Tear the extra one down afterwards,
-  **including its DNS record** (issue `206af045`).
-- **The records let the proxy get its certificate (7996)** — the A record must be
-  **unproxied**: `dig <env>.astralbi.com @1.1.1.1` returns the Hetzner IP, not a
-  Cloudflare 172.64.x address. A proxied record means Cloudflare terminates TLS and
-  kamal-proxy can never complete an HTTP-01 challenge.
-
-Not reachable — the Registrar API neither prices nor sells (issue `86fa0dbf`):
-
-- Sam picks a name and sees what it costs (7988)
-- A taken domain sends Sam back to choose again (7989)
-- Buying takes an explicit yes (7990)
-- A missing payment method is named rather than guessed at (7994)
-
-## Result Path
-
-Findings are filed via `create_issue` and submitted with `submit_qa_result`.
+Judgement calls this pass owes, beyond what the spex can assert: whether the
+phase names and the fourteen sentences actually read as plain language to
+somebody who does not know the system, and whether fourteen steps across the top
+is legible rather than a build log. Both were written by the agent, not by the
+PM, so they are the parts most likely to be wrong.
 
 ## Setup Notes
 
-**Do not attempt a real purchase.** Registration is not refundable. The API cannot
-price a name it does not already hold, so there is no safe way to exercise the
-purchase criteria without spending money on a domain nobody wants.
+The spex cover the same criteria in-process and are green. That is the contract
+layer; this pass is about whether it is right on a real screen, which is where
+the density and the wording can only be judged by looking.
 
-**Clean up every environment you add**, in this order: delete the DNS record first,
-then the server. Releasing the IP while the record still points at it is the window
-where the takeover in `206af045` is live. There is no UI for either — use
-`Cloudflare.delete_dns_record/3` through `mix run` against the owner's scope, and
-the Hetzner API for the server.
+## Result Path
 
-**`mix run` is safe against the live dev server** (a no-op compile does not
-invalidate the lock); `mix test` is not, because the TestAdapter recompiles the dev
-environment for static analysis.
+`.code_my_spec/qa/965/result.md`

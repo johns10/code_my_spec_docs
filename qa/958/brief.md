@@ -1,96 +1,112 @@
 # Qa Story Brief
 
-QA brief for story 958 — Mark Stories Ready for Development to Control Pace.
-
-The story ships the epic board (`CodeMySpecLocalWeb.EpicsLive`) plus the
-`ready_for_dev` pace gate. The board is a LiveView on the local endpoint, so
-this is browser QA.
+Story 958 — Each device onboards itself and I can see what is running where.
 
 ## Tool
 
-web
+web (plus `.code_my_spec/qa/scripts/announce_device.sh` to make machines appear)
 
 ## Auth
 
-None. The local endpoint (`CodeMySpecLocalWeb`) has no user auth — `Plugs.LocalOnly`
-admits any loopback request and project scope comes from the URL's
-`:project_name` segment.
+Browser, on `http://localhost:4000`. Magic link only — `/users/log-in` has **no
+password field**, and the seed user is pre-confirmed so the link works:
 
-Base URL for the in-repo dev server:
+1. `http://localhost:4000/users/log-in`
+2. enter `qa@codemyspec.local`, click "Email me a login link"
+3. open `http://localhost:4000/dev/mailbox` and click the newest link **for that
+   address** — the mailbox is shared, and the newest link overall may log you in
+   as somebody else
 
-```
-http://localhost:4004
-```
+Announcing a machine does **not** use the browser session. A machine has no
+signed-in user, so it authenticates as a machine with the QA project's deploy
+key:
 
-Board under test:
-
-```
-http://localhost:4004/projects/code-my-spec/epics
-```
+    dk_qa_codemyspec_local
 
 ## Seeds
 
-**Do not run `priv/repo/cli_qa_seeds.exs` for this story.** Two reasons:
+    MIX_ENV=dev mix cms.seed priv/repo/qa_seeds.exs
 
-- `MIX_ENV=dev_cli mix run ...` takes the dev_cli compile lock and 500s the
-  running :4004 server mid-session.
-- The board already has real data in `~/.codemyspec/cli_dev.db` (50+ stories,
-  existing epics), which is a better test of the real thing.
+`mix run` will not work while the dev server holds :4000 — it fails with
+`:eaddrinuse` trying to bind the endpoint. Use `cms.seed`.
 
-Instead, create disposable fixtures **through the UI under test** and delete
-them at the end:
+The seed prints the deploy key it set. Make the machines with:
 
-- One epic named `QA 958 Epic`
-- Three stories titled `QA 958 story A|B|C`, created at
-  `http://localhost:4004/projects/code-my-spec/stories/new`
+    .code_my_spec/qa/scripts/announce_device.sh dk_qa_codemyspec_local --hostname qa-laptop --kind local
+    .code_my_spec/qa/scripts/announce_device.sh dk_qa_codemyspec_local --hostname qa-sprite  --kind cloud
+    .code_my_spec/qa/scripts/announce_device.sh dk_qa_codemyspec_local --hostname qa-mystery-box
 
-**Critical constraint:** never release or park any pre-existing story. The
-`ready_for_dev` flag drives `Requirements.Preloader`, so parking a real story
-silently removes it from the requirement graph and changes what the harness
-serves next. Bulk release/park must only ever be aimed at `QA 958 Epic`.
+Each prints `{"device_id":"..."}`. Keep the laptop's id — restarting it needs it.
+
+Project under test: `708492f9-454e-482f-a2eb-be64f0356b87`.
 
 ## What To Test
 
-- **Board renders** — visit `/projects/code-my-spec/epics`. Two columns:
-  epics left, unfiled stories right. Both scroll independently.
-- **New story defaults to parked** (criterion 7940) — create `QA 958 story A`
-  at `/stories/new` with only title + story filled. Expect it to save (no
-  "can't be blank" error from the untouched criterion row) and show `parked`.
-- **Epic creation** (7938) — "New epic" → create `QA 958 Epic`. Expect it in
-  the left column with `0 stories · 0 ready`.
-- **Drag to file** (7938) — drag `QA 958 story A` from unfiled into
-  `QA 958 Epic`. Expect it to leave the unfiled column and the epic header to
-  update to `1 stories`.
-- **Drag out** (7939) — drag it back to the unfiled column. Expect the epic to
-  return to `0 stories` and the story to reappear on the right.
-- **Bulk release** (7941) — file all three stories, then click `Release`.
-  Expect all three to show `ready` and the header to read `3 ready`.
-- **One-shot, not a cascade** (7941) — file a fourth story *after* the release.
-  Expect it to stay `parked` while the other three stay `ready`.
-- **Bulk park** (7957) — click `Park`. Expect all of the epic's stories to show
-  `parked`, and spot-check that a story outside the epic is unchanged.
-- **Rename** (7956) — `Edit` → rename to `QA 958 Renamed`. Expect the new name
-  on the board, the URL slug to follow, and the filed stories to survive.
-- **Delete returns stories to unfiled** (7958) — `Delete` → confirm. Expect the
-  epic gone, every story that was in it back in the unfiled column, and each
-  story's readiness unchanged.
-- **Per-story toggle** (7945) — toggle one QA story `parked` → `ready` → back.
-- **Nav** — `Epics` appears in the sidebar under `// data` and is marked active
-  on the board.
-
-Screenshots at each key state to `.code_my_spec/qa/958/screenshots/`.
-
-## Result Path
-
-Recorded in the DB via `submit_qa_result`; screenshots at
-`.code_my_spec/qa/958/screenshots/`.
+- **A new machine appears without anyone registering it (2838).** Announce
+  `qa-laptop`, then open `/app/devices`. It is listed. Nothing was registered by
+  hand.
+- **The machine is told who it is, and remembers (2839).** The announce returns a
+  `device_id`. Announce again with `--id <that id>` — the same id comes back.
+- **Restarting does not create a second one (2840).** After the re-announce,
+  `/app/devices` still shows one `qa-laptop`, not two.
+- **Somebody else's identity is not handed over (2841).** Announce with
+  `--id` set to a device id belonging to another account. A *different* id comes
+  back, and that account's machine does not appear in this list.
+- **Laptop and cloud box are told apart (2842).** `qa-laptop` reads "local
+  machine", `qa-sprite` reads "cloud machine".
+- **A machine that said nothing does not read as a laptop (2844).** `qa-mystery-box`
+  reads "unknown kind", never "local". Check `data-kind` is absent on that row.
+- **Starting the harness is what onboards the machine (2846).** `just refresh 4000`
+  restarts the real harness. `Johns-Mac-mini` appears on `/app/devices` without
+  any announce script being run.
+- **A machine online says so even when nothing runs on it (2849).** With the
+  harness up and no agent anywhere, `Johns-Mac-mini` reads **Present**. Confirm
+  the harness really is up: `curl -sS localhost:4004/health` shows
+  `connected: true`. **Wait more than two minutes and reload** — it must still
+  read Present. This is where issue 5b5c33ec was found; presence used to be
+  stamped once at boot, so every machine went stale while still connected.
+- **A working copy says which machine it is on (2843, 2847).** On
+  `/app/projects/708492f9-.../working-copies`, the copies the harness actually
+  serves say "on Johns-Mac-mini". Several checkouts on that one machine all
+  name the same machine — one install does not become several.
+- **A copy with no machine is not claimed to be anything (2845).** The
+  historical rows say "no machine — never reported one, or it may be orphaned".
+  They must not claim a machine is coming, nor that the checkout is dead, and
+  must stay listed.
+- **Destroying leaves the checkouts behind (2848).** Destroy `qa-sprite` from
+  `/app/devices`. It goes from the list; any checkout that was on it stays,
+  now saying it has no machine.
+- **A shared box onboards without a project (2858).** Nothing in the announce
+  names a project — no id, no header, no path segment — and the machine is still
+  issued an identity. The no-account half is not reachable through this route;
+  see the note below.
 
 ## Setup Notes
 
-Drag-and-drop is SortableJS via a colocated LiveView hook. Driving it needs a
-real browser drag (`vibium drag`) — LiveViewTest cannot dispatch drag events,
-which is why the BDD specs push the `move_story` event directly instead.
+**Check what the server is actually serving before testing anything.** Not the
+checkout sha and not `just refresh`'s ✓ line — both report the checkout, not the
+process. Read the boot line:
 
-Cleanup at the end of the session: delete `QA 958 Epic` (or its renamed form)
-and the four `QA 958 story *` records so the project's backlog is left as
-found.
+    grep -h "Boot" ~/.codemyspec/web.log | tail -1
+
+**The synthetic machines will read "Last seen", correctly.** `qa-laptop` and
+friends announce once and have no harness behind them, so they go stale as
+designed. Only `Johns-Mac-mini` has a live harness, and only it should hold
+"Present". Do not read the synthetic ones going stale as a defect.
+
+**The no-account half of 2858 cannot be tested through the UI or the route.**
+`Plugs.DeployKeyOrOAuth` takes a deploy key or a user token and both resolve to
+an account, so there is no credential that reaches `/api/devices` and yields an
+accountless scope. `Devices.announce/3` stores one — that is covered in
+`test/code_my_spec/devices_test.exs` — but a route producing one does not exist.
+Record it as not-exercisable rather than failing it or working around it.
+
+**Two issues were already found and fixed during implementation** — 5b5c33ec
+(presence stamped once at boot) and 689bdf63 (the join carried no device). Both
+are in `9f3f33c5`. Re-verify them rather than assuming; they are the two most
+likely to regress.
+
+## Result Path
+
+Submitted via `mcp__plugin_codemyspec_local__submit_qa_result` — the DB attempt
+is the record. No result.md; the harness does not read one.

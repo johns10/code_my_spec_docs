@@ -1,4 +1,6 @@
-# QA Brief — Story 964: My provider credentials go in once and get checked
+# Qa Story Brief
+
+Story 964 — I approve an epic and it gets built somewhere else.
 
 ## Tool
 
@@ -6,103 +8,82 @@ web
 
 ## Auth
 
-Browser session against port 4000, `:browser` pipeline behind
-`:require_authenticated`.
+The QA user is passwordless; `/users/log-in` offers only GitHub, Google and a
+magic link.
 
-**Passwordless** — the plan's old `qa-password-123!` does not exist (filed
-`3acee570`, plan since corrected):
+1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]` with
+   `qa@codemyspec.local` → click "Email me a login link".
+2. `http://127.0.0.1:4000/dev/mailbox` → open the newest message **addressed to
+   this user**; the mailbox is shared with every other QA session on this box,
+   and it is cleared by a server restart.
+3. The link is minted with the configured host
+   (`https://dev.codemyspec.com/users/log-in/<token>`). **Rewrite the origin to
+   `http://127.0.0.1:4000` before navigating.**
+4. Lands on `/app` with the fixture project active. Single-use token.
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]`
-   with `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → read the message.
-3. The link is minted as `https://dev.codemyspec.com/users/log-in/<token>`.
-   **Rewrite the origin to `http://127.0.0.1:4000`.**
-4. Lands on `/app`. Single-use token.
+Fill the email only after LiveView has connected — the input is `readonly` until
+it does, and the fill fails silently enough to look like a wrong selector.
 
 ## Seeds
 
-Already applied. Verify with psql — do not run `mix run` while the dev server
-on 4000 holds the compile lock.
+Base fixture only. Verify without `mix run` — the dev server holds the compile
+lock and a `mix run` under `MIX_ENV=dev` would 500 the app under test:
 
 ```
-psql -qtA code_my_spec_dev -c "select setup_options from projects where id='11111111-1111-4111-8111-111111111111';"
-psql -qtA code_my_spec_dev -c "select key from project_secrets where project_id='11111111-1111-4111-8111-111111111111' order by key;"
+psql -U postgres -h localhost -d code_my_spec_dev -t \
+  -c "select email from users where email='qa@codemyspec.local';"
 ```
 
-Project: `11111111-1111-4111-8111-111111111111`
-Page: `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/provisioning`
+Entity: project `QA Fixture Project`, id `11111111-1111-4111-8111-111111111111`.
 
-Expected fixture state — options `backups content domain email inbound
-storage`; stored secrets include `hetzner_api_token`,
-`hetzner_s3_access_key_id`, `hetzner_s3_secret_access_key`; GitHub, Cloudflare
-and Resend are account-level connections and are **not** connected.
-
-So a correct page shows **six** credential rows, three of them stored and
-three missing.
-
-For the isolation test you need a project in an account the QA user is not a
-member of. `47d78148-6b92-4d9c-bfa9-6dbed5057ddd` ("Week View", account
-`acme-salons`) works. Do **not** use `ee33ba64-...` (`devops-drill`) — it is in
-`code-my-spec`, which the QA user *is* a member of, so it is legitimately
-visible and proves nothing.
+This story needs no provider and no running agent. Everything under test is the
+epic's own life and the screen that shows it.
 
 ## What To Test
 
-Selectors from the story's spex: `credentials-form`, `credential-field`,
-`credential-directions`, `check-credentials`, `start-setup`, `project-form`,
-`project-row`, `setup-step`. Read `data-credential`, `data-state` and
-`data-stored` off each field rather than matching on label text.
+Base URL `http://127.0.0.1:4000`, epics at
+`/app/projects/11111111-1111-4111-8111-111111111111/epics`.
 
-- **7981 — one sitting covers every credential.** On a *fresh* mount, assert
-  all six rows render. **Then toggle any option and re-count.** Testing only
-  the fresh load misses the defect entirely; the count is the assertion.
-- **7982 — an option turned off does not ask for its credential.** Turn
-  `storage` off and assert the two S3 rows go, then turn it back on and assert
-  they **return**. The return leg is the one that matters — the current
-  implementation only ever filters the list down, so it cannot restore a row.
-- **7983 — proven by a real call, not by looking right.** Click
-  `check-credentials`. Stored credentials should move `unchecked` → `verified`
-  and missing ones stay missing. Read-only calls; safe to run.
-- **7984 — an under-scoped token names the permission it lacks.** Needs a
-  deliberately under-scoped Hetzner token. Not obtainable without minting one
-  in the console; record `partial` rather than inventing a pass.
-- **7985 — a missing credential stops the run before it starts.** Safe to
-  exercise: with GitHub/Cloudflare/Resend missing, snapshot every step's
-  `updated_at`, click `start-setup`, wait, and diff. Nothing should move. This
-  is the one `start-setup` click that is safe, because the guard refuses
-  before `run_async` is reached.
-- **7986 — the console-only key pair is asked for with directions.** The two
-  S3 rows must carry `credential-directions` explaining that the pair exists
-  only in the Hetzner console and the secret half is shown once. Check they
-  are present *and* that they survive an option toggle.
-- **7987 — the repo stays clean of credential values.** In
-  `code_my_spec_test_repos/qa_sandbox`, assert `envs/*.enc.env` values are
-  `ENC[AES256_GCM,...]`. The `age1...` string in `.sops.yaml` is a **public**
-  recipient and is supposed to be committed — do not report it.
-- **8050 — credentials follow the project wherever the agent runs.** Secrets
-  are per-project (`project_secrets`), connections per-account. Fully proving
-  the "wherever the agent runs" half needs the CLI surface; record `partial`.
-- **8051 — another project's credentials are not reachable.** Navigate to the
-  `acme-salons` project's provisioning URL as the QA user. Expect a redirect
-  to `/app/projects` with zero steps and zero credential fields.
+- **A draft epic offers nothing to approve.** Create an epic on the page. It
+  reads as draft and carries no "Build this" control — work cannot start on
+  something the agent has not put forward. *(2932)*
+- **A proposed epic offers approval, and only then.** Nothing in the UI proposes
+  yet; use the agent surface to move it (`EpicDispatch.propose/2` via an agent,
+  or check an already-proposed epic if one exists). The control appears. *(2942)*
+- **Agreeing dispatches it.** Click "Build this". The epic reads as dispatched
+  and names where the work is happening. You were never asked to choose a
+  checkout. *(2930)*
+- **Ignoring a proposal changes nothing.** Leave a proposed epic alone, reload:
+  still proposed, no working copy, no agent running on the working copies page.
+  *(2931)*
+- **The screen changes while you watch it.** With the epics page open in one
+  tab, have the agent propose an epic. It should appear **without reloading**.
+  This is the one that needs two windows and is the reason the story exists in
+  this shape. *(2942)*
+- **A dispatched epic that failed says so.** Not reachable from the UI — check
+  the rendered state if one exists; otherwise record as not covered. *(2939)*
+- **The graph node reports why.** `/requirements` → find `work_dispatched`. On
+  the fixture project it should be satisfied, and the row should say *why* —
+  "nothing left to hand out" versus "work is underway" are different sentences
+  and the distinction is the point. *(2933, 2934)*
 
-**Do not click `start-setup` with credentials complete.** The only sanctioned
-click is the 7985 guard test above, which cannot start a run.
-
-## Result Path
-
-Findings via `create_issue` as found; ends with `submit_qa_result` on task
-`e9fe9786-373c-4086-be79-04b008f5f079`. Screenshots to
-`.code_my_spec/qa/964/screenshots/`.
+Judgement this pass owes, beyond what the spex assert: whether "Build this"
+reads as the irreversible act it is to somebody non-technical, and whether a
+dispatched epic that names a rootless default copy ("waiting for a checkout")
+reads as sensible rather than broken.
 
 ## Setup Notes
 
-This story is mostly surface, so unlike 966 and 963 it does not need a live
-provisioning run — seven of nine criteria are fully checkable from a browser.
+The twelve spex cover the same criteria in-process and are green. That is the
+contract layer. This pass is about whether the screen is right, and in
+particular whether the live update actually happens in a real browser — the spex
+proves the LiveView receives the broadcast, not that a person sees it land.
 
-One trap, learned the hard way: **the credential list goes stale after an
-option toggle** (filed `6b22ed0a`). If you arrive at the page mid-session and
-see two rows instead of six, you are looking at a corrupted list, not the
-fixture. Navigate away and back to get a clean mount before asserting
-anything. That staleness is itself the story's biggest defect, so reproduce it
-deliberately rather than working around it.
+Known limitation: nothing in the UI *proposes* an epic yet. Proposing is the
+main agent's act and the main agent needs a provider, which the QA account does
+not have (see issue 4345609b). Criteria that need a proposed epic have to reach
+`EpicDispatch.propose/2` another way or be recorded as not covered.
+
+## Result Path
+
+`.code_my_spec/qa/964/result.md`

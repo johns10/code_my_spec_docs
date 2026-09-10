@@ -1,0 +1,205 @@
+# QA Story 835: Architect surveys the project
+
+Run a full QA session for this story. Two phases: write a testing brief,
+then execute it. The playbook below has the detailed procedure.
+
+**App URL:** Run `mix run -e 'IO.puts(CodeMySpecWeb.Endpoint.url())'`.
+
+## Story description
+
+As the architect agent (Claude executing analysis or design work), I need predictable read and analysis surfaces — JSON/text architecture views, per-component and per-story requirement queries, dependency-graph quality probes, story-tag analysis, and a design-conversation entrypoint — so I can survey the project's actual state without leaning on the write tools.
+
+This story is the read/analysis companion to "Architect Agent Surface" (story 682). 682 covers the architect's write side (patch, link, create stub, execute proposal). This story covers what the architect SEES: the architecture views, requirement-graph navigation, orphan/cycle detection, story tagging analysis, and the start_context_design prompt that kicks off design conversations.
+
+Out of scope: comparing the designed architecture (Architecture.Proposal) against the actual architecture (Components reprojected from Files). That's a separate recurring product thread, not part of this story.
+
+## Acceptance criteria
+
+- show_architecture_overview groups components under their parent context headers
+- architecture_health_summary surfaces concrete percentages and detail breakdowns
+- Default story_count sort puts components with most stories first
+- dependency_count sort puts components with most total deps first
+- show_requirement returns details for a known requirement name
+- show_component_requirements lists requirements for a known component by module name
+- show_story_requirements lists requirements for a known story by ID
+- Unknown requirement/component/story reference returns a not-found error
+- orphaned_contexts lists contexts with no story and no dependencies
+- validate_dependency_graph reports detected cycles when the graph is cyclic
+- start_context_design prompt enumerates unsatisfied stories and existing components
+- show_architecture renders a Mermaid flowchart of contexts and their dependencies
+
+## BDD spec files
+
+- `test/spex/715_architect_surveys_the_project/criterion_6302_show_architecture_overview_groups_components_under_their_parent_context_headers_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6303_architecture_health_summary_surfaces_concrete_percentages_and_detail_breakdowns_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6304_default_story_count_sort_puts_components_with_most_stories_first_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6305_dependency_count_sort_puts_components_with_most_total_deps_first_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6306_show_requirement_returns_details_for_a_known_requirement_name_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6307_show_component_requirements_lists_requirements_for_a_known_component_by_module_name_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6308_show_story_requirements_lists_requirements_for_a_known_story_by_id_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6309_unknown_requirement_component_story_reference_returns_a_not_found_error_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6310_orphaned_contexts_lists_contexts_with_no_story_and_no_dependencies_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6311_validate_dependency_graph_reports_detected_cycles_when_the_graph_is_cyclic_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6312_start_context_design_prompt_enumerates_unsatisfied_stories_and_existing_components_spex.exs`
+- `test/spex/715_architect_surveys_the_project/criterion_6313_show_architecture_renders_a_mermaid_flowchart_of_contexts_and_their_dependencies_spex.exs`
+
+## Linked component: McpServers
+
+This story is implemented by `CodeMySpec.McpServers` (context).
+Reading the source code and spec will help you understand what to
+test and how the feature works.
+
+- Tests: `test/code_my_spec/mcp_servers_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers.spec.md`
+- Source: `lib/code_my_spec/mcp_servers.ex`
+
+## Available scripts
+
+Reference these by path in the brief instead of inlining commands:
+
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_resend.sh`
+
+## Required reading: QA plan
+
+Read `.code_my_spec/qa/plan.md` first. It contains the App Overview, Tools
+Registry, auth strategy, and Seed Strategy you need before writing the
+brief. The plan is produced and maintained by the `qa_setup` task; if
+it's missing or incomplete, the evaluator will tell you to run that
+task first.
+
+## Read the playbook
+
+Read these via the `read_knowledge` MCP tool:
+
+- `qa_story/workflow.md` — two-phase procedure (brief, test), tool
+  rules (`:browser` vs `:api` pipelines), testing approach, and what
+  the evaluator does when you stop.
+- `qa-tooling.md` — testing tool patterns and selection.
+- Tool-specific cheat sheets under `qa-tooling/` (browse with
+  `list_knowledge`, then read individual entries).
+
+## Brief format spec
+
+Write the brief to `.code_my_spec/qa/835/brief.md` matching this spec exactly.
+The evaluator validates the brief structure on stop.
+
+# Qa Story Brief
+
+Per-story QA testing brief. Written by the QA planner after reading the story's prompt file and the QA plan. Gives the tester exact instructions — tool, auth, seeds, what to test.
+
+## Required Sections
+
+### Tool
+
+Format:
+- Use H2 heading
+- Single line: tool name (web, curl, or script path)
+
+Content:
+- Which tool to use for this story's testing
+- `web` for LiveView pages, `curl` or script path for controller/API routes
+
+
+### Auth
+
+Format:
+- Use H2 heading
+- Exact commands or instructions the tester copies verbatim
+
+Content:
+- Login URL, credentials, headers — whatever the tool needs
+- Reference auth scripts from the QA plan if applicable
+- Tester should not need to figure out auth on their own
+
+
+### Seeds
+
+Format:
+- Use H2 heading
+- Exact commands to run
+
+Content:
+- Seed script references (`mix run priv/repo/qa_seeds.exs`)
+- Any story-specific seed commands beyond the base seeds
+- Entity IDs or values the tester will need
+
+
+### What To Test
+
+Format:
+- Use H2 heading
+- Bullet list of specific test scenarios
+
+Content:
+- Specific URLs to visit
+- Interactions to perform (click, fill form, submit)
+- Expected outcomes (what the tester should see)
+- Map to acceptance criteria from the story
+
+
+### Result Path
+
+Format:
+- Use H2 heading
+- Single line: file path
+
+Content:
+- Where the tester writes the result document
+
+
+## Optional Sections
+
+### Setup Notes
+
+Format:
+- Use H2 heading
+- Free-form paragraphs
+
+Content:
+- Additional context, prerequisites, known issues
+
+
+
+## Findings and done signal
+
+Every finding you uncover during execution gets filed via
+`mcp__plugin_codemyspec_local__create_issue` **as you find it** — not
+written into a markdown file. Capture the title, severity, scope, and a
+short description; the call returns an issue id. Hold those ids.
+
+When you finish the session, call
+`mcp__plugin_codemyspec_local__submit_qa_result` with the structured
+scenarios payload **and** every issue id you filed:
+
+    mcp__plugin_codemyspec_local__submit_qa_result(
+      task_id: <task_id>,
+      status: "pass" | "partial" | "fail",
+      scenarios: [%{name: "...", status: "pass|partial|fail", observation: "..."}, ...],
+      issue_ids: [<every id returned from create_issue>]
+    )
+
+Discipline:
+
+- **`status: "pass"`** with `issue_ids: []` is fine.
+- **`status: "partial"` or `"fail"`** with `issue_ids: []` is **rejected
+  by the tool**. A failure with no filed issue is a finding that just
+  disappeared when your session ended — there's nowhere else for it to
+  live. File the issues first, then submit.
+- The bare `submit_qa_result` (without the `mcp__plugin_codemyspec_local__`
+  prefix) does NOT resolve — use the fully-qualified name.
+- Attribution follows automatically: on submit, every `scope: app` issue
+  you listed is attached to this story, and `story_issues_resolved` holds
+  the story's release until they're fixed. `framework`, `qa` and `docs`
+  findings are about the tooling rather than the story, so they queue at
+  the project level instead. If an issue belongs to a *different* story,
+  pass that `story_id` on the `create_issue` call — an explicit
+  attribution is never overwritten.
+- Don't write findings into a result.md file. The harness doesn't read it.
+  Screenshots and other evidence still belong on disk, but the canonical
+  record is the DB attempt + linked issues.

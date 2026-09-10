@@ -109,7 +109,7 @@ closer-to-production test than the in-process `Fixtures` bridge the
 spex suite uses. All throwaway entities (stories, files) are deleted at
 the end of their respective probes.
 
-## Retry Note (qa-873b, session 2)
+### Retry Note (qa-873b, session 2)
 
 This is a second QA pass on story 873, run under an explicit instruction
 **not** to mutate this working copy (no write-then-delete probe files, no
