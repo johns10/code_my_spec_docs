@@ -5,7 +5,7 @@ Spex drive exactly one of these. Pick the one that matches the real user action.
 | I'm testing... | Surface | Entry point | Cassette? |
 |---|---|---|---|
 | Agent calls an MCP tool | MCP tool | `Tool.execute(params, %Frame{assigns: %{current_scope: context.scope}})` | No |
-| Stop hook / hook endpoint | HTTP | `post(~p"/api/hooks/stop", body)` with `x-working-dir` header | Yes — ExCliVcr if shell-out |
+| Stop hook / hook endpoint | HTTP | `post_hook(context, "/api/hooks/stop", body)` | Yes — ExCliVcr if shell-out |
 | A working copy talks to the server | Channel | `socket(UserSocket, …) \|> subscribe_and_join(HarnessProjectChannel, topic, params)` | No |
 | OAuth / outbound HTTP | HTTP | `OAuthHelpers.do_google_callback/3` or `do_github_callback/3` | Yes — ReqCassette (via OAuthHelpers) |
 | Engineer uses local app (port 4003) | LiveView | `live(context.conn, ~p"/projects/...")` | No |
@@ -39,10 +39,7 @@ use ExCliVcr  # add at top of module if shell-out scenario
 
 response =
   use_cmd_cassette "my_cassette_name", record: :none do
-    Phoenix.ConnTest.build_conn()
-    |> Plug.Conn.put_req_header("x-working-dir", context.scope.cwd)
-    |> Plug.Conn.put_req_header("content-type", "application/json")
-    |> post(~p"/api/hooks/stop", %{
+    post_hook(context, "/api/hooks/stop", %{
       "session_id" => context.session_id,          # from :bdd_task_started shared given
       "test_output_files" => %{
         "compile" => Path.expand("test/fixtures/validation/my_scenario/compile.jsonl")
@@ -150,7 +147,7 @@ Deeper: [surfaces.md — in-memory filesystem](surfaces.md#3-in-memory-filesyste
 
 - **`~p` only works for local-endpoint routes.** Cloud routes (`/app/...`) need plain strings.
 - **`response_text/1` is required for MCP assertions.** Don't touch response fields directly.
-- **Hook endpoint needs `x-working-dir`** set to `context.scope.cwd`.
-- **`test_output_files` paths must be `Path.expand/1`-ed.** Relative paths won't survive working-dir resolution.
+- **Use `post_hook(context, path, params)` for hook endpoints.** It sets `x-harness-id` and dispatches to the local endpoint explicitly. No directory travels on the wire — `x-working-dir` and `WorkingDirScope` were removed because resolving a checkout from an announced path succeeded against the wrong disk.
+- **`test_output_files` paths must be `Path.expand/1`-ed.** Relative paths are resolved against the running process, not the working copy.
 - **Empty `compile.jsonl` = no diagnostics.** Do not write `[]` or `{}`.
 - **ExCliVcr cassettes live in `test/fixtures/cassettes/`.** ReqCassette cassettes live in `test/cassettes/oauth/`.

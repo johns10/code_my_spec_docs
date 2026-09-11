@@ -21,25 +21,34 @@ As an agent, I want stories assigned to a working copy, so that findings on anot
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2394_a_finding_on_someone_elses_story_is_still_reported_here_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2395_unassigned_findings_are_visible_without_being_blocking_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2396_a_story_assigned_to_nobody_blocks_everybody_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2398_having_assignments_does_not_hide_the_unassigned_backlog_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2399_another_working_copys_story_is_not_offered_here_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2406_a_regression_on_proven_behaviour_blocks_whoever_is_stopping_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2407_work_in_progress_elsewhere_does_not_block_here_spex.exs`
 
-## Linked component: Harnesses
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.Harnesses` (module).
+This story is implemented by `CodeMySpec.WorkingCopies` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/harnesses_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/harnesses.spec.md`
-- Source: `lib/code_my_spec/harnesses.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

@@ -13,26 +13,26 @@ As a product manager, I want to run the three amigos process with an agent to de
 
 - Graph surfaces three_amigos_complete for a story without acceptance criteria once upstream gates are satisfied
 - add_rule rejects when no persona is linked to the story
-- Readiness clears and the graph advances when a story has ≥1 persona, ≥1 rule, every rule has happy + failure scenarios, and scenarios > questions
+- Readiness clears and the story is sealed when it has ≥1 persona, ≥1 rule, every rule has at least one scenario, and no question is left open
 - Lightweight persona creation completes Three Amigos and surfaces personas_complete as the next research gap
 - Readiness fails with "No rules" when the story has zero rules
 - Readiness fails with "No personas" when the story has zero personas linked
-- Readiness fails when the story has 10 or more rules and the failure detail instructs the PM to slice the story
+- Past 10 rules the gate still passes but emits a non-blocking advisory suggesting the story be split
 - Multiple personas can be linked to one story; all count toward the persona-linkage requirement
 - Task prompt enumerates the available MCP tools (add_rule, add_scenario, add_question, add_persona, link_persona_to_story) and points the agent at the knowledge MCP
 - add_scenario rejects when the rule_statement does not match any existing Rule on the story
 - Deleting all acceptance criteria on a completed story flips readiness back to unsatisfied and re-dispatches Three Amigos
 - add_question creates a Question record observable through list_questions
-- Readiness fails when open questions outnumber scenarios
-- Resolved questions do not count against the scenarios > questions readiness clause
+- Readiness fails while any question on the story is open, whatever the scenario count
+- A resolved question stops blocking readiness; a deferred one does too
 - get_story_gherkin renders a populated story as a plain-text Gherkin feature with Rule blocks, Scenario titles, and Given/When/Then bodies in insertion order
 - A rule whose failure surface lives at a different layer passes the gate with only a happy-path
-- Readiness clears and the graph advances when a story has ≥1 persona, ≥1 rule with at least one scenario each, and scenarios > open questions
-- Readiness fails with "No rules" when the story has zero rules
-- Readiness fails with "No personas" when the story has zero personas linked
+- Sealing is refused while any rule is unmet, so a story can never be sealed with an open red card
 - Readiness fails when the story has 15 or more rules and the failure detail instructs the PM to slice the story (the hard ceiling). Past 10 rules emits a non-blocking advisory instead.
-- Readiness fails when open questions outnumber scenarios
-- Resolved questions do not count against the scenarios > questions readiness clause
+- The failure detail names the unanswered red cards and points at resolve_question
+- A question raised after the story is sealed does not un-seal it — three_amigos_complete reads the seal, not a recomputed check
+- A question raised after sealing leaves the story complete
+- An unanswered red card refuses the seal
 
 ## BDD spec files
 
@@ -67,9 +67,12 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

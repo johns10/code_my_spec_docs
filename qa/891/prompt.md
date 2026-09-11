@@ -7,21 +7,7 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an engineer putting a working copy on the harness, I want onboarding to establish its identity, its databases and its proxy once and write them down, so that nothing downstream derives them and no agent has to discover them.
-
-Onboarding is currently not a step — it is a set of values every consumer re-derives, and each derivation has failed in production.
-
-**Test partitions.** Two independent derivations of one identity: `config/test.exs` derives a name from the worktree path when `MIX_TEST_PARTITION` is unset, and `TestDatabase.partition_for/2` digests the cwd to `h<sha8>`, appending `s` for spex. `analyzer_env.ex` states the consequence outright — "different databases, by accident of two mechanisms rather than by design". Nothing creates them, nothing migrates them, no command names them, and the guard that refuses on a stale one printed advice for a different database entirely. One agent followed that advice and stayed blocked three days across 50 rejected runs (6f89b278). A name assigned once and read by both removes the class.
-
-**Identity on the wire.** Three hook configs disagree about how a harness names itself: the installed marketplace plugin sends no `X-Harness-Id` and posts to a decommissioned port, the repo source sends the header, the generated per-harness config bakes the id into the path. Three agents measured three files and each generalised to "the plugin" (315fa5a8, 746e5c32, c1e6adbd).
-
-**The Anthropic base URL.** Onboarding sets it so agent messages relay through the harness and land on the server. Building that relay is not this story; configuring it is. It carries the working copy's harness id, which is why it goes to `.claude/settings.local.json` — `settings.json` is tracked, so writing it there would stage one machine's identity for commit and the next clone would inherit it (ff18c21f).
-
-**Shape, decided.** A single `mix harness.onboard`, shipped in `client_utils` rather than here. `client_utils` is already a dependency (`mix.exs:109`), so CodeMySpec can onboard its own copies — and a generated application depends on `client_utils` and not on CodeMySpec, so this is the only placement where both can run it. It also inverts the dependency correctly: `client_utils` writes the partition name and CodeMySpec reads it, so `client_utils` never learns a digest algorithm that should no longer exist. Same precedent as `mix.exs:113`, where the one place that shells a generator runs it in the provisioned project, which carries its own copy.
-
-**Scope, decided.** The command runs from inside a worktree the agent has already created — it does not create worktrees. It never creates, migrates or drops a database; it names what is missing and hands over the exact commands. That keeps intact the rule written after a background process with `MIX_ENV` scrubbed out emptied the shared development database three times on 2026-08-13, rather than carving an exception into it.
-
-Success is a working copy where `mix test`, `mix spex` and the analyzer all run, with agent messages recorded server-side, reached by an agent following only what the command printed — no source file, no digest function, no second agent.
+As an engineer putting a working copy on a harness, I want onboarding to establish its identity, its databases and its proxy once and write them down, so that nothing downstream derives them and no agent has to discover them.
 
 ## Acceptance criteria
 
@@ -34,11 +20,21 @@ Success is a working copy where `mix test`, `mix spex` and the analyzer all run,
 - Onboarding twice is the same as onboarding once
 - Not-onboarded is reported as itself
 - The commands are handed over, not run
-- A missing database is reported, not created
 - The output is sufficient to finish the job
 - Submodules follow the working copy without being asked
 - A consumer resolves the recorded partition, not one it derives
 - Minting a fresh id reads the project's own deploy key, not a copy of it in the environment
+- A first run makes the database it needs
+- A run that cannot name its own database acts on none
+- I ask for a copy and get somewhere to work
+- A copy I cannot have is refused, not half-made
+- There is no half-made copy to find
+- Onboarding that fails leaves nothing behind
+- The copy I asked for arrives staffed
+- A copy nothing is serving does not report itself ready
+- The copy lands where the disk is
+- One call, two halves
+- A half that fails does not leave the other half standing
 
 ## BDD spec files
 
@@ -51,10 +47,18 @@ Success is a working copy where `mix test`, `mix spex` and the analyzer all run,
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2356_onboarding_twice_is_the_same_as_onboarding_once_spex.exs`
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2357_not-onboarded_is_reported_as_itself_spex.exs`
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2358_the_commands_are_handed_over_not_run_spex.exs`
-- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2359_a_missing_database_is_reported_not_created_spex.exs`
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2360_the_output_is_sufficient_to_finish_the_job_spex.exs`
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2361_submodules_follow_the_working_copy_without_being_asked_spex.exs`
 - `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2370_a_consumer_resolves_the_recorded_partition_not_one_it_derives_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3093_i_ask_for_a_copy_and_get_somewhere_to_work_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3094_a_copy_i_cannot_have_is_refused_not_half_made_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3095_there_is_no_half_made_copy_to_find_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3096_onboarding_that_fails_leaves_nothing_behind_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3097_the_copy_i_asked_for_arrives_staffed_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3098_a_copy_nothing_is_serving_does_not_report_itself_ready_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3099_the_copy_lands_where_the_disk_is_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3100_one_call_two_halves_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3101_a_half_that_fails_does_not_leave_the_other_half_standing_spex.exs`
 
 ## Linked component: Onboard
 
@@ -70,9 +74,12 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

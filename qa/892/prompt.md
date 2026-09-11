@@ -1,4 +1,4 @@
-# QA Story 892: An agent that has gone quiet stops holding state for everyone else
+# QA Story 892: A working copy that vanished warns until I offboard it
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,52 +7,56 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an engineer whose project several agents work on, I want an agent that has been offline for a couple of hours to have its derived state reclaimed, so that a checkout nobody is running stops holding components and problems that block the agents still working.
+As an engineer whose project several agents work on, I want a working copy whose checkout has been removed to show up as a warning rather than silently holding state, and to be able to offboard it in one act that takes its row, its files, its problems and any component left orphaned with it, so that a checkout nobody has any more stops blocking the agents still working — and nothing is ever cleared out because a machine happened to be offline.
 
 ## Acceptance criteria
 
-- A quiet agent's files and problems are reclaimed
-- A working agent is never reclaimed out from under itself
-- A returning agent is the same agent
+- A removed worktree shows up as missing and nothing else happens
+- An offline device's copies are not flagged as missing
+- The path is answered by the machine the copy is on
+- A path that comes back clears its own warning
+- Offboarding takes the row and its data together
+- A working copy is never offboarded without being asked for
+- Offboarding a copy whose checkout still exists leaves the files alone
 - An orphan component stops blocking a gate no edit could clear
-- Authored links are never spent to reclaim derived rows
-- An unswept checkout is not a quiet agent
-- Idle time does not depend on the machine's timezone
+- Authored links are never spent to clear derived rows
 - Coming back is onboarding, not recovery
-- A live agent's sync is what reclaims a quiet one
-- The sweep is not scoped to the agent doing the syncing
+- A restarted harness still notices a checkout nobody has touched since
 
 ## BDD spec files
 
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2376_a_quiet_agents_files_and_problems_are_reclaimed_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2377_a_working_agent_is_never_reclaimed_out_from_under_itself_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2377_a_working_agent_survives_a_third_agents_sweep_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2378_a_returning_agent_is_the_same_agent_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2379_an_orphan_component_stops_blocking_a_gate_no_edit_could_clear_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2380_authored_links_are_never_spent_to_reclaim_derived_rows_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2381_an_unswept_checkout_is_not_a_quiet_agent_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2382_idle_time_does_not_depend_on_the_machines_timezone_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2383_coming_back_is_onboarding_not_recovery_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2384_a_live_agents_sync_is_what_reclaims_a_quiet_one_spex.exs`
-- `test/spex/1014_an_agent_that_has_gone_quiet_stops_holding_state_for_everyone_else/criterion_2385_the_sweep_is_not_scoped_to_the_agent_doing_the_syncing_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2859_a_removed_worktree_shows_up_as_missing_and_nothing_else_happens_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2860_an_offline_devices_copies_are_not_flagged_as_missing_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2861_the_path_is_answered_by_the_machine_the_copy_is_on_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2862_a_path_that_comes_back_clears_its_own_warning_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2863_offboarding_takes_the_row_and_its_data_together_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2864_a_working_copy_is_never_offboarded_without_being_asked_for_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2865_offboarding_a_copy_whose_checkout_still_exists_leaves_the_files_alone_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2866_an_orphan_component_stops_blocking_a_gate_no_edit_could_clear_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2867_authored_links_are_never_spent_to_clear_derived_rows_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2868_coming_back_is_onboarding_not_recovery_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2872_a_restarted_harness_still_notices_a_checkout_nobody_has_touched_since_spex.exs`
 
-## Linked component: Harnesses
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.Harnesses` (module).
+This story is implemented by `CodeMySpec.WorkingCopies` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/harnesses_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/harnesses.spec.md`
-- Source: `lib/code_my_spec/harnesses.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

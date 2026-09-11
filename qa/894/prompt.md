@@ -20,6 +20,11 @@ As an agent, I want the stop hook to name what class of work is available and wh
 - Searching what we already know is offered alongside the directive
 - A running loop is told how to end
 - An agent outside the loop is not invited to leave one
+- A session that wrote nothing stops cleanly, whatever the project is carrying
+- One edit is enough to own what it broke
+- Work that leaves no tracked file still counts as no edits
+- Editing through the shell still counts as editing
+- Work in files the project does not track is still no edits
 
 ## BDD spec files
 
@@ -47,9 +52,12 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

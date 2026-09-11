@@ -64,24 +64,32 @@ or any other HTTP endpoint the agent or harness hits. Not for LiveViews.
 
 ```elixir
 response =
-  Phoenix.ConnTest.build_conn()
-  |> Plug.Conn.put_req_header("x-working-dir", context.scope.cwd)
-  |> Plug.Conn.put_req_header("content-type", "application/json")
-  |> post(~p"/api/hooks/stop", %{
+  post_hook(context, "/api/hooks/stop", %{
     "test_output_files" => %{
       "compile" => fixture_path("compile.jsonl")
     }
   })
-  |> Phoenix.ConnTest.json_response(200)
 ```
 
-The `x-working-dir` header is how `WorkingDirScope` resolves the scope.
-Always use `context.scope.cwd` (the stub dir from `setup_active_project`).
+`post_hook/3` sets `x-harness-id` and dispatches to
+`CodeMySpecLocalWeb.Endpoint` explicitly, returning the decoded JSON body.
+It takes a context, a scope, or the bare harness id.
+
+**No directory travels on the wire.** `x-working-dir`, `?dir=`,
+`Plugs.WorkingDir` and `WorkingDirScope` were removed: resolving a checkout
+from an announced path succeeded against the *wrong disk* rather than
+failing when it was wrong. A request naming no harness is refused with a
+400 saying where the id lives.
+
+Do not hand-build the conn. Dispatching via `@endpoint` sends hooks to
+whichever endpoint the spex file declares, and hooks are a harness-app
+surface — one file sets the cloud endpoint for its LiveView work and
+reached past it for its hooks.
 
 **Adding a session/task context:**
 
 ```elixir
-post(~p"/api/hooks/stop", %{
+post_hook(context, "/api/hooks/stop", %{
   "session_id" => context.session_id,
   "test_output_files" => %{"compile" => fixture_path("compile.jsonl")}
 })
@@ -96,16 +104,15 @@ use ExCliVcr
 
 response =
   use_cmd_cassette "pipeline_compile_error", record: :none do
-    Phoenix.ConnTest.build_conn()
-    |> Plug.Conn.put_req_header("x-working-dir", context.scope.cwd)
-    |> Plug.Conn.put_req_header("content-type", "application/json")
-    |> post(~p"/api/hooks/stop", %{
+    post_hook(context, "/api/hooks/stop", %{
       "session_id" => context.session_id,
       "test_output_files" => %{"compile" => fixture_path("compile.jsonl")}
     })
-    |> Phoenix.ConnTest.json_response(200)
   end
 ```
+
+`post_hook/3` already returns the decoded body — do not pipe it into
+`json_response/2` again.
 
 **With ReqCassette (outbound HTTP — OAuth / external APIs):**
 

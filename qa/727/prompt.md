@@ -41,23 +41,26 @@ Files, problems and components are projections of a working copy, but they are k
 - `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_743_a_sprite_recreated_on_its_own_volume_resumes_as_the_same_agent_spex.exs`
 - `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_744_a_second_agent_on_a_working_copy_already_being_served_is_refused_spex.exs`
 
-## Linked component: Harnesses
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.Harnesses` (module).
+This story is implemented by `CodeMySpec.WorkingCopies` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/harnesses_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/harnesses.spec.md`
-- Source: `lib/code_my_spec/harnesses.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

@@ -22,31 +22,30 @@ As Sam, I want the preview pane to be showing my app really running, so that wha
 
 ## BDD spec files
 
-- `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2324_the_pane_shows_the_running_app_itself_spex.exs`
 - `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2325_an_app_still_coming_up_says_so_and_changes_over_on_its_own_spex.exs`
 - `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2326_an_app_answering_with_errors_is_broken_not_running_spex.exs`
-- `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2327_the_framed_app_keeps_its_session_spex.exs`
-- `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2328_a_change_in_the_app_reaches_the_pane_without_a_reload_spex.exs`
 - `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2329_a_crash_in_the_preview_becomes_a_signal_not_a_blank_frame_spex.exs`
-- `test/spex/886_the_preview_points_at_a_real_app_over_a_url_that_actually_works/criterion_2331_the_address_sam_shared_yesterday_still_points_at_his_app_today_spex.exs`
 
-## Linked component: PreviewProxy
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpecWeb.Plugs.PreviewProxy` (module).
+This story is implemented by `CodeMySpec.WorkingCopies` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/plugs/preview_proxy_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/plugs/preview_proxy.spec.md`
-- Source: `lib/code_my_spec_web/plugs/preview_proxy.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

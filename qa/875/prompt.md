@@ -24,9 +24,23 @@ A visitor describes what they want to build, answers a few questions, and gets a
 - The interview fills the wait instead of the visitor watching a bar
 - The interview pays out within four questions
 - A workspace that fails mid-interview does not throw the interview away
+- The choice comes after the plan and starts the work
+- A cloud copy is a checkout, not a running artifact
+- The conversation is already going when the visitor arrives
+- Asking the box for an instance is all it takes
+- What the visitor first typed is still there at the end
+- Nothing the visitor already answered is asked again
+- The names are confirmed in the conversation, not guessed from it
+- The project starts with somebody it is for
+- A brand new visitor talks to their agent without connecting anything
+- Asked about something else, it comes back to the plan
+- A visitor who talks past the budget is told, not dropped
 
 ## BDD spec files
 
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2970_the_choice_comes_after_the_plan_and_starts_the_work_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2971_a_cloud_copy_is_a_checkout_not_a_running_artifact_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2972_the_conversation_is_already_going_when_the_visitor_arrives_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8209_an_anonymous_visitor_describes_an_idea_and_gets_a_plan_back_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8210_the_generator_questions_are_asked_in_operator_language_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8211_the_plan_names_its_own_guesses_back_to_the_visitor_spex.exs`
@@ -55,9 +69,12 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`

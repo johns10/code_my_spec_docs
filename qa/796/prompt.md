@@ -12,28 +12,31 @@ As the LLM agent, I receive tasks from the orchestrator, complete them, and am a
 ## Acceptance criteria
 
 - When continuous mode is off and the current task passes, the stop is allowed.
-- When continuous mode is on and the current task passes, the stop is blocked with the next requirement embedded in the block reason.
-- When the stop hook fires in continuous mode and the current task passed, it calls get_next_requirement server-side and embeds the result in the block reason; the agent then calls start_task on the returned requirement.
-- When the embedded directive points to a sub-agent task type, the agent spawns a sub-agent instead of calling start_task directly.
+- When get_next_requirement names a sub-agent task type, the agent spawns a sub-agent instead of calling start_task itself.
 - When a manual-validation task completes and the human signals done in conversation, the agent calls evaluate_task and on a passing evaluation the loop continues.
 - When a manual-validation task completes and the human signals done but evaluate_task fails, the agent receives feedback and iterates on the same task.
-- When the session has an open task and an idle alive sub-agent, the stop is blocked with a directive instructing the main agent to assign the sub-agent to the open task.
 - When the last actionable requirement is satisfied, the next stop is allowed and the user is notified.
 - When evaluate_task returns the same feedback hash five times in a row in a session, the autonomous loop terminates and escalates.
 - When the agent voluntarily taps out of continuous mode, the request is routed to PermissionSocket for human approval.
 - Loop terminus emits a retrospective prompt
 - Block-with-feedback includes a harness-reporting hint
 - When evaluate_task returns invalid feedback whose hash differs from the previously stored hash, or returns valid, the stuck-detection counter resets.
+- An open task with an alive idle sub-agent directs the main agent to assign it
+- The loop names a class of work and a tool call, and picks nothing
+- Outstanding findings are offered before new work
+- A coding agent is not held open by product's queue
+- Finishing work that unblocks another role wakes that role
+- A working copy is put to work in one call, and stopped the same way
 
 ## BDD spec files
 
+- `test/spex/538_llm_agent_autonomous_task_execution/criterion_3106_a_coding_agent_is_not_held_open_by_products_queue_spex.exs`
+- `test/spex/538_llm_agent_autonomous_task_execution/criterion_3108_finishing_work_that_unblocks_another_role_wakes_that_role_spex.exs`
+- `test/spex/538_llm_agent_autonomous_task_execution/criterion_3109_a_working_copy_is_put_to_work_in_one_call_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5110_continuous_off_passing_task_stop_allowed_spex.exs`
-- `test/spex/538_llm_agent_autonomous_task_execution/criterion_5111_continuous_on_passing_task_block_with_next_embedded_spex.exs`
-- `test/spex/538_llm_agent_autonomous_task_execution/criterion_5112_stop_hook_embeds_get_next_requirement_result_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5113_sub_agent_directive_does_not_invite_direct_start_task_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5115_manual_task_passing_evaluation_continues_loop_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5116_manual_task_failing_evaluation_iterates_spex.exs`
-- `test/spex/538_llm_agent_autonomous_task_execution/criterion_5119_idle_subagent_open_task_assign_directive_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5120_last_requirement_satisfied_stop_allowed_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5122_five_consecutive_failures_terminate_loop_spex.exs`
 - `test/spex/538_llm_agent_autonomous_task_execution/criterion_5124_voluntary_tap_out_routed_to_permission_socket_spex.exs`
@@ -55,9 +58,12 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
 - `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
