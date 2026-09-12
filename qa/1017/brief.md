@@ -39,10 +39,19 @@ and `stand_down` are context functions with no MCP tool bound — confirmed by
 enumerating the bound tool names in the code-mode sandbox. The spex reach them
 through the Fixtures bridge, which is in-process and not a QA surface.
 
-- **The main agent comes back round on its own** — establish whether the cadence
-  runs at all in the running app. Grep `~/.codemyspec/web.log` for any check-in
-  activity, and check whether anything starts `MainAgent.Cadence` outside its own
-  module. Expected: periodic wake-ups.
+- **The main agent comes back round on its own** — re-test of issue 96626683
+  (fixed in b7ea25060): a project that gains its first continuous agent while
+  the server is already up must end up with a running cadence, not just one
+  that had it at boot. Do **not** flip a real agent's continuous flag to force
+  this — it rings the agent's bell. Instead use the throwaway QA Fixture
+  Project's own sandbox working copy (harness id
+  `1fc425f5-7b88-4e32-86a3-c16c3317408c`, 0 live agents on it) via the same
+  `POST http://localhost:4004/mcp` handshake `qa_code_mode.sh` uses, sending
+  `X-Harness-Id: 1fc425f5-7b88-4e32-86a3-c16c3317408c`: call `cadence({})`
+  (expect `running: no`), then `set_working_copy_loop({working_copy_id =
+  "1fc425f5-7b88-4e32-86a3-c16c3317408c", working = true})` (0 agents match,
+  so nothing is put to work — safe no-op on the work side), then `cadence({})`
+  again (expect `running: yes`).
 - **The interval is set rather than assumed** — determine where a set interval is
   stored and whether it survives a restart. Expected: durable, per-project.
 - **A pushed question does not wait for the next check-in** — call

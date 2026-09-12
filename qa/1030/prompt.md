@@ -23,7 +23,15 @@ As somebody who has just signed up with nothing set up, I want the agent to take
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3369_the_conversation_survives_signing_up_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3370_arriving_means_arriving_in_a_conversation_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3371_the_paperwork_sits_beside_the_talking_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3372_the_agent_fills_in_what_it_understood_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3374_somebody_who_would_rather_type_than_talk_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3375_the_agent_cannot_be_reached_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3376_onboarding_ends_somewhere_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3377_a_correction_reaches_the_agent_spex.exs`
+- `test/spex/1064_the_main_agent_onboards_me/criterion_3378_talking_before_signing_up_costs_the_visitor_nothing_spex.exs`
 
 ## Linked component: MainAgent
 
