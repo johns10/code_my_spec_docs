@@ -64,17 +64,47 @@ put it back exactly where you found it.
   cannot currently succeed for *any* input. That's consistent with this
   story's only assertion about it, which is refusal; there is no criterion
   here that exercises a genuine takeover.)
-- **3314, 3315, 3316, 3329, 3330 — everything routed through
-  `ask_user_question` / `AnswerQuestion` / `list_open_questions`.** See Setup
-  Notes below before attempting any of these live. As of this QA pass they
-  cannot be exercised end-to-end on the real running local app: a structural
-  gap (filed as issue `9c1c6d69-fdd1-4109-8d67-c6fb52f6507e`) means a
-  question raised through the real `4004/mcp` endpoint never carries the
-  asking agent's identity, so it can never be routed to `holder:
-  "main_agent"` — it always escalates straight to the real user. Do not
-  re-run this experiment to "confirm" it; the finding is already filed and
-  reproducing it again only creates more real inbox/push noise for no new
-  information.
+- **3314 — a blocked agent is unblocked.** As `<product>`, `ask_user_question`
+  with title prefixed `[QA TEST — ignore]` (see Setup Notes on why). Check the
+  row lands `holder: "main_agent"` with a real `agent_id` (psql or wait for
+  `list_open_questions` as `<main>` to show it). As `<main>`, `answer_question`
+  with `basis: "record"` and an answer that actually contains a real orphan
+  story's title (see below — the check is literal substring match against
+  `ready_stories_without_epic`, not semantic). As `<product>`, `check_answer`
+  gets the reply. Confirm `list_open_questions` as `<main>` is clear again.
+- **3315/3329 — a workaround becomes a filed issue, immediately, on the first
+  occurrence.** Same as 3314's answer flow, plus `worked_around: "<gap
+  text>"`. One occurrence is enough — `list_issues({scope="framework",
+  status="incoming"})` shows a new issue naming the role and the gap right
+  after the first answer, not after a pattern accumulates.
+- **3330 — the same workaround is not filed twice.** Repeat the 3315/3329
+  flow two more times with the *same* `worked_around` text. Still exactly one
+  matching issue (dedup), and `get_issue` on it now says "3 times" (or
+  whatever the true count is) in the body — recurrence is counted, not
+  silently dropped.
+- **3316 — an agent cannot use the main agent to escape its own scoping.** As
+  `<coding>`, `ask_user_question` asking main to submit a QA result on its
+  behalf (coding doesn't carry `submit_qa_result`). As `<main>`,
+  `answer_question` with `basis: "record"`, `on_behalf_of: "coding"`,
+  `tool: "submit_qa_result"` → refused (`ToolSets.for_role(:coding)` doesn't
+  include it). Then answer it for real (any `basis: "record"` answer
+  containing a real orphan title) to dispose of it cleanly rather than
+  leaving it open.
+
+**The `basis: "record"` check is real, not a formality.** `recorded?/3`
+checks whether your answer text *contains the title of an actual current
+`ready_stories_without_epic` story* — nothing else satisfies it. Fixture-style
+answers ("Dunning emails go out") will get `:not_recorded` on the real
+project, because that story doesn't exist here. Look up the real one first
+(currently "The main agent onboards me", story 1030) and put its title
+somewhere in your answer string.
+
+**Dispose of every question you raise.** `answer_question` (even a refused
+`on_behalf_of` attempt) leaves the question open until a *successful* answer
+call settles it. Always follow a refusal-path test with a real, successful
+`answer_question` call so nothing is left sitting in `list_open_questions` —
+or worse, orphaned with `holder: "user"` if the routing itself is what's
+broken (see Setup Notes).
 
 ## Result Path
 
@@ -83,25 +113,33 @@ No `result.md` — file findings via `create_issue` as you hit them, and call
 
 ## Setup Notes
 
-**`ask_user_question` has no `agent_id` parameter.** It reads
-`frame.assigns[:agent_id]`, which is populated by
-`CodeMySpecWeb.Plugs.AgentScope` (reads `X-Agent-Id`) — but that plug is wired
-into the **hosted** endpoint's `:mcp_protected` pipeline only
-(`lib/code_my_spec_web/router.ex:39`). The **local** endpoint's `:mcp`
-pipeline (`lib/code_my_spec_local_web/router.ex:325-328`) is just `LocalOnly`
-+ `HarnessScope` — nothing sets `:agent_id` there, and nothing in all of
-`lib/code_my_spec_local_web` does either. Sending `X-Agent-Id` on a curl to
-`4004/mcp` is silently dropped: `holder_for(scope, nil)` returns `"user"`,
-and the question goes straight to the real project owner's `/app` inbox with
-a real Web Push notification, immediately, on tool success — there is no dry
-run and no confirmation step.
+**Tag every test question `[QA TEST — ignore] ...` in both the `title` and
+the question text.** `ask_user_question` has no way to mark a question as
+scaffolding, and an untagged one is indistinguishable from a real blocked
+agent — the project owner cannot tell the difference from the text alone
+(this bit John twice during this story's QA before the convention existed).
 
-Only the **first** live probe of this actually needs to happen — it already
-did, during this QA pass (question id `29c7acb6-0903-4833-98b1-18eab11cfb01`,
-row confirmed via `psql` to have `agent_id` NULL and `holder='user'`). A
-second tester hitting the same wall gains nothing and costs the project owner
-another notification. If this gap gets fixed, re-verify criteria 3314/3315/
-3316/3329/3330 fresh rather than trusting this note forever.
+**Two real transport bugs stood between `ask_user_question` and a working
+`holder: "main_agent"`, both now fixed — history kept here because the
+symptom (`agent_id` NULL, `holder: "user"`) is identical for either and a
+future regression in either layer will look exactly the same:**
+
+1. `CodeMySpecWeb.Plugs.AgentScope` (reads `X-Agent-Id` into
+   `frame.assigns[:agent_id]`) was wired into the **hosted** endpoint's
+   `:mcp_protected` pipeline only. The **local** `:mcp` pipeline had no
+   equivalent. Fixed in `1927ae077` by adding
+   `CodeMySpecLocalWeb.Plugs.AgentScope` to `lib/code_my_spec_local_web/
+   router.ex`'s `:mcp` pipeline, after `HarnessScope`.
+2. That fix alone did not work, because `4004/mcp` is not
+   `CodeMySpecLocalWeb.Endpoint` directly — it is the light harness's proxy
+   (`CmsHarness.Web.McpController`), which forwards only an allowlisted set
+   of headers to the real server and silently drops the rest. `x-agent-id`
+   was not on that list, so the header died at the proxy before reaching
+   either pipeline. Fixed in `4c36f22e9` by adding it to `@forwarded`.
+
+Both are needed together. If `agent_id` ever comes back NULL again, check
+both layers rather than assuming it's a repeat of whichever one you fixed
+last.
 
 **Do not clean up a stray question via `mix run -e`.** The sanctioned code
 path (`CodeMySpec.Notifications.answer_question_request/2`) requires a
