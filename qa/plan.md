@@ -557,3 +557,37 @@ the `changed_files` gate. Neither exists.
 - **`dev.codemyspec.com`** is the production hostname tunneled via Cloudflare from the dev box (see `:cloudflare_tunnel` in `config/dev.exs`). Don't QA against that — it's externally reachable. Always use `127.0.0.1`.
 - **Existing manual QA plan** lives next to this file at `manual_qa_plan.md`. That doc covers a different scope (CLI install, Burrito binary, extension load) and remains the reference for those concerns; this plan is strictly the running backend.
 - **Per-story QA uses this plan** — `QaStory.check_plan` reads `.code_my_spec/qa/plan.md` as Phase 1, before any story brief is written. Keep the Tools Registry section honest because it ends up in every story prompt.
+
+### Graph provenance is on :4000's page, not on the local JSON API
+
+`GET /api/projects/:project_name/requirements/graph` returns `computed_at`,
+`served_from` and the watcher's state, and is the surface story 1021's criteria
+were written against. It lives on `CodeMySpecLocalWeb.Endpoint` — the desktop
+app — and **nothing on this box serves it**. Port 4004 is
+`CmsHarness.Web.Endpoint`, a light harness whose router proxies `/mcp`,
+`/api/harnesses/*/hooks`, `/analysis`, `/promotion`, `/skills` and `/health`
+and nothing else; 4003 is the same shape. A QA session on 1021 lost time
+establishing that (`5dab2365`).
+
+**Read it on `:4000` instead.** `/app/projects/:project_id/requirements/graph`
+renders the same four facts, and carries machine-readable hooks so you do not
+have to parse prose:
+
+    data-served-from="cache" | "computed"
+    data-test="graph-computed-at"      (title attribute holds the timestamp)
+
+`RequirementsLive.provenance/2` builds them from the same
+`Requirements.cached_all/1` metrics the JSON route would, plus
+`GraphWatcher.status/1`. Its own comment says why the watcher is beside the
+timestamp: a graph that has not changed and a graph that has *stopped being able
+to change* both show an unmoving `computed_at`, and only the watcher's state
+tells them apart.
+
+So cache-vs-recompute criteria are reachable — 3231, 3232, 3239, 3240 and the
+cache-hit halves of 3235–3238 / 3346–3349. What is not reachable is the JSON
+shape itself, and no criterion is about the JSON shape.
+
+Do not reach for the MCP read tools for this. `show_story_requirements` and
+`list_requirements` go through `RequirementGraph.compute_all/1` and always
+recompute, so they can never demonstrate a cache hit; `get_next_requirement` is
+cache-aware and exposes no timestamp.
