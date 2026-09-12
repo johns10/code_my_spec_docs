@@ -58,6 +58,8 @@ Then the cached answer holds the same requirements as the computation it came fr
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3423_a_reader_is_not_made_to_recompute_a_graph_nothing_has_touched_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3424_an_observation_recomputes_what_it_touched_and_leaves_the_rest_spex.exs`
 
 ## Linked component: Requirements
 
