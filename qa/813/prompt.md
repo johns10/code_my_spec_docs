@@ -18,6 +18,10 @@ As a returning user with at least one project in my active account, I want /app 
 - First-time users with zero projects still see the project-name form on /app
 - Open workspace goes straight to the active project
 - With no active project, workspace still opens /app
+- Logging in resumes work
+- Logging in with no project yet
+- Home goes to the project being worked on
+- A project nothing has connected to says how to connect it
 
 ## BDD spec files
 

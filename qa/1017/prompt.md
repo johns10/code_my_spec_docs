@@ -23,7 +23,15 @@ As the main agent, I want to be woken on a regular cadence to check on my agents
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3317_the_main_agent_comes_back_round_on_its_own_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3318_a_pushed_question_does_not_wait_for_the_next_check-in_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3319_an_agent_that_went_silent_is_caught_by_the_check-in_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3320_a_quiet_check-in_does_not_become_a_notification_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3331_the_interval_is_set_rather_than_assumed_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3332_the_wake-up_says_what_is_going_on_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3333_a_digest_that_cannot_be_assembled_is_not_delivered_as_an_empty_one_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3334_everybody_is_through_their_work_and_the_main_agent_stands_down_spex.exs`
+- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3335_tapping_out_does_not_make_the_main_agent_unreachable_spex.exs`
 
 ## Linked component: MainAgent
 

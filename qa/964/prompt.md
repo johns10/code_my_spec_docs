@@ -18,7 +18,6 @@ The hand-off. The main agent (story 963) shapes stories and groups them into an 
 - An idle project with nothing left to assign is finished, not stuck
 - The detailed design happens where the code will be written
 - A second epic can go to a copy that already has one
-- A question about a business rule arrives where that work lives
 - Asking about dispatched work gets a report
 - Work that went wrong is reported as wrong, not as silence
 - An idle project with work waiting gets an epic put in front of me
@@ -40,7 +39,6 @@ The hand-off. The main agent (story 963) shapes stories and groups them into an 
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2934_an_idle_project_with_nothing_left_to_assign_is_finished_not_stuck_spex.exs`
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2935_the_detailed_design_happens_where_the_code_will_be_written_spex.exs`
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2936_a_second_epic_can_go_to_a_copy_that_already_has_one_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2937_a_question_about_a_business_rule_arrives_where_that_work_lives_spex.exs`
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2938_asking_about_dispatched_work_gets_a_report_spex.exs`
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2939_work_that_went_wrong_is_reported_as_wrong_not_as_silence_spex.exs`
 - `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2941_an_idle_project_with_work_waiting_gets_an_epic_put_in_front_of_me_spex.exs`

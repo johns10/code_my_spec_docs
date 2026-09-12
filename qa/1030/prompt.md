@@ -1,4 +1,4 @@
-# QA Story 1015: The main agent sees the health of the machinery its agents depend on
+# QA Story 1030: The main agent onboards me
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,33 +7,23 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see whether the harness, tools and preview my agents depend on are working, so that I can tell a broken agent from broken machinery underneath it.
+As somebody who has just signed up with nothing set up, I want the agent to take me from signing up to a working project by talking to me, so that I never have to work out for myself what to configure first.
 
 ## Acceptance criteria
 
-- The machinery is healthy and says so
-- Every agent failing at once points at the machinery
-- One agent failing while the rest work points at the agent
-- A fault the main agent cannot act on is raised
-- What the main agent can fix, it fixes
-- Analyzer health is visible alongside everything else
-- An analyzer that is not really running is not reported as passing
-- A saturated machine explains what its agents are doing
-- Shared machinery is visible across project lines
-- Seeing shared machinery does not confer acting on it
+- The conversation survives signing up
+- Arriving means arriving in a conversation
+- The paperwork sits beside the talking
+- The agent fills in what it understood
+- Somebody who would rather type than talk
+- The agent cannot be reached
+- Onboarding ends somewhere
+- A correction reaches the agent
+- Talking before signing up costs the visitor nothing
 
 ## BDD spec files
 
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3309_the_machinery_is_healthy_and_says_so_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3310_every_agent_failing_at_once_points_at_the_machinery_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3311_one_agent_failing_while_the_rest_work_points_at_the_agent_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3312_a_fault_the_main_agent_cannot_act_on_is_raised_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3321_what_the_main_agent_can_fix_it_fixes_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3322_analyzer_health_is_visible_alongside_everything_else_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3323_an_analyzer_that_is_not_really_running_is_not_reported_as_passing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3324_a_saturated_machine_explains_what_its_agents_are_doing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3325_shared_machinery_is_visible_across_project_lines_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3326_seeing_shared_machinery_does_not_confer_acting_on_it_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
 ## Linked component: MainAgent
 
@@ -81,7 +71,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1015/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/1030/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

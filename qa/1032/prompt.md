@@ -1,4 +1,4 @@
-# QA Story 1015: The main agent sees the health of the machinery its agents depend on
+# QA Story 1032: A tool call that is wrong fails like a failure
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,35 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see whether the harness, tools and preview my agents depend on are working, so that I can tell a broken agent from broken machinery underneath it.
+As an agent calling product tools from a script, I want a call I got wrong to fail loudly, so that I do not carry a wrong belief forward as if the tool had answered me.
 
 ## Acceptance criteria
 
-- The machinery is healthy and says so
-- Every agent failing at once points at the machinery
-- One agent failing while the rest work points at the agent
-- A fault the main agent cannot act on is raised
-- What the main agent can fix, it fixes
-- Analyzer health is visible alongside everything else
-- An analyzer that is not really running is not reported as passing
-- A saturated machine explains what its agents are doing
-- Shared machinery is visible across project lines
-- Seeing shared machinery does not confer acting on it
+- Nothing found reads as nothing found
+- A rejected call does not read as an empty answer
+- Ignoring the failure is not rewarded with a wrong answer
+- The failure names the call
+- A rejected call stops the script
+- A refusal does not arrive dressed as a result
 
 ## BDD spec files
 
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3309_the_machinery_is_healthy_and_says_so_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3310_every_agent_failing_at_once_points_at_the_machinery_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3311_one_agent_failing_while_the_rest_work_points_at_the_agent_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3312_a_fault_the_main_agent_cannot_act_on_is_raised_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3321_what_the_main_agent_can_fix_it_fixes_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3322_analyzer_health_is_visible_alongside_everything_else_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3323_an_analyzer_that_is_not_really_running_is_not_reported_as_passing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3324_a_saturated_machine_explains_what_its_agents_are_doing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3325_shared_machinery_is_visible_across_project_lines_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3326_seeing_shared_machinery_does_not_confer_acting_on_it_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3386_nothing_found_reads_as_nothing_found_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3387_a_rejected_call_does_not_read_as_an_empty_answer_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3388_ignoring_the_failure_is_not_rewarded_with_a_wrong_answer_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3389_the_failure_names_the_call_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3390_a_rejected_call_stops_the_script_spex.exs`
+- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3391_a_refusal_does_not_arrive_dressed_as_a_result_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: McpServers
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.McpServers` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/mcp_servers_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers.spec.md`
+- Source: `lib/code_my_spec/mcp_servers.ex`
 
 ## Available scripts
 
@@ -81,7 +73,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1015/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/1032/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

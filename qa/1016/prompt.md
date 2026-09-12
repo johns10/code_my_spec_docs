@@ -22,7 +22,14 @@ As the main agent, I want to read across the project beyond what any single role
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3313_the_main_agent_sees_past_the_edge_of_a_roles_tool_list_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3314_a_blocked_agent_is_unblocked_rather_than_merely_observed_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3315_a_recurring_lookup_becomes_a_reported_gap_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3316_an_agent_cannot_use_the_main_agent_to_escape_its_own_scoping_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3327_the_main_agent_acts_where_a_role_cannot_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3328_full_scope_does_not_mean_the_main_agent_does_everybodys_work_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3329_fiddling_becomes_an_issue_somebody_can_fix_spex.exs`
+- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3330_the_same_workaround_is_not_filed_over_and_over_spex.exs`
 
 ## Linked component: MainAgent
 

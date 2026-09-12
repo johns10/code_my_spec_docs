@@ -26,6 +26,11 @@ As an engineer, I want the requirement graph to recompute from observations as t
 - A read with nothing pending does not force a recompute
 - Two reads inside one window cost one recompute
 - The announcement says only that something moved
+- A cached answer and a fresh one describe the same graph
+
+Given a reader with no checkout on its scope has been served the requirements graph
+When it reads again and is answered from the cache
+Then the cached answer holds the same requirements as the computation it came from
 
 ## BDD spec files
 
@@ -34,12 +39,16 @@ As an engineer, I want the requirement graph to recompute from observations as t
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3244_many_writes_at_once_cost_one_update_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3245_the_change_is_announced_for_whoever_is_listening_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3246_a_reader_never_sees_an_answer_older_than_the_observations_in_hand_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3247_the_collection_window_does_not_delay_anybody_who_asks_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3249_an_agents_own_process_decides_whether_the_change_was_for_it_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3250_a_change_for_somebody_else_costs_a_query_and_nothing_more_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3303_a_recompute_that_succeeds_passes_without_noise_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3351_a_steady_stream_still_gets_a_pass_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3352_one_projects_burst_does_not_collapse_into_anothers_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3353_a_read_with_nothing_pending_does_not_force_a_recompute_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
 
 ## Linked component: Requirements
 

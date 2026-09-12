@@ -24,7 +24,16 @@ As the main agent, I want to start, stop and restart the agents I am responsible
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3290_the_main_agent_acts_on_what_it_sees_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3291_a_restart_carries_its_reason_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3292_a_restart_that_changes_nothing_is_not_repeated_indefinitely_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3293_a_restart_that_makes_things_worse_is_visible_as_such_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3302_a_restart_that_fixes_the_problem_ends_there_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3304_everybody_carries_on_after_the_application_restarts_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3305_a_paused_agent_comes_back_paused_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3306_the_main_agent_restarts_an_agent_and_nothing_else_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3307_the_main_agent_cannot_restart_the_harness_to_fix_an_agent_spex.exs`
+- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3308_a_fault_that_outlives_a_restart_becomes_something_to_fix_spex.exs`
 
 ## Linked component: MainAgent
 

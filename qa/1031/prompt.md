@@ -1,4 +1,4 @@
-# QA Story 1015: The main agent sees the health of the machinery its agents depend on
+# QA Story 1031: Every process an agent is expected to follow is written down
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,43 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see whether the harness, tools and preview my agents depend on are working, so that I can tell a broken agent from broken machinery underneath it.
+As an agent picking up a task, I want the process behind it written down in the knowledge base, so that I learn it by reading rather than by getting it wrong in front of the owner.
 
 ## Acceptance criteria
 
-- The machinery is healthy and says so
-- Every agent failing at once points at the machinery
-- One agent failing while the rest work points at the agent
-- A fault the main agent cannot act on is raised
-- What the main agent can fix, it fixes
-- Analyzer health is visible alongside everything else
-- An analyzer that is not really running is not reported as passing
-- A saturated machine explains what its agents are doing
-- Shared machinery is visible across project lines
-- Seeing shared machinery does not confer acting on it
+- An agent finds the process without reading the code
+- Why nobody is being offered a story
+- Which number names the spex directory
+- A playbook hands off rather than restating
+- An unfamiliar task has a playbook
+- The prompt points at the detail it assumes
+- An agent handed a component to build finds the order
+- An agent testing a story finds how a result is recorded
+- An agent promoting work finds what the gate does
+- An agent onboarding somebody finds how
 
 ## BDD spec files
 
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3309_the_machinery_is_healthy_and_says_so_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3310_every_agent_failing_at_once_points_at_the_machinery_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3311_one_agent_failing_while_the_rest_work_points_at_the_agent_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3312_a_fault_the_main_agent_cannot_act_on_is_raised_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3321_what_the_main_agent_can_fix_it_fixes_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3322_analyzer_health_is_visible_alongside_everything_else_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3323_an_analyzer_that_is_not_really_running_is_not_reported_as_passing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3324_a_saturated_machine_explains_what_its_agents_are_doing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3325_shared_machinery_is_visible_across_project_lines_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3326_seeing_shared_machinery_does_not_confer_acting_on_it_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3379_an_agent_finds_the_process_without_reading_the_code_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3380_why_nobody_is_being_offered_a_story_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3381_which_number_names_the_spex_directory_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3383_a_playbook_hands_off_rather_than_restating_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3392_an_unfamiliar_task_has_a_playbook_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3393_the_prompt_points_at_the_detail_it_assumes_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3394_an_agent_handed_a_component_to_build_finds_the_order_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3395_an_agent_testing_a_story_finds_how_a_result_is_recorded_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3396_an_agent_promoting_work_finds_what_the_gate_does_spex.exs`
+- `test/spex/1065_every_process_an_agent_is_expected_to_follow_is_written_down/criterion_3397_an_agent_onboarding_somebody_finds_how_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: Knowledge
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Knowledge` (logic).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/knowledge_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/knowledge.spec.md`
+- Source: `lib/code_my_spec/knowledge.ex`
 
 ## Available scripts
 
@@ -81,7 +81,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1015/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/1031/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

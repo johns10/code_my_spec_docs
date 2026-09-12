@@ -16,7 +16,6 @@ As a solo founder, I want CodeMySpec to start a coding agent in a working copy i
 - Asked for a provider that was never connected
 - An expired token is not a disconnected provider
 - The credential is never written down
-- One agent, whichever engine is behind it
 - Two credential kinds, one way to start an agent
 - Two agents on one copy, different providers
 - Two tenants on one box cannot reach each other's subscription
@@ -32,7 +31,6 @@ As a solo founder, I want CodeMySpec to start a coding agent in a working copy i
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2821_asked_for_a_provider_that_was_never_connected_spex.exs`
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2822_an_expired_token_is_not_a_disconnected_provider_spex.exs`
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2823_the_credential_lands_beside_the_copy_never_inside_it_spex.exs`
-- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2824_one_agent_whichever_engine_is_behind_it_spex.exs`
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2825_two_credential_kinds_one_way_to_start_an_agent_spex.exs`
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2826_two_agents_on_one_copy_different_providers_spex.exs`
 - `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2829_two_tenants_on_one_box_cannot_reach_each_others_subscription_spex.exs`

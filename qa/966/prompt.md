@@ -22,6 +22,11 @@ As a non-technical founder, I want my project's progress, its running preview an
 - A stored desktop layout with several tabs open resolves to the preview on a phone
 - A blocked agent is visible while Sam is looking at something else
 - Ordinary progress does not ask for attention
+- Switching agents keeps the screen Sam set up
+- The agent being read is the one marked
+- An agent Sam has left does not write into the one he is reading
+- A half-typed message does not follow Sam to another agent
+- A conversation opens at its most recent turn
 
 ## BDD spec files
 
