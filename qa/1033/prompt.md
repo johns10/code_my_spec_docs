@@ -1,4 +1,4 @@
-# QA Story 1020: The graph recomputes as observations arrive
+# QA Story 1033: The handoff from onboarding to sales to building never breaks the conversation or the panel beside it
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,67 +7,31 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an engineer, I want the requirement graph to recompute from observations as they arrive - file changes, QA submissions, analysis results - so that its answer reflects the project as it is rather than as it was at the last full pass.
+The handoff from onboarding to sales to setup/building, told as one continuous experience rather than three separate ones.
 
 ## Acceptance criteria
 
-- Work becomes available while nobody is looking
-- An idle agent does not sit through available work
-- Many writes at once cost one update
-- The change is announced for whoever is listening
-- A reader never sees an answer older than the observations in hand
-- The collection window does not delay anybody who asks
-- A failed recompute is an error somebody has to look at
-- An agent's own process decides whether the change was for it
-- A change for somebody else costs a query and nothing more
-- A recompute that succeeds passes without noise
-- A steady stream still gets a pass
-- One project's burst does not collapse into another's
-- A read with nothing pending does not force a recompute
-- Two reads inside one window cost one recompute
-- The announcement says only that something moved
-- A cached answer and a fresh one describe the same graph
-
-Given a reader with no checkout on its scope has been served the requirements graph
-When it reads again and is answered from the cache
-Then the cached answer holds the same requirements as the computation it came from
-- One story's observation leaves another story's answer alone
-- Stored requirements are trusted rather than counted
-- A reader is not made to recompute a graph nothing has touched
-- An observation recomputes what it touched and leaves the rest
-- A file changing reconsiders the requirements that file answers
-- A requirement records what it was computed from
-- Satisfying one requirement makes the next one available
-- A story arriving brings its requirements with it
-- A component going away takes its requirements with it
+- The plan-confirmation card renders from the plan, not a project
+- Confirming the plan produces a visible turn in the transcript
+- The panel swaps content without ever showing two things at once
+- The cloud choice reads as a purchase, not a config screen
+- The pre-signup screen renders with the cockpit's own panel and chat components
+- The visitor never learns the agent relocated
+- Handoff swaps credential and location, not code
 
 ## BDD spec files
 
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3242_work_becomes_available_while_nobody_is_looking_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3243_an_idle_agent_does_not_sit_through_available_work_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3244_many_writes_at_once_cost_one_update_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3245_the_change_is_announced_for_whoever_is_listening_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3246_a_reader_never_sees_an_answer_older_than_the_observations_in_hand_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3247_the_collection_window_does_not_delay_anybody_who_asks_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3249_an_agents_own_process_decides_whether_the_change_was_for_it_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3250_a_change_for_somebody_else_costs_a_query_and_nothing_more_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3303_a_recompute_that_succeeds_passes_without_noise_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3351_a_steady_stream_still_gets_a_pass_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3352_one_projects_burst_does_not_collapse_into_anothers_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3353_a_read_with_nothing_pending_does_not_force_a_recompute_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Requirements
+## Linked component: Plan
 
-This story is implemented by `CodeMySpec.Requirements` (context).
+This story is implemented by `CodeMySpecWeb.IntakeLive.Plan` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/requirements_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/requirements.spec.md`
-- Source: `lib/code_my_spec/requirements.ex`
+- Tests: `test/code_my_spec_web/live/intake_live/plan_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/intake_live/plan.spec.md`
+- Source: `lib/code_my_spec_web/live/intake_live/plan.ex`
 
 ## Available scripts
 
@@ -105,7 +69,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1020/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/1033/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

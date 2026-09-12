@@ -11,30 +11,31 @@ A visitor describes what they want to build, answers a few questions, and gets a
 
 ## Acceptance criteria
 
-- An anonymous visitor describes an idea and gets a plan back
 - The generator inputs are inferred, not asked
 - The plan names its guesses back, and every one of them can be corrected
-- A corrected name is the one that survives signup
-- A name someone else already uses is accepted anyway
 - A visitor who leaves and returns finds the plan waiting
 - A plan does not follow the visitor to a different browser
 - An existing customer gets a new project, not a replaced one
 - The workspace comes up and the app is running in it
 - A workspace that fails to come up says so and the plan survives
-- The interview fills the wait instead of the visitor watching a bar
-- The interview pays out within four questions
-- A workspace that fails mid-interview does not throw the interview away
 - The choice comes after the plan and starts the work
 - A cloud copy is a checkout, not a running artifact
-- The conversation is already going when the visitor arrives
-- Asking the box for an instance is all it takes
 - What the visitor first typed is still there at the end
-- Nothing the visitor already answered is asked again
-- The names are confirmed in the conversation, not guessed from it
 - The project starts with somebody it is for
 - A brand new visitor talks to their agent without connecting anything
-- Asked about something else, it comes back to the plan
 - A visitor who talks past the budget is told, not dropped
+- The sign-up card appears with names already filled in and three ways to continue
+- An unconfirmed email sign-up still continues the conversation
+- Choosing cloud asks for payment before the shared host provisions anything
+- Choosing local never asks for payment
+- An anonymous visitor describes an idea and gets a plan back
+- Asked about something else, it comes back to the plan
+- The interview pays out within four questions
+- The conversation is already going when the visitor arrives
+- Asking the box for an instance is all it takes
+- Nothing the visitor already answered is asked again
+- A corrected name is the one that survives signup
+- A name someone else already uses is accepted anyway
 
 ## BDD spec files
 

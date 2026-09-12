@@ -7,23 +7,24 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As someone who just described an idea and signed up, I want a short guided conversation that turns it into one reviewed story, so that I have something concrete to build without having to write it myself.
+As someone who just described an idea, before signing up, I want a short guided conversation that turns it into a few reviewed stories, so that I have something concrete to see before I commit to an account.
 
 ## Acceptance criteria
 
-- Four answers become one story
-- A second story is refused, not silently added
-- The story lands on the project signup made
 - Tool calls appear as the model makes them
 - Sam corrects the story in place
 - The review starts from a story already on the board
 - A normal conversation finishes well inside the cap
 - A model that will not stop is stopped
-- Tools act on the conversation's project
 - A failure mid-conversation keeps what Sam already said
 - Sam steps away and picks up where he left off
 - A tool call arrives as a tool call, not as prose
 - The editor is the story UI, not a second one
+- A short conversation becomes a few stories
+- A sixth story is refused, not silently added
+- Draft stories land on the project conversion creates
+- Pre-signup tool calls act on the visitor's plan
+- Post-signup tool calls act on the visitor's project
 
 ## BDD spec files
 
