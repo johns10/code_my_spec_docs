@@ -17,6 +17,8 @@ router, auth model, and audience. QA touches three logical surfaces:
 | **MCP servers** | Both endpoints expose `/mcp/*` forwards into `Anubis.Server.Transport.StreamableHTTP.Plug` | `4000/mcp/*`, `4004/mcp` (dev) or `4003/mcp` (published) | Streamable HTTP (SSE) | Agents — both Claude.ai (hosted) and Claude Code (local) |
 
 > **Heads up — local app port:** The in-repo dev server (`mix phx.server` with `MIX_ENV=dev` or `MIX_ENV=dev_cli`) runs the local endpoint on **port 4004** so it can coexist with the published `cms` binary on **4003** (see `config/dev.exs:79` and `config/dev_cli.exs:38`). For QA against a dev checkout, hit `127.0.0.1:4004`. Most QA evidence in this session was captured against the dev port.
+>
+> **Heads up — 4004 is sometimes the light harness, not this app:** on a box running the light harness (`CMS_HARNESS=1` / `cms harness`, e.g. a sprite, or a dev box someone set up with `CMS_HARNESS_PORT=4004`), port 4004 answers as `CmsHarness.Web.Endpoint` — a proxy for hooks/analysis/promotion with no LiveView, no data plane, and no `CodeMySpecLocalWeb` routes at all. A browser hit there gets a JSON `systemMessage` ("this is the local harness process, not the CodeMySpec server"), and `/health` returns the harness's own status JSON rather than this app's plain `{"status":"ok"}`. Check which one is actually listening before trusting anything below against it — `curl -s 127.0.0.1:4004/health` tells you immediately — and if it's the harness, QA the local LiveView surface against **port 4000** (`CodeMySpecWeb.Endpoint`) instead.
 
 **Stack:** Phoenix 1.8 + LiveView, Ecto + PostgreSQL (`code_my_spec_dev`), SQLite for
 the CLI's local DB (`~/.codemyspec/cli_dev.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
