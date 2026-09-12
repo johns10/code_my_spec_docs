@@ -19,3 +19,9 @@ liveview
 ## Dependencies
 
 - CodeMySpec.Conversations
+- CodeMySpecWeb.WorkingCopyLive.Liveness
+
+`Liveness.since/2` rather than a local copy: "how long ago" is one rule, and the
+second implementation of a rule is the one that drifts. It already says "just
+now" for a negative duration, which is clock skew between the box that stamped
+the turn and this one — worth having once and not worth rediscovering here.

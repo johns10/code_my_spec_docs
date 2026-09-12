@@ -28,15 +28,22 @@ live_context
 
 ### AgentConversationLive.Index
 
-- **Route:** `/app/projects/:project_id/agent-conversation`
+- **Route:** `/app/projects/:project_id/agent-conversations`
 - **Description:** Every agent session recorded against the project, newest
   activity first, with editable names so five of them can be told apart.
 
 ### AgentConversationLive.Show
 
-- **Route:** `/app/projects/:project_id/agent-conversation/:conversation_id`
+- **Route:** `/app/projects/:project_id/agent-conversation?conversation=<id>`
 - **Description:** One session's transcript — turns, tool calls and returns,
   sub-agent turns attributed — streaming in live while the agent runs.
+
+An earlier version of this table gave `Show` a `:conversation_id` path segment
+and `Index` the bare `/agent-conversation`. The cockpit decision replaced that:
+`Show` *is* the project page, and which session you are reading is a selection
+within it (`?conversation=`), so switching agents is a patch and the panels,
+preview and pane widths stay where they were. That leaves the singular path
+taken, so the list is plural.
 
 ## Components
 
