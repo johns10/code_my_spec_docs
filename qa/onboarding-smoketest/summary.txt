@@ -1,0 +1,89 @@
+Onboarding Full-Flow Smoke Test — Summary
+Date: 2026-09-13
+Tester: qa-onboarding-smoketest (fresh anonymous sessions, no login, via isolated vibium CLI browser
+sessions VIBIUM_SESSION=qa-onboarding-cloud and qa-onboarding-local)
+Target: https://dev.codemyspec.com/build
+
+WHAT WAS TESTED
+1. Cold /build page render + guided intake shaping conversation (idea: pottery studio kiln booking app).
+2. Plan confirmation, name confirmation, email signup, cloud payment (Stripe test card 4242 4242 4242
+   4242), workspace boot, and the transition to the real project/main-agent conversation.
+3. A second, separate fresh visitor (idea: youth soccer practice tracker) taken through the same intake
+   but with "Where should it run" changed to "On my machine" before confirming, to see the local path.
+
+WHAT WORKED WELL
+- The cold /build page renders cleanly: no layout breakage, no console errors, sensible placeholder
+  example text in the composer.
+- The guided-intake LLM conversation is genuinely good. It asked relevant, non-generic follow-up
+  questions (repeat customers? multi-piece bookings? cancellation window?), and the final "Here's what
+  I think you're building" / "The rules I derived" synthesis was accurate and well-written given plain
+  natural-language answers. This part of the product works and would make a good first impression.
+- Plan confirmation smoothly turned account/project name edits into a natural chat bubble ("Call it
+  Pottery Studio — the project is Kiln Booking" / "Got it — ...").
+- Email-only signup was frictionless (no password, no verification step blocking progress).
+- The post-signup second round of shaping questions (4 more questions specific to the feature, e.g.
+  spot-counting, per-piece notifications, cancellation rules) was a nice touch and produced a solid
+  second "rules I derived" list.
+- Stripe test-mode payment (card in the cross-origin iframe) worked cleanly end to end, and the
+  workspace container genuinely boots ("Fetching dependencies" -> "Setting up the database" -> "It's
+  running." with a live preview link).
+
+WHAT'S BROKEN (issues filed via create_issue, scope=app)
+1. [critical, story 1033] Cloud path: paid project's infrastructure never provisions, main agent stuck
+   indefinitely. After a successful $100/mo Stripe payment and a successful workspace container boot,
+   the actual project agent ("iron-willow") never starts. The agent-conversation page sits on "Getting
+   ready. It will start work as soon as its machine picks it up." indefinitely (confirmed still stuck
+   after 9+ minutes via the Working Copies page: "Not being served / Starting 9m ago / 1 agent asked
+   for, none confirmed yet"). The project's own Setup/Provisioning page shows Repository and Server
+   both "not_started" and lists "Still needed: GitHub, Hetzner API token, Hetzner S3 access key ID,
+   Hetzner S3 secret access key, Cloudflare, Resend" — credentials no ordinary paying customer could
+   supply. Trying to message the agent fails with a jargon-heavy error toast about "deploy keys" and
+   "channels." This is the core "handoff to building" breaking for every new cloud customer in this
+   environment.
+
+2. [high, story 875] Local path gives raw shell commands with zero prerequisite guidance. Choosing
+   "On my machine" lands the visitor on a card reading "Run it on your machine" with just:
+     mix cms.new Practice Tracker
+     cd Practice Tracker
+     mix harness.onboard
+   No mention of needing Elixir/OTP, git, Postgres, or even what a terminal is; no install links; no
+   detection of the visitor's machine. Given the marketing site's own positioning ("For operators, not
+   engineers"), this path is a dead end for the actual target user. This directly confirms John's
+   suspicion — a prerequisite/machine-setup story is needed for non-technical users choosing local.
+
+3. [medium, story 1033] No discoverable link from /build/workspace to the real project dashboard /
+   agent conversation. The only action after boot is "Open your application," which opens the target
+   app's own (currently default/scaffold Phoenix) page — not the CodeMySpec project or its agent chat.
+   The Preview/Project/Activity tabs on that page appear inert. The actual agent conversation lives at
+   /app/projects/<id>/agent-conversation, reachable only via "Open workspace" in the marketing site's
+   top nav — never surfaced anywhere in the onboarding/payment/boot flow itself.
+
+4. [medium, story 1033] Payment form and shaping Q&A shown simultaneously. Right after signup, an
+   active "QUESTION 1 OF 4" chat composer sits directly above a full Stripe card-payment form on the
+   same screen, with no clear signal of which to do first (or that both are needed). Same
+   two-cards-at-once pattern shows up on the local path too, with the "Run it on your machine" card.
+
+ANSWER TO THE SPECIFIC QUESTION ASKED
+Could a non-technical user get through this whole flow unassisted?
+- Idea capture + shaping conversation: yes, this part is genuinely good.
+- Cloud path: no — in this environment, even a technical tester following the "just pay and it runs"
+  promise ends up with a $100/month charge and no working app or agent, with no in-product explanation
+  or recovery path (issue 1 above). This may or may not be specific to this dev/QA environment's
+  provisioning state, but nothing in the UI told me that, and a real customer would have no way to tell
+  either.
+- Local path: no — it hands over bare shell commands with the assumption of an existing Elixir/git
+  toolchain (issue 2 above). This is a hard blocker for a non-technical operator persona.
+
+SCREENSHOTS
+.code_my_spec/qa/onboarding-smoketest/screenshots/01 through 27, in chronological order across both
+visitor sessions (cloud: 01-21, local: 22-27).
+
+NOT COVERED / NOTES
+- Did not test GitHub/Google OAuth signup (out of scope / not needed to validate the flow).
+- Did not attempt to actually run the local `mix cms.new` / `harness.onboard` commands (would require a
+  separate real machine setup; the point of issue 2 is that a non-technical user has no path to even
+  attempt this safely).
+- Because the cloud project's agent never picked up work, I could not evaluate whether the follow-on
+  main-agent conversation actually carries over the onboarding idea/Q&A content once it does start —
+  the underlying Stories list for the project was still empty at the time of testing, consistent with
+  the agent never having started (see issue 1), not necessarily a separate context-loss bug.
