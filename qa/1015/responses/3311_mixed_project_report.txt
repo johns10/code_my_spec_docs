@@ -1,0 +1,38 @@
+check_machinery({}) — scope: QA Fixture Project (11111111-1111-4111-8111-111111111111)
+Called via hosted /mcp/harness, run_script, X-Harness-Id: 1fc425f5-7b88-4e32-86a3-c16c3317408c
+(the real qa_sandbox working copy, with 5 real running/starting agents and a full tool list)
+
+Returned:
+harness: 0 of 4 checkout(s) connected — 4 not answering
+  d1540d93-f639-448a-9dac-5317665e513f /private/tmp/.../scratchpad/genapp — not connected
+  7ff8f7d5-43d7-4132-bf0a-45179e98fee1 /tmp/qa739/alpha — not connected
+  d1b31fbb-c940-4fc2-8090-ddb793562553 /private/tmp/.../scratchpad/fullloop/verifyapp — not connected
+  1fc425f5-7b88-4e32-86a3-c16c3317408c /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox — not connected
+
+tools: the machinery is working — other agents on this project are calling
+  tools normally. These are not:
+      22227f46-13b4-4347-9595-da8c12ccb154
+  The fault is theirs rather than the machine's.
+
+preview: [omitted, none reported for any copy]
+
+analyzers:
+  compiler — FAILED: its last run did not finish, so this gate cannot be answered
+  credo — working, and its result is about the code that is here now
+  exunit — FAILED: its last run did not finish, so this gate cannot be answered
+  spex — FAILED: its last run did not finish, so this gate cannot be answered
+
+machine:
+  Johns-Mac-mini — has not reported what it is carrying
+    shared: 4 other project(s) have checkouts here, so anything done to this machine takes their in-flight work with it
+    agents on it: 22227f46-13b4-4347-9595-da8c12ccb154
+  Johns-Mac-mini — load is fine: cpu_count=10, load_average=6.75, memory_free_mb=847
+    shared: 4 other project(s) have checkouts here, so anything done to this machine takes their in-flight work with it
+    agents on it: 220cf1fd-05b1-40c3-bb5a-c7ab3cb7bc92, d4756d5d-baa6-4cf7-9def-d2c4790ec9ea, 70f1a164-60d8-4331-b5d4-af5af93ce701, 24470724-6082-4268-865a-25ce24679e6d, 790d12d8-e0a9-4d49-bd75-d63eebc7af3a
+
+EVIDENCE FOR 3311: agent 22227f46 (on the toolless copy d1540d93) is named in the
+tools: line as the one at fault. The five real, currently-running agents on the
+working shared copy (220cf1fd, d4756d5d, 70f1a164, 24470724, 790d12d8) are NOT
+named there — the report reads "the machinery is working", not "faulty" — and
+are only listed later, in the machine: section, per criterion 3324's requirement
+that a machine's agents be listed beside its load (not as a blame list).

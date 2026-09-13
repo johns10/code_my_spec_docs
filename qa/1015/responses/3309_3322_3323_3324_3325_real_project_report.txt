@@ -1,0 +1,57 @@
+check_machinery({}) — scope: the real "Code My Spec" project (708492f9-454e-482f-
+a2eb-be64f0356b87), via the local endpoint (127.0.0.1:4004/mcp, run_script),
+X-Harness-Id: 9f77b922-9810-4b49-931d-b073012bc317 (this worktree's own harness —
+a genuinely live, connected checkout).
+
+Returned:
+harness: 9 of 10 checkout(s) connected — 1 not answering
+  [10 real worktree checkouts listed by id/root/connected-or-not]
+
+tools: working — every agent's machine is answering with a usable tool list.
+
+preview:
+  [per-copy lines: "none reported" / "serving" / "down at <url>"]
+
+analyzers:
+  compiler — STALE: it last completed against different files, so whatever it
+    said is not a verdict on this code. Nothing it reports should be read as
+    passing.
+  credo — STALE: it last completed against different files, so whatever it
+    said is not a verdict on this code. Nothing it reports should be read as
+    passing.
+  exunit — FAILED: its last run did not finish, so this gate cannot be answered
+  spex — FAILED: its last run did not finish, so this gate cannot be answered
+
+machine:
+  Johns-Mac-mini — SATURATED: cpu_count=10, load_average=14.06, memory_free_mb=153.
+    Agents here will be slow or appear stalled for that reason; restarting them
+    adds to what it is carrying.
+    shared: 5 other project(s) have checkouts here, so anything done to this
+    machine takes their in-flight work with it
+    agents on it: [8 agent ids, all this project's own]
+
+EVIDENCE FOR 3309: "tools: working — every agent's machine is answering with a
+usable tool list." is a positive statement of health, not an absence of a fault
+line. (Earlier, on the qa_sandbox project, "credo — working, and its result is
+about the code that is here now" gave the same positive-statement pattern for a
+genuinely fresh analyzer.)
+
+EVIDENCE FOR 3322: analyzers: section lists compiler/credo/exunit/spex
+individually, in the same report as harness/tools/preview/machine — analyzer
+health is not a separate surface.
+
+EVIDENCE FOR 3323: STALE and FAILED analyzers are described in words that
+explicitly disclaim passing ("Nothing it reports should be read as passing",
+"this gate cannot be answered") rather than being silently omitted or shown
+green.
+
+EVIDENCE FOR 3324: the machine really is saturated right now (load_average
+14.06 against cpu_count 10, i.e. > 2x, and memory_free_mb 153 < 512) — both
+over the thresholds Machinery.saturated?/2 checks — and the report explains it:
+"Agents here will be slow or appear stalled for that reason; restarting them
+adds to what it is carrying." This is real, not staged: the box is genuinely
+busy with concurrent dev/QA activity during this session.
+
+EVIDENCE FOR 3325: "shared: 5 other project(s) have checkouts here" is stated
+for a device this project's own checkouts sit on — visible across project
+lines, without naming the other projects or their agents (see 3326 below).

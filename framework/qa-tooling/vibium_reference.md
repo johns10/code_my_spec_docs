@@ -156,6 +156,60 @@ browser_click(selector: "a[href='/accounts']")
 browser_wait(selector: "[data-phx-session]", state: "attached")
 ```
 
+## Cross-origin iframes (Stripe Payment Element)
+
+The Payment Element is a cross-origin iframe and it *is* drivable. An earlier
+session concluded it "resists scripted interaction entirely" and recorded a
+payment-gated criterion as unexercisable; the sequence below was found on a
+later pass against the same real test-mode element (`80ff3d64`, corrected by
+`10eea5b4`). Do not default to a partial verdict on a payment-gated criterion
+without trying it.
+
+```
+vibium frame "elements-inner-payment"        # matches by URL substring
+vibium fill "#payment-numberInput" "4242424242424242"
+vibium fill "#payment-expiryInput" "12/34"
+vibium fill "#payment-cvcInput" "123"
+vibium select "#payment-countryInput" "United States"
+vibium fill "#payment-postalCodeInput" "94103"
+vibium page switch 0                         # back to the top-level document
+vibium click "#payment-submit"               # lives on the page, not the iframe
+```
+
+Two things carry the sequence:
+
+**`page switch 0` before touching anything outside the iframe.** This is the
+step whose absence produced the earlier "BiDi error: no such frame" — the CLI
+was still scoped to a frame that had since gone stale, so a click on a
+top-level button had nowhere to land. Confirm the reset with
+`vibium eval "window.location.href"`: it should return the page URL, not a
+`js.stripe.com` one.
+
+**Stripe's own element ids, not refs.** `#payment-numberInput` and friends are
+assigned by Stripe and stable; they sidestep the ref-resolution problem below.
+
+## Two vibium behaviours worth knowing before you spend an hour on them
+
+Both cost roughly a dozen failed attempts each on story 1033, and neither
+reports an error — which is what makes them expensive (`80ff3d64`).
+
+**Refs misresolve on structurally identical form trees.** A page with two
+`div > form > button` subtrees — say a confirmation card and a composer —
+gets distinct refs from `vibium map`, but `vibium click "@e11"` resolved to a
+generic path and hit the *first* such button in document order regardless of
+which ref was asked for. Use a selector that names the form
+(`form[phx-submit=describe] button`), not a ref.
+
+**`fill`/`type` can silently no-op against a LiveView-bound `<textarea>`.**
+Both report success; reading `.value` straight afterwards returns `""`, and
+listeners attached to the node beforehand never fire — so the command reached a
+different node, or its events never arrived. The reliable path is to set the
+value and dispatch a real event, which does drive the LiveView round-trip:
+
+```
+vibium eval "const t = document.querySelector('textarea'); t.value = '...'; t.dispatchEvent(new Event('input', {bubbles: true}))"
+```
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
@@ -164,3 +218,6 @@ browser_wait(selector: "[data-phx-session]", state: "attached")
 | Login submits but nothing happens | Targeting wrong form (`#login_form_magic`) | Use `#login_form_password` selectors |
 | Password login returns "invalid" | User not confirmed | Confirm via magic link token in seeds |
 | Stale refs after navigation | Refs invalidated on page change | Call `browser_map` again |
+| `no such frame` after working in an iframe | Context still scoped to the frame | `vibium page switch 0` before touching the top-level page |
+| Click lands on the wrong button | Ref misresolved on an identical form tree | Select by form (`form[phx-submit=x] button`), not by ref |
+| `fill` reports success, `.value` is empty | Command reached a different node | `eval` the value + dispatch a bubbling `input` event |
