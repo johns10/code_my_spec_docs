@@ -5,20 +5,6 @@ onboarding smoke test's finding (issue `ac7a510b`'s split-off provisioning
 half) and the approved plan at
 `.claude/plans/virtual-juggling-dawn.md` in the main repo.
 
-## What changed
-
-`ProvisioningLive` (routes `/app/projects/:id/provisioning[/credentials|/environments|/secrets]`)
-and the sidebar "Provisioning" nav link now branch on
-`scope.active_account.plan`. A managed-cloud account (any plan other than
-`:free`) sees a short "your cloud plan handles this for you" message instead
-of the GitHub/Hetzner/Cloudflare/Resend credential checklist. A `:free`-plan
-(self-hosted) account sees the page exactly as before — unchanged behavior.
-
-Deliberately NOT changed: `Credentials.required/1`, `Provisioning.setup_options/1`,
-`Workspaces.*`, `PreviewAddress`, `PreviewTunnel`, `CodeMySpec.Host`. This is a
-page/nav-level gate, not a change to what self-hosted provisioning itself
-requires.
-
 ## Tool
 
 web
@@ -70,10 +56,25 @@ ad-hoc check — note results directly to the user/session rather than via
 
 ## Setup Notes
 
+**What shipped, corrected from the pre-implementation plan above.** The
+branch is `account.plan == :pro` specifically — not "any plan other than
+`:free`". `account.ex`'s own comment defines `:light` as self-hosted ("the
+harness someone runs on their own machine", correctly still wanting this
+page) and `:pro` as "our agent on our infrastructure" (the managed-cloud
+case). `:paid` is an explicitly-called-out legacy value the schema says not
+to branch on until a later gating story settles what it means, so it falls
+through to the unchanged, self-hosted-looking branch — test with `:light`
+for the self-hosted side, not a bare `:free` account, and don't test `:paid`
+at all. `ProvisioningLive` (routes
+`/app/projects/:id/provisioning[/credentials|/environments|/secrets]`) and
+the sidebar "Provisioning" nav link (`Layouts.managed_cloud?/1`) both branch
+this way; a `:pro` account sees `[data-test='managed-cloud-notice']` instead
+of the credential checklist, reachable directly by URL as well as via nav.
+
 This is a narrow, low-risk UI/nav gate on top of an already-shipped, already
 -verified paid onboarding flow (workspace boot + agent start + preview URL
 all confirmed working in the prior smoke test round). The main regression
 risk is scope creep into `Credentials.required/1`/`Provisioning.setup_options/1`
-themselves, which must stay untouched — a self-hosted (free-plan) customer's
+themselves, which must stay untouched — a self-hosted (`:light`) customer's
 provisioning experience should be byte-for-byte identical to before this
 change.
