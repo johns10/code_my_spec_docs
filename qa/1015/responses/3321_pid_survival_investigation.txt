@@ -1,0 +1,63 @@
+Criterion 3321 — "What the main agent can fix, it fixes" — needs a live agent's
+in-flight turn actually discarded by restart_agent. Per the QA task's own
+background: the running :4000 server was believed to still carry the PRE-fix
+Agents.restart_agent/2 (issue e9f9a5ab: restart handed the same live process
+back, discarding nothing), with the real fix held back from deploy because of
+known issue 733ac788 (a dev-server restart silently kills QA subagents).
+
+What I found instead:
+- `select id, title, status from issues where id::text like 'e9f9a5ab%'` on
+  code_my_spec_dev returns status = "resolved".
+- The on-disk source backing the currently-running :4000 BEAM (confirmed via
+  `lsof -p <pid> | grep cwd` -> /Users/johndavenport/Documents/github/code_my_spec,
+  the MAIN checkout, not this worktree) already contains the fixed
+  Agents.restart_agent/2: it calls `end_process(scope, agent)` (which calls
+  Transport.impl().stop_agent/2 and waits for confirmation) BEFORE flipping
+  status to :starting and relaunching — exactly the shape the moduledoc
+  describes as the fix for e9f9a5ab, not the "Engine.start hands back the
+  running process" bug shape.
+- config/dev.exs sets `code_reloader: true` for this endpoint, which recompiles
+  the whole :code_my_spec app from source on the next request when files have
+  changed — so a BEAM booted before the fix landed would still pick it up
+  without an explicit restart, and separately I observed the server's own PID
+  change twice during this session (61520 -> 65051, unprompted by me), i.e.
+  restarts are actually happening on this box during the window I was testing.
+
+I could not reconcile this with the "still pre-fix" premise from source and
+process inspection alone, and I chose NOT to force a live empirical test to
+settle it, because:
+1. The only way to genuinely exercise the discard-in-flight-work behavior is a
+   REAL agent with a real OS-backed process mid-turn. Every real candidate on
+   this box right now is somebody else's actual in-flight work (the QA
+   Fixture Project's 5 real agents, or any of the ~14 real checkouts joined to
+   the harness), and I was explicitly told not to restart real work — doing so
+   to settle this question would itself be the exact cost 3326/3312 exist to
+   avoid inflicting on other tenants.
+2. A synthetic DB-only agent row (no real registered process anywhere) cannot
+   discriminate the old bug from the fix either way: with nothing actually
+   running, `end_process/2` finds nothing to stop (`{:error, :not_running}` ->
+   treated as :ok) and `launch/2` starts fresh under BOTH the buggy and the
+   fixed implementation — the two code paths only diverge when a live process
+   already exists.
+
+Conclusion, reported as partial: I cannot confirm from a live restart_agent
+call whether the currently-running server discards in-flight work, but the
+evidence I *can* gather (issue status = resolved, on-disk source already
+fixed, dev code_reloader:true, and observed live restarts during this
+session) all points toward the fix already being in effect on :4000, contrary
+to the assumption in the task brief. This is itself the most useful thing to
+report back rather than forcing a pass or fail against an assumed build state
+I could not verify was still current.
+
+On the specific pid-survival question: by the same code reading, the FIXED
+`Agents.restart_agent/2` stops the real process first (`end_process/2` ->
+`Transport.impl().stop_agent/2`) and only then relaunches, so under the fixed
+code a restarted agent's OS pid should NOT survive — a new process is spawned.
+Under the PRE-fix code (per its own moduledoc, quoted verbatim in
+lib/code_my_spec/agents.ex: "the live process was handed straight back") the
+pid WOULD have survived, because Engine.start/1 recognised the process was
+already running and returned it unchanged. So the team lead's reasoning
+("the pid does NOT survive under the fix") reads as correct for the fixed
+code; the caveat is that I was not able to confirm empirically, only from
+reading both the fixed implementation and the bug's own description, which is
+why this is reported as an investigation rather than a measurement.

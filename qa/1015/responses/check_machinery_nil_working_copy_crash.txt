@@ -1,0 +1,25 @@
+check_machinery({}) called via the hosted endpoint (POST /mcp/harness) with only
+an X-Project-ID header (no X-Harness-Id, so ProjectScopeOverride sets
+active_project_id/active_account_id but never touches active_working_copy_id,
+which stays nil).
+
+Returned:
+[
+  null,
+  {
+    "message": "check_machinery crashed: comparing `r.working_copy_id` with
+    `nil` is forbidden as it is unsafe. If you want to check if a value is
+    nil, use is_nil/1 instead",
+    "tool": "check_machinery"
+  }
+]
+
+Root cause (read, not guessed): MainAgent.MachineryRepository.latest_run/2
+builds `where: r.working_copy_id == ^scope.active_working_copy_id` with no
+nil-guard, inside the analyzers/1 pipeline that check_machinery/1 always runs.
+
+Reachability: X-Project-ID-only is a documented, legitimate way to reach the
+hosted /mcp/harness surface (CodeMySpecWeb.Plugs.ProjectScopeOverride's own
+moduledoc: "still accepted, for callers that only have one"). Any caller that
+authenticates by project rather than by a specific harness/working-copy will
+hit this the same way. Filed as an app-scope issue.

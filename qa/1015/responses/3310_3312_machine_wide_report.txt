@@ -1,0 +1,65 @@
+Setup: dedicated throwaway project "QA 1015 Machine Fault Fixture" (99999999-9999-
+4999-8999-999999999999), one working copy (88888888-8888-4888-8888-888888888888,
+root /tmp/qa1015-machine-fault, device b0aa9968 — the real shared dev-mini device),
+one agent (77777777-7777-4777-8777-777777777777, status running). Both rows created
+directly (this is synthetic scratch infrastructure created solely to stage the
+fault, per QA plan/instructions for this run) so the ONLY copy on this project is
+the toolless one — the discriminating precondition for the :machine branch of
+Machinery.tool_fault/1.
+
+1) POST http://localhost:4000/dev/copies/88888888-8888-4888-8888-888888888888/machine_tools
+   {"tools":[]}
+   -> {"status":"recorded","working_copy_id":"88888888-...","machine_tools":[]}
+
+2) check_machinery({}) via run_script, X-Harness-Id: 88888888-8888-4888-8888-888888888888
+
+Returned:
+harness: 0 of 1 checkout(s) connected — 1 not answering
+  88888888-8888-4888-8888-888888888888 /tmp/qa1015-machine-fault — not connected
+
+tools: FAULTY on the machinery — every agent on this project is on a machine
+  reporting no tools, so every tool call any of them makes will fail. This is
+  one fault underneath them and not 1 separate agent faults.
+  Restarting agents will not reach it; they come back into the same client.
+
+analyzers: [all "has not run here" — fresh throwaway project]
+
+machine:
+  Johns-Mac-mini — SATURATED: cpu_count=10, load_average=17.61, memory_free_mb=237.
+    Agents here will be slow or appear stalled for that reason; restarting them
+    adds to what it is carrying.
+    shared: 5 other project(s) have checkouts here, so anything done to this
+    machine takes their in-flight work with it
+    agents on it: 77777777-7777-4777-8777-777777777777
+
+EVIDENCE FOR 3310: tools: line reads FAULTY-on-the-machinery and explicitly says
+"not 1 separate agent faults" — one fault, reported once, not attributed to the
+individual agent id.
+
+3) list_issues({}) -> 1 issues:
+   - [high] The machinery is serving no tools (incoming) — ID: d34ddccc-...
+   EVIDENCE FOR 3312 (raise half): the machine-wide fault was found by
+   check_machinery and written down automatically, unprompted.
+
+4) restart_agent({agent_id = "77777777-7777-4777-8777-777777777777",
+   reason = "QA 1015 verifying machinery-fault refusal"})
+
+   Returned isError / Lua error tuple:
+   "Not restarted: the fault is underneath this agent, not in it.
+
+   Every agent on this project is on a machine reporting no tools. Restarting
+   one brings it back into the same client, so the attempt costs a turn and
+   changes nothing — and from the outside it looks identical to an agent that
+   is merely slow to recover, which is how this turns into a loop.
+
+   It has been raised as an issue. `check_machinery` has the detail."
+
+   EVIDENCE FOR 3312 (refuse half): restart was refused on the FIRST attempt,
+   before any restart count was accumulated — matches the criterion's "not
+   started" framing rather than "noticed after N failures" (that is 1056's
+   3292/3308).
+
+Cleanup performed: dismissed the 2 duplicate "machinery serving no tools" issues
+and the 1 "machinery is what is broken" issue this staging produced, then deleted
+the synthetic agent, working copy and project rows entirely (see result.md /
+final report for the duplicate-issue-filing finding filed separately).

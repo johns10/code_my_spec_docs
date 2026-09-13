@@ -1,0 +1,40 @@
+restart_agent({agent_id = "d1540d93-f639-448a-9dac-5317665e513f", reason = "QA
+1015 checking cross project refusal wording"}) — scope: the throwaway QA 1015
+Machine Fault Fixture project (99999999-...), target id names a working copy
+that belongs to a DIFFERENT project (QA Fixture Project, 11111111-...).
+
+Returned isError:
+"That is not one of your agents, so it was not restarted.
+
+You act on the agents of your own project. If what needs restarting is the
+harness, it is not yours to restart either: it serves every working copy on
+that machine, other projects included, and restarting it kills their in-flight
+work too. Raise it with `create_issue` and let somebody who can weigh that
+decide.
+
+`list_agent_work` has the ids you can use."
+
+get_issue on the issue this filed (8fa57fa9-...):
+"## An agent fault needs something outside the project: QA 1015 checking cross
+project refusal wording
+
+The main agent tried to restart `d1540d93-f639-448a-9dac-5317665e513f`, which
+is not one of this project's agents, for:
+
+  QA 1015 checking cross project refusal wording
+
+It was refused. If the remedy is a harness restart it is not the main agent's
+to perform — the harness serves every working copy on that machine, other
+projects included, and restarting it takes their in-flight work with it.
+Somebody who can weigh that needs to decide."
+
+EVIDENCE FOR 3326: the action is refused (isError) and an issue is raised that
+explains WHY in terms a person can weigh (shared harness, other projects'
+in-flight work) — functionally exactly what the criterion asks for. NOTE: the
+criterion's own spex (criterion_3326_*_spex.exs) asserts the issue text matches
+~r/shared harness/i; the literal two-word phrase "shared harness" does not
+appear in either the tool response or the issue body above (both say "the
+harness... other projects included" / "serves every working copy on that
+machine, other projects included" instead). Filed as a low-severity wording-gap
+issue — the substance of the criterion is met, but `mix spex` would not agree
+today.
