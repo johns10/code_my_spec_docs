@@ -233,3 +233,62 @@ says it stops via `end_process/2`; the code calls `halt_for_restart/1`).
 afterward (its on-disk checkout intentionally left in place, per
 `offboard_working_copy`'s own stated behavior); no real project's agents were
 touched.
+
+**Re-retest (2026-09-13, commit `dfeb7aa90`), this pass:** two things changed
+since `ef16ae11` (the immediately prior attempt, which failed 3321 solely on
+the in-flight-Bash-subprocess gap, believing the Anubis.Client collision
+already fixed by `42235f788`). First, `42235f788` is now known (issue
+`68e535fd`) to have made no difference — the actual fix is `Engine.terminate/2`
+now calling `disconnect_mcp/1`, closing the MCP session the agent's `init/1`
+opened, so a relaunch has nothing leaked to collide with (commit `34b7e63cd`,
+"A stopped agent takes its MCP session with it"). Second, John made an explicit
+product decision on the in-flight-subprocess gap: leave it, the process will
+die eventually — so the open question for this pass was whether that alone
+means 3321 is unmet.
+
+Verified the Anubis.Client fix live, on a fresh disposable agent
+(`85c6a492-205e-48f8-b5bd-2a6f240228d1` on throwaway copy
+`a71d9cdc-5d8d-4a3d-b173-58cd5277e3a3`, `roles=coding`, offboarded after —
+neither previously used). Dispatched `sleep 170 && echo
+QA1015_3321_verify_done` via `POST /dev/agents/<id>/message` (no-wait),
+confirmed the turn open via `list_agent_work` and the OS pair alive via `ps`
+(bash pid 22864 → sleep pid 22865). Called `restart_agent` mid-turn. Result:
+`harness.log` shows `Engine.terminate/2 … agent 85c6a492 stopped` at
+`16:35:24.078Z` and `Engine.start/1 … agent 85c6a492 running` at
+`16:35:25.762Z` — 1.68s later, **no** `{:already_started, Anubis.Client, …}`
+anywhere in `web.log`/`harness.log`, and this on a machine `check_machinery`
+itself reported `SATURATED: load_average 21.85, memory_free_mb 278` at the
+time — a harder condition than most earlier verifications, not a lucky quiet
+window. `list_agent_work` read a **new** turn open at `16:35:25.773725Z`
+(matching the restart, not the stale pre-restart timestamp — `turn_started_at`
+correctly reset), and `list_issues(status=incoming)` showed nothing
+auto-filed. The discrimination `3321` asserts — restart a fixable single-agent
+fault silently, raise nothing — held end-to-end on this repro.
+
+The pre-restart `sleep 170` pair kept running untouched, as `4078e7bf`
+(status: `accepted`) already documents. New this pass: because a restart
+resumes the same conversation thread ("It comes back on the same row and the
+same thread, so it keeps what it was doing" — the tool's own reply), the
+resumed agent re-issued the identical Bash instruction as its first new turn,
+and `ps` showed a **second**, independent `bash`/`sleep` pair start within
+~1s of the restart while the first was still alive — one restart left two
+live copies of the same command, not one. Filed as a refinement of `4078e7bf`,
+low severity: `165a3769-198f-4885-ba80-7983bac5a7b4`. Killed both orphaned
+pairs by hand after capturing evidence, to avoid adding load to the already-
+saturated shared box.
+
+**Judgment call on the criterion (John asked for QA's, not the fix author's):**
+3321 is about discriminating a fixable agent-level fault (restart silently)
+from an unfixable machinery fault (raise, don't restart) — the counterweight
+to 3312. The orphaned/duplicated Bash subprocess doesn't break that
+discrimination: the restart doesn't misfire, doesn't get stuck, doesn't file a
+spurious issue, and the agent comes back functional and usable. It's a
+resource cost on the side, not a broken fix — and it's a cost John reviewed
+and explicitly chose to accept rather than build a custom `bash_executor` for.
+Holding 3321 to "zero side effects from every restart, forever" would be QA
+overriding a made product decision rather than testing the behavior the
+criterion actually describes. **3321 now passes**, with the residual/
+compounding subprocess leak carried forward as a known, accepted, non-blocking
+issue (`4078e7bf` and its refinement `165a3769`) rather than a criterion
+failure. The disposable working copy was offboarded afterward; no real
+project's agents were touched.
