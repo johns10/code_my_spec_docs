@@ -196,8 +196,6 @@ artificial unsatisfied `code_on_running_copy` state on the real project (out
 of step with this project's own QA norm of not polluting real project data
 outside the sandbox). Judged the existing evidence sufficient.
 
-## Setup Notes
-
 Machine was under heavy concurrent load during this QA pass (many worktrees
 running analyzer/spex/promote cycles simultaneously) — this is exactly the
 condition the story's design targets (one project lock, refuse-not-queue on
