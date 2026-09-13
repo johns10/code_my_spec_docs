@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 112a6ce7-7642-43f3-adc8-7538ea4032c3\n\nDelivered. The agent is still working on it — turns can outlast the wait,\nand this one has. It was not interrupted, and there is no need to send the\ninstruction again: doing so would put two of them on the same checkout.\n","type":"text"}],"isError":false}}
+

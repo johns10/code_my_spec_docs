@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 5d65b4d0-95d9-4e5b-915b-cc012f4d91ff\n\n(queued — the agent is mid-turn and will get this next)\n","type":"text"}],"isError":false}}
+

@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 5d65b4d0-95d9-4e5b-915b-cc012f4d91ff\n\nThird question asked (id 2c48b602-7440-4169-bf79-a4817b6e2c2f). Stopping and waiting for the answer.\n","type":"text"}],"isError":false}}
+

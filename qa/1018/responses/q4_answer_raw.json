@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"rejected_call: Lua runtime error: answer_question was called wrong and did not run: invalid arguments: basis is required, expected type of :string.\n\nThe script stopped here. This is not an empty answer — nothing was read, so anything after this call would have been built on a call that never happened. Fix the call; `tool_docs({ name = \"answer_question\" })`, called directly, gives its arguments and their types.","type":"text"}],"isError":true}}
+

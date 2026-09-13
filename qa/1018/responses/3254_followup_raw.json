@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 112a6ce7-7642-43f3-adc8-7538ea4032c3\n\nOn production health: devops is turned off for this project, so there's no infrastructure being provisioned or monitored — the question doesn't apply as things currently stand. I did notice credo has 1 failing check in this working copy from ~1 minute ago, unrelated to that question. Want me to pull the details and fix it?\n","type":"text"}],"isError":false}}
+

@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"timeout: the script ran longer than it is allowed to. A tool it called may be waiting on something that will not answer.","type":"text"}],"isError":true}}
+

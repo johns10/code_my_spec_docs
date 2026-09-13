@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 112a6ce7-7642-43f3-adc8-7538ea4032c3\n\nOK\n","type":"text"}],"isError":false}}
+

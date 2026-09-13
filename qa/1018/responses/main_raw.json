@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Agent started.\n\nAgent: 112a6ce7-7642-43f3-adc8-7538ea4032c3\nType: main\nEngine: alloy\nProvider: claude-code\nModel: the provider's default\nWorking copy: /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox\nAccount: 22222222-2222-4222-8222-222222222222\nStatus: running\n\nIts turns appear in the agent conversation view for this project, the same\nplace a Claude Code agent's do.\n","type":"text"}],"isError":false}}
+

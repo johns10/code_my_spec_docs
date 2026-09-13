@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\n1 decision(s) the user has already made:\n\n  id: 787b263d-1221-49e1-b063-ddb1ff118e38\n  asked: What should I work on next?\n  decided: What should I work on next? → Work on story 715 - Architect surveys the project - it is ready to start and has no epic.\n\nUse one with `answer_question`: basis `precedent`, `precedent_id` the id\nabove. It is checked — a similar question is not the same question.\n","type":"text"}],"isError":false}}
+

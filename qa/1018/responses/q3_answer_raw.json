@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nERROR: Could not do that: :precedent_does_not_fit","type":"text"}],"isError":false}}
+

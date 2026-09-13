@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 5d65b4d0-95d9-4e5b-915b-cc012f4d91ff\n\nYes, I called ask_user_question already (question id 787b263d-1221-49e1-b063-ddb1ff118e38) and am waiting for the answer to be delivered — not polling in the meantime.\n","type":"text"}],"isError":false}}
+

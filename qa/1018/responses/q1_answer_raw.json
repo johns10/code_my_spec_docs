@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAnswered.\n\nQuestion: 787b263d-1221-49e1-b063-ddb1ff118e38\n\nIt has gone back to the agent that asked, the same way a person's answer\nwould — it has no way to tell the two apart and does not need one. It is\noff your list.\n","type":"text"}],"isError":false}}
+

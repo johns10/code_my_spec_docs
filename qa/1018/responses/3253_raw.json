@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nAgent: 112a6ce7-7642-43f3-adc8-7538ea4032c3\n\nStart with a GIN index (trigram or `tsvector` on `title`) — it's a single migration, reversible, and will almost certainly fix the slowness you're seeing at backlog-scale sizes. Elasticsearch is worth it once you need fuzzy ranking, faceted filters across multiple fields, or search volume that starts stressing Postgres itself — but it adds a whole service to operate and keep in sync, so I wouldn't reach for it until the index stops being enough. Want me to add the migration for the GIN index?\n","type":"text"}],"isError":false}}
+

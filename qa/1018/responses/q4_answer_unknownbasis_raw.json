@@ -1,0 +1,4 @@
+id: 0
+event: message
+data: {"id":9,"jsonrpc":"2.0","result":{"content":[{"text":"Returned:\nERROR: Could not do that: {:unknown_basis, \"guess\"}","type":"text"}],"isError":false}}
+
