@@ -13,7 +13,7 @@ Using this module will:
   * import all the functions from this module
   * import all the functions from the `Plug.Conn` module
 
-By default, Plug tests checks for invalid header keys, e.g. header keys which
+By default, Plug tests check for invalid header keys, e.g. header keys which
 include uppercase letters, and raises a `Plug.Conn.InvalidHeaderError` when
 it finds one. To disable it, set `:validate_header_keys_during_test` to
 false on the app config.
@@ -85,7 +85,7 @@ process.
 ## Examples
 
     conn = conn(:get, "/foo", "bar=10")
-    upgrades = Plug.Test.send_upgrades(conn)
+    upgrades = Plug.Test.sent_upgrades(conn)
     assert {:websocket, [opt: :value]} in upgrades
 
 ## sent_pushes/1
@@ -120,9 +120,15 @@ Puts the sock data.
 
 Puts the ssl data.
 
-## put_req_cookie/3
+## put_req_cookie/4
 
 Puts a request cookie.
+
+## Options
+
+  * `:max_age` - the cookie max-age, in seconds. Unset by default.
+  * `:sign` - when true, signs the cookie.
+  * `:encrypt` - when true, encrypts the cookie.
 
 ## delete_req_cookie/2
 

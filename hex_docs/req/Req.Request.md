@@ -16,7 +16,7 @@ Returns a new request struct.
 
   * `:body` - the request body, defaults to `nil`.
 
-  * `:adapter` - the request adapter, defaults to calling [`run_finch`](`Req.Steps.run_finch/1`).
+  * `:adapter` - the request adapter, defaults to `Req.Finch`.
 
 ## Examples
 
@@ -399,7 +399,7 @@ See also "Headers" section in `Req` module documentation.
 
 ## register_options/2
 
-Registers options to be used by a custom steps.
+Registers options to be used by custom steps.
 
 Req ensures that all used options were previously registered which helps
 finding accidentally mistyped option names. If you're adding custom steps

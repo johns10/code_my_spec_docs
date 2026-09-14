@@ -22,10 +22,6 @@ socket with an overall limit of 8_000_000 bytes.
 Besides the options supported by `Plug.Conn.read_body/2`, the multipart parser
 also checks for:
 
-  * `:headers` - containing the same `:length`, `:read_length`
-    and `:read_timeout` options which are used explicitly for parsing multipart
-    headers
-
   * `:validate_utf8` - specifies whether multipart body parts should be validated
     as utf8 binaries. It is either a boolean or a custom exception to raise
 
@@ -35,7 +31,7 @@ also checks for:
 ## Multipart to params
 
 Once all multiparts are collected, they must be converted to params and this
-can be customize with a MFA. The default implementation of this function
+can be customized with an MFA. The default implementation of this function
 is equivalent to:
 
     def multipart_to_params(parts, conn) do
@@ -66,7 +62,7 @@ such as:
 
 ## Dynamic configuration
 
-If you need to dynamically configure how `Plug.Parsers.MULTIPART` behave,
+If you need to dynamically configure how `Plug.Parsers.MULTIPART` behaves,
 for example, based on the connection or another system parameter, one option
 is to create your own parser that wraps it:
 

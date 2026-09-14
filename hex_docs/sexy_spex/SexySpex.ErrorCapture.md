@@ -51,6 +51,13 @@ Returns error count.
 
 Formats captured errors for display.
 
+Each line names the process and the call site that logged it, because the
+handler is installed on `:logger` globally: it captures every process in the
+VM, and the spex that raises is only the one that happened to be running.
+A task left polling by an earlier spex fails an innocent later one, which
+reads as "this spex is flaky" and is unreproducible in isolation — the pid
+and the mfa are what turn that back into something chaseable.
+
 ## check_and_raise!/0
 
 Checks for errors and raises if any were found.

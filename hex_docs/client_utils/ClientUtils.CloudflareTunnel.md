@@ -52,7 +52,10 @@ Requires credentials and DNS configured in Cloudflare dashboard.
   * `:mode` — `:quick` (default) or `:named`
   * `:name` — GenServer name registration (default: `__MODULE__`)
   * `:additional_hostnames` — list of extra hostnames to route through the tunnel
-    (named mode only). Each hostname is added as an ingress rule pointing to
+    (named mode only). A bare hostname routes to the same origin as `:hostname`;
+    a `{hostname, service}` tuple routes to `service` instead, for a second
+    listener on the same machine. Each hostname is added as an ingress rule
+    pointing to
     the same `:origin_url`. Useful for white-label custom domains in dev.
 
 ## url/0

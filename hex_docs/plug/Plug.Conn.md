@@ -63,7 +63,7 @@ or elsewhere).
 
 More can be stored in a session cookie, but be careful: this makes requests
 and responses heavier, and clients may reject cookies beyond a certain size.
-Also, session cookie are not shared between a user's different browsers or devices.
+Also, session cookies are not shared between a user's different browsers or devices.
 If the session is stored elsewhere, such as a database, the browser only has to
 store the session key and therefore more data can be stored in the session.
 
@@ -123,7 +123,7 @@ These fields are reserved for libraries/framework usage.
 
 ## Custom status codes
 
-`Plug` allows status codes to be overridden or added and allow new codes not directly
+`Plug` allows status codes to be overridden or added and allows new codes not directly
 specified by `Plug` or its adapters. The `:plug` application's Mix config can add or
 override a status code.
 
@@ -585,8 +585,10 @@ the socket until we halt.
 
 Reads the headers of a multipart request.
 
-It returns `{:ok, headers, conn}` with the headers or
-`{:done, conn}` if there are no more parts.
+It returns `{:ok, headers, conn}` with the headers,
+`{:error, :too_large, conn}` if the current multipart header block
+exceeds the configured `:length`, or `{:done, conn}` if there are
+no more parts.
 
 Once `read_part_headers/2` is invoked, you may call
 `read_part_body/2` to read the body associated to the headers.
@@ -595,12 +597,18 @@ skipped until the next part headers.
 
 ## Options
 
-  * `:length` - sets the maximum number of bytes to read from the body for
-    each chunk, defaults to `64_000` bytes
+  * `:length` - sets the maximum number of bytes to read while parsing the
+    current multipart header block, defaults to `64_000` bytes
   * `:read_length` - sets the amount of bytes to read at one time from the
     underlying socket to fill the chunk, defaults to `64_000` bytes
   * `:read_timeout` - sets the timeout for each socket read, defaults to
     `5_000` milliseconds
+
+> #### Request length {: .warning}
+>
+> The `:length` option tracks the maximum length within a single call.
+> When doing multiple calls to `read_part_headers/2` and `read_part_body/2`,
+> it is your responsibility to track the overall response length.
 
 ## read_part_body/2
 
@@ -611,6 +619,21 @@ Returns `{:ok, body, conn}` if all body has been read,
 if there is no more body.
 
 It accepts the same options as `read_body/2`.
+
+## Options
+
+  * `:length` - sets the maximum number of bytes to read from the body on
+    every call, defaults to `8_000_000` bytes
+  * `:read_length` - sets the amount of bytes to read at one time from the
+    underlying socket to fill the chunk, defaults to `1_000_000` bytes
+  * `:read_timeout` - sets the timeout for each socket read, defaults to
+    `15_000` milliseconds
+
+> #### Request length {: .warning}
+>
+> The `:length` option tracks the maximum length within a single call.
+> When doing multiple calls to `read_part_headers/2` and `read_part_body/2`,
+> it is your responsibility to track the overall response length.
 
 ## inform/3
 
@@ -652,7 +675,7 @@ context of the requested upgrade.
 If the upgrade is accepted by the adapter, the returned `Plug.Conn` will have a `state` of
 `:upgraded`. This state is considered equivalently to a 'sent' state, and is subject to the same
 limitation on subsequent mutating operations. Note that there is no guarantee or expectation
-that the actual upgrade process has succeeded, or event that it is undertaken within this
+that the actual upgrade process has succeeded, or even that it is undertaken within this
 function; it is entirely possible (likely, even) that the server will only do the actual upgrade
 later in the connection lifecycle.
 
@@ -766,7 +789,9 @@ store different values with distinct purposes.
   * `:secure` - if the cookie must be sent only over https. Defaults
     to true when the connection is HTTPS
   * `:extra` - string to append to cookie. Use this to take advantage of
-    non-standard cookie attributes.
+    non-standard cookie attributes. Since this option may append multiple
+    attributes, callers must not pass user input. If user input must be
+    passed, callers must validate it against semicolon (`;`).
   * `:sign` - when true, signs the cookie
   * `:encrypt` - when true, encrypts the cookie
   * `:same_site` - set the cookie SameSite attribute to a string value.

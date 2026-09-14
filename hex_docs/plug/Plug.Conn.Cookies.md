@@ -12,15 +12,3 @@ If a cookie is invalid, it is automatically discarded from the result.
 
     iex> decode("key1=value1;key2=value2")
     %{"key1" => "value1", "key2" => "value2"}
-
-## encode/2
-
-Encodes the given cookies as expected in a response header.
-
-## Examples
-
-    iex> encode("key1", %{value: "value1"})
-    "key1=value1; path=/; HttpOnly"
-
-    iex> encode("key1", %{value: "value1", secure: true, path: "/example", http_only: false})
-    "key1=value1; path=/example; secure"

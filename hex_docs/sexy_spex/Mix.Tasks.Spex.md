@@ -31,6 +31,13 @@ Each spex file manages its own application lifecycle using setup_all and setup b
     --jsonl [PATH]  Output failures as JSONL (default: spex_failures.jsonl)
     --stale         Only run spex files that have changed or reference changed modules
     --force         Force all spex files to run (use with --stale to reset)
+    --repeat-until-failure N
+                    Run up to N times, stopping at the first failure. The
+                    tool for deciding whether an intermittent failure is
+                    fixed — one green run does not answer that. Note that
+                    the summary line counts the *last* run only, so "8
+                    tests" after four repeats is not a miscount; use
+                    --trace if you want to watch each one.
 
 ## Examples
 
@@ -44,6 +51,7 @@ Each spex file manages its own application lifecycle using setup_all and setup b
     mix spex --trace            # Show detailed test execution
     mix spex test/spex/file.exs --trace
     mix spex --slowest 5        # Show timing for 5 slowest tests
+    mix spex --pattern "**/886_*/*_spex.exs" --repeat-until-failure 25
 
 ## Configuration
 

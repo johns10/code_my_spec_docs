@@ -90,56 +90,64 @@ Sets request authentication.
 
 Asks the server to return compressed response.
 
+This step also enables the [`decompress_body`](`Req.Steps.decompress_body/1`) step, which
+decompresses the response body. Both steps are off by default; set `compressed: true` to opt in.
+
 Supported formats:
 
   * `gzip`
 
   * `br` (if [brotli] is installed)
 
-  * `zstd` (if [ezstd] is installed)
+  * `zstd` (requires Erlang/OTP 28+)
+
+> #### Only enable compression for trusted servers {: .info}
+>
+> The `decompress_body/1` step decompresses the whole response body into memory with no size
+> limit, so a small response can expand into many gigabytes. A malicious or compromised server
+> can exploit this to exhaust memory and crash the client (a decompression bomb / denial of
+> service). For this reason compression is off by default; only set `compressed: true` for
+> endpoints you trust.
 
 ## Request Options
 
   * `:compressed` - if set to `true`, sets the `accept-encoding` header with compression
-    algorithms that Req supports. Defaults to `true`.
+    algorithms that Req supports and decompresses the response body. Defaults to `false`.
 
-    When streaming response body (`into: fun | collectable`), `compressed` defaults to `false`.
+    This option has no effect when streaming the response body (`into: fun | collectable`).
 
 ## Examples
 
-Req automatically decompresses response body (`decompress_body/1` step) so let's disable that by
-passing `raw: true`.
+By default, Req does not ask for a compressed response. Pass `compressed: true` to request one
+and have Req decompress the body, so we get back the decompressed content:
 
-By default, we ask the server to send compressed response. Let's look at the headers and the raw
-body. Notice the body starts with `<<31, 139>>` (`<<0x1F, 0x8B>>`), the "magic bytes" for gzip:
+    iex> response = Req.get!("https://elixir-lang.org", compressed: true)
+    iex> response.body |> binary_part(0, 15)
+    "<!DOCTYPE html>"
 
-    iex> response = Req.get!("https://elixir-lang.org", raw: true)
+To inspect the raw compressed bytes the server sent, additionally pass `raw: true`, which
+disables decompression. Notice the body now starts with `<<31, 139>>`, the "magic bytes"
+for gzip:
+
+    iex> response = Req.get!("https://elixir-lang.org", compressed: true, raw: true)
     iex> Req.Response.get_header(response, "content-encoding")
     ["gzip"]
     iex> response.body |> binary_part(0, 2)
     <<31, 139>>
 
-Now, let's pass `compressed: false` and notice the raw body was not compressed:
-
-    iex> response = Req.get!("https://elixir-lang.org", raw: true, compressed: false)
-    iex> response.body |> binary_part(0, 15)
-    "<!DOCTYPE html>"
-
-The Brotli and Zstandard compression algorithms are also supported if the optional
-packages are installed:
+Zstandard is supported out of the box on Erlang/OTP 28+ (via the built-in `:zstd` module).
+Brotli is supported if the optional [brotli] package is installed:
 
     Mix.install([
       :req,
-      {:brotli, "~> 0.3.0"},
-      {:ezstd, "~> 1.0"}
+      {:brotli, "~> 0.3.0"}
     ])
 
-    response = Req.get!("https://httpbin.org/anything")
+    response = Req.get!("https://httpbin.org/anything", compressed: true)
     response.body["headers"]["Accept-Encoding"]
     #=> "zstd, br, gzip"
 
 [brotli]: https://hex.pm/packages/brotli
-[ezstd]: https://hex.pm/packages/ezstd
 
 ## encode_body/1
 
@@ -177,6 +185,9 @@ Encodes the request body.
   * `:json` - if set, encodes the request body as JSON (using `Jason.encode_to_iodata!/1`), sets
     the `accept` header to `application/json`, and the `content-type` header to `application/json`.
 
+When the request has the default HTTP method, GET, and the request body is set, this step
+automatically changes HTTP method to POST.
+
 ## Examples
 
 Encoding form (`application/x-www-form-urlencoded`):
@@ -210,8 +221,13 @@ Encoding streaming form (`multipart/form-data`):
 
 Encoding JSON:
 
-    iex> Req.post!("https://httpbin.org/post", json: %{a: 2}).body["json"]
-    %{"a" => 2}
+    iex> Req.post!("https://httpbin.org/post", json: %{a: 1}).body["json"]
+    %{"a" => 1}
+
+Automatically change GET to POST when body is set:
+
+    iex> Req.request!("https://httpbin.org/post", json: %{a: 1}).body["json"]
+    %{"a" => 1}
 
 ## put_path_params/1
 
@@ -281,30 +297,6 @@ Sets the "Range" request header.
     iex> Req.Response.get_header(response, "content-range")
     ["bytes 0-3/100"]
 
-## cache/1
-
-Performs HTTP caching using `if-modified-since` header.
-
-Only successful (200 OK) responses are cached.
-
-This step also _prepends_ a response step that loads and writes the cache. Be careful when
-_prepending_ other response steps, make sure the cache is loaded/written as soon as possible.
-
-## Options
-
-  * `:cache` - if `true`, performs simple caching using `if-modified-since` header. Defaults to `false`.
-
-  * `:cache_dir` - the directory to store the cache, defaults to `<user_cache_dir>/req`
-    (see: `:filename.basedir/3`)
-
-## Examples
-
-    iex> url = "https://elixir-lang.org"
-    iex> response1 = Req.get!(url, cache: true)
-    iex> response2 = Req.get!(url, cache: true)
-    iex> response1 == response2
-    true
-
 ## compress_body/1
 
 Compresses the request body.
@@ -313,111 +305,6 @@ Compresses the request body.
 
   * `:compress_body` - if set to `true`, compresses the request body using gzip.
     Defaults to `false`.
-
-## put_plug/1
-
-Sets adapter to `run_plug/1`.
-
-See `run_plug/1` for more information.
-
-## Request Options
-
-  * `:plug` - if set, the plug to run the request through.
-
-## run_plug/1
-
-Runs the request against a plug instead of over the network.
-
-This step is a Req _adapter_. It is set as the adapter by the `put_plug/1` step
-if the `:plug` option is set.
-
-It requires [`:plug`](https://hexdocs.pm/plug) dependency:
-
-    {:plug, "~> 1.0"}
-
-## Request Options
-
-  * `:plug` - the plug to run the request through. It can be one of:
-
-      * A _function_ plug: a `fun(conn)` or `fun(conn, options)` function that takes a
-        `Plug.Conn` and returns a `Plug.Conn`.
-
-      * A _module_ plug: a `module` name or a `{module, options}` tuple.
-
-    Req automatically calls `Plug.Conn.fetch_query_params/2` before your plug, so you can
-    get query params using `conn.query_params`.
-
-    Req also automatically parses request body using `Plug.Parsers` for JSON, urlencoded and
-    multipart requests and you can access it with `conn.body_params`. The raw request body of
-    the request is available by calling `Req.Test.raw_body/1` with the `conn` in your tests.
-
-## Examples
-
-This step is particularly useful to test plugs:
-
-    defmodule Echo do
-      def call(conn, _) do
-        "/" <> path = conn.request_path
-        Plug.Conn.send_resp(conn, 200, path)
-      end
-    end
-
-    test "echo" do
-      assert Req.get!("http:///hello", plug: Echo).body == "hello"
-    end
-
-You can define plugs as functions too:
-
-    test "echo" do
-      echo = fn conn ->
-        "/" <> path = conn.request_path
-        Plug.Conn.send_resp(conn, 200, path)
-      end
-
-      assert Req.get!("http:///hello", plug: echo).body == "hello"
-    end
-
-which is particularly useful to create HTTP service stubs, similar to tools like
-[Bypass](https://github.com/PSPDFKit-labs/bypass).
-
-Response streaming is also supported however at the moment the entire response
-body is emitted as one chunk:
-
-    test "echo" do
-      plug = fn conn ->
-        conn = Plug.Conn.send_chunked(conn, 200)
-        {:ok, conn} = Plug.Conn.chunk(conn, "echo")
-        {:ok, conn} = Plug.Conn.chunk(conn, "echo")
-        conn
-      end
-
-      assert Req.get!(plug: plug, into: []).body == ["echoecho"]
-    end
-
-When testing JSON APIs, it's common to use the `Req.Test.json/2` helper:
-
-    test "JSON" do
-      plug = fn conn ->
-        Req.Test.json(conn, %{message: "Hello, World!"})
-      end
-
-      resp = Req.get!(plug: plug)
-      assert resp.status == 200
-      assert resp.headers["content-type"] == ["application/json; charset=utf-8"]
-      assert resp.body == %{"message" => "Hello, World!"}
-    end
-
-You can simulate network errors by calling `Req.Test.transport_error/2`
-in your plugs:
-
-    test "network issues" do
-      plug = fn conn ->
-        Req.Test.transport_error(conn, :timeout)
-      end
-
-      assert Req.get(plug: plug, retry: false) ==
-               {:error, %Req.TransportError{reason: :timeout}}
-    end
 
 ## checksum/1
 
@@ -504,17 +391,21 @@ See `checksum/1` for more information.
 
 Decompresses the response body based on the `content-encoding` header.
 
+This step only runs when the `:compressed` option is set to `true` (see the `compressed/1`
+step); otherwise the body is left as is. This guards against decompression bombs, where a
+small compressed response expands into a much larger body in memory.
+
 This step is disabled on response body streaming. If response body is not a binary, in other
 words it has been transformed by another step, it is left as is.
 
 Supported formats:
 
-| Format        | Decoder                                         |
-| ------------- | ----------------------------------------------- |
-| gzip, x-gzip  | `:zlib.gunzip/1`                                |
-| br            | `:brotli.decode/1` (if [brotli] is installed)   |
-| zstd          | `:ezstd.decompress/1` (if [ezstd] is installed) |
-| _other_       | Returns data as is                              |
+| Format        | Decoder                                      |
+| ------------- | -------------------------------------------- |
+| gzip, x-gzip  | [`:zlib`](`:zlib`)                           |
+| br            | [`:brotli`](`:brotli`) (requires [brotli])   |
+| zstd          | [`:zstd`](`:zstd`) (requires Erlang/OTP 28+) |
+| _other_       | Returns data as is                           |
 
 This step updates the following headers to reflect the changes:
 
@@ -523,13 +414,16 @@ This step updates the following headers to reflect the changes:
 
 ## Options
 
+  * `:compressed` - if set to `true`, decompresses the response body. Defaults to `false`.
+    See also the `compressed/1` step.
+
   * `:raw` - if set to `true`, disables response body decompression. Defaults to `false`.
 
     Note: setting `raw: true` also disables response body decoding in the `decode_body/1` step.
 
 ## Examples
 
-    iex> response = Req.get!("https://httpbin.org/gzip")
+    iex> response = Req.get!("https://httpbin.org/gzip", compressed: true)
     iex> response.body["gzipped"]
     true
 
@@ -540,45 +434,77 @@ If the [brotli] package is installed, Brotli is also supported:
       {:brotli, "~> 0.3.0"}
     ])
 
-    response = Req.get!("https://httpbin.org/brotli")
+    response = Req.get!("https://httpbin.org/brotli", compressed: true)
     Req.Response.get_header(response, "content-encoding")
     #=> ["br"]
     response.body["brotli"]
     #=> true
 
-[brotli]: http://hex.pm/packages/brotli
-[ezstd]: https://hex.pm/packages/ezstd
+[brotli]: https://hex.pm/packages/brotli
 
 ## decode_body/1
 
 Decodes response body based on the detected format.
 
-Supported formats:
+By default, only JSON responses are decoded. To decode other formats, or to add support for
+custom ones, use the `:decoders` option.
 
-| Format       | Decoder                                                           |
-| ------------ | ----------------------------------------------------------------- |
-| `json`       | `Jason.decode/2`                                                  |
-| `tar`, `tgz` | `:erl_tar.extract/2`                                              |
-| `zip`        | `:zip.unzip/2`                                                    |
-| `gzip`       | `:zlib.gunzip/1`                                                  |
-| `zst`        | `:ezstd.decompress/1` (if [ezstd] is installed)                   |
-| `csv`        | `NimbleCSV.RFC4180.parse_string/2` (if [nimble_csv] is installed) |
+## Built-in decoders
 
-The format is determined based on the `content-type` header of the response. For example,
-if the `content-type` is `application/json`, the response body is decoded as JSON. The built-in
-decoders also understand format extensions, such as decoding as JSON for a content-type of
-`application/vnd.api+json`. To do this, Req falls back to `MIME.extensions/1`; check the
-documentation for that function for more information.
+| Format               | Decoder                                       |
+| -------------------- | --------------------------------------------- |
+| `:json`, `:json_api` | `Jason` (enabled by default)                  |
+| `:zip`               | [`:zip`](`:zip`)                              |
+| `:tar`, `:tgz`       | [`:erl_tar`](`:erl_tar`)                      |
+| `:gz`                | [`:zlib`](`:zlib`)                            |
+| `:zst`               | [`:zstd`](`:zstd`) (requires Erlang/OTP 28+)  |
+| `:csv`               | `NimbleCSV.RFC4180` (requires [nimble_csv]) |
+
+The format is determined by the response `content-type` header. See `MIME` for registering
+content-type/format mapping.
 
 This step is disabled on response body streaming. If response body is not a binary, in other
 words it has been transformed by another step, it is left as is.
 
+> #### Decompression Bombs {: .warning}
+>
+> The archive and compression decoders (`:zip`, `:tar`, `:tgz`, `:gz`, and `:zst`) decompress
+> the whole response body into memory with no size limit, so a small response can expand to
+> many gigabytes. For this reason they are **not** enabled by default; only opt into them via
+> the `:decoders` option for endpoints you trust.
+
 ## Request Options
+
+  * `:decoders` - the list of decoders to use. Defaults to `[:json, :json_api]`.
+
+    Each element is either:
+
+      * a format (atom) handled by a [built-in decoder](#decode_body/1-built-in-decoders),
+        e.g. `:json` or `:zip`;
+
+      * a `{format, codec}` tuple, where `format` is an atom and `codec` is one of:
+
+          * another format (atom), to reuse a built-in decoder, e.g. `{:json5, :json}`;
+
+          * a module exporting `decode/1` that returns `{:ok, term}` or `{:error, exception}`;
+
+          * a 1-arity function that returns `{:ok, term}` or `{:error, exception}`.
+
+    Setting `:decoders` replaces the default, so include `:json` if you still want JSON decoded:
+
+        # handles json, zip, and tar:
+        Req.new(decoders: [:json, :zip, :tar])
+
+    Set `:decoders` to `false` to disable all decoding, including JSON. A custom decoder:
+
+        Req.get!(url, decoders: [ics: &{:ok, ICal.from_ics(&1)}])
 
   * `:decode_body` - if set to `false`, disables automatic response body decoding.
     Defaults to `true`.
 
-  * `:decode_json` - options to pass to `Jason.decode/2`, defaults to `[]`.
+  * `:decode_json` - (deprecated) options to pass to `Jason.decode/2`. Deprecated in favour
+    of passing a custom JSON decoder via the `:decoders` option, e.g.
+    `decoders: [json: &Jason.decode(&1, keys: :atoms)]`.
 
   * `:raw` - if set to `true`, disables response body decoding. Defaults to `false`.
 
@@ -593,14 +519,13 @@ Decode JSON:
     ...> response.body["slideshow"]["title"]
     "Sample Slide Show"
 
-Decode gzip:
+Decode a ZIP archive (opt-in):
 
-    iex> response = Req.get!("https://httpbin.org/gzip")
-    ...> response.body["gzipped"]
-    true
+    iex> response = Req.get!("https://example.com/archive.zip", decoders: [:zip])
+    ...> response.body["file.txt"]
+    "contents"
 
 [nimble_csv]: https://hex.pm/packages/nimble_csv
-[ezstd]: https://hex.pm/packages/ezstd
 
 ## redirect/1
 
@@ -699,7 +624,7 @@ This function can be used as either or both response and error step.
 
           * `Req.TransportError` with `reason: :timeout | :econnrefused | :closed`
 
-          * `Req.HTTPError` with `protocol: :http2, reason: :unprocessed`
+          * `Req.HTTPError` with `protocol: :http2, reason: :unprocessed | :pool_not_available`
 
       * `:transient` - same as `:safe_transient` except retries all HTTP methods (POST, DELETE, etc.)
 
@@ -716,8 +641,8 @@ This function can be used as either or both response and error step.
 
   * `:retry_delay` - if not set, which is the default, the retry delay is determined by
     the value of the `Retry-After` header on HTTP 429/503 responses. If the header is not set,
-    or the header value is negative, the default delay follows a simple exponential backoff:
-    1s, 2s, 4s, 8s, ...
+    or the header value is negative, the default delay follows a simple exponential backoff
+    with jitter, for example: 0.949s, 1.97s, 3.87s, 7.55s, ...
 
     `:retry_delay` can be set to a function that receives the retry count (starting at 0)
     and returns the delay, the number of milliseconds to sleep before making another attempt.
@@ -730,17 +655,7 @@ This function can be used as either or both response and error step.
 
 ## Examples
 
-With default options:
-
     iex> Req.get!("https://httpbin.org/status/500,200").status
-    # 19:02:08.463 [warning] retry: got response with status 500, will retry in 2000ms, 2 attempts left
-    # 19:02:10.710 [warning] retry: got response with status 500, will retry in 4000ms, 1 attempt left
-    200
-
-Delay with jitter:
-
-    iex> delay = fn n -> trunc(Integer.pow(2, n) * 1000 * (1 - 0.1 * :rand.uniform())) end
-    iex> Req.get!("https://httpbin.org/status/500,200", retry_delay: delay).status
     # 08:43:19.101 [warning] retry: got response with status 500, will retry in 941ms, 2 attempts left
     # 08:43:22.958 [warning] retry: got response with status 500, will retry in 1877ms, 1 attempt left
     200

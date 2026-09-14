@@ -44,16 +44,6 @@ Parses "HTTP Date" as datetime or raises an error.
     iex> Req.Utils.parse_http_date!("Mon")
     ** (ArgumentError) cannot parse "Mon" as HTTP date, reason: :invalid_format
 
-## stream_gzip/1
-
-Returns a stream where each element is gzipped.
-
-## Examples
-
-    iex> gzipped = Req.Utils.stream_gzip(~w[foo bar baz]) |> Enum.to_list()
-    iex> :zlib.gunzip(gzipped)
-    "foobarbaz"
-
 ## collect_with_hash/2
 
 Returns a collectable with hash.
