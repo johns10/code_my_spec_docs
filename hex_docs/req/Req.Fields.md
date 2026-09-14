@@ -15,6 +15,24 @@ Merges `fields1` and `fields2`.
 
 Returns field values.
 
+## map/2
+
+Maps field values using `fun`, preserving field names.
+
+## Examples
+
+    iex> Req.Fields.map(%{"a" => ["1", "2"]}, fn _name, value -> value <> "0" end)
+    %{"a" => ["10", "20"]}
+
+## prepend/2
+
+Prepends `new_fields` before `fields`, keeping any existing values.
+
+## Examples
+
+    iex> Req.Fields.prepend(%{"a" => ["1"]}, [{"a", "2"}, {"b", "3"}])
+    %{"a" => ["2", "1"], "b" => ["3"]}
+
 ## put/3
 
 Adds a new field `name` with the given `value` if not present,

@@ -71,7 +71,7 @@ We configure it for production:
     ]
 
 In tests, instead of hitting the network, we make the request against
-a [plug](`Req.Steps.run_plug/1`) _stub_ named `MyApp.Weather`:
+a [plug](`Req.Plug`) _stub_ named `MyApp.Weather`:
 
     # config/test.exs
     config :myapp, weather_req_options: [
@@ -124,9 +124,9 @@ was happening in a spawned GenServer:
 
 ## Broadway
 
-If you're using `Req.Test` with [Broadway](https://hex.pm/broadway), you may need to use
+If you're using `Req.Test` with [Broadway](https://hex.pm/packages/broadway), you may need to use
 `allow/3` to make stubs available in the Broadway processors. A great way to do that is
-to hook into the [Telemetry](https://hex.pm/telemetry) events that Broadway publishes to
+to hook into the [Telemetry](https://hex.pm/packages/telemetry) events that Broadway publishes to
 manually allow the processors and batch processors to access the stubs. This approach is
 similar to what is [documented in Broadway
 itself](https://hexdocs.pm/broadway/Broadway.html#module-testing-with-ecto).
@@ -184,7 +184,6 @@ code is set, a 302 response is sent.
     ...>
     ...>   conn when conn.request_path == "/hello" ->
     ...>     Req.Test.text(conn, "Hello, World!")
-    ...>   conn -> dbg(conn)
     ...> end
     iex>
     iex> resp = Req.get!(plug: plug, url: "http://example.com")
@@ -210,7 +209,7 @@ Simulates a network transport error.
 Creates a request stub with the given `name` and `plug`.
 
 Req allows running requests against _plugs_ (instead of over the network) using the
-[`:plug`](`Req.Steps.run_plug/1`) option. However, passing the `:plug` value throughout the
+[`:plug`](`Req.Plug`) option. However, passing the `:plug` value throughout the
 system can be cumbersome. Instead, you can tell Req to find plugs by `name` by setting
 `plug: {Req.Test, name}`, and register plug stubs for that `name` by calling
 `Req.Test.stub(name, plug)`. In other words, multiple concurrent tests can register test stubs
@@ -300,17 +299,17 @@ tests concurrently.
 
 Sets the `Req.Test` mode based on the given `ExUnit` context.
 
-This works as a ExUnit callback:
+This works as an ExUnit callback:
 
     setup :set_req_test_from_context
 
 ## verify_on_exit!/1
 
-Sets a ExUnit callback to verify the expectations on exit.
+Sets an ExUnit callback to verify the expectations on exit.
 
 Similar to calling `verify!/0` at the end of your test.
 
-This works as a ExUnit callback:
+This works as an ExUnit callback:
 
     setup {Req.Test, :verify_on_exit!}
 

@@ -124,6 +124,22 @@ called:
       end
     end
 
+## Debugging a pipeline
+
+During development, you may wish to display the current state of the connection
+at a certain point in the pipeline. This can be achieved by plugging the `dbg/2`
+macro from Elixir. Since it accepts and returns the connection as first argument,
+and takes options as the second, it just works:
+
+    defmodule PlugWithDbg do
+      use Plug.Builder
+
+      plug Plug.RewriteOn
+      plug :dbg
+      plug Plug.MethodOverride
+      plug :dbg, charlists: :as_lists
+    end
+
 ## plug/2
 
 A macro that stores a new plug. `opts` will be passed unchanged to the new
