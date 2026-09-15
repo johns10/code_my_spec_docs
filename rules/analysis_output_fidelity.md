@@ -48,6 +48,18 @@ that layer, not recoverable further down the call chain.
   concern from this rule — this rule is about not reformatting the output
   of whatever *did* run, not about guaranteeing every caller-specific flag
   is honored by a shared sweep.
+- No heuristic reclassifies a diagnostic based on guessing what its message
+  text means, and drops it (or the whole run) on that guess. This is the
+  same fidelity failure one level up: reformatting rewrites what a tool
+  said, and this rewrites *whether it said anything at all*. A regex
+  matching `module ... is not available` and failing the entire run rather
+  than reporting it is not a narrower case of "keep the real output" — it
+  is this rule's violation, just against the structured diagnostic instead
+  of the raw text. Removed in full 2026-09-15 after it discarded a real,
+  reportable failure (a spec-first spex naming a tool that had never been
+  implemented) as a guessed-at build race, which froze a working copy's
+  Problems and made it unable to promote for about thirteen hours. See
+  story 839.
 
 ## Verifying it
 
