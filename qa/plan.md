@@ -560,6 +560,51 @@ the `changed_files` gate. Neither exists.
 - **Existing manual QA plan** lives next to this file at `manual_qa_plan.md`. That doc covers a different scope (CLI install, Burrito binary, extension load) and remains the reference for those concerns; this plan is strictly the running backend.
 - **Per-story QA uses this plan** — `QaStory.check_plan` reads `.code_my_spec/qa/plan.md` as Phase 1, before any story brief is written. Keep the Tools Registry section honest because it ends up in every story prompt.
 
+### `qa@codemyspec.local` lands on the wrong account, not off the real project
+
+Browser QA against the real "Code My Spec" project (`708492f9-...`) at
+`/app/projects/708492f9-.../...` redirects to `/app/projects` with "That
+project is not yours, or does not exist." This reads as a missing membership
+and is not one — `qa@codemyspec.local` genuinely belongs to account `0f27281c`
+("Code My Spec"), which owns that project. The account exists; it just isn't
+the *active* one.
+
+**Why:** the seed user belongs to nine accounts (eight of them QA-owned
+leftovers from past runs — `QA Account`, `QA Second Account`, `QA Team 605`,
+several `QA 878 Recheck/Verify` variants). Login lands on whichever one the
+session happens to pick, and every project page checks membership against the
+*active* account, not every account the user belongs to.
+
+**Fix before navigating to a project page:**
+
+```
+/app/accounts/picker    -> choose "Code My Spec"
+/app/projects/picker    -> choose the project
+```
+
+Then `/app/projects/<id>/...` resolves normally. Do this once per fresh QA
+session, right after login, before any project-scoped browser QA (`5d9bdc2d`).
+
+The eight stale QA-owned accounts are cruft from past runs and worth pruning
+periodically so a fresh login has fewer wrong accounts to land on — not done
+as part of this plan fix.
+
+### Machine saturation looks exactly like a broken tool
+
+A shared box running many agents' worktrees at once (load average 20+, swap
+pressure) produces intermittent `Unknown tool: X` / `No such tool available`
+failures that are indistinguishable from a real tool-dispatch bug — and the
+tool is reported working again on the very next call, with no restart, once
+load drops (`6a8a4186`).
+
+**Before concluding a tool is broken or restarting an agent to "fix" it:**
+check machine load (`check_machinery`, or `uptime` if you have shell access).
+A `load_average` well above the core count is the more likely explanation than
+a genuine dispatch defect, especially if the same tool worked moments earlier
+from another session. Restarting an agent on a saturated box adds load rather
+than relieving it — `check_machinery`'s own guidance already says so — so a
+restart in this state may make the underlying symptom worse, not better.
+
 ### Graph provenance is on :4000's page, not on the local JSON API
 
 `GET /api/projects/:project_name/requirements/graph` returns `computed_at`,
