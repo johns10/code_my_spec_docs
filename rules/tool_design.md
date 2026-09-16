@@ -99,6 +99,60 @@ end
 - Use consistent error response format
 - Map technical errors to user-friendly messages
 
+## Long-Running Work
+
+### Answer with what you already know
+
+A tool returns as soon as it knows the outcome of the work it actually did. It
+does not report "started" for work it has already finished, and never for work
+it has already refused.
+
+Split the operation at the point where the waiting becomes real:
+
+- **Decided before the work** — validations, gates, precondition reads. These
+  are milliseconds. They belong in the `with` chain and are answered to the
+  caller. See "Validation First".
+- **The work itself** — if it completes in seconds, do it and report the result.
+- **A genuinely long tail** — dispatch it, and return a handle plus a way to
+  check it. Say in the answer that it is still running, so the caller does not
+  read the reply as a completed one.
+
+Promotion is the worked example: it returns immediately, reporting whether the
+merge succeeded and what changed, plus a task that resolves to the status of the
+redeploy. The merge is fast and is reported; the redeploy is slow and is
+dispatched and named.
+
+### Why "started" is worse than an error
+
+An async wrapper reports the outcome out of band — a message to an agent, a line
+in a log. Every caller without that channel gets an optimistic acknowledgement
+and nothing else, so a refusal becomes invisible and a false success takes its
+place. The caller then waits for something that already decided not to happen,
+and checking looks identical to a slow success.
+
+Measured: `promote` wrapped everything in a task because "the sweep takes
+minutes". The sweep had since moved out of the gate, so a full promotion ran in
+0.3s, and every refusal — stale analyzers, uncommitted work, recorded problems —
+was computed in milliseconds and then reported only to Alloy agents. A Claude
+Code session was told "Promotion started." for a promotion refused half an hour
+earlier.
+
+### Check the reason is still true
+
+Both halves of that bug were stale rationale, not a wrong decision at the time.
+The comment explaining why the tool was async outlived the sweep it named. When
+a doc or comment justifies a shape by how long something takes, re-measure
+before trusting it.
+
+### A surface a spec cannot assert on is a broken surface
+
+If a tool answers nothing useful, tests reach for a sibling that does, and the
+real door goes uncovered. Story 1046 had nineteen criteria on promotion and all
+nineteen drove `promote_sync`, because the helper recorded that `promote`
+"answers at once and messages the outcome back, which leaves a spec nothing in
+the reply to assert on". They passed while the tool agents call was returning a
+false success. Fix the surface rather than testing around it.
+
 ## Testing Considerations
 
 - Design tools to be easily testable without mocks
