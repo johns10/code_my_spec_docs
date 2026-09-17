@@ -289,6 +289,16 @@ No qa-role agent, deliberately: "QA work waiting does not wake the coding agent"
 
 **The agents are rows, not processes — nothing runs and nothing spends tokens** until you drive it. That is what makes this safe to use freely, and it is why "provisioning is out of scope" was the wrong read: the scope rule is about not touching *live* agents on the real project, not about this.
 
+> **The rows are reaped, and this will ruin a wake test if you let it.** `record_running_on_copy/3` (`0c912986`) reaps any row on a harnessed copy that claims to be running with no process behind it, so these agents go `:running` → `:stopped` within about a minute of each harness report. `project_wakeable?/2` requires `:running`, so after that they are invisible to `wake_project_roles/2` and **no wake is sent — correctly**.
+>
+> That failure is silent and looks exactly like the defect you are testing. Attempt `38331c19` on story 1004 drove a real requirement transition, verified the graph recomputed, saw no message, and filed the story's central criterion as failing. The evidence was sound and the conclusion was wrong. See `726766b0`.
+>
+> So before trusting **any** wake result, check the rows are still running — not that they were seeded running:
+>
+>     psql -d code_my_spec_dev -c "select role, status from agents where project_id = 'd7f466a1-591e-4f36-8319-42633f59411e';"
+>
+> All `running`, or your result means nothing. Re-run the seed immediately before the transition you are testing and keep the window short. `726766b0` tracks the fact that this is a race rather than a fix.
+
 **Check the harness before trusting a conversation-reading result:**
 
     curl -s localhost:4004/health | grep math_test_project
