@@ -192,6 +192,41 @@ bearer would require the Cloudflare tunnel up. For QA on the hosted API surface,
 either reuse an access token already in the DB (read it via `iex -S mix`) or skip
 to the LiveView surface where browser-session auth Just Works via Vibium.
 
+### `qa_as_agent.sh` — making a call *as* an agent
+
+`.code_my_spec/qa/scripts/qa_as_agent.sh <agent-id> <tool> '<json-args>'`
+
+For the class of story where the *asker* is an agent: a question routed to the
+main agent, a task claimed by a named agent, anything that reads
+`frame.assigns[:agent_id]`. Those tools take no `agent_id` parameter on
+purpose — `Plugs.AgentScope` says who is calling comes off the connection
+rather than out of the caller's words — so a QA session cannot reach them from
+its own MCP connection, whatever it passes.
+
+This opens a second connection with `X-Agent-Id` set. The header is still
+resolved inside the project the request is already scoped to, so it can only
+name an agent you are already authenticated for.
+
+**Make your own fixture; never borrow a working agent.** Attributing a
+synthetic question to a real mid-task agent corrupts the main agent's and the
+owner's read of its state, which is the one thing a QA pass must not do.
+Everything except the call itself is already a tool you have:
+
+1. `create_working_copy` — a scratch checkout
+2. `start_agent` with `role: "coding"` — the reply names the agent id
+3. `qa_as_agent.sh <id> <tool> '<args>'`
+4. `stop_agent`, then `offboard_working_copy`
+
+The coding role is the point: `MainAgent.holder_for/2` treats `:main` as
+"user", so a main-role fixture routes exactly like no fixture at all. That is
+why the sandbox project's existing agents were no use for this (`e2b72303`).
+
+Goes through the harness proxy on :4004, which forwards the header and
+supplies the harness identity — so it drives the real MCP surface rather than a
+QA-only shortcut, and a pass through it is evidence about the thing agents
+actually use. Sending straight to :4000 needs a bearer and `X-Project-ID`
+instead.
+
 ### mix run — seeds and one-offs
 
 Use for setup that needs the app's contexts (creating users, accounts, projects through the supervised pipeline).
