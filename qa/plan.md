@@ -100,7 +100,17 @@ mcp__vibium__browser_screenshot { filename: "4003_requirements.png" }
 
 **Hosted login (port 4000):** the `/users/log-in` page renders **one form**, containing `_csrf_token` and `user[email]`. There is no password field — magic link is the only path. This section used to describe two stacked forms and a password login; that cost every QA session the same detour, because the documented selector times out with "element not found" and the agent then re-maps the DOM to discover the real flow.
 
-**Magic-link login** — fill `user[email]`, click "Log in with email", then read the swoosh mailbox at `http://127.0.0.1:4000/dev/mailbox` (banner on the login page links to it) to grab the token and visit `/users/log-in/:token`. Persist with `browser_storage_state`.
+**Prefer `POST /dev/sign-in`.** It mints the same `"login"` token `deliver_login_instructions/2` puts in the email, redeemed at the same route by the same controller — so you exercise the product's real session auth and skip only the mailbox. It exists because working the magic-link flow by hand every run meant racing every other agent on the box for a `/dev/mailbox` they all share, where "the right message" is whichever login arrived last. `POST /dev/sign-up` registers. Both are in `:dev_routes`, `pipe_through :api` (`router.ex:432`).
+
+**It makes you *a* user, not an *arbitrary* user.** `sign-in` requires the account's password and checks it, so it cannot hand out a session for an account whose password nobody knows; `sign-up` only mints fresh accounts. The router's comment — "that one can message an agent, this one can become a user" — distinguishes the route from `/dev/agents/:id/message`; it is not a promise you can become the project owner.
+
+**A question asked through the local harness is addressed to nobody real.** `Scope.for_local_project/2` (`scope.ex:127-138`) sets `user = default_local_user()` with no branch — a synthetic non-DB struct, `id: 0, email: "cli@localhost"` (`:201-208`). `HarnessScope` (what `:4004` runs through) resolves the scope this way and `AgentScope` runs after it, setting only `:agent_id` and never touching `user`. So every question a fixture asks carries `user_id: 0`, **not** the account owner — which is what both the QA plan and I previously assumed, and it is wrong.
+
+The consequence: no sign-in-able account, existing or freshly minted, can ever equal a sentinel that is not a row. Story 1009 proved it by minting a throwaway user via `/dev/sign-up` (`user_id: 99`) and getting "Question not found or not authorized" on a fixture-asked question, while a real pre-existing question stayed viewable in the same browser session. `DevAgentController.answer` is no way round it either: it only reaches `status == "pending"` requests, so it can never touch one the main agent already answered.
+
+So any criterion needing the **user** side of a locally-asked question — answering, overruling, approving — is blocked today. Story 1009's 3220/3222 stay partial; issues `19b0d2d4` (the QA gap) and `7ba12775` (the mechanism, and whether it is also a product defect). Remedies are a QA-owned project seeded end to end, or a dev seam that answers as a named user. Neither exists; don't burn a pass improvising one.
+
+**Magic-link login (fallback)** — fill `user[email]`, click "Log in with email", then read the swoosh mailbox at `http://127.0.0.1:4000/dev/mailbox` (banner on the login page links to it) to grab the token and visit `/users/log-in/:token`. Persist with `browser_storage_state`. Use when you specifically need to test the mail path; otherwise it is the slow, contended route.
 
 The seed user is **pre-confirmed**, which matters: an account with a password set and no confirmation is refused a magic link on purpose — allowing it is a session-fixation vulnerability — and with no password form on the page that account has no way in at all. `qa_seeds.exs` now confirms the user it creates, and confirms an existing one that predates that. If you meet "Confirm your email address before signing in with a link", the user is in that state; re-run the seed.
 
@@ -220,6 +230,38 @@ Everything except the call itself is already a tool you have:
 The coding role is the point: `MainAgent.holder_for/2` treats `:main` as
 "user", so a main-role fixture routes exactly like no fixture at all. That is
 why the sandbox project's existing agents were no use for this (`e2b72303`).
+
+**A standing fixture already exists — reuse it rather than provisioning.**
+
+    agent        5e603bd6-ba8d-4072-bcad-bb45fb506314   role coding, continuous false
+    working copy d6019ba0-4846-4a6c-ac57-7647aced8753   qa-3252-3253-verify-v2
+
+It is parked, holds no tasks and runs no turns, so naming it costs nothing and
+corrupts nobody's state. Confirm it still answers before you build on it:
+
+    qa_as_agent.sh 5e603bd6-ba8d-4072-bcad-bb45fb506314 run_script '{"script":"return list_tasks({})"}'
+    → Returned:
+      No tasks.
+
+An empty queue *is* the proof: your own session holds tasks, so "No tasks."
+means `X-Agent-Id` resolved to the fixture and not to you. `:agent_not_found`
+or your own task list means the hop did not happen and nothing downstream of it
+is evidence about anything.
+
+Build a fresh one only if you need two askers at once, or if that one has been
+offboarded — then leave this note pointing at whatever you leave behind.
+
+**Most tools are code mode, but the ones this story needs are not.** A tool that
+moved answers a direct `tools/call` by telling you to use
+`run_script({script = "return tool({…})"})` — `list_tasks` is one, and that
+refusal still proves the identity hop reached the tool layer, though it is not a
+result. Wrap it and send it again.
+
+The exceptions are deliberate and are exactly the asker's surface:
+`ask_user_question`, `check_answer`, `list_user_questions`, `send_message`,
+`start_agent` and `stop_agent` stay directly callable, because a script sandbox
+cannot wait on a person or spawn a process (`local_server.ex:63`). Call those
+straight through `qa_as_agent.sh`, with no `run_script` wrapper.
 
 Goes through the harness proxy on :4004, which forwards the header and
 supplies the harness identity — so it drives the real MCP surface rather than a
