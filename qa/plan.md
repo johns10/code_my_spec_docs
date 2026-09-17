@@ -269,6 +269,34 @@ QA-only shortcut, and a pass through it is evidence about the thing agents
 actually use. Sending straight to :4000 needs a bearer and `X-Project-ID`
 instead.
 
+### The agent sandbox — `qa_wake_seed.exs`
+
+**Read this before concluding that provisioning an agent is out of scope.** It is the single most-missed fixture in this plan: four separate QA passes on stories 1004 and 1009 reported "no isolated QA-owned project with its own coding agent exists, and no current tool provisions one" and settled for `partial`. One has existed the whole time, and it was simply not written down here.
+
+    mix cms.seed priv/repo/qa_wake_seed.exs
+
+Not `mix run` — that boots the endpoint and dies `:eaddrinuse` whenever the dev server holds :4000, which is whenever you would want to seed. Idempotent; re-run it freely, and it tops up the agent set rather than stopping at the first one it finds.
+
+What it gives you, on a project of its own with its own checkout at `/Users/johndavenport/Documents/github/math_test_project`:
+
+| role | count | why that count |
+|---|---|---|
+| coding | 2 | "only the assigned one is woken" is a claim about *which* listener hears, and one listener cannot show it |
+| product | 1 | paired with coding: one role's work appears and the other's does not |
+| main | 1 | "a story interview reaches the main agent" — the only other main-role agent is the real one on the top-level checkout, which no QA session may drive |
+
+No qa-role agent, deliberately: "QA work waiting does not wake the coding agent" needs that work left *outstanding*, and an agent of that role would claim it and take the premise away.
+
+**The agents are rows, not processes — nothing runs and nothing spends tokens** until you drive it. That is what makes this safe to use freely, and it is why "provisioning is out of scope" was the wrong read: the scope rule is about not touching *live* agents on the real project, not about this.
+
+**Check the harness before trusting a conversation-reading result:**
+
+    curl -s localhost:4004/health | grep math_test_project
+
+It must say `connected: true, onboarded: true, watching: true`. `dispatch_message/3` calls the transport before it records anything, so with no harness holding the copy a message is undeliverable and never reaches the conversation — every criterion that reads a conversation then fails for that reason rather than the story's. This was genuinely broken until `1c5540ae` was fixed in `2da6b0e7e`; it is onboarded now, but check rather than assume.
+
+Story 1062's seven wake criteria were exercised and passed against this. Story 1004's seven live-unreachable scenarios are the same class and the same remedy.
+
 ### mix run — seeds and one-offs
 
 Use for setup that needs the app's contexts (creating users, accounts, projects through the supervised pipeline).
