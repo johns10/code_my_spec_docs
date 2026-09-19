@@ -1,7 +1,74 @@
 # Three Amigos — Story 538: LLM Agent Autonomous Task Execution
 
-**Status:** signed off — AC ready to write to story 538 (MCP session dropped, retry pending reconnect)
+**Status:** revision in progress — the earlier stop-hook-directed loop is superseded below
 **Started:** 2026-04-22
+
+## 2026-09 revision — durable role-agent work management
+
+This revision replaces the earlier rule that a stop hook selects and embeds the
+next requirement. It preserves the story's goal (a user does not need to route
+every next action) while preserving the internal agent's agency to choose its
+own work.
+
+### Rules
+
+- **R1 — Continuous is policy.** The user or main agent may set `continuous`.
+  It means the already-staffed role agent should take another turn only while it
+  has eligible work. It does not start/staff an agent and is not its process
+  status.
+- **R2 — One active task.** An agent may not start another task while it owns an
+  active one. It must explicitly complete, block, or cancel the active attempt.
+  Cancelling a task does not cancel its graph requirement.
+- **R3 — The agent chooses.** `start_task` is the only claim operation. A new
+  turn tells the durable agent that work is available; it does not assign or
+  embed a requirement.
+- **R4 — Runnable turns are guarded.** Once a turn has ended and its task
+  decision is recorded, the server asks `Agents.Work.request_turn_if_runnable`.
+  It requests at most one new turn only when continuous is true, no turn is in
+  flight, no task is active, and the agent's role/copy has eligible work.
+- **R5 — Stop decisions are small.** With an active task, the stop menu names
+  that task and offers complete, ask/block, tap-out/block, cancel, or keep
+  working. With no active task it renders the compact main menu. Neither menu
+  selects the next requirement.
+- **R6 — Questions block a task, not an agent.** `ask_user_question` links to
+  the durable task UUID, blocks that task, and leaves other eligible work
+  available. A human answer records a resolved blocker; the agent deliberately
+  resumes or cancels the task on a later turn.
+- **R7 — Tap-out has two explicit meanings.** A tap-out with `task_id` blocks
+  only that task. A tap-out with null `task_id` asks to stop continuous work;
+  approval clears `continuous`. `send_message` is not an internal-agent tool.
+- **R8 — Graph events reconsider eligibility, not agents.** The graph watcher
+  calls `Agents.Work`, which evaluates each agent from its own working-copy
+  vantage. It never uses broad `wake` fanout or starts a new agent process.
+
+### Acceptance criteria replacing the earlier R2–R8 criteria
+
+1. When the user or main agent enables continuous work for an already-staffed
+   role agent, no additional agent is started.
+2. When that agent is idle, continuous, and has eligible role/copy-scoped work,
+   it receives one new turn with no requirement preselected.
+3. When it has no eligible work, it receives no turn.
+4. When it tries `start_task` while another task is active, the request is
+   refused until that task is explicitly completed, blocked, or cancelled.
+5. When it asks a task-scoped user question, only that task becomes blocked;
+   the agent may take other eligible work.
+6. When the answer arrives, it records a resolved blocker on only the linked
+   task and causes at most one runnable-turn request.
+7. When it taps out with a task ID, the decision affects only that task; when it
+   taps out without one and approval is granted, continuous work is disabled.
+8. When graph work appears during a turn, the agent is not interrupted; it is
+   reconsidered only after the turn has ended.
+9. When duplicate graph/answer events race, they cannot create concurrent turns.
+10. Internal agents have no `send_message` tool; user questions use the existing
+    `ask_user_question` tool.
+
+### Superseded material
+
+The remainder of this document records the original Story 538 agreement. In
+particular, its next-requirement block reason, `prepared` task transition, and
+broad wake assumptions are historical and must not be used for new Spex or QA
+work. Revise the legacy criteria in the story record and tests to the criteria
+above rather than creating a new story.
 
 ## Story (yellow)
 
