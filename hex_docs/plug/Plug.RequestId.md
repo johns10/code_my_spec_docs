@@ -53,3 +53,14 @@ To use this plug, just plug it into the desired module:
     since v1.18.0*.
 
         plug Plug.RequestId, logger_metadata_key: :my_request_id
+
+  * `:generator` - The function used to generate the request ID, defaults to
+    `Plug.RequestId.generate/0`. When setting up a custom function, it is recommended
+    to be in the `&MyApp.custom_request_id/0` format, so it can be stored at compile-time.
+    The generated value must also have size between 20 and 200 bytes.
+
+        plug Plug.RequestId, generator: &MyApp.custom_request_id/0
+
+## generate/0
+
+Generates a random Base64 encoded request ID.

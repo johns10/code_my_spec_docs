@@ -600,7 +600,7 @@ These messages should be parsed using this function. The possible return values 
   * `{:ok, chunks}` - where a chunk can be `{:data, binary}`, `{:trailers, trailers}`, or
     `:done`.
 
-  * `{:error, reason}` - an error occured
+  * `{:error, reason}` - an error occurred
 
   * `:unknown` - the message was not meant for this response.
 
