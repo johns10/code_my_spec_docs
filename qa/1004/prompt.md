@@ -7,26 +7,31 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want to be left alone when the graph has no work for me, so that I am not spending turns on stop hooks and messages with nothing behind them.
+As a durable internal agent, I want turns only when I am eligible to choose
+useful work, so that I do not spend turns on empty stop hooks or generic wake
+messages.
+
+**Revision note (2026-09-19):** this story no longer specifies broad `wake`
+messages or assignment nudges. It specifies turn eligibility for an
+already-staffed agent. Task blocking and continuous-mode policy are defined by
+Story 538; startup is Story 1038.
 
 ## Acceptance criteria
 
-- Coding work appears and the coding agent is told
-- QA work waiting does not wake the coding agent
-- One turn ends, one nudge arrives
-- A turn ends with nothing to do and nothing is sent
-- The nudge names the open task
-- Problems on the agent's own work are named as the work
-- Two coding agents, and only the assigned one is woken
-- A story interview reaches the main agent
-- The main agent with nothing assigned is left alone too
-- The turn ends, the process does not
-- A nudge names work that has already been done
-- No second message arrives beside the menu
+- An already-staffed continuous agent with no eligible role/copy-scoped work
+  receives no turn request
+- Work for another role or working copy does not make an agent runnable
+- An active task prevents another turn request until it is dispositioned
+- A turn ending with no eligible work produces neither a turn nor a generic
+  operator message
+- The durable process remains available while it is idle; idleness does not
+  imply restaffing or process shutdown
+- Duplicate eligibility events cannot create concurrent turns
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+_The earlier wake/nudge Spex suite is obsolete. Delete it and write a new suite
+from these revised scenarios before implementation begins._
 
 ## Linked component: Agents
 
@@ -60,6 +65,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

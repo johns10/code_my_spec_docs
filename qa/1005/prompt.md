@@ -22,10 +22,26 @@ As an internal agent, I want to be notified when work I can do appears on the gr
 - A recompute that fails wakes nobody
 - A published wake reaches a healthy agent
 - Work inside my role and my copy wakes me
+- Work still waiting does not wake the agent a second time
+- A watcher starting up does not wake anyone for work that predates it
+- A coding agent gets its red spex while product's triage queue is still full
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3188_a_ready_story_wakes_the_idle_coding_agent_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3189_one_graph_change_one_announcement_routed_per_agent_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3190_a_change_that_adds_no_work_for_me_does_not_wake_me_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3191_work_arriving_mid-turn_is_found_at_the_stop_hook_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3192_a_story_ready_to_test_wakes_the_qa_agent_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3193_problems_appearing_wake_the_coding_agent_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3194_an_unreachable_agent_does_not_make_the_graph_retry_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3197_the_work_is_gone_by_the_time_the_agent_wakes_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3198_a_recompute_that_fails_wakes_nobody_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3294_a_published_wake_reaches_a_healthy_agent_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3295_work_inside_my_role_and_my_copy_wakes_me_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3474_work_still_waiting_does_not_wake_the_agent_a_second_time_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3475_a_watcher_starting_up_does_not_wake_anyone_for_work_that_predates_it_spex.exs`
+- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3491_a_coding_agent_gets_its_red_spex_while_products_triage_queue_is_still_full_spex.exs`
 
 ## Linked component: Agents
 
@@ -59,6 +75,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

@@ -70,7 +70,7 @@ broad wake assumptions are historical and must not be used for new Spex or QA
 work. Revise the legacy criteria in the story record and tests to the criteria
 above rather than creating a new story.
 
-## Story (yellow)
+## Archived pre-2026-09 agreement — do not implement
 
 As the LLM agent, I receive tasks from the orchestrator, complete them, and am
 automatically directed to the next task so that I can work through the project
@@ -95,7 +95,7 @@ the session flag is on, it re-blocks with the next directive.
   (R3) shares the response budget with 554's 4 KB cap. Tracked as F1; not
   story-blocking.
 
-## Rules (blue) — confirmed
+## Historical rules — superseded
 
 - **R1** Next-task selection follows the requirements graph
   (`get_next_requirement` returns highest-priority unsatisfied with met prereqs).
@@ -147,7 +147,7 @@ the session flag is on, it re-blocks with the next directive.
 - **F4** Optional voluntary tap-out tool (R8) — if added, route through
   `PermissionSocket`. Out of scope unless examples surface a need.
 
-## Examples (green) — pending sign-off
+## Historical examples — superseded
 
 ### R2 — Continuous mode is a session flag
 - Continuous mode off, task passes, stop is allowed
@@ -182,7 +182,7 @@ the session flag is on, it re-blocks with the next directive.
 - Agent makes progress (different evaluate result), counter resets
 - Agent voluntarily taps out, request routed to PermissionSocket for human approval *(optional, F4)*
 
-## Acceptance Criteria — final form (to write to story 538)
+## Historical acceptance criteria — superseded
 
 1. When continuous mode is off and the current task passes, the stop is allowed.
 2. When continuous mode is on and the current task passes, the stop is blocked with the next requirement embedded in the block reason.

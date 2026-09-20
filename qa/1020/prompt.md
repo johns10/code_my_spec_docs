@@ -40,6 +40,17 @@ Then the cached answer holds the same requirements as the computation it came fr
 - Satisfying one requirement makes the next one available
 - A story arriving brings its requirements with it
 - A component going away takes its requirements with it
+- An analyzer finishing costs nothing for the components it found nothing in
+- A finding swapped for a different one is a different answer
+- An analyzer that finds the same problems again costs nothing
+- An issue filed against one story leaves the other stories alone
+- An entity that produced nothing is not reconsidered on the next pass
+- A container left empty by configuration still carries its children's requirements
+- An observation nothing knows how to apply is recomputed rather than dropped
+- A requirement the observation moved is not left carrying the old answer
+- A requirement settled by an observation reads like one that was recomputed
+- An answer that agrees while explaining itself differently is a difference
+- A story released for development brings its requirements with it
 
 ## BDD spec files
 
@@ -58,8 +69,22 @@ Then the cached answer holds the same requirements as the computation it came fr
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3421_one_storys_observation_leaves_another_storys_answer_alone_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3423_a_reader_is_not_made_to_recompute_a_graph_nothing_has_touched_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3424_an_observation_recomputes_what_it_touched_and_leaves_the_rest_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3426_a_file_changing_reconsiders_the_requirements_that_file_answers_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3427_a_requirement_records_what_it_was_computed_from_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3428_satisfying_one_requirement_makes_the_next_one_available_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3429_a_story_arriving_brings_its_requirements_with_it_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3430_a_component_going_away_takes_its_requirements_with_it_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3448_an_analyzer_finishing_costs_nothing_for_the_components_it_found_nothing_in_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3472_a_finding_swapped_for_a_different_one_is_a_different_answer_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3473_an_analyzer_that_finds_the_same_problems_again_costs_nothing_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3476_an_issue_filed_against_one_story_leaves_the_other_stories_alone_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3489_an_entity_that_produced_nothing_is_not_reconsidered_on_the_next_pass_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3490_an_emptied_container_still_carries_its_childrens_requirements_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3493_a_requirement_the_observation_moved_is_not_left_carrying_the_old_answer_spex.exs`
+- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3496_a_story_released_for_development_brings_its_requirements_with_it_spex.exs`
 
 ## Linked component: Requirements
 
@@ -93,6 +118,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

@@ -126,18 +126,38 @@ than introducing another question tool. It should:
 
 Add nullable `task_id :string` to `QuestionRequest` rather than a relational
 foreign key: tasks are embeds, so a database FK cannot exist. Legacy
-Claude-Code/session questions may keep it null and continue to use polling.
+Claude-Code/session questions may keep it null and use bounded PubSub-driven waiting.
 The user-facing question UI can show the task's saved requirement label, but
 does not use graph `requirement_id` as identity.
 
 On answer, `Notifications.answer_question_request/3` should persist the answer
 first, retain the matching task as `:blocked` but mark its blocker resolved, and
-then invoke the runnable-turn check. The next turn presents the resolved blocker
+then deliver the answer as conversation content. The next turn presents the resolved blocker
 and the agent explicitly resumes or cancels the task; it is not silently made
-active. Do not use `Agents.send_to_agent/3` as a control
-channel for the answer. A later agent turn reads the durable answer/task state;
-a conversation record can still be written for audit/UI, but it is not the
-mechanism that resumes work.
+active. Queue answer content like chat while the agent is busy, without
+interrupting its turn. Deduplicate delivery of the same committed answer.
+Content delivery is separate from automatic work admission and does not itself
+resume the blocked task or change continuous intent.
+
+### Event delivery policy
+
+Classify events individually; do not route every event through a generic wake.
+
+- User chat and question answers carry content: deliver through the conversation
+  path, queueing while busy rather than interrupting the current turn.
+- Analysis reports carry content too and must not be discarded merely because
+  the agent is busy. Queue them for the turn boundary/stop-hook surface; specify
+  their acknowledgement and deduplication semantics in the existing report stories.
+- Graph changes carry eligibility, not conversation content. Reject busy-time
+  turn requests without queueing a message or reserving a future turn. At turn
+  completion, re-evaluate the current graph instead of replaying stale signals.
+- Idle graph signals may request one turn only for an existing runnable agent.
+- Duplicate automatic turn requests are rejected.
+- Permission decisions, tap-out decisions, failures, and explicit user/main-agent
+  commands need their own delivery policies. Persisting a state change immediately
+  is distinct from interrupting a running agent; do not infer interruption from it.
+
+Use PubSub/events for delivery and turn-boundary reconsideration, not polling.
 
 Delete the server-side `CodeMySpec.McpServers.Tasks.Tools.SendMessage` too; its
 free-text use case is intentionally gone. Preserve `ask_user_question` and
@@ -221,7 +241,7 @@ Replace:
 
 with a typed turn request, for example `Agents.request_work_turn/3`, delivered
 to the already-running Engine through the existing authenticated transport.
-The Engine may enqueue that typed request but must not inspect the graph,
+The Engine rejects that typed request while busy rather than enqueueing it, and must not inspect the graph,
 choose a requirement, or manufacture a durable task state.
 
 All other eligibility-changing paths must call the same context: task terminal
@@ -251,8 +271,8 @@ examples are:
    the active task. A cancellation leaves the graph requirement available.
 4. Asking a task-scoped user question blocks only that task; the agent can take
    other role-eligible work.
-5. Answering releases only the linked task and results in at most one runnable
-   turn request; it never sends a generic user-message wake.
+5. Answering resolves only the matching task blocker and queues attributed
+   answer content like chat; it neither interrupts nor automatically resumes a task.
 6. A task-scoped tap-out blocks/releases only that task; a tap-out with null
    `task_id` turns off continuous work on approval.
 7. Graph changes while an agent is mid-turn do not interrupt it; after it

@@ -12,7 +12,7 @@ As an engineer, I want failing BDD specs to block the agent only on stories whos
 ## Acceptance criteria
 
 - A freshly released story starts with its specs not ready
-- A green run on every spec flips the story to specs-ready
+- A green run on every spec, as part of a successful promotion, flips the story to specs-ready
 - One failing spec leaves the story short of ready
 - A stale green run refuses the flip and directs the agent to wait
 - A later edit stales the spex run without un-readying the story
@@ -26,6 +26,7 @@ As an engineer, I want failing BDD specs to block the agent only on stories whos
 - Clearing specs-ready parks a shipped story mid-refactor
 - Setting specs-ready by hand puts a story under enforcement without waiting for a run
 - A ready story's failure blocks whoever is stopping
+- A green run on a checkout that has not promoted does not flip the story to specs-ready
 
 ## BDD spec files
 
@@ -77,6 +78,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

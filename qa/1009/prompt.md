@@ -24,17 +24,26 @@ As an internal agent, I want my questions and messages to reach the main agent f
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3214_a_product_decision_goes_up_to_the_user_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3215_a_question_the_main_agent_cannot_answer_is_never_simply_dropped_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3216_the_answer_comes_back_the_same_way_either_way_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3217_a_technical_question_the_main_agent_handled_is_still_visible_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3218_the_user_is_never_the_only_way_to_get_an_answer_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3219_the_agent_can_tell_who_answered_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3220_the_user_overrules_an_answer_the_main_agent_already_gave_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3221_the_main_agent_is_down_and_the_question_still_reaches_the_user_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3222_a_main_agent_that_answers_wrongly_does_not_bury_the_question_spex.exs`
+- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3223_an_answer_arrives_after_the_agent_that_asked_has_been_restarted_spex.exs`
 
-## Linked component: Questions
+## Linked component: MainAgent
 
-This story is implemented by `CodeMySpec.Questions` (context).
+This story is implemented by `CodeMySpec.MainAgent` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/questions_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/questions.spec.md`
-- Source: `lib/code_my_spec/questions.ex`
+- Tests: `test/code_my_spec/main_agent_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
+- Source: `lib/code_my_spec/main_agent.ex`
 
 ## Available scripts
 
@@ -58,6 +67,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 
