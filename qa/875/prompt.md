@@ -39,22 +39,32 @@ A visitor describes what they want to build, answers a few questions, and gets a
 
 ## BDD spec files
 
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2230_the_plan_names_its_own_guesses_back_to_the_visitor_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2970_the_choice_comes_after_the_plan_and_starts_the_work_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2971_a_cloud_copy_is_a_checkout_not_a_running_artifact_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2972_the_conversation_is_already_going_when_the_visitor_arrives_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2974_what_the_visitor_first_typed_is_still_there_at_the_end_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2977_the_project_starts_with_somebody_it_is_for_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2978_a_brand_new_visitor_talks_to_their_agent_without_connecting_anything_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_2980_a_visitor_who_talks_past_the_budget_is_told_not_dropped_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3398_the_sign-up_card_appears_with_names_already_filled_in_and_three_ways_to_continue_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3399_an_unconfirmed_email_sign-up_still_continues_the_conversation_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3400_choosing_cloud_asks_for_payment_before_the_shared_host_provisions_anything_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3401_choosing_local_never_asks_for_payment_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3402_an_anonymous_visitor_describes_an_idea_and_gets_a_plan_back_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3403_asked_about_something_else_it_comes_back_to_the_plan_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3404_the_interview_pays_out_within_four_questions_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3405_the_conversation_is_already_going_when_the_visitor_arrives_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3406_asking_the_box_for_an_instance_is_all_it_takes_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3407_nothing_the_visitor_already_answered_is_asked_again_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3408_a_corrected_name_is_the_one_that_survives_signup_spex.exs`
+- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_3409_a_name_someone_else_already_uses_is_accepted_anyway_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8209_an_anonymous_visitor_describes_an_idea_and_gets_a_plan_back_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8210_the_generator_questions_are_asked_in_operator_language_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8211_the_plan_names_its_own_guesses_back_to_the_visitor_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8212_a_corrected_name_is_the_one_that_survives_signup_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8213_a_name_someone_else_already_uses_is_accepted_anyway_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8214_a_visitor_who_leaves_and_returns_finds_the_plan_waiting_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8215_a_plan_does_not_follow_the_visitor_to_a_different_browser_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8216_an_existing_customer_gets_a_new_project_not_a_replaced_one_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8217_the_workspace_comes_up_and_the_app_is_running_in_it_spex.exs`
 - `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8218_a_workspace_that_fails_to_come_up_says_so_and_the_plan_survives_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8219_the_interview_fills_the_wait_instead_of_the_visitor_watching_a_bar_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8220_the_interview_pays_out_within_four_questions_spex.exs`
-- `test/spex/990_guided_intake_takes_a_visitor_from_an_idea_to_a_running_app/criterion_8221_a_workspace_that_fails_mid-interview_does_not_throw_the_interview_away_spex.exs`
 
 ## Linked component: Plan
 
@@ -70,16 +80,16 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_resend.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/announce_device.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_github_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_google_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_spine.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/stripe_get_subs.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_github.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_google.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_resend.sh`
 
 ## Required reading: QA plan
 
@@ -88,6 +98,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

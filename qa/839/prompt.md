@@ -11,11 +11,29 @@ As an agent working in a CodeMySpec project, when I run mix test or mix spex the
 
 ## Acceptance criteria
 
-_None defined._
+- At most one analyzer run executes at a time for a given working copy — a request for a different source while one is already running queues behind it rather than running concurrently.
+- A request for a source that is already running is tied to the *next* run for that source, not the one already in flight — an in-flight run may be answering input that is now stale relative to what prompted this request. A request for a source that is already queued (not yet started) is tied to that queued run instead, since it has not yet read its input and will be current when it starts. Either way, when the tied run completes, every request tied to it receives the same real result — never a synthetic 'superseded' status carrying no data.
+- A request that cannot immediately acquire a machine-wide analyzer slot waits for one to free rather than being refused outright, and the wait does not consume the run's kill-timer budget — the timeout is armed only once the analyzer actually begins executing, not at the moment the request is dispatched.
+- A CLI-triggered exunit run satisfies the server's own staleness check
+- A CLI-triggered failure blocks the stop hook the same way a server-triggered failure would
+- A second source queues behind the first rather than running concurrently
+- A duplicate request for a running source receives the result of the next run, not the current one
+- Two duplicate requests during one run coalesce onto a single next run, not two
+- A request waits for a machine-wide slot and completes normally once one frees
+- An analyzer that hangs after acquiring a slot is still killed on its timeout
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3438_at_most_one_analyzer_run_executes_at_a_time_for_a_given_working_copy_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3439_a_request_for_a_source_that_is_already_running_is_tied_to_the_next_run_for_that_source_not_the_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3440_a_request_that_cannot_immediately_acquire_a_machine-wide_analyzer_slot_waits_for_one_to_free_rather_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3441_a_cli-triggered_exunit_run_satisfies_the_servers_own_staleness_check_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3442_a_cli-triggered_failure_blocks_the_stop_hook_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3443_a_second_source_queues_behind_the_first_rather_than_running_concurrently_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3444_a_duplicate_request_for_a_running_source_receives_the_result_of_the_next_run_not_the_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3445_two_duplicate_requests_during_one_run_coalesce_onto_a_single_next_run_not_two_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3446_a_request_waits_for_a_machine-wide_slot_and_completes_normally_once_one_frees_spex.exs`
+- `test/spex/1002_model_and_system_share_one_analysis_run_record/criterion_3447_an_analyzer_that_hangs_after_acquiring_a_slot_is_still_killed_on_its_timeout_spex.exs`
 
 ## Linked component: Analysis
 
@@ -31,16 +49,16 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_resend.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/announce_device.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_github_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_google_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_spine.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/stripe_get_subs.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_github.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_google.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_resend.sh`
 
 ## Required reading: QA plan
 
@@ -49,6 +67,42 @@ Registry, auth strategy, and Seed Strategy you need before writing the
 brief. The plan is produced and maintained by the `qa_setup` task; if
 it's missing or incomplete, the evaluator will tell you to run that
 task first.
+
+## Repros that consume themselves
+
+Before reusing a concrete input from an earlier attempt's brief, ask whether
+running it *changed* what a second run would measure. Anything the system
+remembers — a question it has answered, a decision it recorded, a name it has
+already taken — is spent once it has been used.
+
+The failure this prevents is the expensive kind: a system that correctly
+declines to re-answer a settled question looks exactly like one that failed
+to escalate it, and a re-test then reports a working fix as broken.
+
+Where an input is consumable, choose a fresh one and say in the brief which
+you used, so the next pass knows what is spent. Where you inherit a repro
+from a previous attempt, check it is still unused before trusting the
+result.
+
+## If your tools stop answering, say so before you stop
+
+The dev server and the harness both restart under you without warning. The
+box is shared, several sessions ship fixes to it, and a plain deploy takes
+the harness serving every checkout on the machine with it. You will see
+`:econnrefused`, `:harness_not_connected`, or "No session_id and no agent id
+on this call".
+
+None of that is your story failing. Retry — the session's enrichment comes
+back within a call or two once the harness rejoins — and carry on.
+
+What matters is the case where you cannot carry on. Submit what you have
+with the interruption named as the reason, rather than going quiet. Nobody
+can tell a subagent that died from one that is mid-browser-check: both
+produce no brief, no attempt and no notification. A pass that ended at
+05:22 was reported as "still running" for three hours on exactly that
+evidence (733ac788).
+
+An interruption is also a finding about the QA loop, so file it.
 
 ## Read the playbook
 

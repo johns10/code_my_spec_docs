@@ -30,6 +30,7 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - Browser: `Plug.Session` cookie + CSRF + `CodeMySpecWeb.UserAuth.fetch_current_scope_for_user`
 - API/MCP: `Authorization: Bearer <access_token>` checked by `UserAuth.require_oauth_token` (ExOauth2Provider). Tokens are issued via `/oauth/token` after the OAuth dance at `/oauth/authorize`.
 - LiveView mounts gate on `:require_authenticated`, `:require_active_account`, `:require_active_project` in `live_session` blocks.
+- **Guided intake (story 990, anonymous)**: `/build` mints an anonymous plan session via the `:intake` pipeline (`Plugs.IntakeSession`, cookie key `"intake_token"`) — no login required to start. `POST /build/sign-up` (plain form post from the sign-up card, not `phx-submit`) registers a passwordless user and logs them in directly via `UserAuth.log_in_user/3` (bypasses magic-link auto-confirm on purpose). `/build/workspace` and `/build/preview` sit behind `:require_authenticated` — reaching them from `/build` means the sign-up (or GitHub/Google `/auth/:provider/login?return_to=/build/workspace`) succeeded.
 
 **Local auth (port 4004 dev / 4003 published):**
 - `Plugs.LocalOnly` rejects non-loopback IPs with `403 {"error": "Localhost only"}`.
@@ -43,6 +44,10 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - `4000/api/*` — JSON API (stories, personas, issues, projects, uploads, push notifications) — OAuth bearer
 - `4000/mcp/{stories,components,personas,analytics-admin}` — hosted MCP servers — OAuth bearer + `ProjectScopeOverride`
 - `4000/.well-known/oauth-*` — MCP discovery
+- `4000/build` — guided intake: anonymous plan LiveView (sign-up card renders once the plan is confirmed and no user is signed in)
+- `4000/build/sign-up` — plain POST, registers + logs in from the sign-up card's email field
+- `4000/build/workspace`, `4000/build/preview` — post-signup cloud workspace + preview, gated on `:require_authenticated`; workspace gates further on payment (`Billing.start_subscription`, Stripe Payment Element, `payment_confirmed` hook event) unless the account already has a plan or a workspace already exists for the project
+- `4000/auth/:provider/login`, `4000/auth/:provider/callback` — GitHub/Google OAuth login, `return_to` param honored for intake (`?return_to=/build/workspace`)
 - `4004/projects/:project_name` — project hub (cards for next-task, sync, requirements, components, architecture, stories, issues, sessions, knowledge)
 - `4004/projects/:project_name/{requirements,components,stories,issues,architecture,sessions,knowledge,...}` — local LiveView UI
 - `4004/api/bootstrap/*` — login + project listing for the init flow (`auth/status` returns `{email, authenticated}` without needing a session)
@@ -319,6 +324,25 @@ mix run priv/repo/seeds/math_test_project.exs        # demo project content
 ```
 
 Don't wrap `mix run` in bash loops — each invocation boots the BEAM cold.
+
+### Helper scripts (`.code_my_spec/qa/scripts/*.sh`)
+
+Real-integration probes and fixtures that don't fit `curl`-single-line or `mix run`. Not
+generated per-story — reuse across any story touching these surfaces (payment, OAuth,
+multi-agent, MCP tool list).
+
+| Script | When to use | Invocation |
+|---|---|---|
+| `verify_github.sh` | Confirm `GITHUB_CLIENT_ID`/`SECRET` are live before blaming the app for an OAuth failure | `GITHUB_CLIENT_ID=... GITHUB_CLIENT_SECRET=... ./verify_github.sh` |
+| `verify_google.sh` | Same, for Google OAuth | `GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... ./verify_google.sh` |
+| `verify_resend.sh` | Confirm the Resend API key is live | `RESEND_API_KEY=... ./verify_resend.sh` |
+| `exchange_github_token.sh` | Mint a real GitHub user access token (interactive, browser approval) | `./exchange_github_token.sh [scope]` |
+| `exchange_google_token.sh` | Mint a real Google user access token (interactive) | `./exchange_google_token.sh [scope]` |
+| `stripe_get_subs.sh` | Read back a customer's subscriptions after a payment-gated flow (e.g. guided intake's `/build/workspace`) to confirm what Stripe actually recorded | `./stripe_get_subs.sh <customer_id>` (reads `STRIPE_SECRET_KEY` from `envs/dev.env`) |
+| `announce_device.sh` | Make a device/harness appear via the real `POST /api/devices` route, without starting a full harness process | `./announce_device.sh <deploy-key> --hostname NAME --kind local\|cloud` |
+| `qa_agents.sh` | Mint disposable agents on a project for multi-agent scenarios (identity survives restart, file state isolation) | `./qa_agents.sh up 2` / `list` / `touch 1` / `down` |
+| `qa_code_mode.sh` | Drive the real `/mcp` code-mode surface end to end (handshake + tool call) | `./qa_code_mode.sh [worktree-path]` |
+| `qa_spine.sh` | Dump the real `tools/list` an agent connects with, over a real MCP handshake | `./qa_spine.sh [worktree-path]` |
 
 ### iex — diagnostic only
 
