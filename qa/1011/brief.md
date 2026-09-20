@@ -1,72 +1,63 @@
-# Qa Story Brief — 1011: The main agent sees every open question and message across its working copies
+# Qa Story Brief — Story 1011: The main agent sees every open question across its working copies
 
 ## Tool
 
-curl (MCP `tools/call` against the local endpoint) for every MainAgent surface, plus a short `web` pass for the person's notifications view.
+`run_script` / direct code-mode MCP tools, driven as specific agents via `.code_my_spec/qa/scripts/qa_as_agent.sh` against the shared harness proxy on `:4004`. No LiveView surface is central to this story's own criteria (3267 is the one exception — see Setup Notes).
 
 ## Auth
 
-This story's real surface is MCP tools scoped by harness, not a page a browser logs into for most of it. Do everything against the **sandbox project**, never the real CodeMySpec project — several of these tools write real, hard-to-reverse state (questions, escalations, staffed agents).
+No human login needed for the primary surface: `CodeMySpec.McpServers.MainAgent.Tools.*` are local-harness tools, identity comes from `X-Harness-Id` + `X-Agent-Id`, not a browser session.
 
-1. Sandbox harness id (already onboarded per `.code_my_spec/qa/plan.md`):
-   ```
-   SANDBOX=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
-   ID=$(grep -o '"harness_id"[[:space:]]*:[[:space:]]*"[^"]*"' "$SANDBOX/.cms_harness.json" | head -1 | cut -d'"' -f4)
-   ```
-2. Initialize an MCP session against it once, keep the `Mcp-Session-Id` for every subsequent call:
-   ```
-   curl -s -X POST http://localhost:4004/mcp -H "Content-Type: application/json" \
-     -H "Accept: application/json, text/event-stream" -H "X-Harness-Id: $ID" \
-     -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"qa","version":"1.0"}}}' -D -
-   # then, using the Mcp-Session-Id header from the response:
-   curl -s -X POST http://localhost:4004/mcp -H "Content-Type: application/json" \
-     -H "Accept: application/json, text/event-stream" -H "X-Harness-Id: $ID" -H "Mcp-Session-Id: <id>" \
-     -d '{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}'
-   ```
-3. Most of story 1053's tools (`list_open_questions`, `escalate_question`, `answer_question`, `search_answers`, `list_agent_work`, `create_working_copy`, `message_agent`, `offboard_working_copy`, `list_agents`) are **script-only** — not mounted on `/mcp` directly. Call them through `tools/call` with `name: "run_script"` and a Lua `script` body, e.g.:
-   ```json
-   {"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"run_script","arguments":{"script":"local r, e = list_open_questions({}); if r == nil then return \"failed: \" .. e.message end; return r"}}}
-   ```
-   `ask_user_question`, `stop_agent`, and `check_answer` ARE mounted directly and are called with `name` set to the tool itself; attribute the call to a specific agent with an `X-Agent-Id: <agent uuid>` header.
-4. For the one page-based criterion (3267), log in as **qa@codemyspec.local** — but see the Setup Notes below before escalating anything while logged in or scripted against this project: it does not land where you expect.
+```
+export QA_WORKTREE=<sandbox checkout root>   # see Seeds
+.code_my_spec/qa/scripts/qa_as_agent.sh <agent-id> <tool> '<json-args>'
+```
+
+`list_notifications`, `escalate_question`, `answer_notification`, and `create_working_copy` are code-mode only — wrap them: `run_script({script = "return list_notifications({})"})`. `ask_user_question`, `check_answer`, `list_user_questions`, `stop_agent`, `start_agent`, `start_task` stay direct per-tool calls.
+
+Two sandboxes were used, never the real "Code My Spec" project:
+
+- **QA Fixture Project** — `11111111-1111-4111-8111-111111111111`, harness `1fc425f5-7b88-4e32-86a3-c16c3317408c`, checkout `/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox`. Owner `qa@codemyspec.local`. Already has two distinct working copies registered (`1fc425f5-...` and a stale scratch one, `d1540d93-f639-448a-9dac-5317665e513f`), which is what makes it usable for the cross-checkout criteria without minting anything new.
+- **Math Test Project** — `d7f466a1-591e-4f36-8319-42633f59411e`, harness `56f5bf62-9cf8-400d-abcd-6c796afd3437`, checkout `/Users/johndavenport/Documents/github/math_test_project`. Owner `johns10@gmail.com` (the real dev account — this project is still a sandbox, distinct from "Code My Spec").
 
 ## Seeds
 
-No seed script needed beyond what's already onboarded. To get three distinctly-attributed agents to test against, spin up a disposable working copy on the sandbox and have each staffed agent ask one real, cheap question:
+```
+mix cms.seed priv/repo/qa_wake_seed.exs
+```
+
+Tops up Math Test Project's fixture roster (2 coding, 1 product, 1 main). **The rows are reaped to `status: stopped` within about a minute of the harness's next report** (`record_running_on_copy/3`) because nothing is really running them — this is not a defect and, incidentally, is what let this pass demonstrate criterion 3263 for free (see below). Verify immediately before use:
 
 ```
-tools/call run_script: create_working_copy({ label = "qa-1011-probe" })
+psql -d code_my_spec_dev -c "select id, role, status from agents where project_id = 'd7f466a1-591e-4f36-8319-42633f59411e';"
 ```
-This staffs three real agents — coding, product, qa — on a fresh git worktree under the sandbox. Read back their ids and roles with `list_agent_work({})`.
 
-For each agent, drive a real `ask_user_question` call with a tightly-scoped instruction so it costs one cheap turn instead of a real work session:
-```
-tools/call run_script: message_agent({ agent_id = "<id>", message = "Call the ask_user_question tool exactly once, with title \"<x>\" and one question \"<y>\" with options A and B. Do not do anything else. After calling it, stop." })
-```
-**When you are done, `offboard_working_copy({ working_copy_id = "<id>" })`** to stop the agents and discard the checkout row. The worktree directory itself is left on disk — that's normal — and can be pruned by hand later.
+QA Fixture Project needed no seed — it already carries dozens of agents (mostly `stopped`, which is fine: `AgentScope`/`ask_user_question` do not require the calling agent to be `running`).
+
+**Correction carried forward from story 1009's brief, still not reflected in `plan.md`:** the plan's "a question asked through the local harness is addressed to nobody real (`user_id: 0`)" finding is stale for this box's actual topology. Every question raised this session — on both sandboxes — recorded the real, positive `user_id` of the project's real owner (verified via `psql`), not the `Scope.for_local_project/2` sentinel that the checked-out source (both this worktree and `main`, byte-identical) would produce if called directly. `:4004` on this box is the light-harness proxy, not `CodeMySpecLocalWeb`'s in-process `/mcp`, and it resolves identity differently. Filed as issue (see below) so this propagates into `plan.md` itself rather than living only in per-story briefs.
 
 ## What To Test
 
-- **3260 / 3266** — with three staffed agents each asked a question, call `list_open_questions({})`. Each entry must name the question text, the asking agent's id and role, and the checkout it was raised on.
-- **3261** — call `list_open_questions` from the **main** sandbox checkout's harness scope (not the probe copy's) and confirm questions raised on the probe copy still appear. The listing is project-wide, not copy-scoped.
-- **3262** — `answer_question({ question_id, answer, basis = "record" })` one of the three (the answer text must contain a real story title — get one from `ready_stories_without_epic({})`). Re-run `list_open_questions` and confirm it's gone while the other two remain.
-- **3263** — `stop_agent({ agent_id })` on one of the three agents (that has NOT been answered), then `list_open_questions` again. Its question must still be listed, now showing the agent as `stopped`.
-- **3264** — `escalate_question({ question_id, reason })` on one of the remaining questions. `list_open_questions` should now show two sections — "Needs your attention" and "Waiting on the user" — with the escalated one in the second, not gone and not still in the first.
-- **3269** — as the asking agent (curl with `X-Agent-Id` set to it), call `check_answer({ question_id })` on the escalated-but-unanswered question. Expect "still waiting on the user," not an answer and not silence.
-- **3268** — answer the escalated question (see Setup Notes — do this via `answer_question` with a real `basis`, not by actually escalating to a live human inbox), then re-run `check_answer` as the asking agent. Expect the literal answer text back.
-- **3265** — needs a running **main**-role agent on the project so a delivered question shows up as an orchestrator action on its conversation. **Not achievable with the tools exposed to QA** — `create_working_copy`'s staffing only produces coding/product/qa. See Setup Notes.
-- **3267** — log in as qa@codemyspec.local, visit `/app/notifications`, and separately `/app/questions/:id` for a question id you escalated. See Setup Notes for why this account is not currently a safe or reliable target.
+Ten criteria (3260–3269), against `CodeMySpec.McpServers.MainAgent.Tools.{ListNotifications,EscalateQuestion,AnswerNotification}` plus the asker's own `AskUserQuestion`/`CheckAnswer`/`ListUserQuestions`:
+
+- **3260** (three agents, one place) — as three distinct Math Test Project agents (`coding`, `coding`, `product`), each `ask_user_question`. As any agent, `list_notifications`: all three question texts present, each with its own `agent:` id.
+- **3261** (another working copy still visible) — on QA Fixture Project, ask from an agent on working copy `1fc425f5-...` and from an agent on working copy `d1540d93-...` (a second, already-registered checkout of the *same* project). `list_notifications` read from the first checkout's identity must still show the second checkout's question.
+- **3266** (who asked it, from where) — read off the same listings as 3260/3261: every entry carries `agent: <id> (<role>, <status>)` and `checkout: <working_copy_id> <root>`, derived rather than caller-supplied.
+- **3262** (answered stops competing) — `answer_notification` (`basis: "record"`, citing the real working-copy id) on one of the three 3260 questions. Re-list: that question is gone from both sections; `check_answer` from the asking agent confirms the actual answer text was delivered.
+- **3263** (asker stopped, question not lost) — observed for free: the reaping described under Seeds moved every Math Test Project fixture agent to `status: stopped` between asking and listing, and every one of their questions remained fully listed throughout (title, agent id, checkout). This is arguably stronger evidence than a deliberate `stop_agent` call, since it demonstrates survival through the same unannounced-death path the criterion's own reasoning names ("an agent is restarted whenever its harness reconnects... so this is the ordinary case").
+- **3264** (escalated does not look unhandled) — `escalate_question` on one of the three questions. Re-list: it moves out of "Needs your attention" into "Waiting on the user", keeps its id, gains `sent up because: <reason>`, and the section headings match `MainAgentMapper` exactly (`"Needs your attention"` / `"Waiting on the user"`).
+- **3268** (nested question preserves original link) — a coding agent asks an "original" question; a main-role agent asks a "nested" one that names the original's id in its text; escalate the nested one. `list_notifications` shows both, the original still under "Needs your attention" naming the coding agent, the nested under "Waiting on the user" naming the main agent and the original's id. `list_user_questions` as the coding agent shows only the original, not the nested one (per-asker scoping holds even with a live nested question in flight).
+- **3269** (chain resolves only its own blocker) — two independent coding agents each ask their own question ("Deployment target" / "Receipt retention" analogue). Answer only the first via `answer_notification`. `check_answer` on the second, both before and after, reads "Still waiting on the main agent" throughout — completely unaffected — while the first now returns its answer and has dropped off `list_notifications`.
+- **3265** (guarded turn admission) and the **task-linkage/`start_task` half of 3268/3269** — see Setup Notes; not reachable from outside the spex harness on this pass.
 
 ## Result Path
 
-Findings are filed live via `create_issue` as you find them; final verdict via `submit_qa_result`. No result.md — the harness doesn't read it.
+No `result.md`. Findings via `create_issue`; outcome via `submit_qa_result` on task `007a19f5-aeb1-4032-b3c8-48155c265836`.
 
 ## Setup Notes
 
-**Do not escalate a question against the sandbox project expecting it to land on qa@codemyspec.local.** The sandbox's harness (and every local harness on this dev box) authenticates with the single shared deploy key in `envs/dev.env`, which resolves to the real account owner (`johns10@gmail.com`, user id 1) — not the QA fixture user. `escalate_question`/`ask_user_question` write `question_requests.user_id` from that resolved scope, so **any escalated question — regardless of which project it's nominally on — lands in the real production owner's real `/app/notifications` inbox.** Confirmed 2026-09-12 by checking `question_requests` directly after escalating on the sandbox harness. This is the same class of leak already tracked as issue `08d4d7bd` (there, `ask_user_question` specifically); this session confirms it also applies to `escalate_question`.
-
-Two consequences for whoever runs this brief next:
-- If you escalate anything for real, **close it immediately** with `answer_question({ question_id, answer, basis = "record" })` (any real story title in the answer text satisfies the check) — this calls the exact same `Notifications.answer_question_request/2` the human inbox's own answer form calls, so it cleanly removes the entry from the real owner's UI. Verify with a read-only `psql -qtA code_my_spec_dev -c "select status from question_requests where id = '<id>';"` — expect `answered`.
-- **3267 cannot be verified against qa@codemyspec.local as things stand.** Testing it for real means putting a live entry in the actual product owner's actual inbox, which needs his sign-off, not a QA session's own judgement call. Treat this criterion as `partial` unless that consent is obtained, or unless someone fixes the sandbox's account isolation first.
-
-For 3265, no exposed tool creates a lone main-role agent on a throwaway working copy. Either accept `partial` here too, or (with the project owner's buy-in) exercise it against a checkout that already runs a main agent.
+- **3265 is spex-only and stays that way.** Every scenario asserts on `CmsHarnessTest.Machine.status/1` (`busy?`, `queued`) and `HeldProvider.seen()` — whether a real turn/HTTP request to the model was or wasn't started by the admission path. There is no external surface that observes "did a turn start" independent of watching the actual engine process; QA has no access to `Machine`/`HeldProvider` outside the test harness. This matches the QA plan's own rule: "GenServer state / process internals: there is no QA surface here."
+- **The task-linkage half of 3268/3269 is spex-only for this pass, not for the story.** `AskUserQuestion`'s `task_id` blocking behavior is real and callable — the gap is entirely on the *setup* side: getting a story to a state where `start_task` can legitimately claim `bdd_specs_exist` requires `three_amigos_complete` first, and every story on both sandboxes has that unsatisfied (`list_requirements({requirement_name: "three_amigos_complete", status: "satisfied"})` returned zero rows on QA Fixture Project). Running a real Three Amigos session live is an open-ended, LLM-driven interview — disproportionate to mint for this pass. Spex covers this with `ProjectStateFixtures.apply_project_kickoff/1` and `apply_three_amigos_for_story/3`, fixtures built specifically to skip that cost; QA instead verified everything about 3268/3269 that does not depend on a real task existing (attribution, coexistence, per-asker scoping, and answer-isolation between two independent blockers), which is the bulk of what's novel in both criteria.
+- **3267 was not re-driven live this pass.** Its own moduledoc states it is "green on arrival... not because it was built for [this story]" — pure regression coverage of `Notifications.create_question_request/2` + `/app/notifications`, orthogonal to `CodeMySpec.MainAgent`. Nothing touched by 3260–3266/3268–3269's implementation intersects it (confirmed by reading `NotificationLive.Index` and `Notifications.list_pending_notifications/1`, which filter by `user_id` alone and never reference `holder`, `agent_id`, or the new `OpenQuestion` struct at all). Reproducing it live would mean minting a second project under one real owner purely to reconfirm pre-existing, unrelated LiveView behavior. Spex-covered; flagged rather than re-verified.
+- Ids from this pass are all spent (each was asked once and is either answered or escalated): Math Test Project — `d69f73ea-787a-4e78-9ed0-4b610f0cee75` (answered), `1b03c568-4af8-42a6-9363-60919f17a46a`, `99d8418f-c9f5-4734-9655-f68d8d3eb94f` (pre-existing), `4e713331-b5cc-40ff-80ae-b841a268a6f6` (escalated). QA Fixture Project — `5b2ef0bb-3555-410f-9451-9ff0290e7ee9`, `55cfe047-dfab-4e4c-bc1f-578483ac7094`, `a23e9909-7f5c-4c1f-bd34-3659035b77d5` (3268 original), `62f3e8c0-013c-4170-8421-f1f78a50ab1e` (3268 nested, escalated), `99d0e9fe-2994-49db-83ce-6b572f7147c3` (3269, answered), `25a2667a-f8d7-44b6-9718-8fb80ae5695f` (3269 neighbor, deliberately left unanswered — reusable as a control for a future pass if still pending).
+- QA Fixture Project's "Waiting on the user" section is now 16 entries deep, most of it leftover from stories 1004/1009/1017/896 — none of it blocks reading this pass's evidence (grepped by id throughout) but it is getting hard to eyeball. Flagged as a `scope: qa` issue rather than touched.
