@@ -62,6 +62,42 @@ in behaviour, and the reason should not have to be inferred from how it acts."*
 When the guide is **missing** it says nothing at all. The exact failure it was written
 to prevent happens silently.
 
+## When the agent never ran
+
+The failure that looks most like a behavioural finding and is not one.
+
+Measured 2026-09-20 on criterion 3539. It reported `0 of 1 runs (0%)` with
+`run 1: called nothing at all`, and the suite finished in **1.1 seconds**. That
+number is the whole diagnosis: a turn against a real model cannot happen that
+fast, so no agent ever ran and the run said nothing about conduct.
+
+The cause was the premise. `request_turn/2` enabled continuous mode and checked
+only that the call had not errored — but `set_agent_continuous` succeeds two
+different ways. It may admit a turn, or it may set the standing intent and find
+nothing to offer: no eligible work for that role on that copy, mid-turn, or
+holding an undispositioned task. In the second case the agent never runs, no
+tool calls exist to find, and the criterion reports it exactly as it would
+report an agent that looked at the work and walked away.
+
+Here the graph's only actionable requirement was `code_on_running_copy`, whose
+`execution_type` is `main_agent`. The scenario was measuring a **coding** agent,
+so there was nothing for it, and the fixture had satisfied the component's
+implementation itself by writing both the spec and the implementation file.
+
+Two things came out of it, and both are the general lesson:
+
+- **A helper that establishes a premise must fail loudly when the premise does
+  not hold.** `say/2` already did — its comment records criterion 3543
+  reporting `0 of 3` in 28 seconds from three agents that were never spoken to.
+  `request_turn/2` did not, so the same class of fault survived one function
+  over. Both now flunk with the reason rather than returning quietly.
+- **Say what the graph actually offered.** The premise failure now quotes
+  `get_next_requirement`'s own answer, so the message names the requirement and
+  its `execution_type` instead of leaving you to re-run and guess.
+
+If a run produces no tool calls, do not reach for the prompt. Ask whether the
+agent ran at all, and let the clock answer first.
+
 ## Before you conclude anything
 
 Read the composed prompt. Read the ordered tool calls, not the agent's narration of

@@ -31,6 +31,29 @@ the start.
 Each rung is a decision to keep going. A criterion that is wrong, or a product bug,
 shows up on run 1 — and finding it there costs one run instead of ten.
 
+## Read the transcript. Every iteration, not just the confusing ones
+
+A rate tells you *that* the agent did not do the thing. It never tells you why,
+and why is the only part you can act on. So every time round the ladder, open
+the run and read what the agent actually did — the ordered tool calls with
+their arguments, and what it said between them.
+
+The summary line is not a substitute. `called nothing at all` fits three
+completely different situations:
+
+- the agent ran and chose to do nothing
+- the agent ran and the criterion did not recognise what it did
+- **the agent never ran**
+
+Only the transcript separates them, and the first eval run on this project was
+the third case — a premise that silently did not hold, scored as the agent
+declining work it had never been offered. See
+[diagnosing](diagnosing.md#when-the-agent-never-ran).
+
+Check the wall clock while you are there. A turn against a real model takes
+seconds to minutes; a "failure" that completed in about a second did not
+happen. That number is free and it is the fastest tell there is.
+
 ## Debugging runs are discarded
 
 **The runs you iterated against are not the measurement.** If you tuned the prompt
