@@ -1,58 +1,156 @@
-# Qa Story Brief
+# Qa Story Brief: 1012 — The main agent sees what each of its agents is working on
+
+Rewritten 2026-09-20 against the current criteria (3270–3300; the previous
+brief predates the 2026-09-19/20 rewrite and is superseded).
 
 ## Tool
 
-`mcp__plugin_codemyspec_local__run_script` (Lua) calling `list_agent_work({})` and `check_in({})`.
+`.code_my_spec/qa/scripts/qa_as_agent.sh` (MCP, code-mode `run_script` +
+direct tool calls) plus `psql` against `code_my_spec_dev` for fixture setup
+that has no tool surface (backdating timestamps, toggling
+`working_copies.machine_tools`, inserting/clearing `problems` rows).
 
-This is the real production surface: `run_script` executes against `CodeMySpec.McpServers.ScriptableTools`, the same MCP component registry mounted on the local harness's `4004/mcp` endpoint (see `lib/code_my_spec/mcp_servers/scriptable_tools.ex:148`, `lib/code_my_spec/mcp_servers/local_server.ex`). `ListAgentWork.execute/2` is the tool the story names as the API (see spex criterion 3270 moduledoc). Calling it via `run_script` is the ergonomic, schema-validated path the QA plan recommends over raw curl where the agent's own MCP client tools reach the surface.
-
-Equivalent raw curl (documented for completeness, not needed since `run_script` reaches the same code path):
-```
-curl -s -X POST http://localhost:4004/mcp -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -H "X-Harness-Id: $ID" -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_agent_work","arguments":{}}}'
-```
+This story's surface is `list_agent_work` (`CodeMySpec.McpServers.MainAgent.Tools.ListAgentWork`,
+rendered by `CodeMySpec.McpServers.MainAgent.AgentWorkMapper`) — a code-mode
+MCP tool on the local server (`:4004/mcp`), not a LiveView page. No browser
+tool is needed for this story.
 
 ## Auth
 
-None needed — this session's `run_script` tool is already bound to this project's harness (`X-Harness-Id` resolved automatically by the local MCP client). No login flow involved.
+No user login needed — this is the local harness surface, scoped by
+`X-Harness-Id`. Use the QA wake fixture's own harness id (math_test_project's
+`.cms_harness.json`), not this worktree's:
+
+```
+export QA_WORKTREE=/Users/johndavenport/Documents/github/math_test_project
+SCRIPT=.code_my_spec/qa/scripts/qa_as_agent.sh
+$SCRIPT <agent-id> <tool> '<json-args>'
+```
+
+`list_agent_work` and `check_in` read off the harness's project scope and
+ignore the caller identity, so any agent id on that project works as the
+`<agent-id>`. Tools that need a specific caller (`start_task`,
+`get_next_requirement`, `tap_out`, `ask_user_question`, `stop_agent`) must be
+called as the specific fixture agent whose identity the scenario needs.
 
 ## Seeds
 
-None. Testing was done against the **live, real fleet already running on this CodeMySpec dev project** — not the QA fixture project — because the story's subject (a fleet of registered coding/qa/product/main agents spread across several real working copies, with real tasks, real silences, real tapped-out states, and real working-copy problems) already existed naturally and gave better evidence than a synthetic fixture would. See Setup Notes for why, and for the induction plan used for the states that were not naturally present.
+```
+cd /Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator
+mix cms.seed priv/repo/qa_wake_seed.exs
+```
+
+Idempotent; gives four running agents on math_test_project (project
+`d7f466a1-591e-4f36-8319-42633f59411e`, working copy
+`56f5bf62-9cf8-400d-abcd-6c796afd3437`):
+
+- coding: `25d67c11-f590-4e8e-a00d-6d3fb6bf08eb`, `59596b8a-1a5d-44b8-8f38-9bf1b570442d`
+- product: `e9dce99a-9512-457d-b613-3baa49c387a7`
+- main: `4e98e2a8-f674-4a10-9592-a1468e4b64ac`
+
+**The reap race is real and tight.** `Agents.record_running_on_copy/3` reaps
+any row claiming `:running` with no live process behind it, and on this box
+that happens roughly every harness report cycle (~30s). A `status='running'`
+SQL flip followed by anything slower than a couple of curl round trips (a
+`mix cms.seed` invocation, a multi-step script) loses the window and the next
+`list_agent_work` shows the agents `:stopped` again. Structure each capture
+as: **one** `psql` `UPDATE agents SET status='running' ...` immediately
+followed by the `list_agent_work` call, in the same shell invocation, with no
+slow steps between them. State-setting calls (`start_task`, `ask_user_question`,
+`tap_out`, backdating) don't need the agent to be `:running` — `fetch_agent`
+doesn't check status — so do all of that first and only worry about the race
+for the capture itself.
+
+**This fixture is shared with concurrent QA passes** (siblings ran stories
+1009/1011/1017 against the same rows in this session). Pending questions and
+tap-outs from other stories' fixtures accumulate on these agent rows because
+`qa_wake_seed.exs` only resets `status`/`continuous`/`turn_started_at`/`tasks`
+— it does not touch `permission_requests` or `question_requests`. Treat any
+pre-existing `blocked on: ...` line as possibly not yours; it's still valid
+evidence for this story's criteria (a real unanswered question is a real
+unanswered question), just don't assume you created it.
+
+**Only one actionable requirement exists in this fixture project**
+(`personas_complete`, product role, `project` entity, `execution_type:
+main_agent`) — claim it with `start_task` on the **product** agent to get a
+genuinely named, graph-backed task. Coding-role work is empty by design (see
+`qa_wake_seed.exs`), which is also the real, unforced "nothing to do" case for
+3272/3298.
 
 ## What To Test
 
-For each criterion, call `list_agent_work({})` via `run_script` and inspect the rendered text against the live fleet (currently 11 registered agents across ~5 working copies of this project). Where the live fleet does not naturally exhibit a state, induce it on a throwaway working copy (`create_working_copy`) and offboard it afterward.
-
-- **3270** — one call must list every agent with named work. ✅ confirmed live: one `list_agent_work` call returned all 11 agents (`main`, `coding`, `product`, `qa` roles) spanning 5 different working copies.
-- **3271** — work is named with the story title, not just the requirement id. ✅ confirmed live: coding agent `0067d652` shows `task: code_on_running_copy — "New user reaches a working app state without seeing the account picker"` — both the pipeline step and the actual story title.
-- **3272** — idle and broken (toolless) read differently, both with a reason. ✅ **PASS (retest)** — a new dev-only route landed (`POST /dev/copies/<working_copy_id>/machine_tools {"tools":[]}`) that writes exactly what a real harness join would write, scoped to one working copy, without touching any shared machine's actual MCP client. Confirmed live: created a dedicated throwaway working copy on the QA Fixture Project (`fc242ffd-e379-4f7e-be00-d596aec38b8c`, qa-role agent `f36a24b7-8d7b-4370-bb01-deef655c72e9`), baseline read `nothing to do: the graph holds no work for its role`. Blanked its tools via the dev route, then `list_agent_work` showed that same agent as `cannot work: its machine reports no tools, so every tool call it makes will fail` — the exact string `AgentWorkMapper.holding/1` emits for `AgentWork.toolless?/1`, and visibly distinct wording from the idle case. In the same call, five other agents already running on this project's shared root copy (`1fc425f5-...`) still read `nothing to do:` — untouched, confirming the fault is scoped to the one working copy and didn't bleed onto copies other concurrent sessions were using. Working copy offboarded afterward, which clears the fault (no fault survives a copy's own removal).
-- **3273** — one call spans every working copy of the project, not just the asking checkout. ✅ confirmed live: the single call above already spanned 5 different `working_copy_root`s.
-- **3274** — an agent silent a long time with a held task is not reported as "working on X", but the silence is visible. ✅ confirmed live: coding agent `0067d652` has held `code_on_running_copy` since `15:16:57Z` and last said something at `15:19:14Z` (~3h20m of silence as of this check) — the view shows `last said:` (satisfies the positive assertion) and never says "working on"/"currently working on" (satisfies the negative assertion).
-- **3275** — the view reports parts (open task, last said, blocked-on, in-flight), never a verdict word (stalled/stuck/dead/healthy/unhealthy). ✅ confirmed live: none of the 11 entries contain any verdict word; all use the four labelled parts.
-- **3276** — task-opened and last-said are two distinct, separately-labelled clocks. ✅ confirmed live: agent `0067d652` shows `task opened: 2026-09-12T15:16:57` and `last said: 2026-09-12T15:19:14` — present, labelled, and different.
-- **3277** — an agent waiting on an answer shows the question's own text. ✅ **PASS (retest)** — the QA Fixture Project moved to its own account (`qa-account` / `qa@codemyspec.local`, user 14) since the prior attempt, so `user_id` on a question request now resolves to the sandbox owner instead of John. Confirmed live end to end: called `ask_user_question` directly against the sandbox's own harness (`1fc425f5-7b88-4e32-86a3-c16c3317408c`, project `11111111-1111-4111-8111-111111111111`) — question id `c04375bf-33e7-4daf-b056-01d2675279de`. `psql` confirmed `question_requests.user_id = 14`, `status = 'pending'`. Logged in as `qa@codemyspec.local` via magic link, landed on `/app` with QA Account/QA Fixture Project already active; the question rendered correctly at both `/app/notifications` (pending, with its own text) and `/app/questions/:id` (full form with the real options), not "not found or not authorized". Answered it through the UI (`Blue`); `psql` confirmed `status = 'answered'` with the recorded answer. No permanent inbox residue.<br>One thing this retest could **not** independently exercise: attaching the question to a specific agent's `agent_id` (which is what makes `list_agent_work` show "blocked on" against that agent's own row) requires the question to be raised *by* a real running agent's turn, and both sandbox coding/product agents currently fail every turn with a codex/OpenAI backend error unrelated to this story (filed as `46b1b0f1-6ad3-4087-96f3-530d68bcdfc0`, scope: framework). That half of the mechanism is unchanged from the prior attempts and remains verified by source only (`WorkRepository.open_questions/1` queries `q.agent_id in ids and q.status == "pending"` — read directly, not new this session). The part that was actually in question — whether firing this live would notify the right person — is now proven, not just argued from source.
-- **3278** — a tapped-out agent shows the tap-out and no fault language. ✅ confirmed live and unprompted: product agent `780b1159` on this very worktree shows `blocked on: tapped out — it asked to leave the loop and a person has not answered yet`, with none of stalled/stuck/dead/not responding/fault present.
-- **3279** — a long silence with an open turn (`in_flight`) is not read as a stall. ✅ **PASS (retest)** — issue `b48aa9e8` fixed (`announce_turn_start` now fires in `Engine.start_turn/5`, symmetric with `announce_turn_end`). Confirmed live: `in flight:` now reads `a turn opened <timestamp> and has not finished` while a real turn is open, and reverts to `nothing — no turn is open` the moment it closes.
-- **3297** — an agent mid-response shows work in flight (the `in flight:` line says something other than "nothing"/"none"/"no turn"). ✅ **PASS (retest)** — same fix. Confirmed live via a throwaway working copy's coding agent: three separate real turns (via `message_agent`) each produced their own `turn opened ...` reading, polled at the 4004/mcp endpoint through `run_script` (list_agent_work moved to code-mode-only, so the tool must be called that way, not as a bare `tools/call`). Also confirmed the case the fix's author flagged as open: a second message sent while the first turn was still running (queued behind it) got its **own** `turn opened` announcement immediately after the first turn closed — back-to-back turns do not collapse into one announcement or read as idle in between. See Setup Notes for the retest procedure.
-- **3299** — a coding agent's working-copy problems (with detail, not just a count) are shown against it. ✅ confirmed live: QA agent `fdc75092`'s checkout carries 146 real `mix test` failures, printed in full (file, message, stacktrace) against that agent's row.
-- **3300** — a clean copy says so, and doesn't inherit another copy's problems. ✅ confirmed live: on the same call, agents on other checkouts (`93bdde5a`, `524295bc`, etc.) show `problems on this copy: none — it is clean` rather than the 146 failures from the dirty copy, and rather than being left blank.
+- **3270/3273 (one view, whole-fleet question answerable):** call
+  `list_agent_work` as any agent on the project; confirm every running agent
+  appears in a single response, not one call per agent.
+- **3271/3275 (named work, parts not a verdict):** `start_task` on the product
+  agent for `personas_complete` (`entity_type=project`,
+  `entity_id=d7f466a1-591e-4f36-8319-42633f59411e`). Confirm the listing shows
+  `task: personas_complete` plus a separate `task opened: <ts>` line — a name
+  and a timestamp, not a computed status word. Confirm no field anywhere
+  collapses multiple facts into one verdict (no `stalled`/`healthy`/`stuck`
+  string appears anywhere in the output).
+- **3272 (idle vs. broken don't look alike):** with an agent holding no task,
+  confirm it reads `nothing to do: the graph holds no work for its role`.
+  Then `UPDATE working_copies SET machine_tools = '{}' WHERE id =
+  '56f5bf62-...'` and recapture: the same agent now reads `cannot work: its
+  machine reports no tools, so every tool call it makes will fail`. Restore
+  `machine_tools` afterward (snapshot the 85-tool array before clearing it).
+- **3274 (stopped is not shown as working):** `stop_agent` (direct tool, not
+  `run_script`) on a coding agent that currently has a pending question and an
+  old `last said`. Recapture `list_agent_work` and confirm that agent is
+  entirely absent from the listing — not present with stale facts, just gone.
+- **3276 (task opened an hour ago, quiet 45+ min):** after claiming
+  `personas_complete`, backdate the task's `started_at` inside the agent's
+  `tasks` jsonb array (`UPDATE agents SET tasks = ... jsonb_set(...,
+  '{started_at}', to_jsonb(now() - interval '70 minutes'))`). Confirm both
+  `task opened:` and `last said:` print as absolute timestamps a reader can
+  do the arithmetic on — the tool does not compute or print "45 minutes ago"
+  itself (by design; see `AgentWork` moduledoc on why there's no `status`).
+- **3277 (waiting on an answer says so):** `ask_user_question` as a coding
+  agent (or reuse a pre-existing pending one from the shared fixture).
+  Confirm `blocked on: an unanswered question: "<verbatim text>"`.
+- **3278 (tapped out ≠ stalled):** `tap_out` (direct tool) as one agent.
+  Confirm `blocked on: tapped out — it asked to leave the loop and a person
+  has not answered yet`, distinct wording from the unanswered-question line,
+  visible in the same capture as a plainly-silent agent for contrast.
+- **3279 (long silence + live connection ≠ stall):** an agent with a
+  `last said` days in the past that is still `:running` and still listed
+  (i.e., present in the fleet at all, with no tapped-out/blocked marker) is
+  the evidence — the system doesn't invent a stall label for it.
+- **3297 (mid-response shows work in flight):** call
+  `CodeMySpec.Agents.record_turn_event(scope, agent_id, %{"kind" =>
+  "turn_started"})` via a one-off `mix cms.seed <script>` (there is no MCP
+  tool for this — it's normally driven by the harness's websocket channel).
+  Confirm `in flight: a turn opened <ts> and has not finished`, shown
+  alongside whatever else is true of that agent (task, tapped-out, etc.) as
+  independent lines.
+- **3298 (nothing to do says exactly that):** already covered by 3272's idle
+  case — verbatim string `nothing to do: the graph holds no work for its
+  role`.
+- **3299/3300 (working-copy problems shown / clean shows none):** insert two
+  rows into `problems` keyed to the working copy id; confirm `problems on
+  this copy: N` with per-problem `[source] path:line message` lines on every
+  agent on that copy. Delete the rows; confirm `problems on this copy: none —
+  it is clean`.
 
 ## Result Path
 
-No result.md — findings go through `create_issue` + `submit_qa_result` per the harness's discipline (see task prompt). Screenshots/evidence, if any, live in `.code_my_spec/qa/1012/screenshots/`.
+No `result.md`. File findings with `create_issue` as you find them and close
+the pass with `run_script({ script = "return submit_qa_result({...})" })`
+per `qa_story/workflow.md`.
 
 ## Setup Notes
 
-**Why the live project instead of the QA fixture project:** the QA fixture project (`11111111-...`) has no registered fleet of its own to observe. This story's subject — several real coding/qa/product/main agents, spread across several real working copies, with real held tasks, real silences, a real tapped-out agent, and real working-copy problems — already existed on the live CodeMySpec dev project this session is part of, and produced far better evidence than a synthetic single-agent fixture would. All calls made were read-only (`list_agent_work`), so this carries none of the mutation risk the QA plan warns about for the sandbox-only rule (that rule is about writing MCP tools — `create_story`, `ask_user_question`, etc. — not about read-only listing tools).
-
-**How 3279/3297 were originally found broken:** stood up a throwaway working copy (`create_working_copy`, roster `coding`), waited for its harness to connect (checked `~/.codemyspec/harness.log`), then gave its coding agent a long, tool-free generation task via `message_agent`. `message_agent` itself reported "the agent is still working on it — turns can outlast the wait" (its own busy-tracking correctly saw an open turn), while a tight curl-based poll of `list_agent_work` against the local `4004/mcp` endpoint (~90 samples, ~200ms apart, spanning the whole generation) never once showed anything but `in flight: nothing — no turn is open`. Traced the gap to source (see criterion 3297 row above) and filed it as `b48aa9e8`.
-
-**Retest of 3279/3297 (this session), after `b48aa9e8` was fixed and both the app and harness were promoted/refreshed onto the fix:** repeated the same shape of test — a fresh throwaway working copy (`qa-1012-retest-turnstart-2`, roster `coding`), its coding agent messaged via `message_agent`. `list_agent_work` is now code-mode-only (a bare `tools/call` for it returns a redirect message telling the caller to use `run_script`), so the retest polled by wrapping `list_agent_work({})` inside `run_script` calls made over the `4004/mcp` endpoint, once per poll. Result: `in flight:` correctly read `a turn opened <ISO8601> and has not finished` for the full duration of each real turn, and reverted to `nothing — no turn is open` immediately on close. An accidental double-fire (an earlier backgrounded attempt kept running under `nohup` after its parent shell appeared to exit, so two message-sending runs overlapped) turned into a useful extra check: it produced three real turns in quick succession, including a message sent while the previous turn was still open (so it queued behind it) — and that queued turn's start was announced independently the moment it began, exactly matching the fix author's note that `announce_turn_start` does **not** mirror `announce_turn_end`'s "stay quiet while queued" guard. Working copy offboarded afterward.
-
-**3272's broken/toolless half is now closed out.** Earlier attempts (this one included, initially) left it unexercised because the only known way to make a harness report an empty tool list was breaking a shared machine's real MCP client. team-lead supplied a dev-only route that writes the same DB state (`machine_tools = []`) directly, scoped to one working copy, with no live harness or shared client involved — see the row above for the live result. Key semantics worth recording for the next QA pass: `[]` and `nil` are different (only `[]` with at least one agent on the copy triggers `toolless?/1`); the fault is per-working-copy and compares only within one project's own copies; the next real harness join overwrites it, and offboarding the copy removes it outright, so there was nothing to clean up beyond the throwaway copy itself.
-
-**3277 now passes.** The QA Fixture Project moved to its own account today (`qa-account`), which changed what `ask_user_question`'s `user_id` resolves to when fired against the sandbox's own harness — the real project owner is no longer on the other end. team-lead flagged this explicitly and pointed at qa-1011's earlier end-to-end proof of the same routing change. Repeated that proof for this story: raised a real question against the sandbox harness, confirmed `question_requests.user_id = 14` via `psql`, logged in as `qa@codemyspec.local`, confirmed it rendered at `/app/notifications` and `/app/questions/:id`, answered it through the UI, confirmed `status = 'answered'`. See the row above for the one part this couldn't independently reach (agent-attributed `blocked_on`, blocked on an unrelated codex/OpenAI failure on this account's coding/product agents, issue `46b1b0f1`) — that part is unchanged from prior attempts and remains a source-verification, not a live one.
-
-All 14 criteria now pass. The earlier `scope: qa` issue (`c37a01a3-53d8-44cd-a4e1-84eacc33aca1`) that recorded 3272/3277 as not-safely-inducible is now moot — both were closed out live this session — and was already dismissed by the time this was checked.
-
-**Independent re-confirmation of 3272's broken half (separate QA session, same day):** repeated the dev-route induction on a second, unrelated throwaway working copy on this project (not the QA Fixture Project) — `create_working_copy` → coding agent `99dda1c3-51c6-46bd-8365-c0a41112c2a6` on copy `eb93f06f-566e-4db8-8582-6ceaa09e2de2`, baseline `no task claimed, and the graph does hold work for its role`. After `POST /dev/copies/eb93f06f.../machine_tools {"tools":[]}`, `list_agent_work` showed that agent as `cannot work: its machine reports no tools, so every tool call it makes will fail`, and `check_machinery` correctly attributed the fault to `{:agents, [99dda1c3-...]}` rather than `:machine` — worded as "the machinery is working — other agents on this project are calling tools normally. These are not: [...] The fault is theirs rather than the machine's." Every other agent on the project kept reading `nothing to do:` / normal states throughout, confirming the fault stayed scoped to the one copy. Working copy offboarded afterward. Two independent inductions, two different working copies, same passing result.
+- `check_in` (the MCP tool) is **not** this story's surface. Its non-failure
+  path only triggers `CodeMySpec.Agents.Work.consider_project/2` and returns
+  a static confirmation string — it does not render or deliver
+  `CodeMySpec.MainAgent.CheckInReport`, which is unwired dead code belonging
+  to story 1059 (see its own moduledoc: "Story 1059, criterion 3332"). Filed
+  as a separate issue, attributed there, not to 1012. `list_agent_work` alone
+  is sufficient for every one of 1012's fourteen criteria.
+- Restore `working_copies.machine_tools` and delete any fixture `problems`
+  rows you add before finishing — nothing else in this fixture's reset path
+  touches either.
+- End the pass by re-running `mix cms.seed priv/repo/qa_wake_seed.exs` to
+  cancel any `:active`/`:blocked` tasks you created and put the four agents
+  back to a clean `:running` baseline for the next QA pass.
