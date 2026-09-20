@@ -41,16 +41,6 @@ Then the cached answer holds the same requirements as the computation it came fr
 - A story arriving brings its requirements with it
 - A component going away takes its requirements with it
 - An analyzer finishing costs nothing for the components it found nothing in
-- A finding swapped for a different one is a different answer
-- An analyzer that finds the same problems again costs nothing
-- An issue filed against one story leaves the other stories alone
-- An entity that produced nothing is not reconsidered on the next pass
-- A container left empty by configuration still carries its children's requirements
-- An observation nothing knows how to apply is recomputed rather than dropped
-- A requirement the observation moved is not left carrying the old answer
-- A requirement settled by an observation reads like one that was recomputed
-- An answer that agrees while explaining itself differently is a difference
-- A story released for development brings its requirements with it
 
 ## BDD spec files
 
@@ -69,22 +59,8 @@ Then the cached answer holds the same requirements as the computation it came fr
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3421_one_storys_observation_leaves_another_storys_answer_alone_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3423_a_reader_is_not_made_to_recompute_a_graph_nothing_has_touched_spex.exs`
 - `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3424_an_observation_recomputes_what_it_touched_and_leaves_the_rest_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3426_a_file_changing_reconsiders_the_requirements_that_file_answers_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3427_a_requirement_records_what_it_was_computed_from_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3428_satisfying_one_requirement_makes_the_next_one_available_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3429_a_story_arriving_brings_its_requirements_with_it_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3430_a_component_going_away_takes_its_requirements_with_it_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3448_an_analyzer_finishing_costs_nothing_for_the_components_it_found_nothing_in_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3472_a_finding_swapped_for_a_different_one_is_a_different_answer_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3473_an_analyzer_that_finds_the_same_problems_again_costs_nothing_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3476_an_issue_filed_against_one_story_leaves_the_other_stories_alone_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3489_an_entity_that_produced_nothing_is_not_reconsidered_on_the_next_pass_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3490_an_emptied_container_still_carries_its_childrens_requirements_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3493_a_requirement_the_observation_moved_is_not_left_carrying_the_old_answer_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3496_a_story_released_for_development_brings_its_requirements_with_it_spex.exs`
 
 ## Linked component: Requirements
 
@@ -100,16 +76,16 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_resend.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/announce_device.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_github_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_google_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_spine.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/stripe_get_subs.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_github.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_google.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_resend.sh`
 
 ## Required reading: QA plan
 

@@ -2,7 +2,45 @@
 
 **Story owner:** John (CodeMySpec)
 **Filed:** 2026-05-23
-**Status:** 5 of 9 rules shipped, 4 open
+**Status:** 7 of 12 rules shipped, 5 open
+
+## 2026-09-12 update — cross-checked against an external CRO diagnostic
+
+An outside CRO diagnostic ("Amplified Growth", dated 2026-08-01) independently
+audited the funnel from GA4/GSC data alone, no code access. Cross-checking its
+findings against this repo:
+
+- **Its D2 finding ("`sign_up` re-fires on returning OAuth logins")** — already
+  false. Rule 1 below has prevented this since `b11c6b77` (2026-05-20),
+  contract-tested in `signup_analytics_test.exs`. The diagnostic guessed a
+  duplicate-firing cause for an undercount it couldn't otherwise explain;
+  Rule 3 already traced the real cause (silent MP delivery failures, not
+  duplicates). No action taken.
+- **Its D3 finding ("~26 of 68 sign-ups carry `(not set)` source")** — already
+  fixed, but not by anything in this story. `CodeMySpecWeb.Plugs.GaClientId`
+  (story 812, rule `f9b2c751`) stitches the browser's GA client id into
+  server-side Measurement Protocol hits. Worth a follow-up GA4 pull to confirm
+  the `(not set)` share actually dropped, but no new work queued here.
+- **Its D1 + D7 findings ("CTA + service-tier clicks aren't tracked")** — real,
+  and NOT covered by Rules 1-9 (they predate the homepage's CTA work). Added
+  as **Rules 10-11** below. Re-scoped to the *current* homepage — the
+  diagnostic's own CTA description (four "Build/Operate/Grow" buttons) was
+  already stale by the time it shipped; the actual current structure is the
+  `pricing_tiers` component (Build → `/install`, Operate & Grow →
+  `/users/register`, Built with you → `cal_john()`) plus standalone "Start
+  free" / "Talk to John" pairs on `/`, `/install`, `/pricing`, and
+  `/methodology`. **Shipped same day** — see Rules 10-11 status.
+- **Its IA finding ("`/product` unreachable on mobile nav")** — stale.
+  `layouts.ex:712` already lists Product flat in the mobile drawer; the
+  comment at `layouts.ex:463` confirms this was a deliberate fix.
+- **Its D5 finding ("`gtag.js` lazy-load inflates bounce rate")** — real
+  trade-off, but *deliberate*, not an oversight: `root.html.heex` explicitly
+  defers gtag per a 2026-07-10 TBT/performance audit. This is a product
+  decision to revisit with John, not a bug — not queued here.
+- **Its D4/Reddit-UTM-taxonomy finding** — no UTM-building code exists
+  anywhere in this app; normalizing the strings used in Reddit comments is a
+  posting convention, not an engineering fix. Tracked as a `cro_tasks/` item
+  instead of here.
 
 ## Story
 
@@ -354,16 +392,136 @@ Scenario: Bounce diagnosis is achievable from the session record
 
 ---
 
+## Rule 10 — Primary "Start free" CTAs fire cta_click with a stable label
+
+**Why it matters:** The delegated click handler in `assets/js/app.js` fires
+`cta_click` for two cases: an explicit `data-event-label` attribute, or an
+implicit match on hrefs to `/users/register*` / `/products/code-my-spec*`.
+Every "Start free" link on the site points at `/install`, which matches
+neither case — the single most-clicked conversion CTA on the site produced
+zero events. Surfaced by the external diagnostic (D1/FIX002); root cause
+confirmed 2026-09-12 by reading `app.js` directly — no trigger-logic rewrite
+was needed, the handler already supports explicit labels. The gap was purely
+that the CTA markup never carried one.
+
+**Status:** ✅ Shipped 2026-09-12.
+
+### Scenarios
+
+```
+Scenario: Homepage hero "Start free" fires cta_click
+  Given a visitor on / (home.html.heex, hero card)
+  When they click "Start free"
+  Then cta_click fires with event_label "cta-start-free-home-hero"
+  And target_path is /install, source_path is /
+
+Scenario: Homepage final-section "Start free" fires cta_click
+  Given a visitor on / (home.html.heex, closing CTA section)
+  When they click "Start free"
+  Then cta_click fires with event_label "cta-start-free-home-final"
+
+Scenario: Pricing-tier "Start free" fires cta_click regardless of host page
+  Given the shared pricing_tiers component rendered on / or /pricing
+  When a visitor clicks the Build tier's "Start free"
+  Then cta_click fires with event_label "cta-start-free-pricing-tier"
+  And source_path distinguishes which host page it was clicked from
+
+Scenario: Standalone /pricing page "Start free" fires cta_click
+  Given a visitor on /pricing (page-level CTA, not the tier card)
+  When they click "Start free"
+  Then cta_click fires with event_label "cta-start-free-pricing-page"
+```
+
+Implementation: added `data-event-label` to the four "Start free" anchors —
+`home.html.heex` (hero + final), `pricing.html.heex` (page-level), and
+`marketing_components.ex` (`pricing_tiers`, Build tier). No JS changes. The
+Operate & Grow tier's "Get started" (→ `/users/register`) was already
+tracked implicitly — left untouched.
+
+## Rule 11 — "Talk to John" / service-inquiry surfaces fire a distinct event
+
+**Why it matters:** The Calendly link ("Talk to John" / "Build it with me")
+is the $500+ "Built with you" tier — the highest revenue-per-visitor action
+on the site (per the diagnostic's n=3 paying-customer analysis, D7/FIX006).
+It appears on six page surfaces and none carried a tracking label, so there
+was zero visibility into inquiry volume or which page drove it.
+
+**Status:** ✅ Shipped 2026-09-12.
+
+### Scenarios
+
+```
+Scenario: Each service-inquiry surface fires a distinct label
+  Given the six current cal_john() call sites —
+    home.html.heex (split card + final CTA), install.html.heex,
+    pricing.html.heex (page-level), marketing_components.ex (pricing_tiers
+    Built-with-you tier), methodology.ex
+  When a visitor clicks "Talk to John" / "Build it with me" on any of them
+  Then cta_click fires with a label unique to that surface
+    (cta-service-inquiry-home-card, -home-final, -install, -pricing-page,
+    -pricing-tier, -methodology)
+  And source_path plus event_label together identify page and tier
+    unambiguously for the pricing_tiers instance shared by / and /pricing
+```
+
+Implementation: added `data-event-label` to all six anchors. No JS changes;
+no new GA4 custom dimension needed (`event_label` + `source_path` already
+exist as event params on every `cta_click`).
+
+## Rule 12 — `cta_click` survives same-tab navigation on pages where gtag.js is deferred
+
+**Why it matters:** Surfaced 2026-09-12 while researching a "middle ground"
+for FIX011 (John: "research a middle ground" rather than choosing eager-load
+vs. deferred-load outright). `gtag.js` defers to the same `pointerdown` that
+precedes a CTA click on most pages (`root.html.heex` — `/users/register` is
+already a carved-out exception, eager-loaded for the `GaClientId` cookie
+stitch). Before this fix, a same-tab CTA click fired `gtag('event',
+'cta_click', ...)` and let the browser's default navigation proceed
+immediately in parallel — on a fast click-through, the page can unload
+before the deferred script finishes fetching and flushes the queued
+`dataLayer` push, silently dropping the event. This affected every
+`cta_click` sitewide, including the pre-existing `cta-signature-register`
+blog CTA and the implicit `/users/register*` / `/products/code-my-spec*`
+matches — not just the CTAs added in Rules 10-11. Resolves the tension
+between FIX011 (accurate measurement) and the July TBT decision without
+touching page-level load timing at all: only the click-to-navigate moment
+is affected, and only for links that actually race an unload.
+
+**Status:** ✅ Shipped 2026-09-12.
+
+### Scenarios
+
+```
+Scenario: Same-tab CTA click delays navigation just long enough to send
+  Given a tracked CTA link (data-event-label or implicit match)
+  When a visitor plain-left-clicks it
+  Then navigation is held via preventDefault
+  And gtag fires with an event_callback that performs the navigation
+  And a 300ms hard-timeout fallback also performs the navigation, so a
+    blocked or slow request can't strand the click
+
+Scenario: New-tab clicks are untouched
+  Given a tracked CTA link
+  When a visitor middle-clicks it, or clicks with a modifier key held,
+    or the link has target="_blank"
+  Then the click handler still fires the event
+  But does not preventDefault or delay the browser's native new-tab behavior
+```
+
+Implementation: `assets/js/app.js`, delegated click handler. No change to
+`root.html.heex`'s load-timing logic.
+
 ## Acceptance for closing this story
 
 This story closes when:
 
-1. All 9 rules have scenarios that pass executable verification (BDD spec or equivalent).
-2. The 4 open rules (4, 7, 8, 9) have shipped implementations:
+1. All 11 rules have scenarios that pass executable verification (BDD spec or equivalent).
+2. The 5 open rules (4, 7, 8, 9, and re-verification of Rule 10/11 volume in GA4) have shipped implementations or confirmed signal:
    - Rule 4: env-aware gtag measurement ID
    - Rule 7: Reddit-attribution rescue (mobile-app + UTM-stripped)
    - Rule 8: daily reconciliation task
    - Rule 9: page_view fire reliability fixes
+   - Rules 10/11: confirm `cta_click` volume appears in GA4 within 24-48h of deploy
 3. A subsequent daily analytics snapshot reads the funnel end-to-end without requiring `fly ssh console rpc` cross-checks (Rule 8 + Rule 3 combined).
 4. The `(not set)/(not set)` source bucket holds <10% of prod traffic across a 7-day rolling window (Rule 7 verification).
 

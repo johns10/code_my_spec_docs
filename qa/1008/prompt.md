@@ -14,30 +14,17 @@ As an internal agent, I want my tools, registration and in-flight work to surviv
 - Tools come back on their own after a harness restart
 - An agent stopped and started again has its tools
 - Restarting an agent never costs it its tools
+- An interrupted analysis picks itself back up
 - An interrupted agent is told what happened to its work
-- An idle agent is told the harness restarted
+- An idle agent is not told the harness restarted
 - An agent refuses to start without its tools
+- Tools lost mid-life are not survived quietly
 - An agent with working tools starts normally
 - A stopped agent leaves no MCP session behind, so the next one to start under its name is not refused
-- An agent is asked for on a machine serving no tools
-- A restart collides with the agent it just stopped
-- An agent is restarted part-way through a turn
-- The discarded turn leaves nothing claiming to be in flight
 
 ## BDD spec files
 
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3204_tools_come_back_on_their_own_after_a_harness_restart_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3205_an_agent_stopped_and_started_again_has_its_tools_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3206_restarting_an_agent_never_costs_it_its_tools_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3209_an_interrupted_agent_is_told_what_happened_to_its_work_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3210_an_idle_agent_is_told_the_harness_restarted_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3211_an_agent_refuses_to_start_without_its_tools_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3296_an_agent_with_working_tools_starts_normally_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3449_a_stopped_agent_leaves_no_mcp_session_behind_so_the_next_one_to_start_under_its_name_is_not_refused_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3462_an_agent_is_asked_for_on_a_machine_serving_no_tools_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3467_a_restart_collides_with_the_agent_it_just_stopped_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3468_an_agent_is_restarted_part-way_through_a_turn_spex.exs`
-- `test/spex/1051_harness_startup_and_restart_leave_the_agent_working/criterion_3469_the_discarded_turn_leaves_nothing_claiming_to_be_in_flight_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
 ## Linked component: Agents
 
@@ -53,16 +40,16 @@ test and how the feature works.
 
 Reference these by path in the brief instead of inlining commands:
 
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/announce_device.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_github_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/exchange_google_token.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_agents.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_code_mode.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/qa_spine.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/stripe_get_subs.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_github.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_google.sh`
-- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/phx-new-generator/.code_my_spec/qa/scripts/verify_resend.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/announce_device.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_github_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/exchange_google_token.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_agents.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_code_mode.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/qa_spine.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/stripe_get_subs.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_github.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_google.sh`
+- `/Users/johndavenport/Documents/github/code_my_spec/.claude/worktrees/cro/.code_my_spec/qa/scripts/verify_resend.sh`
 
 ## Required reading: QA plan
 
