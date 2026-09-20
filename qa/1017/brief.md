@@ -1,149 +1,159 @@
-# QA Brief — Story 1017: The main agent looks in on its agents on a cadence
+# Qa Story Brief
+
+Story 1017 — "The main agent looks in on its agents on a cadence"
+(`CodeMySpec.MainAgent` cadence/recovery: `Cadence`, `Work`, `Digest`, tap-out).
 
 ## Tool
 
-`mcp__plugin_codemyspec_local__run_script` (the harness-channel tool bridge this
-session carries) for every `cadence`/`check_in`/`list_agent_work`/
-`list_open_questions`/`list_issues`/`accept_issue`/`resolve_issue`/`start_agent`
-call, plus plain `curl` for the two dev-only routes (`/health`, `/dev/faults`)
-and for driving a second, disposable project's MCP endpoint directly (see
-below).
+script + curl
+
+`qa_as_agent.sh` (code-mode `run_script` for scriptable tools; direct call for
+`tap_out`, `ask_user_question`, `start_task`) against the math_test_project
+harness, plus `curl` against the `/dev/faults` seam and `/dev/mailbox`, plus
+the `vibium` CLI (headless) for the one browser-authorized step. The Vibium
+MCP server itself is down this session; the `vibium` CLI substitutes per the
+team's note.
 
 ## Auth
 
-No auth needed for this session's own project
-(708492f9-454e-482f-a2eb-be64f0356b87) — its tool calls are already scoped via
-the harness id baked into `.cms_harness.json`. The two dev routes are
-unauthenticated by design (`:dev_routes`, compile-time absent from the
-release):
+No product login needed for the agent-surface tools — `qa_as_agent.sh` drives
+the harness proxy directly with `X-Harness-Id` + `X-Agent-Id`.
 
 ```
-curl -s http://localhost:4004/health
-curl -s -X POST http://localhost:4000/dev/faults -H 'Content-Type: application/json' \
-  -d '{"key":"<project_id>","fault":"digest_unavailable"}'
-curl -s -X DELETE http://localhost:4000/dev/faults -H 'Content-Type: application/json' \
-  -d '{"key":"<project_id>","fault":"digest_unavailable"}'
+QA_WORKTREE="/Users/johndavenport/Documents/github/math_test_project" \
+  .code_my_spec/qa/scripts/qa_as_agent.sh <agent-id> <tool> '<json-args>'
 ```
 
-For 3334/3335, drive the **QA Fixture Project** (id
-`11111111-1111-4111-8111-111111111111`) directly instead of this session's own
-project, using the sandbox checkout's own harness id (see `.code_my_spec/qa/plan.md`,
-"Sandbox project for MCP-surface SC tests"):
+`QA_WORKTREE` **must** point at `math_test_project`'s own checkout (it has
+its own `.cms_harness.json`) — pointing it at this worktree sends the *real*
+CodeMySpec project's harness id instead and silently returns the wrong
+project's data. Confirmed this the hard way on the first two calls
+(`get_next_requirement`, `list_notifications` both came back with the real
+project's rows) before fixing `QA_WORKTREE`.
 
-```
-SANDBOX=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
-ID=$(grep -o '"harness_id"[[:space:]]*:[[:space:]]*"[^"]*"' "$SANDBOX/.cms_harness.json" | head -1 | cut -d'"' -f4)
-curl -s -X POST http://localhost:4004/mcp \
-  -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" \
-  -H "X-Harness-Id: $ID" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"run_script","arguments":{"script":"return cadence({})"}}}'
-```
+For the one LiveView step (approving a permission), signed in as
+`qa@codemyspec.local` via the magic-link flow (no password is set for this
+user, so `/dev/sign-in` doesn't apply):
 
-`start_agent`/`stop_agent`/`tap_out` are direct MCP tools (not `run_script`-callable);
-call them the same way with `"name":"start_agent"` etc.
+1. `vibium go` to `http://127.0.0.1:4000/users/log-in`, set
+   `#login_form_magic_email` and click "Email me a login link" (via `vibium
+   eval`, not `vibium fill`/`click` — both timed out finding an element that
+   `eval` could see fine; JS-level `dispatchEvent`/`.click()` worked every
+   time).
+2. `curl http://127.0.0.1:4000/dev/mailbox/<message-id>/html`, extract the
+   `/users/log-in/<token>` link, rewrite the host to `127.0.0.1:4000`.
+3. `vibium go` to that URL.
+4. `/app/accounts/picker` → click the `Code My Spec` account link
+   (`a[phx-value-account-id]`, not the enclosing `<li>`).
+5. `/app/projects/picker` → click `Math Test Project`
+   (`a[phx-value-project-id="d7f466a1-591e-4f36-8319-42633f59411e"]`).
 
 ## Seeds
 
-None. This story is about the *running* fleet. This project's live state (12
-real agents, some working, some idle, some blocked on real questions) is the
-fixture for criteria 3317–3333. See `.code_my_spec/qa/plan.md`'s Seed Strategy
-for the general pattern; it does not apply here.
+```
+mix cms.seed priv/repo/qa_wake_seed.exs
+```
 
-**Do not** flip a real agent's continuous flag or tap out a real agent on
-*this* project to force a scenario — that rings the agent's bell or durably
-stands down a project with real in-flight work. For 3334/3335, use the QA
-Fixture Project instead (see above) — it currently holds only idle/blocked
-`main`-role test agents left over from prior QA passes on this and other
-stories, so a stand-down there costs nothing real.
+Targets math_test_project (project `d7f466a1-591e-4f36-8319-42633f59411e`,
+working copy `56f5bf62-9cf8-400d-abcd-6c796afd3437`). Sets four agents to
+`status=running, continuous=true`:
+
+| role | agent id |
+|---|---|
+| main | `4e98e2a8-f674-4a10-9592-a1468e4b64ac` |
+| coding | `25d67c11-f590-4e8e-a00d-6d3fb6bf08eb` |
+| coding | `59596b8a-1a5d-44b8-8f38-9bf1b570442d` |
+| product | `e9dce99a-9512-457d-b613-3baa49c387a7` |
+
+**These rows are reaped back to `status=stopped` on the next harness report
+— observed at ~6 minute spacing via `settle_against/3` log lines in
+`~/.codemyspec/web.log` this pass, not "within seconds" as prior notes
+warned; either way, re-seed immediately before anything that depends on
+`status=running`.** Reads that don't depend on runnable state (`check_in`,
+`cadence`, `list_notifications`, `list_tasks`, `tap_out`, `start_task`)
+are unaffected by the reap and can be run any time.
+
+`GET /dev/faults` / `POST /dev/faults` / `DELETE /dev/faults` (dev-only,
+scoped by `key` = project id or agent id) is the sanctioned seam for
+criterion 3333 (`digest_unavailable`) and the adjacent silent-agent fault
+(`agent_stays_silent`). Always clear an injected fault after use — it does
+not expire on its own.
 
 ## What To Test
 
-Nine criteria. As of this pass (2026-09-13, build `13956c94a`/`b3915b3e0`),
-both defects the immediately-prior attempt (`4eefdc29`) found are fixed and
-verified live:
-
-- **The main agent comes back round on its own (3317)** — `cadence({})`
-  against this project. **Live: `running: yes`** — issue `11aea8f5` (cadence
-  not seeded because every agent, including the running main agent, had
-  `continuous = false`) is resolved: the cadence now also starts whenever a
-  main agent starts, not only from `continuous_project_scopes/0`.
-- **A pushed question does not wait for the next check-in (3318)** —
-  `list_open_questions({})` against this project's real fleet: several
-  genuine questions delivered within minutes of being asked, independent of
-  the cadence timer. Don't manufacture a new question here (permanent inbox
-  clutter on a real project).
-- **An agent that went silent is caught by the check-in (3319)** —
-  `check_in({})` then `list_agent_work({})`: agents last-said 2026-09-02/03
-  (genuinely stale, 10+ days) are enumerated alongside live/blocked ones with
-  role/task/last-said/blocked-on, not silently dropped.
-- **A quiet check-in does not become a notification (3320)** — structural,
-  unchanged by this pass's fixes: `MainAgent.deliver_check_in/2` only ever
-  calls `Agents.send_to_agent/2` (writes `conversation_messages`);
-  `/app/notifications` reads exclusively from `CodeMySpec.Notifications`,
-  untouched by any check-in path. `check_in({})`'s own reply text stays
-  conversation-only across every call this pass.
-- **The interval is set rather than assumed (3331)** — `cadence({seconds=N})`
-  then `cadence({})` to read back; round-tripped 1200→300→1200 live this
-  pass. Durable, per-project (`project_configurations` row).
-- **The wake-up says what is going on (3332)** — `check_in({})`'s reply plus
-  `list_agent_work({})` (which backs the digest) show every agent by
-  role/task/last-said/blocked-on — not a bare "time to check in."
-- **A digest that cannot be assembled is not delivered as an empty one
-  (3333)** — `POST /dev/faults {"key": "708492f9-...", "fault":
-  "digest_unavailable"}`, then `check_in({})`, then `list_issues({status =
-  "incoming"})` to confirm a real issue was raised (this pass: issue
-  `4017c7d4`, "The check-in could not be assembled"). **Clear the fault
-  immediately after** (`DELETE /dev/faults`) and accept+resolve the synthetic
-  issue with a note — it is not a real production problem.
-- **Everybody is through their work and the main agent stands down (3334)** —
-  now live-exercisable, not just code review, using the QA Fixture Project
-  (see Auth). Procedure used this pass:
-  1. `message_agent({agent_id=<an idle role:main agent on the fixture
-     project's working copy>, message="call your tap_out tool now"})`.
-  2. `cadence({})` on the fixture project immediately reads `woken: no — this
-     project has stood down; it is still reachable by question` (`running:
-     yes` — the timer process itself is untouched, only delivery is gated).
-  3. `start_agent({role="main", working_copy_id="1fc425f5-..."})` (any new
-     `role: main` agent) — `cadence({})` immediately flips back to `woken:
-     yes`. This is the live proof of issue `5f9fad45`'s fix:
-     `Cadence.resume/1` now has a caller (starting a main agent), ordered
-     before `ensure_cadence/1`.
-  4. `stop_agent` the throwaway agent afterward to avoid leaving cruft.
-  A **node restart mid-session silently reset the stood-down flag back to
-  `woken: yes`** on the first attempt — expected per `5f9fad45`'s resolution
-  note (the stood-down list is `Application.put_env`, not durable); redo the
-  tap-out if a restart lands between steps.
-- **Tapping out does not make the main agent unreachable (3335)** — same QA
-  Fixture Project, same stood-down window as 3334 step 2. `list_open_questions({})`
-  called *while* `cadence({})` read `woken: no` still listed every one of the
-  fixture project's pre-existing open questions (asked ~3 hours earlier),
-  unaffected. `MainAgent.question_raised/2`'s delivery path never consults
-  `Cadence.running?/1` or the stood-down list — matches spex 3335. (A second
-  attempt to push a *brand-new* question during the stood-down window landed
-  ambiguously across a mid-session node restart, so it isn't cited as
-  independent evidence — the first check is clean and sufficient on its own.)
+- **3320 / half of 3317 (quiet check leaves everyone alone):** with all
+  fleet agents idle (no eligible graph work, no open question held by
+  main), call `check_in` as main. Confirm: `list_tasks` for every agent
+  stays "No tasks.", `list_notifications` count is unchanged, and no
+  agent row's `work_request_id`/`turn_started_at` changes. Repeat — it
+  must be a no-op every time, not just the first.
+- **3317 (positive: admits a turn only for genuinely runnable+eligible
+  work):** find a role with real eligible graph work via
+  `get_next_requirement` (this pass: `product` had `personas_complete`
+  available). Re-seed so that agent is `running`+`continuous`, then call
+  `check_in` immediately and watch for a reservation
+  (`work_request_id`) or a change in response latency versus the
+  all-idle baseline.
+- **3318 (question work reconsidered without waiting for the timer):**
+  `ask_user_question` as a coding-role agent, then immediately (no
+  delay, no cadence tick) call `list_notifications` as main — it must
+  already show under "Needs your attention," not "waiting on the next
+  check."
+- **3319 (silent agent observed, no automatic intervention):**
+  `list_agent_work` as main over a fleet with idle/stopped agents;
+  confirm it only reports state (no restart fires from a read). Every
+  `check_in` response also asserts this in its own text ("no process
+  was started or restarted").
+- **3331 (interval configures checks, not turns):** `cadence({seconds =
+  N})` as main; confirm the report changes and nothing else does
+  (`list_tasks` stays empty, notification count unchanged).
+- **3332 (recovery exposes evidence without selecting a task):**
+  `check_in`'s own response text plus `list_tasks` staying "No tasks."
+  immediately after.
+- **3333 (failed digest stays an observable failure):** `POST
+  /dev/faults {"key": "<project-id>", "fault": "digest_unavailable"}`,
+  call `check_in`, confirm an issue titled "The check-in could not be
+  assembled" (severity high, scope framework) is created — not a silent
+  empty digest. `DELETE /dev/faults` afterward.
+- **3334 (task tap-out is local):** `start_task` for a real requirement
+  to get a task id, `tap_out({task_id = "..."})` on that agent. Confirm
+  the task is now `[blocked]` on that tap-out, while `cadence({})` and
+  the agent's `continuous` flag are unchanged before/after.
+- **3335 (whole-agent tap-out preserves reachability):** `tap_out({task_id
+  = nil})` on an agent with no active task — confirm the response text
+  ("asks to turn off continuous work upon approval") and that a pending
+  permission of `tool_name: "tap_out"`, `task_id: nil` now exists.
+  Approving it and observing `continuous` flip to `false` while the
+  agent stays reachable needs a session belonging to the permission's
+  `user_id` — see Setup Notes.
 
 ## Result Path
 
-DB-backed attempt via `mcp__plugin_codemyspec_local__submit_qa_result`; findings
-via `create_issue`. No `result.md` — the harness does not read one.
+`.code_my_spec/qa/1017/result.md` (evidence only; findings and the pass/fail
+record go through `create_issue` + `submit_qa_result`, not this file).
 
 ## Setup Notes
 
-Prior attempts on this story: `4eefdc29` (fail, 2026-09-13 03:06:36Z —
-`11aea8f5`/`5f9fad45` filed), `b3269eac` (partial, 2026-09-12 22:56:59Z),
-`b7386ca0` (fail, 2026-09-12 15:29:27Z), `7dd4567c` (fail, 2026-09-12
-12:45:43Z) — `list_qa_attempts({story_id=1017})` has the full history.
+**A structural QA-tooling gap, not a story defect:** a `tap_out` permission
+request raised through the local harness is owned by `scope.user.id`, which
+resolves to the real project's account owner (`user_id: 1`), not to
+`qa@codemyspec.local` or any other QA-mintable identity. `PermissionLive.Show`
+refuses anyone else with "Permission request not found or not authorized." —
+confirmed live after correctly switching the QA session to the `Code My Spec`
+account and the `Math Test Project` project. This is the same class of gap the
+plan already documents for locally-asked *questions* (issues `19b0d2d4` /
+`7ba12775`), extended here to *permissions*. No sanctioned dev seam exists to
+approve as the real owner or to mint a session as user id 1. The spex for
+3335 covers the approve-and-observe half directly (it drives
+`PermissionLive.Show` through a test-privileged `conn`), so that half is
+spex-covered rather than QA-blocked; filed as its own issue since a plain
+grep for the existing question-ownership issues would not surface it.
 
-This pass: re-verified both `11aea8f5` and `5f9fad45` are actually fixed and
-live (not just resolved-on-paper) rather than carrying the report forward,
-then used the QA Fixture Project — previously blocked by a permission
-classifier when reached via a bare `curl` to an isolated project's `/mcp`,
-now reachable by going through the sandbox checkout's own onboarded harness
-id per `.code_my_spec/qa/plan.md`'s documented procedure — to move 3334/3335
-from code-review-only `partial` to live-exercised `pass`. The fixture project
-was not empty this time (6 idle `role: main` test agents and 6 stale open
-questions, residue from prior QA passes across multiple stories/sessions
-sharing it); confirmed isolation via `list_story_titles` (~28, not ~120)
-before touching anything, and only ever tapped out/started agents that were
-already idle there.
+**An unexplained extra `main`-role agent** (`27417912-73f9-4572-a572-52b0faf7ba64`,
+`continuous: false`) appeared on math_test_project partway through this pass,
+alongside the seeded fixture main agent. Did not interfere with any
+observation (it carried no eligible work and nothing acted on it), and its
+`continuous: false` means it could not have absorbed any of the turn-admission
+evidence above. Left unresolved — plausibly from unrelated project-onboarding
+machinery reacting to the QA session's account/project switch — worth a
+one-line mention to whoever next touches this fixture.
