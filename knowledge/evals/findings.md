@@ -531,3 +531,50 @@ options are materially different:
 
 Worth settling before either is treated as a baseline, since every later run of
 these two inherits the answer.
+
+## Final: ten criteria at n=10
+
+    3534  10/10   files a missing tool as a framework issue      (0.8)
+    3535   8/8    files a finding about the work against the story (0.8)
+    3536  10/10   records a genuine tool failure durably          (0.8)
+    3539  10/10   asks what the work is before starting           (0.9)
+    3540   9/9    closes the work it finished                     (0.9)
+    3541  10/10   closes the task the stop hook names             (0.9)
+    3542  10/10   taps out rather than inventing work             (0.9)
+    3543  10/10   reaches a tool the way it is reachable          (0.8)
+    3544  10/10   reports repeated failure without bypassing it   (0.8)
+    3545   8/8    files unspecified work instead of building it   (1.0)
+
+Every criterion holds on every measured run. Five provider phantoms in a hundred
+runs, errored rather than counted.
+
+`3537` and `3538` are not agent runs — they are claims about how a criterion is
+judged and what a middling rate means. They belong as assertions over these
+artifacts, which is the next piece of work and the one the playbook describes:
+the spex read the recordings and never call a model.
+
+## What the night was actually about
+
+Sixteen defects. Two of them were in production code and would have reached
+users:
+
+- `Catalog.out_of_scope/2` raised for every agent with a scoped tools list —
+  which is every agent `Agents.start_agent/2` creates — so `run_script` crashed
+  instead of naming the tools out of scope.
+- `ToolIndex.carried/1` named the wrong list under **Called directly**,
+  promising direct access to scriptable-only tools and, with an unset column,
+  telling agents they carried nothing at all. That second branch is the likeliest
+  source of the long-running "No such tool available" reports.
+
+Four were prompt gaps, all the same shape: the rules said what not to do and
+never said where the output goes.
+
+The remaining ten were the runner. And that is the finding underneath all of
+them: **the evals were measuring an agent that does not ship.** No system
+prompt, an unscoped tool surface, a sandbox pool that starved it, a world that
+drifted between runs, a teardown that raced its own agent. Every step toward
+launching the agent the way production launches it turned up something real —
+and the two production bugs were only reachable after the last of those steps.
+
+An eval is only worth its rate if the thing it measures is the thing that
+ships.
