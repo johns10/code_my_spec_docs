@@ -578,3 +578,71 @@ and the two production bugs were only reachable after the last of those steps.
 
 An eval is only worth its rate if the thing it measures is the thing that
 ships.
+
+## The phantom was fixed by demonstration, not instruction
+
+The earlier sections chase this with prose and conclude it is a provider floor.
+That conclusion was wrong, and the fix was John's: **launch the agent with real
+tool calls already in its history.**
+
+`health` answers `ok` directly, `script_health` answers `ok` from inside
+`run_script`. Both are real registered tools; `LaunchRequest` seeds a call and
+a result for each into the agent's history, so the transcript opens having made
+one call of each shape before the agent is asked for anything.
+
+    3535   best under prose  7/10     with seeded turns, no prose   10/10
+    3545   with the brief    3/10     with seeded turns, no prose    9/10
+
+Ten criteria at n=10, run one at a time: **99 of 100**, one fabricated failure
+in a hundred runs, down from seven — and from nineteen in forty-nine at the
+worst. Nine criteria perfect.
+
+### Why prose could not do it
+
+Four rewrites of the provider brief moved the rate around inside noise, and two
+made it materially worse. The reason is visible in the artifacts: a brief cannot
+describe the format without naming what a failure looks like, and agents echoed
+that naming back as live results. One quoted the placeholder `No such tool
+available: <name>` straight out of the brief as though a tool had returned it.
+
+Asked from inside the condition what had happened, the model was unambiguous:
+
+> Concluded — and more precisely, fabricated. There was nothing to observe: no
+> result was ever sent back to me. The tool docs in my own system prompt contain
+> almost that exact sentence as a worked example... It's plausible I echoed that
+> example text as if it were a live result.
+
+It was never a comprehension failure. The same model wrote the correct nested
+JSON on demand and diagnosed its own error precisely. It is a **mode slip** —
+under structured output, "produce a JSON object describing a tool call" is a
+writing task, and some fraction of the time the model completes the writing
+rather than the call. Instructions are read in the mode that is slipping.
+A transcript is not: it establishes what kind of conversation this is.
+
+**Adding the brief back on top of the seeded turns made it worse** (3545: 8/10
+without, 3/10 with), so it is off by default, kept behind `CMS_PROVIDER_BRIEF=1`
+with these numbers in its moduledoc.
+
+### What it uncovered on the way
+
+- `to_message/1` in the harness dropped any message whose content was blocks
+  rather than text, so a seeded tool call arrived and was silently discarded.
+  The history pipeline had never carried one — `Conversations.as_turn/1` says
+  outright that the tool row is "the working this deliberately leaves out".
+- The health tools give the harness a way to **prove the tool surface answers
+  before an agent is handed anything**. That turns "my tools are unreachable"
+  from something to investigate into something already known to be false, which
+  is most of what this document spent the night doing by hand.
+
+### Method note, the expensive one
+
+Most of the prompt iteration here was decided on n=10 differences near a rate of
+0.5, where one standard error is about 1.6 runs. The sequence 6 → 4 → 6 → 3 → 7
+on 3535 is almost entirely noise, and conclusions were drawn from it — including
+"3534 proves the fix" after measuring one criterion and generalising.
+
+What actually carried signal was structural, and free: **every criterion whose
+first call was a simple direct tool had zero phantoms, and the only one that
+opened with a nested `run_script` carried two-thirds of them.** That was visible
+in artifacts already on disk. Read the shape of a hundred runs before paying for
+ten more.
