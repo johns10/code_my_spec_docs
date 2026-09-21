@@ -234,3 +234,80 @@ calls before anything is torn down.
 agent mid-finish.** The absent `tool_end` was the whole diagnosis — worth
 remembering that a trace is as informative in what is missing as in what it
 holds.
+
+## criterion_3540 — An agent that finishes work closes the task
+
+**10/10.** Median 49 seconds, 7 to 15 calls, no crashes and no errored runs.
+
+The shape is consistent across all ten: `get_next_requirement`, `start_task`,
+orient (a `bash` listing, one or two `read`s, sometimes `tool_docs`), do the work
+through `run_script` with `set_story_component`, then `evaluate_task`. Nothing
+had to be said to the agent about closing what it takes — the prompt it already
+carries was enough once the harness stopped getting in its way.
+
+Worth stating plainly, because it was true of all three defects on this
+criterion: **every failure was the system misleading a correct agent.** None of
+them was the agent doing the wrong thing. The value of the n=1-then-read-the-
+recording loop is precisely that — all three were invisible in the pass/fail
+number and obvious in the trace.
+
+## criterion_3542 — An agent with no work of its kind stops rather than inventing some
+
+The first criterion where the gap was the **agent's prompt** rather than the
+harness — and finding it turned up something much larger.
+
+**Run 1 (0/1).** The agent did three of the four right things: asked, found
+nothing for coding, declined the product role's work, and stopped with an
+accurate account — *"the only remaining requirement in this project belongs to
+another role."* It simply stopped silently instead of calling `tap_out`.
+
+The cause was plain once looked for: **`tap_out` appeared nowhere in any
+agent-facing prompt.** It is named in code comments and in `StopDecision`, and
+nothing ever told an agent when to use it. `OperatingRules` describes the loop
+for an agent that *has* work and says nothing about one that does not. So a rule
+went into §1 Universal — the loop is universal, so it belongs there rather than
+in a role brief.
+
+**Run 2 (0/1), and nothing had changed.** Same silent stop. That is the finding:
+
+### The evals had been measuring an agent with no system prompt
+
+`Support.EvalRunner` started agents through `CmsHarnessTest.Machine.start_agent/3`,
+which assembles a bare map — `agent_id`, `working_copy`, `provider`, and nothing
+else. So `universal`, `role_brief`, `tool_index`, `project_brief` and
+`provider_brief` all arrived `nil`, and `SystemPrompt.compose/1` correctly
+answered `nil`. A production agent is launched from `LaunchRequest.for/1` and
+carries all five.
+
+Two things follow, and the second one hurts:
+
+- **A prompt change could not move a rate**, because the prompt never reached
+  the model. Prompt work measured against these evals was unfalsifiable.
+- **Earlier conclusions drawn from these rates are suspect.** The claim that
+  `ProviderBrief` took 3539 from roughly three-in-four to eight-in-eight cannot
+  be right as stated — that brief was one of the nil sections. Whatever moved
+  that number, it was not the text. 3539 and 3540 are being re-measured on the
+  corrected path; their earlier rates describe an agent that does not ship.
+
+What the agents were actually running on is the per-turn message from
+`Work.@prompt`, which is why they still asked for work and claimed it properly.
+The loop behaviour came from the turn message, not the system prompt.
+
+**Run 3, with the request the server actually builds: 1/1 in six seconds**, and
+the reason it gave was its own: *"get_next_requirement returned nothing
+actionable for the coding role — the one remaining requirement belongs to
+another role."*
+
+**An eval that does not launch the agent the way production launches it is
+measuring a different agent.** The rate looked plausible the whole time, which is
+what made it dangerous — a promptless agent still asks for work and still claims
+it, so nothing about the numbers said the prompt was missing.
+
+### Also fixed: a failing run cost the full deadline
+
+`await_judgement/2` waited out the whole `deadline_ms` whenever the judge never
+became true, so 3542's first miss sat for 180 seconds after the agent had
+stopped at about 20. It now also stops at `turn_ended` — these criteria are
+about the first turn, and an agent that has finished one is not going to add a
+call to it. While fixing a criterion, the failing measurement is the one taken
+most often.
