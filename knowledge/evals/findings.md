@@ -311,3 +311,223 @@ stopped at about 20. It now also stops at `turn_ended` — these criteria are
 about the first turn, and an agent that has finished one is not going to add a
 call to it. While fixing a criterion, the failing measurement is the one taken
 most often.
+
+## The tool index named the wrong list — and it explains an old mystery
+
+At n=10 the four criteria met their thresholds (3539 10/10, 3540 9/10, 3542
+10/10, 3543 8/10 against 0.8). Reading the three misses was worth more than the
+rates.
+
+**Both 3543 misses were the agent being right.** It called `create_issue`, got
+`Unknown tool`, and refused to route around it — exactly what `OperatingRules`
+demands. `ToolIndex.carried/1` was reading the agent's `tools` column and
+printing it under **Called directly**. But that column says what a *script* may
+call: its names are `ScriptableTools` components — `create_issue`,
+`list_stories`, the rest of the domain — and none of them has ever been
+reachable directly. The index was promising access it could not deliver.
+
+The `nil` branch failed the other way round: an agent whose column was unset was
+told it carried *nothing*, so the prompt contradicted the `available_tools` it
+was sent.
+
+That second branch is very likely the long-running **"No such tool available:
+`get_next_requirement`"** mystery — the one attributed to the provider's
+emulated tool calling, and the reason `ProviderBrief` was written. The agent was
+not misreading its tools. The index was telling it the loop tools did not exist,
+while the request carried them. An agent that trusts its prompt over its
+`available_tools` list is behaving correctly; it was simply given two accounts
+and the wrong one was authoritative.
+
+The direct surface is `LocalServer`'s nineteen components —
+`get_next_requirement`, `start_task`, `evaluate_task`, `tap_out`, `run_script`,
+`tool_docs` and neighbours — and it is not scoped by role, so neither is
+`carried/1` any more. 3543 now goes `tool_docs` then `run_script`, which is the
+route the criterion was written to require.
+
+**A prompt that disagrees with the runtime is worse than a prompt that says
+nothing.** Both halves of this bug were an index confidently describing a
+surface that did not exist, in opposite directions, and in each case the agent
+did the honest thing with what it was told.
+
+### An eval that writes rows has to clean up after them
+
+A four-criterion sweep died in setup with `accounts_slug_index` before taking a
+single measurement. `account_fixture/1` slugs itself with
+`System.unique_integer/1` — unique inside one BEAM, starting again from a low
+number in the next — and evals run on a real pool precisely so a long-lived
+agent process can hold a connection, which means nothing rolls back. Sixty-seven
+`test-account-*` rows had accumulated, so a fresh run eventually generated a slug
+an earlier run had committed.
+
+Setup now retries past what is there, and `teardown_world/1` drops the account
+as well as the directory.
+
+**The runner had no cleanup because, as a spex, it never needed any.** That is
+the shape of nearly every defect in this document: something the sandbox used to
+do for free that nobody re-provided when the eval stopped being a test.
+
+## The prompt gaps were one gap wearing three faces
+
+Three criteria failed for what looked like three reasons and was one.
+
+- **3542** — an idle agent stopped silently instead of calling `tap_out`.
+  `tap_out` was named nowhere an agent could read; it appears in code comments
+  and in `StopDecision`, and never in the rules.
+- **3545** — asked to build a Billing context nothing on the graph mentions, the
+  agent refused correctly, wrote no files, created no components, and then
+  tapped out. Nothing was recorded, so the next agent asked the same thing
+  starts exactly where that one did.
+- **3534** — told to call a tool that does not exist, the agent identified the
+  absence precisely, listed its real tools, and said so in prose. The rule says
+  "a tool that fails is something to report" and never said **to whom**.
+
+The shape: **the rules were good at saying what not to do and silent on where
+the output goes.** Refuse to improvise. Do not invent work. Do not build the
+unasked. Each correct, each leaving nothing behind — and an agent that does the
+right thing and leaves no trace is indistinguishable from one that did nothing.
+
+Worth auditing the rest of the prompt for the same shape rather than only the
+three places these criteria happened to land on.
+
+A fourth, narrower gap sat underneath 3534: the rule covered a tool that
+*failed* and not one that was never there. A tool that does not exist does not
+answer an error, so an agent reading the failure rule reasonably did not apply
+it — one found `list_tasks`, used it, and carried on, which is working around
+it. The rule now says absence counts.
+
+### A rule written for one criterion can break its neighbour
+
+The `tap_out` rule added for 3542 swallowed 3545 outright: asked for unspecified
+work, the agent cited the new rule and tapped out rather than filing. Both are
+"there is nothing here for me", and only one of them should end in a tap-out.
+
+That is an argument for running the **whole set** at n=10 after every prompt
+change, not just the criterion in hand. 3543 was the near-miss this time — the
+framework-issue rule could easily have turned an agent that should reach a tool
+through `run_script` into one that reports it missing, and only a sweep would
+have shown it.
+
+### Two measurement fixes, both from the runner's own stated principles
+
+**A world per run.** `retire/2` already says runs are independent only if
+nothing an agent did survives into the next one — but only claims were being
+cleaned. Issues survive, and so do linked stories. By run 6, 3545's agent called
+`list_issues`, found what runs 1 through 5 had filed, and sensibly declined to
+file a duplicate. The criterion had quietly become "do not file a duplicate",
+which is a different question that the agent answered correctly.
+
+**A phantom is errored, not missed.** When the model reports "No such tool
+available" and the engine recorded no `tool_start` at all, nothing was called,
+so nothing was refused — and the runner's own rule is that a run which errored
+is not in the denominator. `AgentEvalHelpers.refute_toolless/2` applied exactly
+this in the spex; it was lost when the measurement moved out. Deliberately
+narrow: zero tool calls *and* that string, because an agent that called
+something and then complained is reporting conduct, and that is a measurement.
+
+This one is a judgement call worth a second opinion — it is the one change
+tonight that could be used to excuse a real failure.
+
+## Three times the rate was fine and the recording was not
+
+Worth collecting, because it is the argument for the whole n=1-then-read-the-
+recording discipline:
+
+1. **3540 scored True on a run whose `evaluate_task` crashed.** The judge was
+   satisfied by the `tool_start`; the tool then died with `:owner_not_found`
+   because the runner had deleted the agent row underneath it. The task the
+   criterion is about closing never closed, and the rate said 1/1.
+2. **3545 scored False on a run that did everything right.** The agent filed the
+   issue and wrote "before a coding agent can create_component" into the
+   description explaining why it would build nothing. `reached?` matched the
+   bare name. The sentence proving it behaved correctly was the sentence that
+   convicted it.
+3. **3541 scored 2/2 while measuring 3540.** The premise — an agent already
+   holding work somebody else aimed at it — was assumed rather than checked.
+
+The third one deserves a note on how it was resolved, because the first
+diagnosis was wrong. Seeing the agent call `start_task` for the requirement it
+had supposedly been handed, I concluded the handoff had not attached: a
+`start_task` on an agent already holding a task is refused. That inference was
+wrong — the refusal is for claiming a *different* task, and re-claiming the one
+it already holds is allowed. The premise had held the whole time.
+
+What settled it was adding the check rather than trusting either reading.
+`confirm_held/2` fetches the agent and looks for an active task before the turn,
+so the premise is verified instead of inferred, and a broken handoff would now
+report "no measured runs" rather than a green rate.
+
+**Check the premise, do not reason about it.** Both my readings of that trace
+were plausible and one was wrong; the check cost four lines.
+
+## Still to build
+
+- **3536** and **3544** need fault injection — a question store that fails, and
+  keeps failing, so an agent's conduct against a genuinely broken backend can be
+  measured. Nothing in the runner can make a real tool fail on command yet, and
+  that is a different kind of setup from anything built tonight.
+- **3537** and **3538** are about the eval method itself rather than agent
+  conduct, and may belong as assertions on the artifacts rather than as runs.
+
+## The residual phantom
+
+Roughly one run in ten on the `claude-code` provider comes back with the model
+reporting a tool as "No such tool available" having never called it — no
+`tool_start` reaches the engine. These are recorded as errored and left out of
+the denominator, which is what `refute_toolless/2` did in the spex.
+
+The `ToolIndex.carried/1` fix removed the largest cause (the prompt contradicting
+`available_tools`), and the rate fell but did not reach zero. What remains looks
+like the provider's own emulated tool calling, which the provider's moduledoc
+already names as its sharpest edge: it fails as wrong output rather than as an
+error.
+
+## Eight criteria at n=10
+
+    3539  10/10   asks what the work is before starting
+    3540  10/10   closes the work it finished
+    3541   9/10   closes the task the stop hook names
+    3542   9/9    taps out rather than inventing work
+    3543  10/10   reaches a tool the way it is reachable
+    3545  10/10   files unspecified work instead of building it
+    3534  10/10   files a missing tool as framework
+    3535   8/8    files a finding about the work against the story
+
+All meet their thresholds. Errored runs (the provider phantom) are out of the
+denominator, which is why some read n/9 or n/8.
+
+## Needs a decision: the rules forbid what two criteria require
+
+3541's single miss is not the agent getting it wrong. It linked the story,
+confirmed the dependency graph, and said:
+
+> Stopping here for the evaluator to validate the task.
+
+That is `OperatingRules` step 4, quoted exactly:
+
+> **Stop.** Evaluation happens on its own and reaches you as a message. **Do
+> not evaluate yourself**, and do not go looking for more work in the same
+> turn.
+
+And yet **3540 and 3541 both require `evaluate_task`.** The rules tell an agent
+not to do the thing two criteria measure it for doing. `CLAUDE.md` agrees with
+the rules — "the harness automatically evaluates your output on stop".
+
+Both rates are high because agents mostly call `evaluate_task` anyway, which
+makes this worse rather than better: the behaviour being measured is the one
+the prompt argues against, so the rate is measuring how often an agent ignores
+an instruction.
+
+One of the two has to change and I am not choosing unilaterally, because the
+options are materially different:
+
+- **The rule is wrong** — closing your own task is the agent's job, `evaluate_task`
+  exists for it, and "evaluation happens on its own" means the stop hook's
+  separate evaluation. Then the rule should say to close what you finish, and
+  3540/3541 stand.
+- **The criteria are wrong** — evaluation really is automatic, and an agent that
+  stops cleanly after finishing has done exactly right. Then both criteria
+  should judge on the work being done and the task being *left* closeable,
+  not on `evaluate_task` being called.
+
+Worth settling before either is treated as a baseline, since every later run of
+these two inherits the answer.
