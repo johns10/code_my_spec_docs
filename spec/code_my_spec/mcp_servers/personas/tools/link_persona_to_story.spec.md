@@ -9,5 +9,6 @@ module
 ## Dependencies
 
 - Anubis.Server.Component
+- CodeMySpec.McpServers.StoryRefs
 - CodeMySpec.McpServers.Validators
 - CodeMySpec.Personas
