@@ -1,4 +1,4 @@
-# QA Story 1019: An agent finds the knowledge its work depends on
+# QA Story 957: I can see my working copies and what is running on each
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,25 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want the knowledge my work depends on to exist and to be cheap to reach, so that I am not reasoning from scratch about things this project already decided.
+As an engineer, I want to see every working copy on my project and the agent running on each, so that I can tell what is working and talk to the ones I can talk to.
 
 ## Acceptance criteria
 
-_None defined._
+- A live Pi agent and a quiet Claude one do not look alike
+- A Pi agent that died stops being present immediately
+- Both checkouts are there, one of them idle
+- Saying something to the Pi agent reaches it
+- A Claude Code agent offers no box to type in
+- Two checkouts of one project are told apart at a glance
+- An agent nobody is running is not on the list as running
+- Nothing here ends an agent or a harness
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2830_a_live_pi_agent_and_a_quiet_claude_one_do_not_look_alike_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2831_a_pi_agent_that_died_stops_being_present_immediately_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2832_both_checkouts_are_there_one_of_them_idle_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2833_saying_something_to_the_pi_agent_reaches_it_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2834_a_claude_code_agent_offers_no_box_to_type_in_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2835_two_checkouts_of_one_project_are_told_apart_at_a_glance_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2836_an_agent_nobody_is_running_is_not_on_the_list_as_running_spex.exs`
+- `test/spex/1019_i_can_see_my_working_copies_and_what_is_running_on_each/criterion_2837_nothing_here_ends_an_agent_or_a_harness_spex.exs`
 
-## Linked component: Knowledge
+## Linked component: Index
 
-This story is implemented by `CodeMySpec.Knowledge` (logic).
+This story is implemented by `CodeMySpecWeb.WorkingCopyLive.Index` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/knowledge_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/knowledge.spec.md`
-- Source: `lib/code_my_spec/knowledge.ex`
+- Tests: `test/code_my_spec_web/working_copy_live/index_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/working_copy_live/index.spec.md`
+- Source: `lib/code_my_spec_web/working_copy_live/index.ex`
 
 ## Available scripts
 
@@ -99,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1019/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/957/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

@@ -1,4 +1,4 @@
-# QA Story 1009: The main agent answers what it can before the user sees it
+# QA Story 872: Many apps share one box without being able to reach each other
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want my questions and messages to reach the main agent first, so that anything it can answer is answered without the user being interrupted.
+As a solo founder, I want each app on my host isolated from the others so that one app being compromised does not hand over the rest.
 
 ## Acceptance criteria
 
-- A product decision goes up to the user
-- A question the main agent cannot answer is never simply dropped
-- The answer comes back the same way either way
-- A technical question the main agent handled is still visible
-- The user is never the only way to get an answer
-- The agent can tell who answered
-- The user overrules an answer the main agent already gave
-- The main agent is down and the question still reaches the user
-- A main agent that answers wrongly does not bury the question
-- An answer arrives after the agent that asked has been restarted
+_None defined._
 
 ## BDD spec files
 
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3214_a_product_decision_goes_up_to_the_user_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3215_a_question_the_main_agent_cannot_answer_is_never_simply_dropped_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3216_the_answer_comes_back_the_same_way_either_way_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3217_a_technical_question_the_main_agent_handled_is_still_visible_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3218_the_user_is_never_the_only_way_to_get_an_answer_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3219_the_agent_can_tell_who_answered_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3220_the_user_overrules_an_answer_the_main_agent_already_gave_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3221_the_main_agent_is_down_and_the_question_still_reaches_the_user_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3222_a_main_agent_that_answers_wrongly_does_not_bury_the_question_spex.exs`
-- `test/spex/1052_the_main_agent_answers_what_it_can_before_the_user_sees_it/criterion_3223_an_answer_arrives_after_the_agent_that_asked_has_been_restarted_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: MainAgent
+## Linked component: Host
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Host` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/host_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/host.spec.md`
+- Source: `lib/code_my_spec/host.ex`
 
 ## Available scripts
 
@@ -117,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1009/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/872/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

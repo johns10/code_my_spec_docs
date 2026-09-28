@@ -1,6 +1,4 @@
-# Qa Story Brief
-
-Story 964 — I approve an epic and it gets built somewhere else.
+# QA Brief — Story 850: My provider credentials go in once and get checked
 
 ## Tool
 
@@ -8,82 +6,109 @@ web
 
 ## Auth
 
-The QA user is passwordless; `/users/log-in` offers only GitHub, Google and a
-magic link.
+Two logins are needed this cycle — one for the ordinary panel checks, one for
+the rejection test. The dev mailbox is shared, so confirm the message you open
+is addressed to the user you asked for before clicking it.
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]` with
-   `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → open the newest message **addressed to
-   this user**; the mailbox is shared with every other QA session on this box,
-   and it is cleared by a server restart.
-3. The link is minted with the configured host
-   (`https://dev.codemyspec.com/users/log-in/<token>`). **Rewrite the origin to
-   `http://127.0.0.1:4000` before navigating.**
-4. Lands on `/app` with the fixture project active. Single-use token.
+**Owner (for the panel, and for anything touching the real Code My Spec account):**
 
-Fill the email only after LiveView has connected — the input is `readonly` until
-it does, and the fill fails silently enough to look like a wrong selector.
+1. `http://127.0.0.1:4000/users/log-in`
+2. Fill `input[name="user[email]"]` with `johns10@gmail.com`
+3. Click **Email me a login link** (the submit button is `form button.btn-secondary`)
+4. `http://127.0.0.1:4000/dev/mailbox` — open the message addressed to that user
+5. The link is issued for `dev.codemyspec.com`; swap the host to `127.0.0.1:4000`
+
+**QA user (for the rejection test — see Setup Notes for why it must be a
+different account):** same flow with `qa@codemyspec.local`. Its accounts are
+`QA Team 605`, `QA Second Account` and `QA Team 605 Scope Test`, none of which
+hold a real Hetzner token.
+
+If the email field renders `readonly`, a session is already open — log out via
+the `a[href="/users/log-out"]` link (it is `data-method="delete"`, so navigating
+to the URL does nothing) and start again.
+
+Switch accounts at `/app/accounts/picker`; the entries are
+`a[phx-value-account-id=...]`.
 
 ## Seeds
 
-Base fixture only. Verify without `mix run` — the dev server holds the compile
-lock and a `mix run` under `MIX_ENV=dev` would 500 the app under test:
+No story-specific seeding.
 
-```
-psql -U postgres -h localhost -d code_my_spec_dev -t \
-  -c "select email from users where email='qa@codemyspec.local';"
-```
-
-Entity: project `QA Fixture Project`, id `11111111-1111-4111-8111-111111111111`.
-
-This story needs no provider and no running agent. Everything under test is the
-epic's own life and the screen that shows it.
+- QA Fixture Project: `11111111-1111-4111-8111-111111111111`, in the
+  `Code My Spec` account (`0f27281c-240b-4d6d-8e52-9c5972329522`)
+- Provisioning page:
+  `http://127.0.0.1:4000/app/projects/<project_id>/provisioning`
+- For the rejection test, create a throwaway project under a QA account via
+  `/app` → **Create project**
 
 ## What To Test
 
-Base URL `http://127.0.0.1:4000`, epics at
-`/app/projects/11111111-1111-4111-8111-111111111111/epics`.
-
-- **A draft epic offers nothing to approve.** Create an epic on the page. It
-  reads as draft and carries no "Build this" control — work cannot start on
-  something the agent has not put forward. *(2932)*
-- **A proposed epic offers approval, and only then.** Nothing in the UI proposes
-  yet; use the agent surface to move it (`EpicDispatch.propose/2` via an agent,
-  or check an already-proposed epic if one exists). The control appears. *(2942)*
-- **Agreeing dispatches it.** Click "Build this". The epic reads as dispatched
-  and names where the work is happening. You were never asked to choose a
-  checkout. *(2930)*
-- **Ignoring a proposal changes nothing.** Leave a proposed epic alone, reload:
-  still proposed, no working copy, no agent running on the working copies page.
-  *(2931)*
-- **The screen changes while you watch it.** With the epics page open in one
-  tab, have the agent propose an epic. It should appear **without reloading**.
-  This is the one that needs two windows and is the reason the story exists in
-  this shape. *(2942)*
-- **A dispatched epic that failed says so.** Not reachable from the UI — check
-  the rendered state if one exists; otherwise record as not covered. *(2939)*
-- **The graph node reports why.** `/requirements` → find `work_dispatched`. On
-  the fixture project it should be satisfied, and the row should say *why* —
-  "nothing left to hand out" versus "work is underway" are different sentences
-  and the distinction is the point. *(2933, 2934)*
-
-Judgement this pass owes, beyond what the spex assert: whether "Build this"
-reads as the irreversible act it is to somebody non-technical, and whether a
-dispatched epic that names a rootless default copy ("waiting for a checkout")
-reads as sensible rather than broken.
+- **One sitting covers every credential the run will need (7981).** One
+  `[data-test="provider-credentials"]` panel listing every credential the
+  enabled options need, each with `data-credential`, `data-credential-kind`,
+  `data-stored` and `data-state`. No second page, no per-provider detour.
+- **An option turned off does not ask for its credential (7982).** Untick
+  storage: the `hetzner_s3_*` fields should stay, because backups and content
+  also consume object storage. Untick the last consumer and they should
+  disappear **without a reload**. Re-tick and they return.
+- **A credential is proven by a real call, not by looking right (7983).** On a
+  throwaway project under a QA account, paste a syntactically plausible but
+  invalid Hetzner API token and save. Expect `data-state="rejected"` naming the
+  permission, not `verified`. This is the criterion that failed last cycle
+  (`bcd2b2b4`) — read Setup Notes before running it.
+- **An under-scoped token names the permission it lacks (7984).** Accepted as
+  structurally verified on the owner's decision of 2026-08-17. Proving it needs
+  a genuinely read-only Hetzner token, which only the owner can mint. Do not
+  mint one; record it as structural.
+- **A missing credential stops the run before it starts (7985).** On a project
+  missing credentials, the gate should name what is still needed, and clicking
+  `[data-test="start-setup"]` should start nothing — verify server-side by
+  confirming no step enters `running` and the done count is unchanged, not just
+  by reading the page.
+- **The console-only key pair is asked for with directions (7986).** The
+  `hetzner_s3_*` fields should carry the console path in their own text, and the
+  API token field should name the read-only trap.
+- **The repo stays clean of credential values (7987).** Grep the working copy
+  for the literal values from `envs/.env`, excluding `.git`, `_build`, `deps`
+  and `node_modules`. Print filenames only — never the values.
+- **Credentials follow the project, wherever the agent runs (8050).** Call
+  `devops_status` through the local MCP endpoint scoped to two different harness
+  ids that resolve the same project, and compare the responses.
+- **Another project's credentials are not reachable (8051).** Must be tested
+  **cross-account** — see Setup Notes.
 
 ## Setup Notes
 
-The twelve spex cover the same criteria in-process and are green. That is the
-contract layer. This pass is about whether the screen is right, and in
-particular whether the live update actually happens in a real browser — the spex
-proves the LiveView receives the broadcast, not that a person sees it land.
+**The Hetzner API token is account-grain now, and that changes two tests.**
+`Credentials` marks `hetzner_api_token` as `grain: :account`; the S3 pair stays
+project-grain because `Storage.credentials/2` reads it there.
 
-Known limitation: nothing in the UI *proposes* an epic yet. Proposing is the
-main agent's act and the main agent needs a provider, which the QA account does
-not have (see issue 4345609b). Criteria that need a proposed epic have to reach
-`EpicDispatch.propose/2` another way or be recorded as not covered.
+- **7983 needs a disposable *account*, not just a disposable project.** Pasting a
+  bad token under `Code My Spec` would overwrite the owner's real Hetzner token
+  for every project in that account. Use a QA account, which holds none.
+- **8051 means cross-account.** An account-grain credential is reachable from
+  every project in its account by design — that is what account grain means. The
+  isolation claim is that another *account* cannot reach it. Confirmed with the
+  owner on 2026-08-17.
+
+**What changed since the failing attempt.**
+
+- `bcd2b2b4` is resolved. The check resolved the account credential while the
+  field being typed into was the project one, so a garbage value read as
+  `verified` — the value under test was never sent anywhere. The catalogue is
+  grain-aware now and a migration lifted the stray project-grain rows.
+- `b1d87f01` is partly addressed. The two cassettes carrying live S3 keys are
+  gone with the whole cassette directory, and the working copy is verified clean.
+  The values remain in git history at `5a85216b` and `0cc186d0`, so the key pair
+  should still be treated as exposed until rotated — console-only, owner's
+  action. Report 7987 on the working-copy standard both prior attempts used, and
+  state the history exposure explicitly rather than letting a pass imply it is
+  gone.
+- `85e91bf8` stays open only for whether the refusal flash reaches someone who
+  presses the header button. Do **not** disable `[data-test="start-setup"]` — the
+  964/7985 spex clicks it to prove the refusal is enforced server-side, and
+  disabling it breaks that proof.
 
 ## Result Path
 
-`.code_my_spec/qa/964/result.md`
+`.code_my_spec/qa/850/result.md`

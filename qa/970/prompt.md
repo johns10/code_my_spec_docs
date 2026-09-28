@@ -1,4 +1,4 @@
-# QA Story 970: I script the tools instead of calling them one at a time
+# QA Story 856: My new project ships deploy-ready
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,51 +7,33 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an agent, I want to call the harness's tools from a sandboxed script and look up their documentation on demand, so that I can do several steps of work in one turn without carrying every tool's arguments.
+Sam's freshly generated project already contains everything needed to deploy, so he never assembles Docker, CI, deploy config or a health endpoint by hand.
 
 ## Acceptance criteria
 
-- A script cannot put a question to a person
-- A loop cannot become a fleet
-- Asking about one tool returns one tool
-- An agent that does not know the name can search for it
-- A script sees the project its sender is connected to
-- Naming another project in the script does not reach it
-- A script cannot run a command or read the disk
-- An endless loop ends, and the server keeps serving
-- A slow tool call does not hang the script
-- Three writes land and the fourth failure is reported
-- The agent can see what the script was thinking
-- A script that will not compile says where
-- Several calls that were several turns become one
-- A string bomb is refused before it is built
+- Each environment has its own deploy configuration
+- The health check answers without session, auth or database
+- Forced SSL does not redirect the proxy's probe
+- A generated project is safe to push as-is
+- Sam can work locally before he owns any infrastructure
+- The project already contains everything a build needs
 
 ## BDD spec files
 
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2986_a_script_cannot_put_a_question_to_a_person_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2987_a_loop_cannot_become_a_fleet_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2988_asking_about_one_tool_returns_one_tool_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2989_an_agent_that_does_not_know_the_name_can_search_for_it_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2990_a_script_sees_the_project_its_sender_is_connected_to_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2991_naming_another_project_in_the_script_does_not_reach_it_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2992_a_script_cannot_run_a_command_or_read_the_disk_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2993_an_endless_loop_ends_and_the_server_keeps_serving_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2994_a_slow_tool_call_does_not_hang_the_script_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2995_three_writes_land_and_the_fourth_failure_is_reported_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2996_the_agent_can_see_what_the_script_was_thinking_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2997_a_script_that_will_not_compile_says_where_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_3003_several_calls_that_were_several_turns_become_one_spex.exs`
-- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_3004_a_string_bomb_is_refused_before_it_is_built_spex.exs`
+- `test/spex/970_my_new_project_ships_deploy-ready/criterion_7976_each_environment_has_its_own_deploy_configuration_spex.exs`
+- `test/spex/970_my_new_project_ships_deploy-ready/criterion_7977_the_health_check_answers_without_session_auth_or_database_spex.exs`
+- `test/spex/970_my_new_project_ships_deploy-ready/criterion_7978_forced_ssl_does_not_redirect_the_proxys_probe_spex.exs`
+- `test/spex/970_my_new_project_ships_deploy-ready/criterion_7979_a_generated_project_is_safe_to_push_as-is_spex.exs`
 
-## Linked component: CodeMode
+## Linked component: Generators
 
-This story is implemented by `CodeMySpec.CodeMode` (context).
+This story is implemented by `CodeMySpec.Generators` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/code_mode_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/code_mode.spec.md`
-- Source: `lib/code_my_spec/code_mode.ex`
+- Tests: `test/code_my_spec/generators_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/generators.spec.md`
+- Source: `lib/code_my_spec/generators.ex`
 
 ## Available scripts
 
@@ -125,7 +107,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/970/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/856/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

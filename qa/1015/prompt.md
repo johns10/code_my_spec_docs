@@ -1,4 +1,4 @@
-# QA Story 1015: The main agent sees the health of the machinery its agents depend on
+# QA Story 894: Stop hook is a main menu
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,46 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see whether the harness, tools and preview my agents depend on are working, so that I can tell a broken agent from broken machinery underneath it.
+As an agent, I want the stop hook to name what class of work is available and which tool to call, so that I neither churn on invented work nor stop with real work outstanding.
 
 ## Acceptance criteria
 
-- The machinery is healthy and says so
-- Every agent failing at once points at the machinery
-- One agent failing while the rest work points at the agent
-- A fault the main agent cannot act on is raised
-- What the main agent can fix, it fixes
-- Analyzer health is visible alongside everything else
-- An analyzer that is not really running is not reported as passing
-- A saturated machine explains what its agents are doing
-- Shared machinery is visible across project lines
-- Seeing shared machinery does not confer acting on it
+- A refusal over outstanding problems names the class and the call
+- Live classes yield one directive and a tally of the rest
+- An empty menu is a terminal state
+- Problems outrank requirements while both are live
+- Collecting an answer is offered alongside the directive
+- Asking is offered alongside the directive, not instead of it
+- Searching what we already know is offered alongside the directive
+- A running loop is told how to end
+- An agent outside the loop is not invited to leave one
+- A session that wrote nothing stops cleanly, whatever the project is carrying
+- One edit is enough to own what it broke
+- Work that leaves no tracked file still counts as no edits
+- Editing through the shell still counts as editing
+- Work in files the project does not track is still no edits
 
 ## BDD spec files
 
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3309_the_machinery_is_healthy_and_says_so_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3310_every_agent_failing_at_once_points_at_the_machinery_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3311_one_agent_failing_while_the_rest_work_points_at_the_agent_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3312_a_fault_the_main_agent_cannot_act_on_is_raised_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3321_what_the_main_agent_can_fix_it_fixes_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3322_analyzer_health_is_visible_alongside_everything_else_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3323_an_analyzer_that_is_not_really_running_is_not_reported_as_passing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3324_a_saturated_machine_explains_what_its_agents_are_doing_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3325_shared_machinery_is_visible_across_project_lines_spex.exs`
-- `test/spex/1057_the_main_agent_sees_the_health_of_the_machinery_its_agents_depend_on/criterion_3326_seeing_shared_machinery_does_not_confer_acting_on_it_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2388_a_refusal_over_outstanding_problems_names_the_class_and_the_call_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2390_three_live_classes_yield_one_directive_and_a_two-item_tally_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2393_an_empty_menu_is_a_terminal_state_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2400_problems_outrank_requirements_while_both_are_live_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2402_an_unanswered_question_sends_the_agent_to_the_answer_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2403_asking_is_offered_alongside_the_directive_not_instead_of_it_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2411_searching_what_we_already_know_is_offered_alongside_the_directive_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2412_a_running_loop_is_told_how_to_end_spex.exs`
+- `test/spex/1015_stop_hook_is_a_main_menu/criterion_2413_an_agent_outside_the_loop_is_not_invited_to_leave_one_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: Validation
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Validation` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/validation_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/validation.spec.md`
+- Source: `lib/code_my_spec/validation.ex`
 
 ## Available scripts
 
@@ -117,7 +120,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1015/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/894/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

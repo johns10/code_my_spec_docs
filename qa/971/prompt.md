@@ -1,4 +1,4 @@
-# QA Story 971: I connect with a short tool list
+# QA Story 857: My deployed app talks back to CodeMySpec without a long-lived key
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,31 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an agent, I want the tool list I receive at connect to carry only the tools I call directly, so that I am not charged for a catalogue I will never read.
+Sam's deployed environments authenticate to CodeMySpec with short-lived credentials, placed by setup rather than copied between systems by hand.
 
 ## Acceptance criteria
 
-- Connecting costs a fraction of what it costs today
-- An agent that connected before the change is told what happened
-- A tool dropped from the list is still reachable
-- No tool falls through the gap between the two surfaces
+- A captured credential is useless after its window
+- Calls keep working across the renewal boundary
+- One credential covers content, issues, users and the widget
+- Sam never sees the credential he is using
+- A refusal says why, so the app knows to renew
+- What the environment holds opens none of the five surfaces
+- The refresh secret buys a token and nothing else
+- A visitor mid-conversation notices no expiry
 
 ## BDD spec files
 
-- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_2999_connecting_costs_a_fraction_of_what_it_costs_today_spex.exs`
-- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3000_an_agent_that_connected_before_the_change_is_told_what_happened_spex.exs`
-- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3001_a_tool_dropped_from_the_list_is_still_reachable_spex.exs`
-- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3002_no_tool_falls_through_the_gap_between_the_two_surfaces_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8019_a_captured_credential_is_useless_after_its_window_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8020_calls_keep_working_across_the_renewal_boundary_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8021_one_credential_covers_content_issues_users_and_the_widget_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8022_sam_never_sees_the_credential_he_is_using_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8023_a_refusal_says_why_so_the_app_knows_to_renew_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8045_what_the_environment_holds_opens_none_of_the_five_surfaces_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8046_the_refresh_secret_buys_a_token_and_nothing_else_spex.exs`
+- `test/spex/971_my_deployed_app_talks_back_to_codemyspec_without_a_long-lived_key/criterion_8055_a_visitor_mid-conversation_notices_no_expiry_spex.exs`
 
-## Linked component: LocalServer
+## Linked component: TokenController
 
-This story is implemented by `CodeMySpec.McpServers.LocalServer` (module).
+This story is implemented by `CodeMySpecWeb.TokenController` (controller).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/mcp_servers/local_server_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers/local_server.spec.md`
-- Source: `lib/code_my_spec/mcp_servers/local_server.ex`
+- Tests: `test/code_my_spec_web/controllers/token_controller_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/token_controller.spec.md`
+- Source: `lib/code_my_spec_web/controllers/token_controller.ex`
 
 ## Available scripts
 
@@ -105,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/971/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/857/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

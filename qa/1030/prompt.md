@@ -1,4 +1,4 @@
-# QA Story 1030: The main agent onboards me
+# QA Story 968: My project's preview has an address, set up when its main checkout is onboarded
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,41 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As somebody who has just signed up with nothing set up, I want the agent to take me from signing up to a working project by talking to me, so that I never have to work out for myself what to configure first.
+As a non-technical founder, I want the running preview of my project to have an address the app already knows, so that it appears on my screen without my finding or configuring anything.
 
 ## Acceptance criteria
 
-- The conversation survives signing up
-- Arriving means arriving in a conversation
-- The paperwork sits beside the talking
-- The agent fills in what it understood
-- Somebody who would rather type than talk
-- The agent cannot be reached
-- Onboarding ends somewhere
-- A correction reaches the agent
-- Talking before signing up costs the visitor nothing
+- The main checkout comes out of onboarding with an address
+- A worktree does not claim to be where the preview runs
+- Restarting the harness does not lose the address
+- Recording the address keeps what the file already said
+- The server learns the address from the checkout
+- Onboarding asks for a tunnel rather than making one
+- Onboarding a second time does not make a second tunnel
+- A visitor's hosted app and a founder's own checkout are reached the same way
+- An app that is still coming up is not reported as broken
+- An app that died after starting stops reading as up
 
 ## BDD spec files
 
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3369_the_conversation_survives_signing_up_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3370_arriving_means_arriving_in_a_conversation_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3371_the_paperwork_sits_beside_the_talking_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3372_the_agent_fills_in_what_it_understood_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3374_somebody_who_would_rather_type_than_talk_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3375_the_agent_cannot_be_reached_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3376_onboarding_ends_somewhere_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3377_a_correction_reaches_the_agent_spex.exs`
-- `test/spex/1064_the_main_agent_onboards_me/criterion_3378_talking_before_signing_up_costs_the_visitor_nothing_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2961_the_main_checkout_comes_out_of_onboarding_with_an_address_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2962_a_worktree_does_not_claim_to_be_where_the_preview_runs_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2963_restarting_the_harness_does_not_lose_the_address_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2964_recording_the_address_keeps_what_the_file_already_said_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2965_the_server_learns_the_address_from_the_checkout_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2966_onboarding_asks_for_a_tunnel_rather_than_making_one_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2967_onboarding_a_second_time_does_not_make_a_second_tunnel_spex.exs`
+- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2969_a_visitors_hosted_app_and_a_founders_own_checkout_are_reached_the_same_way_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: PreviewTunnel
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Workspaces.PreviewTunnel` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/workspaces/preview_tunnel_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/workspaces/preview_tunnel.spec.md`
+- Source: `lib/code_my_spec/workspaces/preview_tunnel.ex`
 
 ## Available scripts
 
@@ -115,7 +115,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1030/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/968/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

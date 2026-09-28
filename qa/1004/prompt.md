@@ -1,4 +1,4 @@
-# QA Story 1004: Idle agents are left alone
+# QA Story 843: Notifications inbox lists Claude's questions and approvals
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,35 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a durable internal agent, I want turns only when I am eligible to choose
-useful work, so that I do not spend turns on empty stop hooks or generic wake
-messages.
-
-**Revision note (2026-09-19):** this story no longer specifies broad `wake`
-messages or assignment nudges. It specifies turn eligibility for an
-already-staffed agent. Task blocking and continuous-mode policy are defined by
-Story 538; startup is Story 1038.
+As an engineer, I want a notifications menu in the web app that lists Claude's pending questions and permission requests, so I can find and answer them even when a push notification never reaches me.
 
 ## Acceptance criteria
 
-- An already-staffed continuous agent with no eligible role/copy-scoped work
-  receives no turn request
-- Work for another role or working copy does not make an agent runnable
-- An active task prevents another turn request until it is dispositioned
-- A turn ending with no eligible work produces neither a turn nor a generic
-  operator message
-- The durable process remains available while it is idle; idleness does not
-  imply restaffing or process shutdown
-- Duplicate eligibility events cannot create concurrent turns
+- Question missed by push still appears in the inbox
+- Pending items sort above answered history
+- Badge count updates live as questions arrive and get answered
+- Clicking a pending question opens the answer page
+- Another user's requests are not visible
+- An already-answered question is shown but no longer answerable
 
 ## BDD spec files
 
-_The earlier wake/nudge Spex suite is obsolete. Delete it and write a new suite
-from these revised scenarios before implementation begins._
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1977_question_missed_by_push_still_appears_in_the_inbox_spex.exs`
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1978_pending_items_sort_above_answered_history_spex.exs`
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1979_badge_count_updates_live_as_questions_arrive_and_get_answered_spex.exs`
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1980_clicking_a_pending_question_opens_the_answer_page_spex.exs`
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1981_another_users_requests_are_not_visible_spex.exs`
+- `test/spex/1004_notifications_inbox_lists_claudes_questions_and_approvals/criterion_1982_an_already_answered_question_is_shown_but_no_longer_answerable_spex.exs`
 
-## Linked component: Agents
+## Linked component: Index
 
-This story is implemented by `CodeMySpec.Agents` (context).
+This story is implemented by `CodeMySpecWeb.NotificationLive.Index` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
-- Source: `lib/code_my_spec/agents.ex`
+- Tests: `test/code_my_spec_web/notification_live/index_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/notification_live/index.spec.md`
+- Source: `lib/code_my_spec_web/notification_live/index.ex`
 
 ## Available scripts
 
@@ -115,7 +109,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1004/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/843/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

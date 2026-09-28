@@ -1,4 +1,4 @@
-# QA Story 964: I approve an epic and it gets built somewhere else
+# QA Story 850: My provider credentials go in once and get checked
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,59 +7,41 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-The hand-off. The main agent (story 963) shapes stories and groups them into an epic; this is what happens when the user agrees to build one. An epic goes to a working copy, agents there do the detailed design and the code, and the main agent's job turns into reporting on work it is not doing. The mechanic already half exists: `ready_for_dev` is a flag on a story today and nothing consumes it as a hand-off.
+Sam enters his provider credentials once before anything is provisioned, and a credential that can't do its job is rejected by name with the permission it's missing.
 
 ## Acceptance criteria
 
-- Agreeing is agreement, and placement is its own act
-- A proposal I ignore changes nothing
-- Ready for development is not the same as started
-- A busy project is not given more work
-- An idle project with nothing left to assign is finished, not stuck
-- The detailed design happens where the code will be written
-- A second epic can go to a copy that already has one
-- Asking about dispatched work gets a report
-- Work that went wrong is reported as wrong, not as silence
-- An idle project with work waiting gets an epic put in front of me
-- I watch the epic take shape and approve it where it is
-- An epic goes where the context already is
-- A fresh copy when nothing fits
-- A new copy arrives with its three agents
-- An agent that never came up is not a copy that is ready
-- The same three take the next epic
-- I discard the copy and its agents go with it
-- A new epic gets a new copy, not the old one's agents
+- One sitting covers every credential the run will need
+- An option turned off does not ask for its credential
+- A credential is proven by a real call, not by looking right
+- An under-scoped token names the permission it lacks
+- A missing credential stops the run before it starts
+- The console-only key pair is asked for with directions
+- The repo stays clean of credential values
+- Credentials follow the project, wherever the agent runs
+- Another project's credentials are not reachable
 
 ## BDD spec files
 
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2930_agreeing_is_agreement_and_placement_is_its_own_act_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2931_a_proposal_i_ignore_changes_nothing_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2932_ready_for_development_is_not_the_same_as_started_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2933_a_busy_project_is_not_given_more_work_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2934_an_idle_project_with_nothing_left_to_assign_is_finished_not_stuck_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2935_the_detailed_design_happens_where_the_code_will_be_written_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2936_a_second_epic_can_go_to_a_copy_that_already_has_one_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2938_asking_about_dispatched_work_gets_a_report_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2939_work_that_went_wrong_is_reported_as_wrong_not_as_silence_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2941_an_idle_project_with_work_waiting_gets_an_epic_put_in_front_of_me_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_2942_i_watch_the_epic_take_shape_and_approve_it_where_it_is_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3085_an_epic_goes_where_the_context_already_is_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3086_a_fresh_copy_when_nothing_fits_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3087_a_new_copy_arrives_with_its_three_agents_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3088_an_agent_that_never_came_up_is_not_a_copy_that_is_ready_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3090_the_same_three_take_the_next_epic_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3091_i_discard_the_copy_and_its_agents_go_with_it_spex.exs`
-- `test/spex/1026_i_approve_an_epic_and_it_gets_built_somewhere_else/criterion_3092_a_new_epic_gets_a_new_copy_not_the_old_ones_agents_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7981_one_sitting_covers_every_credential_the_run_will_need_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7982_an_option_turned_off_does_not_ask_for_its_credential_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7983_a_credential_is_proven_by_a_real_call_not_by_looking_right_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7984_an_under-scoped_token_names_the_permission_it_lacks_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7985_a_missing_credential_stops_the_run_before_it_starts_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7986_the_console-only_key_pair_is_asked_for_with_directions_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_7987_the_repo_stays_clean_of_credential_values_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_8050_credentials_follow_the_project_wherever_the_agent_runs_spex.exs`
+- `test/spex/964_my_provider_credentials_go_in_once_and_get_checked/criterion_8051_another_projects_credentials_are_not_reachable_spex.exs`
 
-## Linked component: EpicDispatch
+## Linked component: ProvisioningLive
 
-This story is implemented by `CodeMySpec.EpicDispatch` (context).
+This story is implemented by `CodeMySpecWeb.ProvisioningLive` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/epic_dispatch_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/epic_dispatch.spec.md`
-- Source: `lib/code_my_spec/epic_dispatch.ex`
+- Tests: `test/code_my_spec_web/live/provisioning_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/provisioning_live.spec.md`
+- Source: `lib/code_my_spec_web/live/provisioning_live.ex`
 
 ## Available scripts
 
@@ -133,7 +115,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/964/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/850/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

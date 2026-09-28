@@ -1,4 +1,4 @@
-# QA Story 1014: The main agent starts, stops and restarts its agents
+# QA Story 892: A working copy that vanished warns until I offboard it
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,45 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to start, stop and restart the agents I am responsible for, so that I can act on what I observe rather than only watch it.
+As an engineer whose project several agents work on, I want a working copy whose checkout has been removed to show up as a warning rather than silently holding state, and to be able to offboard it in one act that takes its row, its files, its problems and any component left orphaned with it, so that a checkout nobody has any more stops blocking the agents still working — and nothing is ever cleared out because a machine happened to be offline.
 
 ## Acceptance criteria
 
-- The main agent acts on what it sees
-- A restart carries its reason
-- A restart that changes nothing is not repeated indefinitely
-- A restart that makes things worse is visible as such
-- A restart that fixes the problem ends there
-- Everybody carries on after the application restarts
-- A paused agent comes back paused
-- The main agent restarts an agent and nothing else
-- The main agent cannot restart the harness to fix an agent
-- A fault that outlives a restart becomes something to fix
+- A removed worktree shows up as missing and nothing else happens
+- An offline device's copies are not flagged as missing
+- The path is answered by the machine the copy is on
+- A path that comes back clears its own warning
+- Offboarding takes the row and its data together
+- A working copy is never offboarded without being asked for
+- Offboarding a copy whose checkout still exists leaves the files alone
+- An orphan component stops blocking a gate no edit could clear
+- Authored links are never spent to clear derived rows
+- Coming back is onboarding, not recovery
+- A restarted harness still notices a checkout nobody has touched since
 
 ## BDD spec files
 
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3290_the_main_agent_acts_on_what_it_sees_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3291_a_restart_carries_its_reason_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3292_a_restart_that_changes_nothing_is_not_repeated_indefinitely_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3293_a_restart_that_makes_things_worse_is_visible_as_such_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3302_a_restart_that_fixes_the_problem_ends_there_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3304_everybody_carries_on_after_the_application_restarts_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3305_a_paused_agent_comes_back_paused_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3306_the_main_agent_restarts_an_agent_and_nothing_else_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3307_the_main_agent_cannot_restart_the_harness_to_fix_an_agent_spex.exs`
-- `test/spex/1056_the_main_agent_starts_stops_and_restarts_its_agents/criterion_3308_a_fault_that_outlives_a_restart_becomes_something_to_fix_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2859_a_removed_worktree_shows_up_as_missing_and_nothing_else_happens_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2860_an_offline_devices_copies_are_not_flagged_as_missing_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2861_the_path_is_answered_by_the_machine_the_copy_is_on_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2862_a_path_that_comes_back_clears_its_own_warning_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2863_offboarding_takes_the_row_and_its_data_together_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2864_a_working_copy_is_never_offboarded_without_being_asked_for_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2865_offboarding_a_copy_whose_checkout_still_exists_leaves_the_files_alone_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2866_an_orphan_component_stops_blocking_a_gate_no_edit_could_clear_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2867_authored_links_are_never_spent_to_clear_derived_rows_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2868_coming_back_is_onboarding_not_recovery_spex.exs`
+- `test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/criterion_2872_a_restarted_harness_still_notices_a_checkout_nobody_has_touched_since_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.WorkingCopies` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
@@ -117,7 +119,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1014/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/892/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

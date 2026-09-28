@@ -1,4 +1,4 @@
-# QA Story 1016: The main agent reads what its agents cannot
+# QA Story 895: Stories are assigned to a working copy
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,39 +7,37 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to read across the project beyond what any single role carries, so that I can answer a question that blocked an agent instead of only noting that it is blocked.
+As an agent, I want stories assigned to a working copy, so that findings on another agent's stories never refuse my stop.
 
 ## Acceptance criteria
 
-- The main agent sees past the edge of a role's tool list
-- A blocked agent is unblocked rather than merely observed
-- A recurring lookup becomes a reported gap
-- An agent cannot use the main agent to escape its own scoping
-- The main agent acts where a role cannot
-- Full scope does not mean the main agent does everybody's work
-- Fiddling becomes an issue somebody can fix
-- The same workaround is not filed over and over
+- A finding on someone else's story is still reported here
+- Unassigned findings are visible without being blocking
+- A story assigned to nobody blocks everybody
+- Having assignments does not hide the unassigned backlog
+- Another working copy's story is not offered here
+- A regression on proven behaviour blocks whoever is stopping
+- Work in progress elsewhere does not block here
 
 ## BDD spec files
 
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3313_the_main_agent_sees_past_the_edge_of_a_roles_tool_list_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3314_a_blocked_agent_is_unblocked_rather_than_merely_observed_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3315_a_recurring_lookup_becomes_a_reported_gap_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3316_an_agent_cannot_use_the_main_agent_to_escape_its_own_scoping_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3327_the_main_agent_acts_where_a_role_cannot_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3328_full_scope_does_not_mean_the_main_agent_does_everybodys_work_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3329_fiddling_becomes_an_issue_somebody_can_fix_spex.exs`
-- `test/spex/1058_the_main_agent_reads_what_its_agents_cannot/criterion_3330_the_same_workaround_is_not_filed_over_and_over_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2394_a_finding_on_someone_elses_story_is_still_reported_here_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2395_unassigned_findings_are_visible_without_being_blocking_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2396_a_story_assigned_to_nobody_blocks_everybody_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2398_having_assignments_does_not_hide_the_unassigned_backlog_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2399_another_working_copys_story_is_not_offered_here_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2406_a_regression_on_proven_behaviour_blocks_whoever_is_stopping_spex.exs`
+- `test/spex/1016_stories_are_assigned_to_a_working_copy/criterion_2407_work_in_progress_elsewhere_does_not_block_here_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.WorkingCopies` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/working_copies_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
+- Source: `lib/code_my_spec/working_copies.ex`
 
 ## Available scripts
 
@@ -113,7 +111,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1016/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/895/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

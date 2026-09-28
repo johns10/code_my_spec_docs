@@ -1,4 +1,4 @@
-# QA Story 985: I can see what the orchestrator did to my agent, not just what my agent did
+# QA Story 871: My repository exists before anything needs to push
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,31 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As someone watching an agent work, I want the orchestrator's own actions in the conversation, so that when the agent suddenly changes direction I can see what was done to it rather than guessing.
+As a user I want CodeMySpec to connect to my GitHub account and select or create the repository for my project, so that when the sprite or the harness starts working on my application it has a remote to push to.
 
 ## Acceptance criteria
 
-- A change of direction has its reason directly above it
-- Three analyzers skipped for one reason is one entry, not three
-- I am told how to get the detail rather than shown all of it
-- An agent reading its own transcript can act on what it finds
-- The agent is not credited with what was done to it
-- A requirement handed over is on the record
-- An agent that stops on an open task is told to close it
+- One repository, carrying the project's docs
+- An existing repository is adopted rather than duplicated
+- The repository belongs to Sam, not to the platform
+- A revoked GitHub connection stops the step rather than falling back
+- The remote is in place before the first build needs it
+- The step is proven by a push, not by the repository existing
+- A repository that exists but rejects the push is not done
+- A colliding name is named, and Sam chooses
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8178_one_repository_carrying_the_projects_docs_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8179_an_existing_repository_is_adopted_rather_than_duplicated_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8180_the_repository_belongs_to_sam_not_to_the_platform_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8181_a_revoked_github_connection_stops_the_step_rather_than_falling_back_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8182_the_remote_is_in_place_before_the_first_build_needs_it_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8183_the_step_is_proven_by_a_push_not_by_the_repository_existing_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8184_a_repository_that_exists_but_rejects_the_push_is_not_done_spex.exs`
+- `test/spex/985_my_repository_exists_before_anything_needs_to_push/criterion_8185_a_colliding_name_is_named_and_sam_chooses_spex.exs`
 
-## Linked component: Conversations
+## Linked component: ProvisioningLive
 
-This story is implemented by `CodeMySpec.Conversations` (context).
+This story is implemented by `CodeMySpecWeb.ProvisioningLive` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/conversations_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/conversations.spec.md`
-- Source: `lib/code_my_spec/conversations.ex`
+- Tests: `test/code_my_spec_web/live/provisioning_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/provisioning_live.spec.md`
+- Source: `lib/code_my_spec_web/live/provisioning_live.ex`
 
 ## Available scripts
 
@@ -105,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/985/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/871/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

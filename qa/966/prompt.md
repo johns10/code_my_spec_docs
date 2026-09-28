@@ -1,4 +1,4 @@
-# QA Story 966: I watch my project and talk to its agent on one screen
+# QA Story 852: My app answers on my own server over HTTPS
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,50 +7,41 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a non-technical founder, I want my project's progress, its running preview and my conversation with its agent laid out on one screen, so that I can watch what is being built while I ask about it.
+Sam ends up with a running server in his own account serving his app over a valid certificate, deployed from an image his own repo built, with a monitor watching it.
 
 ## Acceptance criteria
 
-- The header survives a long conversation
-- Both halves are there on arrival
-- A desktop screen puts the talking on the left
-- A phone stacks the panels above the talking
-- Opening a panel does not cost Sam his place
-- A panel with no preview yet explains itself
-- The dynamic tab swaps its contents without becoming a fourth tab
-- Opening one tab on a phone closes the others
-- A stored desktop layout with several tabs open resolves to the preview on a phone
-- A blocked agent is visible while Sam is looking at something else
-- Ordinary progress does not ask for attention
-- Switching agents keeps the screen Sam set up
-- The agent being read is the one marked
-- An agent Sam has left does not write into the one he is reading
-- A half-typed message does not follow Sam to another agent
-- A conversation opens at its most recent turn
+- The server shows up in Sam's own console
+- The database is not reachable from outside
+- The deployed image is the one the repo built
+- Sam's app answers on his domain over a valid certificate
+- Migrations land before the swap, not after
+- A failed migration leaves the old version serving
+- An unhealthy deploy does not become the live version
+- Every public hostname is answering before setup calls the environment done
+- UAT stands alone, and prod arrives on its own box when Sam is ready
 
 ## BDD spec files
 
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2943_the_header_survives_a_long_conversation_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2944_both_halves_are_there_on_arrival_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2945_a_desktop_screen_puts_the_talking_on_the_left_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2946_a_phone_stacks_the_panels_above_the_talking_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2947_opening_a_panel_does_not_cost_sam_his_place_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2948_a_panel_with_no_preview_yet_explains_itself_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2949_the_dynamic_tab_swaps_its_contents_without_becoming_a_fourth_tab_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2951_opening_one_tab_on_a_phone_closes_the_others_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2952_a_stored_desktop_layout_with_several_tabs_open_resolves_to_the_preview_on_a_phone_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2953_a_blocked_agent_is_visible_while_sam_is_looking_at_something_else_spex.exs`
-- `test/spex/1028_i_watch_my_project_and_talk_to_its_agent_on_one_screen/criterion_2954_ordinary_progress_does_not_ask_for_attention_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8003_the_server_shows_up_in_sams_own_console_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8004_the_database_is_not_reachable_from_outside_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8005_the_deployed_image_is_the_one_the_repo_built_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8006_sams_app_answers_on_his_domain_over_a_valid_certificate_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8007_migrations_land_before_the_swap_not_after_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8008_a_failed_migration_leaves_the_old_version_serving_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8009_an_unhealthy_deploy_does_not_become_the_live_version_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8010_every_public_hostname_is_answering_before_setup_calls_the_environment_done_spex.exs`
+- `test/spex/966_my_app_answers_on_my_own_server_over_https/criterion_8156_uat_stands_alone_and_prod_arrives_on_its_own_box_when_sam_is_ready_spex.exs`
 
-## Linked component: Show
+## Linked component: Deploy
 
-This story is implemented by `CodeMySpecWeb.AgentConversationLive.Show` (liveview).
+This story is implemented by `CodeMySpec.Provisioning.Deploy` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/agent_conversation_live/show_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/agent_conversation_live/show.spec.md`
-- Source: `lib/code_my_spec_web/live/agent_conversation_live/show.ex`
+- Tests: `test/code_my_spec/provisioning/deploy_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/provisioning/deploy.spec.md`
+- Source: `lib/code_my_spec/provisioning/deploy.ex`
 
 ## Available scripts
 
@@ -124,7 +115,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/966/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/852/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

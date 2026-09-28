@@ -1,4 +1,4 @@
-# QA Story 1020: The graph recomputes as observations arrive
+# QA Story 958: Each device onboards itself and I can see what is running where
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,70 +7,49 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an engineer, I want the requirement graph to recompute from observations as they arrive - file changes, QA submissions, analysis results - so that its answer reflects the project as it is rather than as it was at the last full pass.
+As an engineer, I want each device to onboard itself when it comes online and to see all my devices, so that I know what is running where.
 
 ## Acceptance criteria
 
-- Work becomes available while nobody is looking
-- An idle agent does not sit through available work
-- Many writes at once cost one update
-- The change is announced for whoever is listening
-- A reader never sees an answer older than the observations in hand
-- The collection window does not delay anybody who asks
-- A failed recompute is an error somebody has to look at
-- An agent's own process decides whether the change was for it
-- A change for somebody else costs a query and nothing more
-- A recompute that succeeds passes without noise
-- A steady stream still gets a pass
-- One project's burst does not collapse into another's
-- A read with nothing pending does not force a recompute
-- Two reads inside one window cost one recompute
-- The announcement says only that something moved
-- A cached answer and a fresh one describe the same graph
-
-Given a reader with no checkout on its scope has been served the requirements graph
-When it reads again and is answered from the cache
-Then the cached answer holds the same requirements as the computation it came from
-- One story's observation leaves another story's answer alone
-- Stored requirements are trusted rather than counted
-- A reader is not made to recompute a graph nothing has touched
-- An observation recomputes what it touched and leaves the rest
-- A file changing reconsiders the requirements that file answers
-- A requirement records what it was computed from
-- Satisfying one requirement makes the next one available
-- A story arriving brings its requirements with it
-- A component going away takes its requirements with it
-- An analyzer finishing costs nothing for the components it found nothing in
+- A new machine appears without anyone registering it
+- The machine is told who it is, and remembers
+- Restarting a machine does not create a second one
+- A machine claiming somebody else's identity does not get it
+- My laptop and my cloud box are told apart
+- Two checkouts at the same path on different machines are told apart
+- A machine that did not say what it is does not read as a laptop
+- A checkout with no machine is not claimed to be anything in particular
+- Starting the harness is what onboards the machine
+- A second checkout on the same machine does not make a second machine
+- Destroying a machine leaves its checkouts behind, with no machine
+- A machine that is online says so even when nothing is running on it
+- A shared dev box onboards without belonging to anyone
 
 ## BDD spec files
 
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3242_work_becomes_available_while_nobody_is_looking_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3243_an_idle_agent_does_not_sit_through_available_work_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3244_many_writes_at_once_cost_one_update_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3245_the_change_is_announced_for_whoever_is_listening_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3246_a_reader_never_sees_an_answer_older_than_the_observations_in_hand_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3247_the_collection_window_does_not_delay_anybody_who_asks_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3249_an_agents_own_process_decides_whether_the_change_was_for_it_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3250_a_change_for_somebody_else_costs_a_query_and_nothing_more_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3303_a_recompute_that_succeeds_passes_without_noise_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3351_a_steady_stream_still_gets_a_pass_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3352_one_projects_burst_does_not_collapse_into_anothers_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3353_a_read_with_nothing_pending_does_not_force_a_recompute_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3354_two_reads_inside_one_window_cost_one_recompute_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3355_the_announcement_says_only_that_something_moved_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3358_a_cached_answer_and_a_fresh_one_describe_the_same_graph_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3423_a_reader_is_not_made_to_recompute_a_graph_nothing_has_touched_spex.exs`
-- `test/spex/1062_the_graph_recomputes_as_observations_arrive/criterion_3424_an_observation_recomputes_what_it_touched_and_leaves_the_rest_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2838_a_new_machine_appears_without_anyone_registering_it_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2839_the_machine_is_told_who_it_is_and_remembers_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2840_restarting_a_machine_does_not_create_a_second_one_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2841_a_machine_claiming_somebody_elses_identity_does_not_get_it_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2842_my_laptop_and_my_cloud_box_are_told_apart_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2843_two_checkouts_at_the_same_path_on_different_machines_are_told_apart_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2844_a_machine_that_did_not_say_what_it_is_does_not_read_as_a_laptop_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2845_a_checkout_with_no_machine_is_not_claimed_to_be_anything_in_particular_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2846_starting_the_harness_is_what_onboards_the_machine_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2847_a_second_checkout_on_the_same_machine_does_not_make_a_second_machine_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2848_destroying_a_machine_leaves_its_checkouts_behind_with_no_machine_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2849_a_machine_that_is_online_says_so_even_when_nothing_is_running_on_it_spex.exs`
+- `test/spex/1020_each_device_onboards_itself_and_i_can_see_what_is_running_where/criterion_2858_a_shared_dev_box_onboards_without_belonging_to_anyone_spex.exs`
 
-## Linked component: Requirements
+## Linked component: Index
 
-This story is implemented by `CodeMySpec.Requirements` (context).
+This story is implemented by `CodeMySpecWeb.DeviceLive.Index` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/requirements_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/requirements.spec.md`
-- Source: `lib/code_my_spec/requirements.ex`
+- Tests: `test/code_my_spec_web/live/device_live/index_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/device_live/index.spec.md`
+- Source: `lib/code_my_spec_web/live/device_live/index.ex`
 
 ## Available scripts
 
@@ -144,7 +123,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1020/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/958/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

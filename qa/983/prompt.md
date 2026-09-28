@@ -1,4 +1,4 @@
-# QA Story 983: I choose which model each agent runs on
+# QA Story 869: Spec failures block only stories whose specs have gone green
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,54 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the person paying for this, I want to say which provider and model each kind of agent uses, so that QA runs on something cheap and the agent doing the thinking does not.
+As an engineer, I want failing BDD specs to block the agent only on stories whose specs have already passed once, so that I can turn spex enforcement on project-wide without it blocking every story still mid-build.
 
 ## Acceptance criteria
 
-- QA runs cheap while the coder does not
-- Nothing in the launcher knows what a QA agent is
-- An account with only one provider still gets a sensible model
-- The preferred default is skipped when its key is missing
-- A fresh account can run every type without visiting a settings page
-- A running agent keeps the model it started on
-- You cannot choose a provider you have not connected
-- The cheap one is identifiable as the cheap one
-- A type that does not exist cannot be created by typing it
+- A freshly released story starts with its specs not ready
+- A green run on every spec, as part of a successful promotion, flips the story to specs-ready
+- One failing spec leaves the story short of ready
+- A stale green run refuses the flip and directs the agent to wait
+- A later edit stales the spex run without un-readying the story
+- Rewriting a story's BDD specs returns it to not ready
+- A failing spec on a specs-ready story blocks the stop
+- A failing spec on a mid-build story is advisory, not blocking
+- Only the ready story's failure blocks when both kinds are red at once
+- A story reaches ready while another story's specs are red
+- The agent is handed the specs-passing task rather than QA
+- Reaching specs-ready releases QA on the story
+- Clearing specs-ready parks a shipped story mid-refactor
+- Setting specs-ready by hand puts a story under enforcement without waiting for a run
+- A ready story's failure blocks whoever is stopping
+- A green run on a checkout that has not promoted does not flip the story to specs-ready
 
 ## BDD spec files
 
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3005_qa_runs_cheap_while_the_coder_does_not_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3006_nothing_in_the_launcher_knows_what_a_qa_agent_is_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3007_an_account_with_only_one_provider_still_gets_a_sensible_model_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3008_the_preferred_default_is_skipped_when_its_key_is_missing_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3009_a_fresh_account_can_run_every_type_without_visiting_a_settings_page_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3010_a_running_agent_keeps_the_model_it_started_on_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3011_you_cannot_choose_a_provider_you_have_not_connected_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3012_the_cheap_one_is_identifiable_as_the_cheap_one_spex.exs`
-- `test/spex/1039_i_choose_which_model_each_agent_runs_on/criterion_3013_a_type_that_does_not_exist_cannot_be_created_by_typing_it_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_2408_a_ready_storys_failure_blocks_whoever_is_stopping_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8157_a_freshly_released_story_starts_with_its_specs_not_ready_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8158_a_green_run_on_every_spec_flips_the_story_to_specs-ready_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8159_one_failing_spec_leaves_the_story_short_of_ready_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8160_a_stale_green_run_refuses_the_flip_and_directs_the_agent_to_wait_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8161_a_later_edit_stales_the_spex_run_without_un-readying_the_story_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8162_rewriting_a_storys_bdd_specs_returns_it_to_not_ready_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8163_a_failing_spec_on_a_specs-ready_story_blocks_the_stop_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8164_a_failing_spec_on_a_mid-build_story_is_advisory_not_blocking_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8165_only_the_ready_storys_failure_blocks_when_both_kinds_are_red_at_once_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8166_a_story_reaches_ready_while_another_storys_specs_are_red_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8167_the_agent_is_handed_the_specs-passing_task_rather_than_qa_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8168_reaching_specs-ready_releases_qa_on_the_story_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8169_clearing_specs-ready_parks_a_shipped_story_mid-refactor_spex.exs`
+- `test/spex/983_spec_failures_block_only_stories_whose_specs_have_gone_green/criterion_8170_setting_specs-ready_by_hand_puts_a_story_under_enforcement_without_waiting_for_a_run_spex.exs`
 
-## Linked component: Agents
+## Linked component: Requirements
 
-This story is implemented by `CodeMySpecWeb.AccountLive.Agents` (liveview).
+This story is implemented by `CodeMySpec.Requirements` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/account_live/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/account_live/agents.spec.md`
-- Source: `lib/code_my_spec_web/live/account_live/agents.ex`
+- Tests: `test/code_my_spec/requirements_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/requirements.spec.md`
+- Source: `lib/code_my_spec/requirements.ex`
 
 ## Available scripts
 
@@ -115,7 +128,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/983/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/869/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief
