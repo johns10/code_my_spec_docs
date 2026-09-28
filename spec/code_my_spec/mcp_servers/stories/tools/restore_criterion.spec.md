@@ -1,6 +1,6 @@
-# CodeMySpec.McpServers.Stories.Tools.DeleteCriterion
+# CodeMySpec.McpServers.Stories.Tools.RestoreCriterion
 
-MCP tool that deletes an acceptance criterion from a story. Provides protection against deleting verified (locked) criteria to maintain data integrity.
+MCP tool that brings a retired acceptance criterion back under its number, so a spec file naming that number covers it again.
 
 ## Dependencies
 

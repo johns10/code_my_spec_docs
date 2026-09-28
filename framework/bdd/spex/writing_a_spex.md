@@ -28,7 +28,7 @@ defmodule <App>Spex.Story<id>.Criterion<id>Spex do
   setup :register_log_in_setup_account
   setup :setup_active_project
 
-  spex "<engineer/agent> does <action>" do
+  spex "<engineer/agent> does <action>", criterion: <criterion_number> do
     scenario "<observable outcome>" do
       given_ :synced_context_component
       given_ :on_configuration_page
