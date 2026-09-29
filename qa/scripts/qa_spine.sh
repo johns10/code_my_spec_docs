@@ -35,9 +35,9 @@ print(f'  saving     {100 - size*100//82591}%')
 print('  names      ' + ', '.join(names))
 for want in ['run_script','tool_docs','get_next_requirement','start_task','evaluate_task','sync_project']:
     print(f'  spine {want:22} {\"present\" if want in names else \"MISSING\"}')
-for excluded in ['ask_user','start_agent','tap_out','show_in_panel','stop_agent']:
+for excluded in ['ask_user_question','assign_subagent','tap_out','show_in_panel']:
     print(f'  excluded-but-listed {excluded:14} {\"present\" if excluded in names else \"MISSING - unreachable!\"}')
-for moved in ['list_stories','create_story','submit_qa_result']:
+for moved in ['list_stories','create_story','submit_qa_result','start_agent','turn_off_agent']:
     print(f'  moved off the list  {moved:14} {\"still listed!\" if moved in names else \"gone\"}')
 "
 
