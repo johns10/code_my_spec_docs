@@ -504,6 +504,55 @@ stories/personas/issues without colliding with real data.
 To reset the sandbox between major QA passes, re-run the cli_qa_seeds
 script with `QA_LOCAL_PATH` pointing at the sandbox dir.
 
+### A safe fixture for story-scoped gating (criterion 1721-class)
+
+`get_next_requirement(story_number=X)` refuses unless X is the calling
+working copy's team's active story (`story_execution.ex`): "Story <N> is not
+this working copy's team's active story (<active>) ... switch with
+`set_active_story`." Exercising that refusal — "an unlinked story waits
+while linked stories are built" — needs a working copy whose team already
+holds a story, plus a second, unlinked story to ask for instead. Doing this
+against the real "Code My Spec" project's own harness would mean either
+mutating that project's real team assignment or landing mid an agent's real
+work; neither is safe. Use the sandbox instead.
+
+**Already set up — reuse rather than re-provisioning:**
+
+- Working copy / harness `1fc425f5-7b88-4e32-86a3-c16c3317408c` (the
+  `qa_sandbox` checkout, project `11111111-1111-4111-8111-111111111111`).
+- Story 34 ("Qa1083 Story A") is linked to that working copy and held by a
+  stopped `coding`-role agent (`5d65b4d0-95d9-4e5b-915b-cc012f4d91ff`) whose
+  `story_id` makes it the team's active story — `WorkingCopies.team_story_id/1`
+  only reads the row; the agent does not need to be running.
+- Story 35 ("Qa1083 Story B") exists on the same project, left unlinked —
+  the "waits" side of the criterion.
+
+**Drive it over the real hosted `/mcp/harness` surface** (handshake per the
+Tools Registry section above), sending that harness id instead of a real
+project's:
+
+    # ... initialize + notifications/initialized as usual, then:
+    curl -s -X POST http://localhost:4000/mcp/harness \
+      -H "Authorization: Bearer $TOKEN" \
+      -H "X-Project-ID: 11111111-1111-4111-8111-111111111111" \
+      -H "X-Harness-Id: 1fc425f5-7b88-4e32-86a3-c16c3317408c" \
+      -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" \
+      -H "Mcp-Session-Id: $SID" \
+      -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_next_requirement","arguments":{"story_number":34}}}'
+    # → reaches story 34's own scope (the team's active story)
+
+    # same call with story_number: 35 instead →
+    # "Story 35 is not this working copy's team's active story (34).
+    #  Asking for another story does not widen the answer; switch with
+    #  `set_active_story`."
+
+Verified this session (2026-10-02): both calls behave exactly as above.
+**Never call `set_active_story` against this harness** (or any harness on
+the real project) to test this — the refusal itself is the evidence; nothing
+needs reassigning. If this fixture is ever cleared (agent retired, story
+re-linked), recreate it with `reserve_story` / `Agents.assign_team` on two
+fresh stories on the sandbox project rather than touching real ones.
+
 ### Demo content
 
 `priv/repo/seeds/math_test_project.exs` and `metricflow_and_fuellytics.exs`
