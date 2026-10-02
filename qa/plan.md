@@ -42,7 +42,10 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - `4000/` — marketing pages, `/users/log-in`, `/users/register`
 - `4000/app/*` — hosted SaaS LiveViews (overview, accounts, projects, stories, components, issues, architecture)
 - `4000/api/*` — JSON API (stories, personas, issues, projects, uploads, push notifications) — OAuth bearer
-- `4000/mcp/{stories,components,personas,analytics-admin}` — hosted MCP servers — OAuth bearer + `ProjectScopeOverride`
+- `4000/mcp/harness` — forwards to `CodeMySpec.McpServers.LocalServer`, the same direct tool set a local/CLI MCP session carries (`start_task`, `evaluate_task`, `get_next_requirement`, `sync_project`, `run_script`, etc.) — OAuth bearer + `ProjectScopeOverride`. Story/component mutation tools (`create_story`, `set_story_component`, `create_component`, ...) are reached by calling its `run_script` tool with a script, not a separate mount.
+- `4000/mcp/components` — `CodeMySpec.McpServers.ComponentsServer` — OAuth bearer + `ProjectScopeOverride`.
+- `4000/mcp/{gsc,ga4,google-ads}` — SEO/analytics MCP servers, same auth.
+- `/mcp/stories`, `/mcp/personas`, `/mcp/analytics-admin`, `/mcp/tasks`, `/mcp/requirements` do **not** exist on this build (404) — verified by curl against a running instance, 2026-10-02 (`7ae462b3`). The line this replaces was wrong; don't resurrect it without re-checking the router.
 - `4000/.well-known/oauth-*` — MCP discovery
 - `4000/build` — guided intake: anonymous plan LiveView (sign-up card renders once the plan is confirmed and no user is signed in)
 - `4000/build/sign-up` — plain POST, registers + logs in from the sign-up card's email field
@@ -501,6 +504,91 @@ stories/personas/issues without colliding with real data.
 To reset the sandbox between major QA passes, re-run the cli_qa_seeds
 script with `QA_LOCAL_PATH` pointing at the sandbox dir.
 
+### A safe fixture for story-scoped gating (criterion 1721-class)
+
+`get_next_requirement(story_number=X)` refuses unless X is the calling
+working copy's team's active story (`story_execution.ex`): "Story <N> is not
+this working copy's team's active story (<active>) ... switch with
+`set_active_story`." Exercising that refusal — "an unlinked story waits
+while linked stories are built" — needs a working copy whose team already
+holds a story, plus a second, unlinked story to ask for instead. Doing this
+against the real "Code My Spec" project's own harness would mean either
+mutating that project's real team assignment or landing mid an agent's real
+work; neither is safe. Use the sandbox instead.
+
+**Already set up — reuse rather than re-provisioning:**
+
+- Working copy / harness `1fc425f5-7b88-4e32-86a3-c16c3317408c` (the
+  `qa_sandbox` checkout, project `11111111-1111-4111-8111-111111111111`).
+- Story 34 ("Qa1083 Story A") is linked to that working copy and held by a
+  stopped `coding`-role agent (`5d65b4d0-95d9-4e5b-915b-cc012f4d91ff`) whose
+  `story_id` makes it the team's active story — `WorkingCopies.team_story_id/1`
+  only reads the row; the agent does not need to be running.
+- Story 35 ("Qa1083 Story B") exists on the same project, left unlinked —
+  the "waits" side of the criterion.
+
+**Drive it over the real hosted `/mcp/harness` surface** (handshake per the
+Tools Registry section above), sending that harness id instead of a real
+project's:
+
+    # ... initialize + notifications/initialized as usual, then:
+    curl -s -X POST http://localhost:4000/mcp/harness \
+      -H "Authorization: Bearer $TOKEN" \
+      -H "X-Project-ID: 11111111-1111-4111-8111-111111111111" \
+      -H "X-Harness-Id: 1fc425f5-7b88-4e32-86a3-c16c3317408c" \
+      -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" \
+      -H "Mcp-Session-Id: $SID" \
+      -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_next_requirement","arguments":{"story_number":34}}}'
+    # → reaches story 34's own scope (the team's active story)
+
+    # same call with story_number: 35 instead →
+    # "Story 35 is not this working copy's team's active story (34).
+    #  Asking for another story does not widen the answer; switch with
+    #  `set_active_story`."
+
+Verified this session (2026-10-02): both calls behave exactly as above.
+**Never call `set_active_story` against this harness** (or any harness on
+the real project) to test this — the refusal itself is the evidence; nothing
+needs reassigning. If this fixture is ever cleared (agent retired, story
+re-linked), recreate it with `reserve_story` / `Agents.assign_team` on two
+fresh stories on the sandbox project rather than touching real ones.
+
+**This fixture lives in whichever Postgres the fixture was built against —
+it does not travel with a fresh worktree's isolated DB copy.** Each worktree
+gets its own `code_my_spec_dev_wc_<hash>` database, and project
+`11111111-1111-4111-8111-111111111111` there is whatever that snapshot
+happened to contain, not this section's story 34/35. Check first — `select
+id, number, title from stories where project_id =
+'11111111-1111-4111-8111-111111111111' and number in (34,35);` — before
+assuming the fixture is there.
+
+If it is not, rebuild it the same way, over that worktree's own
+`/mcp/harness` with the sandbox's `X-Harness-Id`:
+
+1. `run_script` → `create_story({ title = "..." })` twice (one to hold, one
+   to leave waiting).
+2. `run_script` → `update_story({ story_number = N, ready_for_dev = true })`
+   on both — `set_active_story` refuses an unready story.
+3. `run_script` → `set_active_story({ story_number = <linked> })`. This
+   needs a non-retired coding or QA agent already on the sandbox's working
+   copy to hand the story to (`:no_team` otherwise); one has been left
+   behind by every pass that built this fixture, so check for one
+   (`select id, role, story_id from agents where working_copy_id =
+   '<sandbox-copy-id>' and role in ('coding','qa') and retired_at is null;`)
+   before assuming you need to provision one.
+4. `get_next_requirement(story_number=<linked>)` reaches that story's scope
+   (it may still answer "requirements are not available" if nothing is
+   synced — that is a separate, unrelated gate, not this one); the same call
+   for the other number is refused with "is not this working copy's team's
+   active story".
+
+Verified this way against this worktree's own instance (port 60642,
+DB `code_my_spec_dev_wc_ad7d67d6`), 2026-10-02: that DB's copy of project
+`11111111` had no story 34/35, but did still have a non-retired `coding`
+agent on the sandbox working copy (left over holding an unrelated story).
+Building two fresh stories and reassigning that agent with `set_active_story`
+reproduced both halves of the gate exactly.
+
 ### Demo content
 
 `priv/repo/seeds/math_test_project.exs` and `metricflow_and_fuellytics.exs`
@@ -777,3 +865,24 @@ Do not reach for the MCP read tools for this. `show_story_requirements` and
 `list_requirements` go through `RequirementGraph.compute_all/1` and always
 recompute, so they can never demonstrate a cache hit; `get_next_requirement` is
 cache-aware and exposes no timestamp.
+
+### `evaluate_task` on an ArchitectureDesign/`component_linked` task needs `X-Harness-Id`
+
+`start_task` and `set_story_component` work fine from an external OAuth +
+`X-Project-ID` call against `/mcp/harness`. `evaluate_task` on that same task
+used to always answer `ArchitectureDesign evaluation error: :no_environment`
+(`agent_tasks/architecture_design.ex:158`), because `AgentScope` never
+populated `scope.cwd`/`scope.environment` on this pipeline. **Fixed in
+commit `68fbc0897` (issue `ed28189c`, resolved):** send `X-Harness-Id`
+alongside `X-Project-ID` and the bearer token, and `ProjectScopeOverride`
+supplies `scope.environment` from it. Verified against this worktree's own
+instance (port 60642): `start_task` + `set_story_component` + `evaluate_task`
+for three fresh fixture stories (1090, 1092, 1093) all completed with
+"ArchitectureDesign: Passed" over plain hosted MCP — no local/CLI session
+needed.
+
+Separately: a freshly created story produces no `component_linked`
+requirement until it is released — follow `create_story` with
+`update_story({ ready_for_dev = true })`, or `start_task` answers
+"Requirement component_linked not found for story <id>" even though the
+story exists.
