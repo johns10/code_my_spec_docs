@@ -553,6 +553,42 @@ needs reassigning. If this fixture is ever cleared (agent retired, story
 re-linked), recreate it with `reserve_story` / `Agents.assign_team` on two
 fresh stories on the sandbox project rather than touching real ones.
 
+**This fixture lives in whichever Postgres the fixture was built against —
+it does not travel with a fresh worktree's isolated DB copy.** Each worktree
+gets its own `code_my_spec_dev_wc_<hash>` database, and project
+`11111111-1111-4111-8111-111111111111` there is whatever that snapshot
+happened to contain, not this section's story 34/35. Check first — `select
+id, number, title from stories where project_id =
+'11111111-1111-4111-8111-111111111111' and number in (34,35);` — before
+assuming the fixture is there.
+
+If it is not, rebuild it the same way, over that worktree's own
+`/mcp/harness` with the sandbox's `X-Harness-Id`:
+
+1. `run_script` → `create_story({ title = "..." })` twice (one to hold, one
+   to leave waiting).
+2. `run_script` → `update_story({ story_number = N, ready_for_dev = true })`
+   on both — `set_active_story` refuses an unready story.
+3. `run_script` → `set_active_story({ story_number = <linked> })`. This
+   needs a non-retired coding or QA agent already on the sandbox's working
+   copy to hand the story to (`:no_team` otherwise); one has been left
+   behind by every pass that built this fixture, so check for one
+   (`select id, role, story_id from agents where working_copy_id =
+   '<sandbox-copy-id>' and role in ('coding','qa') and retired_at is null;`)
+   before assuming you need to provision one.
+4. `get_next_requirement(story_number=<linked>)` reaches that story's scope
+   (it may still answer "requirements are not available" if nothing is
+   synced — that is a separate, unrelated gate, not this one); the same call
+   for the other number is refused with "is not this working copy's team's
+   active story".
+
+Verified this way against this worktree's own instance (port 60642,
+DB `code_my_spec_dev_wc_ad7d67d6`), 2026-10-02: that DB's copy of project
+`11111111` had no story 34/35, but did still have a non-retired `coding`
+agent on the sandbox working copy (left over holding an unrelated story).
+Building two fresh stories and reassigning that agent with `set_active_story`
+reproduced both halves of the gate exactly.
+
 ### Demo content
 
 `priv/repo/seeds/math_test_project.exs` and `metricflow_and_fuellytics.exs`
