@@ -1,159 +1,62 @@
-# Qa Story Brief
-
-Story 1017 — "The main agent looks in on its agents on a cadence"
-(`CodeMySpec.MainAgent` cadence/recovery: `Cadence`, `Work`, `Digest`, tap-out).
+# Qa Story Brief — Story 896: Agent sees the questions it has open
 
 ## Tool
 
-script + curl
-
-`qa_as_agent.sh` (code-mode `run_script` for scriptable tools; direct call for
-`tap_out`, `ask_user_question`, `start_task`) against the math_test_project
-harness, plus `curl` against the `/dev/faults` seam and `/dev/mailbox`, plus
-the `vibium` CLI (headless) for the one browser-authorized step. The Vibium
-MCP server itself is down this session; the `vibium` CLI substitutes per the
-team's note.
+MCP (via `qa_as_agent.sh` and direct curl to the sandbox harness) + `web` (Vibium, `/app/questions/:id` and `/app/projects/:id/agent-conversation`)
 
 ## Auth
 
-No product login needed for the agent-surface tools — `qa_as_agent.sh` drives
-the harness proxy directly with `X-Harness-Id` + `X-Agent-Id`.
-
-```
-QA_WORKTREE="/Users/johndavenport/Documents/github/math_test_project" \
-  .code_my_spec/qa/scripts/qa_as_agent.sh <agent-id> <tool> '<json-args>'
-```
-
-`QA_WORKTREE` **must** point at `math_test_project`'s own checkout (it has
-its own `.cms_harness.json`) — pointing it at this worktree sends the *real*
-CodeMySpec project's harness id instead and silently returns the wrong
-project's data. Confirmed this the hard way on the first two calls
-(`get_next_requirement`, `list_notifications` both came back with the real
-project's rows) before fixing `QA_WORKTREE`.
-
-For the one LiveView step (approving a permission), signed in as
-`qa@codemyspec.local` via the magic-link flow (no password is set for this
-user, so `/dev/sign-in` doesn't apply):
-
-1. `vibium go` to `http://127.0.0.1:4000/users/log-in`, set
-   `#login_form_magic_email` and click "Email me a login link" (via `vibium
-   eval`, not `vibium fill`/`click` — both timed out finding an element that
-   `eval` could see fine; JS-level `dispatchEvent`/`.click()` worked every
-   time).
-2. `curl http://127.0.0.1:4000/dev/mailbox/<message-id>/html`, extract the
-   `/users/log-in/<token>` link, rewrite the host to `127.0.0.1:4000`.
-3. `vibium go` to that URL.
-4. `/app/accounts/picker` → click the `Code My Spec` account link
-   (`a[phx-value-account-id]`, not the enclosing `<li>`).
-5. `/app/projects/picker` → click `Math Test Project`
-   (`a[phx-value-project-id="d7f466a1-591e-4f36-8319-42633f59411e"]`).
+- **Browser (hosted app, port 4000):** Log in as `qa@codemyspec.local` via the magic-link flow (no password is set for this seed user):
+  1. `vibium go http://127.0.0.1:4000/users/log-in`, fill `input[name="user[email]"]` with `qa@codemyspec.local`, submit the magic-link form (`#login_form_magic`).
+  2. Fetch the link from the local mailbox: `curl -s "http://127.0.0.1:4000/dev/mailbox/<message-id>/html" | grep -o 'href="[^"]*log-in[^"]*"'` (or drive `/dev/mailbox` in the browser). `/dev/mailbox` is listed at the top of the page after navigating there.
+  3. Rewrite the host to `http://127.0.0.1:4000` before navigating to the `/users/log-in/:token` link (it is minted against `dev.codemyspec.com`).
+  4. Switch active account/project so you land on the sandbox, not "Code My Spec": `GET /app/accounts/picker` → click "QA Account", then confirm the active project is "QA Fixture Project" (it auto-selects since the account has only that one project).
+  - **Use an isolated Vibium session** (`vibium --session qa-896 <cmd>`, or the equivalent `VIBIUM_SESSION` env var). The default session's cookie jar is shared with every other concurrently-running QA agent on this box (qa-1004/1005/1009 were live during this pass) and was already logged in as `qa@codemyspec.local` with a different active account — switching it would have corrupted their in-flight state. `--session <name>` gets its own browser context / cookie jar and login, confirmed via `window.location.href` redirecting to `/users/log-in` on first navigation.
+  - **Vibium's native `fill`/`click`/`type` commands timed out (`element not found` / `waiting for element`) against every element tried this session**, including plainly visible, enabled, unobstructed inputs and buttons (confirmed via `elementFromPoint`, `getBoundingClientRect`, machine load 2.07 — not saturation). Worked around with `vibium eval`, setting the native value setter + dispatching `input`/`change` events for fields, and `element.click()` for buttons/radios. This is a QA-tooling finding (see Issues below), not a story defect — every interaction produced the correct LiveView side effect once dispatched this way.
+- **MCP as an agent:** `.code_my_spec/qa/scripts/qa_as_agent.sh <agent-id> <tool> '<json>'` with `QA_WORKTREE=/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox` exported first (so the script reads the *sandbox's* `.cms_harness.json`, harness id `1fc425f5-7b88-4e32-86a3-c16c3317408c`, project `11111111-1111-4111-8111-111111111111` — **not** this worktree's own `.cms_harness.json`, which names the real "Code My Spec" project 708492f9 and must never be used for `ask_user_question`). Tools not in the direct list (`list_tasks`, etc.) go through `run_script({script = "return tool({...})"})`.
+- **MCP as a legacy/external session (no agent_id):** raw curl to `http://localhost:4004/mcp` with `X-Harness-Id: 1fc425f5-7b88-4e32-86a3-c16c3317408c` and no `X-Agent-Id`, following the `initialize` → `notifications/initialized` → `tools/call` handshake in `.code_my_spec/qa/plan.md`'s curl section.
+- **Never** call `ask_user_question` from this worktree's own bound MCP tools, or with `QA_WORKTREE` unset — both resolve to the real dev harness and write into the real project owner's inbox (issue `08d4d7bd`).
 
 ## Seeds
 
+No new seeds required. Uses existing fixtures:
+- QA Fixture Project `11111111-1111-4111-8111-111111111111` (account `22222222-...` "QA Account", owned by `qa@codemyspec.local`) — already onboarded at `/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox`.
+- Pre-existing stopped, non-continuous fixture agents on that project, picked because each one had never asked a question before this pass (to keep `list_user_questions` evidence clean): `6c016d95-7e13-49e4-b86f-34d2109adb1a` (coding, agent A), `bce7b8f6-1979-4e07-88a2-b50c79be5432` (coding, agent B — already had a `Conversation` row `82c9cea7-5edc-4f5d-9a0f-943c11bb8ba7`, used for the agent-conversation host), `79de3a9e-37bc-4061-bfe7-8cbb803fcff7` (coding, agent C, free-text case), `1a219c61-9265-4f2f-9163-873757e72cb4` (product — used only to reproduce the `start_task` crash below), `5d65b4d0-95d9-4e5b-915b-cc012f4d91ff` (coding, has a non-nil `working_copy_id` — used to file the issue).
+
+**Blocking discovery — do this check first on a re-run:** every "product"-role fixture agent on the QA Fixture Project has `working_copy_id = nil`, and the only actionable requirement in the project (`personas_complete`, project-scoped) requires the "product" role. Calling `start_task` for it **crashes** (`CodeMySpec.TaskOwner.check_requirement_claim/2`, Ecto `ArgumentError` comparing `nil` unsafely — see issue `29a86945`). This blocks every task-claim-and-block scenario below from being exercised live until either that bug is fixed or a product-role fixture with a real `working_copy_id` is seeded. Confirm with:
 ```
-mix cms.seed priv/repo/qa_wake_seed.exs
+psql -qtA code_my_spec_dev -c "select id, role, working_copy_id from agents where project_id='11111111-1111-4111-8111-111111111111';"
 ```
-
-Targets math_test_project (project `d7f466a1-591e-4f36-8319-42633f59411e`,
-working copy `56f5bf62-9cf8-400d-abcd-6c796afd3437`). Sets four agents to
-`status=running, continuous=true`:
-
-| role | agent id |
-|---|---|
-| main | `4e98e2a8-f674-4a10-9592-a1468e4b64ac` |
-| coding | `25d67c11-f590-4e8e-a00d-6d3fb6bf08eb` |
-| coding | `59596b8a-1a5d-44b8-8f38-9bf1b570442d` |
-| product | `e9dce99a-9512-457d-b613-3baa49c387a7` |
-
-**These rows are reaped back to `status=stopped` on the next harness report
-— observed at ~6 minute spacing via `settle_against/3` log lines in
-`~/.codemyspec/web.log` this pass, not "within seconds" as prior notes
-warned; either way, re-seed immediately before anything that depends on
-`status=running`.** Reads that don't depend on runnable state (`check_in`,
-`cadence`, `list_notifications`, `list_tasks`, `tap_out`, `start_task`)
-are unaffected by the reap and can be run any time.
-
-`GET /dev/faults` / `POST /dev/faults` / `DELETE /dev/faults` (dev-only,
-scoped by `key` = project id or agent id) is the sanctioned seam for
-criterion 3333 (`digest_unavailable`) and the adjacent silent-agent fault
-(`agent_stays_silent`). Always clear an injected fault after use — it does
-not expire on its own.
+Any product-role row with `working_copy_id` empty will still crash `start_task` on `personas_complete`.
 
 ## What To Test
 
-- **3320 / half of 3317 (quiet check leaves everyone alone):** with all
-  fleet agents idle (no eligible graph work, no open question held by
-  main), call `check_in` as main. Confirm: `list_tasks` for every agent
-  stays "No tasks.", `list_notifications` count is unchanged, and no
-  agent row's `work_request_id`/`turn_started_at` changes. Repeat — it
-  must be a no-op every time, not just the first.
-- **3317 (positive: admits a turn only for genuinely runnable+eligible
-  work):** find a role with real eligible graph work via
-  `get_next_requirement` (this pass: `product` had `personas_complete`
-  available). Re-seed so that agent is `running`+`continuous`, then call
-  `check_in` immediately and watch for a reservation
-  (`work_request_id`) or a change in response latency versus the
-  all-idle baseline.
-- **3318 (question work reconsidered without waiting for the timer):**
-  `ask_user_question` as a coding-role agent, then immediately (no
-  delay, no cadence tick) call `list_notifications` as main — it must
-  already show under "Needs your attention," not "waiting on the next
-  check."
-- **3319 (silent agent observed, no automatic intervention):**
-  `list_agent_work` as main over a fleet with idle/stopped agents;
-  confirm it only reports state (no restart fires from a read). Every
-  `check_in` response also asserts this in its own text ("no process
-  was started or restarted").
-- **3331 (interval configures checks, not turns):** `cadence({seconds =
-  N})` as main; confirm the report changes and nothing else does
-  (`list_tasks` stays empty, notification count unchanged).
-- **3332 (recovery exposes evidence without selecting a task):**
-  `check_in`'s own response text plus `list_tasks` staying "No tasks."
-  immediately after.
-- **3333 (failed digest stays an observable failure):** `POST
-  /dev/faults {"key": "<project-id>", "fault": "digest_unavailable"}`,
-  call `check_in`, confirm an issue titled "The check-in could not be
-  assembled" (severity high, scope framework) is created — not a silent
-  empty digest. `DELETE /dev/faults` afterward.
-- **3334 (task tap-out is local):** `start_task` for a real requirement
-  to get a task id, `tap_out({task_id = "..."})` on that agent. Confirm
-  the task is now `[blocked]` on that tap-out, while `cadence({})` and
-  the agent's `continuous` flag are unchanged before/after.
-- **3335 (whole-agent tap-out preserves reachability):** `tap_out({task_id
-  = nil})` on an agent with no active task — confirm the response text
-  ("asks to turn off continuous work upon approval") and that a pending
-  permission of `tool_name: "tap_out"`, `task_id: nil` now exists.
-  Approving it and observing `continuous` flip to `false` while the
-  agent stays reachable needs a session belonging to the permission's
-  `user_id` — see Setup Notes.
+Live/browser-checked this pass:
+
+- **3574 — Invalid task links leave no orphan question.** `ask_user_question` with `task_id` set to a well-formed but non-existent UUID, from an agent with no active task. Expect a tool refusal (`Could not reach the user: :task_not_found`) and `list_user_questions` unchanged before/after (no orphan row). Uses agent `6c016d95`.
+- **2418 — Question visibility respects agent ownership.** Two agents (`6c016d95`, `bce7b8f6`) each ask one task-free question. `list_user_questions` as agent A shows only A's question, as agent B shows only B's, and as an uninvolved third agent (`79de3a9e`) shows none. (This pass exercises the agent-vs-agent half only; the session-vs-agent half is covered by the spex, criterion 2418's fixture needs two durable agents *and* two external sessions sharing one checkout, which the live surface has no seam for.)
+- **2422 — Both question hosts support choices and one free-text question.**
+  - Choice question (`817f7f6e-a979-42c9-87f1-72292eed7d74`, no existing conversation) renders on the standalone host `/app/questions/:id`.
+  - Choice question (`5a294138-fbf1-4d19-bb69-04e20001e133`, agent `bce7b8f6` has a pre-existing conversation) renders inline on `/app/projects/:id/agent-conversation?conversation=...#question-...` — same `data-test="question-form"` markup, same fieldset/options/Send-answer structure.
+  - Free-text question (`e288717f-b0fd-43bd-ab03-0407198196fe`) renders a bare `<textarea>` (no options) on the standalone host, submitted and collected correctly via `check_answer`.
+- **The two fixes just shipped in v2.0.75 (called out explicitly by the story owner as worth exercising):**
+  - Submitting a question form with nothing selected and nothing typed is refused (`{:error, :empty_answer}` → the LiveView's generic error branch shows "Failed: :empty_answer") and the question stays pending — verified on `817f7f6e`, then a real answer ("Blue") was submitted immediately after and succeeded normally, proving the refusal doesn't wedge the form.
+  - Typing into the "Other…" text box without clicking its radio is read as the answer, not as blank — verified on `5a294138` (agent-conversation host): typed `"Triangle (typed correction)"` with all radios (including "Other"'s own) left unchecked, submitted, and `check_answer` / the DB row both show the typed text, not `""`.
+- **3576 — Legacy external questions support polling without a task.** Raw curl to the sandbox harness with `X-Harness-Id` and no `X-Agent-Id` (a Claude-Code-shaped session): `ask_user_question` succeeds with no task, no agent listing; answered via the `/app/questions/:id` browser form; a **second, independent** MCP session (fresh handshake, same no-agent shape) calls `check_answer` and gets the answer back — confirming polling needs no task and no session continuity.
+
+Spex-only this pass (reasoning, not held open):
+
+- **2414 / 2415 / 2419 / 2421 — any scenario needing a real claimed-and-blocked task.** Blocked by the `start_task` crash above: no fixture agent combines (a) a role with actionable work and (b) a non-nil `working_copy_id`, so no task can be claimed live without hitting the crash. The spex drive this through the fixture bridge instead and are unaffected. Once issue `29a86945` is fixed, or a product-role fixture with a real working copy exists, this becomes reachable — re-check `get_next_requirement` role/`working_copy_id` combinations first.
+- **2417 — Open questions survive an internal agent restart.** Requires restarting a real, durable engine process under the same identity — deliberately not attempted from QA (would spend real tokens/spawn a live Claude run against fixture data, per the agent-sandbox notes in `.code_my_spec/qa/plan.md`).
+- **3575 — A failed question write does not block the task.** Requires injecting a DB insert failure for a specific user, which is a test-only seam (no live fault-injection surface exists).
+- **3577 / 3578 — Answer queuing / dedup while the agent is busy.** Both require a held/paused provider supplying a real in-flight turn — no such double exists outside the spex harness.
+- **3579 — Resuming an answered task is an explicit revalidated claim.** Depends on the same task-claim path blocked above (valid resume / withdrawn requirement / another agent's claim all need a real active task to resume).
 
 ## Result Path
 
-`.code_my_spec/qa/1017/result.md` (evidence only; findings and the pass/fail
-record go through `create_issue` + `submit_qa_result`, not this file).
+DB-backed attempt via `submit_qa_result` (task id `16c7e602-39da-4007-9d2f-75ea1291c625`). Screenshots: `.code_my_spec/qa/896/screenshots/`.
 
 ## Setup Notes
 
-**A structural QA-tooling gap, not a story defect:** a `tap_out` permission
-request raised through the local harness is owned by `scope.user.id`, which
-resolves to the real project's account owner (`user_id: 1`), not to
-`qa@codemyspec.local` or any other QA-mintable identity. `PermissionLive.Show`
-refuses anyone else with "Permission request not found or not authorized." —
-confirmed live after correctly switching the QA session to the `Code My Spec`
-account and the `Math Test Project` project. This is the same class of gap the
-plan already documents for locally-asked *questions* (issues `19b0d2d4` /
-`7ba12775`), extended here to *permissions*. No sanctioned dev seam exists to
-approve as the real owner or to mint a session as user id 1. The spex for
-3335 covers the approve-and-observe half directly (it drives
-`PermissionLive.Show` through a test-privileged `conn`), so that half is
-spex-covered rather than QA-blocked; filed as its own issue since a plain
-grep for the existing question-ownership issues would not surface it.
-
-**An unexplained extra `main`-role agent** (`27417912-73f9-4572-a572-52b0faf7ba64`,
-`continuous: false`) appeared on math_test_project partway through this pass,
-alongside the seeded fixture main agent. Did not interfere with any
-observation (it carried no eligible work and nothing acted on it), and its
-`continuous: false` means it could not have absorbed any of the turn-admission
-evidence above. Left unresolved — plausibly from unrelated project-onboarding
-machinery reacting to the QA session's account/project switch — worth a
-one-line mention to whoever next touches this fixture.
+- The QA Fixture Project's account (`22222222-...`, "QA Account") is owned by `qa@codemyspec.local`, distinct from the real "Code My Spec" account (`0f27281c-...`, owned by `johns10@gmail.com`) that both this worktree's own harness and the standing "parked" fixture agent (`5e603bd6-...`, documented in `.code_my_spec/qa/plan.md`) belong to. **Do not use that standing fixture, or any `math_test_project` agent, for `ask_user_question`** — both resolve to the real account and would write into the real owner's inbox exactly like issue `08d4d7bd`. Only agents on project `11111111-...` are safe for this story.
+- One issue filed against the QA-tooling itself: Vibium's native interaction commands (`fill`, `click`, `type`) timed out against every element this session while `eval`-based DOM manipulation + native `.click()` worked every time and produced correct LiveView round-trips. Not story 896's bug; flagged so the next QA pass doesn't lose time on the same thing.

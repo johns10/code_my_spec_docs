@@ -1,4 +1,4 @@
-# QA Story 817: Plan QA infrastructure for every surface of the app
+# QA Story 868: Manage Google Ads through the agent
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,37 +7,37 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a developer kicking off QA on a project, I want the harness to drive an agent through a probe-then-write workflow that discovers every running surface (browser pipelines, API pipelines, MCP servers, hook endpoints) across every `lib/*_web/router.ex` it can find, validates the resulting `.code_my_spec/qa/plan.md` against the registered `qa_plan` document spec, and patches an existing plan rather than rewriting from scratch — so that downstream QA work runs against a plan grounded in real selectors, real headers, and real seed paths instead of guesses, and idempotent re-runs preserve working scripts and credentials.
+As a solo founder running my own Google Ads, I want the agent to analyze my campaigns and make the changes I approve, so I get expert-level ad management without hiring an agency.
 
 ## Acceptance criteria
 
-- Probe section enumerates all five discovery steps before the writing instructions
-- MCP server returning 202 Accepted on tools/call gets flagged in the probe instructions
-- Plan with non-empty App Overview, Tools Registry, and Seed Strategy validates clean
-- Plan missing the Tools Registry section fails with a friendly section-name list
-- Plan with bare H2 headers but empty bodies is rejected
-- Existing plan plus existing seed inventory triggers update-rather-than-rewrite mode
-- No existing plan omits the Existing Plan section entirely
+- Campaign performance is returned without an approval step
+- An approved budget change is written to the account
+- Queries use the authenticated user's own Google credentials
+- Tool responses never include the developer token
+- A manager account query targets the chosen customer
+- An unconnected account prompts the user to connect Google
+- A quota error surfaces the API's message
 
 ## BDD spec files
 
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5480_probe_section_enumerates_all_five_discovery_steps_before_the_writing_instructions_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5481_mcp_server_returning_202_accepted_on_tools_call_gets_flagged_in_the_probe_instructions_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5482_plan_with_non-empty_app_overview_tools_registry_and_seed_strategy_validates_clean_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5483_plan_missing_the_tools_registry_section_fails_with_a_friendly_section-name_list_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5484_plan_with_bare_h2_headers_but_empty_bodies_is_rejected_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5485_existing_plan_plus_existing_seed_inventory_triggers_update-rather-than-rewrite_mode_spex.exs`
-- `test/spex/668_plan_qa_infrastructure_for_every_surface_of_the_app/criterion_5486_no_existing_plan_omits_the_existing_plan_section_entirely_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6597_campaign_performance_is_returned_without_an_approval_step_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6598_an_approved_budget_change_is_written_to_the_account_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6599_queries_use_the_authenticated_users_own_google_credentials_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6600_tool_responses_never_include_the_developer_token_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6601_a_manager_account_query_targets_the_chosen_customer_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6602_an_unconnected_account_prompts_the_user_to_connect_google_spex.exs`
+- `test/spex/817_manage_google_ads_through_the_agent/criterion_6603_a_quota_error_surfaces_the_apis_message_spex.exs`
 
-## Linked component: AgentTasks
+## Linked component: GoogleAdsServer
 
-This story is implemented by `CodeMySpec.AgentTasks` (context).
+This story is implemented by `CodeMySpec.McpServers.GoogleAdsServer` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agent_tasks_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agent_tasks.spec.md`
-- Source: `lib/code_my_spec/agent_tasks.ex`
+- Tests: `test/code_my_spec/mcp_servers/google_ads_server_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers/google_ads_server.spec.md`
+- Source: `lib/code_my_spec/mcp_servers/google_ads_server.ex`
 
 ## Available scripts
 
@@ -111,7 +111,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/817/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/868/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

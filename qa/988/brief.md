@@ -1,103 +1,136 @@
-# QA Brief — Story 988: The stop decision reaches the agent running inside our own BEAM
+# Qa Story Brief — Story 874: Analysis Freshness
 
 ## Tool
 
-`mcp__plugin_codemyspec_local__*` (agent tools: `start_agent`, `message_agent`,
-`stop_agent`, `list_agents`), with `psql -d code_my_spec_dev` for reading back
-the agent's conversation and `~/.codemyspec/harness.log` for the analysis seam.
+curl (`:hook` pipeline on `CodeMySpecLocalWeb`, port 4004) for the observable
+surface under test, plus one Vibium/web step against the hosted Configuration
+LiveView (port 4000) to set the analyzer mode this scenario needs.
 
-The story's surface is the agent lifecycle, which is reached only through the
-local MCP server. There is no LiveView for it — the orchestrator's message
-lands in an agent's conversation thread, not on a page — so the browser is the
-wrong instrument here and `qa/plan.md`'s table routes this to the MCP column.
+This story has no LiveView surface of its own — it is the Stop hook's JSON
+response. `POST /api/hooks/stop` is the `:hook`-pipeline example the QA plan's
+tool table names explicitly, so curl is correct per the plan's own rule
+("pick by pipeline, not by guess").
 
 ## Auth
 
-Local MCP on `4004` takes no user auth. Scope comes from the harness id, which
-the plugin's MCP mount already carries as `X-Harness-Id`; calling the
-`mcp__plugin_codemyspec_local__*` tools from this session needs nothing else.
-
-For the direct HTTP probes below, the harness id is
-`6c4a7be3-4e6c-4822-9baa-6db8a702ee6e` (the main checkout — the copy this
-session's scope names):
-
-    curl -sS -X POST localhost:4004/api/harnesses/6c4a7be3-4e6c-4822-9baa-6db8a702ee6e/analysis/wait
-
-Postgres needs no credentials on this box: `psql -d code_my_spec_dev`.
+- **Local hooks (4004):** none. `Plugs.LocalOnly` accepts loopback directly.
+  Every hook curl needs `X-Working-Dir: /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox`
+  so `WorkingDirScope` resolves the QA Fixture Project
+  (`11111111-1111-4111-8111-111111111111`).
+- **Hosted Configuration page (4000):** magic-link login as
+  `qa@codemyspec.local` per `.code_my_spec/qa/plan.md` ("Server (Postgres,
+  `:dev`)" section) — fill `user[email]` at `/users/log-in`, read the token
+  from `/dev/mailbox`, rewrite the origin to `127.0.0.1:4000` before
+  following it.
+  - **Shared mailbox risk:** other QA agents are running concurrently against
+    this same dev server and `/dev/mailbox` is shared. The newest link there
+    may belong to another agent's session. Re-request your own link
+    immediately before use and confirm the landed account is
+    `qa@codemyspec.local` before trusting anything downstream of it.
 
 ## Seeds
 
-No seed script. The bench is a working copy plus a live agent, both created
-during the run:
+Nothing to run. The QA fixture already exists (verified live via `psql`,
+not by re-running `qa_seeds.exs` against the live dev server — see
+`.code_my_spec/qa/plan.md`'s "only with the dev server stopped" note):
 
-    # the disposable project, which exists so QA can run mix credo without
-    # touching the framework's own checkout (see its mix.exs)
-    /Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox
+```
+psql -qtA code_my_spec_dev -c "select id, local_path from projects where id='11111111-1111-4111-8111-111111111111';"
+psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"
+```
 
-Values the tester needs:
+Both returned rows. `local_path` is
+`/Users/johndavenport/Documents/github/code_my_spec_test_repos/qa_sandbox` —
+the QA sandbox project the plan requires for surface-mutating QA. It already
+has `credo` vendored under `deps/`, which is why this story picked it over a
+scratch directory: a real `mix credo` subprocess can run there without a
+fresh `mix deps.get`.
 
-- Working copy id: `c75f9ad9-e4e0-47cc-a0ca-3ffc55c99067` (qa_sandbox, project
-  *Code My Spec* `708492f9-454e-482f-a2eb-be64f0356b87`)
-- Provider: `openai-codex` — John's ChatGPT plan. Flat-rate, so a real turn
-  costs nothing per token, and `CmsHarness.Agents.Provider` documents it as
-  handling its own credential, so no key is passed.
-- Analyzer modes on the project: credo `block_changed`, compile_warnings
-  `block`, exunit and spex `block_all`.
+**Known pre-existing defect, not part of this story:** `lib/qa_sandbox/broken.ex`
+has an intentional syntax error (missing `end`s) that fails `mix compile` for
+the whole sandbox. `StaticAnalysis.Pipeline` skips every other analyzer while
+compile is broken (`skipped_for_compile_errors?`), so as long as this file is
+in place **no real analyzer can ever run in the sandbox** — a story-874 test
+needs credo to actually complete a run, not just enqueue one. Move it aside
+for the test window and restore it byte-for-byte before finishing (see
+"Setup Notes"). File this as its own `scope: qa` issue — it is sandbox
+infrastructure rot, not a finding about story 874.
 
-Read the delivered message back with:
-
-    psql -d code_my_spec_dev -c "select m.role, m.origin, m.inserted_at, m.content \
-      from conversation_messages m join conversations c on c.id = m.conversation_id \
-      where c.agent_id = '<agent id>' order by m.inserted_at;"
+**Config precondition:** credo is currently `block_changed` on the fixture
+project (`psql -qtA code_my_spec_dev -c "select credo from project_configurations where project_id='11111111-1111-4111-8111-111111111111';"`).
+`block_changed` demotes a finding to advisory unless `FileEdits` has this
+session's `session_id` attributed to the file — which a curl-driven session
+never will. Set credo to `block_all` via the Configuration page before
+testing (`http://127.0.0.1:4000/projects/11111111-1111-4111-8111-111111111111/configuration`),
+and set it back to `block_changed` afterward — this is shared config other
+concurrent QA agents may depend on defaulting correctly.
 
 ## What To Test
 
-- **A finished turn puts the analyzers to work.** Start an agent on the
-  qa_sandbox copy, send it a message, and let the turn end. Expect
-  `harness.log` to show analysis requested for
-  `code_my_spec_test_repos/qa_sandbox` with no hook having fired — nothing
-  external POSTed `/api/hooks/stop`, so the enqueue can only have come from the
-  turn ending.
+All three criteria hinge on one control loop against a single file,
+`lib/qa_sandbox/freshness_check.ex` (new — do not reuse `broken.ex`, its
+compile error would mask everything downstream of it):
 
-- **One landing, one set of words.** Have the agent write a module with no
-  `@moduledoc` (credo is `block_changed`, so the agent must touch the file
-  itself or the finding will not block and the scenario proves nothing).
-  Expect an orchestrator message in its conversation carrying the problem
-  summary and the directive — the same sentences `Hooks.Stop` renders for an
-  external agent, not a paraphrase.
+1. **Baseline — get a real, current credo finding on record.**
+   - Write `lib/qa_sandbox/freshness_check.ex` with a genuine "nesting too
+     deep" violation (real credo, not simulated).
+   - `curl -sS -X POST http://127.0.0.1:4004/api/hooks/stop -H "Content-Type: application/json" -H "X-Working-Dir: .../qa_sandbox" -d '{"session_id":"qa-874-probe"}'`
+     — enqueues analysis; expect a pending/allow response, not a block yet
+     (nothing has run against the new file).
+   - `curl -sS -X POST http://127.0.0.1:4004/api/analysis/wait -H "X-Working-Dir: .../qa_sandbox"` —
+     blocks until the real `mix credo` subprocess finishes. qa_sandbox is 3-4
+     files, so this should be seconds, not the 200-590s the plan quotes for
+     the framework's own multi-thousand-file sweep.
+   - Stop again → **expect a block** naming the finding, with **no "stale"
+     marker** — maps to 8202's premise-check half ("the finding must
+     actually block first, or the scenario proves nothing").
 
-- **The answer arrives when it exists.** Expect the message to land *after*
-  the analysis run completes, and expect no text anywhere in it telling the
-  agent to `curl .../analysis/wait` and stop again. That directive is the
-  external path's and must have no counterpart here.
+2. **Criterion 8202 — untouched code still blocks.**
+   - Stop a third time with no edits in between → **expect the same block,
+     still with no "stale" marker.** This is the converse case 8202 exists
+     to catch: a freshness rule permissive enough to always excuse a
+     finding would pass 8201 by never blocking anything, so this asserts
+     the finding survives when nothing has changed at all.
 
-- **A clean stop is left alone.** Remove the offending file, let a turn end on
-  a clean tree with no task open, and expect **no** new orchestrator message.
-  Silence is the correct answer; a message here would charge the agent a turn
-  to be told nothing.
+3. **Criteria 8197 + 8201 — corrected code is labelled stale, not silently
+   re-handed as fresh work.**
+   - Edit `freshness_check.ex` for real — flatten the nesting — and do
+     **not** call `/api/analysis/wait` this time (the whole point is credo
+     has not re-run yet).
+   - Stop again → **expect it still blocks** (8201: a finding from before
+     the edit blocks until the rerun lands — dropping it here would let the
+     *other* three sources go silent too, since every source fingerprints
+     `:implementation`), **and** the response now carries `"stale"` **and**
+     wording matching `/do not re-?fix/i` (8197: the agent must be told this
+     list predates its own edit, not just be blocked again).
+   - Bonus sanity check (not a separate criterion, but closes the loop):
+     `analysis/wait` again, then stop once more → expect an **allow** (credo
+     is clean on the flattened file) — confirms the whole cycle actually
+     resolves rather than wedging.
 
-- **A clean tree does not excuse an abandoned task.** With a task open against
-  the agent and the tree clean, expect a message naming the requirement and
-  carrying the whole `evaluate_task task_id: "..."` call — not a pointer to go
-  read about one.
-
-- **Stopping on purpose is not a delivery failure.** Stop the agent, then let
-  a decision be produced for it. Expect the harness to log that it was not
-  told, at info, and expect nothing to crash — a halted agent has nobody to
-  tell, which is a state rather than a failed delivery.
+Record the literal response bodies (block/allow, presence/absence of
+`"stale"`, presence/absence of the "do not re-fix" phrasing) for each of the
+five stops above — that sequence *is* the evidence for all three criteria.
 
 ## Result Path
 
-`.code_my_spec/qa/988/result.md`
+No result.md. Findings go through `create_issue` as they're found; the run
+closes with one `submit_qa_result` call per the workflow doc.
 
 ## Setup Notes
 
-- The code under test must be **live**, not merely committed: `:4000` and
-  `:4004` both run the main checkout, whatever worktree pushed. Confirm with
-  `grep -hoE '\[Boot\][^"]{0,40}' ~/.codemyspec/web.log | tail -1` before
-  trusting any negative result. This run verified `[Boot] serving 01a7e0de`.
-- A harness restart leaves agent rows reading `running` with no process behind
-  them. `list_agents` after a restart is residue; stop it before starting a
-  fresh agent or the bench is a ghost.
-- Teardown: delete the offending module from qa_sandbox, stop every agent this
-  session started, and leave no credo problem standing against the project.
+- Restoration order matters and is why this brief calls it out explicitly
+  rather than leaving it implicit: (1) rename `broken.ex` aside before step 1
+  and confirm `mix compile` is clean in the sandbox, (2) run every scenario
+  above, (3) delete/revert `freshness_check.ex`, (4) restore `broken.ex` to
+  its exact original content and path, (5) set credo back to
+  `block_changed` on the Configuration page. Leaving the sandbox in a
+  different state than found is itself worth filing if it can't be
+  cleanly reverted.
+- The stale/"do not re-fix" text lives in
+  `lib/code_my_spec/problems/problem_renderer.ex` (`stale_marker/4`,
+  `stale_footer/5`) and is assembled by `lib/code_my_spec/validation.ex`
+  (`check_blocking_problems/4`); `lib/code_my_spec/hooks/stop.ex` is the
+  controller-facing decision wrapper `StopController` actually calls. Useful
+  for interpreting an unexpected response, not something QA should need to
+  read code to pass.

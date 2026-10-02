@@ -1,4 +1,4 @@
-# QA Story 968: My project's preview has an address, set up when its main checkout is onboarded
+# QA Story 854: My files and backups live in my own bucket
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a non-technical founder, I want the running preview of my project to have an address the app already knows, so that it appears on my screen without my finding or configuring anything.
+Sam gets object storage in his own account holding his app's files and last night's database dump.
 
 ## Acceptance criteria
 
-- The main checkout comes out of onboarding with an address
-- A worktree does not claim to be where the preview runs
-- Restarting the harness does not lose the address
-- Recording the address keeps what the file already said
-- The server learns the address from the checkout
-- Onboarding asks for a tunnel rather than making one
-- Onboarding a second time does not make a second tunnel
-- A visitor's hosted app and a founder's own checkout are reached the same way
-- An app that is still coming up is not reported as broken
-- An app that died after starting stops reading as up
+- The buckets are Sam's, in Sam's account
+- Test data never lands in the production bucket
+- A file uploaded to the app comes back from the bucket
+- Last night's dump is there in the morning
+- A backup that stops running does not fail silently
+- Backups past the retention window are gone
+- A dump restores into a working database
+- Sam knows he has a backup, not just a file
 
 ## BDD spec files
 
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2961_the_main_checkout_comes_out_of_onboarding_with_an_address_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2962_a_worktree_does_not_claim_to_be_where_the_preview_runs_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2963_restarting_the_harness_does_not_lose_the_address_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2964_recording_the_address_keeps_what_the_file_already_said_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2965_the_server_learns_the_address_from_the_checkout_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2966_onboarding_asks_for_a_tunnel_rather_than_making_one_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2967_onboarding_a_second_time_does_not_make_a_second_tunnel_spex.exs`
-- `test/spex/1030_my_projects_preview_has_an_address_set_up_when_its_main_checkout_is_onboarded/criterion_2969_a_visitors_hosted_app_and_a_founders_own_checkout_are_reached_the_same_way_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8011_the_buckets_are_sams_in_sams_account_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8012_test_data_never_lands_in_the_production_bucket_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8013_a_file_uploaded_to_the_app_comes_back_from_the_bucket_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8014_last_nights_dump_is_there_in_the_morning_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8015_a_backup_that_stops_running_does_not_fail_silently_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8016_backups_past_the_retention_window_are_gone_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8017_a_dump_restores_into_a_working_database_spex.exs`
+- `test/spex/968_my_files_and_backups_live_in_my_own_bucket/criterion_8054_sam_knows_he_has_a_backup_not_just_a_file_spex.exs`
 
-## Linked component: PreviewTunnel
+## Linked component: Hetzner
 
-This story is implemented by `CodeMySpec.Workspaces.PreviewTunnel` (module).
+This story is implemented by `CodeMySpec.Provisioning.Hetzner` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/workspaces/preview_tunnel_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/workspaces/preview_tunnel.spec.md`
-- Source: `lib/code_my_spec/workspaces/preview_tunnel.ex`
+- Tests: `test/code_my_spec/provisioning/hetzner_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/provisioning/hetzner.spec.md`
+- Source: `lib/code_my_spec/provisioning/hetzner.ex`
 
 ## Available scripts
 
@@ -115,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/968/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/854/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

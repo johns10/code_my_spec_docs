@@ -1,220 +1,133 @@
-# Qa Story Brief
-
-Story 1014 — The main agent starts, stops and restarts its agents.
+# QA Brief — Story 892: A working copy that vanished warns until I offboard it
 
 ## Tool
 
-`run_script` (Lua, calling the `main_agent` MCP tool surface directly:
-`restart_agent`, `check_machinery`, `list_agent_work`, `message_agent`, plus
-`create_working_copy` / `offboard_working_copy` to stage and drive real
-throwaway agents). This is the actual agent-facing surface for this story —
-there is no LiveView or curl-only route for `RestartAgent`; the
-`McpServers.MainAgent` tools are what a real main agent calls, and
-`run_script` is a first-class way to drive them directly, per `tool_docs`.
+web (Vibium) for `CodeMySpecWeb.WorkingCopyLive.Index` (`/app/projects/:project_id/working-copies`) —
+the only surface that removes a working copy. curl for the two HTTP endpoints
+a harness itself uses to establish and report on a working copy:
+`POST /api/harnesses` (mint/recognise, `CodeMySpecWeb.HarnessLookupController`)
+and `POST /api/devices` (machine announce + path observation,
+`CodeMySpecWeb.DeviceController`).
 
-Two more surfaces are load-bearing for the criteria that were previously
-marked unreachable — see Setup Notes for exactly how to use each:
-
-- **`curl` against `POST http://localhost:4004/api/harnesses/<working_copy_id>/rejoin`**
-  (local harness endpoint, port 4004) — drops and rejoins ONE working copy's
-  channel, triggering the same `agents_to_restore` handshake a full harness
-  restart does, without touching any other project's checkout on the box.
-  This is what makes 3304/3305 testable without degrading other people's
-  in-flight work.
-- **`curl` against `GET/POST/DELETE http://localhost:4000/dev/faults`**
-  (hosted app, port 4000, dev-only route) — `POST {"key":"<agent_id>","fault":"agent_stays_silent"}`
-  makes one specific agent count as never having spoken (`RestartRepository`
-  reads `spoke_at` as permanently `nil` for it), so a restart genuinely does
-  not resolve itself. This is what makes 3292/3308 (and the "goes quiet
-  after" half of 3293) testable against a real, live, healthy agent instead
-  of only via the spex suite's DB fixtures. **Always `DELETE` the fault
-  afterward** — it is a standing override, not a one-shot.
-
-`list_issues` / `dismiss_issue` (also via `run_script`) to check the
-issue-raising side of the criteria and clean up test noise afterward.
+Attaching a `device_id` to a working copy (what makes `observe_paths/2` able to
+flip it missing/present) only happens inside the `harness_project:<project_id>`
+Phoenix channel join — there is no HTTP-only way to do it. See Setup Notes.
 
 ## Auth
 
-None needed for the `run_script` / MCP surface. This QA session's own
-harness/session credentials already carry a working `main_agent` MCP tool
-set scoped to the real "Code My Spec" project (project
-`708492f9-454e-482f-a2eb-be64f0356b87`).
+Hosted app (`:4000`): magic-link login as `qa@codemyspec.local` per
+`.code_my_spec/qa/plan.md` — rewrite the mailed link's origin to
+`http://127.0.0.1:4000` before following it.
 
-The `/dev/faults` and `/dev/agents` routes (port 4000) and the `/rejoin`
-route (port 4004) need no auth beyond being on localhost — they are
-compiled out of release builds.
-
-Do **not** use the qa-account / magic-link flow for the `restart_agent` /
-`list_agent_work` / `check_machinery` MCP tools — they only exist on the
-caller's own project scope. The magic-link flow is only relevant if you need
-the `/app/.../agent-conversation` LiveView (e.g. to click the per-agent
-pause toggle). If you do: log in as `johns10@gmail.com` via `/dev/mailbox`,
-then switch to the **"Code My Spec" account** via `/app/accounts/picker`
-(the account defaults to an unrelated "QA Account" otherwise) before
-navigating to a project page. Budget extra time — this session hit both an
-account-scope mismatch and an unrelated session drop trying to reach that
-page; the `run_script`/`dev/*` route path below is more reliable.
+`/api/harnesses` and `/api/devices` take a project deploy key or a token
+exchanged for one at `POST /api/sprite/token`. The QA Fixture Project's key is
+`dk_qa_codemyspec_local` — use only this key for anything under this brief.
+**Never** pass the real `code-my-spec` project's own `DEPLOY_KEY` (from
+`envs/dev.env`) to these scripts; it mutates the live project every other
+agent in this session is working against.
 
 ## Seeds
 
-None. Do not run `qa_seeds.exs` or touch the QA Fixture Project for this
-story — restart-agent testing needs real, running agents on a machine, not
-database fixtures, and this project already has them.
+No seed script needed — the QA Fixture Project (`11111111-1111-4111-8111-111111111111`)
+already exists. Mint a scratch working copy row with:
 
-Instead, **stage one or two dedicated throwaway working copies** per
-session:
+    TOKEN=$(curl -sS -X POST http://localhost:4000/api/sprite/token \
+      -H 'authorization: Bearer dk_qa_codemyspec_local' -H 'content-type: application/json' \
+      | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
-```lua
-create_working_copy({ label = "qa-1014-restart-test", roles = "coding,qa" })
-```
+    curl -sS -X POST http://localhost:4000/api/harnesses \
+      -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' \
+      -d '{"project_id":"11111111-1111-4111-8111-111111111111","root":"/tmp/<scratch-root>","label":"<label>"}'
 
-This mints a fresh git worktree + real `claude-code`-provider agents. Get
-their ids from `list_agents({})` / `list_agent_work({})`, filtered to the
-new `working_copy_id`. New agents default to `continuous: false`.
-
-**Offboard every copy you stage at the end**:
-`offboard_working_copy({ working_copy_id = "..." })`. This stops the agents
-and detaches the copy from the project; it does **not** delete the worktree
-directory from disk — that is left for a person (`git worktree remove` from
-outside this session; QA subagents cannot run git-mutating commands).
+The reply's `working_copy_id` is the row's id. Point `root` at a real directory
+if you want an on-disk check (criterion 2865); a nonexistent path is fine for
+everything else.
 
 ## What To Test
 
-This is a **shared dev box** with other people's real agents doing real
-work, and — as of this run — a genuinely unstable local harness process
-(see Setup Notes). Only ever pass an `agent_id` to `restart_agent` that
-belongs to a working copy this session created in this run.
+At `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/working-copies`:
 
-- **3290 (acts on what it sees) / 3291 (restart carries its reason)**:
-  message the staged coding agent once (`message_agent`) to establish a
-  baseline reply, then `restart_agent(agent_id, reason)`. Confirm the
-  response names the agent id and the reason. Then message the same agent
-  again asking it to quote back, verbatim, the reason it was given for its
-  most recent restart — a real agent's own recollection is strong,
-  non-browser proof the reason reached its thread.
-- **3302 (a fix ends there)**: restart the same agent twice for the *same*
-  reason, letting it reply in between. Both restarts should succeed (not
-  refused).
-- **3306 (restarts one agent and nothing else)**: fire `message_agent` on a
-  *different* agent and `restart_agent` on the target in the same batch (two
-  independent tool calls). Confirm the other agent's turn is unaffected.
-- **3307 (cannot restart the harness)**: call `restart_agent` with the
-  *working copy id* (not an agent id) as `agent_id`. Must be refused
-  (`:not_mine`), and `list_issues({status="incoming", scope="framework"})`
-  must show a new high-severity issue naming the reason. Safe — never
-  touches a real harness process.
-- **3292 (repeat suppression) / 3308 (fault outlives a restart)** — **now
-  reachable live.** Inject `agent_stays_silent` on the target agent
-  (`POST /dev/faults`), then: restart once → `list_agent_work` +
-  `list_issues(scope=framework)` should already show
-  `"A restart changed nothing: <reason>"` (3308, fires on the *first*
-  restart). Restart twice more (still succeeds, not yet at the limit).
-  Restart a 4th time for the identical reason → must be refused
-  (`{:error,{:already_tried,3}}`) and `"Restarting is not fixing this:
-  <reason>"` must appear in issues (3292). **Clear the fault
-  (`DELETE /dev/faults`) and dismiss both synthetic issues afterward.**
-- **3293 (a bad restart is visible in order)** — **now fully confirmed live**,
-  after `5066334b419a` fixed the substitution bug this story's own QA found
-  (`21325686`). Stage one agent, send it a message, `restart_agent` with a
-  distinct reason, send a second message, then open
-  `/app/projects/<project_id>/agent-conversation?conversation=<conversation_id>`
-  for that exact agent (the conversation id is on its "Open <name>" link on
-  the working-copies page — it is *not* the agent id). Confirm the transcript
-  renders that agent's own turns, with the restart notice interleaved in the
-  correct position between the before- and after-turns. Separately, load the
-  same project URL with a conversation id that resolves to nothing and
-  confirm it renders an empty state ("No agent activity recorded..."), never
-  a different agent's thread. Account-switching is no longer needed — the
-  fix corrected the substitution itself, not a scope staleness (the account
-  the QA login lands on now shows "Code My Spec" as Current by default in
-  this pass, for whatever that is worth).
-- **3304 (everybody carries on) / 3305 (a paused agent comes back paused)**
-  — **now reachable live without degrading other projects.** Stage two
-  agents (or two copies): one left at default `continuous: false`
-  ("paused"), one flipped to `continuous: true` via
-  `POST /dev/copies/:id/continuous {"continuous":true}` ("working"), each
-  with at least one real message on its thread. `POST` the per-copy
-  `/rejoin` endpoint (see Tool section). Confirm via
-  `GET http://localhost:4000/dev/agents` (before/after) that `continuous`
-  round-trips correctly per agent, and via `curl localhost:4004/health`
-  that **only** the rejoined copy's `joined_ago_s` resets while every other
-  root's keeps aging — that isolation claim is exactly what makes this safe
-  to run on a shared box. Also acceptable as evidence: a real, unplanned
-  full-harness restart happening during the session (watch
-  `~/.codemyspec/harness.log` for `SIGTERM received` / a new `inst=`) —
-  every previously-running agent on the box should show up as `"restored
-  agent <id>"` afterward, with `continuous` unchanged.
+- **2863 / 2865** — mint a working copy at a real scratch directory. Click
+  **Offboard**, confirm the `<.confirm_dialog>` names the copy and states files
+  + problems + orphaned components are removed and the checkout is not
+  touched. Confirm. The row disappears, the flash states real counts, and the
+  directory (and its `.cms_harness.json`) are untouched on disk.
+- **2864** — `grep -rn "WorkingCopies.offboard" lib/` has exactly one call
+  site: this button's `handle_event`. No scheduled job, hook, or sync path
+  calls it — confirms nothing offboards a copy without a click.
+- **2868** — re-POST `/api/harnesses` presenting the id of a working copy you
+  just offboarded (same root, same id in the body). The reply carries a
+  **different** `working_copy_id` — a returning checkout is issued a new
+  identity, never repaired into the old row.
+- **2859 / 2862 (UI)** — `UPDATE working_copies SET path_missing_since = now()
+  WHERE id = '<id>'` on a copy you own, reload the page: "Checkout gone" badge
+  and warning text render. Set it back to `NULL`: badge disappears. This
+  proves the render path; the detection path (`observe_paths/2` stamping the
+  column from a real report) is channel-only — see Setup Notes and the spex
+  list below.
+- **2866 (partial live)** — offboarding a working copy with orphaned
+  components in the project removes them; the flash names the count. Verified
+  live during this pass (8 orphaned components removed alongside qa-739-beta).
+
+Always clean up rows you mint: `DELETE FROM working_copies WHERE id = '<id>'`
+(only after confirming it has no files/problems, or offboard it through the UI
+instead — that's the real deletion path and leaves no residue to clean by
+hand).
+
+## Not reachable outside the app — verified via `mix spex` instead
+
+Every one of the 11 criteria has a dedicated, substantive spex file at
+`test/spex/1014_a_working_copy_that_vanished_warns_until_i_offboard_it/`, and
+the story's `bdd_specs_passing` requirement is satisfied (green as of this QA
+pass). These use `join_working_copy`/`harness`/`report` helpers that call the
+real channel-join and `observe_paths` code in-process — not a fixture standing
+in for the mechanism.
+
+- **2860** (offline device isolation), **2861** (device-scoped path
+  authority — two working copies at one path, two devices), **2867**
+  (authored links survive an offboard), **2872** (a restarted harness asks the
+  server what it's carrying) — genuinely need either two independent device
+  identities or a harness-process restart. Neither is reachable from outside
+  the BEAM without running a second, independently-credentialed `cms harness`
+  process, which hit an unresolved local blocker — see Setup Notes.
+- **2859 / 2862** (detection/clearing on the server side, as opposed to the UI
+  render checked live above) fall in the same bucket, since they also need a
+  device-attached working copy plus a real path observation.
+
+Code-read alongside the spex for each: `WorkingCopies.observe_paths/2` scopes
+every write to `w.device_id == ^device_id` (the security boundary 2861 is
+about), and `reclaim_orphan_components/1` in `working_copies.ex` excludes
+anything a file or a story still points to project-wide (2867).
 
 ## Result Path
 
-Findings and outcome go through `create_issue` / `submit_qa_result` per the
-task prompt, not a result.md file. Evidence lives in this brief's Setup
-Notes and in the submitted scenario observations.
+Findings filed with `create_issue` as found, submitted via `submit_qa_result`.
+Screenshots: `.code_my_spec/qa/892/screenshots/`.
 
 ## Setup Notes
 
-**2026-09-13, follow-up pass (this attempt).** Focused entirely on closing
-3293, per the fix at `5066334b419a` (issue `21325686`). Staged one throwaway
-working copy (`8ea5c1a3-0dd4-40c1-893f-32259b682104`, agent `cea4be15`,
-"opal-orchard"), sent it `turn-one-before-restart`, restarted it with a
-distinct reason, then sent `turn-two-after-restart`. Logged in via magic
-link and opened
-`/app/projects/708492f9-454e-482f-a2eb-be64f0356b87/agent-conversation?conversation=<its conversation id>`
-(found via the working copy's "Open opal-orchard" link, not guessed):
-the transcript rendered that agent's real turns in order — `turn-one-before-restart`
-→ the `Restarted: <reason>` notice → the agent's own reaction and tool calls
-→ `turn-two-after-restart` — settling the ordering half live rather than by
-recollection. Then loaded the same project URL with a random UUID as
-`?conversation=`: rendered "No agent activity recorded for this project yet.",
-not a substituted thread. Both halves of 3293 pass. Offboarded the working
-copy afterward (worktree left on disk per convention).
+**A second harness process could not join the QA Fixture project's channel on
+this machine.** Started via `CMS_HARNESS=1 CMS_DEPLOY_KEY=dk_qa_codemyspec_local
+cms start` (the published binary, on a free port via `CMS_HARNESS_PORT` +
+`CMS_NODE_NAME` to dodge the sname collision with the already-running dev
+harness) — the socket still connected using the **real `code-my-spec`
+project's** deploy key (verbatim, confirmed byte-for-byte against
+`envs/dev.env`'s `DEPLOY_KEY`) regardless of the process's own `CMS_DEPLOY_KEY`
+env var, and every join to `harness_project:11111111-...` was refused. Same
+result from the already-running dev harness via `qa_agents.sh touch`. Filed as
+a framework issue — this blocks any future QA needing a second, independently
+credentialed harness identity on this box, which is exactly the case
+`CmsHarness.Credentials`'s moduledoc says the per-working-copy credential
+resolution exists to support.
 
-**New finding, not attached to this story**: while confirming 3293 I had two
-real projects in one account in front of me (as issue `4a470cc3` asked for)
-and used them to settle its unproven reading. Loading the *same* conversation
-id under a **different** project's URL, same account, rendered that other
-project's agent transcript in full — tool calls included — rather than
-nothing. Filed as `7dbf9709-f0ab-4368-b214-907484641590` (high, scope app),
-confirming `4a470cc3`. This is a pre-existing gap in
-`Conversations.get_agent_conversation_by_id/2` (scopes on `account_id`, not
-`project_id`), not a regression from `5066334b419a`, and not part of story
-1014's own criteria — left unattached to this story's release gate.
+`/codemyspec:qa story <id>` (the documented skill shortcut) is also broken
+right now: `SkillRouter`'s topic-task path builds `%{requirement_name: topic}`
+but `QaStory.get_story_id/1` pattern-matches on `%{story_id: story_id}`, so
+every invocation fails with "QaStory requires a story ID argument" regardless
+of the id passed. Worked around by calling the `start_task` MCP tool directly
+with `requirement_name: "qa_complete", entity_type: "story", entity_id: "892"`.
+Filed as a framework issue.
 
-**Prior run (2026-09-13, earlier the same day).** Staged working copies
-`92b07035-5800-49a9-8264-0be9c7fb9aed`
-(`qa-1014-restarts`, agents `43a2cf7c...` coding / `82bab1c6...` qa, both
-`continuous: true`) and `72b8cd0b-debd-439f-9137-2c42afbf07f1`
-(`qa-1014-paused`, agent `a75ba956...` coding, `continuous: false`). Both
-offboarded at the end of the session; the worktree directories are left on
-disk for a person to remove.
-
-**The local harness (port 4004) was unstable throughout this run.** It
-SIGTERM'd and relaunched the *entire* fleet on this machine three times in
-about 15 minutes (`~/.codemyspec/harness.log` `inst=` went
-83899→95176→2367→19964→21242), each time stopping and then restoring every
-agent on every project on the box, not just this session's. The long-lived
-brew `codemyspec` service (pid 20889, separate from the dev-mode `mix run`
-harness above) independently logged repeated 403 websocket-upgrade
-disconnects from the CodeMySpec server in the same window. Root cause not
-established — it did not track cleanly with this session's own
-`create_working_copy` calls (one restart happened while this session was
-idle). Reported to the team lead live; treat as a standing framework/ops
-concern for future QA passes on this box, not specific to story 1014's
-code.
-
-Three findings this run (all filed via `create_issue`, ids in
-`submit_qa_result`): the harness instability above (framework, high); an
-`os_pid`/OS-process framing correction to issue `e9f9a5ab` (framework docs);
-and none new on the app itself — all ten criteria are covered by live
-behavior this session, either passing cleanly or (3293's full-order half)
-falling back to the story's own spex coverage for the exact reason recorded
-in that scenario's observation.
-
-Why 3292/3308 needed `/dev/faults` at all: `RestartRepository.spoke_at/1`
-counts any `role: assistant` message on the agent's thread since the
-restart's `inserted_at`, and a real, healthy `claude-code` agent starts
-streaming within seconds of anything sent to it — including the restart's
-own injected `"Restarted: <reason>"` message — so it "speaks" (and
-self-resolves) almost immediately without the fault. `Faults.active?/2`
-short-circuits that read to `nil` for one keyed agent id, which is exactly
-the lever needed and nothing more.
+The story 739 fixture rows (`qa-739-alpha`, `qa-739-beta`) pre-existed in the
+QA Fixture project with `device_id` already `NULL` — the same channel-join
+limitation likely blocked that QA pass too, for the same underlying reason.

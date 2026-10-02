@@ -79,7 +79,7 @@ holding an undispositioned task. In the second case the agent never runs, no
 tool calls exist to find, and the criterion reports it exactly as it would
 report an agent that looked at the work and walked away.
 
-Here the graph's only actionable requirement was `code_on_running_copy`, whose
+Here the graph's only actionable requirement was `story_promoted`, whose
 `execution_type` is `main_agent`. The scenario was measuring a **coding** agent,
 so there was nothing for it, and the fixture had satisfied the component's
 implementation itself by writing both the spec and the implementation file.

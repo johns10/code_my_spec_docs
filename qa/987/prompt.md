@@ -1,4 +1,4 @@
-# QA Story 987: Analysis results reach the agent running inside our own BEAM
+# QA Story 873: Harness-to-Server Projection
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,37 +7,41 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an agent running under Alloy, I want the analyzer results my own turn triggered to reach me without my asking, so that I find out I broke something while I can still act on it.
+As an engineer running a sprite, I want the harness on my machine to project my working copy onto a server that holds no disk, so that every requirement is decided from what I actually wrote.
 
 ## Acceptance criteria
 
-- An Alloy agent is told its own turn broke something
-- The same landing produces the same words for either agent
-- A clean run says nothing to either agent
-- An agent that fires no hooks is still told
-- Being told does not silence the other agent
-- A stopped agent is a stopped agent, not a lost message
-- Being alerted mid-work does not cost the agent its stop decision
+- A written spex file satisfies bdd_specs_exist
+- Written persona research satisfies personas_complete
+- A written QA plan satisfies qa_setup
+- A written journey result satisfies qa_journey_execute
+- A written implementation file satisfies implementation_file
+- An unclassifiable file is named rather than dropped
+- A spec written for a story created after the harness joined is still linked
+- A spex file naming a story that does not exist is linked to nothing
+- A tool that needs a working copy refuses instead of using the server's
 
 ## BDD spec files
 
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3044_an_alloy_agent_is_told_its_own_turn_broke_something_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3045_the_same_landing_produces_the_same_words_for_either_agent_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3046_a_clean_run_says_nothing_to_either_agent_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3047_an_agent_that_fires_no_hooks_is_still_told_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3048_being_told_does_not_silence_the_other_agent_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3049_a_stopped_agent_is_a_stopped_agent_not_a_lost_message_spex.exs`
-- `test/spex/1042_analysis_results_reach_the_agent_running_inside_our_own_beam/criterion_3050_being_alerted_mid-work_does_not_cost_the_agent_its_stop_decision_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8186_a_written_spex_file_satisfies_bdd_specs_exist_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8187_written_persona_research_satisfies_personas_complete_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8188_a_written_qa_plan_satisfies_qa_setup_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8189_a_written_journey_result_satisfies_qa_journey_execute_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8190_a_written_implementation_file_satisfies_implementation_file_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8191_an_unclassifiable_file_is_named_rather_than_dropped_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8192_a_spec_for_a_story_created_after_the_harness_joined_is_still_linked_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8193_a_spex_naming_a_story_that_does_not_exist_is_linked_to_nothing_spex.exs`
+- `test/spex/987_harness_to_server_projection/criterion_8194_a_tool_that_needs_a_working_copy_refuses_instead_of_using_the_servers_spex.exs`
 
-## Linked component: Engine
+## Linked component: Files
 
-This story is implemented by `CmsHarness.Agents.Engine` (module).
+This story is implemented by `CodeMySpec.Files` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/cms_harness/agents/engine_test.exs`
-- Spec: `.code_my_spec/spec/cms_harness/agents/engine.spec.md`
-- Source: `lib/cms_harness/agents/engine.ex`
+- Tests: `test/code_my_spec/files_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/files.spec.md`
+- Source: `lib/code_my_spec/files.ex`
 
 ## Available scripts
 
@@ -111,7 +115,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/987/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/873/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

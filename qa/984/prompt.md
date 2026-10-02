@@ -1,4 +1,4 @@
-# QA Story 984: I connect a model provider by pasting its API key
+# QA Story 870: Watch what a background sprite is actually doing
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,61 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a solo shipper, I want to connect Anthropic or Z.ai by pasting an API key, so that my agents can run on the model I picked instead of the only one I could connect.
+A sprite's agent works for hours with no visible record of what it was told or what it concluded. When a run goes wrong the only evidence is container logs and hook payloads, which is how a run that reported a green suite went unchallenged for a day.
 
 ## Acceptance criteria
 
-- Sam connects Z.ai by pasting the key from its console
-- Sam pastes a key that Anthropic accepts
-- Sam pastes a key with a character missing off the end
-- Sam returns to settings and sees that a key is there, not what it is
-- Two people on one account run QA on different models
-- Sam rotates the Z.ai key after revoking the old one
-- Sam disconnects Z.ai while QA is pointed at it
-- Sam disconnects the last provider he had
-- Sam starts QA and it runs on the cheap model he paid for
+- A completed turn leaves a request and a response on the conversation
+- A sub-agent's work is distinguishable from its parent's
+- A turn that only calls tools is still legible afterwards
+- The run survives the recorder failing
+- The operator watches a running sprite without waiting for it to finish
+- Watching a sprite does not put a machine in the support inbox
+- A tool result stored with role user is not shown as the operator's words
+- A failed tool result is distinguishable from one that succeeded
+- A tool call the recorder wrote renders as a call, not a wall of JSON
+- Two writers store a call differently and it renders one way
+- Prose from each side stays attributed to whoever said it
+- The tool name reads at a glance and its arguments stay out of the way
+- A file-sized payload is cut, and says so
+- A call with no arguments offers nothing to expand
+- Five calls in a row read as one line saying five
+- Opening the group lists the calls; opening a call shows only that one
+- A lone call is not dressed up as a group
+- Output stored with role tool is not passed off as a tool name
+- A long qualified tool name stays readable
 
 ## BDD spec files
 
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3022_sam_connects_zai_by_pasting_the_key_from_its_console_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3023_sam_pastes_a_key_that_anthropic_accepts_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3024_sam_pastes_a_key_with_a_character_missing_off_the_end_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3025_sam_returns_to_settings_and_sees_that_a_key_is_there_not_what_it_is_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3026_two_people_on_one_account_run_qa_on_different_models_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3027_sam_rotates_the_zai_key_after_revoking_the_old_one_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3028_sam_disconnects_zai_while_qa_is_pointed_at_it_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3029_sam_disconnects_the_last_provider_he_had_spex.exs`
-- `test/spex/1040_i_connect_a_model_provider_by_pasting_its_api_key/criterion_3030_sam_starts_qa_and_it_runs_on_the_cheap_model_he_paid_for_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2362_a_tool_result_stored_with_role_user_is_not_shown_as_the_operators_words_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2363_a_failed_tool_result_is_distinguishable_from_one_that_succeeded_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2364_a_tool_call_the_recorder_wrote_renders_as_a_call_not_a_wall_of_json_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2365_two_writers_store_a_call_differently_and_it_renders_one_way_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2366_prose_from_each_side_stays_attributed_to_whoever_said_it_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2367_the_tool_name_reads_at_a_glance_and_its_arguments_stay_out_of_the_way_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2368_a_file_sized_payload_is_cut_and_says_so_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2369_a_call_with_no_arguments_offers_nothing_to_expand_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2371_five_calls_in_a_row_read_as_one_line_saying_five_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2372_opening_the_group_lists_the_calls_opening_a_call_shows_only_that_one_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2373_a_lone_call_is_not_dressed_up_as_a_group_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2374_output_stored_with_role_tool_is_not_passed_off_as_a_tool_name_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_2375_a_long_qualified_tool_name_stays_readable_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8171_a_completed_turn_leaves_a_request_and_a_response_on_the_conversation_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8172_a_sub-agents_work_is_distinguishable_from_its_parents_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8173_a_turn_that_only_calls_tools_is_still_legible_afterwards_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8175_the_run_survives_the_recorder_failing_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8176_the_operator_watches_a_running_sprite_without_waiting_for_it_to_finish_spex.exs`
+- `test/spex/984_watch_what_a_background_sprite_is_actually_doing/criterion_8177_watching_a_sprite_does_not_put_a_machine_in_the_support_inbox_spex.exs`
 
-## Linked component: Agents
+## Linked component: AgentConversationLive
 
-This story is implemented by `CodeMySpecWeb.AccountLive.Agents` (liveview).
+This story is implemented by `CodeMySpecWeb.AgentConversationLive` (live_context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/account_live/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/account_live/agents.spec.md`
-- Source: `lib/code_my_spec_web/live/account_live/agents.ex`
+- Tests: `test/code_my_spec_web/live/agent_conversation_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/agent_conversation_live.spec.md`
+- Source: `lib/code_my_spec_web/live/agent_conversation_live.ex`
 
 ## Available scripts
 
@@ -115,7 +135,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/984/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/870/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

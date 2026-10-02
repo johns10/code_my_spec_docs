@@ -71,7 +71,7 @@ echo -n "endless loop        : "; script 'while true do end'
 echo -n "server still serving: "; script 'return "still here"'
 echo -n "string bomb         : "; script 'return string.rep("x", 100000000)'
 echo -n "ask_user            : "; script 'return ask_user({ question = "hi" })'
-echo -n "start_agent loop    : "; script 'for i = 1, 20 do start_agent({ agent_type = "x" }) end return "spawned"'
+echo -n "assign_subagent loop: "; script 'for i = 1, 20 do assign_subagent({}) end return "spawned"'
 echo -n "nested run_script   : "; script 'return run_script({ script = "return 1" })'
 
 echo

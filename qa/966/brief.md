@@ -1,6 +1,4 @@
-# Qa Story Brief
-
-Story 966 — I watch my project and talk to its agent on one screen.
+# QA Brief — Story 852: My app answers on my own server over HTTPS
 
 ## Tool
 
@@ -8,101 +6,115 @@ web
 
 ## Auth
 
-Passwordless. There is no password login for the QA user; `/users/log-in` offers
-GitHub, Google and a magic link only.
+Log in as the owner. GitHub, Cloudflare and Resend are per-user OAuth
+integrations and only his account holds the grants, so no other user can drive
+these steps.
 
-1. `http://127.0.0.1:4000/users/log-in` — fill `input[name="user[email]"]` with
-   `qa@codemyspec.local`, click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` — the local mail adapter catches it. Open
-   the newest message.
-3. The link is minted with the configured host,
-   `https://dev.codemyspec.com/users/log-in/<token>`. **Rewrite the origin to
-   `http://127.0.0.1:4000` before navigating.** Following it as-is leaves the app
-   under test. This is the step people miss.
-4. Lands on `/app` with the fixture project active. The token is single-use — a
-   second attempt needs a fresh link.
+1. `http://127.0.0.1:4000/users/log-in`
+2. Fill `input[name="user[email]"]` with `johns10@gmail.com`
+3. Click `form button.btn-secondary` ("Email me a login link")
+4. `http://127.0.0.1:4000/dev/mailbox` — the mailbox is shared, so confirm the
+   message is addressed to that user before opening it
+5. The link is issued for `dev.codemyspec.com`; swap the host to `127.0.0.1:4000`
 
-`/dev/mailbox` is shared across QA sessions. Take the newest message only;
-an older one logs you in as somebody else's fixture user.
+If the email field renders `readonly`, a session is already open — log out via
+`a[href="/users/log-out"]` (`data-method="delete"`, so navigating there does
+nothing), then start again.
+
+The active account resets on a server restart. Re-pick at
+`/app/accounts/picker`; entries are `a[phx-value-account-id=...]`.
 
 ## Seeds
 
-Already present — do not re-run seeds with the dev server up. `mix run` under
-`MIX_ENV=dev` takes the compile lock and 500s the app being tested.
+No story-specific seeding. Use the **devops-drill** project, not the QA Fixture
+Project — see Setup Notes for why.
 
-Verify instead, read-only:
+- Project: `ee33ba64-fe35-419a-9de0-46d699499023` ("devops-drill")
+- Working copy: `/Users/johndavenport/Documents/github/code_my_spec_test_repos/devops_drill_v2`
+  (a real `cms new` app; the `devops_drill` path the project records holds an
+  older stub, so the two must be swapped for the run and swapped back after)
+- Domain: `drill.astralbi.com`; uat host `uat.drill.astralbi.com`
+- Provisioning page: `http://127.0.0.1:4000/app/projects/ee33ba64-fe35-419a-9de0-46d699499023/provisioning`
 
-```
-psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"
-```
+The `spex drill` project (`bbd970c8-…`) looks like the better fixture — it is a
+real generated app that has previously reached `deploy: done` — but it belongs
+to "Test Account 17702", whose user holds none of the OAuth grants. GitHub,
+Cloudflare and Resend are per-user, so it cannot be driven as the owner.
 
-Values this session needs:
+Baseline: John's two real servers (`fuellytics`, `fuellytics-prod`) and nothing
+else. Anything named for a project is one this session created.
 
-- Project `QA Fixture Project` — `11111111-1111-4111-8111-111111111111`
-- Conversation with an agent — `62d3f01c-68ac-4c36-a7d1-4467a8da25a6`
-- Designated main working copy — `d1540d93-f639-448a-9dac-5317665e513f` (rooted, 1 agent)
-
-Target screen:
-
-```
-http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/agent-conversation/62d3f01c-68ac-4c36-a7d1-4467a8da25a6
-```
+**Read the Hetzner token from `envs/.env`, not `envs/dev.env`** — `dev.env` has
+no `HETZNER_API_TOKEN` line at all, so a probe built from it sends an empty
+bearer, gets `{"error":{"code":"unauthorized"}}`, and a `.get("servers", [])`
+turns that into a confident "0 servers". Check the instrument against a known
+positive before believing a zero: the first correct query returned three
+servers where the broken one had returned none.
 
 ## What To Test
 
-Both halves and the header (criteria 2944, 2943):
+Drive the provisioning page and run the sequence: **server → dns → deploy →
+tls**. Verify each claim at the provider or over the wire, never only in our
+own rows.
 
-- Load the target screen at a desktop window size. Both the conversation and the
-  panel accordion are present at once, with no navigation between them.
-- The timeline header is visible above them. Scroll the conversation to the
-  bottom and back up — the header stays put rather than scrolling away.
-
-Layout by width (2945, 2946):
-
-- At a desktop width (≥1024), the conversation is on the **left** and the
-  accordion on the **right**.
-- Resize to a phone width (≈390). The accordion moves **above** the
-  conversation. This is a real reflow driven by the client reporting its width,
-  so give the page a moment after the resize.
-
-Panels (2949, 2948, 2947):
-
-- The accordion has exactly **three** tabs: preview, project (the dynamic one),
-  activity. Opening and closing them does not change how many there are.
-- Open the preview tab on a project with nothing deployed. It says no preview is
-  running **and** what would start one — not an empty box.
-- Type a message into the composer but do **not** send it. Open a panel. The
-  text is still in the box afterwards.
-
-Phone exclusivity (2951, 2952):
-
-- At phone width, open the preview, then open activity. The preview closes —
-  only one panel is open at a time.
-- At desktop width open two panels, then resize to phone width. Exactly one
-  remains open and it is the **preview**.
-
-Attention (2953, 2954):
-
-- With the activity tab closed, have an agent in another working copy ask a
-  question. The activity tab header shows an attention mark without the tab
-  being opened. Opening it shows the question and which copy asked.
-- Ordinary progress must **not** raise that mark. This is the half that keeps it
-  worth reading.
-
-## Result Path
-
-`.code_my_spec/qa/966/result.md`
+- **The server shows up in Sam's own console (2026).** Query the Hetzner API
+  with his own token and confirm the box is listed under his account, running.
+- **The database is not reachable from outside (2027).** Read the firewall's
+  whole inbound rule set at Hetzner — confirm there is no 5432 rule and that
+  the default is deny. Corroborate with `nc` against the public IP.
+- **The deployed image is the one the repo built (2028).** The product does not
+  use the boilerplate's `gh run watch` path: it boots a builder box, builds from
+  the checkout, pushes to a private registry, destroys the builder, and deploys
+  with `--skip-push`. Confirm the digest kamal is running is the digest that was
+  built for this commit, not `latest` and not a stale tag.
+- **Sam's app answers on his domain over a valid certificate (2029).**
+  `curl https://uat.spex-drill.earwitness.app/health` → 200 with
+  `ssl_verify_result: 0`. Check the chain, not just the status code.
+- **Migrations land before the swap, not after (2030).** The step records
+  `deploy_phase` resources. Confirm **both** `migrate` and `swap` are recorded
+  with timestamps and that migrate precedes swap — the last completed run
+  recorded only `migrate`, so an ordering that cannot be read back is itself
+  the finding.
+- **A failed migration leaves the old version serving (2031).** Needs a
+  deployed version first. Introduce a migration that fails, deploy, and confirm
+  the previously running version still answers `/health`.
+- **An unhealthy deploy does not become the live version (2032).** Deploy an
+  image whose `/health` does not answer and confirm the swap is withheld.
+- **Every public hostname is answering before setup calls the environment done
+  (2033).** Confirm the environment is not reported done while any of its
+  public hostnames fails to answer.
+- **UAT stands alone, and prod arrives on its own box when Sam is ready
+  (2034).** Add prod and confirm it provisions its own server and its own
+  record without disturbing uat.
 
 ## Setup Notes
 
-The story is the **shell**, not the panels' contents. The preview panel has no
-provisioned instance behind it and the dynamic tab renders a placeholder — that
-is the designed state for this story, not a defect. Judge the frame: does it
-lay out correctly, does it hold state, does it say what it cannot show.
+**Why not the QA Fixture Project.** `qa_sandbox` cannot satisfy this story and
+no amount of running the page will change that. It is a bare mix project —
+`app: :qa_sandbox`, credo as its only dependency, `lib/` holding one file, no
+Phoenix, no release config, and its generated `router.ex` deleted. Its
+Dockerfile runs `mix assets.deploy` (not a task in that project) and copies
+`_build/prod/rel/qa-fixture-project`, a release name `mix release` cannot
+produce — release names must be valid atoms, and that one is hyphenated and
+does not match the OTP app. Its remote, `johns10/qa-fixture-project`, is a
+private mirror of the CodeMySpec repository whose `main` is `3df593ad`, while
+the local tree has a single unrelated `Initial commit` (`11986f2`) — so the
+push is rejected as unrelated history, permanently, not as a transient
+divergence. `cms_drill_app` is a real `cms new` project with a `/health` plug
+in its endpoint, a clean tree, and a remote it has pushed to.
 
-Two of the criteria describe behaviour that differs by viewport. That is not CSS
-— the client reports its width to the server, which decides. So a resize is a
-round trip, and testing it by inspecting stylesheets proves nothing.
+**Do not provision the QA Fixture Project's prod environment.** Its host is the
+apex `astralbi.com`, which serves a real site. `spex-drill.earwitness.app` is a
+subdomain, so prod on the drill project is safe.
 
-Do not use `mix spex` as evidence here. The suite is green and that establishes
-the contract; it does not establish that a person can see this screen.
+**Tear everything down at the end** and verify at the providers: Hetzner back
+to 0 servers, DNS records removed, no builder boxes left. Note that teardown
+deliberately does not delete repositories — `repository` is in the
+"nothing provider-side to remove" list — so anything created at GitHub stays.
+
+**The spex are not the QA.** They run against fakes and prove the contract, not
+the product. Drive the real page and check the real providers.
+
+## Result Path
+
+`.code_my_spec/qa/852/result.md`

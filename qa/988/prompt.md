@@ -1,4 +1,4 @@
-# QA Story 988: The stop decision reaches the agent running inside our own BEAM
+# QA Story 874: Analysis Freshness
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,34 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an agent running under Alloy, I want to be told when I end a turn with problems outstanding or a task still open, so that I close my own work instead of walking away from it.
+As an orchestrating agent, I want a requirement's verdict to reflect the code I just wrote, so that I am never sent to fix something I have already fixed.
 
 ## Acceptance criteria
 
-- A finished turn puts the analyzers to work
-- The answer arrives when it exists, not when it was asked for
-- A busy agent is queued, not interrupted
-- One landing, one set of words, either kind of agent
-- A clean tree does not excuse an abandoned task
-- Waiting is the orchestrator's job, not the agent's
-- A clean stop is left alone
-- Stopping on purpose is not a delivery failure
-- A finding the agent cannot fix stops waking it
-- A new finding starts the count again
+- A corrected finding is not handed back as fresh work
+- A finding from before the last edit still blocks until the rerun lands
+- A finding against untouched code still blocks
+- A sweep killed mid-flight does not leave the previous sweep's findings standing
+- A file no analyzer has read is not reported as clean
+- A file that changed after the analyzer read it is named as stale
+- A file edited while the run was in flight is not recorded as read
+- An analyzer slower than the edit rate still answers for what it did read
 
 ## BDD spec files
 
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3051_a_finished_turn_puts_the_analyzers_to_work_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3052_the_answer_arrives_when_it_exists_not_when_it_was_asked_for_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3053_a_busy_agent_is_queued_not_interrupted_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3054_one_landing_one_set_of_words_either_kind_of_agent_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3055_a_clean_tree_does_not_excuse_an_abandoned_task_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3056_waiting_is_the_orchestrators_job_not_the_agents_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3057_a_clean_stop_is_left_alone_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3058_stopping_on_purpose_is_not_a_delivery_failure_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3059_a_finding_the_agent_cannot_fix_stops_waking_it_spex.exs`
-- `test/spex/1043_the_stop_decision_reaches_the_agent_running_inside_our_own_beam/criterion_3060_a_new_finding_starts_the_count_again_spex.exs`
+- `test/spex/988_analysis_freshness/criterion_8197_a_corrected_finding_is_not_handed_back_as_fresh_work_spex.exs`
+- `test/spex/988_analysis_freshness/criterion_8201_a_finding_from_before_the_last_edit_still_blocks_until_the_rerun_lands_spex.exs`
+- `test/spex/988_analysis_freshness/criterion_8202_a_finding_against_untouched_code_still_blocks_spex.exs`
 
-## Linked component: Engine
+## Linked component: Validation
 
-This story is implemented by `CmsHarness.Agents.Engine` (module).
+This story is implemented by `CodeMySpec.Validation` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/cms_harness/agents/engine_test.exs`
-- Spec: `.code_my_spec/spec/cms_harness/agents/engine.spec.md`
-- Source: `lib/cms_harness/agents/engine.ex`
+- Tests: `test/code_my_spec/validation_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/validation.spec.md`
+- Source: `lib/code_my_spec/validation.ex`
 
 ## Available scripts
 
@@ -117,7 +108,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/988/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/874/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

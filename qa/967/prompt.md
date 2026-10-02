@@ -1,4 +1,4 @@
-# QA Story 967: The agent steers what I am looking at
+# QA Story 853: My secrets live encrypted in my own repo
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,35 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As a non-technical founder, I want my screen to stay where I left it and to let the agent bring the right thing up in front of me, so that I do not have to find things myself while it works.
+Sam's environment variables are encrypted in the repo and decrypted only where they're needed, with nothing in plaintext and no secret store to run.
 
 ## Acceptance criteria
 
-- Coming back gives Sam the screen he left
-- The agent puts a story in front of Sam
-- On a desk the change just appears
-- On a phone the agent asks before taking the screen
-- One project's screen does not follow Sam into another
-- A story that was deleted does not take the screen with it
+- A new secret lands in the repo unreadable
+- The repo alone is not enough to read the secrets
+- The deploy carries the key, Sam does not
+- A missing secret refuses the boot by name
+- Rotating a key is a re-encrypt and a redeploy
+- One set of files serves the laptop and the server
+- An agent working in the repo sees only ciphertext
+- A UAT key will not open production's secrets
 
 ## BDD spec files
 
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2955_coming_back_gives_sam_the_screen_he_left_spex.exs`
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2956_the_agent_puts_a_story_in_front_of_sam_spex.exs`
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2957_on_a_desk_the_change_just_appears_spex.exs`
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2958_on_a_phone_the_agent_asks_before_taking_the_screen_spex.exs`
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2959_one_project_s_screen_does_not_follow_sam_into_another_spex.exs`
-- `test/spex/1029_the_agent_steers_what_i_am_looking_at/criterion_2960_a_story_that_was_deleted_does_not_take_the_screen_with_it_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_7997_a_new_secret_lands_in_the_repo_unreadable_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_7998_the_repo_alone_is_not_enough_to_read_the_secrets_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_7999_the_deploy_carries_the_key_sam_does_not_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_8000_a_missing_secret_refuses_the_boot_by_name_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_8001_rotating_a_key_is_a_re-encrypt_and_a_redeploy_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_8002_one_set_of_files_serves_the_laptop_and_the_server_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_8049_an_agent_working_in_the_repo_sees_only_ciphertext_spex.exs`
+- `test/spex/967_my_secrets_live_encrypted_in_my_own_repo/criterion_8053_a_uat_key_will_not_open_productions_secrets_spex.exs`
 
-## Linked component: Show
+## Linked component: Sops
 
-This story is implemented by `CodeMySpecWeb.AgentConversationLive.Show` (liveview).
+This story is implemented by `CodeMySpec.Provisioning.Sops` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/agent_conversation_live/show_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/agent_conversation_live/show.spec.md`
-- Source: `lib/code_my_spec_web/live/agent_conversation_live/show.ex`
+- Tests: `test/code_my_spec/provisioning/sops_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/provisioning/sops.spec.md`
+- Source: `lib/code_my_spec/provisioning/sops.ex`
 
 ## Available scripts
 
@@ -109,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/967/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/853/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

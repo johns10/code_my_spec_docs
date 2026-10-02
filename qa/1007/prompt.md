@@ -1,4 +1,4 @@
-# QA Story 1007: An agent is told only about work for its own role
+# QA Story 847: Registered users of the deployed app
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,33 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want to be told only about work my own role can act on, so that my attention is not spent on another agent's queue.
+As an operator, I want to see the users registered in my deployed application, so that I can tell who is actually using what I shipped.
 
 ## Acceptance criteria
 
-- QA work reaches the QA agent and nobody else
-- Devops work has no role yet, so the main agent takes it
-- Any agent may run a spex, whoever was told about it
-- Looking is allowed, being pushed is not
-- A role-scoped notification is not enforced as a permission
+_None defined._
 
 ## BDD spec files
 
-- `test/spex/1050_an_agent_is_told_only_about_work_for_its_own_role/criterion_3199_qa_work_reaches_the_qa_agent_and_nobody_else_spex.exs`
-- `test/spex/1050_an_agent_is_told_only_about_work_for_its_own_role/criterion_3200_devops_work_has_no_role_yet_so_the_main_agent_takes_it_spex.exs`
-- `test/spex/1050_an_agent_is_told_only_about_work_for_its_own_role/criterion_3202_any_agent_may_run_a_spex_whoever_was_told_about_it_spex.exs`
-- `test/spex/1050_an_agent_is_told_only_about_work_for_its_own_role/criterion_3203_looking_is_allowed_being_pushed_is_not_spex.exs`
-- `test/spex/1050_an_agent_is_told_only_about_work_for_its_own_role/criterion_3226_a_role-scoped_notification_is_not_enforced_as_a_permission_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Agents
+## Linked component: Index
 
-This story is implemented by `CodeMySpec.Agents` (context).
+This story is implemented by `CodeMySpecWeb.ProjectUsersLive.Index` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
-- Source: `lib/code_my_spec/agents.ex`
+- Tests: `test/code_my_spec_web/live/project_users_live/index_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/project_users_live/index.spec.md`
+- Source: `lib/code_my_spec_web/live/project_users_live/index.ex`
 
 ## Available scripts
 
@@ -107,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1007/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/847/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

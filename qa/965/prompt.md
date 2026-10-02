@@ -1,4 +1,4 @@
-# QA Story 965: A timeline across the top says where my project is
+# QA Story 851: My domain is registered and pointed at my app
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,36 +7,53 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-A horizontal timeline with an indicator on the current step, two sentences of detail, and a step that opens the health page for it.
+As a solo founder, I want my domain pointed at my app so that I never hand-configure DNS.
 
 ## Acceptance criteria
 
-- A project mid-build shows one step for all of its stories
-- The indicator names one step, not a range
-- A project with nothing happening still says where it stands
-- A step is a way in, not a dead end
-- Where the project stands is on the conversation about the project
-- The phase I am in is readable and the rest is context
-- The step I am on says what is happening, in words I already use
+- Setup reports what the registrar actually said, and no more.
+
+Sam checks a name. Setup shows him the registrar's own answer for that name — which, for anything the account does not already hold, is the name and whether the extension is supported. It does not fill the gap: no invented availability, no price, no invitation to buy.
+
+Re-grounded 2026-08: this was "Sam picks a name and sees what it costs", and no input could reach it. Cloudflare's Registrar API returns availability, price and current registrar **only for domains already on the account**; for anything else it returns `{name, supported_tld}`. So a name Sam does not own can never be priced, and a name he does own has no price to show.
+
+It had been passing against a cassette named `cloudflare_domain_check_available_with_price` whose recorded response is `{"name": "sams-new-thing.com", "supported_tld": true}` — no price in it. The recording was honest about the provider; the criterion was satisfied by something that did not demonstrate its claim, which is why this took QA to notice rather than the suite. The cassette is now named `cloudflare_domain_check_unpriced`.
+
+Reporting exactly what the provider said is the claim worth keeping, and it is what the spex already asserted. Reading the absence of an availability field as "taken" is a bug an earlier version had; `:unknown` is the honest answer. Adopting a domain Sam already owns is criterion 8052's territory, not this one.
+- A name setup cannot register says so plainly.
+
+Sam checks a name his account does not hold. Setup does not claim it is available, does not claim it is taken, and does not invite him to buy it — it says what is true: this app cannot register a name it does not already hold, so buy it in the Cloudflare dashboard and come back, and it will be adopted on the next check.
+
+Re-grounded 2026-08: this was "a taken domain sends Sam back to choose again", which assumed setup could tell taken from available. It cannot — the Registrar API answers the same way for `google.com` and for a name nobody has ever registered, because both are equally "not on this account". The old behaviour told Sam to register `google.com` in the dashboard, an errand he cannot complete.
+
+The failure worth guarding against is therefore not "taken" but "implied a capability we do not have". A message that reads as a provider limitation rather than a broken feature is the outcome; the previous copy read as the latter.
+- A retried step does not buy a second domain
+- Sam finds the domain in his own account
+- An unsupported extension becomes a dashboard errand
+- Each environment resolves to its own server
+- The records let the proxy get its certificate
+- An existing domain is an ordinary way in, not an error path
 
 ## BDD spec files
 
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2924_a_project_mid-build_shows_one_step_for_all_of_its_stories_spex.exs`
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2925_the_indicator_names_one_step_not_a_range_spex.exs`
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2926_a_project_with_nothing_happening_still_says_where_it_stands_spex.exs`
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2928_a_step_is_a_way_in_not_a_dead_end_spex.exs`
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2929_where_the_project_stands_is_there_without_being_asked_for_spex.exs`
-- `test/spex/1027_a_timeline_across_the_top_says_where_my_project_is/criterion_2940_the_phase_i_am_in_is_readable_and_the_rest_is_context_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7988_setup_reports_what_the_registrar_actually_said_and_no_more_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7989_a_name_setup_cannot_register_says_so_plainly_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7991_a_retried_step_does_not_buy_a_second_domain_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7992_sam_finds_the_domain_in_his_own_account_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7993_an_unsupported_extension_becomes_a_dashboard_errand_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7995_each_environment_resolves_to_its_own_server_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_7996_the_records_let_the_proxy_get_its_certificate_spex.exs`
+- `test/spex/965_my_domain_is_registered_and_pointed_at_my_app/criterion_8052_an_existing_domain_is_an_ordinary_way_in_not_an_error_path_spex.exs`
 
-## Linked component: ProjectTimeline
+## Linked component: Cloudflare
 
-This story is implemented by `CodeMySpecWeb.ProjectTimeline` (liveview_component).
+This story is implemented by `CodeMySpec.Provisioning.Cloudflare` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/project_timeline_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/project_timeline.spec.md`
-- Source: `lib/code_my_spec_web/live/project_timeline.ex`
+- Tests: `test/code_my_spec/provisioning/cloudflare_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/provisioning/cloudflare.spec.md`
+- Source: `lib/code_my_spec/provisioning/cloudflare.ex`
 
 ## Available scripts
 
@@ -110,7 +127,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/965/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/851/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

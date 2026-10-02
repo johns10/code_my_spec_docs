@@ -1,4 +1,4 @@
-# QA Story 1008: Harness startup and restart leave the agent working
+# QA Story 848: Per-task help on the agent progress view
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,34 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want my tools, registration and in-flight work to survive a harness start or restart, so that infrastructure lifecycle is not my problem.
+As an engineer watching the agent work, I want help content for the task it is currently running, so that I can understand what is happening without reading the source.
 
 ## Acceptance criteria
 
-- Tools come back on their own after a harness restart
-- An agent stopped and started again has its tools
-- Restarting an agent never costs it its tools
-- An interrupted analysis picks itself back up
-- An interrupted agent is told what happened to its work
-- An idle agent is not told the harness restarted
-- An agent refuses to start without its tools
-- Tools lost mid-life are not survived quietly
-- An agent with working tools starts normally
-- A stopped agent leaves no MCP session behind, so the next one to start under its name is not refused
+_None defined._
 
 ## BDD spec files
 
 _No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Agents
+## Linked component: TaskHelp
 
-This story is implemented by `CodeMySpec.Agents` (context).
+This story is implemented by `CodeMySpec.TaskHelp` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
-- Source: `lib/code_my_spec/agents.ex`
+- Tests: `test/code_my_spec/task_help_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/task_help.spec.md`
+- Source: `lib/code_my_spec/task_help.ex`
 
 ## Available scripts
 
@@ -108,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1008/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/848/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

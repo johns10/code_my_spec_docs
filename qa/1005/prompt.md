@@ -1,4 +1,4 @@
-# QA Story 1005: Work appearing on the graph reaches the agent who can do it
+# QA Story 845: Operator mail on the project's own domain
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,51 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want to be notified when work I can do appears on the graph, so that I start on the right thing without a person routing it to me.
+As an operator, I want email on my project's own domain inside the dashboard, so that I can read and reply to correspondents without leaving CodeMySpec.
 
 ## Acceptance criteria
 
-- A ready story wakes the idle coding agent
-- One graph change, one announcement, routed per agent
-- A change that adds no work for me does not wake me
-- Work arriving mid-turn is found at the stop hook
-- A story ready to test wakes the QA agent
-- Problems appearing wake the coding agent
-- An unreachable agent does not make the graph retry
-- The work is gone by the time the agent wakes
-- A recompute that fails wakes nobody
-- A published wake reaches a healthy agent
-- Work inside my role and my copy wakes me
-- Work still waiting does not wake the agent a second time
-- A watcher starting up does not wake anyone for work that predates it
-- A coding agent gets its red spex while product's triage queue is still full
+_None defined._
 
 ## BDD spec files
 
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3188_a_ready_story_wakes_the_idle_coding_agent_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3189_one_graph_change_one_announcement_routed_per_agent_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3190_a_change_that_adds_no_work_for_me_does_not_wake_me_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3191_work_arriving_mid-turn_is_found_at_the_stop_hook_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3192_a_story_ready_to_test_wakes_the_qa_agent_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3193_problems_appearing_wake_the_coding_agent_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3194_an_unreachable_agent_does_not_make_the_graph_retry_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3197_the_work_is_gone_by_the_time_the_agent_wakes_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3198_a_recompute_that_fails_wakes_nobody_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3294_a_published_wake_reaches_a_healthy_agent_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3295_work_inside_my_role_and_my_copy_wakes_me_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3474_work_still_waiting_does_not_wake_the_agent_a_second_time_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3475_a_watcher_starting_up_does_not_wake_anyone_for_work_that_predates_it_spex.exs`
-- `test/spex/1048_work_appearing_on_the_graph_reaches_the_agent_who_can_do_it/criterion_3491_a_coding_agent_gets_its_red_spex_while_products_triage_queue_is_still_full_spex.exs`
+_No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Agents
+## Linked component: MailboxLive
 
-This story is implemented by `CodeMySpec.Agents` (context).
+This story is implemented by `CodeMySpecWeb.MailboxLive` (live_context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
-- Source: `lib/code_my_spec/agents.ex`
+- Tests: `test/code_my_spec_web/live/mailbox_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/mailbox_live.spec.md`
+- Source: `lib/code_my_spec_web/live/mailbox_live.ex`
 
 ## Available scripts
 
@@ -125,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1005/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/845/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief
