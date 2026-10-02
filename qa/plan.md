@@ -42,7 +42,10 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 - `4000/` — marketing pages, `/users/log-in`, `/users/register`
 - `4000/app/*` — hosted SaaS LiveViews (overview, accounts, projects, stories, components, issues, architecture)
 - `4000/api/*` — JSON API (stories, personas, issues, projects, uploads, push notifications) — OAuth bearer
-- `4000/mcp/{stories,components,personas,analytics-admin}` — hosted MCP servers — OAuth bearer + `ProjectScopeOverride`
+- `4000/mcp/harness` — forwards to `CodeMySpec.McpServers.LocalServer`, the same direct tool set a local/CLI MCP session carries (`start_task`, `evaluate_task`, `get_next_requirement`, `sync_project`, `run_script`, etc.) — OAuth bearer + `ProjectScopeOverride`. Story/component mutation tools (`create_story`, `set_story_component`, `create_component`, ...) are reached by calling its `run_script` tool with a script, not a separate mount.
+- `4000/mcp/components` — `CodeMySpec.McpServers.ComponentsServer` — OAuth bearer + `ProjectScopeOverride`.
+- `4000/mcp/{gsc,ga4,google-ads}` — SEO/analytics MCP servers, same auth.
+- `/mcp/stories`, `/mcp/personas`, `/mcp/analytics-admin`, `/mcp/tasks`, `/mcp/requirements` do **not** exist on this build (404) — verified by curl against a running instance, 2026-10-02 (`7ae462b3`). The line this replaces was wrong; don't resurrect it without re-checking the router.
 - `4000/.well-known/oauth-*` — MCP discovery
 - `4000/build` — guided intake: anonymous plan LiveView (sign-up card renders once the plan is confirmed and no user is signed in)
 - `4000/build/sign-up` — plain POST, registers + logs in from the sign-up card's email field
@@ -777,3 +780,24 @@ Do not reach for the MCP read tools for this. `show_story_requirements` and
 `list_requirements` go through `RequirementGraph.compute_all/1` and always
 recompute, so they can never demonstrate a cache hit; `get_next_requirement` is
 cache-aware and exposes no timestamp.
+
+### `evaluate_task` on an ArchitectureDesign/`component_linked` task needs `X-Harness-Id`
+
+`start_task` and `set_story_component` work fine from an external OAuth +
+`X-Project-ID` call against `/mcp/harness`. `evaluate_task` on that same task
+used to always answer `ArchitectureDesign evaluation error: :no_environment`
+(`agent_tasks/architecture_design.ex:158`), because `AgentScope` never
+populated `scope.cwd`/`scope.environment` on this pipeline. **Fixed in
+commit `68fbc0897` (issue `ed28189c`, resolved):** send `X-Harness-Id`
+alongside `X-Project-ID` and the bearer token, and `ProjectScopeOverride`
+supplies `scope.environment` from it. Verified against this worktree's own
+instance (port 60642): `start_task` + `set_story_component` + `evaluate_task`
+for three fresh fixture stories (1090, 1092, 1093) all completed with
+"ArchitectureDesign: Passed" over plain hosted MCP — no local/CLI session
+needed.
+
+Separately: a freshly created story produces no `component_linked`
+requirement until it is released — follow `create_story` with
+`update_story({ ready_for_dev = true })`, or `start_task` answers
+"Requirement component_linked not found for story <id>" even though the
+story exists.
