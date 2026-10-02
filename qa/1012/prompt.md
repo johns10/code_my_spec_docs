@@ -1,4 +1,4 @@
-# QA Story 1012: The main agent sees what each of its agents is working on
+# QA Story 890: Analysis results reach the agent that caused them
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,51 +7,45 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see what each of my agents is currently working on, so that I know where the project's effort is going without asking each one.
+Analyzers run async, and the only place a result is ever delivered is the next stop hook. That is one turn late by construction, and free if the agent never stops again.
 
 ## Acceptance criteria
 
-- Every agent's current work in one view
-- The work is named, not just the state
-- Idle and broken do not look the same
-- A question about all the agents at once is answerable
-- An agent that stopped reporting is not shown as working
-- The main agent reasons from the parts rather than reading a verdict
-- A task opened an hour ago with nothing said for forty-five minutes
-- An agent waiting on an answer says so
-- An agent that tapped out is not mistaken for one that stalled
-- A long silence with a live connection is not a stall
-- An agent mid-response shows work in flight
-- An agent with nothing to do says exactly that
-- A coding agent's working-copy problems are shown with it
-- A clean working copy shows no problems against its agent
+- Two agents in one working copy are both told
+- A subagent's breakage reaches its parent
+- An agent that never stops still finds out
+- A reading turn is told too
+- A large backlog stays one line
+- Silence when nothing moved
+- A clean run says nothing
+- The suffix does not tax the turn
+- The age is on the line
+- An answer that predates the fix
+- A Claude Code agent working the copy is told
+- An agent outside Claude Code is not served by this story
 
 ## BDD spec files
 
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3270_every_agents_current_work_in_one_view_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3271_the_work_is_named_not_just_the_state_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3272_idle_and_broken_do_not_look_the_same_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3273_a_question_about_all_the_agents_at_once_is_answerable_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3274_an_agent_that_stopped_reporting_is_not_shown_as_working_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3275_the_main_agent_reasons_from_the_parts_rather_than_reading_a_verdict_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3276_a_task_opened_an_hour_ago_with_nothing_said_for_forty-five_minutes_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3277_an_agent_waiting_on_an_answer_says_so_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3278_an_agent_that_tapped_out_is_not_mistaken_for_one_that_stalled_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3279_a_long_silence_with_a_live_connection_is_not_a_stall_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3297_an_agent_mid-response_shows_work_in_flight_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3298_an_agent_with_nothing_to_do_says_exactly_that_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3299_a_coding_agents_working-copy_problems_are_shown_with_it_spex.exs`
-- `test/spex/1054_the_main_agent_sees_what_each_of_its_agents_is_working_on/criterion_3300_a_clean_working_copy_shows_no_problems_against_its_agent_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2340_two_agents_in_one_working_copy_are_both_told_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2341_a_subagents_breakage_reaches_its_parent_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2342_an_agent_that_never_stops_still_finds_out_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2343_a_reading_turn_is_told_too_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2344_a_large_backlog_stays_one_line_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2345_silence_when_nothing_moved_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2346_a_clean_run_says_nothing_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2347_the_suffix_does_not_tax_the_turn_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2348_the_age_is_on_the_line_spex.exs`
+- `test/spex/1012_analysis_results_reach_the_agent_that_caused_them/criterion_2349_an_answer_that_predates_the_fix_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: Hooks
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Hooks` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/hooks_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/hooks.spec.md`
+- Source: `lib/code_my_spec/hooks.ex`
 
 ## Available scripts
 
@@ -125,7 +119,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1012/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/890/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

@@ -1,6 +1,4 @@
-# Qa Story Brief
-
-Story 965 — A timeline across the top says where my project is.
+# QA Brief — Story 851: My domain is registered and pointed at my app
 
 ## Tool
 
@@ -8,71 +6,86 @@ web
 
 ## Auth
 
-The QA user is passwordless; `/users/log-in` offers only GitHub, Google and a
-magic link.
+Log in as the QA user through the magic-link flow. The dev mailbox is shared, so
+confirm the message you open is addressed to this user before clicking it.
 
-1. `http://127.0.0.1:4000/users/log-in` → fill `input[name="user[email]"]` with
-   `qa@codemyspec.local` → click "Email me a login link".
-2. `http://127.0.0.1:4000/dev/mailbox` → open the newest message **addressed to
-   this user**; the mailbox is shared with every other QA session on this box.
-3. The link is minted with the configured host
-   (`https://dev.codemyspec.com/users/log-in/<token>`). **Rewrite the origin to
-   `http://127.0.0.1:4000` before navigating.**
-4. Lands on `/app` with the fixture project active. Single-use token.
+1. `http://127.0.0.1:4000/users/log-in`
+2. Fill `input[name="user[email]"]` with `qa@codemyspec.local`
+3. Click **Email me a login link**
+4. `http://127.0.0.1:4000/dev/mailbox` — open the newest message *addressed to
+   `qa@codemyspec.local`*, not simply the newest message
+5. The link is issued for `dev.codemyspec.com`. Swap the host to
+   `127.0.0.1:4000` and keep the path and token.
 
 ## Seeds
 
-None beyond the base fixture, and nothing to run. Verify it is present without
-`mix run` — the dev server on 4000 holds the compile lock and a `mix run` under
-`MIX_ENV=dev` would 500 the app under test:
+No story-specific seeding. The QA Fixture Project already exists:
 
-```
-psql -U postgres -h localhost -d code_my_spec_dev -t \
-  -c "select email from users where email='qa@codemyspec.local';"
-```
+- project id `11111111-1111-4111-8111-111111111111`
+- provisioning page: `http://127.0.0.1:4000/app/projects/11111111-1111-4111-8111-111111111111/provisioning`
 
-Entity: project `QA Fixture Project`, id `11111111-1111-4111-8111-111111111111`.
-
-This story needs no provider, no harness and no agent. The timeline is drawn
-from the project's own requirement graph, which every project has.
+`astralbi.com` is a domain the connected Cloudflare account really holds, which
+is what makes the adoption criteria testable without buying anything.
 
 ## What To Test
 
-Base URL `http://127.0.0.1:4000`, project `11111111-1111-4111-8111-111111111111`.
+Read the domain panel and the dns step on the provisioning page above.
 
-- **It is there without being asked for.** Open `/stories`, `/issues` and
-  `/working-copies` on the project. The timeline is on all three, above the
-  page's own content — not on a page of its own. *(2929)*
-- **One step is current.** Exactly one step carries the current marker; the
-  others read as done or not-started. *(2925)*
-- **All the story work is one step.** The fixture project has stories; the
-  timeline shows a single Building step regardless of how many. *(2924)*
-- **The whole graph is on the line.** Fourteen steps — the project's thirteen
-  own requirements plus story work — none dropped. *(2940)*
-- **One phase expanded, the rest collapsed.** Exactly one phase is expanded and
-  every other is collapsed. *(2940)*
-- **The detail reads as sentences.** The current step carries about two
-  sentences of plain language containing no module name, file path, id or count
-  of internals. Read it as a non-technical person would. *(2927)*
-- **A step is a way in.** Click a step; it opens the page that answers for it
-  rather than dead-ending. *(2928)*
-- **Idle still says where it stands.** The fixture project has nothing in
-  flight; the timeline must still mark a step rather than going blank. This is
-  the one that matters most — a timeline marking nothing is indistinguishable
-  from one that failed to load. *(2926)*
-
-Judgement calls this pass owes, beyond what the spex can assert: whether the
-phase names and the fourteen sentences actually read as plain language to
-somebody who does not know the system, and whether fourteen steps across the top
-is legible rather than a build log. Both were written by the agent, not by the
-PM, so they are the parts most likely to be wrong.
+- **Setup reports what the registrar actually said, and no more (2018).** Check a
+  name the account does not hold (`qa-851-probe-xyzzy-4471.com`). The panel must
+  show the registrar's own answer — the name and whether the extension is
+  supported — and must not invent availability, quote a price, or offer to buy.
+  The panel's own instructions count: copy promising "see what it costs, then say
+  yes" is the defect `d36eea81` was filed for.
+- **A name setup cannot register says so plainly (2019).** Same input. The message
+  must read as a provider limitation, not a broken feature, and must not claim the
+  name is either available or taken. `google.com` is the sharper probe: setup
+  cannot tell it from an unregistered name, so it must not send Sam to register it.
+- **A retried step does not buy a second domain (2020).** Run the domain step twice
+  against `astralbi.com`. Expect it to stay done with exactly one `domain —
+  cloudflare/astralbi.com` resource and no second registration attempt.
+- **Sam finds the domain in his own account (2021).** The recorded resource must be
+  in the user's own connected Cloudflare account — nothing held on a platform
+  account on his behalf.
+- **An unsupported extension becomes a dashboard errand (2022).** Try `.gov` and
+  `.museum`. Expect `[data-test="domain-unsupported"]` with wording distinct from
+  the supported-but-unregisterable case, so the two reasons are told apart.
+- **Each environment resolves to its own server (2023).** Provision a second
+  environment alongside `uat` and run the server and dns steps. Each must get its
+  own box and its own A record. Re-running must not recreate an existing server.
+- **The records let the proxy get its certificate (2024).** The A record must be
+  unproxied — `dig <host> @1.1.1.1` returns the Hetzner address itself, not a
+  Cloudflare proxy address. A proxied record would terminate TLS at Cloudflare and
+  kamal-proxy could never answer an HTTP-01 challenge.
+- **An existing domain is an ordinary way in, not an error path (2025).** Enter
+  `astralbi.com`. Expect it recognised as already owned and adopted, with the
+  domain step completing as done — a normal path, not a failure to work around.
 
 ## Setup Notes
 
-The spex cover the same criteria in-process and are green. That is the contract
-layer; this pass is about whether it is right on a real screen, which is where
-the density and the wording can only be judged by looking.
+**Real provisioning, and tear it down.** Servers and DNS records created here are
+real and cost money. Do not buy domains. Do not touch `fuellytics` or
+`fuellytics prod` — those are live servers. Remove every server and every DNS
+record this session creates before finishing.
+
+**Teardown path.** `Teardown.environment/3` builds its own resource list and
+removes the DNS record before releasing the server, which is the ordering that
+avoids handing a live name to a recycled address. Prefer it over tearing down by
+step. As of `b9ea86eb` the step path also removes an adopted record aimed at one
+of this project's own servers, so both routes are safe — but the environment path
+is still the one whose ordering is guaranteed.
+
+**What changed since the last attempt.** All five issues on this story are
+resolved. Two matter for reading results here:
+
+- DNS resolution now asks the zone's authoritative nameservers rather than a
+  recursive resolver (`f73fb37e`). A freshly written record should read as
+  resolving immediately; "no public resolver returns it" for a record `dig`
+  answers is the old defect and would be a regression.
+- The pricing criteria were re-grounded rather than deleted. 2018 and 2019 are
+  about reporting the provider honestly, not about showing a price — a run that
+  shows no price is passing them, not failing them.
 
 ## Result Path
 
-`.code_my_spec/qa/965/result.md`
+`.code_my_spec/qa/851/result.md`

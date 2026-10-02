@@ -1,4 +1,4 @@
-# QA Story 1005: Work appearing on the graph reaches the agent who can do it
+# QA Story 845: Operator mail on the project's own domain
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,35 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want to be notified when work I can do appears on the graph, so that I start on the right thing without a person routing it to me.
+As an operator, I want email on my project's own domain inside the dashboard, so that I can read and reply to correspondents without leaving CodeMySpec.
 
 ## Acceptance criteria
 
-- A ready story wakes the idle coding agent
-- One graph change, one announcement, routed per agent
-- A change that adds no work for me does not wake me
-- Work arriving mid-turn is found at the stop hook
-- A story ready to test wakes the QA agent
-- Problems appearing wake the coding agent
-- An unreachable agent does not make the graph retry
-- The work is gone by the time the agent wakes
-- A recompute that fails wakes nobody
-- A published wake reaches a healthy agent
-- Work inside my role and my copy wakes me
+_None defined._
 
 ## BDD spec files
 
 _No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Agents
+## Linked component: MailboxLive
 
-This story is implemented by `CodeMySpec.Agents` (context).
+This story is implemented by `CodeMySpecWeb.MailboxLive` (live_context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/agents_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
-- Source: `lib/code_my_spec/agents.ex`
+- Tests: `test/code_my_spec_web/live/mailbox_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/mailbox_live.spec.md`
+- Source: `lib/code_my_spec_web/live/mailbox_live.ex`
 
 ## Available scripts
 
@@ -109,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1005/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/845/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

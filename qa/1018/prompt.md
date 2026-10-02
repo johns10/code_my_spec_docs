@@ -1,4 +1,4 @@
-# QA Story 1018: The main agent answers what it can and escalates only what it cannot
+# QA Story 956: An agent starts in a minted working copy on my own subscription
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,45 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to answer what I can from what I know and pass up only what I cannot, so that the user is interrupted by decisions rather than by engineering detail.
+As a solo founder, I want CodeMySpec to start a coding agent in a working copy it just minted, authenticated with a subscription I already pay for, so that I can put an agent on a project without an API key, an interactive login, or anything to babysit.
 
 ## Acceptance criteria
 
-- A question about the project's own state is answered outright
-- Whether to build something is the user's call
-- An engineering question is put as a choice about the product
-- The main agent does not guess at what it merely suspects
-- The main agent goes and finds out
-- Past answers are searchable
-- A settled question is not put to the user twice
-- A precedent that does not fit is not stretched to cover the case
-- Work to find an answer does not become a stall
+- A copy minted for Pi can run Pi
+- Connected once, used by every agent
+- Asked for a provider that was never connected
+- An expired token is not a disconnected provider
+- The credential is never written down
+- Two credential kinds, one way to start an agent
+- Two agents on one copy, different providers
+- Two tenants on one box cannot reach each other's subscription
+- The agent edits the checkout it was started in
+- A checkout that is not there is refused, not discovered mid-turn
+- A harness restart costs the turn, not the conversation
+- It does not come back to a checkout that is gone
 
 ## BDD spec files
 
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3251_a_question_about_the_projects_own_state_is_answered_outright_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3252_whether_to_build_something_is_the_users_call_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3253_an_engineering_question_is_put_as_a_choice_about_the_product_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3254_the_main_agent_does_not_guess_at_what_it_merely_suspects_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3255_the_main_agent_goes_and_finds_out_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3256_past_answers_are_searchable_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3257_a_settled_question_is_not_put_to_the_user_twice_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3258_a_precedent_that_does_not_fit_is_not_stretched_to_cover_the_case_spex.exs`
-- `test/spex/1060_the_main_agent_answers_what_it_can_and_escalates_only_what_it_cannot/criterion_3259_work_to_find_an_answer_does_not_become_a_stall_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2819_a_copy_minted_for_pi_can_run_pi_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2820_connected_once_used_by_every_agent_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2821_asked_for_a_provider_that_was_never_connected_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2822_an_expired_token_is_not_a_disconnected_provider_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2823_the_credential_lands_beside_the_copy_never_inside_it_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2825_two_credential_kinds_one_way_to_start_an_agent_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2826_two_agents_on_one_copy_different_providers_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2829_two_tenants_on_one_box_cannot_reach_each_others_subscription_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2888_a_harness_restart_costs_the_turn_not_the_conversation_spex.exs`
+- `test/spex/1018_a_pi_agent_starts_in_a_minted_working_copy_on_my_own_subscription/criterion_2889_it_does_not_come_back_to_a_checkout_that_is_gone_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: Agents
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Agents` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/agents_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/agents.spec.md`
+- Source: `lib/code_my_spec/agents.ex`
 
 ## Available scripts
 
@@ -115,7 +119,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1018/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/956/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

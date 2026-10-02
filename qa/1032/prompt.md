@@ -1,4 +1,4 @@
-# QA Story 1032: A tool call that is wrong fails like a failure
+# QA Story 970: I script the tools instead of calling them one at a time
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,35 +7,51 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an agent calling product tools from a script, I want a call I got wrong to fail loudly, so that I do not carry a wrong belief forward as if the tool had answered me.
+As an agent, I want to call the harness's tools from a sandboxed script and look up their documentation on demand, so that I can do several steps of work in one turn without carrying every tool's arguments.
 
 ## Acceptance criteria
 
-- Nothing found reads as nothing found
-- A rejected call does not read as an empty answer
-- Ignoring the failure is not rewarded with a wrong answer
-- The failure names the call
-- A rejected call stops the script
-- A refusal does not arrive dressed as a result
+- A script cannot put a question to a person
+- A loop cannot become a fleet
+- Asking about one tool returns one tool
+- An agent that does not know the name can search for it
+- A script sees the project its sender is connected to
+- Naming another project in the script does not reach it
+- A script cannot run a command or read the disk
+- An endless loop ends, and the server keeps serving
+- A slow tool call does not hang the script
+- Three writes land and the fourth failure is reported
+- The agent can see what the script was thinking
+- A script that will not compile says where
+- Several calls that were several turns become one
+- A string bomb is refused before it is built
 
 ## BDD spec files
 
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3386_nothing_found_reads_as_nothing_found_spex.exs`
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3387_a_rejected_call_does_not_read_as_an_empty_answer_spex.exs`
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3388_ignoring_the_failure_is_not_rewarded_with_a_wrong_answer_spex.exs`
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3389_the_failure_names_the_call_spex.exs`
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3390_a_rejected_call_stops_the_script_spex.exs`
-- `test/spex/1066_a_tool_call_that_is_wrong_fails_like_a_failure/criterion_3391_a_refusal_does_not_arrive_dressed_as_a_result_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2986_a_script_cannot_put_a_question_to_a_person_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2987_a_loop_cannot_become_a_fleet_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2988_asking_about_one_tool_returns_one_tool_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2989_an_agent_that_does_not_know_the_name_can_search_for_it_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2990_a_script_sees_the_project_its_sender_is_connected_to_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2991_naming_another_project_in_the_script_does_not_reach_it_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2992_a_script_cannot_run_a_command_or_read_the_disk_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2993_an_endless_loop_ends_and_the_server_keeps_serving_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2994_a_slow_tool_call_does_not_hang_the_script_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2995_three_writes_land_and_the_fourth_failure_is_reported_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2996_the_agent_can_see_what_the_script_was_thinking_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_2997_a_script_that_will_not_compile_says_where_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_3003_several_calls_that_were_several_turns_become_one_spex.exs`
+- `test/spex/1032_i_script_the_tools_instead_of_calling_them_one_at_a_time/criterion_3004_a_string_bomb_is_refused_before_it_is_built_spex.exs`
 
-## Linked component: McpServers
+## Linked component: CodeMode
 
-This story is implemented by `CodeMySpec.McpServers` (context).
+This story is implemented by `CodeMySpec.CodeMode` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/mcp_servers_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers.spec.md`
-- Source: `lib/code_my_spec/mcp_servers.ex`
+- Tests: `test/code_my_spec/code_mode_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/code_mode.spec.md`
+- Source: `lib/code_my_spec/code_mode.ex`
 
 ## Available scripts
 
@@ -109,7 +125,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1032/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/970/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

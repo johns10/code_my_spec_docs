@@ -1,4 +1,4 @@
-# QA Story 1017: The main agent looks in on its agents on a cadence
+# QA Story 896: Agent sees the questions it has open
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,41 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to be woken on a regular cadence to check on my agents, so that a problem surfaces even when the agent in trouble cannot tell me about it.
+As an agent, I want to see the questions I have open, so that I neither lose track of one nor keep asking the user something they have already answered.
 
 ## Acceptance criteria
 
-- The main agent comes back round on its own
-- A pushed question does not wait for the next check-in
-- An agent that went silent is caught by the check-in
-- A quiet check-in does not become a notification
-- The interval is set rather than assumed
-- The wake-up says what is going on
-- A digest that cannot be assembled is not delivered as an empty one
-- Everybody is through their work and the main agent stands down
-- Tapping out does not make the main agent unreachable
+- A question on its own does not hold the agent in the loop
+- A refusal carries the count of what is waiting on the user
+- A refusal with nothing outstanding does not invent a count
+- The list returns this session's questions in the order they were asked
+- One session's questions stay out of another's list
+- An answered question drops off the agent's list
+- Age alone does not close a question
+- Asking goes through our own tool end to end
+- One question form serves every page that shows a question
 
 ## BDD spec files
 
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3317_the_main_agent_comes_back_round_on_its_own_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3318_a_pushed_question_does_not_wait_for_the_next_check-in_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3319_an_agent_that_went_silent_is_caught_by_the_check-in_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3320_a_quiet_check-in_does_not_become_a_notification_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3331_the_interval_is_set_rather_than_assumed_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3332_the_wake-up_says_what_is_going_on_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3333_a_digest_that_cannot_be_assembled_is_not_delivered_as_an_empty_one_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3334_everybody_is_through_their_work_and_the_main_agent_stands_down_spex.exs`
-- `test/spex/1059_the_main_agent_looks_in_on_its_agents_on_a_cadence/criterion_3335_tapping_out_does_not_make_the_main_agent_unreachable_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2414_a_question_on_its_own_does_not_hold_the_agent_in_the_loop_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2415_a_refusal_carries_the_count_of_what_is_waiting_on_the_user_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2416_a_refusal_with_nothing_outstanding_does_not_invent_a_count_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2417_the_list_returns_this_sessions_questions_in_the_order_they_were_asked_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2418_one_sessions_questions_stay_out_of_anothers_list_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2419_answering_anywhere_closes_the_question_spex.exs`
+- `test/spex/1017_agent_sees_the_questions_it_has_open/criterion_2420_age_alone_does_not_close_a_question_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: Notifications
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpec.Notifications` (infrastructure).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec/notifications_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/notifications.spec.md`
+- Source: `lib/code_my_spec/notifications.ex`
 
 ## Available scripts
 
@@ -115,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1017/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/896/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

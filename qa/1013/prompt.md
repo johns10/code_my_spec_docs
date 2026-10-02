@@ -1,4 +1,4 @@
-# QA Story 1013: The main agent can read its agents' conversations
+# QA Story 891: A working copy comes onto the harness fully configured
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,35 +7,68 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to query and read my agents' conversations, so that I can diagnose, assist and unblock them.
+As an engineer putting a working copy on a harness, I want onboarding to establish its identity, its databases and its proxy once and write them down, so that nothing downstream derives them and no agent has to discover them.
 
 ## Acceptance criteria
 
-- The main agent reads a stuck agent's recent turns
-- The exact error text is available, not a paraphrase
-- A question about a long conversation is answered without reading it all
-- Two agents' turns line up on one timeline
-- A repeated result is not collapsed into one
-- The last ten turns, not the whole history
-- A time range narrows a conversation to the incident
-- A broad query is cut to the limit rather than returned whole
-- A restarted agent's earlier life is still readable
-- No agent's conversation is closed to the main agent
-- A query inside the limit comes back whole
+- A worktree the agent made is configured by one command run inside it
+- A generated application onboards itself with the same command
+- The harness address lands in the untracked settings file
+- A clone does not inherit the identity of the copy it was cloned from
+- Every consumer reads one recorded partition name
+- The analyzer and the engineer do not disagree about the database
+- Onboarding twice is the same as onboarding once
+- Not-onboarded is reported as itself
+- The commands are handed over, not run
+- The output is sufficient to finish the job
+- Submodules follow the working copy without being asked
+- A consumer resolves the recorded partition, not one it derives
+- Minting a fresh id reads the project's own deploy key, not a copy of it in the environment
+- A first run makes the database it needs
+- A run that cannot name its own database acts on none
+- I ask for a copy and get somewhere to work
+- A copy I cannot have is refused, not half-made
+- There is no half-made copy to find
+- Onboarding that fails leaves nothing behind
+- The copy I asked for arrives staffed
+- A copy nothing is serving does not report itself ready
+- The copy lands where the disk is
+- One call, two halves
+- A half that fails does not leave the other half standing
 
 ## BDD spec files
 
-_No BDD specs found. Read the router and app code to understand this story's scope._
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2350_a_worktree_the_agent_made_is_configured_by_one_command_run_inside_it_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2351_a_generated_application_onboards_itself_with_the_same_command_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2352_the_harness_address_lands_in_the_untracked_settings_file_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2353_a_clone_does_not_inherit_the_identity_of_the_copy_it_was_cloned_from_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2354_every_consumer_reads_one_recorded_partition_name_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2355_the_analyzer_and_the_engineer_do_not_disagree_about_the_database_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2356_onboarding_twice_is_the_same_as_onboarding_once_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2357_not-onboarded_is_reported_as_itself_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2358_the_commands_are_handed_over_not_run_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2360_the_output_is_sufficient_to_finish_the_job_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2361_submodules_follow_the_working_copy_without_being_asked_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_2370_a_consumer_resolves_the_recorded_partition_not_one_it_derives_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3093_i_ask_for_a_copy_and_get_somewhere_to_work_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3094_a_copy_i_cannot_have_is_refused_not_half_made_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3095_there_is_no_half_made_copy_to_find_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3096_onboarding_that_fails_leaves_nothing_behind_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3097_the_copy_i_asked_for_arrives_staffed_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3098_a_copy_nothing_is_serving_does_not_report_itself_ready_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3099_the_copy_lands_where_the_disk_is_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3100_one_call_two_halves_spex.exs`
+- `test/spex/1013_a_working_copy_comes_onto_the_harness_fully_configured/criterion_3101_a_half_that_fails_does_not_leave_the_other_half_standing_spex.exs`
 
-## Linked component: Conversations
+## Linked component: Onboard
 
-This story is implemented by `CodeMySpec.Conversations` (context).
+This story is implemented by `Mix.Tasks.Cms.Harness.Onboard` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/conversations_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/conversations.spec.md`
-- Source: `lib/code_my_spec/conversations.ex`
+- Tests: `test/mix/tasks/cms/harness/onboard_test.exs`
+- Spec: `.code_my_spec/spec/mix/tasks/cms/harness/onboard.spec.md`
+- Source: `lib/mix/tasks/cms/harness/onboard.ex`
 
 ## Available scripts
 
@@ -109,7 +142,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1013/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/891/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

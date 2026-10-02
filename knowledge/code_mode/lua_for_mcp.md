@@ -173,9 +173,13 @@ John's calls, each tagged with the story it lands in:
   `start_task`, `evaluate_task`, `sync_project`), the six that block or spawn,
   and the two code-mode tools.
 - **Everything is callable from a script except tools that block on a person or
-  spawn work** *(970)* — `ask_user`, `check_answer`, `start_agent`, `assign_subagent`,
-  `tap_out`, `show_in_panel`. A loop around those means something different
-  from a loop around `get_story`.
+  spawn work** *(970)* — `ask_user`, `check_answer`, `assign_subagent`, `tap_out`,
+  `show_in_panel`. A loop around those means something different from a loop
+  around `get_story`.
+- **The agent lifecycle is scripted, main-only** — `start_agent`,
+  `turn_off_agent`, `turn_on_agent`, `retire_agent`, `restart_agent` are called
+  from `run_script`. `ToolSets` grants them to main and no other role; a caller
+  with no agent identity keeps them.
 - **Consequence, worth stating** *(971)*: the excluded set must be a subset of the
   spine, or those tools become unreachable entirely.
 - **No transaction** *(970)*. A script that fails on its fourth call leaves the first

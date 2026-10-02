@@ -36,10 +36,10 @@
 # session already has:
 #
 #   1. create_working_copy   -> a scratch checkout
-#   2. start_agent           -> role "coding" on it; the reply names the agent id
+#   2. start_agent           -> (run_script) role "coding" on it; the reply names the agent id
 #   3. qa_as_agent.sh <id> ask_user_question '...'
 #   4. ... observe routing, answer as the main agent, collect with check_answer
-#   5. stop_agent            -> and offboard_working_copy
+#   5. turn_off_agent        -> (run_script) and offboard_working_copy
 #
 # A coding role is the point. `holder_for/2` treats `:main` as "user", so a
 # main-role fixture routes exactly like no fixture at all — which is how the

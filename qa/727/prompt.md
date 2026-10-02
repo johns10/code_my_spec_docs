@@ -1,4 +1,4 @@
-# QA Story 727: Agents working the same project do not collide
+# QA Story 838: Engineer trusts QA pass claims as audit-grade events
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,49 +7,45 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-Files, problems and components are projections of a working copy, but they are keyed only by project. Two agents on one project therefore write the same rows — so the harness needs a lease to stop them, and an agent's stop hook reports work it never did. They belong to the agent that produced them.
+As an engineer reviewing QA history on a story, I want pass and fail claims to be DB-backed events I can audit and revisit, not filenames I have to trust by convention, so I can tell at a glance who attempted QA, when, with what outcome, and whether a pass survived later scrutiny.
+
+Today qa_complete is satisfied by the existence of result_complete.md on disk. The file can be touched, renamed, or directly written without an evaluator round trip, and shallow passes are permanent unless the file is manually deleted. The intended landing context is the same top-level Qa bounded context as the agent story, with the engineer surface being a queryable QA attempts history plus a redo path.
 
 ## Acceptance criteria
 
-- Two agents on one project report separate file state
-- Two agents at the same path on different machines stay separate
-- A story written by one agent is visible to another
-- A restarted agent resumes its own state
-- An agent that loses its stored identity does not adopt another's
-- An agent serves the right project with no project id configured
-- A subagent's edits are visible to its parent's stop hook
-- The operator picks which agent's state to look at
-- A human editing outside any agent's workspace produces no file state
-- A human editing inside an agent's workspace is attributed to that agent
-- Two agents on one project are offered different next work
-- A sprite recreated on its own volume resumes as the same agent
-- A second agent on a working copy already being served is refused
+- QA submission creates a row that persists across server restarts
+- DB pass attempt satisfies qa_complete regardless of disk state
+- Editing or deleting result_complete.md does not change qa_complete state
+- list_qa_attempts returns all attempts ordered most-recent first
+- Engineer invalidates the only passed attempt and qa_complete re-clamps
+- Invalidate with empty reason is rejected at the tool boundary
+- After invalidation and re-attempt the chain shows the lineage
+- Story page renders the QA history chain
+- Engineer invalidates a pass from the story page UI
 
 ## BDD spec files
 
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_732_two_agents_on_one_project_report_separate_file_state_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_733_two_agents_at_the_same_path_on_different_machines_stay_separate_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_734_a_story_written_by_one_agent_is_visible_to_another_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_735_a_restarted_agent_resumes_its_own_state_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_736_an_agent_that_loses_its_stored_identity_does_not_adopt_anothers_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_737_an_agent_serves_the_right_project_with_no_project_id_configured_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_738_a_subagents_edits_are_visible_to_its_parents_stop_hook_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_739_the_operator_picks_which_agents_state_to_look_at_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_740_a_human_editing_outside_any_agents_workspace_produces_no_file_state_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_741_a_human_editing_inside_an_agents_workspace_is_attributed_to_that_agent_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_742_two_agents_on_one_project_are_offered_different_next_work_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_743_a_sprite_recreated_on_its_own_volume_resumes_as_the_same_agent_spex.exs`
-- `test/spex/1000_agents_working_the_same_project_do_not_collide/criterion_744_a_second_agent_on_a_working_copy_already_being_served_is_refused_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6452_qa_submission_creates_a_row_that_persists_across_server_restarts_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6453_db_pass_attempt_satisfies_qa_complete_regardless_of_disk_state_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6454_editing_or_deleting_result_completemd_does_not_change_qa_complete_state_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6455_list_qa_attempts_returns_all_attempts_ordered_most-recent_first_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6456_engineer_invalidates_the_only_passed_attempt_and_qa_complete_re-clamps_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6457_invalidate_with_empty_reason_is_rejected_at_the_tool_boundary_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6458_after_invalidation_and_re-attempt_the_chain_shows_the_lineage_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6459_story_page_renders_the_qa_history_chain_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6460_engineer_invalidates_a_pass_from_the_story_page_ui_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6474_engineer_opens_the_qa_index_from_the_sidebar_and_sees_the_default_view_spex.exs`
+- `test/spex/727_engineer_trusts_qa_pass_claims_as_audit-grade_events/criterion_6475_engineer_enables_filters_to_include_older_and_invalidated_attempts_spex.exs`
 
-## Linked component: WorkingCopies
+## Linked component: Qa
 
-This story is implemented by `CodeMySpec.WorkingCopies` (module).
+This story is implemented by `CodeMySpec.Qa` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/working_copies_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
-- Source: `lib/code_my_spec/working_copies.ex`
+- Tests: `test/code_my_spec/qa_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/qa.spec.md`
+- Source: `lib/code_my_spec/qa.ex`
 
 ## Available scripts
 
@@ -123,7 +119,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/727/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/838/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

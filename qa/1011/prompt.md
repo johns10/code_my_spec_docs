@@ -1,4 +1,4 @@
-# QA Story 1011: The main agent sees every open question and message across its working copies
+# QA Story 885: A pane that shows my app, wherever it happens to be running
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,43 +7,39 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As the main agent, I want to see every question and message the agents in my working copies have open, so that nothing sits waiting on me without my knowing it.
+As Sam, I want a pane beside my story that shows my app when it is running and tells me plainly when it is not, so that I can see what was built without leaving what I am shaping.
 
 ## Acceptance criteria
 
-- Questions from three agents show up in one place
-- A question on another working copy is still visible
-- Answered questions stop competing for attention
-- A question asked by an agent that has since stopped is not lost
-- A question the main agent sent up does not look unhandled
-- A question reaches the main agent without it going to look
-- A question carries who asked it and from where
-- One notifications view covers every project
-- A technical question needs an operational answer first
-- A chain of questions does not strand the agent that started it
+- A story with nothing built shows no pane
+- A booting app says it is starting
+- A down app says it is down
+- The app navigating leaves Sam's address bar alone
+- The app's styling stays inside the pane
+- Sam checks the app on a phone-sized screen
+- The pane frames the URL it was handed
+- A running state with no URL is refused, not framed
 
 ## BDD spec files
 
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3260_questions_from_three_agents_show_up_in_one_place_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3261_a_question_on_another_working_copy_is_still_visible_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3262_answered_questions_stop_competing_for_attention_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3263_a_question_asked_by_an_agent_that_has_since_stopped_is_not_lost_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3264_a_question_the_main_agent_sent_up_does_not_look_unhandled_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3265_a_question_reaches_the_main_agent_without_it_going_to_look_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3266_a_question_carries_who_asked_it_and_from_where_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3267_one_notifications_view_covers_every_project_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3268_a_technical_question_needs_an_operational_answer_first_spex.exs`
-- `test/spex/1053_the_main_agent_sees_every_open_question_and_message_across_its_working_copies/criterion_3269_a_chain_of_questions_does_not_strand_the_agent_that_started_it_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2316_a_story_with_nothing_built_shows_no_pane_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2317_a_booting_app_says_it_is_starting_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2318_a_down_app_says_it_is_down_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2319_the_app_navigating_leaves_sams_address_bar_alone_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2320_the_apps_styling_stays_inside_the_pane_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2321_sam_checks_the_app_on_a_phone-sized_screen_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2322_the_pane_frames_the_url_it_was_handed_spex.exs`
+- `test/spex/1011_a_pane_that_shows_my_app_wherever_it_happens_to_be_running/criterion_2323_a_running_state_with_no_url_is_refused_not_framed_spex.exs`
 
-## Linked component: MainAgent
+## Linked component: PreviewComponents
 
-This story is implemented by `CodeMySpec.MainAgent` (context).
+This story is implemented by `CodeMySpecWeb.PreviewComponents` (liveview_component).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/main_agent_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/main_agent.spec.md`
-- Source: `lib/code_my_spec/main_agent.ex`
+- Tests: `test/code_my_spec_web/live/preview_components_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/preview_components.spec.md`
+- Source: `lib/code_my_spec_web/live/preview_components.ex`
 
 ## Available scripts
 
@@ -117,7 +113,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1011/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/885/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

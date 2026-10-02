@@ -1,4 +1,4 @@
-# QA Story 963: A main agent runs my project and explains it to me
+# QA Story 849: Setup runs as a routine I can watch
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,57 +7,48 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-The agent a non-technical user actually talks to. It does the high-level work — helping shape stories, organising them into epics, making working copies, handing an epic to one — and translates what is happening underneath into something a person can follow. Everything built so far is the layer below it: 962 made an agent watchable and answerable inside one working copy, 961 made it stoppable, 957 shows the copies. Those are about a checkout. This is about the project, and it is the only agent a non-technical user should have to know exists.
+Sam starts basic infrastructure setup and watches each step run to completion, seeing what succeeded, what failed, and exactly where it stopped.
 
 ## Acceptance criteria
 
-- Opening a project finds its main agent
-- Starting other agents does not create a second main one
-- A new project can be talked to immediately
-- The main agent answers about the code that is actually there
-- A project with no main working copy says so instead of failing quietly
-- Progress reads as sentences, not as a build log
-- Stories appear in the project as we talk about them
-- Nothing the agent writes is trapped in the chat
-- A second agent cannot be started in the main checkout
-- Yesterday's conversation is still there today
-- A restart does not cost the conversation
-- It answers about the project, not about a directory
-- A subagent's work reports back through the main agent
-- A checkout becomes the main one because somebody said so
-- The main agent hands over rather than designing
-- It can check the work rather than take somebody's word for it
-- Naming a different main copy moves the agent rather than replacing it
+- Sam sees the whole plan before anything runs
+- A step's state changes under Sam's eyes
+- A failing step halts the run instead of pressing on
+- The provider's own error reaches the agent session
+- A re-run picks up where it stopped
+- A resource deleted behind setup's back is rebuilt, not skipped
+- Running a step twice leaves one of everything
+- Coming back without doing the thing keeps setup paused
+- An option turned off never appears in the run
+- Sam reads back what he now owns
+- A step's state is checked against the provider, not remembered
+- Sam retries one errored step without re-running the rest
 
 ## BDD spec files
 
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2902_opening_a_project_finds_its_main_agent_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2903_starting_other_agents_does_not_create_a_second_main_one_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2904_a_new_project_can_be_talked_to_immediately_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2905_the_main_agent_answers_about_the_code_that_is_actually_there_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2906_a_project_with_no_main_working_copy_says_so_instead_of_failing_quietly_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2909_progress_reads_as_sentences_not_as_a_build_log_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2912_stories_appear_in_the_project_as_we_talk_about_them_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2913_nothing_the_agent_writes_is_trapped_in_the_chat_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2915_a_second_agent_cannot_be_started_in_the_main_checkout_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2916_yesterdays_conversation_is_still_there_today_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2917_a_restart_does_not_cost_the_conversation_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2918_it_answers_about_the_project_not_about_a_directory_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2919_a_subagents_work_reports_back_through_the_main_agent_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2920_a_checkout_becomes_the_main_one_because_somebody_said_so_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2921_the_main_agent_hands_over_rather_than_designing_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2922_it_can_check_the_work_rather_than_take_somebodys_word_for_it_spex.exs`
-- `test/spex/1025_a_main_agent_runs_my_project_and_explains_it_to_me/criterion_2923_naming_a_different_main_copy_moves_the_agent_rather_than_replacing_it_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7959_sam_sees_the_whole_plan_before_anything_runs_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7960_a_steps_state_changes_under_sams_eyes_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7961_a_failing_step_halts_the_run_instead_of_pressing_on_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7962_the_providers_own_error_reaches_the_agent_session_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7963_a_re-run_picks_up_where_it_stopped_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7964_a_resource_deleted_behind_setups_back_is_rebuilt_not_skipped_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7965_running_a_step_twice_leaves_one_of_everything_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7966_the_domain_purchase_round-trip_resumes_on_return_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7967_coming_back_without_doing_the_thing_keeps_setup_paused_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7968_an_option_turned_off_never_appears_in_the_run_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7969_sam_reads_back_what_he_now_owns_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7970_a_steps_state_is_checked_against_the_provider_not_remembered_spex.exs`
+- `test/spex/963_setup_runs_as_a_routine_i_can_watch/criterion_7971_sam_retries_one_errored_step_without_re-running_the_rest_spex.exs`
 
-## Linked component: WorkingCopies
+## Linked component: ProvisioningLive
 
-This story is implemented by `CodeMySpec.WorkingCopies` (module).
+This story is implemented by `CodeMySpecWeb.ProvisioningLive` (liveview).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/working_copies_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/working_copies.spec.md`
-- Source: `lib/code_my_spec/working_copies.ex`
+- Tests: `test/code_my_spec_web/live/provisioning_live_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec_web/provisioning_live.spec.md`
+- Source: `lib/code_my_spec_web/live/provisioning_live.ex`
 
 ## Available scripts
 
@@ -131,7 +122,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/963/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/849/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

@@ -1,85 +1,89 @@
-# Qa Story Brief — Story 1013 / 1055: The main agent can read its agents' conversations
+# Qa Story Brief
 
 ## Tool
 
-`run_script` (MCP tool `mcp__plugin_codemyspec_local__run_script`)
-
-The tool under test, `read_agent_conversation`, is a `MainAgent` capability
-registered only in `CodeMySpec.McpServers.ScriptableTools` — it has no HTTP
-route in `lib/code_my_spec_web/router.ex` (confirmed: `grep -rln "MainAgent"
-lib/code_my_spec_web/` finds no `/mcp` forward for it, unlike
-`components`/`gsc`/`ga4`/etc.). The only externally reachable surface is the
-Lua sandbox `run_script` exposes to whatever session is acting as the
-project's main agent — which is exactly this QA session's own role here.
-`curl`/Vibium do not apply; there is nothing at `:4000` to hit.
+`curl` is not applicable — this story's surface is a mix task, not an HTTP route or
+a LiveView. Test by running `mix cms.harness.onboard` from a shell against a
+throwaway working copy and inspecting what it wrote.
 
 ## Auth
 
-None to configure. `run_script` authenticates as the calling session's own
-`current_scope` (this QA session is itself a main-agent-privileged session on
-project `code_my_spec`). No login, token, or header needed.
+None. The task takes no credentials. It reaches the network in exactly one case —
+minting a harness id for a copy that has none — and that path is deliberately not
+exercised here (see Setup Notes).
 
 ## Seeds
 
-None. Do **not** seed synthetic agents/conversations for this story — the
-project already has real, currently-running agents with organic
-conversations, and that is deliberately what this brief tests against
-instead of fixtures.
+No database seeds. The working copy is the fixture, and it is built in the
+scratchpad so nothing touches this checkout:
 
-At brief-writing time, `list_agents({})` returned 8 real running agents
-across 5 working copies and 4 roles (main, coding, product, qa). Use
-`list_agents({})` / `list_agent_work({})` to get current IDs — the ones
-below **will be stale** by the time you run this (agents cycle constantly).
-Re-resolve them, don't hardcode.
+    Q=<scratchpad>/qa891
+    mkdir -p "$Q" && git -C "$Q" init --quiet
 
-**Do not** call `restart_agent`, `message_agent`, `set_agent_continuous`, or
-`start_agent` against any of these real agents during this QA pass — they
-are doing real project work, several are mid-task or blocked on real
-questions, and disrupting them is out of scope for testing a read-only tool.
-Everything below is satisfied with `read_agent_conversation` alone (plus
-`list_agents`/`list_agent_work` for discovery), which is side-effect-free.
+Write `$Q/.cms_harness.json` with an id so the task reads one instead of minting:
+
+    {"harness_id": "qa891-throwaway", "project_id": "qa891", "root": "$Q"}
+
+A second copy for the never-onboarded case:
+
+    F=<scratchpad>/qa891-fresh
+    mkdir -p "$F" && git -C "$F" init --quiet
+
+And a **generated application** — depends on client_utils, not on CodeMySpec —
+which is what criterion 2351 actually claims:
+
+    T=<scratchpad>/target_app
+    mix.exs: deps: [{:client_utils, "~> 0.1.24"}]
+    mix deps.get && git -C "$T" init --quiet
 
 ## What To Test
 
-Resolve current agent IDs first via `list_agents({})` / `list_agent_work({})`,
-then drive `read_agent_conversation` through `run_script`:
+- **One command configures a fresh copy** (2350). Run `mix cms.harness.onboard "$Q"`.
+  Expect `.claude/settings.local.json` to appear carrying both `ANTHROPIC_BASE_URL`
+  and `MIX_TEST_PARTITION`, and the outstanding databases printed.
+- **The address lands untracked, and carries this copy's id** (2352, 2353). The URL
+  must contain `qa891-throwaway`. `.claude/settings.json` must not be created.
+- **One partition, and it is in the file** (2354). The `MIX_TEST_PARTITION` value in
+  the settings must equal the partition named in the printed database names.
+- **Two databases, each named in its own commands** (2355, 2358, 2360). Expect
+  `code_my_spec_test_<p>` and `code_my_spec_test_<p>s`, each with a create and a
+  migrate carrying its own `MIX_TEST_PARTITION=`.
+- **Nothing is created** (2359). No database should exist afterwards; the commands
+  are printed only.
+- **Submodules recurse** (2361). `git -C "$Q" config --get submodule.recurse` → `true`.
+- **Running twice changes nothing** (2356). Hand-edit the settings (add `EDITOR` to
+  `env`, add a `permissions` block), re-run, and confirm both survive and the id and
+  partition are unchanged.
+- **Not-onboarded reports itself** (2357). Run `--check` against `$F` and against
+  `$Q` and compare what an operator sees.
+- **The printed name is the database the command creates** (2355). Run the guard
+  under the same partition and compare:
 
-- **3280 (stuck agent's recent turns, in order):** `read_agent_conversation({ agent_id = <any running agent> })` — confirm the reply is a plain chronological transcript (no need to message the agent to get this).
-- **3281 (exact error text, not paraphrased):** read a busy agent's transcript and look for a `tool failed id=...` line — confirm the full multi-line provider/tool error appears byte-for-byte, not summarized. (A real one exists today on `f8fbe49e-*`: a `get_story` call rejected for a wrong argument type, full Lua compiler error preserved verbatim.)
-- **3282 (targeted answer without reading it all):** `read_agent_conversation({ agent_id = <id>, last_call_of = "get_next_requirement" })` (or any tool name the agent has actually called) — confirm the reply is just that one call + result, not the surrounding transcript.
-- **3283 (two agents merged on one timeline):** `read_agent_conversation({ agent_ids = {id1, id2}, since = <iso>, until = <iso> })` — pick a window (from `list_agent_work` "last said" timestamps) where both agents were actually active, and confirm both agent IDs appear, interleaved in time order rather than one agent's block followed by the other's.
-  - **Lua gotcha, read before you do this:** `until` is a reserved word in Lua and `{ until = "..." }` is a **syntax error** (`compile: Failed to compile Lua! Expected expression`) — the script never runs. Use `args["until"] = "..."` (build the table with `since` only, then assign the bracketed key) instead. See Setup Notes / filed issue.
-- **3284 (repeated result not collapsed):** find (or produce by reading a longer transcript) two identical consecutive lines — the recurring `"The harness restarted. Nothing of your own was in flight, so nothing was lost."` operator broadcast is a reliable naturally-occurring example across every long-lived agent — and confirm both instances render separately, not deduplicated into one.
-- **3285 (last ten turns, not the whole history):** `read_agent_conversation({ agent_id = <id with a long history>, limit = 10 })` — confirm the reply is visibly bounded and the truncation notice appears (there is more history than 10 turns for any of the long-lived agents).
-- **3286 (time range narrows to the incident):** `read_agent_conversation({ agent_id = <id>, since = <iso ~10min ago> })` (add `until` via the bracket workaround above to bound both ends) — confirm only turns inside the window come back, not the full history.
-- **3287 (broad query cut to the limit, and told so):** `read_agent_conversation({ agent_id = <id with a long history> })` with no `limit` — confirm the reply opens with a truncation notice ("This conversation was truncated — the oldest turns are not shown...") rather than silently returning a partial transcript.
-- **3288 (restarted agent's earlier life still readable):** don't restart anything yourself — read a long-lived agent's transcript and look for an `operator: Restarted: <reason>` line (these occur naturally; `f8fbe49e-*` and `93bdde5a-*` both have one). Confirm turns from **before** that line and turns from **after** it are both present, under the same `agent_id`.
-- **3289 (no agent's conversation is closed to the main agent):** call `read_agent_conversation({ agent_id = <id> })` once per role (main/coding/product/qa) and per distinct working copy present in `list_agents`. Confirm every call succeeds (no error) regardless of role or working copy.
-- **3301 (query inside the limit comes back whole):** a narrow `since` window that only catches a couple of very recent turns (e.g. last 5–10 minutes on a currently-idle agent) — confirm the reply contains exactly those turns and **no** truncation notice.
+      MIX_TEST_PARTITION=<p> MIX_ENV=test mix cms.check_test_migrations
 
-## Setup Notes
-
-**The `until` argument cannot be written as a plain Lua table field.**
-`until` is a reserved keyword in Lua grammar, so `read_agent_conversation({
-since = "...", until = "..." })` fails to compile before the tool ever runs
-— the sandbox reports `compile: Failed to compile Lua! Expected expression`,
-which gives no hint that `until` is the cause. The only way to pass it is
-the bracket form:
-
-```lua
-local args = { agent_id = "...", since = "..." }
-args["until"] = "..."
-read_agent_conversation(args)
-```
-
-This was filed as a framework-scope issue during this QA pass (see below) —
-it doesn't block any criterion (the workaround exists and was verified to
-work), but it is a real trap for the next caller, agent or human, who reads
-the tool's own schema (`field(:until, :string, ...)`) and writes the obvious
-thing.
+  The name it refuses on must be the name onboarding printed, character for
+  character. This is the check that was missing through two rounds of QA, and
+  both times a real defect passed because onboarding's output was only ever
+  compared to onboarding's output.
+- **A generated application gets its own name** (2351). In `$T`, the databases
+  must be `target_app_test<p>`, not `code_my_spec_*`.
 
 ## Result Path
 
-Findings are filed live via `create_issue` as they're found (see the
-workflow's "Findings and done signal" section) — this file only records the
-brief; there is no separate result.md to fill in.
+Recorded via `submit_qa_result` on task `210246e7-14b7-48ac-bbf0-48324883b66c`;
+findings filed as issues.
+
+## Setup Notes
+
+**The minting path is deliberately not exercised.** A copy with no
+`.cms_harness.json` asks the server for an id, which creates a real harness record
+against a throwaway directory. That is a side effect QA should not leave behind, so
+every scenario here starts from a copy that already has an id — which is also the
+common case, and the one where "changes nothing" has to hold. The mint path is
+covered by `cms_harness` unit tests, not here, and that gap is stated rather than
+hidden.
+
+**Hooks are expected to be skipped.** `cms-mcp-relay` on this machine prints nothing
+for `capabilities`, so `check_relay/0` refuses and the plugin directory is not
+written. That is the intended behaviour after this story: the relay gates the hooks,
+not the whole command. Absence of `.claude/plugin-dev` is a pass, not a failure.

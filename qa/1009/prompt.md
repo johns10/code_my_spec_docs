@@ -1,4 +1,4 @@
-# QA Story 1009: The main agent answers what it can before the user sees it
+# QA Story 872: Many apps share one box without being able to reach each other
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,34 +7,25 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-As an internal agent, I want my questions and messages to reach the main agent first, so that anything it can answer is answered without the user being interrupted.
+As a solo founder, I want each app on my host isolated from the others so that one app being compromised does not hand over the rest.
 
 ## Acceptance criteria
 
-- A product decision goes up to the user
-- A question the main agent cannot answer is never simply dropped
-- The answer comes back the same way either way
-- A technical question the main agent handled is still visible
-- The user is never the only way to get an answer
-- The agent can tell who answered
-- The user overrules an answer the main agent already gave
-- The main agent is down and the question still reaches the user
-- A main agent that answers wrongly does not bury the question
-- An answer arrives after the agent that asked has been restarted
+_None defined._
 
 ## BDD spec files
 
 _No BDD specs found. Read the router and app code to understand this story's scope._
 
-## Linked component: Questions
+## Linked component: Host
 
-This story is implemented by `CodeMySpec.Questions` (context).
+This story is implemented by `CodeMySpec.Host` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec/questions_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec/questions.spec.md`
-- Source: `lib/code_my_spec/questions.ex`
+- Tests: `test/code_my_spec/host_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/host.spec.md`
+- Source: `lib/code_my_spec/host.ex`
 
 ## Available scripts
 
@@ -108,7 +99,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1009/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/872/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

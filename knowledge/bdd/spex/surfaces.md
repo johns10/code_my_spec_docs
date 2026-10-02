@@ -179,7 +179,7 @@ alias CodeMySpec.Environments
 {:ok, content} = Environments.read_file(context.environment, "lib/foo.ex")
 
 # Check existence
-true = Environments.file_exists?(context.environment, ".code_my_spec/spec/foo.spec.md")
+true = Environments.file_exists?(context.environment, "test/foo_test.exs")
 ```
 
 Paths are **relative to `env.cwd`**. Do not prefix with the absolute
@@ -198,9 +198,9 @@ You do not need to create or register the environment yourself.
 **Typical pattern — write files, then sync via LiveView:**
 
 ```elixir
-given_ "the agent has written a spec and impl into the project", context do
-  :ok = Environments.write_file(context.environment, ".code_my_spec/spec/foo.spec.md", spec_content())
+given_ "the agent has written an impl and its test into the project", context do
   :ok = Environments.write_file(context.environment, "lib/foo.ex", impl_content())
+  :ok = Environments.write_file(context.environment, "test/foo_test.exs", test_content())
   {:ok, context}
 end
 

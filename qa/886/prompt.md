@@ -28,7 +28,7 @@ As Sam, I want the preview pane to be showing my app really running, so that wha
 
 ## Linked component: WorkingCopies
 
-This story is implemented by `CodeMySpec.WorkingCopies` (module).
+This story is implemented by `CodeMySpec.WorkingCopies` (context).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 

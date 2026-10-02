@@ -1,4 +1,4 @@
-# QA Story 1033: The handoff from onboarding to sales to building never breaks the conversation or the panel beside it
+# QA Story 971: I connect with a short tool list
 
 Run a full QA session for this story. Two phases: write a testing brief,
 then execute it. The playbook below has the detailed procedure.
@@ -7,37 +7,31 @@ then execute it. The playbook below has the detailed procedure.
 
 ## Story description
 
-The handoff from onboarding to sales to setup/building, told as one continuous experience rather than three separate ones.
+As an agent, I want the tool list I receive at connect to carry only the tools I call directly, so that I am not charged for a catalogue I will never read.
 
 ## Acceptance criteria
 
-- The plan-confirmation card renders from the plan, not a project
-- Confirming the plan produces a visible turn in the transcript
-- The panel swaps content without ever showing two things at once
-- The cloud choice reads as a purchase, not a config screen
-- The pre-signup screen renders with the cockpit's own panel and chat components
-- The visitor never learns the agent relocated
-- Handoff swaps credential and location, not code
+- Connecting costs a fraction of what it costs today
+- An agent that connected before the change is told what happened
+- A tool dropped from the list is still reachable
+- No tool falls through the gap between the two surfaces
 
 ## BDD spec files
 
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3415_the_plan-confirmation_card_renders_from_the_plan_not_a_project_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3417_confirming_the_plan_produces_a_visible_turn_in_the_transcript_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3418_the_panel_swaps_content_without_ever_showing_two_things_at_once_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3420_the_cloud_choice_reads_as_a_purchase_not_a_config_screen_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3425_the_pre-signup_screen_renders_with_the_cockpits_own_panel_and_chat_components_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3431_the_visitor_never_learns_the_agent_relocated_spex.exs`
-- `test/spex/1067_the_handoff_from_onboarding_to_sales_to_building_never_breaks_the_conversation_or_the_panel_beside/criterion_3432_handoff_swaps_credential_and_location_not_code_spex.exs`
+- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_2999_connecting_costs_a_fraction_of_what_it_costs_today_spex.exs`
+- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3000_an_agent_that_connected_before_the_change_is_told_what_happened_spex.exs`
+- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3001_a_tool_dropped_from_the_list_is_still_reachable_spex.exs`
+- `test/spex/1033_i_connect_with_a_short_tool_list/criterion_3002_no_tool_falls_through_the_gap_between_the_two_surfaces_spex.exs`
 
-## Linked component: Plan
+## Linked component: LocalServer
 
-This story is implemented by `CodeMySpecWeb.IntakeLive.Plan` (liveview).
+This story is implemented by `CodeMySpec.McpServers.LocalServer` (module).
 Reading the source code and spec will help you understand what to
 test and how the feature works.
 
-- Tests: `test/code_my_spec_web/live/intake_live/plan_test.exs`
-- Spec: `.code_my_spec/spec/code_my_spec_web/intake_live/plan.spec.md`
-- Source: `lib/code_my_spec_web/live/intake_live/plan.ex`
+- Tests: `test/code_my_spec/mcp_servers/local_server_test.exs`
+- Spec: `.code_my_spec/spec/code_my_spec/mcp_servers/local_server.spec.md`
+- Source: `lib/code_my_spec/mcp_servers/local_server.ex`
 
 ## Available scripts
 
@@ -111,7 +105,7 @@ Read these via the `read_knowledge` MCP tool:
 
 ## Brief format spec
 
-Write the brief to `.code_my_spec/qa/1033/brief.md` matching this spec exactly.
+Write the brief to `.code_my_spec/qa/971/brief.md` matching this spec exactly.
 The evaluator validates the brief structure on stop.
 
 # Qa Story Brief

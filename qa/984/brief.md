@@ -1,103 +1,98 @@
-# QA Brief — Story 984: I connect a model provider by pasting its API key
+# QA Brief — Story 870: Watch what a background sprite is actually doing
 
 ## Tool
 
-`web` for the settings page and the models page, `curl` for what actually
-starts.
+web
 
 ## Auth
 
-Magic link, port 4000. There is no password field.
+The story's surface is a project-scoped LiveView, so it needs a logged-in user with
+an account and a project. Do **not** reuse the operator's own browser session — a QA
+run logs it out and the operator loses their place.
 
-```
-mix run priv/repo/qa_seeds.exs
-```
-
-Then: open `http://127.0.0.1:4000/users/log-in`, fill `user[email]` with the
-seeded address, click "Log in with email", read
-`http://127.0.0.1:4000/dev/mailbox` for the newest link, and visit
-`/users/log-in/:token`.
-
-The mailbox is shared — the newest link is whoever most recently asked, which
-may not be you. Take the one whose recipient matches.
-
-For the MCP side, no login: harness id from `.cms_harness.json`, against
-`http://localhost:4004/mcp`. Handshake is `initialize`, then the
-`notifications/initialized` notification, then `tools/call`.
+1. `http://localhost:4000/users/register` — register a throwaway address on the
+   `codemyspec.local` domain, e.g. `qa-<topic>@codemyspec.local`.
+2. `http://localhost:4000/dev/mailbox` — take the newest `/users/log-in/<token>` link
+   and navigate to it. The mailbox is shared: if the newest link is not yours, another
+   QA session is running and you will be logged in as them. Match the recipient before
+   clicking.
+3. Create an account, then a project, through the onboarding forms that follow.
+4. Keep the project's UUID — every URL below needs it.
 
 ## Seeds
 
-```
-mix run priv/repo/qa_seeds.exs
-```
+There is no seed script for this story. The rendering criteria each need a specific
+message *shape*, and the recorder only produces those from a live model turn, so seed
+`conversation_messages` rows directly.
 
-Nothing story-specific. The seeds connect no provider, which is the starting
-state most of this story is about.
+Insert one `conversations` row with `type: 'agent'` and a `session_external_id`, then
+the message shapes below. `psql -qtA code_my_spec_dev` against the dev database; take a
+`pg_dump` of the two tables first and delete the seeded rows when finished.
 
-## The credential
+The shapes that matter, and which criteria each one is for:
 
-**A real key is required for half of this and it does not come from the
-seeds.** John supplies one Anthropic or Z.ai key for the run. Rules for it:
-
-- Use it on the QA account only.
-- **Disconnect the provider before finishing**, whatever the outcome.
-- Never write it into a file, a brief, a result, an issue, or a log. It goes
-  in the form field and nowhere else.
-
-Without a key, the accept path cannot be tested and that is a QA gap to file,
-not something to fake with a stub — the whole point of the story is that a key
-somebody pastes reaches a real provider.
+| Shape | Stored as | Covers |
+|---|---|---|
+| A person's typing | `role: user`, plain text | 2366 |
+| The agent's prose | `role: assistant`, plain text | 2366 |
+| A call the recorder wrote | `role: tool`, `"Bash\n{json}"` | 2364, 2367 |
+| Five such calls in a row, no prose between | five consecutive `role: tool` rows | 2371, 2372 |
+| One call with prose either side | a single `role: tool` row | 2373 |
+| A call with no arguments | `role: tool`, bare name, no newline | 2369 |
+| A ~5 kB payload | `role: tool`, `"Write\n{...}"` past 600 bytes | 2368 |
+| A qualified MCP name | `role: tool`, `mcp__plugin_codemyspec_local__add_scenario` | 2375 |
+| Output misfiled under the call role | `role: tool`, multi-word first line | 2374 |
+| A tool result | `role: user`, `"← result: …"` | 2362 |
+| A failed result | `role: user`, `"← failed: …"` | 2363 |
+| A sub-agent's call | any call row with `agent_role: 'qa'` | 8172 |
 
 ## What To Test
 
-**The settings page** — `/app/users/settings`
+Set the viewport to **375 × 812** before loading anything. Every criterion here is
+about what fits and what is readable, and none of them fail at desktop width.
 
-- Anthropic and Z.ai appear, each with a field to paste a key. Before this
-  story they were absent entirely and could only be reached by knowing
-  `/auth/:provider` by heart — which for these two led nowhere.
-- A key the provider **accepts**: the provider reads as connected.
-- A key the provider **refuses** (mangle one character of the real key): the
-  provider still reads as not connected, and the message says the provider
-  rejected it rather than that something went wrong.
-- Reload the page. A stored key is not rendered back — not in the field, not
-  masked, not in the page source. Search the HTML for the key's own characters.
-- Pasting again while connected replaces the key rather than adding a second
-  connection or refusing for already being connected.
-- Disconnect removes it, through the confirm dialog like every other provider.
+- `/app/projects/<id>/agent-conversation` — the transcript renders; the page does not
+  scroll horizontally (`documentElement.scrollWidth <= 375`).
+- The run of five consecutive calls renders as **one** `[data-test='tool-call-group']`
+  with `data-count='5'`, closed by default (2371).
+- Opening the group lists five `[data-test='tool-call']` entries showing names only;
+  opening one entry's `arguments` disclosure leaves the other four closed (2372).
+- The lone call is **not** inside the group and has no group wrapper of its own (2373).
+- The misfiled `role: :tool` output renders as `[data-test='tool-result']`, not as a
+  call whose first line is offered as a tool name (2374).
+- The qualified MCP name is fully visible — measure it, do not eyeball it. Compare the
+  name element's `scrollWidth` to its `clientWidth`, and its card's to the card's. A
+  name wider than its card is clipped, and clipped is how `add_scenario` and `add_rule`
+  become the same block (2375).
+- Results: one carries `data-failed='true'` and reads as failed without reading its
+  text; the other does not (2362, 2363).
+- Prose from each side sits on opposite sides and is matched by neither the call nor
+  the result selector (2366).
+- A call block shows the tool name with arguments behind a **closed** disclosure
+  (2367); the oversized payload carries `data-truncated='true'` and says so **inside**
+  the disclosure, so a closed block stays compact (2368); the bare name offers no
+  disclosure at all (2369).
+- The `agent_role: 'qa'` call renders `QA` beside its name where main-agent calls
+  render `MAIN` (8172).
+- `/app/projects/<id>/inbox` — the agent conversation is **absent**: no rows, no unread
+  count, "No conversations yet", while the same conversation is still fully present on
+  its own surface (8177).
 
-**The models page** — `/app/accounts/:id/agents`
-
-- The provider just connected is now selectable, where it said "connect it
-  first" before.
-- Point QA at it, then disconnect the provider on the settings page. QA falls
-  back to something still connected rather than naming a provider that is gone.
-- With nothing connected at all, every type says it has nothing to run on
-  instead of naming a model.
-
-**Starting an agent** — `start_agent` over MCP
-
-- With the provider connected and QA pointed at it, a QA agent reports that
-  provider and that model. **Stop the agent afterwards.**
-
-**The scope change**
-
-The setting moved from the account to the person in this story. Two members of
-one account should get their own answers on the same URL, and the page should
-say so — a per-user setting under an `/app/accounts/:id/` URL is the thing
-most likely to read as a bug here.
-
-## The one to look hardest at
-
-Whether an account can now genuinely end up running its QA agent on something
-cheap — connected, chosen, and started, with the reply naming the cheap model.
-That is what 983 could not deliver and what this story exists to make true.
-Issue `1a93e35d` says it is impossible; this run is the check on that claim.
+Three criteria are not browser-reachable and are covered by spex instead — say so in
+the observation rather than claiming a browser check: 8171 (both halves recorded),
+8175 (needs a broken store), 8176 (needs a turn arriving while the page is open).
 
 ## Result Path
 
-`.code_my_spec/qa/984/result.md`
+Findings go to `create_issue` as they are found and the attempt goes to
+`submit_qa_result`. Screenshots to `.code_my_spec/qa/870/screenshots/`.
 
 ## Setup Notes
 
-Requires a server restarted since `122b44b4`, with `20260830090000` applied.
-`just refresh` does the restart and the migrate.
+`:4000` serves the **main checkout**, not a worktree. A fix made in a worktree is not
+on the page until it is pushed and the main checkout fast-forwarded — verifying against
+a stale server is how a fix gets confirmed that nobody shipped.
+
+The three tool-call surfaces share `CodeMySpecWeb.ChatComponents`, so a rendering
+defect found here is worth re-checking on `/app/projects/<id>/inbox` and the story
+interview before it is called story-specific.
