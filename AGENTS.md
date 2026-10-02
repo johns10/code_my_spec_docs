@@ -2,7 +2,16 @@
 
 CodeMySpec is a requirements-driven development harness. It models your project as a
 graph of **stories**, **components**, and **requirements**, then guides you through
-building each piece in the right order: specs → tests → implementations → reviews → QA.
+building each piece in the right order: architecture → BDD spex → implementations → QA.
+
+## Prerequisite: Phoenix project root
+
+CodeMySpec is attached to a **Phoenix project root** — the folder containing
+`mix.exs` with `:phoenix` in its deps. The harness reads `mix.exs`, walks
+`lib/`, and writes rules and BDD files relative to that directory.
+If a future session ever attaches to the wrong directory, the init checklist
+surfaces it loudly; the user-side fix is to relaunch Claude Code from the
+project root.
 
 ## Core Loop
 
@@ -26,7 +35,7 @@ Call **`start_task`** with the requirement's `requirement_name`, `entity_type`, 
 `entity_id` (or `module_name` for components). This creates a task on your session and
 returns a **detailed work prompt** containing:
 
-- Which files to read (specs, rules, existing code)
+- What to read (components, rules, existing code)
 - The exact file path to write to
 - Templates and format requirements
 - Design rules and coding standards for the component type
@@ -40,16 +49,9 @@ The requirement types you'll encounter, in dependency order:
 
 | Requirement | What You Produce |
 |---|---|
-| `spec_file` | Module specification in `.code_my_spec/spec/` |
-| `spec_valid` | Fix validation errors in the spec |
-| `review_file` | Design review for a context and its children |
-| `review_valid` | Fix validation errors in the review |
-| `test_file` | Test file following TDD — write tests before implementation |
-| `test_spec_alignment` | Ensure tests cover all spec assertions |
 | `implementation_file` | Implementation code in `lib/` |
-| `tests_passing` | Fix failing tests |
 | `bdd_specs_exist` | BDD scenario files for a story's acceptance criteria |
-| `bdd_specs_passing` | Fix failing BDD specs |
+| `bdd_specs_passing` | Fix failing story specifications |
 | `qa_complete` | QA brief and results for a story |
 
 ### Step 4: Automatic Evaluation
@@ -58,7 +60,6 @@ When you finish (or the session stops), the harness evaluates your output:
 - Does the file exist at the expected path?
 - Does it parse/validate against the document schema?
 - Do tests compile and pass?
-- Is the test aligned with the spec's assertions?
 
 If evaluation finds problems, you receive structured feedback. Fix and continue.
 
@@ -67,7 +68,6 @@ If evaluation finds problems, you receive structured feedback. Fix and continue.
 ```
 .code_my_spec/
 ├── architecture/     Component graph, dependency diagram, decisions
-├── spec/             Module specifications (*.spec.md)
 ├── rules/            Design and test rules by component type
 ├── status/           Implementation status per component
 ├── issues/           Known bugs (incoming/, accepted/, dismissed/)
@@ -115,6 +115,31 @@ If evaluation finds problems, you receive structured feedback. Fix and continue.
 | `install_agents_md` | Create/update this file |
 | `install_rules` | Copy design and test rules |
 
+## HTTP Endpoints (not MCP tools)
+
+Two things the harness does over plain HTTP rather than MCP, because both
+can run for minutes and MCP caps a request at 30 seconds.
+
+| Endpoint | Purpose |
+|---|---|
+| `POST localhost:4004/api/harnesses/<working_copy_id>/analysis/run` | Run one analyzer (`compiler`/`credo`/`exunit`/`spex`). The PreToolUse hook rewrites your `mix test` into this, so you rarely call it yourself. |
+| `POST localhost:4004/api/harnesses/<working_copy_id>/analysis/wait` | Block until the background analyzers are idle, then report each source's state and problem count. |
+
+**Run the wait in the background.** A full sweep on a large project takes
+200-590 seconds; fire it as a background command and you will be notified
+when it returns, rather than sitting on the call.
+
+Use it when a stop is refused with "Background analysis is still running" —
+the refusal includes the exact command with your harness id filled in. The
+stop hook decides from persisted problems, so waiting is how you get a stop
+evaluated against fresh results rather than the previous sweep's.
+
+This used to be an MCP tool called `await_analysis`. It could not work: a
+sweep outlives MCP's 30s request cap, so it answered
+`-32603 Server unavailable` every time it was actually needed — which reads
+as the server being down rather than as a timeout. If you find that name in
+an older prompt, the prompt is stale.
+
 ## Component Types
 
 The harness supports these component types, each with their own requirement
@@ -125,19 +150,19 @@ chain and design rules:
 - **repository** — Data access layer (`.code_my_spec/rules/repository_design.md`)
 - **liveview** — Phoenix LiveView page (`.code_my_spec/rules/liveview_design.md`)
 - **liveview_component** — Reusable LiveView component (`.code_my_spec/rules/liveview_component_design.md`)
-- **live_context** — LiveView grouping (spec + review only)
+- **live_context** — LiveView grouping (only its children are built)
 - **controller** — Phoenix HTTP handler
 - **genserver** — Stateful process
 - **task** — Background job
-- **behaviour** — Callback definition (spec + implementation only)
+- **behaviour** — Callback definition
 
 General Elixir rules: `.code_my_spec/rules/elixir_design.md`, `.code_my_spec/rules/elixir_test.md`
 
 ## Key Principles
 
 1. **The graph is the plan.** Don't decide what to work on — ask `get_next_requirement`.
-2. **Specs before code.** Every component gets a specification first. Tests are written
-   from the spec. Implementation satisfies the tests.
+2. **Behaviour before code.** A story's acceptance criteria become BDD spex first;
+   the implementation makes them pass. Components are designed as records, not files.
 3. **Read the task prompt.** It contains everything you need: templates, rules, file paths,
    and patterns from similar components.
 4. **One requirement at a time.** Complete it, let evaluation run, then get the next one.
