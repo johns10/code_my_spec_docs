@@ -646,3 +646,91 @@ first call was a simple direct tool had zero phantoms, and the only one that
 opened with a nested `run_script` carried two-thirds of them.** That was visible
 in artifacts already on disk. Read the shape of a hundred runs before paying for
 ten more.
+
+---
+
+## criterion_1867 — An agent offered back a released task it can work resumes it
+
+**10/10**, 4–7s a run, one call each, threshold 0.9. Story 1080's first
+offers-step-2 probe.
+
+    start_task(requirement_name: "bdd_specs_exist", entity_type: "story", entity_id: "2")
+
+The premise is the release, not the loop: the coder holds `bdd_specs_exist`,
+blocks it on `ask_user_question`, and the question is answered through
+`answer_question_request`, the inbox's own path. That answer sends the turn.
+The judge checks `start_task` on that requirement *and* entity — the first
+judge accepted any `start_task`, which would have passed an agent that took
+other work.
+
+### The notice made the agent go looking
+
+First n=10 was also 10/10, and that hid the finding. Six runs spent two to
+eight calls and up to 59s before resuming — `list_tasks` to find the task id,
+`list_requirements`, `list_stories`, `get_story` — and run 6 called
+`start_task` with no `entity_id` at all before working it out. The notice said
+"resume task e0f81d7d (`bdd_specs_exist`) with `start_task`": a task id the
+agent cannot pass to `start_task`, and no entity.
+
+Product fix: a resume notice now names the exact call
+(`Work.resume_instruction/2`), story by number. Second n=10: every run made
+exactly that one call.
+
+### The lesson
+
+A pass rate cannot see cost. The behaviour was right ten times out of ten
+both times; what moved was how much the agent had to reconstruct that the
+notice already knew.
+
+---
+
+## criterion_1869 — An agent whose tap-out is declined goes back to work
+
+**10/10** at n=10, 6–10s a run, threshold 0.9.
+
+    get_next_requirement -> start_task(bdd_specs_exist, story 2)
+
+The agent asks to leave the loop with no task (`tap_out`, "I do not see
+anything for me to do"), and a person declines it through
+`resolve_permission_request` with "There is coding work on the board for you."
+That denial is the turn. Every run did exactly what the notice asks — ask for
+work, claim it — with nothing in between. No fixes were needed: the notice is
+the whole turn (criterion 1864) and carries the decider's reason.
+
+## criterion_1868 — parked
+
+Covered by spex 1863 for now. Follow-up: a QA-shaped world where `qa_complete`
+is actionable, then an accepted issue on the story so it waits on
+`story_issues_resolved` — the production case (offer 0c828c03).
+
+The premise could not be built in this world. A released task that *waits*
+needs its requirement to stop being actionable while it is blocked, and the
+one coding requirement the world offers, `bdd_specs_exist`, hangs off
+`three_amigos_complete`, a one-way latch. Adding a criterion and unlinking the
+story's component were both tried; the premise check
+(`still_not_actionable/1`) caught each, so no run measured a false premise.
+
+---
+
+## criterion_1871 — Main escalates a teammate's question it cannot answer
+
+**10/10** at n=10, 22–36s a run, threshold 0.9.
+
+    list_notifications -> get_next_requirement -> tool_docs(escalate_question)
+      -> escalate_question
+
+A coder asks whether a cancelled booking refunds the deposit; main's copy is
+the main copy, and the question wakes main itself. Every run escalated with a
+reason ("a refund policy decision… not something the project's records
+settle") and none re-asked with `ask_user_question`. The judge waits for the
+turn to end, so escalating and then asking anyway would fail it.
+
+### The runner, not the agent
+
+The first run errored "nothing was requested": the question had already woken
+main through `:teammate_question`, so switching the loop on afterwards found it
+mid-turn. The question is the turn; the probe does not use the loop.
+
+Every run looks up `escalate_question` with `tool_docs` before calling it. The
+turn prompt names the tool and when to use it, not its arguments; one docs call
+is a reasonable price and was left as is.
