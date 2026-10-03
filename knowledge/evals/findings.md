@@ -766,3 +766,16 @@ stamp that was already there. `ReadyForQa.command/2` never said so. It now
 answers an already-certified story with "already certified at <commit>…
 complete this task with `evaluate_task`". Second n=10: every run three calls,
 15–31s.
+
+### After 67e6b5cb: the offer closes itself
+
+`start_task` now checks a story requirement against the story itself before
+taking it, refuses work already done, tells the graph, and closes the caller's
+open offer on it as declined "already satisfied". Re-measured 10/10: every run
+`get_next_requirement -> start_task (refused) -> get_next_requirement`, found
+nothing left for coding, and ended the turn, 13–35s. The agents did not call
+`reject_offer` even when the refusal suggested it — so the system closes the
+offer rather than relying on them to.
+
+The judge reads the closed offer during the run and remembers it: the final
+verdict is taken after `retire/2` deletes the agent, and its offers go with it.
