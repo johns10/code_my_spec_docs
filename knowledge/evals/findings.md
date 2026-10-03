@@ -734,3 +734,35 @@ mid-turn. The question is the turn; the probe does not use the loop.
 Every run looks up `escalate_question` with `tool_docs` before calling it. The
 turn prompt names the tool and when to use it, not its arguments; one docs call
 is a reasonable price and was left as is.
+
+---
+
+## criterion_1870 — An agent offered work already done closes or rejects it, never taps out
+
+**10/10**, ~15s and three calls a run, threshold 0.9. Reworded 2026-10-03
+from "rejects it with `reject_offer`" (option 1); `start_task` refusing
+satisfied work is issue 67e6b5cb.
+
+    get_next_requirement -> start_task(ready_for_qa) -> evaluate_task
+
+The premise is the 1118 shape: work already done that the graph still offers.
+`ready_for_qa` is made offerable, then the story's certification stamp is
+written with no announcement (test DB only), so the offer is stale.
+
+### Two premises that did not hold
+
+Writing the specs `bdd_specs_exist` asks for onto disk without a sync: the
+agent claimed the task and reviewed the specs — the fixture's own had the wrong
+module namespace, and even correct ones make finishing the work legitimate.
+`reject_offer` was not the right answer, so the criterion was reworded rather
+than the agent's answer forced.
+
+### The prompt re-did done work
+
+First n=10 under the reworded criterion was 10/10 and slow: 50–170s and 10–25
+calls, the agents re-certifying from scratch — reading specs, `bash`, one
+`git init && git commit` in an eval directory that is not a repository — for a
+stamp that was already there. `ReadyForQa.command/2` never said so. It now
+answers an already-certified story with "already certified at <commit>…
+complete this task with `evaluate_task`". Second n=10: every run three calls,
+15–31s.
