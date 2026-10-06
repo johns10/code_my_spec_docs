@@ -86,12 +86,25 @@ hdr=(-H "Content-Type: application/json"
      -H "X-Harness-Id: $HID"
      -H "X-Agent-Id: $AGENT")
 
-curl -s -X POST "$URL" "${hdr[@]}" -D "$TMP/h" -o /dev/null \
+curl -s -X POST "$URL" "${hdr[@]}" -D "$TMP/h" -o "$TMP/body" \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"qa-as-agent","version":"1"}}}'
 
 SID=$(grep -i '^mcp-session-id:' "$TMP/h" | tr -d '\r' | cut -d' ' -f2)
-[ -n "$SID" ] ||
-  die "no mcp-session-id from $URL — is the harness up? (curl -s $URL >/dev/null; check :4004/health)"
+if [ -z "$SID" ]; then
+  # The server declines to open a session for an initialize that names no
+  # working copy, answering with a JSON-RPC error saying exactly that (code
+  # -32000) and no mcp-session-id header. That is the documented contract, not
+  # a liveness fault — and the body is the whole diagnosis, so report it rather
+  # than guessing. Issue e6b4792b: the guess sent QA to :4004/health, the one
+  # thing that was never wrong, while the real cause (a checkout that was never
+  # onboarded) sat unread in this body.
+  echo "qa_as_agent: $URL declined to open a session. The server said:" >&2
+  cat "$TMP/body" >&2
+  echo >&2
+  echo "qa_as_agent: if that names a missing working copy, onboard this checkout:" >&2
+  echo "qa_as_agent:   (cd \"$WT\" && mix cms.harness.onboard)" >&2
+  exit 1
+fi
 
 curl -s -X POST "$URL" "${hdr[@]}" -H "Mcp-Session-Id: $SID" -o /dev/null \
   -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
