@@ -492,6 +492,42 @@ somewhere no longer changes which project answers.
    point — two checkouts of one project are two harnesses whatever their paths
    say, and a path could not tell them apart.
 
+> **The `:4004` proxy runs MAIN's code, whatever `X-Harness-Id` you send**
+> (issue 32ffb55b). `/health` on that daemon reports `server_url:
+> http://localhost:4000`, and it forwards every request — sandbox id or not — to
+> the single shared main checkout's running process. The sandbox project's rows
+> live in main's own database, so the sandbox method above is correct for logic
+> that is *already promoted*. It is **not** a way to exercise a working copy's
+> own unpromoted commits: the proxy executes main's compiled code, not the
+> copy's.
+>
+> The harm is specific and has happened: on story 1052, criterion 1987
+> (implemented only in a working copy, unpromoted) driven through
+> `qa_as_agent.sh` returned `holder: "main_agent"` — main's code, which predates
+> the fix — while the same scenario against the copy's own app correctly
+> returned `"user"`. A pass that trusts the sandbox method here reports a live
+> regression against correct code, or "verifies" the story's change by
+> exercising main's already-fixed behaviour. Either way it is not evidence
+> about the copy.
+>
+> **For a copy's own agent-routing or tool code, the route that works** is
+> straight to that copy's own app on its dynamic port, bypassing the proxy,
+> with a bearer token plus `X-Project-ID`, `X-Harness-Id` and `X-Agent-Id` to
+> `/mcp/harness`. `qa_as_agent.sh` accepts this via `CMS_MCP_URL`, and its own
+> header documents the token/`X-Project-ID` requirement that the `:4004` proxy
+> would otherwise have supplied:
+>
+> ```bash
+> CMS_MCP_URL=http://127.0.0.1:<copy-port>/mcp/harness qa_as_agent.sh <agent-id> <tool> '<args>'
+> ```
+>
+> Two obstacles to know before you try it, both real and both recorded rather
+> than worked around: `create_working_copy` refuses with `:no_device` in a
+> copy's isolated database (no machine/device row exists off main), so fixture
+> agents must be minted on main and driven against the copy by id; and if the
+> call loses agent identity, compare it with the proxy path, because
+> `X-Agent-Id` is honoured by the server (issue 27599aa1).
+
 App-surface QA (Vibium against ports 4000 / 4003, exercising live LiveViews
 and controllers) still hits the dev databases — only the agent-surface
 mutation tests need the sandbox swap.
