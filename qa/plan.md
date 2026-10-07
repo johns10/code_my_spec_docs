@@ -360,6 +360,32 @@ Use sparingly during QA; prefer the surfaces above so the test actually exercise
 
 The two endpoints have different schemas, so QA fixtures come in two flavors.
 
+### First: run pending migrations against the instance you will test
+
+**Before seeding or testing anything**, make sure the app instance QA is pointed
+at has had every migration applied. A worktree's own running instance does not
+auto-migrate, so a migration that landed after that instance started leaves its
+database silently missing the new column: every query touching the affected
+table fails with `Postgrex.Error ... undefined_column`, and the surface area
+looks broken when the migration itself is fine (issue 26abcd2c â the
+`20261002150000_add_architecture_to_project_configurations` migration left
+Configuration page loads, Cadence wake and ShadowProjector all erroring on a
+stale instance; story 1083's pass hit the same thing for a different migration).
+
+Check and apply, against the **instance's** database rather than assuming:
+
+```bash
+# What the instance thinks is pending â unauthenticated, and the honest answer:
+curl -s http://127.0.0.1:<instance-port>/health   # look at "pending_migrations"
+
+# Apply them (records the instance as migrated; safe to re-run):
+mix ecto.migrate
+```
+
+An empty `pending_migrations` is the state a QA pass should start from. If it is
+non-empty, the instance is running code against a schema it was not built for,
+and any failure you go on to see may be that rather than the story.
+
 ### Server (Postgres, `:dev`) — `priv/repo/qa_seeds.exs`
 
 Idempotent. Creates user + personal account + member + project. Run with:
