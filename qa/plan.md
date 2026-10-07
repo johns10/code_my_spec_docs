@@ -12,11 +12,11 @@ router, auth model, and audience. QA touches three logical surfaces:
 | Surface | Endpoint | Port | Pipeline | Audience |
 |---|---|---|---|---|
 | **Hosted UI / API** | `CodeMySpecWeb.Endpoint` | `4000` (HTTP), `4001` (HTTPS) | `:browser` (session) + `:api`/`:mcp_protected` (OAuth bearer) | Authenticated humans + Claude MCP connector |
-| **Local UI / hooks (in-repo dev)** | `CodeMySpecLocalWeb.Endpoint` | `4004` (dev / dev_cli via `mix phx.server`) | `:browser` (no auth) + `:api`/`:mcp` (working-dir scoped) | The local CLI binary, hooks, and human owner |
+| **Local UI / hooks (in-repo dev)** | `CodeMySpecLocalWeb.Endpoint` | `4004` (dev via `mix phx.server`; the harness runs `MIX_ENV=harness`) | `:browser` (no auth) + `:api`/`:mcp` (working-dir scoped) | The local CLI binary, hooks, and human owner |
 | **Local UI / hooks (published binary)** | `CodeMySpecLocalWeb.Endpoint` | `4003` (the published `cms` binary) | Same pipelines as 4004 | End users running the `cms` CLI |
 | **MCP servers** | Both endpoints expose `/mcp/*` forwards into `Anubis.Server.Transport.StreamableHTTP.Plug` | `4000/mcp/*`, `4004/mcp` (dev) or `4003/mcp` (published) | Streamable HTTP (SSE) | Agents — both Claude.ai (hosted) and Claude Code (local) |
 
-> **Heads up — local app port:** The in-repo dev server (`mix phx.server` with `MIX_ENV=dev` or `MIX_ENV=dev_cli`) runs the local endpoint on **port 4004** so it can coexist with the published `cms` binary on **4003** (see `config/dev.exs:79` and `config/dev_cli.exs:38`). For QA against a dev checkout, hit `127.0.0.1:4004`. Most QA evidence in this session was captured against the dev port.
+> **Heads up — local app port:** The in-repo dev server (`mix phx.server` with `MIX_ENV=dev`) runs the local endpoint on **port 4004** so it can coexist with the published `cms` binary on **4003** (see `config/dev.exs:79`). `MIX_ENV=dev_cli` no longer exists — it was retired in `9cc937a82`. For QA against a dev checkout, hit `127.0.0.1:4004`. Most QA evidence in this session was captured against the dev port.
 >
 > **Heads up — 4004 is sometimes the light harness, not this app:** on a box running the light harness (`CMS_HARNESS=1` / `cms harness`, e.g. a sprite, or a dev box someone set up with `CMS_HARNESS_PORT=4004`), port 4004 answers as `CmsHarness.Web.Endpoint` — a proxy for hooks/analysis/promotion with no LiveView, no data plane, and no `CodeMySpecLocalWeb` routes at all. A browser hit there gets a JSON `systemMessage` ("this is the local harness process, not the CodeMySpec server"), and `/health` returns the harness's own status JSON rather than this app's plain `{"status":"ok"}`. Check which one is actually listening before trusting anything below against it — `curl -s 127.0.0.1:4004/health` tells you immediately — and if it's the harness, QA the local LiveView surface against **port 4000** (`CodeMySpecWeb.Endpoint`) instead.
 
@@ -24,7 +24,7 @@ router, auth model, and audience. QA touches three logical surfaces:
 the CLI's local DB (`~/.codemyspec/cli_dev.db` under `MIX_ENV=dev_cli`), Anubis MCP server library, Wallaby for
 journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 
-> **Heads up — local app DB:** The local CLI uses SQLite at `~/.codemyspec/cli_dev.db`, NOT a Postgres `cli_dev` database. Plain `mix run` defaults to `MIX_ENV=dev` (Postgres). Always prefix CLI seed scripts with `MIX_ENV=dev_cli`.
+> **Heads up — local app DB:** The retired CLI used SQLite at `~/.codemyspec/cli_dev.db`. There is no CLI seed to run now (`priv/repo/cli_qa_seeds.exs` was retired with it in `9cc937a82`); QA fixtures come from the Server seed above. Plain `mix run` still defaults to `MIX_ENV=dev` (Postgres).
 
 **Hosted auth (port 4000):**
 - Browser: `Plug.Session` cookie + CSRF + `CodeMySpecWeb.UserAuth.fetch_current_scope_for_user`
@@ -349,7 +349,7 @@ Use for setup that needs the app's contexts (creating users, accounts, projects 
 
 ```
 mix cms.seed priv/repo/qa_seeds.exs                  # server (Postgres) QA fixture
-MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs   # local CLI (SQLite) QA fixture
+# (retired) MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs — dev_cli and that script are gone
 mix run priv/repo/seeds.exs                          # OAuth MCP connector app
 mix run priv/repo/seeds/math_test_project.exs        # demo project content
 ```
@@ -451,23 +451,30 @@ The script uses `Users.register_user/1` + `update_user_password/2`,
 hashing and changeset validation come from the real code path. It also stamps
 `Member{role: :owner}` directly so the user can administer the account.
 
-### Local CLI (SQLite, `:dev_cli` / `:prod_cli`) — `priv/repo/cli_qa_seeds.exs`
+### ~~Local CLI (SQLite, `:dev_cli` / `:prod_cli`)~~ — RETIRED, and this is why a QA seed rerun fails
 
-Idempotent. Creates an optional `client_user` (so `bootstrap/auth/status`
-reports authenticated without an OAuth round-trip) plus the same project row
-keyed on the same UUID. Run with:
+**Do not run `MIX_ENV=dev_cli` anything.** The CLI and its environments were
+retired in `9cc937a82` ("Retire the CLI; the harness runs on its own
+MIX_ENV=harness"): `config/dev_cli.exs`, `config/prod_cli.exs`,
+`config/cli_demo.exs` and `config/dev_sprite.exs` are deleted, and
+`priv/repo/cli_qa_seeds.exs` with them.
 
-```
-# Local app NOT running:
-MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
+Because `config/config.exs` ends with `import_config "#{config_env()}.exs"`, an
+env whose file no longer exists cannot load at all — it dies before your script
+runs, with
 
-# Local app already on port 4004:
-NO_SERVER=true MIX_ENV=dev_cli mix run priv/repo/cli_qa_seeds.exs
-```
+    ** (File.Error) could not read file ".../config/dev_cli.exs": no such file or directory
 
-The local schema has no accounts/members table — `HarnessScope` resolves the
-harness id on each request, and the harness record carries both the project and
-the working copy's root.
+which reads as a broken checkout rather than as a retired environment (issue
+95a6ec8c reported exactly this, and saw it as an absolute path into another
+project's worktree, because a local edit had put one there). Nothing is wrong
+with the working copy; the instruction is stale.
+
+The harness is what serves `/mcp`, the hooks and the local surface now, on
+**`MIX_ENV=harness`** (`config/harness.exs`, from `CmsHarness.Application`), and
+`just harness` boots it on 4004. For a QA fixture, use the Server seed above —
+`mix cms.seed priv/repo/qa_seeds.exs` — against the hosted instance. There is no
+CLI seed to run and no CLI database to seed.
 
 ### Sandbox project for MCP-surface SC tests — `code_my_spec_test_repos/qa_sandbox/`
 
@@ -800,7 +807,11 @@ chain is resolved, the local CLI seed only runs cleanly against `:prod_cli`
 (the bundled CLI binary). The script itself is correct; its first invocation
 in a clean `:dev_cli` env is gated on the migration fix.~~
 
-**No longer true. `:dev_cli` boots.** Verified three ways on 2026-08-15:
+~~**No longer true. `:dev_cli` boots.**~~ **Superseded: `:dev_cli` was
+retired on 2026-10-03 by `9cc937a82` and its config file deleted, so the env no
+longer loads at all.** The verification below was correct on 2026-08-15 and is
+kept only so a reader of the 817/8b94f6df reports can see what it relied on. The
+harness now runs `MIX_ENV=harness`. Verified on 2026-08-15:
 
 - `fix_stories_account_id_type` (version `20260424170000`) **is** applied in
   `~/.codemyspec/cli_dev.db`.
