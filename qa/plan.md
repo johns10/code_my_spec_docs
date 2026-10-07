@@ -690,6 +690,41 @@ on the server; QA seeds do **not** duplicate that.
 
 ## System Issues
 
+### Verifying agent-delivery defects when your copy has no connected harness
+
+`harness_connected false` on a serving copy is not a reason to leave an
+agent-delivery defect unverified (a54c6760 is the functional gap; this is the
+procedure that covers for it, and 13d1641d is the record that it was never
+written down). **The harness's own log is the measurement**, and it needs no
+harness attachment, no live probe and no connected sandbox: every agent turn
+that dies leaves a full crash record there.
+
+```
+~/.codemyspec/harness.log          # the harness service log (CMS_LOG_LEVEL=debug for more)
+```
+
+Each failed turn is one line: `ts=… level=error src=harness`, a `crash_reason`
+naming `{:killed, {GenServer, :call, […, {:chat | :stream_chat, "<the prompt
+text>", …]}}}` and the call site (`start_turn/5`, `run_turn/3`). So you can
+count deliveries in a window, see **which call** died (`:stream_chat` for a
+streamed turn, `:chat` for a whole-turn reply — the current log carries
+`:stream_chat` records only, so do not assume a `:chat` record exists), and match
+a record to the turn that produced it by its prompt text — all read-only, off
+the file.
+
+Worked example, run this session: `grep -c 'crash_reason' ~/.codemyspec/harness.log`
+over a window, then confirm the matching prompt text in the record — which is how
+the eight timeout records a54c6760 cites were counted, and how this plan's own
+last `:turn_ceiling_exceeded` was found. Note the ancestry caveat the issue
+records: a harness running from the main checkout tells you nothing about a
+candidate commit, so **read which checkout and commit the logging process is
+running from**, not just the count.
+
+That caveat is the honest limit of this route, and it is why it substitutes for
+a live probe only when the question is "did this delivery fail, and how"
+rather than "does the candidate fix it". For the latter, connect (a54c6760) or
+drive the copy's own app directly (the sandbox section above).
+
 ### Onboarding the sandbox says `:no_credential` while the credential is in the repo
 
 `mix cms.harness.onboard` — step 1 of the sandbox section above — fails with
