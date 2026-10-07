@@ -62,6 +62,34 @@ journey tests. Tailwind + esbuild watchers run via the dev endpoint config.
 
 ## Tools Registry
 
+### `sync_project` needs a harness on *that* server process
+
+Harness-channel presence is **per-server-process in-memory state** (issue
+94d2cbad). A harness connected to `:4000` is invisible to an isolated worktree
+instance on its own dynamic port even for the same project id, so
+`sync_project` called over `/mcp/harness` against that isolated instance
+answers:
+
+> Nothing to sync from here — this server holds no working copy, and no harness
+> is currently registered for this project to ask
+
+The only `cms` process on the box is the single LaunchAgent-managed daemon, and
+it exposes no onboard/connect flags; repointing or duplicating it to test one
+worktree risks the other concurrent sessions it already serves. So there is no
+lightweight way to connect a throwaway harness to one isolated instance for a
+single call, and **the documented substitute is the direct in-process call** —
+the same substitution the BDD spex make by registering an in-memory environment
+instead of a live harness:
+
+```bash
+DATABASE_NAME=<this instance's db> MIX_ENV=dev mix cms.seed priv/repo/<script>.exs
+# … where <script>.exs calls FileSync.sync/… / FileComponentSync.sync_from_files/…
+```
+
+Use that for in-code dependency pickup on an isolated instance rather than
+treating the `sync_project` refusal as a story defect — it is pre-existing
+sync/harness infrastructure (stories 127, 1062), not the story under test.
+
 ### Picking the tool — start from the surface, not the test framework
 
 QA exercises the **agent's actual surface** from outside the BEAM. The spex
