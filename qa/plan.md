@@ -414,6 +414,22 @@ An empty `pending_migrations` is the state a QA pass should start from. If it is
 non-empty, the instance is running code against a schema it was not built for,
 and any failure you go on to see may be that rather than the story.
 
+**A plain `mix ecto.migrate` targets the default dev database, not necessarily
+the instance's own.** Each worktree-managed app instance gets its own isolated
+Postgres database, named in that instance's `state.json`
+(`~/.codemyspec/app-instances/<id>/state.json`, the `database` field) — e.g.
+`code_my_spec_dev_wc_ad7d67d6`, not `code_my_spec_dev`. Running `mix
+ecto.migrate` without `DATABASE_NAME` set will happily report "Migrations
+already up" against the wrong database while the instance you're actually
+testing keeps raising `Phoenix.Ecto.PendingMigrationError` on every request.
+Check `state.json` first, then:
+
+```bash
+DATABASE_NAME=<state.json's database> MIX_ENV=dev mix ecto.migrate
+```
+
+followed by `restart_app` to pick it up (hit 2026-10-11, story 1091's QA pass).
+
 ### Server (Postgres, `:dev`) — `priv/repo/qa_seeds.exs`
 
 Idempotent. Creates user + personal account + member + project. Run with:
@@ -1022,3 +1038,29 @@ requirement until it is released — follow `create_story` with
 `update_story({ ready_for_dev = true })`, or `start_task` answers
 "Requirement component_linked not found for story <id>" even though the
 story exists.
+
+### QA Fixture Project has only one staffed working copy
+
+Of the four working copies offered in the issue-assignment dropdown (qa_sandbox,
+verifyapp, genapp, qa-739-alpha), only qa_sandbox has a coding or qa agent --
+confirmed via `select wc.id, a.role from working_copies wc join agents a on
+a.working_copy_id = wc.id where a.role in ('coding','qa') and a.retired_at is
+null`. Assigning to any of the other three correctly refuses with :no_team
+(flash: "That working copy has no coding or QA agent to hold the issue.") --
+that is the app working as designed, not a bug. But it means criterion "Main
+moves an issue to another team" (story 1091) has no second staffed destination
+to reassign to live in this fixture; only spex/unit coverage exercises the
+success path. Seed a second working copy with a coding or qa agent here to
+close the gap (hit 2026-10-11).
+
+### A full-page browser_get_html dump can silently truncate before the flash region
+
+This app's /issues/:id page's rendered HTML regularly exceeds the ~24000 char
+cap the harness applies when saving a tool result to a file for later sed/grep
+reading -- the saved file ends mid-document with a truncation marker, not just
+the inline preview. Grepping that saved file for a flash message can come back
+empty even when the flash is genuinely present, because the div fell past the
+truncation point. Check flash content with browser_find({ selector =
+"#flash-error" }) / browser_get_text directly instead of dumping and grepping
+full HTML -- cost a mistaken "still reproduces" read on issue 258f0631 before
+the targeted check showed the error flash was there all along (hit 2026-10-11).
