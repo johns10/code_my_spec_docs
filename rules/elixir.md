@@ -41,3 +41,12 @@ Focus code on the expected successful execution path.
 Don't try to handle every possible error - let the supervisor handle process failures and restarts.
 
 Write tests that verify message passing between processes and supervision behavior. Test that processes crash appropriately and recover correctly.
+
+## Comments
+
+A comment or docstring states the current contract, and — where the code would
+look wrong without it — a one-to-three-line why. No commit hashes, dates or
+"this used to": git keeps history, and a story told in code goes stale the day
+the code it describes changes. Design rationale and the lessons from incidents
+go in `.code_my_spec/knowledge/<area>/`; point to it from the code when the spot
+needs it.
