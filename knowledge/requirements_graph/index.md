@@ -2,7 +2,9 @@
 
 How the graph that tells every agent what to work on is written, read and kept
 current — the design behind `lib/code_my_spec/requirements*`, and the lessons
-that shaped it. Code comments point here by section name.
+that shaped it. Code comments point here by section name. The checkers,
+definitions, preloading and the contexts the graph reads are in
+[checkers.md](checkers.md).
 
 | Module | Role |
 |---|---|
