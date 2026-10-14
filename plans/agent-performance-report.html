@@ -1,0 +1,157 @@
+<title>In-App Agent Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#f5f6f8; --ink:#1d2430; --muted:#5d6878; --rule:#d7dce4; --panel:#ffffff;
+  --accent:#2f6f8f; --good:#2e7d4f; --warn:#a36a12; --bad:#b23b3b; --chip:#e8edf3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12161c; --ink:#e3e8ef; --muted:#9aa6b6; --rule:#2b333e; --panel:#181d25;
+    --accent:#6fb1d1; --good:#5fbf86; --warn:#e0a548; --bad:#e07a7a; --chip:#222a35; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12161c; --ink:#e3e8ef; --muted:#9aa6b6; --rule:#2b333e; --panel:#181d25;
+  --accent:#6fb1d1; --good:#5fbf86; --warn:#e0a548; --bad:#e07a7a; --chip:#222a35; color-scheme:dark;
+}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px;padding-block:28px 56px}
+main{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:28px;line-height:1.2;margin:0;font-weight:600;text-wrap:balance}
+h2{font-size:18px;margin:0 0 10px;font-weight:600;text-wrap:balance}
+p{margin:0;max-width:68ch}
+.meta{color:var(--muted);font-size:13px;margin-top:6px}
+.mono,td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+section{display:flex;flex-direction:column;gap:12px}
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.finding{background:var(--panel);border:1px solid var(--rule);border-left:4px solid var(--muted);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.finding.bad{border-left-color:var(--bad)} .finding.warn{border-left-color:var(--warn)} .finding.good{border-left-color:var(--good)}
+.finding b{font-size:15px}
+.finding span{color:var(--muted);font-size:14px}
+.scroll{overflow-x:auto;border:1px solid var(--rule);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+td.num,th.num{text-align:right}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;background:var(--chip);color:var(--ink)}
+.pill.bad{color:var(--bad)} .pill.good{color:var(--good)} .pill.warn{color:var(--warn)}
+ol,ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.note{color:var(--muted);font-size:13px}
+.bar{height:8px;background:var(--accent);opacity:.75;border-radius:2px}
+</style>
+
+<main>
+<header>
+  <h1>In-App Agent Scorecard</h1>
+  <p class="meta">Code My Spec project · window 2026-10-02 00:00Z to 2026-10-04 03:00Z (about 48h, plus partial 10-04) · one-off, from the dev database · prepared for John</p>
+</header>
+
+<section>
+  <h2>What stands out</h2>
+  <div class="findings">
+    <div class="finding good"><b>The teams ship</b><span>In-app teams promoted stories 1083, 1084, 1085 and 1087 in this window. 1081 is in QA and 1091 is in build. 7 of the 71 promotes to main were in-app team merges.</span></div>
+    <div class="finding bad"><b>Tap-outs go undecided</b><span>49 tap-outs, and 29 expired with nobody deciding them. That's the largest autonomy leak: the agent waits, then the work quietly lapses.</span></div>
+    <div class="finding bad"><b>QA rarely passes first time</b><span>14 QA attempts: 3 pass, 7 partial, 4 fail. 1081 took 5 attempts and 1085 took 3.</span></div>
+    <div class="finding warn"><b>Questions to people wait hours</b><span>Product's questions waited about 6h on average for an answer and QA's about 4h, while coders' questions were answered in about 11 min, mostly by main.</span></div>
+    <div class="finding warn"><b>Most stalls were the harness</b><span>Tonight's stops traced to harness bugs: a reconcile crash that rolled back file syncs, the harness killed by another session, a stale copy app, a Codex usage limit. They weren't agent judgment errors.</span></div>
+    <div class="finding warn"><b>Cost is invisible</b><span>Token usage isn't stored anywhere, so we can't compare Codex and Claude, or cost per story, yet. Alloy reports it per turn; it only needs persisting.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Activity by role</h2>
+  <p class="note">Assistant replies, failed tool calls, and system/operator messages delivered to agents. System messages include harness notices (restarts, offers) and operator nudges; the data doesn't separate the two yet.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Day</th><th>Role</th><th>Provider</th><th class="num">Replies</th><th class="num">Tool failures</th><th class="num">Failure rate</th><th class="num">System msgs</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">10-02</td><td>coding</td><td>Claude Code</td><td class="num">937</td><td class="num">31</td><td class="num">3.3%</td><td class="num">56</td></tr>
+      <tr><td class="mono">10-02</td><td>product</td><td>Claude Code</td><td class="num">482</td><td class="num">22</td><td class="num">4.6%</td><td class="num">47</td></tr>
+      <tr><td class="mono">10-02</td><td>qa</td><td>Claude Code</td><td class="num">456</td><td class="num">19</td><td class="num">4.2%</td><td class="num">40</td></tr>
+      <tr><td class="mono">10-02</td><td>main</td><td>Claude Code</td><td class="num">196</td><td class="num">13</td><td class="num">6.6%</td><td class="num">63</td></tr>
+      <tr><td class="mono">10-03</td><td>coding</td><td>Claude Code</td><td class="num">1,696</td><td class="num">65</td><td class="num">3.8%</td><td class="num">133</td></tr>
+      <tr><td class="mono">10-03</td><td>coding</td><td>Codex</td><td class="num">673</td><td class="num">23</td><td class="num">3.4%</td><td class="num">41</td></tr>
+      <tr><td class="mono">10-03</td><td>product</td><td>Claude Code</td><td class="num">752</td><td class="num">50</td><td class="num">6.6%</td><td class="num">110</td></tr>
+      <tr><td class="mono">10-03</td><td>qa</td><td>Claude Code</td><td class="num">510</td><td class="num">29</td><td class="num">5.7%</td><td class="num">69</td></tr>
+      <tr><td class="mono">10-03</td><td>qa</td><td>Codex</td><td class="num">117</td><td class="num">3</td><td class="num">2.6%</td><td class="num">7</td></tr>
+      <tr><td class="mono">10-03</td><td>main</td><td>Claude Code</td><td class="num">260</td><td class="num">27</td><td class="num">10.4%</td><td class="num">112</td></tr>
+      <tr><td class="mono">10-04*</td><td>coding</td><td>Claude Code</td><td class="num">394</td><td class="num">7</td><td class="num">1.8%</td><td class="num">14</td></tr>
+      <tr><td class="mono">10-04*</td><td>coding</td><td>Codex</td><td class="num">152</td><td class="num">2</td><td class="num">1.3%</td><td class="num">51</td></tr>
+      <tr><td class="mono">10-04*</td><td>qa</td><td>Claude Code</td><td class="num">153</td><td class="num">14</td><td class="num">9.2%</td><td class="num">7</td></tr>
+      <tr><td class="mono">10-04*</td><td>qa</td><td>Codex</td><td class="num">42</td><td class="num">0</td><td class="num">0%</td><td class="num">47</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">* 10-04 is partial (00:00–03:00Z). Codex agents ran from about 18:30Z on 10-03 until they hit the ChatGPT usage limit at about 00:35Z on 10-04. The high system-message counts for Codex on 10-04 are failed-turn notices after that.</p>
+</section>
+
+<section>
+  <h2>QA attempts by story</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Story</th><th class="num">Pass</th><th class="num">Partial</th><th class="num">Fail</th><th>Outcome</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">1081</td><td class="num">0</td><td class="num">4</td><td class="num">1</td><td><span class="pill warn">in QA</span> telemetry receive path was missing; the fix needed a prototype</td></tr>
+      <tr><td class="mono">1083</td><td class="num">1</td><td class="num">2</td><td class="num">0</td><td><span class="pill good">shipped</span></td></tr>
+      <tr><td class="mono">1084</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td><span class="pill good">shipped</span></td></tr>
+      <tr><td class="mono">1085</td><td class="num">0</td><td class="num">1</td><td class="num">2</td><td><span class="pill good">shipped</span> passed after the window opened</td></tr>
+      <tr><td class="mono">1087</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">shipped</span> first-pass</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Blocked time</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>What</th><th>Who</th><th class="num">Count</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Tap-outs</td><td>coding (Claude)</td><td class="num">42</td><td>8 approved · 4 denied · <b>29 expired</b> · 1 pending</td></tr>
+      <tr><td>Tap-outs</td><td>coding (Codex)</td><td class="num">6</td><td>2 approved · 4 pending</td></tr>
+      <tr><td>Tap-outs</td><td>qa</td><td class="num">1</td><td>approved</td></tr>
+      <tr><td>Questions</td><td>coding</td><td class="num">15</td><td>13 answered, average <span class="mono">11 min</span></td></tr>
+      <tr><td>Questions</td><td>product</td><td class="num">14</td><td>12 answered, average <span class="mono">349 min</span></td></tr>
+      <tr><td>Questions</td><td>qa</td><td class="num">5</td><td>3 answered, average <span class="mono">241 min</span></td></tr>
+      <tr><td>Questions</td><td>main</td><td class="num">3</td><td>1 answered, 2 withdrawn</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Offers</h2>
+  <p class="note">An offer is a nudge with an expected outcome. "Ignored" over-counts: in an earlier trace, 15 of 17 "ignored" unblocked offers had in fact been claimed another way.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Kind</th><th class="num">Claimed</th><th class="num">Ignored</th><th class="num">Declined</th><th class="num">Superseded</th><th class="num">Avg time to claim</th></tr></thead>
+    <tbody>
+      <tr><td>work</td><td class="num">147</td><td class="num">22</td><td class="num">22</td><td class="num">–</td><td class="num">3.9 min</td></tr>
+      <tr><td>menu</td><td class="num">22</td><td class="num">19</td><td class="num">–</td><td class="num">–</td><td class="num">11.6 min</td></tr>
+      <tr><td>unblocked</td><td class="num">17</td><td class="num">16</td><td class="num">–</td><td class="num">–</td><td class="num">11.6 min</td></tr>
+      <tr><td>denial (declined tap-out)</td><td class="num">16</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">3.4 min</td></tr>
+      <tr><td>problems</td><td class="num">13</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">6.9 min</td></tr>
+      <tr><td>answer</td><td class="num">10</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">14 min</td></tr>
+      <tr><td>retry</td><td class="num">–</td><td class="num">15</td><td class="num">–</td><td class="num">12</td><td class="num">–</td></tr>
+      <tr><td>resume (after restarts)</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">157</td><td class="num">–</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Work offers were claimed 77% of the time. 157 superseded resume offers reflect how often the harness restarted (each promote), not agent behaviour.</p>
+</section>
+
+<section>
+  <h2>What I'd change first</h2>
+  <ol>
+    <li><b>Never let a tap-out expire unseen.</b> Route undecided tap-outs to main after a short timeout, so main decides or escalates instead of letting the work lapse. That's 29 lost decisions in 48h.</li>
+    <li><b>Get product and QA questions answered faster.</b> Main answers coders in minutes; product's and QA's questions sit for hours waiting on a person. Have main try those first, and escalate only true product calls.</li>
+    <li><b>Raise QA first-pass.</b> Have the coder run the QA brief's checks before certifying, and make sure the copy's app is restarted onto the committed code before QA starts. Twice tonight QA tested stale code.</li>
+    <li><b>Fewer harness restarts per promote.</b> Every promote currently restarts or reloads the harness and re-sends resume offers to every agent.</li>
+    <li><b>Record token usage per turn</b> so Codex and Claude can be compared on cost. That's part of story 1092.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Limits of this report</h2>
+  <ul>
+    <li>System notices and operator nudges are counted together; the data has no field telling them apart.</li>
+    <li>Story cycle time by stage isn't here: task open and close times live in the harness, not in this database, so they need their own query.</li>
+    <li>Token usage isn't recorded, so cost is missing entirely.</li>
+    <li>90 framework issues were filed in the window, but operator sessions file them too, so that count isn't agent-only.</li>
+  </ul>
+</section>
+</main>
