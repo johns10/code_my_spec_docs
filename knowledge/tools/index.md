@@ -140,6 +140,33 @@ here by section name. The original research into the Lua runtime is in
 - **Validation errors are rendered as their sentence plus field name**, not as
   inspected structs.
 
+## Tool library
+
+A tool a domain offers agents can live in that domain instead of in
+`McpServers`. Personas is the first (2026-10-15); the rest of `McpServers`
+moves the same way.
+
+- **Contract:** `CodeMySpec.Tools.Tool`: `name/0`, `description/0`,
+  `params/0` (a Peri schema written as data, no macro), `call/2` returning
+  `{:ok, text} | {:error, text}`, and optionally `script_result/2` for data.
+  It takes `%{scope: ..., session_id: ..., agent_id: ...}`, never a frame.
+- **Why Peri:** it is what Anubis validates with, so arguments are cast and
+  refused exactly as before, and `Peri.to_json_schema/2` yields the same JSON
+  Schema Anubis produced from `schema do`.
+- **Owner:** each domain lists its tools (`CodeMySpec.Personas.Tools.all/0`).
+  `CodeMySpec.ToolLibrary` collects them, so a surface depends on one list,
+  not on every domain behind it.
+- **Surfaces:** `ScriptableTools.registrations/0` appends the library to the
+  Anubis components; code mode, `ToolRegistry` (the agent tool index) and
+  `LocalServer`'s "this moved" hint all read that. `CodeMode` runs a library
+  entry with `call/2` (or `script_result/2`) instead of `execute/2`.
+- **Spex** call a tool by name through `ToolLibrary.run/3`, the path every
+  surface takes, since `CodeMySpecSpex` may not reach into a domain.
+
+Not yet done: a library tool on the direct MCP list (`LocalServer`) needs an
+Anubis adapter (`Frame.register_tool` at init); Personas are script-only, so
+the first slice did not need one.
+
 ## Machine tools
 
 - **The browser tools live on the agent's machine** (reported by the working
