@@ -149,9 +149,11 @@ lessons that shaped it. Code comments point here by section name.
 - **Gate copy hygiene.** The tree and databases are not swapped under a run
   still going there; the wait is bounded so an orphaned run row cannot hold the
   queue forever.
-- **Red** ejects the candidate with the findings at `head`; a gate that could
-  not run (no findings) requeues and retries. A run that failed at the batch
-  commit is red.
+- **Nothing is retried.** A candidate is taken only once main and the gate
+  copy can both be read; until then it stays queued, and a copy joining wakes
+  the queue. Once taken, any failure ejects it with the reason (red findings,
+  a failed run at the batch commit, a gate that could not run, a build or
+  landing error). Only main moving under a batch rebuilds it.
 - **Assets** are built after the analyzers are green: no analyzer runs the
   asset pipeline.
 - **Landing** goes through `Promotion.land/6` under the same lock. If main
