@@ -163,9 +163,19 @@ moves the same way.
 - **Spex** call a tool by name through `ToolLibrary.run/3`, the path every
   surface takes, since `CodeMySpecSpex` may not reach into a domain.
 
-Not yet done: a library tool on the direct MCP list (`LocalServer`) needs an
-Anubis adapter (`Frame.register_tool` at init); Personas are script-only, so
-the first slice did not need one.
+- **Direct list:** `LocalServer` names its library tools (`@library_tools`,
+  today `reject_offer`, by the same rule as its components: a script
+  exclusion). `init/2` puts them on each session's frame with
+  `Frame.register_tool/3` (`McpServers.LibraryTools`); Anubis lists them
+  beside the components and validates their arguments, and a call reaches
+  `handle_tool_call/3`, which runs `call/2` with the scope
+  `Validators.validate_local_scope/1` resolves and the connection's
+  `agent_id`. `LocalServer.registrations/0` is the direct list for every
+  reader (the tool index, `tool_docs`, `run_script`'s direct-only refusal);
+  `ScriptableTools.registrations/0` leaves those names out.
+- **Frame tools need `init/2`:** Anubis runs it on `notifications/initialized`
+  and on session restore. A client that skips the notification sees no
+  library tools.
 
 ## Machine tools
 
