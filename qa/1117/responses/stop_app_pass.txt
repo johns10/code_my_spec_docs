@@ -1,0 +1,9 @@
+preview-7bd818cc-e623-4220-aa47-a95a443824a5.codemyspec.com 200
+preview-3d7fe72b-0b24-43bc-a0c6-7b9c1bc9d98b.codemyspec.com 200
+preview-c8eda3e8-ed17-49ec-86b0-1862b21f58b0.codemyspec.com 200
+preview-9f77b922-9810-4b49-931d-b073012bc317.codemyspec.com 503
+dev.codemyspec.com 200
+astralbi.com 200
+preview-56f5bf62-9cf8-400d-abcd-6c796afd3437.codemyspec.com 000
+own 200
+80783 /opt/homebrew/bin/cloudflared --config /Users/johndavenport/.codemyspec/tunnels/12a798a4-81a3-4242-8b59-ac171c0a01

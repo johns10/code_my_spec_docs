@@ -1,0 +1,8 @@
+## after share (twice, idempotent)
+preview-7bd818cc-e623-4220-aa47-a95a443824a5 200
+preview-3d7fe72b-0b24-43bc-a0c6-7b9c1bc9d98b 200
+preview-c8eda3e8-ed17-49ec-86b0-1862b21f58b0 200
+dev.codemyspec.com 200
+astralbi.com 200
+oauth-ish dev /auth/github/callback 302
+math_test host 000
