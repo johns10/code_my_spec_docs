@@ -229,11 +229,15 @@ comments point here by section name.
   fires on completion). Text and thinking deltas are never steps; text deltas
   go to `on_draft`, a live draft that is never stored.
 - Usage rides on `turn_ended`: asking the loop afterwards answers busy.
-- Tools: read, write, edit, bash, plus the launch request's `direct_tools`
-  resolved to `CmsHarness.Agents.Tools.<Name>`. The server's
-  `ToolIndex.carried/1` is the one list; tools `CodeMode.Catalog` excludes from
-  scripts (the graph spine, `assign_subagent`) must be carried directly. An
-  uncarried tool's call is told where it is reachable.
+- Tools: read, write, edit, bash, plus the launch request's `direct_tools`:
+  `ToolIndex.carried_definitions/1`, each tool's name, description and schema
+  as the server registers it. A harness module of that name is used where it
+  does more than forward (`run_script`, `run_browser_script`, `tool_docs`);
+  every other one is `Tools.Direct.tool/1`, an Alloy inline tool forwarding
+  over MCP. No copy of a server tool's text lives in the harness. Tools
+  `CodeMode.Catalog` excludes from scripts (the graph spine,
+  `assign_subagent`) must be carried directly. An uncarried tool's call is
+  told where it is reachable. `Engine.tool_name/1` names a tool of either kind.
 - The MCP session is opened in `init/1`, never during validation in the
   caller's process, which may be the channel.
 - The tool context carries `agent_id`: the server scopes a script's tools and

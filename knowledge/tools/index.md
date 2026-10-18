@@ -142,40 +142,54 @@ here by section name. The original research into the Lua runtime is in
 
 ## Tool library
 
-A tool a domain offers agents can live in that domain instead of in
-`McpServers`. Personas is the first (2026-10-15); the rest of `McpServers`
-moves the same way.
+A tool a domain offers agents lives in that domain, not in `McpServers`. Every
+domain tool has moved (2026-10-17). What stays in `McpServers`: code mode,
+health, promotion, `start_agent` and `runtime_diagnostics` (both probe the MCP
+surface itself), and the Google tools on their own servers.
 
 - **Contract:** `CodeMySpec.Tools.Tool`: `name/0`, `description/0`,
   `params/0` (a Peri schema written as data, no macro), `call/2` returning
   `{:ok, text} | {:error, text}`, and optionally `script_result/2` for data.
-  It takes `%{scope: ..., session_id: ..., agent_id: ...}`, never a frame.
+  It takes `%{scope:, session_id:, agent_id:, working_dir:}`, never a frame.
+  `CodeMySpec.Tools` holds the shared parts: `project_scope/1`,
+  `connected_project/1`, `error/1`, `changeset_errors/1`, `input_schema/1`.
 - **Why Peri:** it is what Anubis validates with, so arguments are cast and
   refused exactly as before, and `Peri.to_json_schema/2` yields the same JSON
   Schema Anubis produced from `schema do`.
-- **Owner:** each domain lists its tools (`CodeMySpec.Personas.Tools.all/0`).
-  `CodeMySpec.ToolLibrary` collects them, so a surface depends on one list,
-  not on every domain behind it.
-- **Surfaces:** `ScriptableTools.registrations/0` appends the library to the
-  Anubis components; code mode, `ToolRegistry` (the agent tool index) and
-  `LocalServer`'s "this moved" hint all read that. `CodeMode` runs a library
-  entry with `call/2` (or `script_result/2`) instead of `execute/2`.
-- **Spex** call a tool by name through `ToolLibrary.run/3`, the path every
-  surface takes, since `CodeMySpecSpex` may not reach into a domain.
-
-- **Direct list:** `LocalServer` names its library tools (`@library_tools`,
-  today `reject_offer`, by the same rule as its components: a script
-  exclusion). `init/2` puts them on each session's frame with
-  `Frame.register_tool/3` (`McpServers.LibraryTools`); Anubis lists them
-  beside the components and validates their arguments, and a call reaches
-  `handle_tool_call/3`, which runs `call/2` with the scope
-  `Validators.validate_local_scope/1` resolves and the connection's
-  `agent_id`. `LocalServer.registrations/0` is the direct list for every
-  reader (the tool index, `tool_docs`, `run_script`'s direct-only refusal);
-  `ScriptableTools.registrations/0` leaves those names out.
+- **Adapter boundary:** a domain's tools are `CodeMySpec.<Domain>.Tools`, its
+  own top-level Boundary with `all/0`. What the tools read becomes that
+  adapter's deps, not the core domain's. Reply text lives in
+  `<Domain>.Tools.Responses` (aliased as the old `*Mapper` name).
+  Several domains can share an adapter: `Agents.Tools` holds the agent, task
+  and main-agent tools; `WorkingCopies.Tools` the copy and app tools.
+- **Owner:** `CodeMySpec.ToolLibrary` collects every adapter's `all/0`;
+  `run/3` validates and calls, `data/3` returns `script_result/2` when there
+  is one. A surface depends on that one list, not on every domain.
+- **Contracts are frozen:** `test/fixtures/tool_contracts/<domain>.json` holds
+  each tool's name, description and schema as the old component registered
+  it; `FrozenContractsTest` fails on drift. Write the fixture before deleting
+  the component.
+- **Surfaces:** `ScriptableTools.registrations/0` is the library minus the
+  direct names and `@components_server_only`; code mode and `ToolRegistry`
+  read it. `CodeMode` runs a library entry with `call/2` or
+  `script_result/2`.
+- **Direct lists:** `LocalServer` (`@spine`, `@unscriptable`) and
+  `ComponentsServer` (`@library_tools`) put their library tools on each
+  session's frame at `init/2` (`McpServers.LibraryTools`); Anubis lists and
+  validates them, and `handle_tool_call/3` runs `call/2`.
+  `LocalServer.registrations/0` is the direct list for every reader.
 - **Frame tools need `init/2`:** Anubis runs it on `notifications/initialized`
   and on session restore. A client that skips the notification sees no
   library tools.
+- **Spex and tests** call a tool by name through `ToolLibrary.run/3` or
+  `data/3`, the path every surface takes. A helper that took a tool module
+  takes the name.
+- **Moving a domain, the traps:** a test that consumes a helper's result
+  (`refute reply.isError`) never names the tool and is missed by a caller
+  grep; only the full spex run finds it. `{:error, :no_working_dir}` was
+  `validate_local_scope`'s; `project_scope/1` answers
+  `:missing_active_project`, so refusal clauses keyed on the old atom go dead
+  (the compiler says so).
 
 ## Machine tools
 
