@@ -92,6 +92,12 @@ lessons that shaped it. Code comments point here by section name.
   join and is logged loudly once, quietly after.
 - An `observations` reply of unmatched topic is ordinary shutdown, logged at
   info.
+- One connection at a time. A topic close leaves the connection up, so
+  `:reconnect` drops a connected socket and lets `handle_disconnect/2` dial
+  once it is gone, and a reconnect armed before a join that has since landed
+  does nothing. Dialing beside the live socket made each new join evict the
+  old channel, whose death came back as another close: two copies looped
+  every few seconds and one harness held 195 sockets to :4000 (2026-10-18).
 
 ## Manifests
 
@@ -191,6 +197,8 @@ lessons that shaped it. Code comments point here by section name.
   once-a-second join loop that rotated away the logs needed to debug it.
 - **When the server says the topic is gone, drop the socket.** A topic rejoin
   is a no-op while Slipstream believes it is joined.
+- **Never dial beside a live socket.** A rejoin evicts the old channel, and
+  its death arrives at the same client as a close of the new one.
 - **Nothing on the channel process may wait on the channel.** Any handler that
   reads files or calls back into the channel runs in a task.
 - **Every request gets exactly one answer.** Silence reads as latency; a second

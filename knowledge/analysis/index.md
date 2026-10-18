@@ -1,7 +1,7 @@
 # Analysis and validation
 
 How analyzer runs (compiler, credo, exunit, spex) are requested, executed,
-reconciled into Problems and turned into stop and promote decisions — the
+reconciled into Problems and turned into promote decisions — the
 design behind `lib/code_my_spec/analysis*`, `compile.ex`, `tests.ex`,
 `static_analysis/`, `problems/`, `validation*`, the stop and pre-tool-use
 hooks, and QA attempts. Code comments point here by section name.
@@ -13,12 +13,12 @@ hooks, and QA attempts. Code comments point here by section name.
 | `Analysis.Reconciler` | The single write path for run results: Problems, ledger row, events. |
 | `Analysis.RunsRepository` | The `analysis_runs` ledger, scoped per working copy. |
 | `Analysis.HarnessRegistry` | Which working copies have a connected harness, keyed to its channel process. |
-| `Analysis.Alert` | One-line "a run landed" notice on an agent's next tool call. |
 | `Compile`, `Tests`, `StaticAnalysis.CredoRun` | Run one tool and parse what it reported. |
 | `StaticAnalysis.Pipeline` | In-process analyzers for a task's role. |
-| `Problems.ProblemRepository` | Problems rows: reconcile per source, watermark, cleanup. |
-| `Problems.ProblemRenderer` | The stop response text. |
-| `Validation`, `Validation.Blocking` | Stop decision from persisted Problems; the one definition of "may block". |
+| `Problems.ProblemRepository` | Problems rows: reconcile per source, cleanup. |
+| `Problems.ProblemRenderer` | Problem text for task feedback and `list_problems`. |
+| `Validation` | What a stop does first: file sync and the in-process validators. Never refuses. |
+| `Validation.Blocking` | The one definition of "may block" and "enforceable", read by promotion. |
 | `Hooks.Stop`, `Hooks.PreToolUse` | Claude Code hook entry points. |
 | `Qa.QaAttempts` | QA attempt records. |
 
@@ -184,27 +184,8 @@ hooks, and QA attempts. Code comments point here by section name.
   (`file:line criterion`) omit the error, so a spex sweep failing the same
   criteria for a new reason looked unchanged and its asker waited forever.
 - Every path that fails a run ends in `Reconciler.announce_failed/2`.
-- A Claude Code session is not told by the Reconciler; it picks up
-  `Analysis.Alert` on its next tool call.
-
-## The analysis alert
-
-- Two transports render the same text: the post-tool-use hook (through the
-  `Hooks.AnalysisAlert` shim) and `McpServers.AgentAlert` for agents under
-  Alloy, which fire no hooks. That is why it lives in `Analysis`, not `Hooks`.
-- Push the fact, pull the detail: sources, counts and age only, capped at 199
-  characters; `list_problems` has the rest. A finding list on every call is
-  noise the model learns to skip.
-- Scoped to the working copy, never narrowed by session or file.
-- Silent path is one query (`Problems.watermark/1`), since it runs on every
-  tool call.
-- Dedup per `{copy, session, agent}` in `:persistent_term` (a Task subagent
-  shares its parent's session). The first render of a mark is cached so two
-  transports never get different age text for one event.
-- Counts only enforceable, blockable problems: never-green spex are advisory,
-  and counting them put a permanent unactionable number in every alert.
-- The age matters: analysis is async, and a bare count reads as a verdict on
-  the fix just made.
+- A Claude Code session is not told: problems gate at promotion, and an agent
+  that wants them asks `list_problems`.
 
 ## Compile
 
@@ -259,33 +240,22 @@ hooks, and QA attempts. Code comments point here by section name.
 - `reconcile_problems_for_source/4` clears one source over a file scope and
   inserts the new set in one transaction, so the old set stays readable until
   the new one lands. No lock: tied runs are handled at their cause.
-- `watermark/1` is `{count, max(updated_at)}` in one query, for the alert.
 
 ## Validation and blocking
 
-- `Validation.validate_stop/3` decides from Problems completed runs already
-  persisted. It runs only in-process validators; `analysis` is always
-  `%{enqueued: [], memoized: []}` (`.code_my_spec/rules/analysis_is_explicit.md`).
-- Paths: no project → allow. `cwd: nil` or `{:cannot_scan, _}` → ask the
-  harness holding the copy; none → allow with nothing checked. Local →
-  `FileSync.sync_changed`, `ComponentSync`, then the pipeline. The remote path
-  skips the sync and the in-process validators but shares scoping, modes and
-  the blocking check.
-- Per-source modes from `ProjectConfiguration` (`credo`, `exunit`, `spex`,
-  `qa_validation`, `architecture`): `:off`, `:block_all`, `:block_changed`
-  (path or component id), `:dont_block`. NULL falls back to the schema default.
-  Compiler errors always block; warnings follow `compile_warnings`.
-- Demotion order: mode → `Blocking.split_by_story_enforcement/3` (unlocated
-  spex advisory) → `Blocking.can_block?/2` (`:info` blocks only when
-  `advisory_findings: :block`) → `split_unattributed/2` (a no-op) →
-  `split_by_role/2` (spex held back where `RoleProfile.holds_problems?/1` is
-  false).
-- `Validation.Blocking` is a leaf read by Validation, Promotion,
-  `Analysis.Alert` and `Agents.Menu`: one definition of "may block" and
-  "enforceable".
-- `blocking_key/1` hashes sorted `{source, file_path, line, message}`, not the
-  rendered reason (which carries relative ages), so repeat detection can build
-  a streak.
+- Problems gate at promotion only (John, 2026-10-18). A stop never refuses over
+  them, the stop menu mentions the count as information, and no tool call is
+  annotated with them. Stop-time blocking (per-source modes, attribution,
+  demotion, the stop response) was removed then, with its criteria.
+- `Validation.validate_stop/3` still runs at every stop: `FileSync.sync_changed`,
+  `ComponentSync`, then the in-process validators, which record Problems. It
+  always answers `{:ok, _}`. No project → nothing to do; `cwd: nil` or
+  `{:cannot_scan, _}` → the harness holding the copy, or nothing.
+- `ProjectConfiguration` keeps two switches (`qa_validation`, `architecture`;
+  only `:off` is checked, legacy block modes read as on) and
+  `advisory_findings`, which decides whether `:info` findings block promotion.
+- `Validation.Blocking` is a leaf read by Promotion and `Agents.Menu`: one
+  definition of "may block" and "enforceable".
 
 ## Spex story attribution
 
@@ -300,66 +270,37 @@ hooks, and QA attempts. Code comments point here by section name.
   number matching no story is nil, never a story that happens to hold that id;
   a directory spanning several stories is nil.
 
-## Changed files and attribution
+## Changed files
 
-- Local: the agent's recorded edits (`FileEdits` by `agent_id`) if any, else
-  `Files.changed_since(task.started_at)` (or the scan's changed paths with no
-  task), narrowed to the session's PostToolUse edits, relativized against cwd.
+- What a stop's in-process validators read. Local: the agent's recorded edits
+  (`FileEdits` by `agent_id`) if any, else `Files.changed_since(task.started_at)`
+  (or the scan's changed paths with no task), narrowed to the session's
+  PostToolUse edits, relativized against cwd.
 - Remote with a task: `changed_files_for_task/3`, nothing consumed. Remote
-  without a task: the session's recorded paths, consumed by a cleanup thunk
-  only after both ledger reads were acted on. The agent-only ledger is never
-  consumed.
+  without a task: the session's recorded paths, consumed after use. The
+  agent-only ledger is never consumed.
 - A session with zero recorded edits: over 25 dirty files → empty set (likely
   a rebase); `Session.git_rewrite_at` at or after task start → empty set;
   otherwise the dirty set is kept.
-- `session_paths/3` is `nil` (unusable; nothing demoted), an empty set, or
-  paths. `verify_against_ledger/3` keeps paths that join File rows;
-  `corroborate_with_disk/2` turns an empty set into `nil` when project files
-  changed. Disk never widens attribution.
-- No cwd guard: harness paths are already project-relative and `relativize/2`
-  passes them through.
 
 ## Stop hook
 
-- `Hooks.Stop.decide/2` answers immediately from persisted problems. Allow is
-  the default; a missing or unknown `session_id` logs a warning (except before
-  `init_project`).
+- `Hooks.Stop.decide/2` never refuses over problems. Allow is the default; a
+  missing or unknown `session_id` logs a warning (except before `init_project`).
 - Order: a live subagent task exempts the parent (task `:active`, has an
   `agent_id`, agent in `Session.active_subagents/2` by heartbeat TTL — a task
   row alone outlives a killed subagent) → stuck threshold → manual task allows
-  → `Validation.validate_stop/3`.
-- Stuck detection: a block records `Validation.blocking_key/1`; the same set
-  advances the streak, a changed set resets it. At 5, a continuous session is
-  switched off, notified and given a retrospective; a non-continuous one gets
-  an allow saying nothing was fixed. The counter is not cleared.
-- Continuous mode after a valid evaluation blocks with `Menu.render/4` while
-  `Work.actionable/3` is non-empty (read model, no filesystem glob in the
-  channel process); the model picks the next requirement. Nothing actionable →
-  allow with a retrospective.
-- A block's reason is capped at 4096 bytes; menu and framework-issue footer
-  are budgeted first, so truncation drops only findings. A refusal's menu never
-  carries the tap-out offer.
-
-## Stop response
-
-- `ProblemRenderer.render_stop_response/3`: at most 10 blocking problems per
-  source (pinned by acceptance criteria), 200 bytes each, 4096 total;
-  advisories collapse to one line per source.
-- Each source group names the run that answered (`Validation` `answers/2`:
-  commit, finished_at, duration from `Analysis.latest_answer/2`), or "has never
-  completed a run" plus the failure reason from `Run.output` or
-  `stats["error"]` (first 6 lines, 600 bytes). There is no "stale" label;
-  whether a run saw current code is the promote gate's question.
-- Notes per group: analyzer build staleness (`stats["analyzer_staleness"]`,
-  stamped by the harness), a failed rerun behind an older answer, all findings
-  killed (the machine, not the code), a missing local precondition, and a
-  `reproduce:` line only for credo (plain `mix credo` hides the low-priority
-  band).
-- `(not edited by this session)` only marks; demotions are always announced
-  (`demoted_note/1`). An allowed stop with advisories returns only the
-  assignment note.
-- `internal_agent?` (agent_id without session_id) is computed in
-  `check_blocking_problems/5`, because `decide/3` gets fresh opts.
+  → `Validation.validate_stop/3` → task evaluation.
+- A refusal comes from the active task's evaluation (its requirement is not
+  met; problems never fail a task, `ProblemFeedback.combine/2`) or from the
+  loop: continuous mode after a valid evaluation blocks with `Menu.render/4`
+  while `Work.actionable/3` is non-empty. Nothing actionable → allow with a
+  retrospective.
+- Stuck detection counts repeated evaluation feedback. At 5, a continuous
+  session is switched off, notified and given a retrospective; a
+  non-continuous one gets an allow saying nothing was fixed.
+- A refusal's reason is capped at 4096 bytes, menu and framework-issue footer
+  budgeted first. A refusal's menu never carries the tap-out offer.
 
 ## Routing analysis commands
 

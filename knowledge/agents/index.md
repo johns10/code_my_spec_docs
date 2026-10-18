@@ -132,8 +132,8 @@ lessons that shaped it. Code comments point here by section name.
 - Sends from inside the harness channel go through a task: a send is a call
   into that same channel, which the transport refuses rather than deadlock.
 - Only `write` and `edit` calls are recorded as the agent's edits, on the call
-  (an agent under Alloy fires no PostToolUse, and `block_changed` narrows
-  findings to these files).
+  (an agent under Alloy fires no PostToolUse, and a stop's in-process
+  validators read these files).
 
 ## Messaging
 

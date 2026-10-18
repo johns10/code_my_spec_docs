@@ -122,8 +122,8 @@ comments point here by section name.
 
 ## The stop menu
 
-- A **class** is countable state in this working copy the hook can rank: open
-  problems, the agent's own open task, actionable requirements, in that order.
+- A **class** is countable state in this working copy the hook can rank: the
+  agent's own open task, then actionable requirements.
   An **offer** is printed regardless: the open-question count with
   `list_user_questions`/`check_answer`, `ask_user_question`, `semantic_search`,
   and `tap_out` inside the loop.
@@ -132,10 +132,12 @@ comments point here by section name.
 - Issues are not a class: the graph counts them per role. As a class, three
   agents on one copy were all sent to the same incoming issues only product
   could triage.
-- Problems count only for roles that hold them (`holds_problems?`), and only
-  what the gate blocks on (`Blocking.enforceable/2`). A QA agent was once held
-  open by spex findings it could neither read nor fix; a coding agent was told
-  "133 problems" that were unwritten features.
+- Problems are not a class: they gate at promotion only (John, 2026-10-18). The
+  menu carries one information line with the count, for roles that hold them
+  (`holds_problems?`) and counting only what promotion blocks on
+  (`Blocking.enforceable/2`). As a class, a QA agent was held open by spex
+  findings it could neither read nor fix, and a coding agent was told "133
+  problems" that were unwritten features.
 - The requirements count is `Work.actionable/3` with the owner, the same list
   the agent would be offered, so count and list never disagree.
 - One directive; the rest tallied as counts. The open task named is the newest
@@ -149,14 +151,15 @@ comments point here by section name.
 
 ## The stop decision
 
-- Same content as the Stop hook (`Validation.validate_stop/3` + the menu),
-  delivered as a message to an agent we run, which fires no hooks.
+- Same content as the Stop hook (the menu), delivered as a message to an agent
+  we run, which fires no hooks. `Validation.validate_stop/3` runs first for the
+  file sync and in-process validators; it never refuses.
 - Never "wait for analysis": results are pushed when they exist.
 - Silent when there is nothing to say. Outside the loop the agent is told
   nothing (a message costs a turn); inside it, an empty menu is the terminus.
-- Stuck detection: the same blocking key more than 5 times per agent goes
-  silent (`:persistent_term`, so a restart costs one duplicate). A continuing
-  menu that repeats byte-for-byte is counted in its own slot.
+- Stuck detection: a continuing menu that repeats byte-for-byte more than 5
+  times per agent goes silent (`:persistent_term`, so a restart costs one
+  duplicate).
 - The conversation is opened before anything is recorded:
   `record_sent_to_agent/2` silently records nothing for an agent with none.
 - The turn request runs off the harness channel's process (a call back into it
