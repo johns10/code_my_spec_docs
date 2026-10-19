@@ -323,17 +323,13 @@ What it gives you, on a project of its own with its own checkout at `/Users/john
 
 No qa-role agent, deliberately: "QA work waiting does not wake the coding agent" needs that work left *outstanding*, and an agent of that role would claim it and take the premise away.
 
-**The agents are rows, not processes — nothing runs and nothing spends tokens** until you drive it. That is what makes this safe to use freely, and it is why "provisioning is out of scope" was the wrong read: the scope rule is about not touching *live* agents on the real project, not about this.
+**Run this only for the disposable QA project, between scenarios.** The seed refreshes non-retired agents on the selected onboarded copy through the Agent changeset, clears their off record and stale turn marker, cancels abandoned tasks, and tops up the role counts. Retired agents remain retired; agents on other copies are not refreshed.
 
-> **The rows are reaped, and this will ruin a wake test if you let it.** `record_running_on_copy/3` (`0c912986`) reaps any row on a harnessed copy that claims to be running with no process behind it, so these agents go `:running` → `:stopped` within about a minute of each harness report. `project_wakeable?/2` requires `:running`, so after that they are invisible to `wake_project_roles/2` and **no wake is sent — correctly**.
->
-> That failure is silent and looks exactly like the defect you are testing. Attempt `38331c19` on story 1004 drove a real requirement transition, verified the graph recomputed, saw no message, and filed the story's central criterion as failing. The evidence was sound and the conclusion was wrong. See `726766b0`.
->
-> So before trusting **any** wake result, check the rows are still running — not that they were seeded running:
->
->     psql -d code_my_spec_dev -c "select role, status from agents where project_id = 'd7f466a1-591e-4f36-8319-42633f59411e';"
->
-> All `running`, or your result means nothing. Re-run the seed immediately before the transition you are testing and keep the window short. `726766b0` tracks the fact that this is a race rather than a fix.
+The seed itself does not start processes. A connected harness may restore on-duty agents and consume tokens. Do not treat seeded rows as proof that an agent is running: current lifecycle derives running from live `Agents.Presence`, while `off_at` and `retired_at` determine whether an agent is on duty. Check the agent's live lifecycle before a wake or delivery scenario.
+
+`Agent.work_request_id` and `work_requested_at` no longer exist. Turn requests are durable `CodeMySpec.Agents.Offer` records managed by `Agents.Offers`; `Offers.in_flight?/1` participates in admission alongside live presence and `turn_started_at`. The seed does not erase offers. Finish or withdraw outstanding scenario work through its supported lifecycle before repeating a probe. Do not repair lifecycle state with direct SQL.
+
+If the harness is disconnected or the fixture agent is not present, record conversation delivery and agent-answer attribution as **not run**. Verify those live scenarios on main after promotion; a passing seed regression is not evidence of live delivery.
 
 **Check the harness before trusting a conversation-reading result:**
 
