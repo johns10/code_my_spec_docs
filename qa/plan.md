@@ -410,18 +410,26 @@ An empty `pending_migrations` is the state a QA pass should start from. If it is
 non-empty, the instance is running code against a schema it was not built for,
 and any failure you go on to see may be that rather than the story.
 
-**A plain `mix ecto.migrate` targets the default dev database, not necessarily
-the instance's own.** Each worktree-managed app instance gets its own isolated
-Postgres database, named in that instance's `state.json`
-(`~/.codemyspec/app-instances/<id>/state.json`, the `database` field) — e.g.
-`code_my_spec_dev_wc_ad7d67d6`, not `code_my_spec_dev`. Running `mix
-ecto.migrate` without `DATABASE_NAME` set will happily report "Migrations
-already up" against the wrong database while the instance you're actually
-testing keeps raising `Phoenix.Ecto.PendingMigrationError` on every request.
-Check `state.json` first, then:
+**Read the copy's assigned database from `.code_my_spec/status/database_name`
+in that checkout.** Each worktree-managed app instance records its isolated
+Postgres database there as plain text — e.g. `code_my_spec_dev_wc_ad7d67d6`.
+This file is inside the agent's readable workspace. Run commands from the
+copy's project root so they use the correct file.
+
+`config/dev.exs` reads this file automatically when `DATABASE_NAME` is unset
+or empty; an explicit `DATABASE_NAME` overrides it. If the file is absent,
+the config falls back to the default dev database. For a managed working
+copy, use `ensure_app_running` to establish the assignment before migrating
+if the file is missing; do not guess the database name. Main does not write
+this file and uses its own `config/dev.exs` database configuration.
+
+To inspect the assignment and explicitly select it for migration:
 
 ```bash
-DATABASE_NAME=<state.json's database> MIX_ENV=dev mix ecto.migrate
+cat .code_my_spec/status/database_name
+qa_database=$(cat .code_my_spec/status/database_name) &&
+  test -n "$qa_database" &&
+  DATABASE_NAME="$qa_database" MIX_ENV=dev mix ecto.migrate
 ```
 
 followed by `restart_app` to pick it up (hit 2026-10-11, story 1091's QA pass).
