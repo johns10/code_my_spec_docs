@@ -323,17 +323,13 @@ What it gives you, on a project of its own with its own checkout at `/Users/john
 
 No qa-role agent, deliberately: "QA work waiting does not wake the coding agent" needs that work left *outstanding*, and an agent of that role would claim it and take the premise away.
 
-**The agents are rows, not processes — nothing runs and nothing spends tokens** until you drive it. That is what makes this safe to use freely, and it is why "provisioning is out of scope" was the wrong read: the scope rule is about not touching *live* agents on the real project, not about this.
+**Run this only for the disposable QA project, between scenarios.** The seed refreshes non-retired agents on the selected onboarded copy through the Agent changeset, clears their off record and stale turn marker, cancels abandoned tasks, and tops up the role counts. Retired agents remain retired; agents on other copies are not refreshed.
 
-> **The rows are reaped, and this will ruin a wake test if you let it.** `record_running_on_copy/3` (`0c912986`) reaps any row on a harnessed copy that claims to be running with no process behind it, so these agents go `:running` → `:stopped` within about a minute of each harness report. `project_wakeable?/2` requires `:running`, so after that they are invisible to `wake_project_roles/2` and **no wake is sent — correctly**.
->
-> That failure is silent and looks exactly like the defect you are testing. Attempt `38331c19` on story 1004 drove a real requirement transition, verified the graph recomputed, saw no message, and filed the story's central criterion as failing. The evidence was sound and the conclusion was wrong. See `726766b0`.
->
-> So before trusting **any** wake result, check the rows are still running — not that they were seeded running:
->
->     psql -d code_my_spec_dev -c "select role, status from agents where project_id = 'd7f466a1-591e-4f36-8319-42633f59411e';"
->
-> All `running`, or your result means nothing. Re-run the seed immediately before the transition you are testing and keep the window short. `726766b0` tracks the fact that this is a race rather than a fix.
+The seed itself does not start processes. A connected harness may restore on-duty agents and consume tokens. Do not treat seeded rows as proof that an agent is running: current lifecycle derives running from live `Agents.Presence`, while `off_at` and `retired_at` determine whether an agent is on duty. Check the agent's live lifecycle before a wake or delivery scenario.
+
+`Agent.work_request_id` and `work_requested_at` no longer exist. Turn requests are durable `CodeMySpec.Agents.Offer` records managed by `Agents.Offers`; `Offers.in_flight?/1` participates in admission alongside live presence and `turn_started_at`. The seed does not erase offers. Finish or withdraw outstanding scenario work through its supported lifecycle before repeating a probe. Do not repair lifecycle state with direct SQL.
+
+If the harness is disconnected or the fixture agent is not present, record conversation delivery and agent-answer attribution as **not run**. Verify those live scenarios on main after promotion; a passing seed regression is not evidence of live delivery.
 
 **Check the harness before trusting a conversation-reading result:**
 
@@ -414,18 +410,26 @@ An empty `pending_migrations` is the state a QA pass should start from. If it is
 non-empty, the instance is running code against a schema it was not built for,
 and any failure you go on to see may be that rather than the story.
 
-**A plain `mix ecto.migrate` targets the default dev database, not necessarily
-the instance's own.** Each worktree-managed app instance gets its own isolated
-Postgres database, named in that instance's `state.json`
-(`~/.codemyspec/app-instances/<id>/state.json`, the `database` field) — e.g.
-`code_my_spec_dev_wc_ad7d67d6`, not `code_my_spec_dev`. Running `mix
-ecto.migrate` without `DATABASE_NAME` set will happily report "Migrations
-already up" against the wrong database while the instance you're actually
-testing keeps raising `Phoenix.Ecto.PendingMigrationError` on every request.
-Check `state.json` first, then:
+**Read the copy's assigned database from `.code_my_spec/status/database_name`
+in that checkout.** Each worktree-managed app instance records its isolated
+Postgres database there as plain text — e.g. `code_my_spec_dev_wc_ad7d67d6`.
+This file is inside the agent's readable workspace. Run commands from the
+copy's project root so they use the correct file.
+
+`config/dev.exs` reads this file automatically when `DATABASE_NAME` is unset
+or empty; an explicit `DATABASE_NAME` overrides it. If the file is absent,
+the config falls back to the default dev database. For a managed working
+copy, use `ensure_app_running` to establish the assignment before migrating
+if the file is missing; do not guess the database name. Main does not write
+this file and uses its own `config/dev.exs` database configuration.
+
+To inspect the assignment and explicitly select it for migration:
 
 ```bash
-DATABASE_NAME=<state.json's database> MIX_ENV=dev mix ecto.migrate
+cat .code_my_spec/status/database_name
+qa_database=$(cat .code_my_spec/status/database_name) &&
+  test -n "$qa_database" &&
+  DATABASE_NAME="$qa_database" MIX_ENV=dev mix ecto.migrate
 ```
 
 followed by `restart_app` to pick it up (hit 2026-10-11, story 1091's QA pass).
