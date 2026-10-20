@@ -1,3 +1,6 @@
+---
+deps: [oban]
+---
 # Use Oban for background job processing
 
 ## Status

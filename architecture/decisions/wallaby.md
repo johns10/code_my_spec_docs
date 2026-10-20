@@ -1,3 +1,7 @@
+---
+deps: []
+declined: [wallaby]
+---
 # Use Wallaby for browser-based integration testing
 
 ## Status

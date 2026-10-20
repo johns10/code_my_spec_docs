@@ -1,3 +1,6 @@
+---
+deps: [tailwind]
+---
 # Use Tailwind CSS for styling
 
 ## Status

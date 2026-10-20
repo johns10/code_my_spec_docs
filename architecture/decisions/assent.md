@@ -1,3 +1,6 @@
+---
+deps: [assent, oauth2]
+---
 # Use Assent for OAuth provider authentication
 
 ## Status

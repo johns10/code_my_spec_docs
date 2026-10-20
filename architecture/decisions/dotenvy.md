@@ -1,3 +1,6 @@
+---
+deps: [dotenvy]
+---
 # Use Dotenvy for environment management
 
 ## Status

@@ -1,3 +1,6 @@
+---
+deps: [swoosh]
+---
 # Use Resend for transactional email
 
 ## Status

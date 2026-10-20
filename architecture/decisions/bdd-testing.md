@@ -1,3 +1,6 @@
+---
+deps: [sexy_spex]
+---
 # Use BDD specs with SexySpex over LiveViewTest
 
 ## Status

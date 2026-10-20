@@ -1,3 +1,6 @@
+---
+deps: [bandit]
+---
 # Use Bandit as the HTTP server
 
 ## Status

@@ -1,3 +1,6 @@
+---
+deps: []
+---
 # Use Elixir as the primary language
 
 ## Status

@@ -1,3 +1,6 @@
+---
+deps: [web_push_elixir]
+---
 # Use web_push_elixir for browser push notifications
 
 ## Status

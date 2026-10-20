@@ -1,3 +1,6 @@
+---
+deps: [bcrypt_elixir]
+---
 # Use phx.gen.auth for authentication
 
 ## Status

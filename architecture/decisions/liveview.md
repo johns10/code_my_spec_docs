@@ -1,3 +1,6 @@
+---
+deps: [phoenix_live_view, lazy_html, live_pane, live_flow]
+---
 # Use Phoenix LiveView for interactive UI
 
 ## Status

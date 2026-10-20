@@ -1,3 +1,6 @@
+---
+deps: []
+---
 # Use MDEx for Markdown rendering
 
 ## Status
@@ -18,3 +21,6 @@ Use MDEx (`~> 0.5`) as the primary Markdown renderer. It provides CommonMark com
 - NIF compilation required (Rust toolchain needed for building from source)
 - Excellent rendering performance for content-heavy pages
 - Syntax highlighting works out of the box without client-side JavaScript
+
+## Dependencies
+MDEx is used by the content pipeline but is not a direct dependency in `mix.exs`; it arrives with a sibling library. This ADR therefore covers no direct package.

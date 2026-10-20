@@ -1,3 +1,6 @@
+---
+deps: [phoenix, phoenix_ecto, phoenix_html, phoenix_live_reload, phoenix_live_dashboard, jason, gettext, dns_cluster, telemetry_metrics, telemetry_poller, esbuild, finch, heroicons]
+---
 # Use Phoenix as the web framework
 
 ## Status

@@ -1,3 +1,7 @@
+---
+deps: []
+declined: [exvcr]
+---
 # Use ExVCR for HTTP recording in tests
 
 ## Status

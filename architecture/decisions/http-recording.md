@@ -1,3 +1,6 @@
+---
+deps: [req_cassette, ex_cli_vcr]
+---
 # Record external calls with ReqCassette and ExCliVcr
 
 ## Status

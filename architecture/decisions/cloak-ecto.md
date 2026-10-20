@@ -1,3 +1,6 @@
+---
+deps: [cloak_ecto]
+---
 # Use Cloak Ecto for field-level encryption at rest
 
 ## Status

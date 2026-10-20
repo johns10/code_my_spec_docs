@@ -1,3 +1,6 @@
+---
+deps: [ecto_sqlite3, ecto_sql]
+---
 # Use SQLite as the primary database via ecto_sqlite3
 
 ## Status

@@ -1,3 +1,7 @@
+---
+deps: []
+declined: [oapi_github]
+---
 # Use oapi_github for GitHub API integration
 
 ## Status

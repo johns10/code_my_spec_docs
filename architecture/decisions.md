@@ -5,6 +5,18 @@ dependency that decision brought in — `ecto` is one choice, not four — so th
 list is comparable to `mix.exs` procedurally: every dependency should be covered
 by exactly one ADR here.
 
+Each ADR declares what it covers in frontmatter, because package names cannot
+be matched against prose:
+
+    ---
+    deps: [phoenix, phoenix_ecto]      # direct mix.exs dependencies this decision brought in
+    declined: [wallaby]                # packages deliberately not used (optional)
+    ---
+
+An ADR may cover no dependency (`deps: []`). `check_decisions` fails on a direct
+dependency no ADR covers, an ADR covering a dependency no longer in `mix.exs`, and
+a declined dependency that is present. Transitive dependencies are not counted.
+
 Only current decisions are listed. Superseded ADRs stay in `decisions/` with
 their replacement named, so the reasoning survives without the list claiming we
 still use them.
@@ -45,3 +57,19 @@ still use them.
 
 ## Audit & Observability
 - [PaperTrail (audit logging)](decisions/paper-trail.md) — Accepted
+
+## Agents & Tooling
+- [Alloy (agent engine)](decisions/agent-engine.md) — Accepted
+- [Anubis (MCP server)](decisions/mcp-server.md) — Accepted
+- [Lua (code mode scripting)](decisions/lua-scripting.md) — Accepted
+- [Slipstream (harness channel)](decisions/harness-channel.md) — Accepted
+- [Burrito and Elixir Desktop (packaging)](decisions/packaging.md) — Accepted
+- [Credo, ExSlop, Sobelow (code gates)](decisions/code-quality.md) — Accepted
+
+## Data & Services
+- [Postgres (server database)](decisions/postgres.md) — Accepted
+- [Req and ReqLLM (HTTP and models)](decisions/http-clients.md) — Accepted
+- [ExAws (S3 storage)](decisions/aws-storage.md) — Accepted
+- [ex_oauth2_provider (OAuth2 provider)](decisions/oauth-provider.md) — Accepted
+- [Nx, Ortex, Tokenizers (local embeddings)](decisions/embeddings.md) — Accepted
+- [Supporting dependencies (grouped)](decisions/supporting-dependencies.md) — Accepted

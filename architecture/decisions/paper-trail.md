@@ -1,3 +1,6 @@
+---
+deps: [paper_trail]
+---
 # Use PaperTrail for audit logging
 
 ## Status

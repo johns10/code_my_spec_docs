@@ -1,3 +1,6 @@
+---
+deps: [boundary]
+---
 # Use Boundary for compile-time dependency enforcement
 
 ## Status

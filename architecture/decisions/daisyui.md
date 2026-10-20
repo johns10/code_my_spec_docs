@@ -1,3 +1,6 @@
+---
+deps: []
+---
 # Use DaisyUI as the component library
 
 ## Status

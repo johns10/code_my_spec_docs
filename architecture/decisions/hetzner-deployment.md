@@ -1,3 +1,6 @@
+---
+deps: []
+---
 # Use Hetzner Cloud with Docker Compose for deployment
 
 ## Status

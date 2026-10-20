@@ -1,3 +1,6 @@
+---
+deps: []
+---
 # Use PowAssent and CodeMySpec generators for integrations, multi-tenancy, and feedback
 
 ## Status
