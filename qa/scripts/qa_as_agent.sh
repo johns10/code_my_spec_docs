@@ -32,14 +32,14 @@
 # Do not pass the id of an agent that is doing something. Attributing a
 # synthetic question to a real, mid-task agent corrupts the main agent's and
 # the owner's read of that agent's state, which is exactly what a QA pass must
-# not do. Make your own and take it away again — both halves are tools a QA
-# session already has:
+# not do. Use the standing fixture agent in qa/plan.md, or on a candidate copy
+# app provision your own with POST <instance>/dev/qa-agents (plan.md,
+# "Provisioning agents on a candidate"). In-app QA cannot create or offboard
+# working copies; those are main's tools. Then:
 #
-#   1. create_working_copy   -> a scratch checkout
-#   2. start_agent           -> (run_script) role "coding" on it; the reply names the agent id
-#   3. qa_as_agent.sh <id> ask_user_question '...'
-#   4. ... observe routing, answer as the main agent, collect with check_answer
-#   5. turn_off_agent        -> (run_script) and offboard_working_copy
+#   1. qa_as_agent.sh <id> ask_user_question '...'
+#   2. ... observe routing, answer as the main agent, collect with check_answer
+#   3. leave any copy you did not make alone; tell main about leftovers
 #
 # A coding role is the point. `holder_for/2` treats `:main` as "user", so a
 # main-role fixture routes exactly like no fixture at all — which is how the

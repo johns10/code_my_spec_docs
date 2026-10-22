@@ -254,12 +254,18 @@ name an agent you are already authenticated for.
 **Make your own fixture; never borrow a working agent.** Attributing a
 synthetic question to a real mid-task agent corrupts the main agent's and the
 owner's read of its state, which is the one thing a QA pass must not do.
-Everything except the call itself is already a tool you have:
+An in-app QA agent cannot make or remove working copies: `create_working_copy`,
+`start_agent` and `offboard_working_copy` are main's tools, not QA's. So:
 
-1. `create_working_copy` — a scratch checkout
-2. `start_agent` with `role: "coding"` — the reply names the agent id
-3. `qa_as_agent.sh <id> <tool> '<args>'`
-4. `stop_agent`, then `offboard_working_copy`
+1. Reuse the standing fixture below, or on a candidate copy app provision your
+   own agents with `POST <instance>/dev/qa-agents` (see "Provisioning agents on
+   a candidate" below).
+2. `qa_as_agent.sh <id> <tool> '<args>'`
+3. Never mint or offboard copies yourself. If a pass leaves a copy behind, tell
+   main with `message_agent` and name it.
+
+(A terminal QA session with main's tools may still mint a scratch copy with
+`create_working_copy` + `start_agent` and remove it with `offboard_working_copy`.)
 
 The coding role is the point: `MainAgent.holder_for/2` treats `:main` as
 "user", so a main-role fixture routes exactly like no fixture at all. That is
@@ -370,6 +376,7 @@ multi-agent, MCP tool list).
 | `stripe_get_subs.sh` | Read back a customer's subscriptions after a payment-gated flow (e.g. guided intake's `/build/workspace`) to confirm what Stripe actually recorded | `./stripe_get_subs.sh <customer_id>` (reads `STRIPE_SECRET_KEY` from `envs/dev.env`) |
 | `announce_device.sh` | Make a device/harness appear via the real `POST /api/devices` route, without starting a full harness process | `./announce_device.sh <deploy-key> --hostname NAME --kind local\|cloud` |
 | `qa_agents.sh` | Mint disposable agents on a project for multi-agent scenarios (identity survives restart, file state isolation) | `./qa_agents.sh up 2` / `list` / `touch 1` / `down` |
+| `POST /dev/qa-agents` (route, not a script) | On a candidate's own copy app: provision a project, copy and agents from the candidate's checkout, for QA to act as agents against the candidate's own `/mcp/harness`. Use this from in-app QA instead of `qa_agents.sh` | see "Provisioning agents on a candidate" |
 | `qa_code_mode.sh` | Drive the real `/mcp` code-mode surface end to end (handshake + tool call) | `./qa_code_mode.sh [worktree-path]` |
 | `qa_spine.sh` | Dump the real `tools/list` an agent connects with, over a real MCP handshake | `./qa_spine.sh [worktree-path]` |
 
@@ -420,7 +427,10 @@ Postgres database, named in that instance's `state.json`
 ecto.migrate` without `DATABASE_NAME` set will happily report "Migrations
 already up" against the wrong database while the instance you're actually
 testing keeps raising `Phoenix.Ecto.PendingMigrationError` on every request.
-Check `state.json` first, then:
+Check `state.json` first (terminal QA only: an in-app QA agent's read tool is
+scoped to its own copy and cannot read `~/.codemyspec`; it should rely on the
+instance's `/health` `pending_migrations` and leave migrating to `restart_app`),
+then:
 
 ```bash
 DATABASE_NAME=<state.json's database> MIX_ENV=dev mix ecto.migrate
@@ -1082,3 +1092,22 @@ truncation point. Check flash content with browser_find({ selector =
 "#flash-error" }) / browser_get_text directly instead of dumping and grepping
 full HTML -- cost a mistaken "still reproduces" read on issue 258f0631 before
 the targeted check showed the error flash was there all along (hit 2026-10-11).
+
+## Provisioning agents on a candidate
+
+An in-app QA agent provisions its agents on the candidate itself, through the
+copy app's dev route (story 1143):
+
+```bash
+curl -s -X POST "<instance>/dev/qa-agents" \
+  -H 'content-type: application/json' \
+  -d '{"email": "<qa account email>", "password": "<password>", "roles": ["coding"]}' -D -
+```
+
+It records the candidate's own checkout as the project, the copy and the agents,
+and answers with `X-Project-ID` and `X-Agent-Id` headers to use against the
+candidate's `/mcp/harness`. It only works on a copy app (it refuses with
+`:not_a_copy_app` on main's), and only on builds that contain the route
+(afd5fda1a or later). Do not reach for `create_working_copy` through
+`call_mcp_server`: that needs a connected harness, which a candidate usually
+does not have.
