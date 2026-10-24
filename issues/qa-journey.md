@@ -69,7 +69,7 @@ All implement `CheckerBehaviour`, receive `%Project{}` as entity.
 |------|--------|
 | `requirements/qa_journey_plan_checker.ex` | `journey_plan.md` exists + valid via `Documents.create_dynamic_document` |
 | `requirements/qa_journey_execute_checker.ex` | `journey_result.md` exists + valid |
-| `requirements/qa_journey_wallaby_checker.ex` | At least one `*_test.exs` under `test/journeys/` via `Environments.glob` |
+| `requirements/qa_journey_wallaby_checker.ex` | At least one `*_test.exs` under `test/journeys/` via `ExecutionContexts.glob` |
 
 ### 5. Agent Tasks — 3 new files
 

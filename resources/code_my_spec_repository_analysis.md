@@ -451,7 +451,7 @@ Each session type has step implementations following `StepBehaviour`:
 | -------------------------------------------- | ---------------------------------------- |
 | `Agents.AgentTypes`                          | Registry of all agent types with prompts |
 | `Agents.Implementations.ClaudeCodeAgent`     | Claude Code CLI execution                |
-| `Environments.VSCode` / `Environments.Local` | Environment-specific execution           |
+| `ExecutionContexts.VSCode` / `ExecutionContexts.Local` | Environment-specific execution           |
 
 ### 5.4 Domain: Stories (Product Manager)
 

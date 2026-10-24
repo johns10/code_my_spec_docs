@@ -33,7 +33,7 @@ Test Suite
     ├── ExCliVcr (CLI recording)     ── records/replays System.cmd calls
     ├── ExVCR (HTTP recording)       ── records/replays HTTP requests
     ├── TestAdapter.Pool             ── pools pre-built Phoenix project copies
-    ├── RecordingEnvironment         ── test environment impl (filesystem ops)
+    ├── RecordingExecutionContext         ── test environment impl (filesystem ops)
     └── Fixture Files                ── cassettes, transcripts, source files
 ```
 

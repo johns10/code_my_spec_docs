@@ -147,7 +147,7 @@ Dependencies:
 - CodeMySpec.Issues.Projector
 - CodeMySpec.Issues.IssuesRepository
 - CodeMySpec.Documents
-- CodeMySpec.Environments
+- CodeMySpec.ExecutionContexts
 
 ### LocalServer
 **module**
@@ -223,7 +223,7 @@ Manages component requirement checking, persistence, and workflow queries. Requi
 Dependencies:
 - CodeMySpec.Sessions.SessionsRepository
 - CodeMySpec.Sessions.SessionStack
-- CodeMySpec.Environments
+- CodeMySpec.ExecutionContexts
 
 ### Spec
 **module**

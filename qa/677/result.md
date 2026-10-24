@@ -21,7 +21,7 @@ All 8 story 677 criterion files executed successfully:
 - Criterion 5757 (gate passes when project BDD spec plan exists) — pass
 - Criterion 5758 (gate blocks with plan-specific message when plan missing) — pass
 
-The spex suite drives the `EvaluateTask` MCP tool (criteria 5751, 5752, 5755, 5756, 5757, 5758) and the `InstallCredoChecks` MCP tool (criteria 5753, 5754) via in-process calls using in-memory `RecordingEnvironment` for checker tests and real filesystem temp dirs for install tests.
+The spex suite drives the `EvaluateTask` MCP tool (criteria 5751, 5752, 5755, 5756, 5757, 5758) and the `InstallCredoChecks` MCP tool (criteria 5753, 5754) via in-process calls using in-memory `RecordingExecutionContext` for checker tests and real filesystem temp dirs for install tests.
 
 ### Scenario 2: Local app health check
 

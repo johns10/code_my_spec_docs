@@ -10,7 +10,7 @@ Spex drive exactly one of these. Pick the one that matches the real user action.
 | OAuth / outbound HTTP | HTTP | `OAuthHelpers.do_google_callback/3` or `do_github_callback/3` | Yes — ReqCassette (via OAuthHelpers) |
 | Engineer uses local app (port 4003) | LiveView | `live(context.conn, ~p"/projects/...")` | No |
 | Engineer uses cloud SaaS (/app) | LiveView | `live(context.conn, "/app/...")` + `@endpoint CodeMySpecWeb.Endpoint` | No |
-| Agent writes a file to the project | Filesystem | `Environments.write_file(context.environment, "lib/foo.ex", content)` | No |
+| Agent writes a file to the project | Filesystem | `ExecutionContexts.write_file(context.execution_context, "lib/foo.ex", content)` | No |
 
 ---
 
@@ -130,13 +130,13 @@ Deeper: [surfaces.md — LiveView](surfaces.md#4-liveview-ui)
 ## Filesystem — 30-second skeleton
 
 ```elixir
-alias CodeMySpec.Environments
+alias CodeMySpec.ExecutionContexts
 
-:ok = Environments.write_file(context.environment, "lib/foo.ex", "defmodule Foo do\nend\n")
-{:ok, content} = Environments.read_file(context.environment, "lib/foo.ex")
+:ok = ExecutionContexts.write_file(context.execution_context, "lib/foo.ex", "defmodule Foo do\nend\n")
+{:ok, content} = ExecutionContexts.read_file(context.execution_context, "lib/foo.ex")
 ```
 
-`context.environment` is ready after `setup :setup_active_project`. Paths
+`context.execution_context` is ready after `setup :setup_active_project`. Paths
 are relative to `env.cwd` — no prefix needed.
 
 Deeper: [surfaces.md — in-memory filesystem](surfaces.md#3-in-memory-filesystem)

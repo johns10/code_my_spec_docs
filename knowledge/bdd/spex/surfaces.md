@@ -170,16 +170,16 @@ this for "the agent wrote a file" setup.
 **Operations:**
 
 ```elixir
-alias CodeMySpec.Environments
+alias CodeMySpec.ExecutionContexts
 
 # Write — agent writing a file
-:ok = Environments.write_file(context.environment, "lib/foo.ex", content)
+:ok = ExecutionContexts.write_file(context.execution_context, "lib/foo.ex", content)
 
 # Read — then_ observing file content after a generator ran
-{:ok, content} = Environments.read_file(context.environment, "lib/foo.ex")
+{:ok, content} = ExecutionContexts.read_file(context.execution_context, "lib/foo.ex")
 
 # Check existence
-true = Environments.file_exists?(context.environment, "test/foo_test.exs")
+true = ExecutionContexts.file_exists?(context.execution_context, "test/foo_test.exs")
 ```
 
 Paths are **relative to `env.cwd`**. Do not prefix with the absolute
@@ -188,7 +188,7 @@ to the same key when `env.cwd` is `/memfs/env-42`.
 
 **The environment is already wired up** by `setup_active_project`:
 
-- `context.environment` — the `InMemoryEnvironment` agent
+- `context.execution_context` — the `InMemoryExecutionContext` agent
 - `context.scope.environment` — same agent, also accessible from the scope
 - LiveViews that rebuild scope via `Scope.for_local_project/1` resolve to
   the same agent (registered by `Fixtures.register_environment/2`)
@@ -199,8 +199,8 @@ You do not need to create or register the environment yourself.
 
 ```elixir
 given_ "the agent has written an impl and its test into the project", context do
-  :ok = Environments.write_file(context.environment, "lib/foo.ex", impl_content())
-  :ok = Environments.write_file(context.environment, "test/foo_test.exs", test_content())
+  :ok = ExecutionContexts.write_file(context.execution_context, "lib/foo.ex", impl_content())
+  :ok = ExecutionContexts.write_file(context.execution_context, "test/foo_test.exs", test_content())
   {:ok, context}
 end
 
@@ -221,7 +221,7 @@ end
   file keys.
 - The stub dir at `context.scope.cwd` has only a `mix.exs` file on real
   disk. `File.read!` calls inside production code that bypass
-  `Environments.read_file/2` will fail during specs — that is intentional.
+  `ExecutionContexts.read_file/2` will fail during specs — that is intentional.
 
 **Real examples:**
 - `test/spex/127_*/criterion_5924_*.exs` — write spec + impl, sync, observe file row in LiveView
@@ -238,7 +238,7 @@ bridge:
 alias CodeMySpecSpex.Fixtures
 
 when_ "the agent edits a file and the watcher syncs it", context do
-  :ok = Environments.write_file(context.environment, "lib/foo.ex", new_content())
+  :ok = ExecutionContexts.write_file(context.execution_context, "lib/foo.ex", new_content())
   {:ok, _} = Fixtures.notify_file_changed(context.scope, "lib/foo.ex")
   {:ok, context}
 end

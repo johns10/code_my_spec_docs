@@ -12,7 +12,7 @@ The MCP surface under test is the local endpoint, which uses no user auth — sc
 
 ## Seeds
 
-No manual seeding required. The spex test framework sets up all fixtures in memory (InMemoryEnvironment) per-scenario via the shared givens and `Fixtures.*` helpers defined in `test/support/fixtures/code_my_spec_spex_fixtures.ex` and `test/support/fixtures/technical_strategy_fixtures.ex`.
+No manual seeding required. The spex test framework sets up all fixtures in memory (InMemoryExecutionContext) per-scenario via the shared givens and `Fixtures.*` helpers defined in `test/support/fixtures/code_my_spec_spex_fixtures.ex` and `test/support/fixtures/technical_strategy_fixtures.ex`.
 
 Run the full spex suite to exercise all criteria:
 

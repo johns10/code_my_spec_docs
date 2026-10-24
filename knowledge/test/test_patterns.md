@@ -37,7 +37,7 @@ defmodule MyFeatureTest do
   use CodeMySpec.DataCase, async: false
   use ExCliVcr
 
-  alias CodeMySpec.Environments.Environment
+  alias CodeMySpec.ExecutionContexts.ExecutionContext
   alias CodeMySpec.Support.TestAdapter
   import CodeMySpec.UsersFixtures
 
@@ -47,7 +47,7 @@ defmodule MyFeatureTest do
     scope = full_scope_fixture()
     {:ok, project_dir} = TestAdapter.clone(scope, @test_repo_url)
 
-    env = Environment.new(:local, project_dir)
+    env = ExecutionContext.new(:local, project_dir)
     scope = %{scope | environment: env, cwd: project_dir}
 
     on_exit(fn -> TestAdapter.checkin(project_dir) end)
@@ -63,7 +63,7 @@ end
 setup do
   tmp_dir = Path.join(System.tmp_dir!(), "my_test_#{:erlang.unique_integer([:positive])}")
   File.mkdir_p!(tmp_dir)
-  env = Environment.new(:local, tmp_dir)
+  env = ExecutionContext.new(:local, tmp_dir)
 
   scope = %Scope{
     environment: env,
@@ -83,7 +83,7 @@ end
 setup do
   tmp_dir = Path.join(System.tmp_dir!(), "session_test_#{:erlang.unique_integer([:positive])}")
   File.mkdir_p!(tmp_dir)
-  {:ok, env} = CodeMySpec.Environments.create(:local, working_dir: tmp_dir)
+  {:ok, env} = CodeMySpec.ExecutionContexts.create(:local, working_dir: tmp_dir)
 
   on_exit(fn -> File.rm_rf!(tmp_dir) end)
 
@@ -91,7 +91,7 @@ setup do
 end
 ```
 
-## Scope and Environment
+## Scope and ExecutionContext
 
 ### Scope
 
@@ -104,7 +104,7 @@ The `Scope` struct carries user context and working directory:
   active_account_id: "...",
   active_project: %Project{},
   active_project_id: "...",
-  environment: %Environment{},
+  environment: %ExecutionContext{},
   cwd: "/path/to/project"       # Runtime concern, NOT persisted
 }
 ```
@@ -115,10 +115,10 @@ The `Scope` struct carries user context and working directory:
 scope = %{scope | cwd: project_dir}
 ```
 
-### Environment
+### ExecutionContext
 
 ```elixir
-%Environment{
+%ExecutionContext{
   type: :local,        # :cli | :local | :vscode
   cwd: "/path",        # Working directory
   ref: %{},            # Type-specific references
@@ -126,7 +126,7 @@ scope = %{scope | cwd: project_dir}
 }
 ```
 
-Created via `Environment.new(:local, project_dir)` or `Environments.create(:local, working_dir: dir)`.
+Created via `ExecutionContext.new(:local, project_dir)` or `ExecutionContexts.create(:local, working_dir: dir)`.
 
 ### Testing without filesystem access
 

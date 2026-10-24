@@ -95,7 +95,7 @@ hooks, and QA attempts. Code comments point here by section name.
 
 ## Harness filesystem requests
 
-- `Analysis.harness_fs_request/4` is the `Environments.HarnessTransport`
+- `Analysis.harness_fs_request/4` is the `ExecutionContexts.HarnessTransport`
   implementation; it is declared in `Environments` (a leaf) to avoid a cycle.
 - Each failure has its own tag, because the fixes differ:
   `:harness_not_registered` (rejoin), `:harness_timeout` (accepted, never

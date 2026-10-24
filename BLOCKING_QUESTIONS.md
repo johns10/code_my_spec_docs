@@ -50,7 +50,7 @@ it could not see was with a process outside the analyzer entirely."
 **Q1 (analyzer test implementation) — build the real thing.** One module
 implementing the analyzer behaviour, swapped by config, returning recorded
 results. Replaces `test_output_files`, `use_cmd_cassette` and the
-`InMemoryEnvironment` shell passthrough for test purposes. Touches
+`InMemoryExecutionContext` shell passthrough for test purposes. Touches
 `Analysis.Runners`, `Compile`, `Tests`, `StaticRunner` and every test threading
 a fixture path. Note this and the item above converge — both end at "the
 analyzer owns how tests are invoked".
@@ -513,7 +513,7 @@ changes a lot of files.
   subprocess, but it is process-global, so it cannot be used from an
   `async: true` file without killing whatever else is running concurrently.
   That is the mechanism behind the `** (EXIT …) killed` phantoms.
-- `InMemoryEnvironment` — fakes the filesystem, deliberately **not** the shell
+- `InMemoryExecutionContext` — fakes the filesystem, deliberately **not** the shell
   (`defdelegate cmd(...) to: Local`), so cassettes intercept underneath.
 
 A genuine test implementation of the analyzer behaviour — one module, swapped

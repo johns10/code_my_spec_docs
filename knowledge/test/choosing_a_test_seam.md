@@ -11,7 +11,7 @@ in a row and broke nine unrelated tests doing it. Every trap below was paid for.
 | The test asserts on… | Reach for | Cost |
 |---|---|---|
 | A pure function's output — parsers, converters, renderers | Nothing. Call it with data. | None |
-| Files being read, written, globbed | `Environments.create(:memory, …)` | Writes must go through `Environments.write_file/3` |
+| Files being read, written, globbed | `ExecutionContexts.create(:memory, …)` | Writes must go through `ExecutionContexts.write_file/3` |
 | What the *pipeline decided* — blocking, demotion, staleness, freshness | Seed the decision's inputs; keep the analyzer from running at all | None, and it is usually free |
 | What a command actually *returned* | `use_cmd_cassette` | High — see below. Almost never right in a unit test |
 | The shell-out itself — that we invoke the analyzer correctly and parse real output | A real subprocess, in a tagged integration test | Slow, so keep the count small |
@@ -46,11 +46,11 @@ spawning processes whose output is discarded.
 
 ## The memory environment fakes the filesystem, not the shell
 
-`InMemoryEnvironment` deliberately delegates execution to Local:
+`InMemoryExecutionContext` deliberately delegates execution to Local:
 
 ```elixir
 @impl true
-defdelegate cmd(env, command, args, opts), to: CodeMySpec.Environments.Local
+defdelegate cmd(env, command, args, opts), to: CodeMySpec.ExecutionContexts.Local
 ```
 
 That is not an oversight — its docstring says so, and the reason is that
@@ -64,9 +64,9 @@ Consequences worth knowing before you reach for it:
   still shells out.
 - The scope you hand in is not always the scope that runs. The analyzer rebuilds one via
   `Scope.for_local_project/2`, which constructs a fresh `:local` environment when the
-  registry has nothing — so the env must also be `Environments.register/2`'d to take
+  registry has nothing — so the env must also be `ExecutionContexts.register/2`'d to take
   effect down that path.
-- `File.write!` is invisible to it. Writes go through `Environments.write_file/3`.
+- `File.write!` is invisible to it. Writes go through `ExecutionContexts.write_file/3`.
 
 ## Cassettes are a suite-wide mechanism, not a local one
 

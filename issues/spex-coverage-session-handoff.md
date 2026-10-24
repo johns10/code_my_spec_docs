@@ -49,7 +49,7 @@ on incoming events.
 ### Boundary tightening — Fixtures is now the only door
 
 - `CodeMySpecSpex.Fixtures` promoted to a top-level boundary with
-  `deps: [CodeMySpec, CodeMySpec.Environments, CodeMySpecTest]`.
+  `deps: [CodeMySpec, CodeMySpec.ExecutionContexts, CodeMySpecTest]`.
 - `CodeMySpecSpex` (the spex boundary itself) no longer depends on
   `CodeMySpec` or `CodeMySpec.Repo`. Current doors:
   `[Environments, McpServers, Fixtures, Web, LocalWeb]`.

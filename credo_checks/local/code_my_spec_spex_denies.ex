@@ -9,7 +9,7 @@ defmodule CodeMySpec.Check.Warning.CodeMySpecSpexDenies do
       (`_spex.exs`). Complements the framework-level function denies
       in `CodeMySpec.Check.Warning.SpexDeniedCalls`.
 
-      The `CodeMySpecSpex` boundary only deps on `CodeMySpec.Environments`,
+      The `CodeMySpecSpex` boundary only deps on `CodeMySpec.ExecutionContexts`,
       `CodeMySpec.McpServers`, `CodeMySpecSpex.Fixtures`, `CodeMySpecWeb`,
       and `CodeMySpecLocalWeb`. The Boundary compiler catches alias-form
       violations; this Credo check is a second net for fully-qualified
@@ -19,7 +19,7 @@ defmodule CodeMySpec.Check.Warning.CodeMySpecSpexDenies do
       Stdlib whole-module denies:
 
       - `File`, `:file` — the spec suite runs against an in-memory filesystem.
-        Real file I/O reaches past the `CodeMySpec.Environments` abstraction
+        Real file I/O reaches past the `CodeMySpec.ExecutionContexts` abstraction
         and lets a scenario "succeed" for the wrong reason.
       - `Port` — ports are for talking to external programs; use cassettes
         for CLI-driven pipeline steps instead.
@@ -36,7 +36,7 @@ defmodule CodeMySpec.Check.Warning.CodeMySpecSpexDenies do
       - Set up via `CodeMySpecSpex.Fixtures` (the curated bridge) or by
         driving the UI / hook surface that produces the state.
       - Observe via rendered HTML, HTTP response bodies, MCP tool
-        responses, or `CodeMySpec.Environments.read_file/2`.
+        responses, or `CodeMySpec.ExecutionContexts.read_file/2`.
 
       If a spec needs state that none of the above can produce, add a
       narrow function to `CodeMySpecSpex.Fixtures` — don't reach for the

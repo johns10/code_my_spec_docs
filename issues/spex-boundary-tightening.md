@@ -20,12 +20,12 @@ What's changed in the lead-in to this issue:
 
 1. **`CodeMySpecSpex.Fixtures` is now its own top-level boundary**
    (`test/support/fixtures/spex_fixtures.ex`), with
-   `deps: [CodeMySpec, CodeMySpec.Environments, CodeMySpecTest]`. The
+   `deps: [CodeMySpec, CodeMySpec.ExecutionContexts, CodeMySpecTest]`. The
    bridge is no longer nested inside `CodeMySpecSpex`, so the spex
    boundary itself does **not** depend on `CodeMySpec`.
 2. **`CodeMySpec` and `CodeMySpec.Repo` are removed from
    `CodeMySpecSpex`'s `deps:`** in `test/support/code_my_spec_spex.ex`.
-   The current door list is `[CodeMySpec.Environments,
+   The current door list is `[CodeMySpec.ExecutionContexts,
    CodeMySpec.McpServers, CodeMySpecSpex.Fixtures, CodeMySpecWeb,
    CodeMySpecLocalWeb]`.
 3. **The `Sync.sync_path/2` "file changed" event has been routed

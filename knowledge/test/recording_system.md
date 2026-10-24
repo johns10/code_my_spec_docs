@@ -100,8 +100,8 @@ Standard Elixir HTTP recording library. Used for GitHub API interactions (creati
 
 Cassettes stored in `test/fixtures/vcr_cassettes/`.
 
-## Test Environment (RecordingEnvironment)
+## Test Environment (RecordingExecutionContext)
 
-Location: `test/support/recording_environment.ex`
+Location: `test/support/recording_execution_context.ex`
 
-The default `EnvironmentsBehaviour` implementation for tests (configured in `config/test.exs`). Despite the name, it's primarily a local filesystem environment - it handles `read_file`, `write_file`, `glob`, `file_exists?`, etc. by resolving paths relative to the environment's `cwd`.
+The default `ExecutionContextsBehaviour` implementation for tests (configured in `config/test.exs`). Despite the name, it's primarily a local filesystem environment - it handles `read_file`, `write_file`, `glob`, `file_exists?`, etc. by resolving paths relative to the environment's `cwd`.

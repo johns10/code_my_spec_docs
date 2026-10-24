@@ -13,7 +13,8 @@ lessons that shaped it. Code comments point here by section name.
 | `Promotion.Steps` | The git/disk operations themselves (precheck, merge, submodule sync, tags, batch build). |
 | `PromotionQueue.Worker` | One project's queue: build a batch in the gate copy, gate, land or eject. |
 | `BootVersion` | Which commit a running process booted from; drift; which paths need a restart. |
-| `WorkingCopies` / `WorkingCopy` | The server-issued identity of one checkout, its main designation, preview and app state. |
+| `WorkingCopies` / `WorkingCopy` | The server-issued identity of one source checkout and its default agent-workspace designation. |
+| `AppInstances` / `AppInstance` | Independent runtime identities, lifecycle policies, health/revisions, preview endpoints, and destination promotion receipts. |
 | `Workspaces`, `PreviewAddress`, `PreviewTunnel`, `Runner.Local` | A project's cloud/bare-metal instance and its preview address and tunnel. |
 | `Projects` / `Project` | Project records, local-config resolution, deploy keys. |
 | `Migration` | Copies a project's authored records from a local harness to the cloud. |
@@ -54,6 +55,50 @@ publication is not a UAT or production release.
   `sync_working_copy` to retry a pending or failed main-device application.
 - Remote publication stamps identify the published commit. Historical local
   version-tag behavior below belongs to the retained bootstrap path.
+
+## Independent app instances
+
+An app instance is a runtime, not a working copy. Its UUID identifies the
+server record, harness process, saved runtime state, and app log. A source
+checkout can have several instances with separate ports and cloned databases.
+The authenticated working-copy channel still carries requests, but does not
+own their lifecycle; the harness-wide app supervisor does.
+
+`AppInstances` owns runtime state and scope-first lifecycle operations.
+`WorkingCopies` owns source identity, git state and agent placement. The
+project stores desired promotion intent; each app instance stores its own
+application receipt. Git synchronization remains a source operation.
+
+Policies are explicit: persistent or idle-stoppable, configured or allocated
+ports, configured or cloned database, and whether to run the after-promote
+hook. A newly created default instance derives initial policy from the source
+copy's main designation. Later designation changes do not rewrite runtime
+policy. Only the default instance writes the checkout's database-name hint;
+secondary instances keep their database choice with their runtime.
+
+Lifecycle tools accept an optional instance UUID, constrained to the caller's
+own source checkout. Omitting it resolves that checkout's default instance.
+Replies and background reports carry the instance UUID, and the channel
+validates project, device, source and request correlation before storing them.
+The channel contract is v3; deploy the server and harness together. Explicit
+v2 harnesses receive an upgrade refusal at join instead of runtime commands
+they cannot interpret.
+
+The cutover migration transfers runtime state, existing IDs, timestamps and
+encrypted tunnel credentials without decrypting them. New instances receive
+independent UUIDs. The harness adopts legacy root-keyed runtime state once,
+keeping the running process, port, database and log instead of launching a
+second app. Existing public preview addresses remain valid.
+
+Offboarding refuses persistent runtime dependencies unless the caller chooses
+`instance_disposition: "discard"`. It stops instances and releases preview
+routes before deleting their records and the source association. An unreachable
+instance reported as running remains a dependency; its source is not silently
+removed. Ordinary stopping leaves the checkout and database intact.
+
+Environment records, release selection and a device-level runtime transport
+are subsequent work. This extraction supplies the independent runtime resource
+for durable dev/UAT/prod environments and ephemeral QA attempts.
 
 ## Legacy local implementation reference
 

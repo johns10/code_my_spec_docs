@@ -104,7 +104,7 @@ defmodule MyFeatureTest do
   use CodeMySpec.DataCase, async: false
   use ExCliVcr
 
-  alias CodeMySpec.Environments.Environment
+  alias CodeMySpec.ExecutionContexts.ExecutionContext
   alias CodeMySpec.Support.TestAdapter
 
   import CodeMySpec.UsersFixtures
@@ -115,7 +115,7 @@ defmodule MyFeatureTest do
     scope = full_scope_fixture()
     {:ok, project_dir} = TestAdapter.clone(scope, @test_repo_url)
 
-    env = Environment.new(:local, project_dir)
+    env = ExecutionContext.new(:local, project_dir)
     scope = %{scope | environment: env, cwd: project_dir}
 
     on_exit(fn -> TestAdapter.checkin(project_dir) end)

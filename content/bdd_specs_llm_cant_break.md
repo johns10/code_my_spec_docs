@@ -148,7 +148,7 @@ Here's how it plays out on CodeMySpec:
 | Third-party HTTP (OAuth providers, etc.) | `Req` HTTP client | Record via `ReqCassette` |
 | Production filesystem reads/writes | Reads/writes working directory | In-memory filesystem implementation |
 
-In-memory filesystem on both sides because the abstraction is load-bearing in both directions. Production code writes through `Environments.write_file/3`; the in-memory implementation answers those calls in test. A code path that reaches `File.read!` directly fails the spec immediately because the in-memory environment has no answer for that call. The mock isn't a shortcut. It's the only way tests can honour the abstraction realistically, which forces production code to use it consistently.
+In-memory filesystem on both sides because the abstraction is load-bearing in both directions. Production code writes through `ExecutionContexts.write_file/3`; the in-memory implementation answers those calls in test. A code path that reaches `File.read!` directly fails the spec immediately because the in-memory environment has no answer for that call. The mock isn't a shortcut. It's the only way tests can honour the abstraction realistically, which forces production code to use it consistently.
 
 `ReqCassette` is a recording, not a mock. The cassette captures what the real OAuth provider returned the first time. On replay, the cassette fails if the production code makes a call that wasn't recorded, in the wrong order, or with different parameters. The model can't write a `Mox.expect` that quietly accepts any input. It makes the recorded calls or the spec fails.
 
@@ -233,7 +233,7 @@ defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
 
   use CodeMySpecSpex.Case
 
-  alias CodeMySpec.Environments
+  alias CodeMySpec.ExecutionContexts
 
   @broken_spec_path ".code_my_spec/spec/broken_context.spec.md"
 
@@ -244,7 +244,7 @@ defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
     scenario "spec missing the H1 title is marked invalid after sync" do
       given_ "the agent has written a spec file missing the required H1 title",
              context do
-        :ok = Environments.write_file(context.environment, @broken_spec_path, broken_spec())
+        :ok = ExecutionContexts.write_file(context.environment, @broken_spec_path, broken_spec())
         {:ok, context}
       end
 
@@ -274,7 +274,7 @@ defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
 end
 ```
 
-The spec exercises both users in one scenario. The `given_` step drives the **agent** surface: `Environments.write_file/3` writes a file into the in-memory environment. The `when_` step drives the **engineer** surface: mount the Files LiveView with `live/2`, click the sync button with `element/2 |> render_click/1`. The `then_` step reads what the engineer sees on the page after sync runs: `has_element?/2` against the rendered DOM with a `data-file-path` selector that points at the broken spec's row.
+The spec exercises both users in one scenario. The `given_` step drives the **agent** surface: `ExecutionContexts.write_file/3` writes a file into the in-memory environment. The `when_` step drives the **engineer** surface: mount the Files LiveView with `live/2`, click the sync button with `element/2 |> render_click/1`. The `then_` step reads what the engineer sees on the page after sync runs: `has_element?/2` against the rendered DOM with a `data-file-path` selector that points at the broken spec's row.
 
 The whole spec routes through `Environments`, the LiveView, and the rendered HTML. If the production sync pipeline reaches `File.read!` directly or skips the projection step, this spec fails immediately
 

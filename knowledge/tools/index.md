@@ -271,7 +271,7 @@ surface itself), and the Google tools on their own servers.
 
 - **"Could not look" is not "not there".** Under a light harness the server
   holds no working copy and every file operation answers `:no_environment`.
-  `Environments.unobservable?/1` is the one list of such replies; checkers ask
+  `ExecutionContexts.unobservable?/1` is the one list of such replies; checkers ask
   it rather than keeping their own.
 - **Checkers pass unobservable errors through, not as `:invalid`**, so
   `TaskEvaluator` can name the task, type and working copy. It still blocks:

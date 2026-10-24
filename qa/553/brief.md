@@ -10,7 +10,7 @@ No auth required. Tests run via `mix spex` which boots the test environment dire
 
 ## Seeds
 
-No seeds required. Spex tests use `RecordingEnvironment` and tmp directories — no database fixtures needed.
+No seeds required. Spex tests use `RecordingExecutionContext` and tmp directories — no database fixtures needed.
 
 ## What To Test
 

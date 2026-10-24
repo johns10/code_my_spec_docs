@@ -10,7 +10,7 @@ Local endpoint (port 4004): no user auth required. `WorkingDirScope` resolves fr
 
 ## Seeds
 
-No seeds required for the BDD scenarios — each spex scenario builds its own fixture environment using `Environments.write_file/3` + the sync LiveView in-process. The live project uses the standard checkout at `/Users/johndavenport/Documents/github/code_my_spec`.
+No seeds required for the BDD scenarios — each spex scenario builds its own fixture environment using `ExecutionContexts.write_file/3` + the sync LiveView in-process. The live project uses the standard checkout at `/Users/johndavenport/Documents/github/code_my_spec`.
 
 ## What To Test
 

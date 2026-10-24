@@ -157,10 +157,10 @@ Only override when the task needs custom orchestration (e.g., QaStory writes pha
 Use `Environments` for all filesystem access. Never use raw `File` module calls. This enables testing with virtual filesystems.
 
 ```elixir
-Environments.read_file(env, path)
-Environments.write_file(env, path, content)
-Environments.file_exists?(env, path)
-Environments.glob(env, pattern)
+ExecutionContexts.read_file(env, path)
+ExecutionContexts.write_file(env, path, content)
+ExecutionContexts.file_exists?(env, path)
+ExecutionContexts.glob(env, pattern)
 ```
 
 ### Registration

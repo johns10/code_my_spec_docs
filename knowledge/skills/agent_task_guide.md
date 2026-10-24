@@ -16,7 +16,7 @@ Everything skill design teaches still applies. This guide tells you which skill 
 | `description` (routing signal) | `orchestrate/1` return string |
 | `SKILL.md` body | `command/2` return prompt |
 | `references/foo.md` | `priv/knowledge/**.md`, referenced by direct path in the prompt (preferred) or via the knowledge MCP `semantic_search` (discovery only) |
-| `scripts/foo.py` | Helper modules + `Environments.*` functions (no first-class script convention) |
+| `scripts/foo.py` | Helper modules + `ExecutionContexts.*` functions (no first-class script convention) |
 | `allowed-tools` | MCP tools documented in prose inside the prompt |
 | Per-skill stop hook *(doesn't exist on Claude Code)* | `evaluate/2` + the unified `Evaluator` |
 | Progressive disclosure tiers | The way `command/2` writes its prompt (see below) |

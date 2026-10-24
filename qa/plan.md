@@ -932,7 +932,7 @@ lever, so the criteria stay spex-covered.
 To exercise these live you need a real file write inside the task window —
 PostToolUse attribution is what puts a path in `changed_files` — which means a
 real agent edit or a `mix`-driven write, not a curl. The spex do exactly that:
-`Environments.write_file` plus `use_cmd_cassette`, which is why they cover
+`ExecutionContexts.write_file` plus `use_cmd_cassette`, which is why they cover
 these two and QA does not.
 
 If this becomes worth reaching from QA, the two routes are a seed that

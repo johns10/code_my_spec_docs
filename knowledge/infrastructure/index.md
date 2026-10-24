@@ -11,8 +11,8 @@ Code comments point here by section name.
 | Module | Role |
 |---|---|
 | `Deploys` | Read model of what is deployed per story and environment; the `deploy` requirement's checker. |
-| `Environments` | Execution primitives (files, commands) over an opaque `Environment`, dispatched by type. |
-| `Environments.EnvironmentsBehaviour` | The contract every environment implementation meets. |
+| `ExecutionContexts` | Execution primitives (files, commands) over an opaque `ExecutionContext`, dispatched by type. |
+| `ExecutionContexts.ExecutionContextsBehaviour` | The contract every environment implementation meets. |
 | `Generators.DeployArtifacts` | Writes the deploy artifacts a project is missing. |
 | `Generators.DeployBoilerplate` | Audits a project for those artifacts and their deploy traps. |
 | `Integrations` | OAuth and API-key provider connections; token freshness and refresh. |
@@ -46,14 +46,30 @@ Code comments point here by section name.
   (`record/4` has callers of its own). The event names the story; a row with
   no story names nothing and recomputes the project.
 
-## Execution environments
+## Execution contexts
+
+`CodeMySpec.ExecutionContexts` dispatches filesystem and command operations
+through `%CodeMySpec.ExecutionContexts.ExecutionContext{}`. This is execution
+location and transport, separate from deployment environments such as dev,
+UAT, and prod. Local/CLI adapter configuration uses `:execution_context_adapter`;
+container overrides use `:container_execution_context_adapter`.
+
+`WorkingCopies.execution_context/1` resolves the explicitly selected working
+copy in the active project. Missing, mismatched, or unrooted copies return nil;
+it does not choose Main or another checkout. Remote agent access should build
+on this explicit target selection and the existing harness transport.
+`WorkingCopies.tool_execution_context/2` additionally supports a configured
+stdio working directory when no working copy was selected.
+
+Execution options and setup context fields use `execution_context:`.
+The existing `:no_environment` error is retained for caller compatibility.
 
 - Types: `:cli`, `:local` (local filesystem; `Cli` delegates `cmd` to
   `Local`), `:container`, `:harness` (a working copy on another machine, over
   its channel; not configurable, since swapping it means swapping the
   transport), `:memory` (spex). `impl/1` has no catch-all: an unknown type
   raises `FunctionClauseError`.
-- A `nil` environment is the server with no local working copy, and every
+- A `nil` execution context is the server with no local working copy, and every
   file operation answers rather than raising: `{:error, :no_environment}`,
   `[]` for `glob`/`stream_files`, `false` for `file_exists?`, `{"no
   environment", 1}` for `cmd`. Before this, task prompts for whole classes of

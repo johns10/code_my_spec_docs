@@ -107,7 +107,7 @@ scope = %Users.Scope{
   active_project: project,
   active_project_id: project.id,
   cwd: project.local_path,
-  environment: CodeMySpec.Environments.Environment.new(:local, project.local_path)
+  environment: CodeMySpec.ExecutionContexts.ExecutionContext.new(:local, project.local_path)
 }
 
 frame = %Frame{assigns: %{current_scope: scope, working_dir: project.local_path}}
@@ -151,7 +151,7 @@ Run it:
 mix run --no-compile /tmp/smoke.exs 2>&1 | grep -E "^===|^\[(OK|ERR|RAISE)"
 ```
 
-Always use `--no-compile` — a running `mix phx.server` holds the `_build/` lock and a plain `mix run` will trip over `CodeMySpec.Environments.registry_child_spec/0 is undefined`. The `--no-compile` flag bypasses the re-compile that would otherwise conflict.
+Always use `--no-compile` — a running `mix phx.server` holds the `_build/` lock and a plain `mix run` will trip over `CodeMySpec.ExecutionContexts.registry_child_spec/0 is undefined`. The `--no-compile` flag bypasses the re-compile that would otherwise conflict.
 
 Filter `grep -v "^\[debug\]\|^SELECT\|^↳\|^\[90m"` when output is too noisy.
 

@@ -417,7 +417,7 @@ Code comments point here by section name.
   nothing about existing ciphertext. `public_key/1` lets the stored private
   key be checked against the recipient.
 - sops resolves `.sops.yaml` from its cwd, so it runs from the project root
-  with relative paths, through `Environments.cmd/4`.
+  with relative paths, through `ExecutionContexts.cmd/4`.
 
 ## Onboarding a legacy app's secrets
 
@@ -458,7 +458,7 @@ Code comments point here by section name.
   duplicate" works without the caller knowing it.
 - Repositories are created private and empty (no `auto_init`).
 - `push/3` inits, commits, sets the remote and pushes through
-  `Environments.cmd/4`. It refuses to repoint an `origin` that names a
+  `ExecutionContexts.cmd/4`. It refuses to repoint an `origin` that names a
   different repository (SSH/HTTPS forms compare equal): a misconfigured
   working directory once republished a real checkout's history and rewrote
   origin for every worktree.

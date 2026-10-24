@@ -1,7 +1,7 @@
 # Project Setup — Fixtures
 
 Reference for `CodeMySpec.Support.SetupFixtures`, the helper that drives
-an `InMemoryEnvironment` into a state where named setup step modules
+an `InMemoryExecutionContext` into a state where named setup step modules
 evaluate `{:ok, :valid}`.
 
 ## Step → state required
@@ -40,10 +40,10 @@ that satisfies the step evaluators. Fine for this use case. If we ever
 need to actually `mix deps.get` or compile against the fixture, swap
 the append strategy for a template.
 
-### `InMemoryEnvironment` directory semantics
+### `InMemoryExecutionContext` directory semantics
 
 `file_exists?/2` returns true for any path that either exists as a file
-OR has descendants (`in_memory_environment.ex:78-86`). To satisfy
+OR has descendants (`in_memory_execution_context.ex:78-86`). To satisfy
 `ProjectStructure`, write `.keep` files under the required directories
 — no explicit directory creation needed.
 
@@ -101,19 +101,19 @@ See `specs.md` for the invocation pattern. Location:
 ```elixir
 defmodule CodeMySpec.Support.SetupFixtures do
   @moduledoc """
-  Seeds an InMemoryEnvironment so named setup step modules evaluate
+  Seeds an InMemoryExecutionContext so named setup step modules evaluate
   `{:ok, :valid}`. Additive — `satisfy/3` can be called multiple times
   to simulate incremental completion.
   """
 
   alias CodeMySpec.AgentTasks.Setup
-  alias CodeMySpec.Environments
-  alias CodeMySpec.Environments.Environment
+  alias CodeMySpec.ExecutionContexts
+  alias CodeMySpec.ExecutionContexts.ExecutionContext
 
   @app_name "my_app"
   @app_mod "MyApp"
 
-  @spec satisfy(Environment.t(), [module()]) :: :ok
+  @spec satisfy(ExecutionContext.t(), [module()]) :: :ok
   def satisfy(env, steps) do
     ensure_baseline_mix_exs(env)
     Enum.each(steps, &satisfy_step(env, &1))
@@ -122,16 +122,16 @@ defmodule CodeMySpec.Support.SetupFixtures do
 
   # Per-step clauses — see Step→state table above for file contents.
   defp satisfy_step(env, Setup.ApplicationInWeb),
-    do: Environments.write_file(env, "lib/#{@app_name}_web/application.ex", "# stub\n")
+    do: ExecutionContexts.write_file(env, "lib/#{@app_name}_web/application.ex", "# stub\n")
 
   defp satisfy_step(env, Setup.CodemyspecDeps), do: amend_mix_exs(env, :deps)
   defp satisfy_step(env, Setup.Compilers), do: amend_mix_exs(env, :compilers)
   defp satisfy_step(env, Setup.SpexConfig), do: amend_mix_exs(env, :spex_config)
 
   defp satisfy_step(env, Setup.TestBoundaries) do
-    Environments.write_file(env, "test/support/#{@app_name}_spex.ex",
+    ExecutionContexts.write_file(env, "test/support/#{@app_name}_spex.ex",
       "defmodule #{@app_mod}Spex do\n  use Boundary\nend\n")
-    Environments.write_file(env, "test/support/#{@app_name}_test_boundary.ex",
+    ExecutionContexts.write_file(env, "test/support/#{@app_name}_test_boundary.ex",
       "defmodule #{@app_mod}Test do\n  use Boundary\nend\n")
   end
 
@@ -140,7 +140,7 @@ defmodule CodeMySpec.Support.SetupFixtures do
   defp satisfy_step(_env, Setup.TestSupportNamespace), do: :ok
 
   defp satisfy_step(env, Setup.SpexCase) do
-    Environments.write_file(env, "test/support/#{@app_name}_spex_case.ex", """
+    ExecutionContexts.write_file(env, "test/support/#{@app_name}_spex_case.ex", """
     defmodule #{@app_mod}Spex.Case do
       use SexySpex
       import Phoenix.LiveViewTest
@@ -149,24 +149,24 @@ defmodule CodeMySpec.Support.SetupFixtures do
   end
 
   defp satisfy_step(env, Setup.ProjectStructure) do
-    Environments.write_file(env, ".code_my_spec/rules/.keep", "")
-    Environments.write_file(env, ".code_my_spec/spec/#{@app_name}/.keep", "")
-    Environments.write_file(env, ".code_my_spec/spec/#{@app_name}_web/.keep", "")
+    ExecutionContexts.write_file(env, ".code_my_spec/rules/.keep", "")
+    ExecutionContexts.write_file(env, ".code_my_spec/spec/#{@app_name}/.keep", "")
+    ExecutionContexts.write_file(env, ".code_my_spec/spec/#{@app_name}_web/.keep", "")
   end
 
   defp satisfy_step(env, Setup.IgnoredPaths) do
-    Environments.write_file(env, ".code_my_spec/config.yml",
+    ExecutionContexts.write_file(env, ".code_my_spec/config.yml",
       "ignored_paths:\n  - lib/#{@app_name}/repo.ex\n")
   end
 
   defp satisfy_step(env, Setup.AgentsMd),
-    do: Environments.write_file(env, ".code_my_spec/AGENTS.md", "# Agents\n")
+    do: ExecutionContexts.write_file(env, ".code_my_spec/AGENTS.md", "# Agents\n")
 
   defp satisfy_step(env, Setup.Rules),
-    do: Environments.write_file(env, ".code_my_spec/rules/default.md", "# Rule\n")
+    do: ExecutionContexts.write_file(env, ".code_my_spec/rules/default.md", "# Rule\n")
 
   defp satisfy_step(env, Setup.CredoChecks) do
-    Environments.write_file(env, ".credo.exs", """
+    ExecutionContexts.write_file(env, ".credo.exs", """
     %{configs: [%{
       requires: [
         ".code_my_spec/credo_checks/framework/**/*.ex",
@@ -182,14 +182,14 @@ defmodule CodeMySpec.Support.SetupFixtures do
   end
 
   defp satisfy_step(env, Setup.ClaudeMd),
-    do: Environments.write_file(env, "CLAUDE.md",
+    do: ExecutionContexts.write_file(env, "CLAUDE.md",
           "# CLAUDE\n<!-- code_my_spec:start -->\nmanaged\n<!-- code_my_spec:end -->\n")
 
   # --- mix.exs baseline + amendments ---
 
   defp ensure_baseline_mix_exs(env) do
-    unless Environments.file_exists?(env, "mix.exs") do
-      Environments.write_file(env, "mix.exs", """
+    unless ExecutionContexts.file_exists?(env, "mix.exs") do
+      ExecutionContexts.write_file(env, "mix.exs", """
       defmodule #{@app_mod}.MixProject do
         use Mix.Project
         def project, do: [app: :#{@app_name}, version: "0.0.1"]
@@ -223,11 +223,11 @@ defmodule CodeMySpec.Support.SetupFixtures do
   end
 
   defp append_if_missing(env, path, marker, snippet) do
-    {:ok, content} = Environments.read_file(env, path)
+    {:ok, content} = ExecutionContexts.read_file(env, path)
 
     if String.contains?(content, marker),
       do: :ok,
-      else: Environments.write_file(env, path, content <> snippet)
+      else: ExecutionContexts.write_file(env, path, content <> snippet)
   end
 end
 ```
@@ -236,4 +236,4 @@ end
 
 - **mix.exs amendments are string-append hacks, not real Elixir.** Acceptable because no step tries to compile the file. If that changes, swap to a template.
 - **`CredoChecks` fixture reproduces a nontrivial content block verbatim.** If the step's expected substrings drift, the fixture silently breaks. Accept for now.
-- **`InMemoryEnvironment` doesn't implement `ensure_dir` beyond a no-op.** Fixtures rely on "file under path = path exists as dir" semantics. Confirmed behavior today, but it's load-bearing.
+- **`InMemoryExecutionContext` doesn't implement `ensure_dir` beyond a no-op.** Fixtures rely on "file under path = path exists as dir" semantics. Confirmed behavior today, but it's load-bearing.

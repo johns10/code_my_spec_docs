@@ -27,7 +27,7 @@ test/
 │   │   └── ...
 │   ├── test_adapter.ex         Fixture repo manager
 │   ├── test_adapter/pool.ex    Pool GenServer
-│   ├── recording_environment.ex  Test environment (filesystem ops)
+│   ├── recording_execution_context.ex  Test environment (filesystem ops)
 │   ├── data_case.ex            Database test case template
 │   └── conn_case.ex            Web/LiveView test case template
 ```

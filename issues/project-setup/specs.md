@@ -8,7 +8,7 @@ which (post-refactor) renders `ProjectSetup.command/2` output.
 
 - **Case template:** `use CodeMySpecLocalWeb.ConnCase`
 - **LiveView helpers:** `import Phoenix.LiveViewTest`
-- **Environment:** `CodeMySpec.Support.InMemoryEnvironment`
+- **Environment:** `CodeMySpec.Support.InMemoryExecutionContext`
 - **Scope wiring:** register the in-memory env per project via the
   environment registry so `Scope.for_local_project/1` (called by the
   LiveView) returns the same env the test seeded.
@@ -19,12 +19,12 @@ Add to `test/support/shared_givens.ex`:
 
 ```elixir
 given_ :project_with_in_memory_env, context do
-  {:ok, env} = CodeMySpec.Support.InMemoryEnvironment.create(working_dir: "/memfs")
+  {:ok, env} = CodeMySpec.Support.InMemoryExecutionContext.create(working_dir: "/memfs")
   project = project_fixture(%{local_path: "/memfs", name: "setup-spec"})
-  CodeMySpec.Environments.register(project.id, env)
+  CodeMySpec.ExecutionContexts.register(project.id, env)
   on_exit(fn ->
-    CodeMySpec.Environments.unregister(project.id)
-    CodeMySpec.Support.InMemoryEnvironment.destroy(env)
+    CodeMySpec.ExecutionContexts.unregister(project.id)
+    CodeMySpec.Support.InMemoryExecutionContext.destroy(env)
   end)
   {:ok, Map.merge(context, %{env: env, project: project})}
 end

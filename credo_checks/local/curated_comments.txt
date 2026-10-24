@@ -95,8 +95,8 @@ lib/code_my_spec/dev_state.ex
 lib/code_my_spec/devices.ex
 lib/code_my_spec/embeddings/hetzner_flame_backend.ex
 lib/code_my_spec/embeddings/hex_doc_reconciler.ex
-lib/code_my_spec/environments.ex
-lib/code_my_spec/environments/environments_behaviour.ex
+lib/code_my_spec/execution_contexts.ex
+lib/code_my_spec/execution_contexts/execution_contexts_behaviour.ex
 lib/code_my_spec/epic_dispatch.ex
 lib/code_my_spec/files.ex
 lib/code_my_spec/files/component_sync.ex
