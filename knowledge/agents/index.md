@@ -1,5 +1,7 @@
 # Agents core
 
+Main's resource access is separate from its runtime home: see [working-copy attachments](attachments.md).
+
 How the server runs the agents that work a project: which agents exist and on
 which checkout, how they start, stop and restart, how the main agent watches
 the fleet and settles questions, and how work is offered and admitted as

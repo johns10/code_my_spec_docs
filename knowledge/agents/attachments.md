@@ -1,0 +1,17 @@
+# Main's working-copy attachments
+
+Stories 1148 and 1149 separate Main's runtime home from the copies it can access. An attachment is an authorized resource relationship, not a new agent, conversation, working copy or app instance. Main can hold several attachments while Coding and QA retain their existing assignments.
+
+`CodeMySpec.AgentAttachments` owns the `agent_working_copy_attachments` rows. Every call validates the caller's Main role and project/account scope. Target copies must belong to that project. The caller identity comes from trusted tool context, never an agent or session ID supplied as a tool argument. Connecting contacts an online harness with attachment capability before recording success. Unsupported or offline targets fail immediately.
+
+The tools are `connect_working_copy`, `list_working_copy_attachments`, `disconnect_working_copy` and `work_in_copy`. Discovery uses `list_working_copies`, including device identity. Every execution request names its attachment; neither ambient cwd nor another copy is a fallback. Operations cover read, list, write, literal search and executable-plus-arguments commands. These are direct harness operations, not requests for another reasoning agent to do the work.
+
+The existing `fs_request` transport carries attachment operations. `CmsHarness.Attachments` creates an ephemeral session keyed by the channel's authoritative root and attachment ID. Requests execute asynchronously so disconnect can cancel running work. File paths are relative; traversal and symlink components are rejected. Commands run with the target cwd and existing child-environment cleanup. Output is bounded to 1 MiB, with a bounded execution timeout.
+
+An explicit disconnect revokes the attachment and terminates only its owned execution. Command launchers stay owned after foreground completion so ordinary background descendants can also be terminated. POSIX cleanup uses process groups; Windows uses the owned live parent with `taskkill /T /F`. The copy, other attachments and independent Coding/QA agents survive. No arbitrary daemon or sandbox escape containment is promised.
+
+Unexpected transport loss simply fails the pending interaction. Remote work may continue. This phase intentionally has no automatic retry, output replay, operation ledger or reconciliation; it must not claim an unobserved command succeeded or stopped. This is the product decision from Three Amigos, superseding the richer recovery proposal in the distributed-harness research.
+
+Detached onboarding Main attaches to the first working copy without changing its identity, conversation, runtime home or process. Product's existing relocation path is unchanged. Native provider adapter replacement and cross-host native-session migration are not part of this slice.
+
+The acceptance suite uses real tools, domain code and device runtime with in-process delivery between isolated roots. That is not proof of two-host channel operation or provider-native continuity. Record remote drill evidence separately and preserve this distinction.
