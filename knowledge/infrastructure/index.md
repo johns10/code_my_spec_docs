@@ -1,5 +1,7 @@
 # Infrastructure
 
+See [machine identity](machine-identity.md) for the unified server/device model.
+
 The modules around provisioning: what is deployed where, the servers and
 provider resources an account holds, the deploy artifacts a project carries,
 the OAuth integrations that act on the user's accounts, the execution
@@ -283,7 +285,7 @@ The existing `:no_environment` error is retained for caller compatibility.
 ## Servers
 
 - Servers belong to the account, not a project; a project environment points
-  at one by `server_name` (written by a successful setup run) or `server_id`
+  at one by `server_name` (written by a successful setup run) or `device_id`
   (written immediately by linking). `environments_on/2` matches both.
 - Linking touches nothing on the box — it is used on boxes already serving.
 - `list/1` is the provider's answer merged with our links: linked but
@@ -303,8 +305,8 @@ The existing `:no_environment` error is retained for caller compatibility.
 - Containers are attributed to projects by exact service name (`<app>` for
   prod, `<app>-<env>` otherwise; `<app>` as the slug or the kebabed module
   name). Unplaceable containers keep `project_id: nil`.
-- Environment labels are free strings; `prod`/`uat` are suggestions.
-- `retire/2` refuses while any project points at the server.
+- Machine purpose labels are free strings; `prod`/`uat` are suggestions. Devices owns the record; Servers supplies provider operations.
+- `retire/2` refuses while any project points at the machine, then clears the provider link without deleting its device identity or harness credentials.
 
 ## Plugin packaging
 
