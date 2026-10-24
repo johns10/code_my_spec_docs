@@ -1,0 +1,2 @@
+{"probe":"two_independent_cached_ledger_instances","firstDuplicate":false,"secondDuplicate":false,"conclusion":"not a multi-instance lease"}
+{"probe":"unmarked_ambiguous_adapter_error","simulatedSideEffects":2,"conclusion":"adapter must explicitly classify uncertain dispatch failures"}

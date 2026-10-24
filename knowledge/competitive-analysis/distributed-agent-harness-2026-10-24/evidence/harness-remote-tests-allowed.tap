@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: journal observation stays read-only until explicit claim, then prompt reuses the acquired writer
+ok 1 - journal observation stays read-only until explicit claim, then prompt reuses the acquired writer
+  ---
+  duration_ms: 4.089625
+  type: 'test'
+  ...
+# Subtest: failed writer acquisition does not leave phantom ownership and can be retried
+ok 2 - failed writer acquisition does not leave phantom ownership and can be retried
+  ---
+  duration_ms: 1.310417
+  type: 'test'
+  ...
+# Subtest: compatibility adoption never substitutes for a real Session-first writer claim
+ok 3 - compatibility adoption never substitutes for a real Session-first writer claim
+  ---
+  duration_ms: 0.251208
+  type: 'test'
+  ...
+# Subtest: an ACP Session already opened successfully by this daemon can be claimed without a second load
+ok 4 - an ACP Session already opened successfully by this daemon can be claimed without a second load
+  ---
+  duration_ms: 0.13125
+  type: 'test'
+  ...
+# Subtest: claim refuses a native Session that no longer exists
+ok 5 - claim refuses a native Session that no longer exists
+  ---
+  duration_ms: 0.10625
+  type: 'test'
+  ...
+# Subtest: a claimed native Session is forgotten when its adapter exits, so Stop reloads it
+ok 6 - a claimed native Session is forgotten when its adapter exits, so Stop reloads it
+  ---
+  duration_ms: 4.820291
+  type: 'test'
+  ...
+# Subtest: one agent's adapter exit does not drop another agent's writer claims
+ok 7 - one agent's adapter exit does not drop another agent's writer claims
+  ---
+  duration_ms: 1.171708
+  type: 'test'
+  ...
+# Subtest: the operation ledger reports unresolved mutations without exposing prompt content
+ok 8 - the operation ledger reports unresolved mutations without exposing prompt content
+  ---
+  duration_ms: 0.418833
+  type: 'test'
+  ...
+# Subtest: native Session claim targets the exact agent and existing Session id
+ok 9 - native Session claim targets the exact agent and existing Session id
+  ---
+  duration_ms: 31.245208
+  type: 'test'
+  ...
+# Subtest: native writer refusal is a conflict and never falls through to another route
+ok 10 - native writer refusal is a conflict and never falls through to another route
+  ---
+  duration_ms: 7.830792
+  type: 'test'
+  ...
+# Subtest: replaying one accepted client request id dispatches one native prompt
+ok 11 - replaying one accepted client request id dispatches one native prompt
+  ---
+  duration_ms: 22.172166
+  type: 'test'
+  ...
+# Subtest: replaying one accepted slash command dispatches once and changed arguments conflict
+ok 12 - replaying one accepted slash command dispatches once and changed arguments conflict
+  ---
+  duration_ms: 11.717541
+  type: 'test'
+  ...
+# Subtest: native Session prompt validates and includes image attachments in the idempotent operation
+ok 13 - native Session prompt validates and includes image attachments in the idempotent operation
+  ---
+  duration_ms: 16.462709
+  type: 'test'
+  ...
+# Subtest: native Session prompt rejects unsupported or oversized attachment input before dispatch
+ok 14 - native Session prompt rejects unsupported or oversized attachment input before dispatch
+  ---
+  duration_ms: 6.452
+  type: 'test'
+  ...
+# Subtest: concurrent retries converge before a second native prompt can start
+ok 15 - concurrent retries converge before a second native prompt can start
+  ---
+  duration_ms: 13.1855
+  type: 'test'
+  ...
+# Subtest: same client request id with different prompt is rejected without redispatch
+ok 16 - same client request id with different prompt is rejected without redispatch
+  ---
+  duration_ms: 11.001625
+  type: 'test'
+  ...
+# Subtest: ambiguous native delivery is retained as uncertain and is never replayed
+ok 17 - ambiguous native delivery is retained as uncertain and is never replayed
+  ---
+  duration_ms: 12.939208
+  type: 'test'
+  ...
+# Subtest: definite pre-accept rejection removes the ledger entry so the same request can retry
+ok 18 - definite pre-accept rejection removes the ledger entry so the same request can retry
+  ---
+  duration_ms: 11.757167
+  type: 'test'
+  ...
+# Subtest: replaying one accepted Stop request dispatches one native cancel
+ok 19 - replaying one accepted Stop request dispatches one native cancel
+  ---
+  duration_ms: 10.52425
+  type: 'test'
+  ...
+# Subtest: concurrent Stop retries converge before a second native cancel can start
+ok 20 - concurrent Stop retries converge before a second native cancel can start
+  ---
+  duration_ms: 8.096083
+  type: 'test'
+  ...
+# Subtest: a Stop request id cannot be reused for a later turn token
+ok 21 - a Stop request id cannot be reused for a later turn token
+  ---
+  duration_ms: 10.123
+  type: 'test'
+  ...
+# Subtest: ambiguous Stop delivery is retained as uncertain and never replayed
+ok 22 - ambiguous Stop delivery is retained as uncertain and never replayed
+  ---
+  duration_ms: 9.85425
+  type: 'test'
+  ...
+# Subtest: Stop before ACP claim is a conflict and never becomes accepted
+ok 23 - Stop before ACP claim is a conflict and never becomes accepted
+  ---
+  duration_ms: 11.826041
+  type: 'test'
+  ...
+# Subtest: unknown agent maps to 404 and unrelated requests delegate unchanged
+ok 24 - unknown agent maps to 404 and unrelated requests delegate unchanged
+  ---
+  duration_ms: 5.109208
+  type: 'test'
+  ...
+# Subtest: native Session operation routes accept POST only
+ok 25 - native Session operation routes accept POST only
+  ---
+  duration_ms: 8.299042
+  type: 'test'
+  ...
+# Subtest: accepted native Session prompt survives daemon restart and deduplicates retry
+ok 26 - accepted native Session prompt survives daemon restart and deduplicates retry
+  ---
+  duration_ms: 10.803
+  type: 'test'
+  ...
+# Subtest: accepted operation result survives restart so resource-creating retries return the same native Session
+ok 27 - accepted operation result survives restart so resource-creating retries return the same native Session
+  ---
+  duration_ms: 4.258458
+  type: 'test'
+  ...
+# Subtest: pending operation survives restart and is never automatically replayed
+ok 28 - pending operation survives restart and is never automatically replayed
+  ---
+  duration_ms: 2.965459
+  type: 'test'
+  ...
+# Subtest: same client request id cannot be reused for different prompt payload
+ok 29 - same client request id cannot be reused for different prompt payload
+  ---
+  duration_ms: 2.9595
+  type: 'test'
+  ...
+# Subtest: uncertain operation recovery hint survives restart
+ok 30 - uncertain operation recovery hint survives restart
+  ---
+  duration_ms: 3.348917
+  type: 'test'
+  ...
+# Subtest: safe pre-dispatch failure removes the pending record while ambiguous failure preserves it
+ok 31 - safe pre-dispatch failure removes the pending record while ambiguous failure preserves it
+  ---
+  duration_ms: 5.211542
+  type: 'test'
+  ...
+# Subtest: runIdempotentMutation executes dispatch and deduplicates retries
+ok 32 - runIdempotentMutation executes dispatch and deduplicates retries
+  ---
+  duration_ms: 5.338625
+  type: 'test'
+  ...
+# Subtest: runIdempotentMutation reconciles uncertain operations on retry
+ok 33 - runIdempotentMutation reconciles uncertain operations on retry
+  ---
+  duration_ms: 8.432958
+  type: 'test'
+  ...
+# Subtest: runIdempotentMutation preserves checkpoint() if dispatch fails afterward
+ok 34 - runIdempotentMutation preserves checkpoint() if dispatch fails afterward
+  ---
+  duration_ms: 3.699375
+  type: 'test'
+  ...
+# Subtest: runIdempotentMutation rethrows safe pre-dispatch errors and detects signature conflicts
+ok 35 - runIdempotentMutation rethrows safe pre-dispatch errors and detects signature conflicts
+  ---
+  duration_ms: 7.210667
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 318.929166

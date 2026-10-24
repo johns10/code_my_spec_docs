@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-24",
+  "existing_harness_commit": "6c66a6654b8386ce7fd445e4c8e1bf5f3d3e044c",
+  "isolation_directory": "/private/tmp/cms-distributed-agent-research-20261024",
+  "repositories": [
+    {
+      "name": "Harness Remote",
+      "url": "https://github.com/giuliastro/harness-remote",
+      "sha": "00882318c7de569be71f200f43f0a8eedc54d6ce",
+      "version": "3.5.0 (root); 0.1.7 (bridge)",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "OpenHands SDK / Agent Server",
+      "url": "https://github.com/OpenHands/software-agent-sdk",
+      "sha": "acd96e6fa424c02432304395b9208f99be24b54d",
+      "version": "Agent Server 1.58.1",
+      "license": "MIT"
+    },
+    {
+      "name": "OpenHands Agent Canvas",
+      "url": "https://github.com/OpenHands/OpenHands",
+      "sha": "fee10e3d2909ebbf9950578575b1ee011492171e",
+      "version": "1.33.0",
+      "license": "MIT"
+    }
+  ],
+  "working_repository_head_at_final_check": "2d8cec0bd6276e1f3edca1d0385ad7ed293886c8",
+  "concurrent_changes": "Repository HEAD advanced during research; no commits or branch changes were made by this research. Architecture baseline is pinned separately."
+}

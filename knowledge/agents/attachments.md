@@ -10,7 +10,7 @@ The existing `fs_request` transport carries attachment operations. `CmsHarness.A
 
 An explicit disconnect revokes the attachment and terminates only its owned execution. Command launchers stay owned after foreground completion so ordinary background descendants can also be terminated. POSIX cleanup uses process groups; Windows uses the owned live parent with `taskkill /T /F`. The copy, other attachments and independent Coding/QA agents survive. No arbitrary daemon or sandbox escape containment is promised.
 
-Unexpected transport loss simply fails the pending interaction. Remote work may continue. This phase intentionally has no automatic retry, output replay, operation ledger or reconciliation; it must not claim an unobserved command succeeded or stopped. This is the product decision from Three Amigos, superseding the richer recovery proposal in the distributed-harness research.
+Unexpected transport loss simply fails the pending interaction. Remote work may continue. This phase intentionally has no automatic retry, output replay, operation ledger or reconciliation; it must not claim an unobserved command succeeded or stopped. This is the product decision from Three Amigos, superseding the richer recovery proposal in the [distributed-harness research](../competitive-analysis/distributed-agent-harness-2026-10-24/recommendation.md).
 
 Detached onboarding Main attaches to the first working copy without changing its identity, conversation, runtime home or process. Product's existing relocation path is unchanged. Native provider adapter replacement and cross-host native-session migration are not part of this slice.
 

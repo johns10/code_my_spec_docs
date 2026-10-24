@@ -1,0 +1,12 @@
+{
+  "checked": "2026-10-24",
+  "url": "https://github.com/OpenHands/software-agent-sdk/issues/4187",
+  "title": "[Feature]: Support server-owned conversations with remote execution-only workspaces",
+  "state": "closed",
+  "state_reason": "not_planned",
+  "updated_at": "2026-09-29T15:01:25Z",
+  "closed_at": "2026-09-29T15:01:25Z",
+  "comments_count": 3,
+  "closing_comment_url": "https://github.com/OpenHands/software-agent-sdk/issues/4187#issuecomment-5892869537",
+  "closing_reason": "Automatic closure for inactivity; no implementation claim in closing comment."
+}

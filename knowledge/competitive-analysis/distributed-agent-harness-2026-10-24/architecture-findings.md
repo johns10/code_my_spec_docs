@@ -1,0 +1,44 @@
+# Existing harness architecture assessment
+
+Initial assessment written before runtime experiments on 2026-10-24. Source baseline: `6c66a6654b8386ce7fd445e4c8e1bf5f3d3e044c`. The working tree already contained a modification to `lib/code_my_spec/working_copies/tools/sync_working_copy.ex` and untracked `.agents/`; neither is changed by this investigation. Findings below are source inspection, not runtime validation.
+
+## What already exists
+
+The control plane owns agent records, conversations, offers, mailbox entries, requirements and promotion decisions. The device-side `CmsHarness` owns processes, working-copy supervision, shell/filesystem access, browser access and channel connections. This is already a distributed execution architecture, not a blank slate.
+
+* `lib/code_my_spec/agents/agent.ex:92` defines durable agent UUIDs alongside engine/session identifiers, execution mode, working-copy ID/path, provider/model and process/boot identity. Working-copy identity is already an independent UUID (`lib/code_my_spec/working_copies/working_copy.ex:1`); a path is reported metadata. Do not replace these identities with a candidate's session ID.
+* `lib/code_my_spec/agents/transport.ex` defines start, dispatch, interrupt, stop and machine-tool seams. `transport/harness.ex:77-185` routes requests through `HarnessRegistry.executor_holder(working_copy_id)`. `lib/code_my_spec/analysis/harness_registry.ex:26-102` distinguishes executor instances and roots, but still obtains a host through a working copy.
+* `lib/code_my_spec/agents/mailbox.ex:38-125,349-385` persists message admission, locks the agent on claim, carries a delivery reference, and checks `mailbox_generation` before consumption. Reuse this; do not substitute a candidate queue. It does not establish exactly-once arbitrary shell execution.
+* `lib/code_my_spec/agents/offer.ex:18-95` preserves the actual statuses: open, claimed, declined, ignored, superseded, expired, n_a, undelivered and cancelled. The requested accepted/rejected terminology is conceptual; retain current metric semantics, including undelivered versus ignored. `lib/code_my_spec/agent_performance/offer_health.ex` is the existing reporting boundary.
+* `lib/code_my_spec/promotion.ex:71-104,284-309,920-956` already provides project-level promotion locking and commit-keyed certification. Existing integration promotion remains authoritative.
+* `lib/cms_harness/agents/terminal.ex:1-70` attaches user-owned Claude Code and Codex sessions. Claude messaging uses its local inbox mechanism; Codex uses `codex queue --thread`. Existing support must be distinguished from independently verified provider API compatibility. The adapter reports interrupt as unsupported (`:140`).
+
+## Exact coupling points
+
+1. **Detached is currently desktop-local.** `Agents.start_detached_agent/2` (`lib/code_my_spec/agents.ex:1888-1913`) creates a project/role scratch directory, chooses Alloy and only succeeds in desktop mode. `ensure_detached_running/2` (`:1915-1942`) refuses other environments. This allows onboarding without a checkout, but does not provide runtime-independent placement.
+2. **Onboarding becomes relocation.** `move_main_agent/2` and `relocate/3` (`agents.ex:2352-2406`) stop a detached engine, rewrite execution mode, working-copy ID and path, then relaunch while retaining conversation identity. Product follows the main roster (`:2407` onward). A resource attachment should replace this identity-placement transition.
+3. **Agent schema still requires a directory.** `Agent.changeset/2` requires `working_copy` even when the detached main/product exception permits a null `working_copy_id`. The schema's opening documentation still describes one role per copy, an incomplete description of current detached behavior.
+4. **Routing uses the checkout as the host address.** `Agents.Transport` callbacks and `transport/harness.ex` use working-copy ID even for agent lifecycle operations. Detached transport switches to a desktop implementation by environment. Agent runtime host and tool execution destination cannot be selected independently through this seam.
+5. **Engine lifetime and tools are rooted in a copy.** `lib/cms_harness/agents/engine/impl.ex:80-110` requires an existing directory and starts the keeper under `Copy.agents(working_copy)`. `:858-924` builds working-directory/tool context from it. `lib/cms_harness/agents/tools/bash.ex:65-90` invokes local `Shell.run`; `tools/direct.ex` forwards orchestration calls through MCP. Moving only the MCP endpoint would therefore lose main's ordinary Bash semantics.
+6. **Recovery has two different meanings.** `LaunchRequest.hydrate/2` and `history/2` (`lib/code_my_spec/agents/launch_request.ex:40-46,119-135`) reconstruct Alloy context from persisted conversations. Native CLI continuity instead depends on provider session state. Preserving the former is not proof of preserving native reasoning/session state.
+7. **Credential distribution needs a separate decision.** `LaunchRequest.for/2` merges credential fields, including OAuth access/refresh fields (`:60-99,195-222`). No values were read. This is an existing behavior, not a pattern endorsed for reuse. The requested prototype should use runtime-local, provider-supported login and transmit opaque credential-profile references, never copy this credential path into a new adapter.
+
+## Durability and authorization limits
+
+The mailbox has durable admission and stale-engine protection. Channel request correlation is different: `lib/code_my_spec_web/channels/harness_project_channel.ex:818-828,957-963` keeps pending callers in socket state; `lib/cms_harness/project/channel_client.ex:2631-2637` fails pending calls on disconnect. A correlation ref is not a durable operation receipt. Arbitrary command completion with a lost reply still requires reconciliation. `Bash.timed_out/1` explicitly describes unknown analyzer outcome and directs clients to existing run results; preserve that narrower mechanism.
+
+Account-scoped relay joins exist (`lib/code_my_spec_web/channels/harness_channel.ex:24-37`), and working-copy channel joins validate authority. Neither alone establishes permissions for a future cross-workspace arbitrary shell tool. This assessment does not certify the complete authentication system. Keep identity/grants on the server and enforce target-specific authority again at execution.
+
+Durable records live in the configured repository, not solely in agent processes. Host-independent durability still depends on deployment/storage: desktop-local database persistence is not equivalent to surviving loss of that device. `workspaces/workspace.ex` is a project-instance provisioning schema, not yet a general attachment model.
+
+## Smallest proposed change surface (not implemented)
+
+Keep agent UUID, conversation, offers, mailbox, team assignment and promotion. Introduce explicit runtime bindings (provider/native-session ID, runtime host, lifecycle generation), and resource attachments (existing working-copy UUID, host, permissions, observed Git revision). Replace routing through the agent's home checkout with explicit target routing. Expose the harness's filesystem, shell/process, Git and logs through that target boundary to any authenticated MCP client. Start with one provider adapter and two environments; retain a single writer per native session and allow multiple observers.
+
+Add a durable operation ledger for state-changing remote actions: operation ID, request digest, authority epoch, target generation, status, result/output cursor and reconciliation state. A repeated ID with different arguments must fail. A host that cannot establish completion must return unknown, not silently rerun. Gate edits against observed file hashes and promotion against existing commit checks. These are additions to execution semantics, not a replacement task scheduler.
+
+The initial architectural conclusion is that the existing control plane should remain in charge. Candidate value must be measured against native runtime control and reusable remote execution primitives, not against orchestration features already present here.
+
+## Concurrent repository changes
+
+During the research another activity advanced repository HEAD to `2d8cec0bd6276e1f3edca1d0385ad7ed293886c8`; the originally observed working-tree changes were no longer present at the final check. This research made no commits, branch switches or production edits. The assessment is anchored to the initial commit, with [saved source excerpts](evidence/harness-source-excerpts.md). A focused comparison confirmed the key agent schema/transport/launch/engine coupling files unchanged, apart from an added AppInstances dependency in agents.ex. Working-copy, promotion and channel code did change concurrently; apply those baseline findings to current code with that qualification before implementation.

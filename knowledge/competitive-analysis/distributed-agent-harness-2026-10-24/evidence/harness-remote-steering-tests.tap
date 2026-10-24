@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: a steering harness forwards a prompt into the live turn instead of queueing it
+ok 1 - a steering harness forwards a prompt into the live turn instead of queueing it
+  ---
+  duration_ms: 9.52475
+  type: 'test'
+  ...
+# Subtest: an adapter that refuses steering hands the recorded prompt to the ordinary queue
+ok 2 - an adapter that refuses steering hands the recorded prompt to the ordinary queue
+  ---
+  duration_ms: 2.274208
+  type: 'test'
+  ...
+# Subtest: a queueing harness never calls the adapter's steering method
+ok 3 - a queueing harness never calls the adapter's steering method
+  ---
+  duration_ms: 0.871333
+  type: 'test'
+  ...
+# Subtest: a slash command takes the queue even while a steering turn runs
+ok 4 - a slash command takes the queue even while a steering turn runs
+  ---
+  duration_ms: 0.680625
+  type: 'test'
+  ...
+# Subtest: a steering request that resolves startedNewTurn keeps the session busy until it is settled
+ok 5 - a steering request that resolves startedNewTurn keeps the session busy until it is settled
+  ---
+  duration_ms: 1.130583
+  type: 'test'
+  ...
+# Subtest: harness profiles declare exactly one steering harness
+ok 6 - harness profiles declare exactly one steering harness
+  ---
+  duration_ms: 0.323333
+  type: 'test'
+  ...
+# Subtest: output streamed after an injected steering prompt answers that prompt, below its user row
+ok 7 - output streamed after an injected steering prompt answers that prompt, below its user row
+  ---
+  duration_ms: 1.700958
+  type: 'test'
+  ...
+# Subtest: a queued prompt keeps the session busy while its model is applied on dequeue
+ok 8 - a queued prompt keeps the session busy while its model is applied on dequeue
+  ---
+  duration_ms: 1.964208
+  type: 'test'
+  ...
+# Subtest: a prompt queued before the running turn streams anything still sits below that turn's reply
+ok 9 - a prompt queued before the running turn streams anything still sits below that turn's reply
+  ---
+  duration_ms: 1.08075
+  type: 'test'
+  ...
+# Subtest: a prompt arriving while the first one is still switching models waits instead of starting a parallel turn
+ok 10 - a prompt arriving while the first one is still switching models waits instead of starting a parallel turn
+  ---
+  duration_ms: 0.789042
+  type: 'test'
+  ...
+# Subtest: a running turn's late prompt echo is still suppressed after another prompt is queued
+ok 11 - a running turn's late prompt echo is still suppressed after another prompt is queued
+  ---
+  duration_ms: 1.895292
+  type: 'test'
+  ...
+# Subtest: a queued prompt is flagged queued in the transcript until it starts, and prompt() reports the disposition
+ok 12 - a queued prompt is flagged queued in the transcript until it starts, and prompt() reports the disposition
+  ---
+  duration_ms: 0.710292
+  type: 'test'
+  ...
+# Subtest: a steering harness reports a steered prompt, and Stop removes a queued one with its flag
+ok 13 - a steering harness reports a steered prompt, and Stop removes a queued one with its flag
+  ---
+  duration_ms: 0.4545
+  type: 'test'
+  ...
+# Subtest: unqueue withdraws one waiting prompt and leaves the running turn and the rest of the queue alone
+ok 14 - unqueue withdraws one waiting prompt and leaves the running turn and the rest of the queue alone
+  ---
+  duration_ms: 0.511042
+  type: 'test'
+  ...
+# Subtest: a turn the agent starts after its prompt resolved is adopted as a new busy reply and settles on silence
+ok 15 - a turn the agent starts after its prompt resolved is adopted as a new busy reply and settles on silence
+  ---
+  duration_ms: 66.091209
+  type: 'test'
+  ...
+# Subtest: output arriving right after a turn ended stays that turn's tail and does not open a new one
+ok 16 - output arriving right after a turn ended stays that turn's tail and does not open a new one
+  ---
+  duration_ms: 1.049333
+  type: 'test'
+  ...
+# Subtest: a Session this bridge never ran a turn in does not adopt unsolicited output
+ok 17 - a Session this bridge never ran a turn in does not adopt unsolicited output
+  ---
+  duration_ms: 0.416208
+  type: 'test'
+  ...
+# Subtest: a prompt sent during an adopted turn queues behind it and starts once the turn settles
+ok 18 - a prompt sent during an adopted turn queues behind it and starts once the turn settles
+  ---
+  duration_ms: 68.495458
+  type: 'test'
+  ...
+# Subtest: Stop ends an adopted turn: the harness is cancelled and its later output is dropped
+ok 19 - Stop ends an adopted turn: the harness is cancelled and its later output is dropped
+  ---
+  duration_ms: 0.6225
+  type: 'test'
+  ...
+# Subtest: an adopted turn stays open while a tool call it opened is still running
+ok 20 - an adopted turn stays open while a tool call it opened is still running
+  ---
+  duration_ms: 328.486792
+  type: 'test'
+  ...
+# Subtest: Claude replies streamed back to back become separate paragraphs, keyed by the adapter's message id
+ok 21 - Claude replies streamed back to back become separate paragraphs, keyed by the adapter's message id
+  ---
+  duration_ms: 1.41
+  type: 'test'
+  ...
+# Subtest: ledger accept failure after target creation becomes uncertain and is never replayed
+ok 22 - ledger accept failure after target creation becomes uncertain and is never replayed
+  ---
+  duration_ms: 25.715708
+  type: 'test'
+  ...
+# Subtest: target semantics stay in the signature rather than changing the durable ledger key
+ok 23 - target semantics stay in the signature rather than changing the durable ledger key
+  ---
+  duration_ms: 1.371375
+  type: 'test'
+  ...
+# Subtest: source identity and client request id remain part of the durable ledger scope
+ok 24 - source identity and client request id remain part of the durable ledger scope
+  ---
+  duration_ms: 0.124959
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 572.534208

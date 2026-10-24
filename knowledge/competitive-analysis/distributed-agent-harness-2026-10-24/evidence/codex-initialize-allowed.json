@@ -1,0 +1,1 @@
+{"probe": "native_codex_initialize", "status": "success", "sessions_created": 0, "model_turns": 0, "result_fields": ["codexHome", "platformFamily", "platformOs", "userAgent"]}
