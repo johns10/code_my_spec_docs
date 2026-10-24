@@ -12,7 +12,7 @@ kamal, object storage) to the two calls the sequence makes per step:
 | `Provisioning` | Sequences steps: `run_step/3` verifies, then runs only when absent; `run_and_record/5` records resources. |
 | `ProvisioningPlan` | Devops level and the permitted environment set. |
 | `ProvisioningPlan.StepRepository` | Recorded step rows and their resources. |
-| `Provisioning.EnvironmentRepository` | Environment rows: name, host, server name, ip, `first_deployed_at`. |
+| `Environments` | Environment rows: name, host, server name, ip, `first_deployed_at`. |
 | `Provisioning.{Hetzner, Cloudflare, Resend, Sops, Storage, Registry, Database, Builder, Deploy, Backups, Widget, ContentPublishing, Dns}` | Providers; each asks for what it needs. |
 
 ## Contract
