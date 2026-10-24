@@ -1,7 +1,7 @@
 # Promotion and working copies
 
-How finished work gets from a working copy onto the checkout the local app
-runs from, and the records it moves through — the design behind
+How verified work reaches the remote development branch and then a device
+checkout, and the records it moves through — the design behind
 `lib/code_my_spec/promotion*`, `working_copies*`, `workspaces*`, and the
 lessons that shaped it. Code comments point here by section name.
 
@@ -18,6 +18,51 @@ lessons that shaped it. Code comments point here by section name.
 | `Projects` / `Project` | Project records, local-config resolution, deploy keys. |
 | `Migration` | Copies a project's authored records from a local harness to the cloud. |
 | `DevState` | Reconciles what the database believes against the runtime. |
+
+## Current remote-promotion contract (story 1147)
+
+The project queue certifies a candidate on its source device and publishes that
+exact commit to `origin/<development_branch>` (default `main`). Remote Git is
+integration authority. A desktop checkout, its availability, and its preview
+health do not determine whether publication succeeded. Normal development
+publication is not a UAT or production release.
+
+- `PromotionQueue.Worker` fetches the configured target through the source
+  harness and builds in an isolated `promotion-gate:<source-copy-id>` checkout
+  on that device. It preserves the submitting tree and queued candidate.
+- Dirty submissions, stale product QA, analyzer findings, and conflicts retain
+  their existing refusal rules. Main-device work uses the same queue and gates.
+- Before publication the queue persists the certified base, head, branch, gate,
+  promotion identity, and ordering sequence. Publication atomically advances the
+  branch and creates `refs/codemyspec/promotions/<id>`. The expected-base lease
+  and ancestry check prevent overwriting another publication.
+- A changed remote base requires rebuilding and certifying again. A lost reply
+  retries the persisted identity and reconciles its receipt and remote ancestry;
+  an unrelated commit already on the remote is not proof of this publication.
+- `Promotion.land_remote/6` records reviewed story/issue completion after
+  publication. Persistence failure reports published-but-completion-held;
+  retrying the same candidate resumes completion using its original receipt.
+- `Promotion.RunningCopy` reads the publication stamp, even on main and even
+  without a destination. Preview failure cannot clear a published story.
+- `Promotion.DeviceSync` stores the desired destination revision independently.
+  An offline destination remains pending. Its own harness fetches and safely
+  fast-forwards the configured branch, synchronizes submodules, and applies the
+  app lifecycle. Dirty/diverged checkouts are preserved and reported failed.
+- Applied means the app's served commit was verified. An older replay cannot
+  replace newer desired work. A verified successful application is not repeated.
+  Use `list_working_copies` for publication-independent app/sync state and
+  `sync_working_copy` to retry a pending or failed main-device application.
+- Remote publication stamps identify the published commit. Historical local
+  version-tag behavior below belongs to the retained bootstrap path.
+
+## Legacy local implementation reference
+
+The following sections describe the previous local-only path, retained for
+bootstrapping this upgrade and explicit compatibility fixtures. Where they
+refer to local main as authority, no-op main promotions, shared destination
+paths, version tags, or optimistic serving claims, they do not describe the
+remote queue above. Do not use them to bypass remote certification or to claim
+an offline preview is serving.
 
 ## Promotion
 
