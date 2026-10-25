@@ -1093,7 +1093,7 @@ truncation point. Check flash content with browser_find({ selector =
 full HTML -- cost a mistaken "still reproduces" read on issue 258f0631 before
 the targeted check showed the error flash was there all along (hit 2026-10-11).
 
-## Provisioning agents on a candidate
+### Provisioning agents on a candidate
 
 An in-app QA agent provisions its agents on the candidate itself, through the
 copy app's dev route (story 1143):
