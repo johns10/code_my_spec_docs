@@ -1,5 +1,12 @@
 # QA Journey Plan
 
+## Prerequisites
+
+- The working copy's own app is running: `ensure_app_running`, at the URL it reports.
+- QA seed data loaded into that app's own database: `MIX_ENV=dev mix cms.seed priv/repo/qa_seeds.exs` (see `qa/plan.md` for the database it targets).
+- Credentials: the QA seed user from `priv/repo/qa_seeds.exs`; never real accounts.
+- The copy's harness is connected (`check_machinery`), so analysis runs and file sync reach the server.
+
 ## Journeys
 
 ### Harness-to-Server Projection QA (story 873)
