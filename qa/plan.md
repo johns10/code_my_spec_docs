@@ -1133,6 +1133,11 @@ Add `"attachment_fixtures": true` (with `"roles": ["main"]`). The reply gains
 - `unauthorized_working_copy_id`: a copy in another project. Connecting to it
   is the unauthorized-id case.
 
+Every fixture copy comes onboarded (as `mix cms.harness.onboard` would leave
+it: `.claude/settings.local.json` with `CMS_HARNESS_ID` and
+`MIX_TEST_PARTITION`, and its harness config), so a readiness check that asks
+for `onboarded: true` answers yes. Do not onboard them again by hand.
+
 The attachment tools (`list_working_copy_attachments`, `connect_working_copy`,
 `disconnect_working_copy`, `work_in_copy`) are code-mode tools: call
 `tools/call` `run_script` on the candidate's `/mcp/harness`, as the fixture
