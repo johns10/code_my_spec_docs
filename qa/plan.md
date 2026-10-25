@@ -1111,3 +1111,40 @@ candidate's `/mcp/harness`. It only works on a copy app (it refuses with
 (afd5fda1a or later). Do not reach for `create_working_copy` through
 `call_mcp_server`: that needs a connected harness, which a candidate usually
 does not have.
+
+`"roles": ["main"]` gives a fixture Main on the candidate. Its `headers` carry
+a bearer token: send them to the candidate's `/mcp/harness` and you act as that
+Main, with Main's catalog there. Your own QA catalog still refuses Main's tools
+("Not available to your role"); that is expected and is not the route.
+
+#### Fixtures for Main's attachment tools (story 1148)
+
+Add `"attachment_fixtures": true` (with `"roles": ["main"]`). The reply gains
+`attachment_fixtures`:
+
+- `online`: two copies, each on a device of its own, each with a `harness`
+  entry (`cwd`, `command`, `port`, `ready`). A copy is online only once its
+  harness runs: start each `command` in `cwd` in the background, wait until
+  `ready` answers, and note the pid. They take a few minutes the first time
+  (they compile into `_build/qa_harness`). Each announces as its copy's
+  `device_id`. Stop them by pid when done (never by name).
+- `offline`: a copy on a third device with no harness. Connecting to it is
+  the offline-device case.
+- `unauthorized_working_copy_id`: a copy in another project. Connecting to it
+  is the unauthorized-id case.
+
+The attachment tools (`list_working_copy_attachments`, `connect_working_copy`,
+`disconnect_working_copy`, `work_in_copy`) are code-mode tools: call
+`tools/call` `run_script` on the candidate's `/mcp/harness`, as the fixture
+Main, with a script that calls them. The direct tool list will not show them.
+Not the browser. Example, after both harnesses are ready:
+
+```lua
+local a = connect_working_copy({working_copy_id = "<online[1] id>"})
+local b = connect_working_copy({working_copy_id = "<online[2] id>"})
+return {list = list_working_copy_attachments({}),
+        pwd = work_in_copy({attachment_id = a.id, operation = "command", command = "pwd"})}
+```
+
+A harness log line "Connect this harness: visit …/oauth/device" is noise: the
+fixture's deploy key authenticates it.
