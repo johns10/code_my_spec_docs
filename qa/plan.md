@@ -125,7 +125,7 @@ Three layers, three tools. Pick by pipeline, not by guess.
 Use for any route in a `:browser` pipeline on either endpoint — anything that renders HTML, runs LiveView, or expects a session cookie.
 
 ```
-mcp__vibium__browser_launch
+mcp__vibium__browser_start
 mcp__vibium__browser_navigate { url: "http://127.0.0.1:4004/projects/code-my-spec" }
 mcp__vibium__browser_map
 mcp__vibium__browser_click { selector: "@e3" }
