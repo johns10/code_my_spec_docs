@@ -26,8 +26,8 @@ definitions, preloading and the contexts the graph reads are in
   (`IncrementalGraph.settle/2`: drain what is pending, consider the asked-about
   checkouts) and then reads the rows (`Projection.load/2`). It waits for
   observations already announced; it never re-derives what nobody announced.
-  A read costs a preload (tens of ms); a compute costs seconds on a large
-  project. `settle: false` exists so a test can see an unannounced write still
+  A read costs a shape load and a row read (see "The read path"); a compute
+  costs seconds on a large project. `settle: false` exists so a test can see an unannounced write still
   missing.
 - **A read starts the writer only for a project with no rows.** "Never
   projected" means no project-level rows — every seed writes them, so their
@@ -52,6 +52,42 @@ definitions, preloading and the contexts the graph reads are in
   caller is the stop hook; a stop is not a change). `satisfied_now?/2` re-checks
   a story requirement against the story before `start_task` takes it, because
   the graph can lag an unannounced write.
+
+## The read path
+
+How discovery reads the graph: `StoryExecution.read/5`, behind
+`get_next_requirement`, the stop hook's work menu and `Agents.Work`.
+
+- **Three steps, timed.** Settle the writer at the vantage, load a read
+  context, read the rows. Each step is timed, and a read over a second logs
+  `[StoryExecution] slow read … settle= preload= graph= placed=`, so a slow read
+  says where its time went.
+- **A read loads the shape, never the computation's preload.**
+  `Preloader.read_context/1` is `topology_context/1` plus `questions_by_story`:
+  the components and their maps, this checkout's ready stories, story issues,
+  and which components have files here. `Preloader.load/1` is a compute's
+  context. It reads every file row on the checkout (about 5,000 on this
+  project) and every input a checker needs, and cost 0.5-1.4s a call on
+  2026-10-27.
+- **One load per read.** `RequirementGraph.cached_graph/2` reads the rows with
+  the context its caller already loaded. `cached_graph_with_actionable/2`
+  settles, loads and ranks for itself, for a caller that wants the ranked list
+  and nothing else.
+- **What a read uses.** Rehydrating rows (`Projection.load/2`) reads
+  `components`, `components_by_id` and `stories`; ranking reads `components`,
+  `children_by_parent` and the stories; story execution reads
+  `questions_by_story`. Keys a read does not load stay absent ("Absent is not
+  empty" in checkers.md), so a read that starts needing one raises instead of
+  reading "none".
+- **Settle is the only wait.** Idle, it costs nothing. After a mark it waits for
+  the drain, which on this project took 15-68s across 12 vantages.
+  `get_next_requirement` gives the whole read 2.5s and otherwise answers that
+  the graph is rebuilding, and the agent asks again.
+- **Measured before changing.** Discovery used to load the full preload twice
+  (once itself, once inside `cached_graph_with_actionable/2`) and rank a list it
+  then dropped: 1.3-3.2s a call with nothing pending, over the 1s deadline it
+  had, so every checkout was told the graph was rebuilding while the projector
+  sat idle.
 
 ## Vantages
 
