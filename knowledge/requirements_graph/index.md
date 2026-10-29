@@ -9,7 +9,7 @@ definitions, preloading and the contexts the graph reads are in
 | Module | Role |
 |---|---|
 | `Requirements.IncrementalGraph` | One process per project; the only writer. Drains marks, settles verdicts, draws the project's edges. |
-| `Requirements.GraphStore` | Writes and reads the rows: `requirements` per checkout, `requirement_topologies` per project. |
+| `Requirements.GraphStore` | Writes and reads the rows: file-backed verdicts per checkout in `requirements`, project-wide verdicts in `project_requirements`, edges in `requirement_topologies`. |
 | `Requirements.RequirementGraph` | Pure: computes nodes and edges, ranks actionable work. Writes nothing. |
 | `Requirements.Handlers` | Settles requirements an event moved, from loaded profiles, without recomputing. |
 | `Requirements.GraphWatcher` | The front callers use to start and settle the writer. |
@@ -19,7 +19,8 @@ definitions, preloading and the contexts the graph reads are in
 
 - **One writer.** An `IncrementalGraph` process per project (Registry key
   `{project_id, :graph}`, under `WatcherSupervisor`, `restart: :transient`)
-  writes `requirements` / `requirement_topologies` through `GraphStore`. Writers
+  writes `requirements` / `project_requirements` / `requirement_topologies`
+  through `GraphStore`. Writers
   start with an agent, at boot for continuous projects, and on the first read of
   a project that has no rows.
 - **Reads never recompute.** A reader settles the writer at its vantage
@@ -91,9 +92,20 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
 
 ## Vantages
 
-- **A verdict is a statement about a checkout.** The graph is projected per
-  vantage — a working copy id, or `nil` — and a row's `working_copy_id` is its
-  vantage. `vantage_report/1` lays the checkouts side by side; routing bugs are
+- **A file-backed verdict is a statement about a checkout.** It is projected
+  per vantage — a working copy id, or `nil` — and a row's `working_copy_id` is
+  its vantage.
+- **The rest are statements about the project.** A verdict whose checker reads
+  only records, or every checkout's files (`personas_complete`), is the same at
+  every checkout, so it is stored once in `project_requirements`
+  (`GraphStore.project_wide_names/0`) and a vantage reads it beside its own rows
+  (`GraphStore.rows_at/1`), for the entities visible there. Per-checkout copies
+  drifted: rows an older checker wrote stayed on the checkouts no drain reached.
+  Not every record checker qualifies: `issues_triaged`, `issues_resolved` and
+  `work_dispatched` leave out issues on stories placed at another checkout, so
+  they stay per checkout.
+  `project_wide_verdicts_ignore_the_checkout_test` computes each from two
+  checkouts and fails if one starts reading its checkout. `vantage_report/1` lays the checkouts side by side; routing bugs are
   often invisible from any single one.
 - **The `nil` vantage** is the row-space for readers with no checkout, computed
   from the project's default checkout's files (`Preloader.files_vantage/1`), or
@@ -104,10 +116,21 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
   sees the scope. Without it a caller naming no checkout computes from every
   checkout's files blended while storing under the default checkout's identity.
 - **A `nil` mark** is a change that is not about a checkout (a story renamed, an
-  issue accepted). It is the only case that fans out to every vantage; looping
-  every vantage on every drain would be the whole-project recompute this design
-  avoids. A file sync moves the `nil` vantage only when it happens in the
+  issue accepted). It is the only case that fans out to every awake vantage, and only
+  when it can move a per-checkout verdict or the shape: a kind that moves only
+  project-wide requirements (`Handlers.project_wide?/1`: deploys) settles the
+  `nil` vantage alone. Project-wide requirements are settled at the first
+  vantage of a drain and skipped at the rest, and so is an issue event's
+  fallback recompute, which only re-establishes issue nodes. Looping every vantage on every drain would be the whole-project
+  recompute this design avoids. A file sync moves the `nil` vantage only when it happens in the
   default checkout.
+- **Dormant checkouts wait.** A checkout with no harness connected
+  (`HarnessRegistry.connected?/1`), not the main copy, and not seen for a day
+  is passed by: no fan-out reaches it and its own marks stay unconsumed. A
+  fanning-out drain leaves it one durable unknown mark, so when it is seen again
+  its next drain seeds it whole and it ends where a full recompute would. Until
+  then its per-checkout rows are stale, not wrong; project-wide rows stay
+  current for it. Most of a large project's checkouts are old worktrees.
 - **Requested vantages** (from `settle` callers, plus the starter's own) are
   considered in the next drain even when no mark names them, then forgotten.
   Considered is not recomputed: an established vantage with nothing pending
@@ -154,7 +177,17 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
   process has seen it, or its rows cover every current definition
   (`GraphStore.definitions_covered?/2` against `RequirementGraph.defined_names/2`).
   Handlers settle rows and never create them, so a release that adds or removes
-  a requirement needs a reseed. `clear/1` and `reproject/2` force one.
+  a requirement needs a reseed. `clear/1` and `reproject/2` force one. Coverage
+  counts the project's rows for the entities visible at the vantage, so once
+  the first vantage (`nil`, which sees every story) has seeded them, the rest
+  are covered: the migration that moved project-wide verdicts deleted their
+  per-checkout rows rather than leave every vantage holding names its
+  templates no longer define there.
+- **A seed reaps what the vantage no longer sees.** Rows of a story placed at
+  another checkout, or no longer ready, stay behind at the rest, and coverage
+  read them as entities the vantage should not hold: every arrival reseeded
+  nearly every vantage. `GraphStore.reap_unseen/2` deletes them, per checkout
+  only, after each seed.
 - **An unseeded projector computes even with no marks.** It has to establish
   what is true before deltas mean anything.
 - **A seed computes once and writes once** (`compute_nodes`); the project's
