@@ -8,8 +8,8 @@ definitions, preloading and the contexts the graph reads are in
 
 | Module | Role |
 |---|---|
-| `Requirements.IncrementalGraph` | One process per project; the only writer. Drains marks, settles verdicts, redraws edges. |
-| `Requirements.GraphStore` | Writes and reads the rows: `requirements`, `requirement_edges`. |
+| `Requirements.IncrementalGraph` | One process per project; the only writer. Drains marks, settles verdicts, draws the project's edges. |
+| `Requirements.GraphStore` | Writes and reads the rows: `requirements` per checkout, `requirement_topologies` per project. |
 | `Requirements.RequirementGraph` | Pure: computes nodes and edges, ranks actionable work. Writes nothing. |
 | `Requirements.Handlers` | Settles requirements an event moved, from loaded profiles, without recomputing. |
 | `Requirements.GraphWatcher` | The front callers use to start and settle the writer. |
@@ -19,7 +19,7 @@ definitions, preloading and the contexts the graph reads are in
 
 - **One writer.** An `IncrementalGraph` process per project (Registry key
   `{project_id, :graph}`, under `WatcherSupervisor`, `restart: :transient`)
-  writes `requirements` / `requirement_edges` through `GraphStore`. Writers
+  writes `requirements` / `requirement_topologies` through `GraphStore`. Writers
   start with an agent, at boot for continuous projects, and on the first read of
   a project that has no rows.
 - **Reads never recompute.** A reader settles the writer at its vantage
@@ -42,7 +42,7 @@ definitions, preloading and the contexts the graph reads are in
 - **Row writes.** `GraphStore.write/3` replaces what one computation covered;
   `put_verdict/2` / `put_verdicts/5` move verdicts a handler already knows;
   `sweep/2` settles one requirement across every owner of a type;
-  `write_edges/3` writes an edge set as a difference. Inserts are chunked by the
+  `write_topology/4` stores the project's edges. Inserts are chunked by the
   65,535-parameter limit divided by the row's measured width.
 - **Audit.** `served_vs_recomputed/1` recomputes the whole project once on
   demand and compares it with the served rows, edges and per-role actionable
@@ -112,7 +112,7 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
   considered in the next drain even when no mark names them, then forgotten.
   Considered is not recomputed: an established vantage with nothing pending
   costs nothing.
-- **Per-vantage state.** The edge baseline (`last_topology`) and handler
+- **Per-vantage state.** The shape baseline (`last_topology`) and handler
   hit/miss counts are kept per vantage: one slot would answer one checkout's
   question with another's, and summing hides a miss in one worktree behind a
   hit in another.
@@ -157,8 +157,8 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
   a requirement needs a reseed. `clear/1` and `reproject/2` force one.
 - **An unseeded projector computes even with no marks.** It has to establish
   what is true before deltas mean anything.
-- **A seed computes once and writes once** (`compute_nodes`), drawing edges once
-  for every vantage of the project. Per-entity compute-and-write made a no-op
+- **A seed computes once and writes once** (`compute_nodes`); the project's
+  edges are drawn once per drain, not per vantage. Per-entity compute-and-write made a no-op
   seed tens of thousands of queries.
 
 ## Edges
@@ -167,26 +167,35 @@ How discovery reads the graph: `StoryExecution.read/5`, behind
   story.component_linked`; story ↔ component tree (kickoff `bdd_specs_exist →`
   first work item, exit `→ ready_for_qa`); `story.qa_complete →
   project.qa_journey_plan` (the fan-in `GraphProjector` lays out on).
-- **Edges are global.** They end in `Topology.transitive_reduction/1`, so they
-  cannot be computed per entity. They are a function of the node set, never of
-  a verdict: a drain that only swept cannot move them.
-- **When to redraw.** A vantage met with rows already there is redrawn once per
-  process — a release that moves a prerequisite moves edges and no row. After
-  that, only when the shape moved (`Freshness.topology/2`) *or* a write inserted
-  or reaped a row; a story can appear in the shape one drain before its rows
-  exist.
-- **Stored by row id**, upserted then reaped, never deleted and reinserted: a
-  reinserted row gets a new id and orphans every edge on it. Edge identity is
-  `{from_requirement_id, to_requirement_id}`; an endpoint with no row is dropped.
-- **Written as a difference.** The wanted set is whole (a reduction is global);
-  the write deletes stale ids and inserts new ones. A full rewrite was most of
-  all write volume.
-- **Closure rules.** Kickoff spans the story's surface and its transitive
-  dependency closure; a context brings only its direct children. A
-  `:discovered` component with no file on this checkout is a phantom from
-  another checkout: kept while referenced, excluded from kickoff and children.
-  `:authored` components are never filtered. A filtered-out prerequisite is
-  walked past to its nearest surviving ancestor.
+- **One topology per project.** Edges are a function of records alone —
+  components, dependencies, stories, issues, config and definitions — so every
+  checkout shares them. `Edges.generate/3` draws them over every ready story,
+  wherever placed, and every component; a checkout's edges are the ones whose
+  two ends are rows there (`Edges.among/2`, in `Projection.load/2`). No file
+  moves an edge.
+- **Unreduced.** Stored as generated. Readiness reads reachability, which a
+  transitive reduction preserves, so a redundant edge changes no answer.
+  Measured on every vantage of the dev DB before the reduction left the write
+  path: identical ready sets and order. `GraphReport` serves them dense.
+- **Views read a stored reduction.** The writer stores the topology's
+  reduction beside it (`display_edges`); the graph page reads that between the
+  nodes it shows. Exact at the `nil` vantage, which holds every story; a narrow
+  checkout can miss an edge a longer path implied only through nodes it lacks.
+  `StoryGraph.select/3` reduces its own small slice.
+- **One row** in `requirement_topologies`: `edges` and `display_edges` as
+  compressed erlang terms keyed `{entity_type, entity_id, name}`, and the
+  `Freshness.topology/2` hash they were drawn from. A project with no row is
+  unprojected.
+- **When to redraw.** A drain marks the edges due when a settled vantage's
+  shape moved, and on each vantage's first drain per process — a release that
+  moves a prerequisite moves edges and no row. The drain then hashes the
+  project's shape once and draws only when it differs from the stored row's.
+- **No phantoms.** A `:discovered` component with no file on a checkout is not
+  dropped from that checkout's stories: its record says write the file, and
+  the requirement is unsatisfied there (John, 2026-10-28). Kickoff spans the
+  story's surface and its transitive dependency closure; a context brings only
+  its direct children. A filtered-out prerequisite is walked past to its
+  nearest surviving ancestor.
 
 ## Verdicts and handlers
 

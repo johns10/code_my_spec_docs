@@ -125,7 +125,7 @@ by section name.
 - **Narrow loads skip fingerprints** (`skip_fingerprints`): a hash from a
   narrow context is plausible but not the one a whole load produces.
 - `topology_context/1` is the shape only — enough for `Freshness.topology/2`,
-  `Edges.plan/3` and rehydrating rows — so a narrow drain redraws without a
+  `Edges.generate/3` and rehydrating rows — so a narrow drain redraws without a
   full load.
 
 ## Fingerprints
@@ -150,9 +150,9 @@ by section name.
 - **Config is stamped into every entity fingerprint** (`with_config/2`): it
   decides which definitions exist and is no input to any entity.
 - **`topology/2` is edges only**: component type, parent, dependencies, story
-  attachment, discovered-component file membership, issue placement, config,
-  and the definition set (names and prerequisites). It gates edge redraws and
-  edge-plan reuse; it never moves a verdict.
+  attachment, issue placement, config, and the definition set (names and
+  prerequisites). No file is in it. It gates edge redraws; it never moves a
+  verdict.
 - **The definition set must be in the topology hash.** Without it a release
   that moved a prerequisite produced an identical shape and every vantage kept
   stale edges until unrelated activity happened. It must not reach entity
@@ -161,25 +161,26 @@ by section name.
 
 ## Edge derivation
 
-- **The reduction decomposes.** Three template facts bound paths: the project
-  enters a story at `qa_setup → component_linked` and leaves at
-  `qa_complete → qa_journey_plan`; a story enters components at
-  `bdd_specs_exist` and re-enters at `ready_for_qa`; so no component-to-component
-  path crosses a story or the project. Hence the component side reduces once,
-  each story's edges reduce against reachability over it, and the project chain
-  reduces against the stories' bridges.
-- **Why.** A whole-set reduction made one component appearing cost a reduction
-  over tens of thousands of edges at every vantage.
-- **Plans are shared by shape and file membership.** Generating kickoff edges
-  is most of a redraw; checkouts with the same discovered-file membership reuse
-  one plan.
-- **`over/4` must equal the whole-set result** (`RequirementGraph.edges_over/4`);
-  `edges_derived_per_entity_match_the_pass_test` holds them together. A template
-  edge breaking one of the three facts fails there first.
-- **Reachability is bitsets** over a condensation: per-successor DFS scaled with
-  distinct targets × edges, and real graphs spread targets widely. Cycles occur;
-  the reduction never minimizes inside a cycle and keeps equivalent entrances,
-  since removing alternates independently can remove every entrance.
+- **Generated, never reduced.** The component side (templates and declared
+  dependencies), each story's edges (its chain, kickoff, exits and project
+  joins) and the project chain are generated on their own and stored as they
+  are. `edges_derived_per_entity_match_the_pass_test` holds the per-entity sets
+  to the whole pass; `the_writer_stores_edges_as_generated_test` fails if the
+  writer reduces again.
+- **Why no reduction.** Readiness blocks a node behind any unsatisfied
+  ancestor, which is reachability, and a reduction preserves reachability. It
+  bought nothing for "what's next" and made edges global: per-vantage
+  reachability bitsets, virtual edges and cycle special cases to decompose it.
+  Stored once per project, dropping it costs no rows.
+- **Views read a stored reduction.** `Topology.transitive_reduction/1` runs
+  once per topology change, in the writer, and costs about a second on the
+  largest project; per render it was most of the graph page. It never
+  minimizes inside a cycle and keeps equivalent entrances, since removing
+  alternates independently can remove every entrance.
+- **Once per project.** Edges were drawn per vantage because they pointed at
+  per-checkout row ids, and because a discovered component with no file on a
+  checkout was dropped from its stories. Both went: edges are keyed by entity,
+  and the phantom rule was dropped.
 
 ## Announcing writes
 
