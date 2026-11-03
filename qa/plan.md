@@ -1112,9 +1112,10 @@ candidate's `/mcp/harness`. It only works on a copy app (it refuses with
 `call_mcp_server`: that needs a connected harness, which a candidate usually
 does not have.
 
-`"roles": ["main"]` gives a fixture Main on the candidate. Its `headers` carry
-a bearer token: send them to the candidate's `/mcp/harness` and you act as that
-Main, with Main's catalog there. Your own QA catalog still refuses Main's tools
+`"roles": ["main"]` gives a fixture Main on the candidate. The response's
+`sign_in_url` opens a browser session as the seeded user so `/app` is reachable.
+Its `headers` carry a bearer token: send them to the candidate's `/mcp/harness`
+and you act as that Main, with Main's catalog there. Your own QA catalog still refuses Main's tools
 ("Not available to your role"); that is expected and is not the route.
 
 #### Fixtures for Main's attachment tools (story 1148)
@@ -1122,12 +1123,13 @@ Main, with Main's catalog there. Your own QA catalog still refuses Main's tools
 Add `"attachment_fixtures": true` (with `"roles": ["main"]`). The reply gains
 `attachment_fixtures`:
 
-- `online`: two copies, each on a device of its own, each with a `harness`
-  entry (`cwd`, `command`, `port`, `ready`). A copy is online only once its
-  harness runs: start each `command` in `cwd` in the background, wait until
-  `ready` answers, and note the pid. They take a few minutes the first time
-  (they compile into `_build/qa_harness`). Each announces as its copy's
-  `device_id`. Stop them by pid when done (never by name).
+- `online`: two copies, each on a device of its own. Provisioning starts and
+  owns both harnesses, waits for each to connect, and returns its id, port,
+  readiness URL and `log_path` under the fixture agent's `agent_scratch` directory.
+  The `command` is diagnostic only; do not run it from QA's restricted shell.
+  The candidate's `/health` reports `harness_connected=true` once they are ready.
+  Retire them with `POST /dev/qa-agents/retire` using the same email and password
+  plus `project_id` from the provisioning response. The app stops their processes.
 - `offline`: a copy on a third device with no harness. Connecting to it is
   the offline-device case.
 - `unauthorized_working_copy_id`: a copy in another project. Connecting to it
@@ -1142,7 +1144,7 @@ The attachment tools (`list_working_copy_attachments`, `connect_working_copy`,
 `disconnect_working_copy`, `work_in_copy`) are code-mode tools: call
 `tools/call` `run_script` on the candidate's `/mcp/harness`, as the fixture
 Main, with a script that calls them. The direct tool list will not show them.
-Not the browser. Example, after both harnesses are ready:
+Not the browser. Provisioning waits until both harnesses are ready. Example:
 
 ```lua
 local a = connect_working_copy({working_copy_id = "<online[1] id>"})
