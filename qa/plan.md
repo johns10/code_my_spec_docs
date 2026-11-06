@@ -347,7 +347,7 @@ It must say `connected: true, onboarded: true, watching: true`. `dispatch_messag
 
 Story 1062's seven wake criteria were exercised and passed against this. Story 1004's seven live-unreachable scenarios are the same class and the same remedy.
 
-### mix run — seeds and one-offs
+### Seed scripts and one-offs
 
 Use for setup that needs the app's contexts (creating users, accounts, projects through the supervised pipeline).
 
@@ -443,13 +443,14 @@ followed by `restart_app` to pick it up (hit 2026-10-11, story 1091's QA pass).
 Idempotent. Creates user + personal account + member + project. Run with:
 
 ```
-mix run priv/repo/qa_seeds.exs
+mix cms.seed priv/repo/qa_seeds.exs
 ```
 
-> **Only with the dev server stopped.** The server on 4000 holds the compile
-> lock, so a `mix run` under `MIX_ENV=dev` mid-session 500s the app you are
-> testing. To check seed state while it is up, read Postgres directly:
-> `psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"`
+`mix cms.seed` starts the database dependencies without booting an endpoint, so
+the dev server can remain running. The seed's disposable `QA_LOCAL_PATH`
+safeguard still applies. To check seed state without writing data, read
+Postgres directly:
+`psql -qtA code_my_spec_dev -c "select email from users where email='qa@codemyspec.local';"`
 
 Outputs:
 - Email `qa@codemyspec.local` — **passwordless; there is no password login.** The
