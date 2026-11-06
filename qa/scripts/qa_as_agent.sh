@@ -5,9 +5,16 @@
 #
 #   qa_as_agent.sh <agent-id> <tool> ['<json-arguments>']
 #
-#   qa_as_agent.sh 880c7713-... list_tasks '{}'
+#   qa_as_agent.sh <fixture-id> run_script '{"script":"return list_tasks({})"}'
 #   qa_as_agent.sh <fixture-id> ask_user_question '{"questions":[{"question":"Which?","options":[{"label":"A","description":"first"},{"label":"B","description":"second"}]}],"title":"QA routing check"}'
 #   qa_as_agent.sh <fixture-id> check_answer '{"question_id":"..."}'
+#
+# QA's own connection cannot call main-role fleet tools such as
+# create_working_copy, start_agent, stop_agent or offboard_working_copy. To
+# exercise them, use a main-role fixture identity through this proxy. These
+# tools are code-mode: call run_script with Lua, for example:
+#   qa_as_agent.sh <main-fixture-id> run_script '{"script":"return start_agent({...})"}'
+# Supply real start_agent arguments in place of {...}; see qa/plan.md.
 #
 # WHY THIS EXISTS
 #
