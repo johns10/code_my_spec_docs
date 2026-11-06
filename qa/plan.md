@@ -264,8 +264,13 @@ An in-app QA agent cannot make or remove working copies: `create_working_copy`,
 3. Never mint or offboard copies yourself. If a pass leaves a copy behind, tell
    main with `message_agent` and name it.
 
-(A terminal QA session with main's tools may still mint a scratch copy with
-`create_working_copy` + `start_agent` and remove it with `offboard_working_copy`.)
+A terminal QA session's own QA-role connection cannot call these main-role
+fleet tools. To exercise that path, use `qa_as_agent.sh` with a disposable
+main-role fixture identity and wrap each tool in `run_script`. For example,
+`qa_as_agent.sh <main-fixture-id> run_script '{"script":"return start_agent({...})"}'`
+uses the fixture's main role. Supply the actual tool arguments in place of
+`{...}`. Use the same route for `create_working_copy`, `stop_agent` and
+`offboard_working_copy`; never borrow an active main agent's identity.
 
 The coding role is the point: `MainAgent.holder_for/2` treats `:main` as
 "user", so a main-role fixture routes exactly like no fixture at all. That is
@@ -291,17 +296,18 @@ is evidence about anything.
 Build a fresh one only if you need two askers at once, or if that one has been
 offboarded — then leave this note pointing at whatever you leave behind.
 
-**Most tools are code mode, but the ones this story needs are not.** A tool that
-moved answers a direct `tools/call` by telling you to use
-`run_script({script = "return tool({…})"})` — `list_tasks` is one, and that
-refusal still proves the identity hop reached the tool layer, though it is not a
-result. Wrap it and send it again.
+**Most tools use code mode.** A direct `tools/call` to one of them responds
+with instructions to use `run_script`. For example, `list_tasks`,
+`create_working_copy`, `start_agent`, `stop_agent` and
+`offboard_working_copy` must be called as `run_script` Lua expressions.
+A refusal to a direct call proves the identity hop reached the tool layer,
+but it is not a successful result; wrap the call and send it again.
 
-The exceptions are deliberate and are exactly the asker's surface:
-`ask_user_question`, `check_answer`, `list_user_questions`, `send_message`,
-`start_agent` and `stop_agent` stay directly callable, because a script sandbox
-cannot wait on a person or spawn a process (`local_server.ex:63`). Call those
-straight through `qa_as_agent.sh`, with no `run_script` wrapper.
+The asker's direct-call surface remains `ask_user_question`, `check_answer`,
+`list_user_questions` and `send_message`. Call those through
+`qa_as_agent.sh` without a `run_script` wrapper. The fleet-management calls
+also require a main-role fixture identity; the QA role's own connection
+cannot access them.
 
 Goes through the harness proxy on :4004, which forwards the header and
 supplies the harness identity — so it drives the real MCP surface rather than a
