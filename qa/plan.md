@@ -1069,9 +1069,11 @@ close the gap (hit 2026-10-11).
 
 ### The QA Fixture Project's inbox collects leftover questions
 
-Questions cannot be withdrawn or expired by design (story 896), so every QA pass that
-raises one on the fixture project (`11111111-1111-4111-8111-111111111111`) leaves it in
-`list_notifications` under "Waiting on the user" for good. Measured 2026-09-20: about 16,
+Questions do not expire, and users cannot dismiss them (story 896). The asking agent
+can withdraw its own pending question with `withdraw_question` and a reason (story 1017);
+this also releases the task it blocked. A QA pass that raises a fixture question should
+withdraw it at the end of the pass. Older questions whose asking agent is gone remain
+in `list_notifications` under "Waiting on the user". Measured 2026-09-20: about 16
 from the 1004, 1009, 1017 and 896 passes, which makes a fresh pass's listing hard to read.
 It is sandbox debris, not a story defect (issue eeeeeb3d).
 
@@ -1079,11 +1081,15 @@ Convention:
 
 - **Tell your pass's questions apart by id**, not by eyeballing the list: note each id you
   raise in the brief and match on it. Do not read the unfiltered listing as your evidence.
-- **QA owns the sweep.** Before a pass on the fixture project, answer the questions that
-  predate it with `answer_notification` (as the project owner, `qa@codemyspec.local`).
-  Nothing real is waiting on the fixture project, so any answer clears them; say "stale
-  QA fixture question" so nobody mistakes it for a decision. Never clear them in the
-  database: an answer is the one path that also settles the asking agent's task.
+- **Withdraw your own fixture questions.** At the end of a pass, call
+  `withdraw_question` with each still-pending question's id and the reason it is moot.
+  This releases any task the question blocked.
+- **QA owns the sweep for questions whose asker is gone.** Before a pass on the
+  fixture project, answer those older questions with `answer_notification` (as the
+  project owner, `qa@codemyspec.local`). Nothing real is waiting on the fixture
+  project, so any answer clears them; say "stale QA fixture question" so nobody
+  mistakes it for a decision. Never clear them in the database: an answer is the
+  path that also settles the asking agent's task.
 - **Do not answer another pass's open question** if its brief is still in flight; check
   `qa/<story>/brief.md` for the id first.
 
