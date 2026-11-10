@@ -4,6 +4,8 @@ QA infrastructure for the running CodeMySpec backend. CodeMySpec is unusual in t
 ships *two* Phoenix apps in one OTP release — both are user-facing surfaces and both
 need QA coverage. The plan below covers both, plus the MCP servers each app exposes.
 
+For Story 205 chat scenarios, use the [seed and reset guide](../../priv/repo/qa_205_fixture.md).
+
 ## App Overview
 
 CodeMySpec runs **two Phoenix endpoints** from one BEAM node, each with its own
