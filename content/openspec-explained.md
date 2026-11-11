@@ -38,6 +38,8 @@ OpenSpec is a free, MIT-licensed spec-driven development framework from Fission 
 
 I have spent the last year building real Phoenix apps with spec-driven tooling, and OpenSpec is the framework I'd point a skeptical engineer at first, because it asks for almost nothing up front. No API key, no MCP server, no proprietary runtime. You install an npm package, run `openspec init`, and your specs are plain markdown files in your repo. This explainer covers how it works, where it shines, the criticism that comes up over and over, and how it lines up against CodeMySpec, the closest thing it has to a direct comparison.
 
+{{nontechnical_founder_cta campaign="openspec-explained-intro"}}
+
 ## What OpenSpec is
 
 OpenSpec is built by [Fission AI](https://github.com/Fission-AI/OpenSpec) and shipped as the npm package `@fission-ai/openspec` (Node 20.19+). It is MIT-licensed and open source. The repo has a large and steadily growing community, and it is under active iteration: v1.4.1 shipped June 3, 2026, the same day I pulled these facts. [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec)

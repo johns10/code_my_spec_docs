@@ -39,6 +39,8 @@ tags:
 
 Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. When an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent. They become the durable memory of why your codebase looks the way it does.
 
+{{nontechnical_founder_cta campaign="architectural-decision-records-intro"}}
+
 ## What ADRs Are (30-Second Version)
 
 An ADR captures one technical decision: what you chose, why you chose it, and what you gave up. Michael Nygard [proposed the format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) back in 2011. Status, Context, Decision, Consequences. That's it. Most teams skip them because writing docs feels like busywork. That calculus changes completely when agents enter the picture.

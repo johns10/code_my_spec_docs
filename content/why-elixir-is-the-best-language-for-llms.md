@@ -39,6 +39,8 @@ tags:
 
 On the largest multi-language code generation benchmark published so far, large language models solve Elixir problems at a higher rate than any of the other nineteen languages tested. That is the short version. The longer version is more interesting, because Elixir is a low-resource language. The internet holds a fraction of the Elixir code it holds for Python or JavaScript, so the models had far less to learn from. They came out ahead anyway. This post walks through what the benchmark found, why it happens, where the claim stops being airtight, and what any of it means if you build software with AI.
 
+{{nontechnical_founder_cta campaign="why-elixir-is-the-best-language-for-llms-intro"}}
+
 ## The evidence
 
 The benchmark is AutoCodeBench, published by Tencent Hunyuan. It contains 3,920 problems spread evenly across 20 languages, roughly 196 problems each, and it grades answers by running the generated code in a sandbox rather than by eyeballing it. More than 30 models were evaluated, open and closed, in both reasoning and non-reasoning modes. Tencent has no stake in Elixir, which is part of what makes the result worth paying attention to.

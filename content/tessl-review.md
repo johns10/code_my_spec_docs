@@ -40,6 +40,8 @@ Tessl is the most aggressive spec-driven development vision in the market, and i
 
 The vision deserves serious treatment. This review does that, then separates it from what you can actually run today.
 
+{{nontechnical_founder_cta campaign="tessl-review-intro"}}
+
 ## Who builds Tessl
 
 Tessl was founded by Guy Podjarny ("Guypo"), founder and former president of Snyk, the multi-billion-dollar developer-security company, and before that CTO at Akamai. He also co-hosts the AI Native Dev podcast and runs the AI Native DevCon conference in New York. Tessl is his second major venture, and the pedigree explains both the capital and the thought-leadership share Tessl commands in the spec-driven conversation.

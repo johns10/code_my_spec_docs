@@ -41,6 +41,8 @@ Kiro and OpenSpec both put a specification before the code, but they sit at oppo
 
 I have read deeply on both and run spec-first workflows on real Phoenix apps. Here is the honest comparison.
 
+{{nontechnical_founder_cta campaign="kiro-vs-openspec-intro"}}
+
 ## The core difference in one paragraph
 
 Kiro turns one prompt into three structured artifacts (a `requirements.md` in EARS notation, a `design.md`, and a dependency-sequenced `tasks.md`) inside a VS Code-derived editor, then implements them with Bedrock-backed agents on metered credits. OpenSpec does much less on purpose: `openspec init` drops a propose, apply, sync, archive loop into your repo, generates lightweight delta specs that record only what each change adds, modifies, or removes, and never calls an LLM itself (no API key, no MCP). Kiro optimizes for integrated, gated, enterprise-grade structure. OpenSpec optimizes for low overhead and changing code that already exists.

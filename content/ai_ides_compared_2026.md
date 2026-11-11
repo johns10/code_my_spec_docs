@@ -38,6 +38,8 @@ tags:
 
 # AI IDEs Compared in 2026: Cursor vs Windsurf vs Zed vs Kiro
 
+{{nontechnical_founder_cta campaign="ai-ides-compared-2026-intro"}}
+
 ## Introduction
 
 If you're willing to throw out your code editor for better AI, you have four serious options in 2026. They don't agree on what "AI coding" means:

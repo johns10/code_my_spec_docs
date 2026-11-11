@@ -38,6 +38,8 @@ tags:
 
 Vibe coded websites look alike because nobody decided how yours should look, so the model used the average of every site it trained on. Fixing it takes five decisions about theme, color, type, layout and tone, made once and written down, plus a rule that every page you build afterward has to follow them. Better prompting page by page does not work, and the rest of this explains why.
 
+{{nontechnical_founder_cta campaign="vibe-coded-websites-look-the-same-intro"}}
+
 ## Your site is not ugly, it is indistinguishable
 
 The problem is sameness, not quality. Most vibe coded sites are competently built: the spacing is even, the contrast mostly works, nothing is broken. They fail because a visitor has already seen forty sites with the same gradient and the same three cards, and the recognition arrives before they read a single word.

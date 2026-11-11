@@ -41,6 +41,8 @@ Both GitHub Spec Kit and AWS Kiro put a specification at the center of AI coding
 
 I have read deeply on both and run spec-first workflows on real Phoenix apps. Here is the honest comparison.
 
+{{nontechnical_founder_cta campaign="spec-kit-vs-kiro-intro"}}
+
 ## The core difference in one paragraph
 
 Spec Kit is a methodology plus scaffolding: a Python CLI (`specify`) drops Markdown templates and slash commands into your repo, and your existing agent (Copilot, Claude Code, Cursor, Gemini CLI, and 30-odd others) drives the constitution -> specify -> plan -> tasks -> implement loop. Nothing is locked; the specs are prose Markdown you commit like code. Kiro inverts that. It is a Code OSS (VS Code-compatible) editor where one prompt generates three structured artifacts (`requirements.md` in EARS notation, `design.md`, and a dependency-sequenced `tasks.md`), and Bedrock-backed agents implement them. The discipline is stronger and more guided, but you cash it in inside Kiro, on AWS credits, with the models AWS offers you.

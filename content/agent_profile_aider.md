@@ -36,6 +36,8 @@ tags:
 
 # Aider in 2026: Features, Pricing, Benchmarks, and Community Sentiment
 
+{{nontechnical_founder_cta campaign="aider-review-2026-intro"}}
+
 ## Overview
 
 Aider is the OG open-source CLI coding agent, and it still gets the fundamentals right in ways the vendor CLIs don't. Paul Gauthier started it before the wave, and the git integration is the deepest in the space: every edit auto-committed with a real message, clean `/undo`, committer tagged "(aider)" so you can audit what the model touched.

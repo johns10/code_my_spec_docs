@@ -43,6 +43,8 @@ Agent OS is a free, MIT-licensed, stack-neutral system from Brian Casel's Builde
 
 Agent OS changed shape significantly in January 2026, and much of the secondhand coverage still describes the old version. So: Agent OS is a strong standards-injection layer, it is not a spec-as-source pipeline, and after v3 it no longer pretends to be one.
 
+{{nontechnical_founder_cta campaign="agent-os-review-intro"}}
+
 ## What Agent OS is
 
 Agent OS comes from **Brian Casel** via **Builder Methods**, his training-and-community brand for "business owners and operators building real tools with AI." Casel is a long-time bootstrapped founder (prior products include ZipMessage and Audience Ops), and he positions Agent OS as open-source tooling lifted from his own workflow. The repo dates to July 2025, and Casel was an early popularizer of the phrase "spec-driven development," though plenty of people dispute that term, with GitHub Spec Kit and others using it concurrently, so treat any "coined it" framing as marketing.

@@ -44,6 +44,8 @@ The catch I want to get out of the way up front: "free tool + API key" is not al
 
 **Updated July 10, 2026.** Free and open source turned out not to mean immortal. Since the spring version of this post: Roo Code's repo was archived read-only on May 15. Continue.dev was acquired by Cursor in June and wound down (repo read-only, hosted Hub closing). Gemini CLI's famous free tier ended June 18 as Google folds the tool into Antigravity CLI. Aider has gone dormant (no substantial release since August 2025). On the bright side, Cline added Claude Sonnet 5 support plus a hosted ClinePass tier, OpenCode and Goose are shipping weekly, and Warp open-sourced its core in May. Corrections are inline below.
 
+{{nontechnical_founder_cta campaign="free-open-source-ai-coding-tools-2026-intro"}}
+
 ## The Quick Matrix
 
 | Tool | Type | License | Stars | Truly Free? | Real Monthly Cost | Best For |

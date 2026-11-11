@@ -46,6 +46,8 @@ This is the problem nobody talks about. We keep giving agents more tools, more s
 
 The fix is a concept from 1980s interface design. It's called progressive disclosure, and it turns out to be the defining architectural pattern for AI agent context management.
 
+{{nontechnical_founder_cta campaign="progressive-disclosure-intro"}}
+
 ## The Original Insight
 
 Jakob Nielsen [defined progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/) as a design strategy: show users only what they need right now, and defer everything else to a secondary screen. The concept is older than the web. It comes from early GUI research in the 1970s and 1980s.

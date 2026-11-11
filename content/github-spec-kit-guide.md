@@ -38,6 +38,8 @@ Spec Kit is the most visible thing in [spec-driven development](/blog/spec-drive
 
 GitHub Spec Kit is an open-source toolkit that bolts a structured, spec-first workflow onto whatever AI coding agent you already use, turning Markdown specs into the artifact that drives code generation. I've read the philosophy doc, dug through the field reports, and the pattern is consistent: it gets you a clean spec and a first generation, then leaves you on your own. Here's how the `/specify -> /plan -> /tasks -> implement` loop works, where it shines, the criticisms it has earned, and where it stops compared to a full-lifecycle harness like CodeMySpec.
 
+{{nontechnical_founder_cta campaign="github-spec-kit-guide-intro"}}
+
 ## What Spec Kit is
 
 Spec Kit is a project from GitHub (owned by Microsoft), shipped under the official `github/spec-kit` org with an MIT license. The public face is Den Delimarsky, a Principal Product Manager at GitHub, who authored the launch post on the GitHub Blog (September 2, 2025) and maintains an ongoing explainer series.

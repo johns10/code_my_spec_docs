@@ -43,6 +43,8 @@ AI coding agents are great at producing plausible code fast, and terrible at rem
 
 That spec is the durable memory that survives context windows, model swaps, and the months between when a feature was built and when someone has to change it. By mid-2026 SDD is a real category with a Martin Fowler article, a DeepLearning.AI course, an arXiv paper, and at least seven serious tools fighting over the term. It is also one of the few durable ideas in a churning market: the spring 2026 consolidation wave (acquisitions, rebrands, and sunsets across the [broader AI coding tool landscape](/blog/best-ai-coding-tools-2026)) strengthened the case for keeping your intent in specs you own rather than in any one vendor's chat history. This guide defines the category, lays out the rigor spectrum, walks the canonical workflow, classifies the tools, compares them in one table, and gives you a way to choose. I build with one of these tools daily (CodeMySpec, which I make), so I will flag my bias where it shows up and try to be fair to the rest.
 
+{{nontechnical_founder_cta campaign="spec-driven-development-intro"}}
+
 ## What is spec-driven development?
 
 **Spec-driven development is a software methodology where a written specification, not the code, is the source of truth: humans author and maintain the spec, and AI agents generate, verify, and update code against it.**
