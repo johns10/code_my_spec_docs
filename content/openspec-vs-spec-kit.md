@@ -40,6 +40,8 @@ If you are choosing a spec-driven development framework in 2026, the two names y
 
 I have read deeply into both and run spec-first workflows on real Phoenix apps. Here is the honest breakdown: what each one actually does, where each one breaks down, and how to pick.
 
+{{nontechnical_founder_cta campaign="openspec-vs-spec-kit-intro"}}
+
 ## The core difference in one paragraph
 
 Spec Kit gives you a full pipeline (constitution, specify, clarify, plan, analyze, tasks, implement) that produces a stack of dense Markdown documents per feature. It takes a project from zero to a working system through deliberate up-front planning. OpenSpec gives you a much smaller loop (propose, apply, sync, archive) built around a "delta" model where each change describes only what it adds, modifies, or removes against a source-of-truth spec. Spec Kit optimizes for structure and starting clean. OpenSpec optimizes for low overhead and changing code that already exists.

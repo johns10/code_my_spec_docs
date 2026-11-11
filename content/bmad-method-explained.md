@@ -40,6 +40,8 @@ If you have spent any time reading about spec-driven development, you have run i
 
 This is the explainer I wish I had read before I tried to figure out where BMAD fits in the [spec-driven development landscape](/blog/spec-driven-development). Here is what it is, how it actually works, the honest knocks against it, and how it lines up against a spec-first harness like CodeMySpec.
 
+{{nontechnical_founder_cta campaign="bmad-method-explained-intro"}}
+
 ## What BMAD Is
 
 BMAD-METHOD ("Breakthrough Method for Agile AI-Driven Development") is an open-source framework from BMad Code, LLC. It is MIT-licensed, free, and bring-your-own-model. It is one of the most popular and widely adopted projects in the agentic-coding space. [![GitHub stars](https://img.shields.io/github/stars/bmad-code-org/BMAD-METHOD?style=flat&label=stars&color=e25515)](https://github.com/bmad-code-org/BMAD-METHOD)

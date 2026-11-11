@@ -44,6 +44,8 @@ I build with a spec-driven development tool every day, so I have opinions about 
 
 One disclosure up front: I make one of these tools (CodeMySpec), so I will flag my bias where it shows up and give it the same honest treatment as the rest. No tool here is the right answer for everyone, and I will tell you where each one breaks down.
 
+{{nontechnical_founder_cta campaign="best-spec-driven-development-tools-intro"}}
+
 ## How I evaluated these tools
 
 A spec-driven tool is only as good as the gap between "the spec said this" and "the code does this." I scored each tool on six things that decide whether the spec governs the build or just kicks it off:
