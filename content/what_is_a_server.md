@@ -39,7 +39,7 @@ tags:
 # What Is a Server and Why Are You Paying For One?
 
 > "CodeX wanted me to upgrade... now I'm at $50/month and I don't know why"
-> -- r/vibecoding
+>, r/vibecoding
 
 Someone posted a list of 15 services vibe coders should use. Databases, forms, payments, search, error tracking, analytics, CI/CD, on and on. Top comment, 97 upvotes: "Too many words, just prompt." Second comment, 43 upvotes: "I have no idea what any of that means."
 
@@ -81,7 +81,7 @@ I use Hetzner. $4/month for a server that runs my entire app with Postgres. One 
 
 The tradeoff: you manage that server yourself. Updates, security, backups. Services like Vercel and Supabase exist because they handle that for you. You pay more, but you think about less.
 
-Neither is wrong. But your AI will never tell you "hey, you could run all of this on one $4 server instead of five separate services." Now you know the choice exists.
+Neither is wrong. But your AI will never tell you "hey, you could run all this on one $4 server instead of five separate services." Now you know the choice exists.
 
 ## The "Is A / Has A" Breakdown
 
@@ -115,7 +115,7 @@ That gives you a map of where your money goes.
 
 > "Can this app run on a single VPS with Postgres instead of using separate services for hosting, database, and file storage?"
 
-Sometimes the answer is genuinely no - payment processing should always be Stripe or similar. But for a lot of vibe-coded apps, the answer is yes, and you'll go from $50/month to $4.
+Sometimes the answer is genuinely no - payment processing should always be Stripe or similar. But for many vibe-coded apps, the answer is yes, and you'll go from $50/month to $4.
 
 ## If You're Still Here: What's Actually Inside My $4 Server
 

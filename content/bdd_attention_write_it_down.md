@@ -91,7 +91,7 @@ I had been writing tasks. I hadn't been writing behaviors. The model and I were 
 
 The subtler problem was memory.md.
 
-I wanted the model to update the memory file as it worked. That meant the model was writing to memory.md. The model writing to memory.md was the same model that had just finished a task and wanted to report progress. Those two facts combined badly.
+I wanted the model to update the memory file as it worked. That meant the model was writing to memory.md. The model writing to memory.md was the same model that had finished a task and wanted to report progress. Those two facts combined badly.
 
 The model would update the memory to reflect its own interpretation of what had happened. Steps that weren't quite done would be recorded as complete. Context that contradicted the guidelines would drift in. By session five on a long feature, the `memory.md` I was loading at session start wasn't the state I thought the project was in. It was a version that had been edited iteratively by a model that was motivated to show forward progress.
 

@@ -46,7 +46,7 @@ I needed a way to approve these requests from my phone. So I built one.
 
 ## Why Are Push Notifications Not Enough for AI Agent Permissions?
 
-The obvious solution is push notifications. There are already tools out there that do this well — [claude-remote-approver](https://github.com/yuuichieguchi/claude-remote-approver) hooks into Claude Code's permission system and sends notifications via ntfy.sh with approve, deny, and even "always approve" action buttons. It handles AskUserQuestion too. It works and it ships in an afternoon.
+The obvious solution is push notifications. There are already tools out there that do this well, [claude-remote-approver](https://github.com/yuuichieguchi/claude-remote-approver) hooks into Claude Code's permission system and sends notifications via ntfy.sh with approve, deny, and even "always approve" action buttons. It handles AskUserQuestion too. It works and it ships in an afternoon.
 
 But when I started building my version, I realized I wanted more than a notification flow. I wanted persistence, a full approval UI, and audit history. The questions that drove me:
 
@@ -63,19 +63,21 @@ Here's how permission requests flow through CodeMySpec:
 
 ### Step 1: The Hook
 
-Claude Code supports hooks — shell scripts that run before or after tool calls. When a tool needs approval, the hook fires. It POSTs the tool name and input to a local server running on the developer's machine.
+Claude Code supports hooks, shell scripts that run before or after tool calls. When a tool needs approval, the hook fires. It POSTs the tool name and input to a local server running on the developer's machine.
 
-### Step 2: Local Server → Production
+### Step 2: Local Server → CodeMySpec Server
 
-The local server doesn't make the decision. It forwards the request to the production CodeMySpec instance via HTTP. Why? Because the production server is where the user's authentication, push subscriptions, and persistent state live. The local server is just a bridge.
+The local server doesn't make the decision. It forwards the request to the CodeMySpec server via HTTP, using your signed-in token. Why? Because the server is where your authentication, push subscriptions, and persistent state live. The local server is just a bridge.
+
+Anything that goes wrong resolves to "ask". No credential, no server, no reply inside the timeout (two minutes by default), a dead socket: the hook answers "ask", which puts Claude Code's own prompt in front of whoever is at the terminal. The failure mode is "you get asked locally", never "it went ahead".
 
 ### Step 3: Persistence + Web Push
 
-The production server does two things simultaneously:
+The server does two things simultaneously:
 
 1. **Saves the permission request to the database.** This is the key difference from a notification-only approach. The request exists as a record with a status (`pending`, `approved`, `denied`, `expired`), a decision field, timestamps, and a foreign key to the user. If the notification never arrives, the request still exists and can be acted on from any browser.
 
-2. **Fires a Web Push notification.** Not ntfy.sh or any third-party service — the W3C Web Push API with VAPID keys. The notification includes a link to the approval page.
+2. **Fires a Web Push notification.** Not ntfy.sh or any third-party service, the W3C Web Push API with VAPID keys. The notification includes a link to the approval page.
 
 ```elixir
 def create_permission_request(user, attrs) do
@@ -88,7 +90,7 @@ end
 
 ### Step 4: The Approval UI
 
-Tapping the notification opens a Phoenix LiveView page showing the full permission request — tool name, the complete tool input (which can be complex JSON), and approve/deny buttons. This is where having a real UI matters. Some tool inputs are a single file path. Others are multi-line shell commands or API payloads. You need to actually read them before deciding.
+Tapping the notification opens a Phoenix LiveView page showing the full permission request, tool name, the complete tool input (which can be complex JSON), and approve/deny buttons. This is where having a real UI matters. Some tool inputs are a single file path. Others are multi-line shell commands or API payloads. You need to actually read them before deciding.
 
 ### Step 5: The Decision Cascade
 
@@ -97,20 +99,20 @@ When the user clicks approve or deny:
 1. The `PermissionRequest` record is updated in the database
 2. A message is broadcast via Phoenix PubSub on the topic `"permission_request:{id}"`
 3. A Phoenix Channel (`PermissionChannel`) subscribed to that topic pushes the decision to connected clients
-4. A Slipstream WebSocket client running on the developer's local machine receives the message
-5. The local server sends the decision as a Server-Sent Event back to the waiting hook
+4. A Slipstream WebSocket client on the developer's machine, opened for that one request, receives the message
+5. The local server answers the waiting hook request with the decision
 6. The hook returns the decision to Claude Code, which continues or stops
 
 The whole round trip takes about 2 seconds.
 
 ```
-Hook → Local Server → Production → DB + Web Push
-                                          ↓
-Phone ← Web Push notification ← Production
+Hook → Local Server → Server → DB + Web Push
+                                    ↓
+Phone ← Web Push notification ← Server
   ↓
 User taps → LiveView → Approve/Deny
   ↓
-PubSub → Channel → WebSocket → Local Server → SSE → Hook → Claude Code continues
+PubSub → Channel → WebSocket → Local Server → Hook → Claude Code continues
 ```
 
 ## Why Build a Full-Stack Permission System Instead of a Simple Notification Tool?
@@ -138,15 +140,15 @@ Phoenix is almost unfairly good at this. The stack I needed was:
 - **Web Push** via `web_push_elixir` for notifications
 - **Slipstream** for the local WebSocket client connecting back to production
 
-Every one of these is a first-class Phoenix citizen or a well-maintained library. The hardest part wasn't any individual piece — it was wiring them together into a coherent flow. Phoenix's built-in PubSub made the broadcasting trivial. Channels gave me authenticated real-time communication without thinking about it. LiveView meant the approval page was a single `.ex` file.
+Every one of these is a first-class Phoenix citizen or a well-maintained library. The hardest part wasn't any individual piece, it was wiring them together into a coherent flow. Phoenix's built-in PubSub made the broadcasting trivial. Channels gave me authenticated real-time communication without thinking about it. LiveView meant the approval page was a single `.ex` file.
 
 If you're building agent infrastructure and wondering which stack to use, the real-time capabilities of Phoenix/Elixir make this kind of system almost too easy.
 
 ## Frequently Asked Questions
 
-**How fast is the round trip from permission request to agent resuming?** The entire flow -- from the hook firing, through the production server, Web Push notification, user approval on their phone, and the decision cascading back to the waiting agent -- takes about 2 seconds. The agent pauses seamlessly and resumes immediately after the decision arrives.
+**How fast is the round trip from permission request to agent resuming?** The entire flow, from the hook firing, through the production server, Web Push notification, user approval on their phone, and the decision cascading back to the waiting agent, takes about 2 seconds. The agent pauses seamlessly and resumes immediately after the decision arrives.
 
-**What happens if I miss the push notification?** The permission request is persisted in the database with a pending status. You can approve it from any browser where you are authenticated -- your laptop, phone, or any other device. The request does not vanish if the notification fails to deliver.
+**What happens if I miss the push notification?** The permission request is persisted in the database with a pending status. You can approve it from any browser where you are authenticated, your laptop, phone, or any other device. The request does not vanish if the notification fails to deliver.
 
 **Is this secure enough for production use?** Web Push subscriptions are tied to authenticated users via VAPID keys. The approval page requires login. Every permission request and its resolution is stored in the database with timestamps for audit purposes. There is no shared secret or public topic that an unauthorized person could respond to.
 

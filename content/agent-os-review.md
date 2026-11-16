@@ -43,6 +43,8 @@ Agent OS is a free, MIT-licensed, stack-neutral system from Brian Casel's Builde
 
 Agent OS changed shape significantly in January 2026, and much of the secondhand coverage still describes the old version. So: Agent OS is a strong standards-injection layer, it is not a spec-as-source pipeline, and after v3 it no longer pretends to be one.
 
+{{nontechnical_founder_cta campaign="agent-os-review-intro"}}
+
 ## What Agent OS is
 
 Agent OS comes from **Brian Casel** via **Builder Methods**, his training-and-community brand for "business owners and operators building real tools with AI." Casel is a long-time bootstrapped founder (prior products include ZipMessage and Audience Ops), and he positions Agent OS as open-source tooling lifted from his own workflow. The repo dates to July 2025, and Casel was an early popularizer of the phrase "spec-driven development," though plenty of people dispute that term, with GitHub Spec Kit and others using it concurrently, so treat any "coined it" framing as marketing.
@@ -110,7 +112,7 @@ The two tools overlap on one axis and diverge completely on another. Both Agent 
 
 In Agent OS, **standards are the product.** They are reverse-engineered from your code, indexed, and injected as advisory context (or Claude Skills). They are the main event, and the spec is a thin downstream nudge inside Plan Mode. Nothing enforces them.
 
-In CodeMySpec, the **rules and standards layer is subordinate to a mandatory BDD spec.** Rules constrain *how* code is written, but the **BDD spec defines what must be true and gates the build.** Standards are the floor; the spec is the contract. CMS's specs are persisted, versioned artifacts that any agent consumes via MCP or generated context files, not an ephemeral plan that evaporates after implementation. And CMS adds the piece Agent OS does not have at all: **live verification.** A QA subagent boots the real app, drives a real browser, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway.
+In CodeMySpec, the **rules and standards layer is subordinate to a mandatory BDD spec.** Rules constrain *how* code is written, but the **BDD spec defines what must be true and gates the build.** Standards are the floor; the spec is the contract. CMS's specs are persisted, versioned artifacts that live in your repo and gate the build, not an ephemeral plan that evaporates after implementation. And CMS adds the piece Agent OS does not have at all: **live verification.** A QA subagent boots the real app, drives a real browser, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway.
 
 | Axis | Agent OS (v3) | CodeMySpec |
 |---|---|---|
@@ -119,10 +121,10 @@ In CodeMySpec, the **rules and standards layer is subordinate to a mandatory BDD
 | Enforcement / gate | None; standards are advisory injection | Mandatory BDD gate; configurable `require_specs`, `require_reviews`, `require_tests` |
 | Verification | None | Live browser QA + generated tests |
 | Stack | Stack-neutral, framework-agnostic | Phoenix/Elixir-native |
-| Agent lock-in | None (Claude Code optimized; degrades elsewhere) | None (MCP + CLAUDE.md, .cursorrules, GEMINI.md); no token markup |
-| Pricing | Free, MIT (+ paid workshops) | Free (early access) |
+| Agent lock-in | None (Claude Code optimized; degrades elsewhere) | None (BYO keys; plugins for Claude Code, Codex, Antigravity); no token markup |
+| Pricing | Free, MIT (+ paid workshops) | Build free; Operate & Grow $100/mo per user |
 
-The fair framing is not "CMS does standards better." Agent OS's Discover is a genuinely strong capability that CMS does not foreground, and the two share the BYO-agent, no-markup, portable-artifact philosophy. These are **different jobs.** Agent OS is a standards-injection layer that makes your agent write more like you. CodeMySpec is a spec-gated, full-lifecycle harness that makes a behavioral spec mandatory and verifies the result against it. If you want to learn how the gated-spec model works in practice, [CodeMySpec](/developers) is built around exactly that contract. Agent OS injects standards and hopes the agent follows them; CMS makes the spec the gate.
+The fair framing is not "CMS does standards better." Agent OS's Discover is a genuinely strong capability that CMS does not foreground, and the two share the bring-your-own-key, no-markup, repo-resident philosophy. These are **different jobs.** Agent OS is a standards-injection layer that makes your agent write more like you. CodeMySpec is a spec-gated, full-lifecycle harness that makes a behavioral spec mandatory and verifies the result against it. If you want to learn how the gated-spec model works in practice, [CodeMySpec](/developers) is built around exactly that contract. Agent OS injects standards and hopes the agent follows them; CMS makes the spec the gate.
 
 ## Related Articles
 

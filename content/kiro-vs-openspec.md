@@ -41,6 +41,8 @@ Kiro and OpenSpec both put a specification before the code, but they sit at oppo
 
 I have read deeply on both and run spec-first workflows on real Phoenix apps. Here is the honest comparison.
 
+{{nontechnical_founder_cta campaign="kiro-vs-openspec-intro"}}
+
 ## The core difference in one paragraph
 
 Kiro turns one prompt into three structured artifacts (a `requirements.md` in EARS notation, a `design.md`, and a dependency-sequenced `tasks.md`) inside a VS Code-derived editor, then implements them with Bedrock-backed agents on metered credits. OpenSpec does much less on purpose: `openspec init` drops a propose, apply, sync, archive loop into your repo, generates lightweight delta specs that record only what each change adds, modifies, or removes, and never calls an LLM itself (no API key, no MCP). Kiro optimizes for integrated, gated, enterprise-grade structure. OpenSpec optimizes for low overhead and changing code that already exists.
@@ -97,13 +99,13 @@ The dividing line is clean: Kiro is the integrated, opinionated environment that
 
 Here is what both tools share, and where both leave a gap. Both are spec-first, and neither verifies the generated code against the live, running app. Kiro's Agent Hooks can run tests, but unit tests passing is not the same as the button actually working. OpenSpec's `verify` "won't block archive," and its scenarios are optional. In both, the spec governs the code by convention, not by enforcement.
 
-[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
+[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a plugin for Claude Code (with Codex and Google Antigravity plugins too) that connects to a local harness. Three differences matter against these two tools:
 
 - **A mandatory BDD gate.** BDD scenarios (Given/When/Then) are required, not optional documents the agent should follow, and they are behavioral contracts rather than requirement phrasing. Module specs, reviews, and tests are configurable knobs; the BDD gate is not.
 - **Built-in live verification.** A QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. Neither Kiro nor OpenSpec runs the live app to confirm the spec held.
-- **Phoenix-native, and BYO everything.** Phoenix contexts, LiveView, Ecto, and OTP are first-class. Specs are portable as MCP context or context files (CLAUDE.md, .cursorrules, GEMINI.md), so you bring your own agent, your own model, and your own keys with no token markup, the opposite of Kiro's credit metering.
+- **Phoenix-native, and BYO everything.** Phoenix contexts, LiveView, Ecto, and OTP are first-class. Specs and tests live in your repo as files, and the harness runs on your own agent and keys (Claude Code, Codex, Google Antigravity), so you bring your own model with no token markup, the opposite of Kiro's credit metering.
 
-To be fair: repo-resident specs and bring-your-own-agent portability are not unique to CodeMySpec. OpenSpec meets that bar too, and both tools keep specs in your repo. The defensible difference is the combination: a mandatory behavioral gate plus live-app verification plus a full lifecycle on one requirement graph, built deep for one stack. It is early access and Elixir-specific, so it is not the answer if you are on a different stack. But if you are building Phoenix and the drift-and-verification gap is what worries you, it is worth a look.
+To be fair: repo-resident specs and bring-your-own-model keys are not unique to CodeMySpec. OpenSpec meets that bar too, and both tools keep specs in your repo. The defensible difference is the combination: a mandatory behavioral gate plus live-app verification plus a full lifecycle on one requirement graph, built deep for one stack. It is Elixir-specific, free to build, and $100 a month per user once your software is live, so it is not the answer if you are on a different stack. But if you are building Phoenix and the drift-and-verification gap is what worries you, it is worth a look.
 
 ## Related Articles
 

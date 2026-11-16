@@ -128,11 +128,11 @@ graph TB
         email["Resend / SendGrid (Email)"]
     end
 
-    react -- "API calls (JSON)" --> api
-    api -- "queries" --> db
-    api -- "upload/download" --> s3
-    api -- "charges" --> stripe
-    api -- "sends" --> email
+    react, "API calls (JSON)" --> api
+    api, "queries" --> db
+    api, "upload/download" --> s3
+    api, "charges" --> stripe
+    api, "sends" --> email
     react -. "downloads images" .-> s3
     react -. "public APIs only" .-> stripe
 ```
@@ -143,7 +143,7 @@ Reading this diagram:
 
 **The server** has your API routes and auth logic. This is the middleman. Every request from the client goes through here. The server checks who's asking, decides if they're allowed, and then talks to the services.
 
-**Third-party services** are where your data actually lives. The database stores your records. S3 stores your files. Stripe handles money. Email services send notifications. Your server talks to all of these - the client almost never talks to them directly.
+**Third-party services** are where your data actually lives. The database stores your records. S3 stores your files. Stripe handles money. Email services send notifications. Your server talks to all these - the client almost never talks to them directly.
 
 The dotted lines are the exceptions. The client can download images directly from S3 (that's fine, images are public). The client can talk to Stripe's public-facing JavaScript for payment forms (Stripe designed it that way). But the actual charges, the database queries, the email sends - those all go through your server.
 

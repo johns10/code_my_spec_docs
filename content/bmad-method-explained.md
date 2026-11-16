@@ -40,6 +40,8 @@ If you have spent any time reading about spec-driven development, you have run i
 
 This is the explainer I wish I had read before I tried to figure out where BMAD fits in the [spec-driven development landscape](/blog/spec-driven-development). Here is what it is, how it actually works, the honest knocks against it, and how it lines up against a spec-first harness like CodeMySpec.
 
+{{nontechnical_founder_cta campaign="bmad-method-explained-intro"}}
+
 ## What BMAD Is
 
 BMAD-METHOD ("Breakthrough Method for Agile AI-Driven Development") is an open-source framework from BMad Code, LLC. It is MIT-licensed, free, and bring-your-own-model. It is one of the most popular and widely adopted projects in the agentic-coding space. [![GitHub stars](https://img.shields.io/github/stars/bmad-code-org/BMAD-METHOD?style=flat&label=stars&color=e25515)](https://github.com/bmad-code-org/BMAD-METHOD)
@@ -99,29 +101,29 @@ BMAD is stack-generic by design. A community port, `mkreyman/bmad-elixir`, adapt
 
 BMAD and CodeMySpec are solving different problems, and the cleanest way to see the difference is to state each tool's central question.
 
-BMAD answers: **how do I run a whole AI agile team?** CodeMySpec answers: **how do I make the spec good enough that any agent produces verified good code?**
+BMAD answers: **how do I run a whole AI agile team?** CodeMySpec answers: **how do I make the spec an executable contract that the build and a QA agent verify?**
 
 That difference cascades into everything else.
 
 | Dimension | BMAD-METHOD | CodeMySpec |
 |---|---|---|
-| Core identity | Multi-persona agile team simulation | Spec-generation harness that produces specs an agent consumes |
+| Core identity | Multi-persona agile team simulation | Spec-gated harness that drives your coding agent and verifies the result |
 | Unit that drives code | Hyper-detailed story files (sharded from PRD/arch) | BDD specs + module specs on a requirement graph |
 | Spec philosophy | Specs are one artifact among many | Spec quality *is* the thesis |
-| Spec role | Context-packing for the next agent | Portable protocol layer (consumed via MCP / context files) |
-| Phases | Agentic Planning -> Context-Engineered Development | Spec generation -> BYO-agent implementation |
+| Spec role | Context-packing for the next agent | Executable BDD contract the build is gated on |
+| Phases | Agentic Planning -> Context-Engineered Development | Spec, code, tests, live QA on one requirement graph |
 | Stack | Generic / language-agnostic | Phoenix-native |
 | Verification | Multi-agent QA review of stories | Mandatory BDD gate + live browser QA on the running app |
-| Weight | Heavyweight: 6-7 personas, high token spend, weeks to learn | Lighter: the harness produces the spec, you run any agent |
-| Pricing | Free, MIT, BYO model | Free in early access, BYO agent/model/keys |
+| Weight | Heavyweight: 6-7 personas, high token spend, weeks to learn | Lighter: one harness drives your agent, you steer |
+| Pricing | Free, MIT, BYO model | Build free; Operate & Grow $100/mo per user; BYO keys |
 
-BMAD bundles roles, handoffs, and stories into a method. [CodeMySpec](/developers) does the opposite: it isolates the spec as a portable, BDD-grounded protocol and stays out of the agent's way. Specs are markdown, tests are ExUnit, and any agent (Claude Code, Codex, Gemini CLI) can consume them via MCP or generated context files. Bring your own agent, your own model, your own keys. We don't arbitrage tokens.
+BMAD bundles roles, handoffs, and stories into a method. [CodeMySpec](/developers) does the opposite: it isolates the spec as an executable, BDD-grounded contract and stays out of the agent's way. The specs run with `mix spex`, tests are ExUnit, and the harness drives Claude Code today, with Codex and Google Antigravity plugins too. Bring your own keys. We don't arbitrage tokens.
 
 The other gap is verification. BMAD's quality gate is a multi-agent QA review of the story output, agents checking agents, which is exactly where the error-propagation criticism bites. CodeMySpec's gate is different in kind: every spec produces BDD acceptance criteria and generated tests, and then a QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass. BDD specs pass. Then the QA agent clicks the button and finds the bug anyway. Prompting is praying; verification is a guarantee.
 
 Most spec-driven tools are spec-only. They generate a spec and hand off to a separate agent. CodeMySpec runs spec, code, test, and live verification in one system, tracked on a requirement graph, built Elixir-first by an Elixir engineer.
 
-If you want to orchestrate a full AI product team and you have a greenfield project with real compliance needs, BMAD is a serious, comprehensive choice. If you want the spec itself to be good enough, and verified, so that any agent produces working Phoenix code without the weeks-long ramp and the 230M-tokens-a-week bill, that is the problem CodeMySpec solves.
+If you want to orchestrate a full AI product team and you have a greenfield project with real compliance needs, BMAD is a serious, comprehensive choice. If you want the spec itself to be good enough, and verified, so that your agent produces working Phoenix code without the weeks-long ramp and the 230M-tokens-a-week bill, that is the problem CodeMySpec solves.
 
 ## Related Articles
 
@@ -141,7 +143,7 @@ If you want to orchestrate a full AI product team and you have a greenfield proj
 - [Tim Wang, "Spec-kit, BMAD, Agent OS and Kiro," Medium](https://medium.com/@tim_wang/spec-kit-bmad-and-agent-os-e8536f6bf8a4)
 - [Reenbit, "BMAD vs Spec Kit vs OpenSpec"](https://reenbit.com/bmad-vs-spec-kit-vs-openspec-choosing-your-spec-driven-ai-framework/)
 - [Reenbit, "What Is BMAD?"](https://reenbit.com/the-bmad-method-how-structured-ai-agents-turn-vibe-coding-into-production-ready-software/)
-- [Anderson Santos, "You should BMAD -- part 2," Medium](https://adsantos.medium.com/you-should-bmad-part-2-a007d28a084b)
+- [Anderson Santos, "You should BMAD, part 2," Medium](https://adsantos.medium.com/you-should-bmad-part-2-a007d28a084b)
 - [MarkTechPost, "9 Best AI Tools for Spec-Driven Development in 2026"](https://www.marktechpost.com/2026/05/08/9-best-ai-tools-for-spec-driven-development-in-2026-kiro-bmad-gsd-and-more-compare/)
 - [Vishal Mysore, "Comprehensive Guide to Spec-Driven Development: Kiro, GitHub Spec Kit, and BMAD-METHOD," Medium](https://medium.com/@visrow/comprehensive-guide-to-spec-driven-development-kiro-github-spec-kit-and-bmad-method-5d28ff61b9b1)
 - [AngelHack DevLabs, "What is the BMad Method?"](https://devlabs.angelhack.com/blog/bmad-method/)

@@ -53,9 +53,9 @@ tags:
 
 <style>
   /* ══════════════════════════════════════════════════════════════════════
-     The Harness Layer — CRO block styles
+     The Harness Layer, CRO block styles
      Tokens borrowed from app.css brand system (CodeMySpec brand_system v0.9).
-     All selectors namespaced .cro-* — no leakage outside this article.
+     All selectors namespaced .cro-*, no leakage outside this article.
      ══════════════════════════════════════════════════════════════════════ */
 
   /* Locally re-declare the brand tokens this article needs, in case the
@@ -319,7 +319,7 @@ tags:
     }
   }
 
-  /* ─── EVOLUTIONS — three columns, escalating ───────────────────────── */
+  /* ─── EVOLUTIONS, three columns, escalating ───────────────────────── */
   .cro-evo {
     display: grid;
     grid-template-columns: 0.85fr 1fr 1.25fr;
@@ -597,7 +597,7 @@ tags:
     background: var(--cro-red);
   }
 
-  /* ─── HARNESS STACK — fractal nested levels ──────────────────────── */
+  /* ─── HARNESS STACK, fractal nested levels ──────────────────────── */
   .cro-stack {
     display: flex;
     flex-direction: column;
@@ -694,7 +694,7 @@ tags:
     }
   }
 
-  /* ─── CTA-TAIL — full brand-zone treatment ─────────────────────── */
+  /* ─── CTA-TAIL, full brand-zone treatment ─────────────────────── */
   .cro-tail {
     position: relative;
     overflow: hidden;
@@ -861,7 +861,7 @@ tags:
 <aside
   class="not-prose"
   data-cro="hero"
-  data-design-needed="Big-stat hero. Foreground: '1,000,000 lines · 0 written by hand · 5 months · 3 engineers'. Frame: brand zone (red/60). Primary CTA below stat: 'Install the plugin' → /products/code-my-spec?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=hero-cta. Optional secondary 'Read the methodology' → /methodology. Sits above the lede, replaces the muted intro feel."
+  data-design-needed="Big-stat hero. Foreground: '1,000,000 lines · 0 written by hand · 5 months · 3 engineers'. Frame: brand zone (red/60). Primary CTA below stat: 'Install the plugin' → /product?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=hero-cta. Optional secondary 'Read the methodology' → /methodology. Sits above the lede, replaces the muted intro feel."
 >
   <div class="cro-hero cro-signal-top cro-chamfer-lg">
     <div class="cro-hero-strip">
@@ -882,13 +882,13 @@ tags:
         </div>
       </div>
       <p class="cro-hero-lede">
-        Three engineers. Five months. The model wasn't the unlock — the harness
+        Three engineers. Five months. The model wasn't the unlock, the harness
         was. This is what the wrapper around the model can do when you treat it
         as the product.
       </p>
       <div class="cro-hero-ctas">
         <a
-          href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-cta"
+          href="/product?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=hero-cta"
           data-event-label="cta-harness-hero"
           class="cro-btn"
         >
@@ -926,7 +926,7 @@ tags:
 <!-- ─────────────────────────── LEDE ─────────────────────────── -->
 <p>
   <strong>The harness layer</strong> is the deterministic constraint system
-  surrounding an AI coding agent — the specs, verification loops, lifecycle
+  surrounding an AI coding agent, the specs, verification loops, lifecycle
   controls, and architectural enforcement that sit between the model's
   output and your codebase. It's what turns probabilistic token generation
   into reliable software.
@@ -990,7 +990,7 @@ tags:
     >LangChain made the formula explicit</a
   >
   in early 2026: <em>Agent = Model + Harness</em>. They demonstrated a 13.7-point
-  Terminal Bench 2.0 jump (52.8 → 66.5) from harness changes alone — same model,
+  Terminal Bench 2.0 jump (52.8 → 66.5) from harness changes alone, same model,
   same task, different surrounding system. Capability at the 2026 frontier is a
   substrate question, not a weights question.
 </p>
@@ -1028,20 +1028,20 @@ tags:
 <ul>
   <li>
     <strong>A rules file alone</strong> (CLAUDE.md, AGENTS.md,
-    <code>.cursorrules</code>) — has persistence, no oracle, no enforcement. The
+    <code>.cursorrules</code>), has persistence, no oracle, no enforcement. The
     model can ignore every word.
     <a href="https://martinfowler.com/articles/harness-engineering.html"
       >Birgitta Böckeler</a
     >
-    classifies these as <em>guides</em> — one component of a harness, not a
+    classifies these as <em>guides</em>, one component of a harness, not a
     harness on their own.
   </li>
   <li>
-    <strong>A skill</strong> (the Anthropic SKILL.md pattern) — a capability
+    <strong>A skill</strong> (the Anthropic SKILL.md pattern), a capability
     module the agent loads on demand. Composes into a harness; not one alone.
   </li>
   <li>
-    <strong>An MCP server</strong> — extends the agent's tool surface. Tools are
+    <strong>An MCP server</strong>, extends the agent's tool surface. Tools are
     a layer of a harness, but tools without enforcement or feedback are just a
     bigger API.
   </li>
@@ -1055,7 +1055,7 @@ tags:
 <p>
   The boundary test:
   <em>if the agent ignored the artifact, would anything stop or correct it?</em>
-  If no, it's not a harness — it's a hint.
+  If no, it's not a harness, it's a hint.
 </p>
 
 <h2>The shapes a harness comes in</h2>
@@ -1076,7 +1076,7 @@ tags:
     <a href="https://kiro.dev/">Kiro</a>,
     <a href="https://github.com/bmad-code-org/BMAD-METHOD">BMAD-Method</a>,
     <a href="https://tessl.io/">Tessl</a>, and CodeMySpec. Common failure: the
-    codebase satisfies the spec but does the wrong thing in production —
+    codebase satisfies the spec but does the wrong thing in production, 
     <em>spec-without-signal</em>.
   </li>
   <li>
@@ -1089,19 +1089,19 @@ tags:
     >, Karpathy's
     <a href="https://github.com/karpathy/autoresearch">autoresearch</a> for ML
     experiments. Common failure: the agent optimises for the signal rather than
-    the goal — Goodhart's law restated for agents.
+    the goal, Goodhart's law restated for agents.
   </li>
   <li>
     <strong>Hybrid (spec + signal).</strong> Spec-driven inner loop with a
     signal-driven outer loop on top that can re-enter the spec phase when
     runtime evidence contradicts it. OpenAI's Codex internal harness sits closest
-    to this shape — architectural enforcement plus production signal. No mature
+    to this shape, architectural enforcement plus production signal. No mature
     public example of a clean hybrid yet, which is why this is the most
     interesting empty quadrant in the space.
   </li>
   <li>
     <strong>Hook-based / policy enforcement.</strong> The harness doesn't run
-    its own loop — it intercepts the agent's. Oracle is a deterministic rule
+    its own loop, it intercepts the agent's. Oracle is a deterministic rule
     (TDD discipline, file ownership, architectural boundary). Example:
     <a href="https://github.com/nizos/tdd-guard">TDD-Guard</a> blocks
     Write/Edit on Claude Code if there's no failing test for the change. Common
@@ -1165,7 +1165,7 @@ tags:
 >
   <div class="cro-evo cro-chamfer-md">
     <div class="cro-evo-col cro-evo-col-1">
-      <div class="cro-evo-yr">2022 – 2024</div>
+      <div class="cro-evo-yr">2022, 2024</div>
       <h3 class="cro-evo-name">Prompt<br />engineering</h3>
       <div class="cro-evo-verb">communicates</div>
       <p class="cro-evo-body">
@@ -1236,7 +1236,7 @@ tags:
 <aside
   class="not-prose"
   data-cro="cta-mid"
-  data-design-needed="Inline mid-article CTA. Frame: brand-adjacent (some red, scanlines OK). Copy: 'Prompting is praying. Verification is a guarantee.' CTA: 'See how CodeMySpec enforces the harness for Phoenix' → /products/code-my-spec?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=cta-mid. Visual hook: terminal-style line + button, or just a strong typographic statement with a single-line CTA. Don't make it a full-bleed hero — it's mid-article punctuation, not interruption."
+  data-design-needed="Inline mid-article CTA. Frame: brand-adjacent (some red, scanlines OK). Copy: 'Prompting is praying. Verification is a guarantee.' CTA: 'See how CodeMySpec enforces the harness for Phoenix' → /product?utm_source=harness-layer-page&utm_medium=internal&utm_campaign=cta-mid. Visual hook: terminal-style line + button, or just a strong typographic statement with a single-line CTA. Don't make it a full-bleed hero, it's mid-article punctuation, not interruption."
 >
   <div class="cro-mid">
     <div class="cro-mid-term">
@@ -1248,11 +1248,11 @@ tags:
       >
     </p>
     <p class="cro-mid-sub">
-      CodeMySpec is the harness — productized, for Phoenix.
+      CodeMySpec is the harness, productized, for Phoenix.
     </p>
     <div class="cro-mid-cta">
       <a
-        href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
+        href="/product?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-mid"
         data-event-label="cta-harness-mid"
         class="cro-btn"
         >▸ See it on Phoenix</a
@@ -1289,7 +1289,7 @@ tags:
   <a href="https://mitchellh.com/writing/my-ai-adoption-journey"
     >Hashimoto's AGENTS.md</a
   >
-  for the Ghostty project works — but only because he pairs it with custom
+  for the Ghostty project works, but only because he pairs it with custom
   scripts and the discipline of rerunning the agent against documented failures.
   His own framing: AGENTS.md alone is not the harness. The practice around it
   is.
@@ -1369,7 +1369,7 @@ tags:
 <aside
   class="not-prose"
   data-cro="pullquote"
-  data-design-needed="Pull quote — the load-bearing finding. Big serif/display treatment, attribution muted underneath. Visual frame: red hairline left-border or full chamfered card. The quote is the hook to land the next paragraph."
+  data-design-needed="Pull quote, the load-bearing finding. Big serif/display treatment, attribution muted underneath. Visual frame: red hairline left-border or full chamfered card. The quote is the hook to land the next paragraph."
 >
   <blockquote class="cro-pq">
     <p class="cro-pq-q">
@@ -1590,7 +1590,7 @@ tags:
 <p>
   The outer-loop capture primitive is already in place. Agents call
   <code>create_issue</code> via an MCP tool when they hit a problem they can't
-  resolve cleanly — undocumented config, looping hooks, contradictory prompts,
+  resolve cleanly, undocumented config, looping hooks, contradictory prompts,
   tool errors. Users file feedback into the same queue from inside their app.
   Issues carry severity, a status lifecycle (incoming → accepted →
   resolved / dismissed), and optionally a <code>story_id</code> that pins them
@@ -1604,7 +1604,7 @@ tags:
   What's structurally next: the automated detection layer and the formalised
   closure. The detection layer is an agent that watches prod crashes and error
   rates and files issues without a human in the middle. The closure is the
-  handoff from a triaged issue back into spec mutation — when the queue says
+  handoff from a triaged issue back into spec mutation, when the queue says
   "the deployed system is wrong," the harness re-enters the spec phase, mutates
   the relevant story or scenario, regenerates the affected tasks, and patches.
   Both are on the roadmap. Both make the harness genuinely hybrid in Böckeler's
@@ -1612,11 +1612,11 @@ tags:
 </p>
 
 <p>
-  The strategic shape is that every report-back surface — agent failure, user
-  feedback, prod incident — routes into the same issues queue, and the spec
+  The strategic shape is that every report-back surface, agent failure, user
+  feedback, prod incident, routes into the same issues queue, and the spec
   graph reads from it. Issue-centric by design. The inner loop is real and
   load-bearing today. The outer-loop capture is in place. The closure is the
-  next horizon. Naming the gap is what makes the inner loop defensible — and
+  next horizon. Naming the gap is what makes the inner loop defensible, and
   the issues pipeline is what makes the hybrid claim a roadmap rather than a
   wish.
 </p>
@@ -1625,7 +1625,7 @@ tags:
 <aside
   class="not-prose"
   data-cro="cta-tail"
-  data-design-needed="End-of-article CTA stack. Highest-intent reader. Frame: brand zone (full red treatment, scanlines acceptable). Primary: install commands (mirror the homepage hero install block — '/plugin marketplace add Code-My-Spec/plugins' / '/plugin install codemyspec@codemyspec' with copy button). Secondary: 'Talk to John' (cal link via ExternalLinks.cal_john — design pass to wire), 'Read the methodology' → /methodology. Tertiary: link back to series index. Should feel like the homepage final-CTA section but compressed — this is the tail of an article, not a landing page."
+  data-design-needed="End-of-article CTA stack. Highest-intent reader. Frame: brand zone (full red treatment, scanlines acceptable). Primary: install commands (mirror the homepage hero install block, '/plugin marketplace add Code-My-Spec/plugins' / '/plugin install codemyspec@codemyspec' with copy button). Secondary: 'Talk to John' (cal link via ExternalLinks.cal_john, design pass to wire), 'Read the methodology' → /methodology. Tertiary: link back to series index. Should feel like the homepage final-CTA section but compressed, this is the tail of an article, not a landing page."
 >
   <div class="cro-tail cro-signal-top cro-chamfer-lg">
     <div class="cro-tail-grid" aria-hidden="true"></div>
@@ -1659,7 +1659,7 @@ tags:
       </div>
       <div class="cro-tail-links">
         <a
-          href="/products/code-my-spec?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail"
+          href="/product?utm_source=harness-layer-page&amp;utm_medium=internal&amp;utm_campaign=cta-tail"
           data-event-label="cta-harness-tail"
           >See the product page →</a
         >

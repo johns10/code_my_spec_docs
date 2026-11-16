@@ -38,6 +38,8 @@ OpenSpec is a free, MIT-licensed spec-driven development framework from Fission 
 
 I have spent the last year building real Phoenix apps with spec-driven tooling, and OpenSpec is the framework I'd point a skeptical engineer at first, because it asks for almost nothing up front. No API key, no MCP server, no proprietary runtime. You install an npm package, run `openspec init`, and your specs are plain markdown files in your repo. This explainer covers how it works, where it shines, the criticism that comes up over and over, and how it lines up against CodeMySpec, the closest thing it has to a direct comparison.
 
+{{nontechnical_founder_cta campaign="openspec-explained-intro"}}
+
 ## What OpenSpec is
 
 OpenSpec is built by [Fission AI](https://github.com/Fission-AI/OpenSpec) and shipped as the npm package `@fission-ai/openspec` (Node 20.19+). It is MIT-licensed and open source. The repo has a large and steadily growing community, and it is under active iteration: v1.4.1 shipped June 3, 2026, the same day I pulled these facts. [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec)
@@ -130,7 +132,7 @@ It is a weaker fit if you need a hard quality gate, enforced behavioral specs, t
 
 This is the comparison worth taking seriously, because OpenSpec is the closest thing CodeMySpec has to a peer, and the overlap is real.
 
-Both are repo-resident: specs live in version control, not a proprietary cloud silo. Both are bring-your-own-agent with no lock-in. Neither monetizes inference: OpenSpec requires no API key at all, and CodeMySpec is explicitly BYO-key with no token markup. Both treat the spec as a portable protocol the agent consumes. And both speak in behavioral terms: OpenSpec uses Given/When/Then, so the contrast is not that one has behavior specs and the other doesn't.
+Both are repo-resident: specs live in version control, not a proprietary cloud silo. Both are bring-your-own-key with no lock-in. Neither monetizes inference: OpenSpec requires no API key at all, and CodeMySpec is explicitly BYO-key with no token markup. Both keep the spec as a file in your repo that the agent works from. And both speak in behavioral terms: OpenSpec uses Given/When/Then, so the contrast is not that one has behavior specs and the other doesn't.
 
 The split is enforcement and depth.
 
@@ -142,7 +144,7 @@ The split is enforcement and depth.
 | Verification | None | **Live browser QA + generated tests** |
 | Stack depth | Stack-neutral, generic | **Phoenix/Elixir-native** |
 | Center of gravity | Brownfield, change-led (deltas) | Quality-led, full lifecycle |
-| Lock-in | None (20+ agents, no key) | None (any agent, BYO model/keys) |
+| Lock-in | None (20+ agents, no key) | None (BYO keys; plugins for Claude Code, Codex, Antigravity) |
 
 The first row is the one that matters. OpenSpec asks for a behavior contract; CodeMySpec requires one and won't let work pass without it. In OpenSpec, scenarios are optional, `verify` won't block archive, and `archive --no-validate` bypasses checks entirely. CodeMySpec enforces behavioral specs as a non-negotiable gate, with module specs, reviews, and tests as configurable knobs on top. Said plainly: OpenSpec lets you skip the behavior spec; CodeMySpec won't.
 

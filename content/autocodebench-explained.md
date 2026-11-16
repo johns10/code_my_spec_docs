@@ -36,7 +36,7 @@ tags:
 
 # AutoCodeBench Explained: The Benchmark That Ranks Languages, Not Just Models
 
-Most coding benchmarks ask one question: which model is best? AutoCodeBench asks a second one that turns out to be just as interesting: which language do models write best? Its answer surprised many people, so it is worth understanding how the benchmark works before you decide how much to trust it. This is a plain-English walkthrough of what AutoCodeBench is, how it builds its problems, what it found, and where its limits are.
+Most coding benchmarks ask one question: which model is best? AutoCodeBench asks a second one that turns out to be as interesting: which language do models write best? Its answer surprised many people, so it is worth understanding how the benchmark works before you decide how much to trust it. This is a plain-English walkthrough of what AutoCodeBench is, how it builds its problems, what it found, and where its limits are.
 
 ## What AutoCodeBench is
 

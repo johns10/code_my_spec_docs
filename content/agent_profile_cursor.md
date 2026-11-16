@@ -112,15 +112,15 @@ Cursor 3 (April 2, 2026, "Glass") is a bet. The IDE is now secondary to an Agent
 
 ### Notable Quotes
 
-> "I've almost totally switched over to Claude Code CLI. It's a game changer for me. I use it alongside Cursor or VSCode to check out the diffs." -- u/ehs5, r/cursor (60 upvotes on comment, 84 on thread)
+> "I've almost totally switched over to Claude Code CLI. It's a game changer for me. I use it alongside Cursor or VSCode to check out the diffs.", u/ehs5, r/cursor (60 upvotes on comment, 84 on thread)
 
-> "I dropped cursor cold turkey when Claude Code 4.6 came out and I haven't opened it since." -- u/SantaBarbaraProposer, r/cursor (27 upvotes)
+> "I dropped cursor cold turkey when Claude Code 4.6 came out and I haven't opened it since.", u/SantaBarbaraProposer, r/cursor (27 upvotes)
 
-> "Companies: 'we have to be AI native and are heavily invested in AI' / Devs: 'is heavily invested in AI' / Companies: 'no, not like that'" -- u/Melodic_Order3669, r/ChatGPTCoding, on the $1,500/day incident (84 upvotes)
+> "Companies: 'we have to be AI native and are heavily invested in AI' / Devs: 'is heavily invested in AI' / Companies: 'no, not like that'", u/Melodic_Order3669, r/ChatGPTCoding, on the $1,500/day incident (84 upvotes)
 
-> "I've been a Pro user for a while because Cursor's Tab autocomplete is the best in the game. But lately I've moved my agent/chat workflows to other tools, and now I'm basically paying full price for a feature I could get at a fraction of the cost." -- u/olucasaguilar, r/cursor (28 upvotes)
+> "I've been a Pro user for a while because Cursor's Tab autocomplete is the best in the game. But lately I've moved my agent/chat workflows to other tools, and now I'm basically paying full price for a feature I could get at a fraction of the cost.", u/olucasaguilar, r/cursor (28 upvotes)
 
-> "By prioritizing the vibe coding use case, Cursor made itself unusable for full-time software engineers." -- ischemist.com
+> "By prioritizing the vibe coding use case, Cursor made itself unusable for full-time software engineers.", ischemist.com
 
 ## Performance Notes
 
@@ -169,14 +169,14 @@ Cursor 3 (April 2, 2026, "Glass") is a bet. The IDE is now secondary to an Agent
 
 ## CodeMySpec Integration
 
-The user base makes Cursor a high-value integration target even if it's not the deepest fit.
+CodeMySpec has no dedicated plugin for Cursor, but Cursor supports MCP, so it can connect to the CodeMySpec MCP server (`https://codemyspec.com/mcp/harness`, streamable HTTP, OAuth sign-in) and call the same tools. CodeMySpec does not generate `.cursorrules` files; the specs, tests and rules live in your repo as ordinary files you can point Cursor at. Add the server in Cursor's MCP settings.
 
-- **Context files:** `.cursorrules` is the analog to `CLAUDE.md`. CodeMySpec can generate it from specs: architecture, boundaries, standards
-- **MCP support:** Full tools support, per-project or global. With MCP Apps (v2.6), specs could render as interactive visualizations in the chat panel
+- **Context files:** `.cursorrules` is the analog to `CLAUDE.md`. You can point it at the spec and rules files in your repo.
+- **MCP support:** Full tools support, per-project or global. With MCP Apps (v2.6), MCP servers can render interactive visualizations in the chat panel
 - **Hooks:** No native pre/post hook system like Claude Code. Automations (event-driven triggers) can partially fill the gap
-- **Subagents:** v2.5 subagents enable async tree-coordinated work. A spec decomposes into sub-tasks, each with a subagent. Background Agents run autonomously in cloud VMs
+- **Subagents:** v2.5 subagents enable async tree-coordinated work. Background Agents run autonomously in cloud VMs
 - **Skills/commands:** No user-definable slash commands. MCP tools are the closest equivalent
-- **Memory:** None across sessions. `.cursorrules` + MCP are the only way to carry spec context forward. Every Composer session starts fresh
+- **Memory:** None across sessions. `.cursorrules` + MCP are the only way to carry context forward. Every Composer session starts fresh
 
 ## Related Articles
 
@@ -186,19 +186,19 @@ The user base makes Cursor a high-value integration target even if it's not the 
 
 ## Sources
 
-- [Cursor Blog -- CursorBench](https://cursor.com/blog/cursorbench)
+- [Cursor Blog, CursorBench](https://cursor.com/blog/cursorbench)
 - [Cursor Changelog](https://cursor.com/changelog)
-- [Cursor Pricing -- Vantage](https://www.vantage.sh/blog/cursor-pricing-explained)
-- [Cursor Pricing Hidden Costs -- WeAreFounders](https://www.wearefounders.uk/cursor-pricing-2026-every-plan-explained-and-the-hidden-costs-nobody-mentions/)
-- [Cursor $2B ARR -- TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
-- [Cursor $1B ARR -- SaaStr](https://www.saastr.com/cursor-hit-1b-arr-in-17-months-the-fastest-b2b-to-scale-ever-and-its-not-even-close/)
-- [Cursor Revenue Doubles -- Bloomberg](https://www.bloomberg.com/news/articles/2026-03-02/cursor-recurring-revenue-doubles-in-three-months-to-2-billion)
-- [Cursor Credit Frustration -- HackerNoon](https://hackernoon.com/cursors-credit-based-plans-leave-developers-puzzled-frustrated)
-- [Cursor Silent Price Raise -- Medium](https://medium.com/@jimeng_57761/when-cursor-silently-raised-their-price-by-over-20-and-more-what-is-the-message-the-users-are-6af93385f362)
-- [Vibe Coding Killed Cursor -- ischemist](https://ischemist.com/writings/long-form/how-vibe-coding-killed-cursor)
-- [Cursor CEO on Vibe Coding -- Slashdot](https://developers.slashdot.org/story/25/12/26/0623233/cursor-ceo-warns-vibe-coding-builds-shaky-foundations-that-eventually-crumble)
-- [Cursor Reddit Sentiment -- AIToolDiscovery](https://www.aitooldiscovery.com/guides/cursor-reddit)
-- [Cursor vs Copilot 2026 -- Morph](https://www.morphllm.com/comparisons/cursor-vs-copilot)
-- [Cursor Automations -- TechCrunch](https://techcrunch.com/2026/03/05/cursor-is-rolling-out-a-new-system-for-agentic-coding/)
+- [Cursor Pricing, Vantage](https://www.vantage.sh/blog/cursor-pricing-explained)
+- [Cursor Pricing Hidden Costs, WeAreFounders](https://www.wearefounders.uk/cursor-pricing-2026-every-plan-explained-and-the-hidden-costs-nobody-mentions/)
+- [Cursor $2B ARR, TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
+- [Cursor $1B ARR, SaaStr](https://www.saastr.com/cursor-hit-1b-arr-in-17-months-the-fastest-b2b-to-scale-ever-and-its-not-even-close/)
+- [Cursor Revenue Doubles, Bloomberg](https://www.bloomberg.com/news/articles/2026-03-02/cursor-recurring-revenue-doubles-in-three-months-to-2-billion)
+- [Cursor Credit Frustration, HackerNoon](https://hackernoon.com/cursors-credit-based-plans-leave-developers-puzzled-frustrated)
+- [Cursor Silent Price Raise, Medium](https://medium.com/@jimeng_57761/when-cursor-silently-raised-their-price-by-over-20-and-more-what-is-the-message-the-users-are-6af93385f362)
+- [Vibe Coding Killed Cursor, ischemist](https://ischemist.com/writings/long-form/how-vibe-coding-killed-cursor)
+- [Cursor CEO on Vibe Coding, Slashdot](https://developers.slashdot.org/story/25/12/26/0623233/cursor-ceo-warns-vibe-coding-builds-shaky-foundations-that-eventually-crumble)
+- [Cursor Reddit Sentiment, AIToolDiscovery](https://www.aitooldiscovery.com/guides/cursor-reddit)
+- [Cursor vs Copilot 2026, Morph](https://www.morphllm.com/comparisons/cursor-vs-copilot)
+- [Cursor Automations, TechCrunch](https://techcrunch.com/2026/03/05/cursor-is-rolling-out-a-new-system-for-agentic-coding/)
 - [Cursor MCP Docs](https://cursor.com/docs/context/mcp)
-- [VS Code Fork Fragmentation -- DEV Community](https://dev.to/pullflow/forked-by-cursor-the-hidden-cost-of-vs-code-fragmentation-4p1)
+- [VS Code Fork Fragmentation, DEV Community](https://dev.to/pullflow/forked-by-cursor-the-hidden-cost-of-vs-code-fragmentation-4p1)

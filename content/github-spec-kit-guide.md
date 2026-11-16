@@ -15,7 +15,7 @@ expires_at: null
 meta_title: "GitHub Spec Kit: How It Works (2026 Guide)"
 meta_description: "What is GitHub Spec Kit? A 2026 guide to the /specify -> /plan -> /tasks -> implement workflow, its strengths, the sea-of-markdown critique, and where it stops."
 og_title: "GitHub Spec Kit: How It Works and When to Use It"
-og_description: "A hands-on guide to GitHub's spec-driven toolkit -- the workflow, strengths, the reinvented-waterfall critiques, and how it stacks up against an enforced harness."
+og_description: "A hands-on guide to GitHub's spec-driven toolkit, the workflow, strengths, the reinvented-waterfall critiques, and how it stacks up against an enforced harness."
 og_image: null
 
 metadata:
@@ -38,6 +38,8 @@ Spec Kit is the most visible thing in [spec-driven development](/blog/spec-drive
 
 GitHub Spec Kit is an open-source toolkit that bolts a structured, spec-first workflow onto whatever AI coding agent you already use, turning Markdown specs into the artifact that drives code generation. I've read the philosophy doc, dug through the field reports, and the pattern is consistent: it gets you a clean spec and a first generation, then leaves you on your own. Here's how the `/specify -> /plan -> /tasks -> implement` loop works, where it shines, the criticisms it has earned, and where it stops compared to a full-lifecycle harness like CodeMySpec.
 
+{{nontechnical_founder_cta campaign="github-spec-kit-guide-intro"}}
+
 ## What Spec Kit is
 
 Spec Kit is a project from GitHub (owned by Microsoft), shipped under the official `github/spec-kit` org with an MIT license. The public face is Den Delimarsky, a Principal Product Manager at GitHub, who authored the launch post on the GitHub Blog (September 2, 2025) and maintains an ongoing explainer series.
@@ -48,7 +50,7 @@ Adoption has been extraordinary. The repo has one of the largest GitHub followin
 
 The core philosophy, from the repo's `spec-driven.md`, is a deliberate "power inversion":
 
-> "Specifications don't serve code -- code serves specifications."
+> "Specifications don't serve code, code serves specifications."
 
 > "The Product Requirements Document (PRD) isn't a guide for implementation; it's the source that generates implementation."
 
@@ -130,7 +132,7 @@ Spec Kit is a strong fit if you are a developer or team using AI agents who want
 
 ## How it compares to CodeMySpec
 
-Both Spec Kit and CodeMySpec are BYO-agent and keep specs in your own repo, and both reject pure vibe coding. That shared ground is real; portability is table stakes here, not a CodeMySpec exclusive. The differences are enforcement, spec structure, verification, and vertical focus.
+Both Spec Kit and CodeMySpec are bring-your-own-key and keep specs in your own repo, and both reject pure vibe coding. That shared ground is real; portability is table stakes here, not a CodeMySpec exclusive. The differences are enforcement, spec structure, verification, and vertical focus.
 
 Most SDD tools, Spec Kit included, are spec-first scaffolding: they generate a spec and hand off to a separate agent, and the spec governs by convention. [CodeMySpec](/developers) is a full-lifecycle harness (spec, code, tests, and live verification on one requirement graph) where BDD specs are a mandatory gate, not optional documents.
 
@@ -142,8 +144,8 @@ Most SDD tools, Spec Kit included, are spec-first scaffolding: they generate a s
 | Verification | None | Live browser QA via Vibium MCP + generated tests |
 | Spec authority over time | Drifts after first generation | Durable protocol on a requirement graph |
 | Stack | Stack-neutral, language-agnostic | Phoenix/Elixir-native |
-| Agent / model | BYO-agent (30+); BYO-model implied | BYO-agent, BYO-model, BYO-keys, no token markup |
-| Pricing | Free, MIT | Free (early access) |
+| Agent / model | BYO-agent (30+); BYO-model implied | BYO keys, no token markup; plugins for Claude Code, Codex, Antigravity |
+| Pricing | Free, MIT | Build free; Operate & Grow $100/mo per user |
 
 The honest contrast comes down to three things. First, **enforcement vs convention**: Spec Kit's specs are documents the agent should follow; CodeMySpec makes BDD specs a gate the work has to pass. Second, **verification**: Spec Kit has none, so you are trusting that prose produced conforming code. CodeMySpec's QA subagent boots the real app, drives a real browser, screenshots, and files issues with severity: unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. Third, **depth vs breadth**: Spec Kit is stack-neutral and broad; CodeMySpec runs deep for Elixir and Phoenix, with contexts, LiveView, Ecto, and OTP as first-class concerns.
 

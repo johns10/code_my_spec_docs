@@ -107,11 +107,11 @@ The criticisms are real, and most of them trace back to pricing.
 
 The community reaction was overwhelmingly negative. From the Hacker News thread titled "AWS pricing for Kiro dev tool dubbed 'a wallet-wrecking tragedy'":
 
-> "Clear pricing makes it easy for you to control costs. Vibe pricing makes it easy for the vendor to maximize revenue." -- kermatt
+> "Clear pricing makes it easy for you to control costs. Vibe pricing makes it easy for the vendor to maximize revenue.", kermatt
 
-> "Just give me dollar amounts, I feel like I'm paying these companies with vbucks at this point." -- ranie93
+> "Just give me dollar amounts, I feel like I'm paying these companies with vbucks at this point.", ranie93
 
-> "I still don't understand why pricing can't be as simple as it was initially." -- mns
+> "I still don't understand why pricing can't be as simple as it was initially.", mns
 
 The current 2026 model is the post-backlash simplification: a single "credit" unit instead of the vibe-vs-spec split (Free at $0, Pro at $20/mo for 1,000 credits, up to Power at $200/mo for 10,000, overage at $0.04/credit, credits don't roll over). But the structural complaint stands. Every action consumes credits, including spec prompts, refinements, task execution, and hook runs, and per-prompt metering against non-rolling credits still feels opaque next to flat-rate competitors.
 
@@ -129,9 +129,9 @@ I build CodeMySpec, a full-lifecycle, specification-driven AI development harnes
 
 **EARS requirement syntax vs BDD behavioral specs.** Kiro's EARS standardizes how a requirement is phrased. CodeMySpec's specs are mandatory BDD scenarios (Given/When/Then) plus configurable module specs, and the BDD specs produce acceptance criteria with generated tests. The difference isn't "Kiro has no specs." It's that EARS is requirement phrasing while BDD is a behavioral contract, and in CodeMySpec the QA step boots the real app and drives a real browser to verify behavior, not only run unit tests. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway.
 
-**Locked-in IDE vs portable protocol.** Kiro's specs live in `.kiro/` and are realized inside Kiro and Bedrock. CodeMySpec's specs are markdown and its tests are ExUnit, served to any agent through MCP or generated context files (CLAUDE.md, AGENTS.md, .cursorrules, GEMINI.md). The spec is the portable artifact, not a feature of one editor. Portability is table stakes in this category, not a CMS exclusive, but Kiro doesn't offer it.
+**Locked-in IDE vs portable protocol.** Kiro's specs live in `.kiro/` and are realized inside Kiro and Bedrock. CodeMySpec's BDD specs are executable (run with `mix spex`) and its tests are ExUnit, and they live as files in your repo. The harness drives Claude Code today, with Codex and Google Antigravity plugins too. The spec is the portable artifact, not a feature of one editor. Portability is table stakes in this category, not a CMS exclusive, but Kiro doesn't offer it.
 
-**Bedrock metering with markup vs BYO-model with no markup.** Kiro routes inference through Bedrock and bills credits. CodeMySpec is bring-your-own-agent, bring-your-own-model, bring-your-own-keys, with no token arbitrage. You pay your model provider directly.
+**Bedrock metering with markup vs BYO-model with no markup.** Kiro routes inference through Bedrock and bills credits. CodeMySpec runs on your own agent access and keys, with no token arbitrage. You pay your model provider directly.
 
 The shorthand: most spec tools, Kiro included, own the spec phase. CodeMySpec runs spec, code, test, and live verification end to end on a requirement graph, built Elixir-first. If you want the full side-by-side, see [CodeMySpec vs Kiro EARS](/blog/codemyspec-vs-kiro-specs), and you can see the harness itself at [CodeMySpec](/developers).
 

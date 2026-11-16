@@ -108,11 +108,11 @@ The model was writing specs it knew how to pass. The coding agent would wrap a `
 
 The gate had to be at the front. Three Amigos is BDD's original answer for that: walk through the story from Business, Developer, and QA perspectives before writing any scenario. The PM confirms scenario titles before any code gets generated. That's the gate.
 
-But good scenarios aren't enough on their own. A spec can still cheat to answer the right question: calling context functions directly, asserting database state instead of user-visible state. The fix is enforcing the boundary at compile time. Specs live in a sealed module that can't import the core app. The only thing a spec is allowed to do is what a real user can do.
+But good scenarios aren't enough on their own. A spec can still cheat to answer the right question: calling context functions directly, asserting database state instead of user-visible state. The fix is enforcing the boundary at compile time. Specs live in a sealed module that can't import the core app. The only thing a spec is allowed to do is what a real user can do. The specs are executable and run with `mix spex`, not `mix test`.
 
 **[Read the full article: Three Amigos](/blog/bdd-attention-three-amigos)**
 
-{{verification_gate_cta shape="aside" headline="Six installments, one claim: it holds only if the model re-reads it from a place it did not author." sub="A chat log fails that test. So does a memory file the model gets to rewrite." body="CodeMySpec keeps specs in the repo and blocks the build when the code stops matching them." label="Put the rules somewhere it has to read" campaign="bdd-attention-thesis"}}
+{{verification_gate_cta shape="aside" headline="Six installments, one claim: it holds only if the model re-reads it from a place it did not author." sub="A chat log fails that test. So does a memory file the model gets to rewrite." body="CodeMySpec keeps executable specs in the repo and gates the work when the code stops matching them." label="Put the rules somewhere it has to read" campaign="bdd-attention-thesis"}}
 
 ## The thesis
 
@@ -134,4 +134,4 @@ Each installment has its own footnotes. The series draws on:
 2. [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172), Liu et al., TACL 2024
 3. [Context Rot: How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot), Chroma, 2025
 4. [The Anatomy of a Three Amigos Requirements Discovery Workshop](https://johnfergusonsmart.com/three-amigos-requirements-discovery/), John Ferguson Smart
-5. [AI in Testing #10: Spec-Driven Development — BDD's Second Chance or Just More Docs?](https://medium.com/@cheparsky/ai-in-testing-10-spec-driven-development-bdds-second-chance-or-just-more-docs-151e30ecc97e), Cheparsky
+5. [AI in Testing #10: Spec-Driven Development: BDD's Second Chance or Just More Docs?](https://medium.com/@cheparsky/ai-in-testing-10-spec-driven-development-bdds-second-chance-or-just-more-docs-151e30ecc97e), Cheparsky

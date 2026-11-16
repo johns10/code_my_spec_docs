@@ -38,6 +38,8 @@ tags:
 
 Vibe coded websites look alike because nobody decided how yours should look, so the model used the average of every site it trained on. Fixing it takes five decisions about theme, color, type, layout and tone, made once and written down, plus a rule that every page you build afterward has to follow them. Better prompting page by page does not work, and the rest of this explains why.
 
+{{nontechnical_founder_cta campaign="vibe-coded-websites-look-the-same-intro"}}
+
 ## Your site is not ugly, it is indistinguishable
 
 The problem is sameness, not quality. Most vibe coded sites are competently built: the spacing is even, the contrast mostly works, nothing is broken. They fail because a visitor has already seen forty sites with the same gradient and the same three cards, and the recognition arrives before they read a single word.
@@ -52,11 +54,11 @@ The answer is not to get weird. Familiar layouts work, and reinventing your navi
 
 Models converge because unremarkable design choices dominate their training data, and a request that leaves the look open gets answered with the middle of that distribution. Anthropic named the mechanism in November 2025:
 
-> "During sampling, models predict tokens based on statistical patterns in training data. Safe design choices–those that work universally and offend no one–dominate web training data."
+> "During sampling, models predict tokens based on statistical patterns in training data. Safe design choices, those that work universally and offend no one, dominate web training data."
 
 The same post names the result, "Inter fonts, purple gradients on white backgrounds, and minimal animations," and then names what it costs you:
 
-> "immediately recognizable—and dismissible."
+> "immediately recognizable, and dismissible."
 
 Anthropic's own cookbook says the quiet part on the record: "Claude can generate high-quality frontends, but without guidance it tends toward generic, conservative designs," and it "defaults to safe choices unless explicitly encouraged otherwise."
 
@@ -150,11 +152,11 @@ None of that was expensive. It is one afternoon of deciding, recorded in one fil
 
 Writing a design system down accomplishes nothing on its own. A file that nothing obliges the model to open is a file the model skips. Two mechanisms give it teeth, and both are cheap enough to copy whatever you build with.
 
-**Require a design section on every page before it gets built.** In CodeMySpec, a page specification is invalid without one, alongside its route, its interactions and its dependencies. The section is plain prose: how the page is laid out, which components it uses, what happens on a narrow screen. Writing it drags the choice into the open before any code exists, and it gives you something to disagree with while disagreeing is still free.
+**Require a design section on every page before it gets built.** In CodeMySpec, a page's design document has required sections: its purpose, its route, the context functions it calls, its structure (mount, events, and a template section covering the UI layout and the components it uses), the data flow, and security. Writing it drags the layout choice into the open before any code exists, and it gives you something to disagree with while disagreeing is still free.
 
 **Put the reference in the instructions the model receives.** The design rules that ship for pages and components tell the agent to read the project's design system before building any interface, use the classes and theme values defined there, and not invent colors or component patterns that deviate from it. Those rules get loaded into the prompt for the work, so the instruction arrives attached to the task instead of sitting in a document somebody hopes gets opened.
 
-What those two mechanisms do not do matters as much, so here it is plainly. Nothing renders your page and compares it against the design system. The check confirms a design section exists and is complete, not that the built page obeyed it. The rule tells the agent to read the design system file, so if you never made the five decisions, the rule points at nothing. This keeps decisions in front of the model. It is not a compiler for visual style, and anybody selling you that is overstating what current tooling does.
+What those two mechanisms do not do matters as much, so here it is plainly. Nothing renders your page and compares it against the design system. Nothing checks that the built page obeyed the design section. The rule tells the agent to read the design system file, so if you never made the five decisions, the rule points at nothing. This keeps decisions in front of the model. It is not a compiler for visual style, and anybody selling you that is overstating what current tooling does.
 
 That shape is the whole approach at CodeMySpec: decide once through a structured process, record it where the work has to reference it, and stop renegotiating the same question every session. Design is one instance, which is why the product centers on [working a process rather than writing better prompts](/blog/control-over-prompts).
 
@@ -164,7 +166,7 @@ Visual sameness is one decision nobody made. Slop code is the opposite: hundreds
 
 Plenty of sites have both at once. If yours does, the path from prototype to something you can sell runs through [rebuilding a vibe-coded app](/vibe-coding-rebuild).
 
-{{enforced_spec_cta shape="aside" headline="Every vibe-coded site converges on the same three sections because nothing wrote down what this one is." sub="A design decision nobody recorded is a design decision the next generation quietly discards." body="CodeMySpec keeps the decision in the repo as a spec, and the build blocks when the code stops matching it." label="Write the decision down where it holds" campaign="vibe-coded-websites-look-the-same"}}
+{{enforced_spec_cta shape="aside" headline="Every vibe-coded site converges on the same three sections because nothing wrote down what this one is." sub="A design decision nobody recorded is a design decision the next generation quietly discards." body="CodeMySpec keeps the decision in the repo as a spec, and the work is gated when the code stops matching it." label="Write the decision down where it holds" campaign="vibe-coded-websites-look-the-same"}}
 
 ## Where to start
 

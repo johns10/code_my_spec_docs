@@ -48,7 +48,7 @@ I used Claude for planning and Cline (inside Cursor) for coding. Cline was more 
 
 ## What Does an Effective AI Coding Workflow Look Like?
 
-Five components: architecture, planning, coding, review, and process iteration. I want to be very clear -- I don't do any of this by hand. I work with the model to generate all of it.
+Five components: architecture, planning, coding, review, and process iteration. I want to be very clear, I don't do any of this by hand. I work with the model to generate all of it.
 
 ### Architecture
 
@@ -114,7 +114,7 @@ This workflow was the foundation. It taught me the core principle: **process bea
 
 But it was still manual. Copy-pasting context. Managing memory files by hand. Hoping the model remembered its guidelines.
 
-That's why I built CodeMySpec. It takes these ideas -- structured planning, clear architecture, persistent memory, stop-and-validate loops -- and automates all the manual parts.
+That's why I built CodeMySpec. It takes these ideas, structured planning, clear architecture, persistent memory, stop-and-validate loops, and automates all the manual parts.
 
 Instead of copy-pasting context into every chat, MCP servers give AI direct access to your architecture, stories, and components. Instead of manually sequencing tasks, a dependency graph determines work order. Instead of hoping the model ran tests, a validation pipeline enforces it. Instead of updating memory files by hand, the system tracks what's dirty and what's done.
 
@@ -126,7 +126,7 @@ The workflow principles haven't changed. I still use them every day. CodeMySpec 
 
 Back up from the technology, the tooling, the hype. Being good at AI-assisted development means going back to first principles of software design. Critically inspect your workflows. Constantly improve them.
 
-Not even good engineers get good at coding with AI overnight. A good plan and a good understanding of what you want to build -- that's what separates shipping from spinning.
+Not even good engineers get good at coding with AI overnight. A good plan and a good understanding of what you want to build, that's what separates shipping from spinning.
 
 ## Frequently Asked Questions
 
@@ -136,7 +136,7 @@ Not even good engineers get good at coding with AI overnight. A good plan and a 
 
 **What is the most common mistake people make when coding with AI?** Skipping the planning phase. People jump straight to prompting without a technical implementation plan, a defined architecture, or a todo list. The model then makes ad hoc decisions about structure, dependencies, and patterns that compound into architectural chaos over time.
 
-**How does CodeMySpec improve on this manual workflow?** CodeMySpec automates the manual parts -- context injection, task sequencing, memory management, and validation enforcement. Instead of copy-pasting guidelines into every chat, MCP servers provide direct access to architecture and stories. Instead of hoping the model ran tests, a validation pipeline enforces it automatically after every task.
+**How does CodeMySpec improve on this manual workflow?** CodeMySpec automates the manual parts, context injection, task sequencing, memory management, and validation enforcement. Instead of copy-pasting guidelines into every chat, MCP servers provide direct access to architecture and stories. Instead of hoping the model ran tests, a validation pipeline enforces it automatically after every task.
 
 ## Related Articles
 

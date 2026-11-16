@@ -77,7 +77,7 @@ I adjust based on what the data says. Then I scan again. I run the loop daily.
 
 ## Which MCP servers make up the marketing stack?
 
-Four servers, each doing one thing.
+Four MCP servers and one plugin, each doing one thing.
 
 **Reddit MCP** ([reddit-mcp-buddy](https://github.com/nicosql/reddit-mcp-buddy)), browse subreddits, get post details with comments, search. The workhorse. It lets me read the room before I say anything.
 
@@ -99,7 +99,7 @@ I encoded the repeatable workflows as slash commands: `/scan-reddit`, `/draft-re
 
 **Read the room.** The scan captures top comments and their sentiment. If the top comment is dismissive, walking in with an earnest pitch gets destroyed. The top comment tells you what the audience rewards.
 
-**The content has to exist first.** You can't link to something you haven't written. I have 100+ articles in my content library. When a thread asks about testing AI-generated code, I have an article for that. The marketing works because the content already exists and is genuinely useful. I have a content system in my harness where I write a markdown file with a YAML sidecar, git push, and it's live. When I spot a content gap from a Reddit thread, I can write the article and publish it the same day.
+**The content has to exist first.** You can't link to something you haven't written. I have 100+ articles in my content library. When a thread asks about testing AI-generated code, I have an article for that. The marketing works because the content already exists and is genuinely useful. I have a content system in my harness where I write a markdown file with YAML frontmatter, commit it, and run a publish step that syncs it to the site. When I spot a content gap from a Reddit thread, I can write the article and publish it the same day.
 
 **Let Reddit threads tell you what to write.** My best-performing content series came from reading r/vibecoding threads. Someone posted a list of 15 tools vibe coders should use. The top comment was "Too many words, just prompt." The second comment: "I have no idea what any of that means." So I wrote a series explaining those fundamentals in plain English. The articles get linked in threads that are asking the exact questions they answer. The content writes itself when you listen to what people are confused about.
 
@@ -129,26 +129,27 @@ Marketing advice for founders usually falls into "just put yourself out there" (
 
 ## Want this without the six-month buildup?
 
-I packaged the whole loop as a Claude Code plugin: MarketMySpec. Three skills:
+I packaged the whole loop as a Claude Code plugin: MarketMySpec. Four skills:
 
 - `/marketing-strategy`: Interviews you, runs research agents, produces a real positioning + ICP + channels + 90-day plan. Not a generic template.
 - `/daily-plan`: Reads your strategy and yesterday's log. Picks today's 1-3 activities. No re-deciding from zero each morning.
 - `/marketing-stack`: Installs the MCP recipes your strategy actually calls for. Reddit, GA4, Search Console, the SEO plugin, whichever channels match your audience.
+- `/marketing-library`: Curates the playbook plugins your strategy benefits from, like CRO, SEO, and copywriting skills.
 
 Install:
 
 ```
 /plugin marketplace add Code-My-Spec/plugins
-/plugin install marketmyspec@codemyspec
+/plugin install market-my-spec@codemyspec
 ```
 
-Free during early access. BYOK: it runs on your Claude, your tokens, your environment. Your strategy lives as plain markdown in your repo. No lock-in.
+The plugin is free. BYOK: it runs on your Claude, your tokens, your environment. Your strategy lives as plain markdown in your repo. No lock-in.
 
 [Run /marketing-strategy →](/products/market-my-spec?utm_source=blog&utm_medium=internal&utm_campaign=agentic-marketing-with-mcp)
 
 ## Frequently Asked Questions
 
-**Do I have to build all this myself?** No. The MarketMySpec plugin packages the loop. `/marketing-strategy` runs the strategy interview. `/daily-plan` tells you what to work on today. `/marketing-stack` installs the MCP recipes your strategy needs. Install with `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install marketmyspec@codemyspec`. Free during early access, BYOK.
+**Do I have to build all this myself?** No. The MarketMySpec plugin packages the loop. `/marketing-strategy` runs the strategy interview. `/daily-plan` tells you what to work on today. `/marketing-stack` installs the MCP recipes your strategy needs. Install with `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install market-my-spec@codemyspec`. The plugin is free, BYOK.
 
 **Can a founder with no marketing experience use MCP tools for marketing?** Yes. The entire approach is built around engineering principles: define inputs, build a repeatable process, create feedback loops, and iterate on data. You do not need marketing expertise. You need the willingness to show up where your users are and let the data guide your next move.
 

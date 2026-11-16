@@ -44,6 +44,8 @@ The catch I want to get out of the way up front: "free tool + API key" is not al
 
 **Updated July 10, 2026.** Free and open source turned out not to mean immortal. Since the spring version of this post: Roo Code's repo was archived read-only on May 15. Continue.dev was acquired by Cursor in June and wound down (repo read-only, hosted Hub closing). Gemini CLI's famous free tier ended June 18 as Google folds the tool into Antigravity CLI. Aider has gone dormant (no substantial release since August 2025). On the bright side, Cline added Claude Sonnet 5 support plus a hosted ClinePass tier, OpenCode and Goose are shipping weekly, and Warp open-sourced its core in May. Corrections are inline below.
 
+{{nontechnical_founder_cta campaign="free-open-source-ai-coding-tools-2026-intro"}}
+
 ## The Quick Matrix
 
 | Tool | Type | License | Stars | Truly Free? | Real Monthly Cost | Best For |
@@ -55,7 +57,7 @@ The catch I want to get out of the way up front: "free tool + API key" is not al
 | **Cline** | VS Code ext | Apache 2.0 | 59K | BYOK | $5-200 | Autonomous agent |
 | **Roo Code** | VS Code ext | Apache 2.0 | 22K | BYOK | $5-200 | Archived May 2026 (fork it or move to Cline) |
 | **Continue.dev** | CLI + ext | Apache 2.0 | 32K | BYOK | $0-20 | Acquired by Cursor, winding down |
-| **Zed** | Editor | GPL | -- | Editor free | $10/mo + tokens | Speed + collaboration |
+| **Zed** | Editor | GPL | n/a | Editor free | $10/mo + tokens | Speed + collaboration |
 | **PearAI** | IDE (fork) | Apache 2.0 | 40K | Limited free | $15-200 | All-in-one IDE |
 
 ## The Former Free Entry Point: Gemini CLI (Now Sunsetting)
@@ -242,15 +244,11 @@ If a friend asked me:
 
 ## The CodeMySpec Angle
 
-Free and open-source tools are the natural home for spec-driven work. When you're not locked into a vendor's workflow, you can bring your own specification format, including CodeMySpec's.
+Free and open-source tools are the natural home for spec-driven work. When you're not locked into a vendor's workflow, you can keep your own specifications and tests in the repo.
 
-Integration paths:
-- **Aider, OpenCode, Goose**: specs via context files, or (for Goose) MCP servers
-- **Cline, Roo Code**: MCP tool integration means CodeMySpec specs serve directly to the agent
-- **Gemini CLI**: GEMINI.md generated from CodeMySpec specs
-- **Zed**: Agent Client Protocol lets any spec-serving agent plug in
+The CodeMySpec harness has plugins for Claude Code, OpenAI Codex, and Google Antigravity. Every other tool above that supports MCP (Cline, Roo Code, Goose, OpenCode, Zed and more) can connect to the CodeMySpec MCP server without a dedicated plugin, and CodeMySpec doesn't generate rules files like `.cursorrules` or `GEMINI.md` for them. What carries over is the repo: executable BDD specs and tests are plain files in a standard Phoenix app, so any of these tools can read and work in the project.
 
-BYOK developers already bring their own API key. They tend to want to bring their own specs, their own workflow, their own standards too. That's what CodeMySpec is built for.
+BYOK developers already bring their own API key. They tend to want to bring their own specs, their own workflow, their own standards too. CodeMySpec is free to build with, on your own keys, and is built around that.
 
 ## Related Articles
 
@@ -263,15 +261,15 @@ BYOK developers already bring their own API key. They tend to want to bring thei
 ## Sources
 
 - [Aider LLM Leaderboards](https://aider.chat/docs/leaderboards/)
-- [Aider vs Claude Code -- Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
+- [Aider vs Claude Code, Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
 - [Gemini CLI Quotas](https://geminicli.com/docs/resources/quota-and-pricing/)
-- [Cline Review 2026 -- vibecoding.app](https://vibecoding.app/blog/cline-review-2026)
+- [Cline Review 2026, vibecoding.app](https://vibecoding.app/blog/cline-review-2026)
 - [Cline 5M Installs](https://cline.bot/blog/5m-installs-1m-open-source-grant-program)
-- [Roo Code Review -- vibecoding.app](https://vibecoding.app/blog/roo-code-review)
-- [Roo Code vs Cline -- Qodo](https://www.qodo.ai/blog/roo-code-vs-cline/)
-- [Continue.dev Review -- vibecoding.app](https://vibecoding.app/blog/continue-dev-review)
+- [Roo Code Review, vibecoding.app](https://vibecoding.app/blog/roo-code-review)
+- [Roo Code vs Cline, Qodo](https://www.qodo.ai/blog/roo-code-vs-cline/)
+- [Continue.dev Review, vibecoding.app](https://vibecoding.app/blog/continue-dev-review)
 - [PearAI Pricing](https://www.trypear.ai/pricing)
-- [Zed AI 2026 -- Builder.io](https://www.builder.io/blog/zed-ai-2026)
+- [Zed AI 2026, Builder.io](https://www.builder.io/blog/zed-ai-2026)
 - [Zed Pricing](https://zed.dev/pricing)
-- [Best Open Source AI Coding Agents 2026 -- cssauthor](https://cssauthor.com/best-open-source-ai-coding-agents/)
+- [Best Open Source AI Coding Agents 2026, cssauthor](https://cssauthor.com/best-open-source-ai-coding-agents/)
 - Reddit: [r/ChatGPTCoding](https://reddit.com/r/ChatGPTCoding/), [r/vibecoding](https://reddit.com/r/vibecoding/)

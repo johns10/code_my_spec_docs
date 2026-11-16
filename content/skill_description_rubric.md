@@ -15,7 +15,7 @@ expires_at: null
 meta_title: "Why Your Skill Isn't Triggering: The Description Rubric"
 meta_description: "The description is the only routing signal. If your skill isn't triggering, this is why. Failure modes, self-check questions, and anti-patterns to recognize."
 og_title: "Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)"
-og_description: "I had seven agent tasks with the same orchestrate string. The agent picked them at random. Here's the rubric I rewrote them with."
+og_description: "I had seven agent tasks with the same dispatch string. The agent picked them at random. Here's the rubric I rewrote them with."
 og_image: null
 
 metadata:
@@ -43,11 +43,11 @@ tags:
 
 # Why Your Skill Isn't Triggering (and the Description Rubric That Fixes It)
 
-This week I had seven agent_task modules in CodeMySpec that all shared the same description string. Seven different tasks -- ContextSpec, ContextDesignReview, ComponentSpec, ComponentTest, LiveContextSpec, LiveViewSpec, ControllerSpec -- and every one of them said `Spawn a @spec-writer sub-agent to call start_task...` in the routing signal. The agent picked them basically at random. Sometimes it'd open ControllerSpec when I wanted a context spec. Sometimes it would fire ComponentTest when there were no components to test.
+This week I had seven agent_task modules in CodeMySpec that all shared the same description string. Seven different tasks, ContextSpec, ContextDesignReview, ComponentSpec, ComponentTest, LiveContextSpec, LiveViewSpec, ControllerSpec, and every one of them said `Spawn a @spec-writer sub-agent to call start_task...` in the routing signal. The agent picked them basically at random. Sometimes it'd open ControllerSpec when I wanted a context spec. Sometimes it would fire ComponentTest when there were no components to test.
 
 That's overtriggering. The description is too generic to distinguish the skills from each other or from unrelated work, so the agent fires for everything.
 
-The opposite problem is worse, because you don't notice it. I've shipped skills I thought were perfect -- good body, good scripts, decent references -- that triggered zero times in the next two months. That's undertriggering. The description named what the skill did but not what a user would actually say to invoke it. The skill is invisible.
+The opposite problem is worse, because you don't notice it. I've shipped skills I thought were perfect, good body, good scripts, decent references, that triggered zero times in the next two months. That's undertriggering. The description named what the skill did but not what a user would actually say to invoke it. The skill is invisible.
 
 Both problems reduce to the same root cause: **the description doesn't accurately scope what the skill is for.**
 
@@ -60,28 +60,28 @@ If you read [how to write your first agent skill](/blog/how-to-write-your-first-
 - ...40 more...
 ```
 
-It picks one or none. The body, the references, the scripts -- none of it matters until the description wins. If the description doesn't win, nobody reads it.
+It picks one or none. The body, the references, the scripts, none of it matters until the description wins. If the description doesn't win, nobody reads it.
 
-This is the rubric I apply to every new skill, and the one I just applied to thirty-odd `orchestrate/1` strings refactoring CodeMySpec.
+This is the rubric I apply to every new skill, and the one I applied to thirty-odd `dispatch/1` strings refactoring CodeMySpec.
 
 ## The two failure modes
 
 Undertrigger and overtrigger. Complementary, not opposites.
 
-**Undertrigger** -- the description doesn't surface the words a user would type, so the agent picks something else (or nothing). Symptoms: skill exists, you tested it once, and you never see it fire again.
+**Undertrigger**: the description doesn't surface the words a user would type, so the agent picks something else (or nothing). Symptoms: skill exists, you tested it once, and you never see it fire again.
 
-**Overtrigger** -- the description is too generic, so the agent picks your skill for unrelated work. Symptoms: skill fires constantly, doing things the user didn't ask for.
+**Overtrigger**: the description is too generic, so the agent picks your skill for unrelated work. Symptoms: skill fires constantly, doing things the user didn't ask for.
 
-The seven-orchestrate-strings situation was both at once: too generic to keep the tasks out of unrelated work, and too generic to point the agent at the right one when the work was spec-related.
+The seven-dispatch-strings situation was both at once: too generic to keep the tasks out of unrelated work, and too generic to point the agent at the right one when the work was spec-related.
 
 ## The four ingredients of a good description
 
 Every description should answer four questions. If yours doesn't, that's where the failure is.
 
 1. **What does it produce or do?** Concrete output, not abstract capability. "Manages releases" is abstract. "Drafts GitHub release notes from merged PRs" is concrete.
-2. **When should the agent reach for it?** Specific trigger conditions. Not "when needed" -- actual conditions: "when preparing a tagged GitHub release," "when the user asks to ship a release."
+2. **When should the agent reach for it?** Specific trigger conditions. Not "when needed", actual conditions: "when preparing a tagged GitHub release," "when the user asks to ship a release."
 3. **What trigger phrases match real user language?** The words a user would actually type or speak. If the user would say "ship a release" and your description doesn't have "ship" or "release" in it, you have a routing problem.
-4. **What's the scope boundary?** When *not* to use it. Explicit or implicit. "Drafts GitHub release notes" implicitly excludes Docker, npm, k8s -- the agent won't pick it for those.
+4. **What's the scope boundary?** When *not* to use it. Explicit or implicit. "Drafts GitHub release notes" implicitly excludes Docker, npm, k8s, the agent won't pick it for those.
 
 Compact form:
 
@@ -107,11 +107,11 @@ Concrete operations (extract, fill, merge). Trigger phrases (PDFs, forms, docume
 
 ❌ `description: Manages releases`
 
-"Manages" is too broad. Will fire for unrelated release work -- npm publish, docker push, k8s rollout.
+"Manages" is too broad. Will fire for unrelated release work, npm publish, docker push, k8s rollout.
 
 ✅ `description: Drafts GitHub release notes from merged PRs, proposes a semver bump, and provides a copy-pasteable gh release create command. Use when preparing a tagged GitHub release.`
 
-Specific platform (GitHub). Specific outputs (release notes, semver bump, command). Clear scope (tagged GitHub releases -- not Docker, not npm).
+Specific platform (GitHub). Specific outputs (release notes, semver bump, command). Clear scope (tagged GitHub releases, not Docker, not npm).
 
 ### Example 3: Test skill
 
@@ -135,13 +135,13 @@ Run each new description through these. If any answer is "no" or "not sure," rev
 6. **Are the trigger phrases front-loaded?** Codex truncates aggressively under index pressure. Put the most important words first.
 7. **Is it under 1,024 characters?** All three platforms cap somewhere around here.
 
-I run new orchestrate strings through these before committing. The seven spec-gen tasks I mentioned at the top all failed at least three of the seven. After the rewrite, they pass all seven.
+I run new dispatch strings through these before committing. The seven spec-gen tasks I mentioned at the top all failed at least three of the seven. After the rewrite, they pass all seven.
 
 ## Length and structure
 
-Sweet spot: 150-400 characters. Hard cap: 1,024 on Claude Code and OpenCode. Codex truncates earlier under its ~2% context-window index budget, so with dozens of skills installed it shortens descriptions first -- front-load trigger words there.
+Sweet spot: 150-400 characters. Hard cap: 1,024 on Claude Code and OpenCode. Codex truncates earlier under its ~2% context-window index budget, so with dozens of skills installed it shortens descriptions first, front-load trigger words there.
 
-One or two sentences. No line breaks -- some tools collapse them. Third person, present tense. "Extracts text..." not "I extract...".
+One or two sentences. No line breaks, some tools collapse them. Third person, present tense. "Extracts text..." not "I extract...".
 
 ## Trigger phrase patterns that work
 
@@ -179,11 +179,11 @@ If you find yourself writing a paragraph of description, stop. The body is for n
 
 ## Where to go next
 
-If your description passes the seven self-check questions, the rest is body shape, reference structure, and script discipline -- covered in [how to write your first agent skill](/blog/how-to-write-your-first-skill).
+If your description passes the seven self-check questions, the rest is body shape, reference structure, and script discipline, covered in [how to write your first agent skill](/blog/how-to-write-your-first-skill).
 
 The next post picks up at the cross-platform layer:
 
-**[One skill, three platforms: portability across Claude Code, OpenCode, and Codex](/blog/skill-portability)** -- the compatibility matrix, the portable subset of frontmatter, the discovery path differences. The rubric in this post works across all three platforms. The differences are everywhere else.
+**[One skill, three platforms: portability across Claude Code, OpenCode, and Codex](/blog/skill-portability)**: the compatibility matrix, the portable subset of frontmatter, the discovery path differences. The rubric in this post works across all three platforms. The differences are everywhere else.
 
 ## Related Articles
 

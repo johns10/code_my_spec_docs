@@ -43,7 +43,7 @@ Get a Phoenix project running on CodeMySpec in about 10 minutes.
 
 - macOS (Apple Silicon) or Windows (x64)
 - A Phoenix project: Elixir 1.18+, Phoenix 1.8+, PostgreSQL
-- A coding agent: [Claude Code](https://docs.claude.com/claude-code) is the deepest integration; Codex and Antigravity are supported early
+- A coding agent: Claude Code and Codex are fully supported through plugins, and Antigravity has a plugin too. Any other agent (Cursor, Aider, Gemini CLI, Copilot, and so on) connects through the MCP server
 - A [CodeMySpec account](https://www.codemyspec.com/users/register)
 
 ## 1. Install
@@ -52,8 +52,8 @@ Follow **[/install](/install)**. It is the canonical, per-platform source for bo
 
 In short, there are two pieces:
 
-1. **The server.** A local `cms` process that hosts the tools. On macOS, `brew install Code-My-Spec/tap/codemyspec` then `brew services start codemyspec`. On Windows, the `cms-setup-x64.msi` from the [latest release](https://github.com/Code-My-Spec/plugins/releases). It runs in the background on `localhost:4003` and restarts on boot.
-2. **The plugin.** In Claude Code: `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install codemyspec@codemyspec`. Codex and Antigravity have their own commands, listed on the install page.
+1. **The server.** The desktop app (download for macOS or Windows from [/install](/install), free account required) runs it for you. Prefer a terminal? A local `cms` process that hosts the tools. On macOS, `brew install Code-My-Spec/tap/codemyspec` then `brew services start codemyspec`. On Windows, the `cms-setup-x64.msi` from the [latest release](https://github.com/Code-My-Spec/plugins/releases). It runs in the background on `localhost:4003` and restarts on boot.
+2. **The plugin.** In Claude Code: `/plugin marketplace add Code-My-Spec/plugins` then `/plugin install codemyspec@codemyspec`. Codex and Antigravity have their own plugin commands, listed on the install page. Other agents skip the plugin and connect to the MCP server directly.
 
 The server hosts the admin UI, the MCP server, the skill suite, and the hooks wired into your agent's lifecycle.
 
@@ -67,7 +67,7 @@ Inside your agent, with your Phoenix project as `$PWD`:
 
 The skill checks whether you are already authenticated, then opens a sign-in URL in your browser. OAuth PKCE runs against the CodeMySpec server and the token is stored locally. You only do this once (tokens refresh automatically).
 
-Without a token, every MCP tool returns `not_authenticated` and stops.
+Without a token, the MCP tools can't reach your project and report an authentication error.
 
 On Codex, run the `init` skill from `/skills`. On Antigravity, run `/init auth`.
 
@@ -79,16 +79,13 @@ Still inside Claude Code:
 /codemyspec:init
 ```
 
-This walks the agent through the 6-step pre-project checklist:
+This walks the agent through the 3-step pre-project checklist:
 
-1. **Auth** — confirms you completed step 2
-2. **Elixir** — correct version installed
-3. **Phoenix installer** — `mix phx.new` available
-4. **PostgreSQL** — running and reachable
-5. **Phoenix project** — `mix.exs` and a usable Phoenix app in `$PWD`
-6. **CLI config** — calls `list_projects` + `init_project` to link this directory to a CodeMySpec project
+1. **Auth**: confirms you completed step 2
+2. **Phoenix project**: `mix.exs`, `lib/`, and `config/` exist in `$PWD`
+3. **CLI config**: links this directory to a CodeMySpec project
 
-Each step is idempotent; the skill re-evaluates on every call and only inlines prompts for unfinished steps. Re-run until every step checks off. You can watch the same checklist in the browser at `http://localhost:4003/projects/:project_name/init` once the project is linked.
+Each step is idempotent. The skill re-evaluates on every call and only inlines prompts for unfinished steps. Re-run until every step checks off. You can watch the same checklist in the web app at `https://www.codemyspec.com/app/projects/:project_id/init`.
 
 ## 4. Tell the agent to use `get_next_requirement`
 
@@ -98,31 +95,31 @@ Now the main development loop takes over. Say:
 
 The tool is self-driving. It inspects the project state and returns the right prompt for whatever comes next:
 
-- **Project-level setup incomplete** → runs the `ProjectSetup` checklist and inlines the prompt for every unfinished step.
-- **Setup done** → returns the highest-priority unsatisfied requirement. The agent calls `start_task`, does the work, and the stop hook auto-evaluates.
+- **Project-level setup incomplete**: runs the `ProjectSetup` checklist (dependencies, compilers, `mix spex` configuration, test boundaries, `AGENTS.md`, rules, Credo checks, `CLAUDE.md`) and inlines the prompt for every unfinished step.
+- **Setup done**: offers the next unsatisfied requirement. The agent calls `start_task`, does the work, and the stop hook auto-evaluates.
 
-Every time the agent looks lost, the answer is the same: `get_next_requirement`. The main development loop is just:
+Every time the agent looks lost, the answer is the same: `get_next_requirement`. The main development loop is:
 
 ```
-get_next_requirement → start_task → (do the work) → evaluate_task → repeat
+get_next_requirement, start_task, (do the work), evaluate_task, repeat
 ```
 
-The graph computes what to work on next based on prerequisites: specs before tests, tests before implementation, implementation before review. Follow the task prompts &mdash; they include file paths, spec templates, and the rules for the component type. `AGENTS.md` (installed during setup) has the full workflow reference.
+The requirement graph computes what to work on next. Executable BDD specs, the ones you run with `mix spex`, sit at the center: they define what each story must do, and the code and tests exist to satisfy them. Follow the task prompts. They include file paths, templates, and the rules for the component type. `AGENTS.md` (installed during setup) has the full workflow reference.
 
-## The local admin UI
+## The web app
 
-Beyond `/auth` and `/projects`, the local server's LiveView UI at `http://localhost:4003/projects/:project_name/...` gives you:
+The CodeMySpec web app at `https://www.codemyspec.com/app/projects/:project_id/...` shows the same state the agent sees:
 
-- **Init checklist** at `/projects/:project_name/init` — the 6-step pre-setup checklist (Auth, Elixir, Phoenix installer, PostgreSQL, Phoenix project, CLI config) with per-step instructions. Same data `get_next_requirement` walks the agent through, rendered for humans.
-- Requirements list and graph view
-- Architecture overview and dependency graph
-- Stories, issues, sessions, knowledge browser
+- **Init checklist** at `/init`, the 3-step pre-setup checklist (Auth, Phoenix project, CLI config) with per-step prompts you can copy into your agent. Same data `get_next_requirement` walks the agent through, rendered for humans.
+- Requirements graph at `/requirements/graph`
+- Architecture dependency graph at `/architecture`
+- Stories, epics, personas, issues, QA, and the knowledge browser
 
 Useful when you want to see what the agent sees without asking it.
 
-## Just want the Product Manager?
+## Just want story interviews in chat?
 
-If you're not using Claude Code and only want to interview stories with AI, add the remote Stories MCP server to your MCP client. See [Stories MCP setup](/documentation/stories-mcp-setup).
+If you only want to interview stories with AI, add the remote CodeMySpec MCP server to your MCP client. See [MCP setup](/documentation/stories-mcp-setup).
 
 ## Troubleshooting
 
@@ -134,9 +131,9 @@ curl http://localhost:4003/health
 
 On macOS, restart it with `brew services restart codemyspec`. If the port is already taken, something else is on 4003; stop that first.
 
-**`not_authenticated` error.** Run `/codemyspec:init auth` and complete sign-in before calling any MCP tool. Every tool returns this until you do.
+**Authentication error.** Run `/codemyspec:init auth` and complete sign-in before calling any MCP tool.
 
-**macOS blocks the binary.** Allow it under System Settings &rarr; Privacy & Security.
+**macOS blocks the app or binary.** The installers aren't code signed yet. Open System Settings, then Privacy and Security, and choose Open Anyway. On Windows, choose More info, then Run anyway at the SmartScreen prompt.
 
 **Auth token expired.** Run `/codemyspec:init auth` again.
 

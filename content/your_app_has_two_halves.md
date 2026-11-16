@@ -38,7 +38,7 @@ tags:
 # Your App Has Two Halves and You Need to Know Which Is Which
 
 > "Vibe code so hard your entire waitlist is visible in frontend"
-> -- r/vibecoding, 608 upvotes
+>, r/vibecoding, 608 upvotes
 
 When I first started writing software, I spun up a Django app and everything was going fine. Then at some point I needed JavaScript to do something on the page. And I didn't understand that I had crossed a line. I was no longer writing code that ran on the server. I was writing code that ran in the browser.
 

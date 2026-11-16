@@ -105,9 +105,9 @@ Every tool above is optimized for the first 80 percent: get a working prototype 
 
 - **A mandatory verification gate.** CodeMySpec walks a graph of stories, components, and requirements, and each component must pass a chain that ends in passing BDD specs and a completed QA step. The BDD gate is mandatory, not a configurable knob. A QA agent then boots the real app, drives a live browser, takes screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. No builder above runs the live app to confirm the spec held.
 - **You own a real, deployable app.** The output is a full Phoenix and Elixir stack you own and deploy: auth, an Ecto database, LiveView UI, contexts, and background workers. No closed SDK, no frontend-only export.
-- **Bring your own agent, model, and keys, with no token markup.** It runs inside your Claude Code with your keys, so there is no per-token resale meter. That directly answers the credit-burn complaint that dominates builder sentiment.
+- **Bring your own agent, model, and keys, with no token markup.** It runs inside your own coding agent (Claude Code first) with your keys, so there is no per-token resale meter. That directly answers the credit-burn complaint that dominates builder sentiment.
 
-The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. It is delivered as a Claude Code plugin plus remote MCP servers behind OAuth plus a CLI, and it is Elixir and Phoenix only. It is more process by design, not less. What that threshold is not is a technical one. The people running it hardest today are not engineers, and the verification step is the reason it holds up for them: you do not have to be able to read the code to trust a QA agent that opens the app and reports what broke. If you want to describe an app and ship it from a browser this afternoon, one of the tools above is your answer, and you should use it. CodeMySpec is for the person who needs the app to be real, owned, and verifiable, and will trade a setup afternoon to get there. The same argument, applied to the build loop itself, lives in [spec-driven development](/blog/spec-driven-development).
+The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. It is delivered as a plugin for Claude Code (with Codex and Google Antigravity plugins too) plus MCP servers behind OAuth and a local harness, and it is Elixir and Phoenix only. Building is free, and running your software live is $100 a month per user. It is more process by design, not less. What that threshold is not is a technical one. The people running it hardest today are not engineers, and the verification step is the reason it holds up for them: you do not have to be able to read the code to trust a QA agent that opens the app and reports what broke. If you want to describe an app and ship it from a browser this afternoon, one of the tools above is your answer, and you should use it. CodeMySpec is for the person who needs the app to be real, owned, and verifiable, and will trade a setup afternoon to get there. The same argument, applied to the build loop itself, lives in [spec-driven development](/blog/spec-driven-development).
 
 ## How to pick
 
@@ -116,7 +116,7 @@ The honest threshold, stated plainly: CodeMySpec is the opposite of one-click. I
 - Want the best hosting and a real dev environment alongside the agent: **Replit Agent**.
 - Want the fastest zero-config hosted MVP and accept platform lock-in: **Base44**.
 - Non-technical, want a mature visual platform and never plan to touch code: **Bubble**.
-- Already breaking on real customers, willing to use Claude Code, and you want a real owned app with a verification gate: **CodeMySpec** (Elixir and Phoenix only).
+- Already breaking on real customers, willing to use a coding agent like Claude Code, and you want a real owned app with a verification gate: **CodeMySpec** (Elixir and Phoenix only).
 
 ## Related Articles
 

@@ -43,6 +43,8 @@ AI coding agents are great at producing plausible code fast, and terrible at rem
 
 That spec is the durable memory that survives context windows, model swaps, and the months between when a feature was built and when someone has to change it. By mid-2026 SDD is a real category with a Martin Fowler article, a DeepLearning.AI course, an arXiv paper, and at least seven serious tools fighting over the term. It is also one of the few durable ideas in a churning market: the spring 2026 consolidation wave (acquisitions, rebrands, and sunsets across the [broader AI coding tool landscape](/blog/best-ai-coding-tools-2026)) strengthened the case for keeping your intent in specs you own rather than in any one vendor's chat history. This guide defines the category, lays out the rigor spectrum, walks the canonical workflow, classifies the tools, compares them in one table, and gives you a way to choose. I build with one of these tools daily (CodeMySpec, which I make), so I will flag my bias where it shows up and try to be fair to the rest.
 
+{{nontechnical_founder_cta campaign="spec-driven-development-intro"}}
+
 ## What is spec-driven development?
 
 **Spec-driven development is a software methodology where a written specification, not the code, is the source of truth: humans author and maintain the spec, and AI agents generate, verify, and update code against it.**
@@ -94,7 +96,7 @@ Here are the seven tools most worth knowing, on the dimensions that actually dis
 
 | Tool | Maker | Category | Spec format | Enforcement / gate | Verification | Agent/IDE lock-in | Pricing | Community |
 |---|---|---|---|---|---|---|---|---|
-| **CodeMySpec** | J. Davenport | Full-lifecycle harness (Layer 1) | BDD scenarios (Spex) + module specs on a requirement graph | **Mandatory BDD gate** | **Live browser QA + generated tests** | None (any agent, BYO model/keys) | Free (early access) | Emerging |
+| **CodeMySpec** | J. Davenport | Full-lifecycle harness (Layer 1) | BDD scenarios (Spex) + module specs on a requirement graph | **Mandatory BDD gate** | **Live browser QA + generated tests** | None (any agent, BYO model/keys) | Build free; Operate & Grow $100/mo per user | Emerging |
 | **GitHub Spec Kit** | GitHub/MS | Spec-first scaffolding | Prose markdown (spec/plan/tasks.md) | None (convention) | None | None (~30 agents) | Free, MIT | [![GitHub stars](https://img.shields.io/github/stars/github/spec-kit?style=flat&label=stars&color=e25515)](https://github.com/github/spec-kit) |
 | **Kiro** | AWS | Spec-first IDE | EARS (requirements/design/tasks.md) | Review-gated, not enforced | Agent Hooks (tests) | Kiro IDE/CLI, Claude via Bedrock | Metered credits w/ markup | Closed |
 | **Tessl** | Tessl (Podjarny) | Spec-as-source (aspirational) | Spec regenerates code (beta, JS-only, non-deterministic) | n/a (pre-product) | n/a | Platform/registry | Closed beta | Closed beta |
@@ -114,7 +116,7 @@ Here are the seven tools most worth knowing, on the dimensions that actually dis
 
 **Agent OS** from Brian Casel is standards-first rather than spec-first: it reverse-engineers your codebase's conventions into documented standards and injects the relevant ones into your agent's context. Its v3 (January 2026) deliberately dropped durable spec-writing in favor of shaping Claude Code's ephemeral Plan Mode, on the rationale that frontier models now handle scaffolding. Strong at the standards problem, but no longer holds a spec as a source of truth. Read the [Agent OS review](/blog/agent-os-review).
 
-**CodeMySpec** is the tool I build. It is a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir, distributed as a Claude Code plugin with a local MCP server and a web app. The mental model is a requirement graph: every artifact (spec, test, implementation, BDD scenario, QA result) is a node with prerequisites, and the system computes what to work on next. BDD scenarios (written in a Spex DSL from acceptance criteria) are a mandatory gate; module specs, reviews, and tests are configurable knobs. The piece that sets it apart is verification, covered below.
+**CodeMySpec** is the tool I build. It is a full-lifecycle, specification-driven AI development harness for Phoenix and Elixir, distributed as a Claude Code plugin with a local MCP server and a web app. The mental model is a requirement graph: every artifact (spec, test, implementation, BDD scenario, QA result) is a node with prerequisites, and the system computes what to work on next. BDD scenarios (written in a Spex DSL from acceptance criteria) are executable specs you run with `mix spex`, and they are a mandatory gate; module specs, reviews, and tests are configurable knobs. The piece that sets it apart is verification, covered below.
 
 ## What most tools get wrong
 

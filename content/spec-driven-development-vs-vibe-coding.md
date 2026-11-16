@@ -57,7 +57,7 @@ The payoff is that the spec becomes durable memory. It survives the context wind
 
 ### Not all SDD is equally rigorous
 
-Here is the part that matters more than any feature list, and it is why "just write a spec" is not the answer on its own. Birgitta Bockeler on Martin Fowler's site, echoed almost exactly by the 2026 arXiv paper "From Code to Contract," lays out a three-level rigor spectrum:
+Here is the part that matters more than any feature list, and it is why "write a spec" is not the answer on its own. Birgitta Bockeler on Martin Fowler's site, echoed almost exactly by the 2026 arXiv paper "From Code to Contract," lays out a three-level rigor spectrum:
 
 1. **Spec-first.** The spec gives initial clarity, then is discarded or allowed to drift once code is generated. The code becomes the source of truth again. This is the default behavior of Spec Kit and Kiro.
 2. **Spec-anchored.** The spec is maintained alongside the code for the life of the system, and tests enforce alignment between the two. Bockeler calls this the sweet spot for most production systems.
@@ -106,7 +106,7 @@ Look back at the rigor spectrum. A spec-first tool generates a beautiful `requir
 
 The fix is a spec that verifies. Two pieces have to be true. First, the spec has to be a gate: the code is not done until it satisfies the spec, and the system enforces that rather than trusting you to remember. Second, verification has to be real: not "the unit tests pass," but "the behavior described in the spec actually happens when the app runs." Those are different claims, and the gap between them is exactly where vibe coding bugs hide.
 
-This is the design CodeMySpec is built around, and the reason I built it. BDD scenarios (written from acceptance criteria) are a mandatory gate, not an optional doc; spec quality is the explicit lever on code quality. And verification is built in: a QA subagent writes a brief from the BDD specs, boots the real app, drives a real browser through the [Vibium](https://vibium.dev) MCP, screenshots the result, and files issues with severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the actual button and finds the bug anyway. Prompting is praying. Verification is a guarantee.
+This is the design CodeMySpec is built around, and the reason I built it. BDD scenarios (written from acceptance criteria) are executable specs you run with `mix spex`, and they are a mandatory gate, not an optional doc; spec quality is the explicit lever on code quality. And verification is built in: a QA subagent writes a brief from the BDD specs, boots the real app, drives a real browser through the [Vibium](https://vibium.dev) MCP, screenshots the result, and files issues with severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the actual button and finds the bug anyway. Prompting is praying. Verification is a guarantee.
 
 To be fair about what is shared: repo-resident specs, bring-your-own-agent, and writing the spec before the code are not unique to any one tool. OpenSpec, Spec Kit, and others meet some of those bars, and portability is table stakes, not a moat. The defensible combination is the mandatory behavioral gate plus built-in live verification on the whole lifecycle, which is the line between "I wrote a spec" and "the spec is enforced." CodeMySpec also happens to be Phoenix and Elixir-native, a vertical no other tool occupies, which matters if that is your stack and not at all if it is not.
 

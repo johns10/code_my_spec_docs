@@ -171,7 +171,7 @@ Here's how I'd actually pick. Worth noting that running [a harness layer](/devel
 
 All six tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality. True whether you're on Opus 4.8 or a local model through Aider.
 
-CodeMySpec sits at the layer above: a set of model harnesses that help one person build, sell, and support real software. The [build harness](/developers) generates specifications any of these agents can consume, through MCP (Claude Code, Codex, Gemini CLI, Goose all support it) or context files (CLAUDE.md, .cursorrules, GEMINI.md), then holds the agent to them through tests and QA. Whichever agent you already use, the harness feeds it better input and checks its output. And because the same platform carries a content engine plus the email, chat, and ads layer, the app you build with these agents is also one you can market and support without hiring a team.
+CodeMySpec sits at the layer above: a set of model harnesses that help one person build, sell, and support real software. The [build harness](/developers) runs locally on your machine and drives your coding agent with executable BDD specs (run with `mix spex`), then holds the agent to them through tests and QA. It plugs into Claude Code today, with Codex and Google Antigravity plugins too, [all on your own keys](/agents). The specs and tests live in your repo as plain files, so you can open the project in any other agent too. Other MCP-capable agents (Cursor, Gemini CLI, Copilot and more) connect through the CodeMySpec MCP server with no dedicated plugin. And because the same platform carries a content engine plus the email, chat, and ads layer, the app you build with these agents is also one you can market and support without hiring a team.
 
 Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding), where CLI agents fit in the progression from autocomplete to autonomous development.
 
@@ -192,14 +192,14 @@ Cross-reference: ["Five Levels of AI Coding"](/blog/five-levels-of-ai-coding), w
 ## Sources
 
 - [SWE-bench Leaderboard](https://www.swebench.com/)
-- [SWE-bench Feb 2026 — Simon Willison](https://simonwillison.net/2026/Feb/19/swe-bench/)
-- [Codex vs Claude Code 2026 — MorphLLM](https://www.morphllm.com/comparisons/codex-vs-claude-code)
-- [Claude Code vs Codex: What 500+ Reddit Devs Think — dev.to](https://dev.to/_46ea277e677b888e0cd13/claude-code-vs-codex-2026-what-500-reddit-developers-really-think-31pb)
+- [SWE-bench Feb 2026, Simon Willison](https://simonwillison.net/2026/Feb/19/swe-bench/)
+- [Codex vs Claude Code 2026, MorphLLM](https://www.morphllm.com/comparisons/codex-vs-claude-code)
+- [Claude Code vs Codex: What 500+ Reddit Devs Think, dev.to](https://dev.to/_46ea277e677b888e0cd13/claude-code-vs-codex-2026-what-500-reddit-developers-really-think-31pb)
 - [Aider LLM Leaderboards](https://aider.chat/docs/leaderboards/)
-- [Aider vs Claude Code — Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
-- [Claude Code vs Gemini CLI — Shipyard](https://shipyard.build/blog/claude-code-vs-gemini-cli/)
+- [Aider vs Claude Code, Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
+- [Claude Code vs Gemini CLI, Shipyard](https://shipyard.build/blog/claude-code-vs-gemini-cli/)
 - [Gemini CLI Quotas and Pricing](https://geminicli.com/docs/resources/quota-and-pricing/)
-- [Codex CLI Features — OpenAI](https://developers.openai.com/codex/cli/features/)
-- [Top 5 CLI Coding Agents 2026 — DEV Community](https://dev.to/lightningdev123/top-5-cli-coding-agents-in-2026-3pia)
-- [CLI Tools Compared — sanj.dev](https://sanj.dev/post/comparing-ai-cli-coding-assistants)
+- [Codex CLI Features, OpenAI](https://developers.openai.com/codex/cli/features/)
+- [Top 5 CLI Coding Agents 2026, DEV Community](https://dev.to/lightningdev123/top-5-cli-coding-agents-in-2026-3pia)
+- [CLI Tools Compared, sanj.dev](https://sanj.dev/post/comparing-ai-cli-coding-assistants)
 - Reddit threads: [r/ChatGPTCoding](https://www.reddit.com/r/ChatGPTCoding/), [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/), [r/vibecoding](https://www.reddit.com/r/vibecoding/)

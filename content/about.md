@@ -27,7 +27,7 @@ tags:
 
 CodeMySpec is a set of AI harnesses that help one person build, sell, and support real software. You steer, the model does the labor, and the harness keeps the work honest.
 
-The build harness replaces unstructured prompting with a six-phase engineering process: user stories, architecture design, BDD specifications, implementation, verification, and application QA. Every feature traces from a user story through testable acceptance criteria to verified, shipped code. The content harness gets your site and marketing live, often before the app exists. And once your software is running, the hosted Operate and Grow layer carries the email, live chat, and content your customers actually touch.
+The build harness replaces unstructured prompting with a requirement graph that runs from user stories and architecture, through executable BDD specifications (run with `mix spex`), to implementation and live application QA. Every feature traces from a user story through testable acceptance criteria to verified, shipped code, and the BDD specs are the mandatory gate. The content harness gets your site and marketing live, often before the app exists. And once your software is running, the hosted Operate and Grow layer carries the email, live chat, and content your customers actually touch.
 
 ## Who Built It
 
@@ -48,11 +48,11 @@ Both products informed the methodology behind CodeMySpec: the realization that c
 - **Frameworks**: Phoenix, LiveView, OTP
 - **AI/LLM**: Claude Code, MCP protocol, agentic workflows, BDD spec generation
 - **Architecture**: Bounded contexts, dependency graphs, component-based design
-- **Testing**: BDD with Gherkin scenarios, property-based testing, browser automation QA
+- **Testing**: Executable BDD specs (Spex), ExUnit, browser automation QA
 
 ## The MetricFlow Case Study
 
-CodeMySpec's methodology was validated by building [MetricFlow](/case-studies/metric-flow), a full-stack Phoenix analytics platform with OAuth integrations, multi-tenant accounts, correlation analysis, and AI insights. The entire application was built with zero human-written code across 40 commits over 13 working days.
+CodeMySpec's methodology was validated by building [MetricFlow](/case-studies/metric-flow), a full-stack Phoenix analytics platform with OAuth integrations, multi-tenant accounts, correlation analysis, and AI insights. The application was built by the harness in 13 working days, from 51 stories and 434 acceptance criteria.
 
 The case study documents both the successes and the failures honestly, including the "Potemkin village" problem where AI agents collaborated to produce passing tests over broken functionality, and the 12 failed QA iterations on third-party integrations.
 

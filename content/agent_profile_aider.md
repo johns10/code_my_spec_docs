@@ -36,6 +36,8 @@ tags:
 
 # Aider in 2026: Features, Pricing, Benchmarks, and Community Sentiment
 
+{{nontechnical_founder_cta campaign="aider-review-2026-intro"}}
+
 ## Overview
 
 Aider is the OG open-source CLI coding agent, and it still gets the fundamentals right in ways the vendor CLIs don't. Paul Gauthier started it before the wave, and the git integration is the deepest in the space: every edit auto-committed with a real message, clean `/undo`, committer tagged "(aider)" so you can audit what the model touched.
@@ -159,11 +161,11 @@ The Polyglot leaderboard has become the de facto standard for evaluating coding 
 
 ## CodeMySpec Integration
 
-Aider's model flexibility and git-first workflow make it a natural fit for spec-driven development, especially if you're watching costs.
+CodeMySpec has no dedicated plugin for Aider, and Aider has no native MCP client yet (see below), so use is file-based for now: the specs, tests and rules live in your repo as ordinary files you can `/read`. Through the third-party MCP bridges listed below, Aider can also reach the CodeMySpec MCP server (`https://codemyspec.com/mcp/harness`, streamable HTTP, OAuth sign-in). CodeMySpec does not generate `CONVENTIONS.md` files.
 
-- **Context files:** `/add` for mutable context, `/read` for read-only. CodeMySpec specs drop in as `/read` references with full visibility and zero risk of the model rewriting them. No `CLAUDE.md`-style auto-load.
+- **Context files:** `/add` for mutable context, `/read` for read-only. Spec files from your repo drop in as `/read` references with full visibility and zero risk of the model rewriting them. No `CLAUDE.md`-style auto-load.
 - **MCP support:** Not native yet (issue #4506 open). Third-party servers exist (`disler/aider-mcp-server`, `sengokudaikon/aider-mcp-server`). File-based spec delivery until native MCP lands.
-- **Hooks support:** No pre/post hooks. The auto-fix loop (run linters/tests, fix, re-run) is the closest thing, and it works well for spec-driven test compliance.
+- **Hooks support:** No pre/post hooks. The auto-fix loop (run linters/tests, fix, re-run) is the closest thing, and it works well for test compliance.
 - **Subagent support:** None. Single conversation, single thread. Parallel work means running multiple Aider instances manually.
 - **Skills/commands support:** None. Custom workflows require wrapper scripts around the CLI.
 - **Memory/persistence:** No persistent memory. Fresh session every time. Repo-map gives codebase awareness; spec context gets re-added each session via `/add` or `/read`.
@@ -179,10 +181,10 @@ Aider's model flexibility and git-first workflow make it a natural fit for spec-
 ## Sources
 
 - [Aider LLM Leaderboards](https://aider.chat/docs/leaderboards/)
-- [Aider Polyglot Benchmark -- Epoch AI](https://epoch.ai/benchmarks/aider-polyglot)
+- [Aider Polyglot Benchmark, Epoch AI](https://epoch.ai/benchmarks/aider-polyglot)
 - [Aider Release History](https://aider.chat/HISTORY.html)
-- [Aider vs Claude Code -- Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
-- [Aider vs Claude Code -- zenvanriel.com](https://zenvanriel.com/ai-engineer-blog/aider-vs-claude-code/)
-- [Programming with Aider -- slinkp.com](https://slinkp.com/programming-with-aider-20250725.html)
+- [Aider vs Claude Code, Morph](https://www.morphllm.com/comparisons/morph-vs-aider-diff)
+- [Aider vs Claude Code, zenvanriel.com](https://zenvanriel.com/ai-engineer-blog/aider-vs-claude-code/)
+- [Programming with Aider, slinkp.com](https://slinkp.com/programming-with-aider-20250725.html)
 - [MCP Issue #4506](https://github.com/aider-ai/aider/issues/4506)
 - [Aider Documentation](https://aider.chat/docs/)

@@ -38,7 +38,7 @@ tags:
 # What Is Code, Actually?
 
 > "You said a lot of words but as a vibe coder, I have no idea what any of that means."
-> -- r/vibecoding, 21 upvotes
+>, r/vibecoding, 21 upvotes
 
 Yeah, fair. Most "guides for beginners" are written by developers who forgot what it's like to not know this stuff. I've been writing code for years and I still remember the feeling of staring at a project folder full of files I didn't create, wondering what any of it was.
 

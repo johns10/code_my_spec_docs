@@ -172,14 +172,14 @@ For teams already on GitHub it's still the "don't change anything" option. Issue
 
 ## CodeMySpec Integration
 
-Copilot's installed base and native GitHub integration make it a high-reach target for CodeMySpec, even with the April signup pause.
+CodeMySpec has no dedicated plugin for Copilot, but Copilot supports MCP, so it can connect to the CodeMySpec MCP server (`https://codemyspec.com/mcp/harness`, streamable HTTP, OAuth sign-in) and call the same tools. CodeMySpec does not generate `.github/copilot-instructions.md` files; the specs, tests and rules live in your repo as ordinary files you can point Copilot at. In VS Code, add the server through Copilot's MCP configuration.
 
-- **Context files:** `.github/copilot-instructions.md` is the native project-context file. CodeMySpec generates it from specs: architecture decisions, component boundaries, coding rules. VS Code and the Cloud Agent both read it automatically.
-- **MCP support:** Full MCP in VS Code 1.99+ with GitHub MCP Registry. CodeMySpec serves specs via MCP, auto-configured for the Cloud Agent, so spec context is available even in async background work.
-- **Hooks support:** Agent hooks in preview (March 2026). `/create-*` commands define reusable prompts and hooks. Once hooks hit GA, specs can trigger automated verification after edits.
-- **Subagent support:** Custom agents, sub-agents, plan agent all available in Agent Mode. The Cloud Agent itself is single-agent (issue in, PR out): functional for spec-to-PR but thinner than Claude Code's Agent Teams.
-- **Skills/commands:** Custom skills via `/create-*`. Community skills from `github/awesome-copilot`. Specs translate cleanly into skill definitions.
-- **Memory/persistence:** Copilot Memory is on by default for Pro/Pro+. Strongest persistence story among IDE-based tools: spec context compounds over time.
+- **Context files:** `.github/copilot-instructions.md` is the native project-context file. VS Code and the Cloud Agent both read it automatically.
+- **MCP support:** Full MCP in VS Code 1.99+ with GitHub MCP Registry, so MCP-served context is available even in async background work.
+- **Hooks support:** Agent hooks in preview (March 2026). `/create-*` commands define reusable prompts and hooks.
+- **Subagent support:** Custom agents, sub-agents, plan agent all available in Agent Mode. The Cloud Agent itself is single-agent (issue in, PR out): thinner than Claude Code's Agent Teams.
+- **Skills/commands:** Custom skills via `/create-*`. Community skills from `github/awesome-copilot`.
+- **Memory/persistence:** Copilot Memory is on by default for Pro/Pro+. Strongest persistence story among IDE-based tools: context compounds over time.
 
 ## Related Articles
 

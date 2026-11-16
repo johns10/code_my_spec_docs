@@ -43,7 +43,7 @@ If you are evaluating both, that one sentence is the decision. The rest of this 
 Most comparison pages open by inventing differences. I'll start with the overlap, because it's real and pretending otherwise would cost me credibility:
 
 - **Specs live in your repo.** Both tools keep specs as version-controlled files alongside code, not in a proprietary cloud silo. Both treat the spec as a portable protocol the agent reads.
-- **Bring your own agent.** Both are agent-neutral. OpenSpec feeds 20+ assistants (Claude Code, Cursor, Copilot, Gemini CLI, Codex, Amazon Q, Cline, and more) via installed Skills and slash commands. CodeMySpec serves specs through MCP servers (Claude Code, Codex, Gemini CLI, Goose, Cline) or generated context files (CLAUDE.md, AGENTS.md, .cursorrules, GEMINI.md, copilot-instructions.md).
+- **Bring your own agent.** Both are agent-neutral. OpenSpec feeds 20+ assistants (Claude Code, Cursor, Copilot, Gemini CLI, Codex, Amazon Q, Cline, and more) via installed Skills and slash commands. CodeMySpec ships plugins for Claude Code, Codex, and Google Antigravity, and serves its tools over MCP, so other MCP-capable agents can connect too.
 - **No token tax.** OpenSpec requires no API key at all, since it never calls an LLM itself. CodeMySpec is explicitly bring-your-own-key with no token markup. Neither tool monetizes inference.
 - **Specs before code.** Both believe spec quality precedes good AI-generated code. Both put a human-aligned spec in front of generation.
 - **Behavioral vocabulary in both.** OpenSpec *does* use Given/When/Then scenarios. CodeMySpec uses BDD scenarios. The honest contrast is not whether behavior shows up in the spec. It is whether the tool *enforces* it and *verifies* it.
@@ -75,7 +75,7 @@ CodeMySpec is a full-lifecycle, specification-driven AI development harness for 
 
 The core mental model is a **requirement graph**. Every artifact (spec, test, implementation, BDD scenario, QA result) is a node with prerequisites. The system computes what to work on next through a `get_next_requirement -> start_task` loop, so you never stare at a blank repo wondering what is unblocked.
 
-Specs come in two forms. **BDD scenarios** in the Spex DSL come from acceptance criteria and are **mandatory**. They are the gate. **Module specs**, along with reviews and test requirements, are configurable knobs you can turn on or off. You can relax the module-level rigor; you cannot skip the behavior spec.
+Specs come in two forms. **BDD scenarios** in the Spex DSL come from acceptance criteria and are **mandatory**. They are executable: you run them with `mix spex`, not `mix test`, and they are the gate. **Module specs**, along with reviews and test requirements, are configurable knobs you can turn on or off. You can relax the module-level rigor; you cannot skip the behavior spec.
 
 Verification is the part no other tool in this space does. A `qa` subagent plans, writes a brief from the BDD specs, boots the real application, drives a real browser through the Vibium MCP, takes screenshots, and files issues with severity. The line that captures it: unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. Prompting is praying; verification is a guarantee.
 
@@ -99,10 +99,10 @@ CodeMySpec inverts that. The behavior spec is the gate, and a live-app QA pass o
 | **Behavior spec** | Optional, advisory | Mandatory gate |
 | **Enforcement** | `validate` = structure only; `verify` won't block archive | Blocking BDD gate; reviews/tests configurable |
 | **Verification** | None (no test execution) | Live browser QA + generated tests |
-| **Agent lock-in** | None (20+ agents, no API key, no MCP) | None (any agent, BYO model/keys, via MCP or context files) |
+| **Agent lock-in** | None (20+ agents, no API key, no MCP) | None (BYO model/keys; plugins for Claude Code, Codex, Antigravity; MCP for the rest) |
 | **Stack awareness** | Stack-neutral, structurally generic | Phoenix/Elixir-native |
 | **Primary job** | Brownfield change tracking (delta-led) | Spec-quality-led build across the lifecycle |
-| **Pricing** | Free, MIT, v1.4.1 (Jun 2026) [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec) | Free during early access |
+| **Pricing** | Free, MIT, v1.4.1 (Jun 2026) [![GitHub stars](https://img.shields.io/github/stars/Fission-AI/OpenSpec?style=flat&label=stars&color=e25515)](https://github.com/Fission-AI/OpenSpec) | Build is free (includes the content engine). Operate & Grow is $100/mo per user. |
 
 ## Where Each Wins
 
@@ -131,7 +131,7 @@ This is not a cheap shot. It is the structural cost of advisory verification. If
 
 CodeMySpec's bet is that you should not have to supply that discipline by hand. The spec is the gating contract code must satisfy, and the QA pass checks conformance against the running app, which structurally resists the drift OpenSpec users self-report. That is the trade: CodeMySpec asks more of you up front (a mandatory gate, a Phoenix-shaped opinion) in exchange for not asking you to manually police drift forever.
 
-And the honest caveat in the other direction: CodeMySpec is early access with tooling still emerging, while OpenSpec is past v1.0, actively shipping, and battle-tested by a large community. If broad maturity and a 20+ agent install base matter more to you than enforcement and verification today, that is a legitimate reason to start with OpenSpec.
+And the honest caveat in the other direction: CodeMySpec is a younger tool with a smaller community, while OpenSpec is past v1.0, actively shipping, and battle-tested by a large community. If broad maturity and a 20+ agent install base matter more to you than enforcement and verification today, that is a legitimate reason to start with OpenSpec.
 
 ## Spec as a Protocol
 

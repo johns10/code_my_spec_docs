@@ -36,130 +36,64 @@ tags:
   - domain-driven-design
 ---
 
-# Architecture MCP Server: Technical Reference
+# Architecture Tools: Technical Reference
 
 ## Overview
 
-The Architecture MCP Server (`architecture-server`) is a local-only MCP server that provides architecture analysis tools for AI agents. It exposes 2 tools for validating component dependency graphs and analyzing user stories by tag groupings to inform architectural design decisions.
+There is no separate architecture server anymore. The architecture tools are part of CodeMySpec's tool library, and they run alongside the component tools and the story tools. An agent reaches them through the harness MCP server, either with `run_script` (call `tool_docs` first for arguments) or through the `/codemyspec:design architecture` skill, which drives the design session for you.
 
-**Endpoint:** `/mcp/architecture` (localhost:4001 only)
-**Transport:** Streamable HTTP via Hermes MCP
-**Auth:** LocalOnly plug, WorkingDir header, LocalScope from config.yml
+The tools check and project the component graph. The component records themselves are managed with the [Components tools](/documentation/components-mcp-server).
 
-## What It Does
+## What They Do
 
-The Architecture Server provides two focused analysis capabilities:
+1. **Validate** the dependency graph for circular dependencies.
+2. **Analyze** stories by tag to suggest context boundaries.
+3. **Compare** the planned architecture against live code and report drift.
+4. **Compare** architecture decision records against `mix.exs`.
+5. **Show** the architecture as an overview or a namespace tree.
+6. **Apply** a written architecture proposal.
 
-1. **Validates dependency graphs** for circular dependencies that violate clean architecture
-2. **Analyzes stories by tags** to identify domain groupings and inform context design
-
-This is a lightweight, local-only server intended for AI agents working on the codebase directly. For full component CRUD and architecture design, use the Components MCP Server (web, `/mcp/components`).
-
-## Available Tools
+## Tools
 
 ### validate_dependency_graph
 
-**Purpose:** Validates the component dependency graph for circular dependencies.
-
-**Parameters:** None
-
-**What it does:**
-- Loads all components and their dependencies for the current project
-- Detects circular dependency cycles (e.g., A depends on B depends on A)
-- Returns validation result: success or detailed list of detected cycles
-
-**Returns:**
-- Success: confirmation that no circular dependencies exist
-- Failure: list of detected cycles with component paths
-
-**Use case:** Run after modifying dependencies to ensure clean architecture is maintained. Circular dependencies make code harder to test, maintain, and reason about.
+No parameters. Loads every component and dependency in the project and reports circular dependencies as a list of cycles, or confirms there are none. Run it after adding dependencies.
 
 ### analyze_stories
 
-**Purpose:** Analyzes user stories grouped by their tags to inform architecture design.
+No parameters. Groups the project's stories by tag, shows which tags co-occur, and lists untagged stories. Tag stories first with `tag_stories`, then use the groupings to decide where context boundaries belong.
 
-**Parameters:** None
+### check_architecture
 
-**Prerequisites:** Stories should be tagged first using `tag_stories` or individual tag tools from the Stories Server.
+No parameters. Compares the planned architecture against live code and reports where they disagree: an unplanned dependency, a planned dependency the code never uses, a planned component with no code, or code with no planned owner. It always runs on request. The project's `architecture` configuration switch only changes whether the stop hook reports findings.
 
-**What it does:**
-- Loads all stories in the current project
-- Groups stories by their tags (supports both simple tags and prefixed `category:value` tags)
-- Identifies tag co-occurrences (tags that frequently appear together on stories)
-- Lists untagged stories that need categorization
+### check_decisions
 
-**Returns:** Markdown report with:
-- Summary: total stories, tagged count, untagged count
-- Tag groupings: stories organized by tag with counts
-- Tag co-occurrences: tag pairs appearing together on 2+ stories (top 15)
-- Untagged stories: list of stories needing tags (up to 10 shown)
+No parameters. Compares the ADRs in `.code_my_spec/architecture/decisions/` against `mix.exs`. It reports a direct dependency no ADR covers, an ADR covering a dependency that is gone, and an ADR that declines a dependency you actually use. Each ADR declares coverage in frontmatter with `deps: [...]` and `declined: [...]`.
 
-**Use case:** Before designing Phoenix contexts, tag stories by domain area, then run `analyze_stories` to see natural groupings that suggest context boundaries.
+### show_architecture_overview
 
-**Example output:**
-```
-## Story Analysis
+No parameters. Returns every component grouped by parent context, with types, descriptions, and dependencies.
 
-**Total:** 24 | **Tagged:** 20 | **Untagged:** 4
+### show_namespace_hierarchy
 
-### Tags
+Shows the components as a module-namespace tree, two levels deep by default. Optional arguments: `depth`, `prefix` (for example `MyApp.Accounts`), and `descriptions` (default true). It's the first thing to read for an overview.
 
-**Domain**
-  - authentication (5): id1, id2, id3, id4, id5
-  - billing (3): id6, id7, id8
-  - notifications (4): id9, id10, id11, id12
+### execute_proposal
 
-### Tag Co-occurrence
+No parameters. Reads the architecture proposal at `.code_my_spec/architecture/proposal.md`, validates it, and creates or updates components and story links. Use it when you rewrite the proposal for a larger restructure instead of editing component by component.
 
-- authentication + notifications (3 stories)
-- billing + notifications (2 stories)
+### regenerate_proposal
 
-### Untagged Stories
+Takes `confirm: true`. Rewrites `proposal.md` from the architecture that already exists in the project, discarding any unexecuted edits. Useful when a project has components but no proposal document.
 
-- [id20] Admin exports audit log
-- [id21] User updates profile photo
-```
+## How the Design Session Uses Them
 
-## Transport and Authentication
+The design task has two modes:
 
-- **Local only:** Served at localhost:4001 via the LocalOnly plug
-- **Scope resolution:** Uses `WorkingDir` header and `LocalScope` from config.yml
-- **No OAuth required:** Designed for local AI agent use (Claude Code, Claude Desktop)
-- **Framework:** Hermes MCP with Streamable HTTP transport
+- **Initial**: no components and no proposal yet. The agent writes `proposal.md`, and the evaluator validates and executes it.
+- **Revision**: components already exist. The agent edits through the tools (`create_component`, `add_dependency`, `set_story_component`), and the evaluator checks that the task's story is linked to a component.
 
-## Integration with Workflow
+## Scope and Auth
 
-The Architecture Server complements the Components Server:
-
-```
-1. Stories Server     -> Create and refine user stories
-2. Stories Server     -> Tag stories by domain area
-3. Architecture Server (this) -> analyze_stories to see groupings
-4. Components Server  -> Design contexts based on analysis
-5. Architecture Server (this) -> validate_dependency_graph after adding deps
-```
-
-## Technical Implementation
-
-**Framework:** Hermes MCP Server
-**Server name:** `architecture-server` v1.0.0
-**Capabilities:** Tools only (no resources or prompts)
-**Location:** `lib/code_my_spec/mcp_servers/architecture_server.ex`
-
-**Tool modules:**
-```elixir
-component(CodeMySpec.McpServers.Architecture.Tools.ValidateDependencyGraph)
-component(CodeMySpec.McpServers.Architecture.Tools.AnalyzeStories)
-```
-
-## Error Handling
-
-**Scope errors:**
-- Authentication failed: user needs to run `codemyspec auth login`
-- Needs authentication: no credentials configured
-
-**Data errors:**
-- No stories found: import stories first using Stories Server tools
-- Unexpected results: logged and returned with inspect details
-
-All errors return descriptive messages with resolution guidance.
+Every call is scoped to the project the working copy belongs to, and the client's OAuth identity decides which account you're in. The local server forwards MCP traffic to `https://codemyspec.com/mcp/harness`. Without sign-in, calls fail with an authentication error; run `/codemyspec:init auth`.

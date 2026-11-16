@@ -119,12 +119,12 @@ Every tool above shares one structural gap, and it is the same gap that produced
 
 It builds a real, full-stack Phoenix application (auth, an Ecto database, LiveView UI, contexts, background jobs) that you own as a normal repo. The difference is the loop it runs to get there. BDD specs are a mandatory gate: work cannot advance past a behavioral spec it fails. Then a QA agent boots the real app, drives a live browser, screenshots the result, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. That live-app verification is the structural answer to "the agent broke prod." It is also why the loop is slower than describe-it-and-ship, by design.
 
-On cost, CodeMySpec is bring-your-own agent, model, and keys, with no token markup. It runs inside your own Claude Code with your own keys, so there is no per-token resale meter to surprise you. That directly addresses the second Replit worry.
+On cost, CodeMySpec is bring-your-own agent, model, and keys, with no token markup. It runs inside your own coding agent with your own keys, so there is no per-token resale meter to surprise you. That directly addresses the second Replit worry.
 
 Now the honest limits, because this is not a fit for everyone:
 
 - It is Elixir and Phoenix only. If you need React, Next, or general web output, this is disqualifying and you should pick one of the builders above.
-- It requires Claude Code plus MCP servers behind OAuth plus a CLI binary, and the custom-domain email feature needs DNS setup. Replit, Lovable, v0, and Bolt are zero-setup and in-browser. CodeMySpec is the opposite of one-click.
+- It requires a coding agent (Claude Code is the flagship, with Codex and Google Antigravity plugins too) plus MCP servers behind OAuth plus a local harness, and the custom-domain email feature needs DNS setup. Replit, Lovable, v0, and Bolt are zero-setup and in-browser. CodeMySpec is the opposite of one-click.
 - It is more process, not less. The mandatory spec and QA gates are friction on purpose. That is a benefit when you are graduating a broken prototype, and a cost when you only want a fast demo.
 
 So CodeMySpec is not a drop-in Replit replacement for a non-technical builder. It is the graduation option for someone already at the wall: a prototype breaking on real customers, an owner willing to use Claude Code or bring an engineer, and a need for the app to be real, owned, and verified before it ships. If that is not you, one of the builders above is your answer, and that is a fine place to land.

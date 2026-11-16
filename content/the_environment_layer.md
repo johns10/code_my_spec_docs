@@ -106,7 +106,7 @@ Giving an AI agent shell access requires trust. The environment layer is where t
 
 [Auto mode](https://www.anthropic.com/engineering/claude-code-auto-mode), released March 2026, replaces the blunt `--dangerously-skip-permissions` flag with a model-based classifier. Internal testing shows a [0.4% false positive rate on real traffic and 5.7% false negative rate on synthetic exfiltration](https://www.anthropic.com/engineering/claude-code-auto-mode). Anthropic recommends running it only inside a sandbox, the classifier is defense-in-depth, not the sole line of defense.
 
-Most other tools still default to running with your full user permissions. Aider, Gemini CLI, and most open-source agents have no built-in permission system at all. The principle is the same across all of them: don't rely on the model's judgment for security. Use deterministic, environment-level boundaries.
+Most other tools still default to running with your full user permissions. Aider, Gemini CLI, and most open-source agents have no built-in permission system at all. The principle is the same across them all: don't rely on the model's judgment for security. Use deterministic, environment-level boundaries.
 
 ## Git as infrastructure
 

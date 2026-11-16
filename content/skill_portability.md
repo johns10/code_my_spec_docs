@@ -43,11 +43,11 @@ tags:
 
 # One Skill, Three Platforms
 
-When I write a new skill, it goes in `.claude/skills/<name>/`. Not because I only run Claude Code -- because OpenCode reads that directory natively, and a single symlink from `.agents/skills/` makes Codex find it too. One source of truth, three platforms, one place to edit.
+When I write a new skill, it goes in `.claude/skills/<name>/`. Not because I only run Claude Code. OpenCode reads that directory natively, and a single symlink from `.agents/skills/` makes Codex find it too. One source of truth, three platforms, one place to edit.
 
 That's possible because Claude Code, OpenCode, and Codex independently arrived at the same skill convention. `SKILL.md` in a named directory, `name` and `description` in the frontmatter, body loaded on demand. The discovery paths differ. Some platforms honor extra frontmatter fields, others silently ignore them. The core artifact is the same.
 
-The convergence is the prize. One skill, three platforms -- if you know which fields are portable and which aren't.
+The convergence is the prize. One skill, three platforms, if you know which fields are portable and which aren't.
 
 This post is the matrix: what's portable, what's platform-specific, what's silently dropped if you guess wrong, and the template I start from.
 
@@ -76,7 +76,7 @@ Where the skill lives on disk determines who finds it. The three platforms diver
 | OpenCode | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` (precedence: opencode > claude > agents) | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
 | Codex | `.agents/skills/` (cwd, walking up to repo root) | `~/.agents/skills/` |
 
-OpenCode is the one that gives you portability for free -- it reads all three project paths. Claude Code only reads `.claude/skills/`; Codex only reads `.agents/skills/`. Put the skill in `.claude/skills/` and symlink it from `.agents/skills/` and you're covered.
+OpenCode is the one that gives you portability for free: it reads all three project paths. Claude Code only reads `.claude/skills/`; Codex only reads `.agents/skills/`. Put the skill in `.claude/skills/` and symlink it from `.agents/skills/` and you're covered.
 
 **Recommended layout for portability:**
 
@@ -111,11 +111,11 @@ This is where portability bugs come from. Fields silently get ignored on platfor
 
 **The portable subset is `name` and `description`.** Anything else risks being silently ignored. If you depend on `allowed-tools` or `disable-model-invocation` for safety, you're writing a Claude Code skill, not a portable one.
 
-The trade-off is real. Claude Code's `allowed-tools` whitelist pre-approves MCP calls so the user doesn't get prompted on every invocation. Losing it means OpenCode users see permission prompts your Claude Code users don't. There's no portable substitute -- per-skill tool restriction lives at the agent or config layer on the other two platforms. Document the requirement in prose and accept the friction.
+The trade-off is real. Claude Code's `allowed-tools` whitelist pre-approves MCP calls so the user doesn't get prompted on every invocation. Losing it means OpenCode users see permission prompts your Claude Code users don't. There's no portable substitute, per-skill tool restriction lives at the agent or config layer on the other two platforms. Document the requirement in prose and accept the friction.
 
 ## Invocation syntax
 
-Implicit invocation (the agent picks the skill from the description) works the same way on all three. Explicit invocation -- when the user wants to force the skill to load -- diverges.
+Implicit invocation (the agent picks the skill from the description) works the same way on all three. Explicit invocation, when the user wants to force the skill to load, diverges.
 
 | Platform | Explicit invocation |
 |---|---|
@@ -153,8 +153,8 @@ Refer to tools **conceptually** in the body:
 ## Required tools
 
 This skill uses the **GitHub MCP server**. Required tools:
-- `create_issue` -- to file new issues
-- `list_issues` -- to find duplicates
+- `create_issue`: to file new issues
+- `list_issues`: to find duplicates
 ```
 
 The agent resolves "the GitHub create_issue tool" against whatever prefix its platform uses. User wires up the server once, out of band. Skill stays portable.
@@ -196,7 +196,7 @@ It shows up in every cross-platform skill repo, so worth covering.
 - Model / effort overrides at the skill level (Claude-only).
 - Argument substitution in the body (Claude-only `$0..$N`).
 
-If your skill design depends on any of the second list, you're writing a Claude Code skill. That's fine -- just be honest about it.
+If your skill design depends on any of the second list, you're writing a Claude Code skill. That's fine. Be honest about it.
 
 ## The portable skill template
 
@@ -246,7 +246,7 @@ This skill assumes the **GitHub MCP server** is installed with the `create_issue
 - Codex: `codex mcp add github ...`, set `enabled_tools = ["create_issue", "list_issues"]`.
 ```
 
-The Codex chrome (icon, brand color, MCP dep declarations) lives in `agents/openai.yaml` -- the other two platforms ignore it, so it costs nothing to include.
+The Codex chrome (icon, brand color, MCP dep declarations) lives in `agents/openai.yaml`. The other two platforms ignore it, so it costs nothing to include.
 
 ## When to go portable vs single-platform
 
@@ -266,7 +266,7 @@ Default to Claude Code-specific when:
 
 The cost of going portable is mostly the loss of `allowed-tools`. Everything else is recoverable through the body. If you can live with permission prompts on tool calls, portability is free.
 
-{{skill_as_software_cta shape="aside" headline="Two frontmatter fields survive the trip across Claude Code, OpenCode, and Codex: name and description." sub="Everything else is silently dropped, which is what happens to any convention nothing checks." body="CodeMySpec keeps specs as plain markdown in your repo and makes them a gate the build actually checks." label="Put specs where the build checks them" campaign="skill-portability"}}
+{{skill_as_software_cta shape="aside" headline="Two frontmatter fields survive the trip across Claude Code, OpenCode, and Codex: name and description." sub="Everything else is silently dropped, which is what happens to any convention nothing checks." body="CodeMySpec keeps executable BDD specs in your repo and runs them as a gate (`mix spex`) before work is promoted." label="Put specs where the build checks them" campaign="skill-portability"}}
 
 ## Where to go next
 

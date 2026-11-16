@@ -41,6 +41,8 @@ Both GitHub Spec Kit and AWS Kiro put a specification at the center of AI coding
 
 I have read deeply on both and run spec-first workflows on real Phoenix apps. Here is the honest comparison.
 
+{{nontechnical_founder_cta campaign="spec-kit-vs-kiro-intro"}}
+
 ## The core difference in one paragraph
 
 Spec Kit is a methodology plus scaffolding: a Python CLI (`specify`) drops Markdown templates and slash commands into your repo, and your existing agent (Copilot, Claude Code, Cursor, Gemini CLI, and 30-odd others) drives the constitution -> specify -> plan -> tasks -> implement loop. Nothing is locked; the specs are prose Markdown you commit like code. Kiro inverts that. It is a Code OSS (VS Code-compatible) editor where one prompt generates three structured artifacts (`requirements.md` in EARS notation, `design.md`, and a dependency-sequenced `tasks.md`), and Bedrock-backed agents implement them. The discipline is stronger and more guided, but you cash it in inside Kiro, on AWS credits, with the models AWS offers you.
@@ -87,13 +89,13 @@ The honest summary: Spec Kit trades guidance for freedom, Kiro trades freedom fo
 
 Here is what both tools share, and where both leave a gap. Spec Kit and Kiro are both spec-first, and both can drift. Spec Kit's prose specs drive the first generation but do not durably govern the codebase, because the authority is convention. Kiro's specs are more structured, but EARS phrasing is not an executable contract, and "vibe mode" sits right alongside spec mode as an escape hatch. Critically, neither tool verifies the generated code against the live, running app. Spec Kit has no verification loop at all; Kiro's Hooks can run tests, but unit tests passing is not the same as the button actually working.
 
-[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin plus a local MCP server. Three differences matter against these two tools:
+[CodeMySpec](/developers) targets exactly that gap. It is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a plugin for Claude Code (with Codex and Google Antigravity plugins too) that connects to a local harness. Three differences matter against these two tools:
 
 - **A mandatory BDD gate.** BDD scenarios (Given/When/Then) are not optional documents the agent should follow. They are required, and they are behavioral contracts, not requirement phrasing. Module specs, reviews, and tests are configurable knobs; the BDD gate is not.
 - **Built-in live verification.** A QA subagent boots the real app, drives a real browser, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. No spec-first tool in this space does live-app verification.
-- **Phoenix-native, and BYO everything.** Phoenix contexts, LiveView, Ecto, and OTP are first-class. Specs are portable as MCP context or context files (CLAUDE.md, .cursorrules, GEMINI.md), so you bring your own agent, your own model, and your own keys with no token markup, the opposite of Kiro's credit metering.
+- **Phoenix-native, and BYO everything.** Phoenix contexts, LiveView, Ecto, and OTP are first-class. Specs and tests live in your repo as files, and the harness runs on your own agent and keys (Claude Code, Codex, Google Antigravity), so you bring your own model with no token markup, the opposite of Kiro's credit metering.
 
-To be fair: portability is not unique to CodeMySpec. Spec Kit is also BYO-agent, and both tools keep specs in your repo. The defensible difference is the combination: a mandatory behavioral gate plus live-app verification plus a full lifecycle on one requirement graph, built deep for one stack. Most SDD tools generate a spec and hand off. CodeMySpec keeps spec, code, tests, and verification in one system. It is early access (free during early access) and Elixir-specific, so it is not the answer if you are on a different stack. But if you are building Phoenix and the drift-and-verification gap is what worries you, it is worth a look.
+To be fair: portability is not unique to CodeMySpec. Spec Kit is also BYO-agent, and both tools keep specs in your repo. The defensible difference is the combination: a mandatory behavioral gate plus live-app verification plus a full lifecycle on one requirement graph, built deep for one stack. Most SDD tools generate a spec and hand off. CodeMySpec keeps spec, code, tests, and verification in one system. It is Elixir-specific, free to build, and $100 a month per user once your software is live, so it is not the answer if you are on a different stack. But if you are building Phoenix and the drift-and-verification gap is what worries you, it is worth a look.
 
 ## Related Articles
 

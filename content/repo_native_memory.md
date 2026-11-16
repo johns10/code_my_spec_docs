@@ -28,13 +28,13 @@ Memory that lives as files in the project's working tree. Markdown, plain text. 
 
 Two boundaries worth being precise about.
 
-**It's not the same as `CLAUDE.md` or `AGENTS.md`.** Those are operating instructions — prescriptive, written upfront, don't accumulate from interaction. CLAUDE.md tells the agent how to behave; memory tells it what happened. Different artifact, different purpose. (Full argument in the flagship piece.)
+**It's not the same as `CLAUDE.md` or `AGENTS.md`.** Those are operating instructions, prescriptive, written upfront, don't accumulate from interaction. CLAUDE.md tells the agent how to behave; memory tells it what happened. Different artifact, different purpose. (Full argument in the flagship piece.)
 
 **It's not the same as repo-native retrieval** like Aider's tree-sitter repo map. Those re-derive structure from code each session. Repo-native memory is durable state.
 
 What counts: Cline / Roo "Memory Bank" patterns (`activeContext.md`, `decisionLog.md`, `progress.md`). Doug's `journal-N.md` pattern. ADRs and the newer Agent Decision Records. Hypercubed's git loop on r/ChatGPTCoding. The whole `.code_my_spec/` tree we use on CodeMySpec.
 
-What also counts, and most people don't realize this: **Claude Code's own auto memory is repo-native.** The March 31 source leak revealed a three-layer architecture — in-context, external file (`MEMORY.md`), structural project (`CLAUDE.md`). Auto memory writes to `~/.claude/projects/<project>/memory/` as plain markdown. Topic files load on demand. There's even an unshipped consolidation daemon called autoDream that processes transcripts into the markdown files while you sleep. Anthropic's own answer to "where should memory live" is files in a directory.
+What also counts, and most people don't realize this: **Claude Code's own auto memory is repo-native.** The March 31 source leak revealed a three-layer architecture, in-context, external file (`MEMORY.md`), structural project (`CLAUDE.md`). Auto memory writes to `~/.claude/projects/<project>/memory/` as plain markdown. Topic files load on demand. There's even an unshipped consolidation daemon called autoDream that processes transcripts into the markdown files while you sleep. Anthropic's own answer to "where should memory live" is files in a directory.
 
 ## How it actually works
 
@@ -44,7 +44,7 @@ The agent reads the repo at session start. It writes back into the same files wh
 
 The Cline Memory Bank pattern is the most explicit example. Five canonical files. The agent reads them in a defined order. After significant work, the agent updates `activeContext.md` (what we're working on now) and `progress.md` (what's done). `decisionLog.md` accumulates choices. `systemPatterns.md` documents conventions.
 
-Doug's journal pattern is even simpler. One file per session. Append-only. The agent writes ISO-timestamped entries: command + actual output, files edited and why, hypotheses + outcomes, dead ends + reasons. Doug found the imperative tone matters — "consider keeping a journal" gets skipped; "keep a journal" doesn't.
+Doug's journal pattern is even simpler. One file per session. Append-only. The agent writes ISO-timestamped entries: command + actual output, files edited and why, hypotheses + outcomes, dead ends + reasons. Doug found the imperative tone matters, "consider keeping a journal" gets skipped; "keep a journal" doesn't.
 
 In both cases, the storage is the working tree. The retrieval is `cat` or the agent's file-read tool. The schema is "humans can read this." That's the whole stack.
 
@@ -56,11 +56,11 @@ In both cases, the storage is the working tree. The retrieval is `cat` or the ag
 
 **Karpathy's LLM-Wiki gist.** Three operations: Ingest, Query, Lint. Markdown wiki between LLM and raw sources. Multiple third-party tools released in March-April 2026 cite this gist as inspiration.
 
-**Mission.md pattern.** A user with 3,500+ sessions documented this on GitHub: a single `mission.md` briefing — "what's done, what's next, what's blocked" — beats trying to remember everything. Memory files get `type` and `description` frontmatter for relevance filtering.
+**Mission.md pattern.** A user with 3,500+ sessions documented this on GitHub: a single `mission.md` briefing, "what's done, what's next, what's blocked", beats trying to remember everything. Memory files get `type` and `description` frontmatter for relevance filtering.
 
-**The 59-compactions story.** GitHub issue #34556. One power user, 12-18 hours/day, 26 days, 59 compactions. Built a complete 3-tier system because the platform doesn't ship one: L1 `MEMORY.md` (~100 lines, always loaded), L2 topic files (loaded on demand), L3 vault (~200 files including 127 conversation narratives, a 1,477-line changelog). Token cost: ~3,100 tokens per session just to reload. Real pain, real solution, all in markdown files.
+**The 59-compactions story.** GitHub issue #34556. One power user, 12-18 hours/day, 26 days, 59 compactions. Built a complete 3-tier system because the platform doesn't ship one: L1 `MEMORY.md` (~100 lines, always loaded), L2 topic files (loaded on demand), L3 vault (~200 files including 127 conversation narratives, a 1,477-line changelog). Token cost: ~3,100 tokens per session only to reload. Real pain, real solution, all in markdown files.
 
-**CodeMySpec's `.code_my_spec/` tree.** What I use. Specs, status files, decisions, knowledge — markdown, in the repo, loaded by the agent on demand via skills and slash commands. I'm biased about this one, but the bias was earned by trying the alternatives first.
+**CodeMySpec's `.code_my_spec/` tree.** What I use. Specs, status files, decisions, knowledge, markdown, in the repo, loaded by the agent on demand via skills and slash commands. I'm biased about this one, but the bias was earned by trying the alternatives first.
 
 Jamie Lord, who's done more honest evaluation than anyone in this space, said it straight: "Native CLAUDE.md, auto memory, plan mode, hooks, and skills cover roughly 80% of what third-party memory and planning tools promise."
 
@@ -72,7 +72,7 @@ Jamie Lord, who's done more honest evaluation than anyone in this space, said it
 - The team can read what's written. So can your future self.
 - Long-horizon projects. A two-month project benefits from durable state. A throwaway script doesn't.
 
-The headline data point: the [most-starred "memory artifact" in the AI coding landscape](https://github.com/forrestchang/andrej-karpathy-skills/stargazers) is `forrestchang/andrej-karpathy-skills` at 87k+ stars (as of 2026-04-25) — a single CLAUDE.md file. (It's actually operating instructions, not memory, which is the whole flagship argument. The point holds: the dominant pattern by community attention is files in the repo, not infrastructure.) [MemPalace](https://github.com/mempalace/mempalace/stargazers), the most-marketed dedicated memory system, sits at 49.6k by comparison.
+The headline data point: the [most-starred "memory artifact" in the AI coding landscape](https://github.com/forrestchang/andrej-karpathy-skills/stargazers) is `forrestchang/andrej-karpathy-skills` at 87k+ stars (as of 2026-04-25), a single CLAUDE.md file. (It's actually operating instructions, not memory, which is the whole flagship argument. The point holds: the dominant pattern by community attention is files in the repo, not infrastructure.) [MemPalace](https://github.com/mempalace/mempalace/stargazers), the most-marketed dedicated memory system, sits at 49.6k by comparison.
 
 ## When it breaks
 
@@ -105,7 +105,7 @@ Don't use it as your only memory if you're doing customer-facing chatbot work, m
 
 The reason this pattern keeps winning, despite being unglamorous, is that the alternatives keep losing in the specific way they were supposed to win. Vector retrieval misses obvious context. Dedicated memory stores accumulate contamination. Graph databases become their own maintenance project. A markdown file the agent reads on Monday is the same markdown file the agent reads on Friday.
 
-Next post: dedicated memory stores. The category that gets the most marketing and has the messiest tradeoffs. Spoiler — I tried four of them and went back to markdown.
+Next post: dedicated memory stores. The category that gets the most marketing and has the messiest tradeoffs. Spoiler, I tried four of them and went back to markdown.
 
 What's your stack? Repo-native already, or are you still chasing infrastructure?
 

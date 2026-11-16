@@ -75,7 +75,7 @@ I use Three Amigos. It's one structured way to do good requirements collection. 
 - **Scenarios.** Concrete examples per rule. Given-When-Then, one behaviour per scenario.
 - **Open questions.** The things the conversation surfaced that nobody can answer in the room. Park them. Send them back to the user.
 
-The deliverable is a list of scenario titles a human approved. Whatever LLM generates Gherkin afterward anchors to that list, not to its own interpretation. Longer protocol writeup at [bdd_attention_three_amigos.md](/blog/bdd-attention-three-amigos).
+The deliverable is a list of scenario titles a human approved. Whatever LLM writes the specs afterward anchors to that list, not to its own interpretation. Longer protocol writeup at [bdd_attention_three_amigos.md](/blog/bdd-attention-three-amigos).
 
 ## Step 2: leave the spec no room to cheat
 
@@ -207,11 +207,13 @@ Boundary controls which modules a spec can call. Credo controls which patterns t
 
 The custom Credo rules I apply to CodeMySpec:
 
-- **Ban control flow** No `if`, `case`, `try` or `cond` in tests, ANYWHERE.
-- **Ban `File`.** Forces filesystem access through the in memory file system. 
-- **Ban `Phoenix.PubSub.broadcast` and bare `send/2` inside spec setup.** Otherwise the model fakes state changes by broadcasting directly to a LiveView from a given step, skipping the real producer.
-- **Ban `Mox`, `Mock`, and the literal string `mock`.** Mocks are a fresh cheating surface. If a spec needs an outbound boundary controlled, it uses a recording.
-- **Ban any context module not on the spec boundary's deps list.** Boundary catches this at compile, but a Credo rule that flags it earlier in the editor speeds the feedback loop.
+- **Ban control flow.** No `if`, `case`, `try` or `cond` in tests, anywhere.
+- **Ban `File` and `Port`.** Forces filesystem access through the in-memory file system, and CLI-driven steps through recordings.
+- **Ban bare `send/2` in specs.** Otherwise the model fakes state changes by messaging a process directly from a given step, skipping the real producer.
+- **Ban shell and dynamic-eval escape hatches.** `System.cmd`, `System.shell`, `:os.cmd`, `Code.eval_*` and `Kernel.apply` are all denied in spec files.
+- **Ban `Repo` and any context module not on the spec boundary's deps list.** Boundary catches the alias form at compile, but a Credo rule also catches fully qualified calls like `MyApp.Repo.all(...)` that slip past when the model writes the call inline.
+
+I don't ban Mox by name here. The deps list plus the recording strategy already leave a spec nothing to mock against, and a mock is the first thing a reviewer should question if one shows up.
 
 Each banned pattern is a path the model would otherwise discover the next time a spec is hard to make pass.
 
@@ -221,13 +223,13 @@ Recordings drift when the third-party service changes its response shape, or whe
 
 ## Step 5: writing specs through the boundary
 
-Design and mechanical protection are in place. Here's an actual spec from the CodeMySpec test suite. Story 127 covers filesystem-to-DB projection: the agent writes a file into the project's working directory, sync flips a DB row, and the file shows up in the engineer's Files page. Criterion 5926 says: a spec file missing its required H1 title parses as invalid and renders an `invalid` badge on the matching row.
+Design and mechanical protection are in place. Here's a spec in the shape CodeMySpec's own suite uses, trimmed and renamed for the article. Specs live under `test/spex/` as `*_spex.exs` files and run with `mix spex`, not `mix test`; `mix cms.spex` runs the whole suite as four parallel shards. Story 127 covers filesystem-to-DB projection: the agent writes a file into the project's working directory, sync flips a DB row, and the file shows up in the engineer's Files page. Criterion 5926 says: a spec file missing its required H1 title parses as invalid and renders an `invalid` badge on the matching row.
 
 ```elixir
 defmodule CodeMySpecSpex.Story127.Criterion5926Spex do
   @moduledoc """
-  Story 127 — Filesystem-to-DB Projection
-  Criterion 5926 — Spec file with malformed structure is marked invalid
+  Story 127: Filesystem-to-DB Projection
+  Criterion 5926: Spec file with malformed structure is marked invalid
   with the parser error.
   """
 
@@ -278,7 +280,7 @@ The spec exercises both users in one scenario. The `given_` step drives the **ag
 
 The whole spec routes through `Environments`, the LiveView, and the rendered HTML. If the production sync pipeline reaches `File.read!` directly or skips the projection step, this spec fails immediately
 
-The `defp broken_spec` is a plain string helper. It lives inside the spec module because it isn't reusable state, just the test data for one criterion. Helpers like this are fine inside a spec; the boundary is about reaching into the application, not about expressing test inputs.
+The `defp broken_spec` is a plain string helper. It lives inside the spec module because it isn't reusable state, only the test data for one criterion. Helpers like this are fine inside a spec; the boundary is about reaching into the application, not about expressing test inputs.
 
 Setup that recurs across specs gets lifted into `MyAppSpex.SharedGivens`. CodeMySpec has one that mounts the configuration LiveView, used everywhere a spec needs to act as the engineer on the configuration page:
 

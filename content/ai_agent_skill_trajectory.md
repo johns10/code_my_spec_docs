@@ -84,11 +84,11 @@ Nobody does this anymore. Prompt engineering was figuring out what to say to a r
 
 That world is gone. Even the chat UIs are agentic now. Your IDE has an agent inside it. Claude, ChatGPT, Cursor all run agent loops under the hood, reading your project, fetching from the web, using tools. You haven't talked to a raw model in a long time.
 
-But many people still think at this level. "If I just write a better prompt, the output will be better." That's level 0 thinking in a level 1+ world.
+But many people still think at this level. "If I write a better prompt, the output will be better." That's level 0 thinking in a level 1+ world.
 
 ### Level 1: Agent Interaction
 
-Where most people actually are. You're working with an agent that reads files, runs commands, searches the web, calls APIs. You just might not realize it.
+Where most people actually are. You're working with an agent that reads files, runs commands, searches the web, calls APIs. You might not realize it.
 
 The skill is understanding the agent loop. It reasons, acts, observes the result, reasons again. You're not getting a response to a question. You're collaborating with something that takes actions. Understanding that changes how you work with it.
 
@@ -146,7 +146,7 @@ Soto's Amazon example: 100+ PRs per month, fully autonomous, zero structural cor
 
 Most people are at 0-1. The leverage is at 3. Most people don't know 3-4 exist.
 
-{{harness_not_model_cta shape="aside" headline="Most people are at level 1. The leverage is at level 3." sub="Level 3 is not a mindset. It is linters, hooks, and gates somebody has to build." body="CodeMySpec is that layer for Phoenix: specs that block the build, and a QA agent that drives the app." label="Start from a harness that exists" campaign="ai-agent-skill-trajectory"}}
+{{harness_not_model_cta shape="aside" headline="Most people are at level 1. The leverage is at level 3." sub="Level 3 is not a mindset. It is linters, hooks, and gates somebody has to build." body="CodeMySpec is that layer for Phoenix: executable specs that gate the work, and a QA agent that drives the app." label="Start from a harness that exists" campaign="ai-agent-skill-trajectory"}}
 
 ## What to Do About It
 
@@ -156,7 +156,7 @@ Most people are at 0-1. The leverage is at 3. Most people don't know 3-4 exist.
 
 **At level 3:** Look at Managed Agents or build your own execution environment. That's level 4.
 
-Or just start building. You'll discover each level as you hit the limits of the one you're on. That's what happened to me.
+Or start building. You'll discover each level as you hit the limits of the one you're on. That's what happened to me.
 
 ---
 
@@ -171,7 +171,7 @@ Or just start building. You'll discover each level as you hit the limits of the 
 
 ## Sources
 
-- [Fran Soto - Harness Engineering: AI Agents into Reliable Engineers](https://strategizeyourcareer.com/p/harness-engineering-ai-agents)
-- [Martin Fowler - Harness Engineering for Coding Agents](https://martinfowler.com/articles/harness-engineering.html)
-- [HumanLayer - Skill Issue: Harness Engineering for Coding Agents](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents)
-- [Anthropic - Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+- [Fran Soto: Harness Engineering: AI Agents into Reliable Engineers](https://strategizeyourcareer.com/p/harness-engineering-ai-agents)
+- [Martin Fowler: Harness Engineering for Coding Agents](https://martinfowler.com/articles/harness-engineering.html)
+- [HumanLayer: Skill Issue: Harness Engineering for Coding Agents](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents)
+- [Anthropic: Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)

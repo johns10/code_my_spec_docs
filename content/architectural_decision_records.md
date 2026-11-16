@@ -39,6 +39,8 @@ tags:
 
 Most teams treat Architecture Decision Records as documentation. Write them once, file them away, forget they exist. I've done it too. When an AI coding agent is generating your code, ADRs stop being documentation and start being the most useful resource you can hand the agent. They become the durable memory of why your codebase looks the way it does.
 
+{{nontechnical_founder_cta campaign="architectural-decision-records-intro"}}
+
 ## What ADRs Are (30-Second Version)
 
 An ADR captures one technical decision: what you chose, why you chose it, and what you gave up. Michael Nygard [proposed the format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) back in 2011. Status, Context, Decision, Consequences. That's it. Most teams skip them because writing docs feels like busywork. That calculus changes completely when agents enter the picture.
@@ -57,7 +59,7 @@ Here's my favorite approach: write your standard stack decisions before any codi
 
 In CodeMySpec, the TechnicalStrategy module ships with [pre-made ADRs](https://codemyspec.com) for every standard stack choice. When a project kicks off, decisions like "Use Elixir as the primary language" and "Use Tailwind CSS for styling" get written automatically with full context. The agent reads them and follows them. No discussion needed.
 
-Then for anything outside the standard stack (maybe you need a payment processor or a specific caching strategy), the agent does cursory research, evaluates options against project needs, and writes a new ADR for human review. Two phases: auto-write the obvious stuff, deliberate on the rest.
+Then for anything outside the standard stack (maybe you need a payment processor or a specific caching strategy), the agent does cursory research, evaluates options against project needs, and writes a new ADR for human review. Two phases: auto-write the obvious stuff, deliberate on the rest. The `check_decisions` tool then compares your ADRs against `mix.exs`. Each ADR declares what it covers in frontmatter (`deps: [...]`, `declined: [...]`), so it flags a dependency no decision covers and a decision about a dependency that is gone.
 
 This is not a path for the lazy. You still need to think through your stack. But you only think through it once, and every agent on every project inherits those decisions.
 
@@ -112,12 +114,12 @@ What's your approach to constraining agent behavior? I'd be curious whether anyo
 **Sources:**
 
 - [Michael Nygard, "Documenting Architecture Decisions" (2011)](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
-- [Archgate - Executable ADRs for AI Governance](https://archgate.dev/)
-- [Agent Decision Records (AgDR) - GitHub](https://github.com/me2resh/agent-decision-record)
+- [Archgate, Executable ADRs for AI Governance](https://archgate.dev/)
+- [Agent Decision Records (AgDR), GitHub](https://github.com/me2resh/agent-decision-record)
 - [Owen Zanzal, "Vibe ADR: Building with Intention in the Age of AI" (2025)](https://medium.com/devops-ai/vibe-adr-building-with-intention-in-the-age-of-ai-d01e93f36696)
 - [InfoQ, "Architectural Governance at AI Speed" (2026)](https://www.infoq.com/articles/architectural-governance-ai-speed/)
 - [ArXiv, "Asymmetric Goal Drift in Coding Agents Under Value Conflict"](https://arxiv.org/html/2603.03456v1)
-- [AWS Prescriptive Guidance - ADR Process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
+- [AWS Prescriptive Guidance, ADR Process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
 
 ## Related Articles
 

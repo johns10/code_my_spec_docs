@@ -204,13 +204,13 @@ They don't catch everything. They don't catch UX issues, performance problems, o
 
 ## What to Tell Your AI
 
-1. **Write the spec first.** Three to five Gherkin scenarios. Happy path and critical edge cases.
+1. **Write the spec first.** Three to five scenarios. Happy path and critical edge cases.
 
-2. **Put it in the repo.** `.feature` files in `features/` or `specs/`. Agent reads them as context.
+2. **Put it in the repo, as something that runs.** In an Elixir project that's a `*_spex.exs` file under `test/spex/` using the spex Given/When/Then DSL. In another stack it's a `.feature` file or the equivalent. Either way the agent reads it as context and the test runner executes it.
 
-3. **Implement against the spec.** Not "build me a login system." Say "implement `features/authentication.feature` and make all scenarios pass."
+3. **Implement against the spec.** Not "build me a login system." Say "implement the specs in `test/spex/authentication/` and make them pass."
 
-4. **Run specs after every change.** Regression safety net. Spec goes red, you know immediately.
+4. **Run specs after every change.** In a spex project that's `mix spex`, not `mix test`. Regression safety net. Spec goes red, you know immediately.
 
 5. **Iterate specs, not just code.** Requirements change? Update the spec first. Then tell the agent to make them pass again.
 
@@ -219,10 +219,10 @@ BDD isn't back because someone invented something new. It's back because the thi
 ---
 
 **Sources:**
-- [Dan North - Introducing BDD](https://dannorth.net/blog/introducing-bdd/) (2006)
-- [Birgitta Bockeler / Thoughtworks - Spec-Driven Development](https://www.thoughtworks.com/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices)
-- [arXiv - Spec-Driven Development: From Code to Contract](https://arxiv.org/html/2602.00180v1)
-- [Meir Michanie - Why BDD Is Essential in the Age of AI Agents](https://medium.com/@meirgotroot/why-bdd-is-essential-in-the-age-of-ai-agents-65027f47f7f6)
-- [Andy Knight / Automation Panda - Is BDD Dying?](https://automationpanda.com/2025/03/06/is-bdd-dying/)
-- [Cucumber - Anti-Patterns](https://cucumber.io/blog/bdd/cucumber-antipatterns-part-one/)
-- [GitHub Blog - Spec-Driven Development with AI](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)
+- [Dan North: Introducing BDD](https://dannorth.net/blog/introducing-bdd/) (2006)
+- [Birgitta Bockeler / Thoughtworks: Spec-Driven Development](https://www.thoughtworks.com/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices)
+- [arXiv: Spec-Driven Development: From Code to Contract](https://arxiv.org/html/2602.00180v1)
+- [Meir Michanie: Why BDD Is Essential in the Age of AI Agents](https://medium.com/@meirgotroot/why-bdd-is-essential-in-the-age-of-ai-agents-65027f47f7f6)
+- [Andy Knight / Automation Panda: Is BDD Dying?](https://automationpanda.com/2025/03/06/is-bdd-dying/)
+- [Cucumber: Anti-Patterns](https://cucumber.io/blog/bdd/cucumber-antipatterns-part-one/)
+- [GitHub Blog: Spec-Driven Development with AI](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)

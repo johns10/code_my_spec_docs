@@ -35,9 +35,9 @@ tags:
 
 # How to manage user stories to get the most out of AI
 
-> **Part of the [CodeMySpec Methodology](/methodology)** — Phase 1: Requirements & Stories.
+> **Part of the [CodeMySpec Methodology](/methodology)**, Phase 1: Requirements & Stories.
 
-User stories are the interface to your entire product. They define the architecture, design, tests, and code. They're also a plain-english definition of what the product does -- useful for positioning, documentation, and test assertions.
+User stories are the interface to your entire product. They define the architecture, design, tests, and code. They're also a plain-english definition of what the product does, useful for positioning, documentation, and test assertions.
 
 When working with AI, stories are the context that keeps everything honest.
 
@@ -92,22 +92,23 @@ Through these interviews, the stories get refined, critiqued, and expanded.
 
 Here's the thing. I started with copy-pasting markdown. I built something better.
 
-CodeMySpec has a **Stories MCP Server** with 12 tools. It's not planned -- it's built and working:
+CodeMySpec has story tools built into its MCP server. It's not planned, it's built and working:
 
-- **AI-driven story interviews** via `start_story_session` (interview mode or review mode)
-- **Structured acceptance criteria** with individual criterion CRUD
-- **Story tagging, priority, and locking** (30-minute locks to prevent conflicts)
-- **PaperTrail audit trail** on every change
-- **Story-to-component linking** for traceability
-- **Real-time WebSocket notifications** via StoriesChannel
+- **AI-driven story interviews** via `start_story_interview`, and quality reviews via `start_story_review` (or `/codemyspec:product interview` and `/codemyspec:product review`)
+- **Three Amigos sessions** via `start_three_amigos_session`, where acceptance criteria get written and tied to executable BDD scenarios
+- **Structured acceptance criteria** with individual criterion tools (`add_criterion`, `move_criterion`, `retire_criterion`)
+- **Tags, priority, epics, and dependencies** between stories
+- **Personas** linked to the stories they serve
+- **PaperTrail audit trail** on story changes
+- **Story-to-component linking** (`set_story_component`) for traceability
 
-Stories live in the database, not markdown files. The AI accesses them directly through MCP tools. No more copy-pasting.
+Stories live in the database, not markdown files. The AI accesses them directly through MCP tools. No more copy-pasting. Each acceptance criterion can link to an executable spec you run with `mix spex`, so a story stops being a note and becomes something the build checks.
 
 ## Using Stories Effectively
 
-**1. Start with interviews.** Use `start_story_session` in interview mode. The AI asks questions you haven't considered, identifies missing acceptance criteria, and catches conflicts.
+**1. Start with interviews.** Use `start_story_interview`. The AI asks questions you haven't considered, identifies missing acceptance criteria, and catches conflicts.
 
-**2. Review regularly.** Switch to review mode. The AI evaluates completeness, clarity, and consistency across all your stories.
+**2. Review regularly.** Run `start_story_review`. The AI evaluates completeness, clarity, and consistency across all your stories.
 
 **3. Link stories to components.** When you implement a story, link it to the responsible context. This creates traceability from requirement to code.
 
@@ -131,7 +132,7 @@ This is not about speed. It's about having a tool that makes it *feasible* to do
 
 Writing stories and keeping them updated used to be aspirational. Most teams started with good intentions, then let documentation rot. The overhead was too high.
 
-With AI, stories become your primary interface. They're not documentation maintained *after* writing code -- they're the input you use *to write* code. Keeping them accurate isn't overhead. It's how you work.
+With AI, stories become your primary interface. They're not documentation maintained *after* writing code, they're the input you use *to write* code. Keeping them accurate isn't overhead. It's how you work.
 
 ## Related Articles
 

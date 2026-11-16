@@ -38,7 +38,7 @@ tags:
 
 # How to write design documents that keep AI from going off the rails
 
-> **Part of the [CodeMySpec Methodology](/methodology)** — Phase 3: Design Documents.
+> **Part of the [CodeMySpec Methodology](/methodology)**, Phase 3: Design Documents.
 
 You've written your stories. You've mapped them to contexts. Now you need to build the thing.
 
@@ -50,14 +50,14 @@ Here's the thing. AI generates code without understanding your design. It makes 
 
 The fix: write design documents before code. One per code file. Iterate on plain English until the design is right, then hand it to AI to implement.
 
-## One Design Doc Per Code File
+## One Design Per Component
 
-For a Phoenix context like `Stories`:
+For a Phoenix context like `Stories`, the design covers the context and each child:
 
 ```
-.code_my_spec/spec/code_my_spec/stories.spec.md       (context design)
-.code_my_spec/spec/code_my_spec/stories/story.spec.md  (schema design)
-.code_my_spec/spec/code_my_spec/stories/repo.spec.md   (repository design)
+Stories           (context design)
+Stories.Story     (schema design)
+Stories.Repo      (repository design)
 ```
 
 Each maps 1:1 to a code file:
@@ -68,13 +68,13 @@ lib/code_my_spec/stories/story.ex
 lib/code_my_spec/stories/repo.ex
 ```
 
-The design doc is specification written *before* coding. Not documentation written after.
+The design is written *before* coding. Not documentation written after.
 
-## Document Types in CodeMySpec
+## Where the Design Lives in CodeMySpec
 
-CodeMySpec's Documents Registry supports 17 document types: spec, context_spec, schema, json, liveview, liveview_component, live_context_spec, dynamic_document, design_review, architecture_proposal, adr, qa_plan, qa_story_brief, qa_result, qa_issue, qa_journey_plan, and qa_journey_result.
+I used to keep these as one markdown spec file per code file. CodeMySpec doesn't work that way anymore. Components are records: type, description, parent, dependencies, and linked stories, read with `get_component` or `show_namespace_hierarchy`. The detailed contract moved to where it can be checked: **executable BDD specs**. Each story's acceptance criteria become Given-When-Then specs, run with `mix spex`, and the agent implements components against them. A design doc you read is a hope. A spec you run is a gate.
 
-Each type defines required and optional sections. The DocumentValidityChecker and MarkdownParser validate them automatically. Documents live in `.code_my_spec/spec/`.
+Markdown design docs still earn their keep for the parts that need prose: public API shape, execution flow, dependencies. CodeMySpec's document registry validates the document types it still uses (ADRs, the architecture proposal, QA plans and results, integration specs, and others) against required sections, so the agent gets specific feedback when one is malformed.
 
 ## The Design Template
 
@@ -122,7 +122,7 @@ For larger features (5+ components), use bulk generation. Have the AI draft all 
 
 ### Step 4: Commit
 
-Save to `.code_my_spec/spec/`. The design is now your source of truth.
+Save the design with the component record and the BDD specs. The design is now your source of truth.
 
 {{design_gate_cta campaign="writing-design-documents"}}
 

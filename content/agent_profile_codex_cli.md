@@ -113,13 +113,13 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ### Notable Quotes
 
-> "After 8 attempt with codex, thought I'll give Claude code a try. And as soon as it created a PR..." -- u/Rude-Explanation-861, r/OpenAI (609 upvotes -- Codex auto-review flagged a Claude-generated PR)
+> "After 8 attempt with codex, thought I'll give Claude code a try. And as soon as it created a PR...", u/Rude-Explanation-861, r/OpenAI (609 upvotes, Codex auto-review flagged a Claude-generated PR)
 
-> "GPT-5.4 really struggles a lot with UI and frontend optimization... With Opus 4.6, you could one-shot the frontend with backend integration and it will work out of the box." -- u/Creepy-Row970, r/OpenAI
+> "GPT-5.4 really struggles a lot with UI and frontend optimization... With Opus 4.6, you could one-shot the frontend with backend integration and it will work out of the box.", u/Creepy-Row970, r/OpenAI
 
-> "Just ask it why it did it that way and go down a 5 hour rabbit hole that gets you nowhere. That's what I do at least." -- u/Dwman113, r/ChatGPTCoding (24 upvotes)
+> "Just ask it why it did it that way and go down a 5 hour rabbit hole that gets you nowhere. That's what I do at least.", u/Dwman113, r/ChatGPTCoding (24 upvotes)
 
-> "Honestly, Codex is like a Surgeon and Claude is more like a Surgical Resident" -- u/Reza______, r/vibecoding
+> "Honestly, Codex is like a Surgeon and Claude is more like a Surgical Resident", u/Reza______, r/vibecoding
 
 ## Performance Notes
 
@@ -161,13 +161,13 @@ The pace is absurd: 553 releases in 10 months, 9,000+ plugins, a Rust rewrite in
 
 ## CodeMySpec Integration
 
-Open source and the biggest plugin ecosystem make Codex a natural target for spec consumption.
+Codex is fully supported. CodeMySpec ships a Codex plugin (`codemyspec-harness`, installed from the `Code-My-Spec/plugins` marketplace) with lifecycle hooks and worker skills that point Codex at the same local harness Claude Code uses, plus a lighter `codemyspec-chat` plugin that gives ordinary Codex chat remote MCP and bundled workflows with no local service. The specs, tests, and QA are written once and reused across agents.
 
-- **Context files:** Codex adopted the Agent Skills spec from Claude Code (Dec 2025) and reads `AGENTS.md`. CodeMySpec can generate these from specs
-- **MCP support:** Full support, 9,000+ plugins, `codex mcp add` to wire up. Serve specs via MCP and reference them inline with `@plugin` mentions
-- **Hooks:** No documented pre/post hook system. Custom verification means external scripting
-- **Subagents:** `spawn_agents_on_csv` enables multi-agent workflows. Decompose a spec into a CSV of tasks, each a parallel agent. Sub-agent nicknames help track which component each is implementing
-- **Skills/commands:** Agent Skills spec support means skills files can define reusable workflows that consume specs
+- **Context files:** Codex adopted the Agent Skills spec from Claude Code (Dec 2025) and reads `AGENTS.md`. The CodeMySpec Codex plugin bundles worker skills that fetch task context from the local harness
+- **MCP support:** Full support, 9,000+ plugins, `codex mcp add` to wire up. The plugin connects Codex to CodeMySpec's MCP endpoint (OAuth sign-in)
+- **Hooks:** The plugin forwards Codex lifecycle hooks (session start, tool use, stop) to the harness. Review and trust them with `/hooks`
+- **Subagents:** `spawn_agents_on_csv` enables multi-agent workflows. Sub-agent nicknames help track which component each is implementing
+- **Skills/commands:** Agent Skills spec support means skills files can define reusable workflows
 - **Memory:** None across sessions. Context files + MCP are how you carry spec context forward
 
 ## Related Articles
@@ -180,13 +180,13 @@ Open source and the biggest plugin ecosystem make Codex a natural target for spe
 
 ## Sources
 
-- [Introducing GPT-5.3-Codex -- OpenAI](https://openai.com/index/introducing-gpt-5-3-codex/)
-- [Introducing GPT-5.4 -- OpenAI](https://openai.com/index/introducing-gpt-5-4/)
+- [Introducing GPT-5.3-Codex, OpenAI](https://openai.com/index/introducing-gpt-5-3-codex/)
+- [Introducing GPT-5.4, OpenAI](https://openai.com/index/introducing-gpt-5-4/)
 - [Codex CLI Features](https://developers.openai.com/codex/cli/features/)
 - [Codex Changelog](https://developers.openai.com/codex/changelog/)
-- [Codex vs Claude Code 2026 -- SmartScope](https://smartscope.blog/en/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark/)
-- [Claude Code vs OpenAI Codex -- Northflank](https://northflank.com/blog/claude-code-vs-openai-codex)
-- [Codex CLI Rust Rewrite -- InfoQ](https://www.infoq.com/news/2025/06/codex-cli-rust-native-rewrite/)
+- [Codex vs Claude Code 2026, SmartScope](https://smartscope.blog/en/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark/)
+- [Claude Code vs OpenAI Codex, Northflank](https://northflank.com/blog/claude-code-vs-openai-codex)
+- [Codex CLI Rust Rewrite, InfoQ](https://www.infoq.com/news/2025/06/codex-cli-rust-native-rewrite/)
 - [Codex MCP Documentation](https://developers.openai.com/codex/mcp/)
 - [GitHub: openai/codex](https://github.com/openai/codex)
-- [Codex vs Claude Code -- morphllm.com](https://www.morphllm.com/comparisons/codex-vs-claude-code)
+- [Codex vs Claude Code, morphllm.com](https://www.morphllm.com/comparisons/codex-vs-claude-code)

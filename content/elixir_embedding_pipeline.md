@@ -13,9 +13,9 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Local Embedding Pipeline in Elixir with Ortex"
-meta_description: "Pull docs from compiled BEAM files, embed locally with Ortex, search with sqlite_vec, serve through MCP. No API calls. No network."
+meta_description: "Parse hex docs into markdown, embed them with Ortex and all-MiniLM, search with pgvector, serve it through one MCP tool. No embedding API calls."
 og_title: "How I Built a Local Embedding Pipeline in Elixir"
-og_description: "Extract docs from BEAM bytecode, embed with Ortex, search with sqlite_vec, serve through MCP to Claude Code. Everything local."
+og_description: "Parse hex docs, embed with Ortex, search with pgvector, serve through MCP to Claude Code. The model ships inside the app."
 og_image: null
 
 metadata:
@@ -28,7 +28,7 @@ tags:
   - elixir
   - embeddings
   - ortex
-  - sqlite-vec
+  - pgvector
   - mcp
   - beam
   - semantic-search
@@ -37,44 +37,48 @@ tags:
 
 # How I Built a Local Embedding Pipeline in Elixir That Searches My Own Docs
 
-I wanted my Elixir harness to search HexDocs for all my current dependency versions and my project documentation without calling an external API. No OpenAI embeddings endpoint. No Ollama sidecar. No network calls. Everything embedded in the desktop app.
+I wanted my Elixir harness to search HexDocs for all my current dependency versions and my project documentation without calling an external embeddings API. No OpenAI embeddings endpoint. No Ollama sidecar. The model ships inside the app.
 
-I got inspired by the [HexDocs MCP server](https://hexdocs.pm/hexdocs_mcp/readme.html). They had a cool approach, but they were scraping HexDocs instead of using the local dependencies, and they were embedding with Ollama through a Node MCP server. I wanted it all contained inside my harness, which is an Elixir desktop app built with Burrito. That constraint shaped every decision.
+I got inspired by the [HexDocs MCP server](https://hexdocs.pm/hexdocs_mcp/readme.html). They had a cool approach, but they were scraping HexDocs instead of using the versions my project actually pins, and they were embedding with Ollama through a Node MCP server. I wanted it all contained inside my own Elixir stack. That constraint shaped every decision.
+
+This pipeline has been rebuilt once since I first wrote about it. The first version ran entirely inside the desktop app with SQLite. It now embeds on the server and stores vectors in Postgres. This post describes how it works today, and where the first version differed.
 
 ## The Architecture
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant MCP as MCP Tool
+    participant MCP as semantic_search tool
+    participant R as Reconcilers
     participant ES as EmbeddingService
-    participant S as Serving (Ortex)
-    participant DB as SQLite + sqlite_vec
+    participant S as OrtexServing
+    participant DB as Postgres + pgvector
 
-    Note over CC,DB: Indexing Flow (run once per change)
-    CC->>MCP: embed_docs / embed_hexdocs
-    MCP->>ES: embed_directory(project, source, path)
-    ES->>ES: Walk markdown files, chunk (1500 chars)
+    Note over R,DB: Indexing (automatic, no tool to call)
+    R->>R: Hex docs: fetch tarball for each pinned package@version
+    R->>R: Project knowledge: diff .code_my_spec/knowledge fingerprints
+    R->>ES: embed changed files
+    ES->>ES: Chunk (1500 chars, 200 overlap)
     ES->>ES: Content-hash check (skip unchanged)
-    ES->>S: Generate embedding (new chunks only)
+    ES->>S: Embed new chunks (bulk priority)
     S->>S: Tokenize, ONNX inference, mean pool, L2 norm
     S-->>ES: 384-dim vector
-    ES->>DB: INSERT with vec_f32 embedding
+    ES->>DB: Upsert chunk + vector
 
-    Note over CC,DB: Search Flow (every query)
-    CC->>MCP: semantic_search("how do channels work?")
+    Note over CC,DB: Search (every query)
+    CC->>MCP: semantic_search("how do channels work?", source: "hexdocs:phoenix")
     MCP->>ES: search(project, query)
-    ES->>S: Embed the query
+    ES->>S: Embed the query (search priority)
     S-->>ES: Query vector
-    ES->>DB: vec_distance_cosine ORDER BY
+    ES->>DB: cosine distance ORDER BY
     DB-->>ES: Top matching chunks
     ES-->>MCP: Formatted results
     MCP-->>CC: Relevant documentation
 ```
 
-### 1. DocExtractor: Pulling Markdown Out of Compiled Bytecode
+### 1. Pulling markdown out of hex packages
 
-This is the part I'm most proud of. The docs are already markdown, baked right into the BEAM bytecode. You don't need to scrape anything. My extractor uses `:beam_lib.chunks/2` to read the raw doc chunks directly from `.beam` files in `_build/`:
+Elixir docs are already markdown. The first version read them out of compiled bytecode with `:beam_lib.chunks/2`, straight from the `.beam` files in `_build/`:
 
 ```elixir
 defp extract_beam(path) do
@@ -93,32 +97,37 @@ defp extract_beam(path) do
 end
 ```
 
-No network. No HTML parsing. No scraping hexdocs.pm. The docs are right there in the compiled files. Every dependency you've compiled already has its documentation sitting in `_build/`. I just walk the ebin directory, pull the EEP-48 chunks, and render module docs plus function docs into markdown strings.
+That worked, and I was proud of it, until the pipeline moved to the server. The server never compiles your project, so there's no `_build/` to walk. And reading doc chunks ties extraction to the OTP version that compiled them, with an unrecognised chunk raising.
 
-### 2. Serving: Local Embeddings with Ortex
+So the current extractor works from source. A reconciler reads the versions your project's `mix.lock` pins, fetches each package's tarball from hex.pm, verifies it against the lock's checksum, and parses the `@moduledoc` and `@doc` literals out of `lib/**/*.ex` with `Code.string_to_quoted/1`. Source docs are plain markdown, and that parse is independent of the OTP version. Each `package@version` gets embedded once, no matter how many projects depend on it.
 
-My first attempt was with Bumblebee and Nx. That failed because I couldn't get it wrapped into Burrito (the tool I use to package the desktop app). Ortex worked because it's just ONNX Runtime with a clean NIF - no complex build dependencies.
+### 2. Serving: local embeddings with Ortex
+
+My first attempt was with Bumblebee and Nx. That failed because I couldn't get it wrapped into Burrito (the tool I use to package the desktop app). Ortex worked because it's plain ONNX Runtime with a clean NIF, no complex build dependencies.
 
 ```elixir
-defmodule CodeMySpec.Embeddings.Serving do
+defmodule CodeMySpec.Embeddings.OrtexServing do
   use GenServer
 
-  @model_path "priv/models/all-MiniLM-L6-v2.onnx"
-  @tokenizer_id "sentence-transformers/all-MiniLM-L6-v2"
+  @model_name "all-MiniLM-L6-v2"
+  @model_path "priv/models/#{@model_name}.onnx"
+  @tokenizer_path "priv/models/#{@model_name}.tokenizer.json"
   @max_length 256
 ```
 
-It's a GenServer that loads all-MiniLM-L6-v2 through Ortex. The ONNX model ships with the app in `priv/models/`. Tokenizer downloads from HuggingFace on first use and caches locally.
+It's a GenServer that loads all-MiniLM-L6-v2 through Ortex. Both the ONNX model and the tokenizer ship with the app in `priv/models/`, and nothing is fetched at runtime, so it works offline.
 
-The inference pipeline: tokenize with the HuggingFace tokenizer, truncate and pad to uniform length, build Nx tensors (ONNX BERT expects int64), run through Ortex, mean pool the hidden states with the attention mask, L2 normalize. Out come 384-dimensional embeddings. Nx is still in the stack for the tensor math - mean pooling and normalization.
+The inference pipeline: tokenize with the HuggingFace tokenizer, truncate and pad to uniform length, build Nx tensors (ONNX BERT expects int64), run through Ortex, mean pool the hidden states with the attention mask, L2 normalize. Out come 384-dimensional embeddings.
 
-I picked all-MiniLM-L6-v2 because it's 80MB, fast, and good enough for doc search. No need for a giant model when you're matching "how do I create a Phoenix channel" against API docs.
+One model, one queue, two priorities. A search embeds a single query, while the reconcilers embed whole packages' worth of chunks. If those shared a plain FIFO mailbox, a search could wait behind a package. So every call carries a priority, `:search` or `:bulk`, and the next job always comes off the search queue first.
 
-### 3. EmbeddingService: Chunk, Deduplicate, Store in sqlite_vec
+I picked all-MiniLM-L6-v2 because it's about 80MB, fast, and good enough for doc search. No need for a giant model when you're matching "how do I create a Phoenix channel" against API docs.
 
-Takes a directory of markdown, chunks it (1500 chars, 200 overlap), embeds the chunks, and stores everything in SQLite using the sqlite_vec extension for vector search.
+### 3. EmbeddingService: chunk, deduplicate, store
 
-Content-hash deduplication: unchanged chunks skip re-embedding. Re-indexing the whole knowledge base after editing one file takes seconds because only changed chunks get re-embedded.
+It takes a document, chunks it (1500 characters, 200 overlap), embeds the chunks, and stores them with their vectors.
+
+Content-hash deduplication: a file whose hash hasn't changed skips re-embedding entirely. Re-indexing a knowledge base after editing one file takes seconds because only changed files get re-embedded.
 
 ```elixir
 defp content_hash(text) do
@@ -126,53 +135,45 @@ defp content_hash(text) do
 end
 ```
 
-sqlite_vec gives me cosine distance search right inside SQLite. No separate vector database. No Pinecone. No Weaviate. Just an extension on the database I'm already using:
+Each row is stamped with the model that produced it, so swapping the model becomes a re-embed instead of silently mixing vector spaces.
 
-```elixir
-sql = """
-SELECT e.source, e.path, e.chunk_index, e.content
-FROM doc_embeddings e
-WHERE e.project_id = ?1
-ORDER BY vec_distance_cosine(e.embedding, vec_f32(?3))
-LIMIT ?2
-"""
-```
+Storage is a `Backend` behaviour. The server uses Postgres with the pgvector extension and an HNSW index built with `vector_cosine_ops`, and search is cosine distance (`<=>`). The first version used SQLite with the sqlite_vec extension inside the desktop app. I moved to pgvector when embedding became a server job, because many projects share the same hex package embeddings and Postgres already holds everything else.
 
-Embeddings stored as `vec_f32` columns. The schema uses `SqliteVec.Ecto.Float32` for the Ecto type. Everything sits right next to my app data in the same database file.
+### 4. One MCP tool: semantic_search
 
-### 4. MCP Tools: Claude Code Interface
+A single MCP tool exposes the search to Claude Code, with a `source` filter:
 
-Two MCP tools expose the search to Claude Code:
+- `knowledge` is the framework reference (LiveView, DaisyUI, and so on).
+- `project_knowledge` is your project's own research and decisions from `.code_my_spec/knowledge`.
+- `hexdocs` searches every embedded hex package, and `hexdocs:<package>` narrows to one, like `hexdocs:phoenix`.
 
-**semantic_search** - Search project knowledge, specs, rules, design docs. Claude asks "find docs about authentication" and gets the most relevant chunks.
+Claude asks "how does Phoenix.Channel handle joins" and gets the actual current API docs for the version I'm running, not hallucinated ones from training data. Leave the filter off and it searches everything.
 
-**search_hexdocs** - Search embedded hex dependency docs. Claude asks "how does Phoenix.Channel handle joins" and gets the actual current API docs for whatever version I'm running, not hallucinated ones from training data.
-
-Same embedding service under the hood, different source filter.
+There's no sync tool and nothing to trigger. Hex docs appear once the server has embedded the versions your lockfile pins. Project knowledge appears once the harness reports a change under `.code_my_spec/knowledge`.
 
 ## The Stack
 
 | Component | Library | Purpose |
 |-----------|---------|---------|
-| Doc extraction | Code.fetch_docs / :beam_lib | EEP-48 markdown from BEAM files |
+| Doc extraction | Code.string_to_quoted | Moduledocs and docs from hex package source |
 | Model inference | Ortex (ONNX Runtime) | Run all-MiniLM-L6-v2 locally |
 | Tokenization | Tokenizers (HuggingFace) | BERT tokenization |
 | Tensor math | Nx | Mean pooling, L2 normalization |
-| Vector storage | sqlite_vec | Cosine distance search |
-| Database | SQLite via Ecto | Chunk storage, deduplication |
+| Vector storage | pgvector | Cosine distance search, HNSW index |
+| Database | Postgres via Ecto | Chunk storage, deduplication |
 | MCP server | Anubis | Tool interface for Claude Code |
 
-Everything runs in the same BEAM VM. No sidecar services. No Docker containers for vector databases. No API keys. The whole thing packages into a Burrito desktop app.
+Everything runs in the same BEAM VM. No sidecar services. No hosted embeddings API, no API keys for embedding.
 
-{{enforced_boundary_cta shape="aside" headline="The whole pipeline runs inside one BEAM VM with no sidecars, no vector database, and no API keys." sub="Building a component like this is the easy half; keeping it aligned with its spec over time is not." body="CodeMySpec specifies each Phoenix component up front and blocks the build when the code stops matching the spec." label="Walk the component workflow" campaign="elixir-embedding-pipeline"}}
+{{enforced_boundary_cta shape="aside" headline="The whole pipeline runs inside one BEAM VM with no sidecars and no embeddings API." sub="Building a component like this is the easy half; keeping it aligned with its spec over time is not." body="CodeMySpec specifies each Phoenix component up front and gates the work when the code stops matching the spec." label="Walk the component workflow" campaign="elixir-embedding-pipeline"}}
 
 ## What I'd Do Differently
 
-The chunking is naive - character count with overlap. I'd rather chunk on markdown headers so each chunk is a semantically complete section. Right now a function doc can split across two chunks.
+The chunking is naive, character count with overlap on line boundaries. I'd rather chunk on markdown headers so each chunk is a semantically complete section. Right now a function doc can split across two chunks.
 
 No reranking yet. Cosine distance is good enough for doc search, but a cross-encoder reranker would help for nuanced queries.
 
-And I want automatic re-embedding on file watch. Right now I trigger it manually or through the MCP tool. A file system watcher that re-embeds on save would close the loop.
+The first version made me trigger embedding by hand through an MCP tool. That's gone: reconcilers now keep the index current on their own.
 
 ## Related Articles
 

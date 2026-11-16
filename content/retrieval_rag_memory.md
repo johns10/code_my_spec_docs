@@ -28,11 +28,11 @@ The memory store is a corpus of documents (or conversation chunks, or code snipp
 
 The defining trait: memory is consulted *reactively*. It's not loaded by default. It's fetched on each query based on similarity to whatever is happening right now.
 
-The boundary against repo-native is loading vs retrieving. A `CLAUDE.md` is loaded — it's there, in the system prompt, every session. A vector store is retrieved — it's somewhere, accessed only when a query semantically matches.
+The boundary against repo-native is loading vs retrieving. A `CLAUDE.md` is loaded, it's there, in the system prompt, every session. A vector store is retrieved, it's somewhere, accessed only when a query semantically matches.
 
 The boundary against dedicated memory stores is what gets stored vs how things are found. Dedicated stores have intentional writes (the agent or user decides what's worth keeping); retrieval-based systems index everything and answer "what's similar to this query?" Many production systems do both.
 
-What counts: vector databases (Pinecone, Weaviate, Chroma, pgvector). Cursor's codebase semantic search. Claude Projects' file uploads. mem0 in vector mode. MemPalace's verbatim-text + ChromaDB index. Hindsight's parallel-strategy retrieval. LlamaIndex's `VectorMemory`. Aider's tree-sitter repo map (a *structural* retrieval — not vector — solving the same problem).
+What counts: vector databases (Pinecone, Weaviate, Chroma, pgvector). Cursor's codebase semantic search. Claude Projects' file uploads. mem0 in vector mode. MemPalace's verbatim-text + ChromaDB index. Hindsight's parallel-strategy retrieval. LlamaIndex's `VectorMemory`. Aider's tree-sitter repo map (a *structural* retrieval, not vector, solving the same problem).
 
 ## How it actually works
 
@@ -46,15 +46,15 @@ The mechanism is well-understood. The hard part isn't running the pipeline. It's
 
 **Cursor's codebase semantic search.** Vector index over your repository. Works well for "where is the login handler defined?" Works poorly for "what was the rationale behind this pattern?" because rationale isn't in the code.
 
-**Claude Projects with file uploads.** Functional for reference docs. Frustrating when document structure is load-bearing — chunked retrieval shreds it.
+**Claude Projects with file uploads.** Functional for reference docs. Frustrating when document structure is load-bearing, chunked retrieval shreds it.
 
 **mem0 in vector mode.** Production-deployed at AWS scale. For coding specifically, the vector mode is the one most coders try first and the one with the most subtle quality issues.
 
-**MemPalace** as a hybrid example. Verbatim conversation history, ChromaDB index, structured "memory palace" metaphor on top. The retrieval is real RAG; the metaphor is presentation. Jamie Lord's evaluation found raw ChromaDB outperformed every MemPalace-specific mode — the value is the local embeddings, not the architecture.
+**MemPalace** as a hybrid example. Verbatim conversation history, ChromaDB index, structured "memory palace" metaphor on top. The retrieval is real RAG; the metaphor is presentation. Jamie Lord's evaluation found raw ChromaDB outperformed every MemPalace-specific mode, the value is the local embeddings, not the architecture.
 
 **Hindsight (Vectorize).** Four parallel retrieval strategies (semantic, BM25, entity-graph traversal, temporal filter) reranked with a cross-encoder. The serious version of "make retrieval actually work." Built-in MCP server. Lower mindshare than MemPalace, technically more sophisticated.
 
-**Aider's repo map.** Tree-sitter parses the codebase. Graph-rank scores files by importance. Top-N files (default 1k tokens) get included. This is *structural retrieval* — not vector — but it solves the same problem with a different shape. One of the most under-rated patterns in the space.
+**Aider's repo map.** Tree-sitter parses the codebase. Graph-rank scores files by importance. Top-N files (default 1k tokens) get included. This is *structural retrieval*, not vector, but it solves the same problem with a different shape. One of the most under-rated patterns in the space.
 
 ## When it works
 
@@ -64,7 +64,7 @@ The mechanism is well-understood. The hard part isn't running the pipeline. It's
 - Latency budget allows. Each query requires an embedding call, a vector lookup, often a rerank.
 - Approximate is good enough. RAG retrieves *plausible* matches, not *correct* matches.
 
-The use case retrieval was designed for — answering questions over a large unstructured corpus — is exactly where it works. ChatGPT-over-your-PDFs is a real product. Cursor's codebase search is a real productivity boost.
+The use case retrieval was designed for, answering questions over a large unstructured corpus, is exactly where it works. ChatGPT-over-your-PDFs is a real product. Cursor's codebase search is a real productivity boost.
 
 ## When it breaks
 
@@ -84,18 +84,18 @@ ETH Zurich went further. Their research found that "repository context files ten
 
 **Tuning is real engineering.** Embedding model, chunking strategy, top-k value, reranker, hybrid weights, query rewriting, metadata filters. Six knobs minimum. Most teams don't tune them and accept mediocre retrieval.
 
-**Over-applied to coding.** This is my biggest complaint with RAG specifically for coding. Most coding context isn't a "search this corpus" problem — it's a "what's in this file right now" problem. RAG turns a definite question into a probabilistic one and wastes compute on the conversion.
+**Over-applied to coding.** This is my biggest complaint with RAG specifically for coding. Most coding context isn't a "search this corpus" problem, it's a "what's in this file right now" problem. RAG turns a definite question into a probabilistic one and wastes compute on the conversion.
 
 ## How to pair it with other categories
 
 Retrieval is most useful as a *fallback* when other categories can't cover the case:
 
-- **Pair with repo-native as the primary, retrieval as the long tail.** Load CLAUDE.md and Memory Bank by default. When the agent needs something specific that wasn't loaded — a stack trace, a function definition, a doc page — retrieval can fetch it. Don't put RAG at the top of the stack.
+- **Pair with repo-native as the primary, retrieval as the long tail.** Load CLAUDE.md and Memory Bank by default. When the agent needs something specific that wasn't loaded, a stack trace, a function definition, a doc page, retrieval can fetch it. Don't put RAG at the top of the stack.
 - **Pair with transcript-derived for historical lookup.** Once you have many session summaries, a vector index lets you answer "did we deal with this bug before?"
 - **Pair with structural retrieval (Aider-style repo map) for code-shaped questions.** Vector retrieval misses code's structure; structural retrieval respects it. Use both.
 - **Skip pairing with dedicated memory stores over the same content.** Two systems that both decide "what's relevant" disagree at the worst moments.
 
-{{repo_native_memory_cta shape="aside" headline="RAG turns a definite question about your codebase into a probabilistic one." sub="The context a coding agent is missing is not similar text, it is a written definition of done." body="CodeMySpec keeps that definition in your repo as a gate, and the build blocks when the code stops matching it." label="Read how the spec gate works" campaign="retrieval-rag-memory"}}
+{{repo_native_memory_cta shape="aside" headline="RAG turns a definite question about your codebase into a probabilistic one." sub="The context a coding agent is missing is not similar text, it is a written definition of done." body="CodeMySpec keeps that definition in your repo as executable specs, and the work is gated when the code stops matching them." label="Read how the spec gate works" campaign="retrieval-rag-memory"}}
 
 ## The honest verdict
 

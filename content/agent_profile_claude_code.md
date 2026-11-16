@@ -171,14 +171,13 @@ Closest tool-level data is HAL/CORE-Bench:
 
 ## CodeMySpec Integration
 
-Claude Code has the deepest CodeMySpec integration potential of any tool I looked at.
+Claude Code is where CodeMySpec started and has the most mature plugin. CodeMySpec runs as a Claude Code plugin (`/plugin marketplace add Code-My-Spec/plugins`, then `/plugin install codemyspec@codemyspec`) that points Claude Code at a local harness on your machine. It runs on your own Claude access, with no proxying and no token markup.
 
-- **Context files:** `CLAUDE.md` is the native project context file. CodeMySpec can generate it from specs, so architecture decisions, component boundaries, and coding rules load on every session start
-- **MCP support:** full MCP client (Claude Code shipped it first). CodeMySpec can serve specs as tools and resources during coding
-- **Hooks:** pre/post hooks on tool calls. Specs can trigger automated verification after edits, like running tests, checking architecture, validating acceptance criteria
-- **Subagents:** Agent Teams + worktree isolation. One agent per component, each in its own worktree, coordinated by a team lead
-- **Skills/commands:** specs become reusable `/slash-commands` in `.claude/commands/`. A CodeMySpec skill could take a story ID, fetch the spec, and set up the full implementation context
-- **Memory:** automatic memories persist across sessions. Combined with `CLAUDE.md`, spec context carries forward without re-explanation
+- **Context and MCP:** the plugin registers the harness as an MCP server, so the requirement graph, the executable BDD specs, and the task context are tools Claude Code can call
+- **Hooks:** the plugin forwards Claude Code's lifecycle hooks (session start, tool use, stop) to the harness, which is how the build gets checked against the specs instead of trusted
+- **Subagents:** the plugin ships specialized subagents for writing BDD specs, writing tests, writing code, and QA
+- **Skills:** the lifecycle shows up as slash-command skills (design, implement, QA, sync and more)
+- **Memory:** the specs and project state live in your repo, so they carry across sessions without re-explaining
 
 ## Related Articles
 

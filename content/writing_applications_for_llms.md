@@ -45,7 +45,7 @@ The second is harnessing LLMs. Hooks, orchestration, validation pipelines. Softw
 
 These are not the same activity. A CLAUDE.md file is settings. A skill is a library. These are things you build for the agent to use. A hook that runs your test suite after every file write? That's your code controlling the agent. A harness that dispatches tasks to specialized agents, validates output, and manages state across sessions? That's your application using the LLM as a component.
 
-The industry calls all of this "harness engineering." I think that's imprecise. The harness is the part that controls the LLM. The application is the part the LLM uses. Both matter. They're different skills.
+The industry calls all this "harness engineering." I think that's imprecise. The harness is the part that controls the LLM. The application is the part the LLM uses. Both matter. They're different skills.
 
 ## Applications for LLMs
 

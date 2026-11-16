@@ -48,7 +48,7 @@ I used this approach exclusively for a long time. It kinda works. And the moment
 
 ## What prompt and pray actually is
 
-No spec. No plan. No acceptance criteria. No structure. Just me, Claude Code, and a description of what I want the thing to do. I hit enter. I see where it lands. I correct. I hit enter again. Repeat until the code works, or until I rage-quit and write it myself.
+No spec. No plan. No acceptance criteria. No structure. Only me, Claude Code, and a description of what I want the thing to do. I hit enter. I see where it lands. I correct. I hit enter again. Repeat until the code works, or until I rage-quit and write it myself.
 
 For small stuff, this is fine. It's more than fine. If I need a one-off script to rename 200 files, or a quick LiveView component that renders a list, prompt and pray is the fastest path to "done." The model gets the whole task in one shot, the context is small, and there's not enough surface area for things to go sideways. I still work this way for small tasks. I'm not going to write a spec for a five-line bash script. That would be insane.
 

@@ -20,22 +20,22 @@ A colleague at work built a tool called [session-kit](https://github.com/jstoobz
 
 This is the third post in a series on agent memory systems. The first covered repo-native (files in the repo). The second covered dedicated memory stores (the model decides what to remember during the conversation). This one covers the under-discussed third leg: processes that read conversation logs *after* the work is done and turn them into memory the next session can use.
 
-If you've ever watched `/compact` happen in Claude Code and thought "I wish that summary survived to the next session, not just the next chunk of this one" — you're already thinking about transcript-derived memory.
+If you've ever watched `/compact` happen in Claude Code and thought "I wish that summary survived to the next session, not just the next chunk of this one", you're already thinking about transcript-derived memory.
 
 ## What "transcript-derived" actually means
 
-A separate process — usually async, often LLM-powered — reads the conversation transcript and produces durable memory artifacts. The model in the live conversation is not the curator. The processing happens *after* the work is done (or before context compaction).
+A separate process, usually async, often LLM-powered, reads the conversation transcript and produces durable memory artifacts. The model in the live conversation is not the curator. The processing happens *after* the work is done (or before context compaction).
 
 The boundary against dedicated memory stores is timing. Their writes happen *during* the conversation, with the same model that's helping you code. Transcript-derived writes happen *after*, with a separate process. Often a separate model.
 
-The boundary against repo-native is what's being persisted. Repo-native is structured artifacts (specs, decision records, plans) that humans or agents wrote intentionally. Transcript-derived is extracted from conversation history that wasn't written for memory purposes — it's archaeology on the chat log.
+The boundary against repo-native is what's being persisted. Repo-native is structured artifacts (specs, decision records, plans) that humans or agents wrote intentionally. Transcript-derived is extracted from conversation history that wasn't written for memory purposes, it's archaeology on the chat log.
 
 ## How it actually works
 
 Three steps:
 
 1. Conversation happens. Claude Code writes a transcript to disk.
-2. A trigger fires — `PreCompact` hook, `Stop` hook, `SessionEnd` hook, or a cron job.
+2. A trigger fires, `PreCompact` hook, `Stop` hook, `SessionEnd` hook, or a cron job.
 3. A process reads the transcript. Could be deterministic (rule-based extraction) or LLM-powered (a summarizer or "compiler"). Output gets written somewhere durable. Next session loads the durable output as part of its context.
 
 Anthropic's hook system is the load-bearing infrastructure for most Claude-specific implementations. `PreCompact` and `SessionStart` receive JSON with `transcript_path`, `cwd`, trigger type. You point them at a script. The script does whatever you want.
@@ -48,11 +48,11 @@ The processing step is where the design decisions matter. A literal transcript d
 
 **Claude Code's autoDream** (unshipped per the source leak, but real). Anthropic's own answer to transcript-derived consolidation. Runs automatically when 24+ hours and 5+ sessions have passed. Four phases: Orient (scan memory directory), Gather Signal (search transcripts narrowly for user corrections, explicit saves, recurring themes, important decisions), Consolidate (merge into existing files, convert relative dates to absolute, remove contradictions, eliminate stale entries), Prune and Index (keep MEMORY.md under 200 lines). Read-only on project code, lock files prevent concurrent runs, runs in background. Observed performance: 913 sessions consolidated in ~8-9 minutes. This is what "transcript-derived done at platform scale" looks like.
 
-**claude-mem.** Claude Code plugin. Hooks capture session transcripts. The agent SDK compresses them. Future sessions get progressive context injection — high-level overview first, deeper history on demand. Productized version of what most sophisticated Claude Code users end up building themselves.
+**claude-mem.** Claude Code plugin. Hooks capture session transcripts. The agent SDK compresses them. Future sessions get progressive context injection, high-level overview first, deeper history on demand. Productized version of what most sophisticated Claude Code users end up building themselves.
 
 **claude-memory-compiler** (coleam00). Hooks capture sessions. The agent SDK extracts decisions and lessons. An LLM "compiler" organizes everything into structured cross-referenced articles. The result reads like internal documentation rather than a chat log. Explicitly cites Karpathy's LLM Knowledge Base architecture as inspiration.
 
-**claude-memory** (itsjwill). Auto-captures decisions, learnings, client info. Cloud backup to Supabase with syncing every 5 minutes. Semantic search via pgvector. Different tradeoff — cloud sync vs local-only.
+**claude-memory** (itsjwill). Auto-captures decisions, learnings, client info. Cloud backup to Supabase with syncing every 5 minutes. Semantic search via pgvector. Different tradeoff, cloud sync vs local-only.
 
 **Custom session-end summarizers.** The folk pattern. Spawn `claude -p` as a subprocess at session end. Pass the transcript. Get back a markdown summary. Append to a journal file. Most sophisticated coders eventually build one.
 
@@ -88,15 +88,15 @@ Transcript-derived is great as a *feeder* into other categories:
 - **Pair with retrieval/RAG when summaries pile up.** Once you have 100+ session summaries, a vector index becomes useful. The summarizer fills the corpus; retrieval finds what's relevant later.
 - **Skip pairing with dedicated memory stores.** Two curators (the in-session model and the post-session summarizer) produce memory that disagrees.
 
-{{repo_native_memory_cta shape="aside" headline="Summarize the summary enough times and your memory is a copy of a copy with the detail gone." sub="Artifacts you wrote on purpose do not drift that way, because they are the source rather than a derivative." body="CodeMySpec builds on that: specs live in the repo as the contract, and the build blocks when code stops matching." label="Keep the contract in the repo" campaign="transcript-derived-memory"}}
+{{repo_native_memory_cta shape="aside" headline="Summarize the summary enough times and your memory is a copy of a copy with the detail gone." sub="Artifacts you wrote on purpose do not drift that way, because they are the source rather than a derivative." body="CodeMySpec builds on that: executable specs live in the repo as the contract, and the work is gated when code stops matching." label="Keep the contract in the repo" campaign="transcript-derived-memory"}}
 
 ## The honest verdict
 
-Transcript-derived is the most under-rated category. The implementations are real (claude-mem, claude-memory-compiler, session-kit, Anthropic's own autoDream). The pattern is well-supported by Anthropic's hook infrastructure. The failure modes are gentler than dedicated memory stores. For software engineering specifically I went a different direction — [CodeMySpec is built around structured artifacts](/developers?utm_source=transcript-derived-memory&utm_medium=internal&utm_campaign=cta-mid) — but the transcript pattern is the right call for general workflows. The main reason it's under-discussed is that it doesn't have "memory product" branding the curated stores have. It's plumbing. Plumbing isn't sexy.
+Transcript-derived is the most under-rated category. The implementations are real (claude-mem, claude-memory-compiler, session-kit, Anthropic's own autoDream). The pattern is well-supported by Anthropic's hook infrastructure. The failure modes are gentler than dedicated memory stores. For software engineering specifically I went a different direction, [CodeMySpec is built around structured artifacts](/developers?utm_source=transcript-derived-memory&utm_medium=internal&utm_campaign=cta-mid), but the transcript pattern is the right call for general workflows. The main reason it's under-discussed is that it doesn't have "memory product" branding the curated stores have. It's plumbing. Plumbing isn't sexy.
 
 If you're a heavy Claude Code user with sessions that routinely hit compaction, set up a `PreCompact` hook that dumps the transcript and runs a summarizer that writes to a markdown file in your repo. Total setup: an afternoon. Total upside: your next session starts with real context from the previous one, every time, without you having to remember to write anything down.
 
-If you're not a heavy user — short sessions, throwaway work — skip this category. The overhead isn't worth it.
+If you're not a heavy user, short sessions, throwaway work, skip this category. The overhead isn't worth it.
 
 Next post: retrieval / RAG. The category everyone reaches for first, and almost nobody should reach for first. The most discussed memory pattern in AI generally and the most over-applied to coding.
 

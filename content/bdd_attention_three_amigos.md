@@ -110,7 +110,7 @@ This is what closes the MetricFlow Potemkin village. Not just better scenario ti
 
 Those are four different features. "Connect Google Analytics" described one of them, loosely.
 
-The model didn't write those scenarios. The PM confirmed them. The model then generated Gherkin from confirmed scenario titles, with the PM-approved intent as the anchor. The gate held.
+The model didn't write those scenarios. The PM confirmed them. The model then wrote the executable specs from the confirmed scenario titles, run with `mix spex`, with the PM-approved intent as the anchor. The gate held.
 
 {{verification_gate_cta shape="aside" headline="Connect Google Analytics turned out to be four different features, not one." sub="Nobody finds that out reviewing the spec after the code is already green." body="CodeMySpec runs the interview before scenarios exist, then checks the result against the running app." label="Run the gate before code exists" campaign="bdd-attention-three-amigos"}}
 

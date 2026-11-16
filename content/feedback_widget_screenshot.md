@@ -38,6 +38,8 @@ tags:
 
 I built a feedback widget that captures screenshots. One click, it grabs exactly what the user sees, uploads to S3, attaches it to the bug report. No page navigation, no browser extensions.
 
+> **Update:** `mix cms_gen.feedback_widget`, the generator this post describes, is deprecated. New projects get `mix cms_gen.support_widget` instead: chat and report-a-problem over your project's deploy key, with no OAuth connection to set up. The screenshot technique below (html-to-image, a colocated hook, a presigned upload) still applies to any LiveView widget you build.
+
 ## The Widget
 
 Floating LiveComponent. Chat bubble in the bottom-right. Click it, fill out title/description/severity, optionally grab a screenshot, submit. Issue shows up in CodeMySpec with the screenshot attached.
@@ -72,7 +74,7 @@ sequenceDiagram
 
 ## The Screenshot Capture
 
-The fun part. User clicks "Capture Screenshot" and the widget grabs exactly what's on screen. Not a browser API screenshot - a rendered-to-canvas capture of the DOM.
+The fun part. User clicks "Capture Screenshot" and the widget grabs exactly what's on screen. Not a browser API screenshot, a rendered-to-canvas capture of the DOM.
 
 ### The JavaScript
 
@@ -173,16 +175,16 @@ Decode base64 to binary. Get a presigned URL from CodeMySpec. PUT directly to S3
 
 ## The Generator
 
-Ships as a Mix generator:
+It shipped as a Mix generator (now deprecated, see the update at the top):
 
 ```bash
 $ mix cms_gen.feedback_widget
 ```
 
 Three files:
-- `feedback_widget.ex` - the LiveComponent
-- `codemyspec/client.ex` - HTTP client for the API
-- `screenshot.js` - the capture logic
+- `feedback_widget.ex`, the LiveComponent
+- `codemyspec/client.ex`, HTTP client for the API
+- `screenshot.js`, the capture logic
 
 Drop the component in your root layout, install `html-to-image`, configure OAuth. Done.
 

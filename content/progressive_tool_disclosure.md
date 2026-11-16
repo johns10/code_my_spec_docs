@@ -46,6 +46,8 @@ This is the problem nobody talks about. We keep giving agents more tools, more s
 
 The fix is a concept from 1980s interface design. It's called progressive disclosure, and it turns out to be the defining architectural pattern for AI agent context management.
 
+{{nontechnical_founder_cta campaign="progressive-disclosure-intro"}}
+
 ## The Original Insight
 
 Jakob Nielsen [defined progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/) as a design strategy: show users only what they need right now, and defer everything else to a secondary screen. The concept is older than the web. It comes from early GUI research in the 1970s and 1980s.
@@ -199,6 +201,10 @@ Both [Anthropic](https://www.anthropic.com/engineering/effective-harnesses-for-l
 
 {{verification_gate_cta headline="200 tool definitions and the model picks wrong seven times out of eight." sub="15 relevant ones and it works fine." body="Disclosure is a harness problem, not a prompting problem." label="Put a harness around your agent" campaign="progressive-disclosure"}}
 
+## How CodeMySpec Does It
+
+CodeMySpec's own MCP server hit this problem. Its tool list had grown to 111 tools, about 20,000 tokens paid by every agent at connect, for a task that calls three or four of them. Now the server advertises a short list directly: the loop tools (`get_next_requirement`, `start_task`, `evaluate_task`, `sync_project`) plus `tool_docs` and `run_script`. Every other tool is reached through code mode. The agent calls `tool_docs` for one tool's arguments, then `run_script` runs a short Lua script that calls it. The tool schemas load only when needed.
+
 ## What to Tell Your AI
 
 If you want to implement progressive disclosure in your project today, here's the checklist:
@@ -231,28 +237,28 @@ Audit your /context. You might be surprised what's eating your tokens.
 
 ## Sources
 
-1. [Progressive Disclosure](https://www.nngroup.com/articles/progressive-disclosure/) - Jakob Nielsen, Nielsen Norman Group
-2. [Boris Cherny on context bloat](https://www.threads.com/@boris_cherny/post/DSnyfjUCGZ2/) - Threads
-3. [Boris Cherny on subagents](https://www.threads.com/@boris_cherny/post/DUMZy85EoFj/) - Threads
-4. [Building Claude Code with Boris Cherny](https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny) - The Pragmatic Engineer
-5. [Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - Anthropic Engineering
-6. [Agent Skills Overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) - Anthropic
-7. [Code Execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp) - Anthropic Engineering
-8. [Tool Search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) - Anthropic
-9. [Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) - Anthropic Engineering
-10. [Context Window Optimization](https://www.shaped.ai/blog/context-window-optimization-why-ranking-not-stuffing-is-the-scaling-law-for-agents) - Shaped
-11. [Why AI Agents Need Progressive Disclosure](https://www.honra.io/articles/progressive-disclosure-for-ai-agents) - Honra
-12. [MCP Context Window Problem](https://www.junia.ai/blog/mcp-context-window-problem) - Junia
-13. [Claude Agent Skills Deep Dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/) - Lee Han Chung
-14. [Stop Bloating Your CLAUDE.md](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/) - Alex Op
-15. [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md) - HumanLayer
-16. [Skill Issue: Harness Engineering](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents) - HumanLayer
-17. [Lazy Skills: Token-Efficient Approach](https://boliv.substack.com/p/lazy-skills-a-token-efficient-approach) - Boliv
-18. [Context Engineering for Coding Agents](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html) - Martin Fowler / Birgitta Bockeler
-19. [Building Internal Agents: Progressive Disclosure](https://lethain.com/agents-large-files/) - Will Larson
-20. [Harness Engineering](https://openai.com/index/harness-engineering/) - OpenAI
-21. [Progressive Disclosure](https://thedecisionlab.com/reference-guide/design/progressive-disclosure) - The Decision Lab
-22. [Cognitive Load Limits in LLMs](https://arxiv.org/html/2509.19517v2) - arXiv
-23. [Fix AI Agents: Context Window Attention](https://datagrid.com/blog/optimize-ai-agent-context-windows-attention) - Datagrid
-24. [Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use) - Anthropic Engineering
-25. [The Bloat Tax Breaking AI Agents](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents) - AgentPMT
+1. [Progressive Disclosure](https://www.nngroup.com/articles/progressive-disclosure/), Jakob Nielsen, Nielsen Norman Group
+2. [Boris Cherny on context bloat](https://www.threads.com/@boris_cherny/post/DSnyfjUCGZ2/), Threads
+3. [Boris Cherny on subagents](https://www.threads.com/@boris_cherny/post/DUMZy85EoFj/), Threads
+4. [Building Claude Code with Boris Cherny](https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny), The Pragmatic Engineer
+5. [Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), Anthropic Engineering
+6. [Agent Skills Overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview), Anthropic
+7. [Code Execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp), Anthropic Engineering
+8. [Tool Search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool), Anthropic
+9. [Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents), Anthropic Engineering
+10. [Context Window Optimization](https://www.shaped.ai/blog/context-window-optimization-why-ranking-not-stuffing-is-the-scaling-law-for-agents), Shaped
+11. [Why AI Agents Need Progressive Disclosure](https://www.honra.io/articles/progressive-disclosure-for-ai-agents), Honra
+12. [MCP Context Window Problem](https://www.junia.ai/blog/mcp-context-window-problem), Junia
+13. [Claude Agent Skills Deep Dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/), Lee Han Chung
+14. [Stop Bloating Your CLAUDE.md](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/), Alex Op
+15. [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md), HumanLayer
+16. [Skill Issue: Harness Engineering](https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents), HumanLayer
+17. [Lazy Skills: Token-Efficient Approach](https://boliv.substack.com/p/lazy-skills-a-token-efficient-approach), Boliv
+18. [Context Engineering for Coding Agents](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html), Martin Fowler / Birgitta Bockeler
+19. [Building Internal Agents: Progressive Disclosure](https://lethain.com/agents-large-files/), Will Larson
+20. [Harness Engineering](https://openai.com/index/harness-engineering/), OpenAI
+21. [Progressive Disclosure](https://thedecisionlab.com/reference-guide/design/progressive-disclosure), The Decision Lab
+22. [Cognitive Load Limits in LLMs](https://arxiv.org/html/2509.19517v2), arXiv
+23. [Fix AI Agents: Context Window Attention](https://datagrid.com/blog/optimize-ai-agent-context-windows-attention), Datagrid
+24. [Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use), Anthropic Engineering
+25. [The Bloat Tax Breaking AI Agents](https://www.agentpmt.com/articles/thousands-of-mcp-tools-zero-context-left-the-bloat-tax-breaking-ai-agents), AgentPMT

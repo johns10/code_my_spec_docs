@@ -41,7 +41,7 @@ tags:
 
 CLAUDE.md tells Claude who it is. Skills tell it what to do.
 
-That distinction matters more than it sounds. CLAUDE.md loads every session -- it's ambient context, always there, always consuming your context window. A skill loads on demand. You type `/scan-reddit` and Claude becomes a Reddit scanner. You type `/develop-context` and it becomes a full-stack development orchestrator. The rest of the time, those instructions don't exist in context.
+That distinction matters more than it sounds. CLAUDE.md loads every session, it's ambient context, always there, always consuming your context window. A skill loads on demand. You type `/scan-reddit` and Claude becomes a Reddit scanner. You type `/develop-context` and it becomes a full-stack development orchestrator. The rest of the time, those instructions don't exist in context.
 
 This is the first step toward a bigger idea: writing applications for agents instead of humans.
 
@@ -51,14 +51,14 @@ A skill is a markdown file in a directory. The directory lives at `.claude/skill
 
 ```
 .claude/skills/scan-reddit/
-  SKILL.md           # Required -- instructions Claude follows
-  templates/         # Optional -- output templates
-  examples/          # Optional -- reference material
+  SKILL.md           # Required, instructions Claude follows
+  templates/         # Optional, output templates
+  examples/          # Optional, reference material
 ```
 
 When you type `/scan-reddit`, Claude reads `SKILL.md` and follows the instructions. That's it. No compilation, no runtime, no API. A markdown file that an agent reads and executes.
 
-The older format -- single files in `.claude/commands/` -- still works. But the skill directory format is better because you can include supporting files that Claude loads on demand instead of cramming everything into one document.
+The older format, single files in `.claude/commands/`, still works. But the skill directory format is better because you can include supporting files that Claude loads on demand instead of cramming everything into one document.
 
 ## SKILL.md Anatomy
 
@@ -78,7 +78,7 @@ You are scanning Reddit for threads where CodeMySpec's approach
 to AI-assisted development is relevant...
 ```
 
-The frontmatter controls discovery and behavior. The markdown body is the actual application -- the instructions the agent follows.
+The frontmatter controls discovery and behavior. The markdown body is the actual application, the instructions the agent follows.
 
 ### Frontmatter That Matters
 
@@ -89,8 +89,8 @@ The frontmatter controls discovery and behavior. The markdown body is the actual
 | Setting | You invoke | Claude invokes | Use for |
 |---|---|---|---|
 | Default (both absent) | Yes | Yes | Most skills |
-| `disable-model-invocation: true` | Yes | No | Side effects -- deploy, commit, send messages |
-| `user-invocable: false` | No | Yes | Background knowledge Claude should just know |
+| `disable-model-invocation: true` | Yes | No | Side effects: deploy, commit, send messages |
+| `user-invocable: false` | No | Yes | Background knowledge Claude should know |
 
 **`allowed-tools`** restricts what tools Claude can use during the skill. `allowed-tools: Read, Grep, Glob` means it can read code but not edit anything.
 
@@ -107,7 +107,7 @@ Here's what makes a skill more than a prompt: it structures an entire workflow w
 1. Loads memory files for voice, product context, and marketing intelligence
 2. Reads the lead file to get the thread link, summary, and angle
 3. Fetches the full Reddit thread and top comments via MCP
-4. Analyzes the room -- what's the dominant sentiment, what's getting upvoted
+4. Analyzes the room, what's the dominant sentiment, what's getting upvoted
 5. Searches CodeMySpec content for genuinely relevant articles
 6. Drafts a comment following specific tone rules (no bold headers, no links, no "I built a system that...")
 7. Outputs in a structured format: thread summary, angle, research, room vibe, draft
@@ -118,11 +118,11 @@ That's not a prompt. That's an application. It has inputs (the lead file), proce
 
 Skills are part of a broader pattern in Claude Code: progressive disclosure. The idea is that Claude should only load context it actually needs.
 
-**Layer 1 -- Always loaded:** CLAUDE.md and skill descriptions. This is ambient context. Keep it small. CLAUDE.md should be ~50 lines max. Skill descriptions add a few hundred characters each.
+**Layer 1, always loaded:** CLAUDE.md and skill descriptions. This is ambient context. Keep it small. CLAUDE.md should be ~50 lines max. Skill descriptions add a few hundred characters each.
 
-**Layer 2 -- Loaded on invoke:** The full SKILL.md body. Only enters context when the skill is triggered. This is where the bulk of your instructions live.
+**Layer 2, loaded on invoke:** The full SKILL.md body. Only enters context when the skill is triggered. This is where the bulk of your instructions live.
 
-**Layer 3 -- Loaded on demand:** Supporting files in the skill directory. Claude reads them when it needs them during execution. Reference docs, templates, examples.
+**Layer 3, loaded on demand:** Supporting files in the skill directory. Claude reads them when it needs them during execution. Reference docs, templates, examples.
 
 This matters because context window is a shared, finite resource. A 500-line skill that loads every session wastes tokens on instructions Claude doesn't need 90% of the time. That same skill loaded on demand costs nothing until invoked.
 
@@ -134,14 +134,14 @@ Skills accept arguments through `$ARGUMENTS`:
 
 ```yaml
 ---
-name: develop-context
-argument-hint: [ContextModuleName]
+name: develop
+argument-hint: "[context|liveview|refactor] [ModuleName]"
 ---
 
-Develop the $ARGUMENTS context through the full lifecycle...
+Develop the $ARGUMENTS component through the full lifecycle...
 ```
 
-`/develop-context Accounts` substitutes "Accounts" for `$ARGUMENTS`. Positional args work too -- `$0`, `$1`, `$2` for specific positions.
+`/develop context Accounts` substitutes "context Accounts" for `$ARGUMENTS`. Positional args work too, `$0`, `$1`, `$2` for specific positions.
 
 More interesting is dynamic context injection. Prefix a backtick command with `!` and it executes before Claude sees the skill:
 
@@ -150,15 +150,15 @@ PR diff: !`gh pr diff`
 PR comments: !`gh pr view --comments`
 ```
 
-Claude sees the actual diff and comments, not the commands. This lets skills adapt to the current state of the world -- pulling in live data from git, APIs, or any CLI tool.
+Claude sees the actual diff and comments, not the commands. This lets skills adapt to the current state of the world, pulling in live data from git, APIs, or any CLI tool.
 
-In CodeMySpec's development skills, this goes even further. The skill calls an Elixir CLI that generates a complete prompt based on the current state of the project:
+In CodeMySpec's development skills, this goes even further. The skill posts to the local harness, an Elixir server running on your machine, which generates a complete prompt based on the current state of the project:
 
 ```yaml
-!`${CLAUDE_PLUGIN_ROOT}/.claude-plugin/bin/agent-task develop_context ${CLAUDE_SESSION_ID} $ARGUMENTS`
+!`curl -sS -X POST "http://localhost:${CMS_HARNESS_PORT:-4004}/api/skills/start" --data-urlencode "skill=develop" --data-urlencode "arguments=$ARGUMENTS"`
 ```
 
-That one line calls an Elixir application that reads the project's component graph, checks requirement status, loads the relevant spec files, and generates a detailed prompt with everything the agent needs. The skill file is 3 lines. The application behind it is thousands of lines of Elixir.
+That one line calls an Elixir application that reads the project's component graph, checks requirement status, loads the relevant spec files, and returns JSON with a `prompt` field holding everything the agent needs. The skill file is a few lines. The application behind it is thousands of lines of Elixir.
 
 ## Real Examples
 
@@ -168,7 +168,7 @@ I have three skills that chain together for Reddit marketing:
 
 **`/scan-reddit`** browses 4 subreddits via MCP, identifies 3-7 threads relevant to AI coding quality, and creates structured lead files in `.code_my_spec/leads/incoming/`. Each lead captures the thread title, score, top comment vibe, angle, and relevant content topics. Output: a summary with recommendations on which 2-3 threads to action first.
 
-**`/draft-response`** takes a lead file and turns it into a Reddit comment. It loads my tone guide, reads the full thread, analyzes what's getting upvoted, and drafts something that sounds like a person talking in a thread -- not a blog post pasted into comments. The skill explicitly forbids bold headers, numbered lists, links, and the phrase "lights out software factory."
+**`/draft-response`** takes a lead file and turns it into a Reddit comment. It loads my tone guide, reads the full thread, analyzes what's getting upvoted, and drafts something that sounds like a person talking in a thread, not a blog post pasted into comments. The skill explicitly forbids bold headers, numbered lists, links, and the phrase "lights out software factory."
 
 **`/dev-marketing-writer`** drafts longer content. Blog posts, tutorials, case studies. It loads the same tone guide and marketing context, but its instructions are about outside-in framing (write about the topic, not the product), developer-first language (specific claims, not superlatives), and format adaptation (Reddit is casual, blog posts can be structured).
 
@@ -176,13 +176,13 @@ Each skill is a self-contained application with its own inputs, constraints, and
 
 ### Development: The Full Lifecycle
 
-CodeMySpec's development skills are more ambitious. They're distributed as a plugin -- a directory of skills that ship with the CLI tool and load when Claude Code starts with the plugin enabled.
+CodeMySpec's development skills are more ambitious. They're distributed as a Claude Code plugin, a directory of skills that talks to the local `cms` server and loads when Claude Code starts with the plugin enabled. Claude Code and Codex each have a full plugin (Antigravity has one too), and any other agent connects through the MCP server.
 
-**`/design-architecture`** starts a guided session that analyzes user stories, proposes bounded contexts, and maps stories to both surface components (LiveViews, controllers) and domain components (contexts, schemas). The skill calls an Elixir backend that generates a prompt with all unsatisfied stories, current component count, dependency graph, and architecture views.
+**`/design architecture`** starts a guided session that analyzes user stories, proposes bounded contexts, and maps stories to both surface components (LiveViews, controllers) and domain components (contexts, schemas). The skill calls an Elixir backend that generates a prompt with all unsatisfied stories, current component count, dependency graph, and architecture views.
 
-**`/develop-context`** orchestrates the full lifecycle of a Phoenix context -- specification, design review, implementation of every child component in dependency order, tests, validation. One command, one context, soup to nuts.
+**`/develop context`** orchestrates the full lifecycle of a Phoenix context, specification, design review, implementation of every child component in dependency order, tests, validation. One command, one context, soup to nuts. `/product` runs the story interview and Three Amigos sessions that come before any of this, and the specs it produces run with `mix spex`.
 
-**`/qa-story`** runs a QA session against the running application. The agent reads the story and acceptance criteria, writes a test brief, executes against the live app, records results with evidence, and files issues for failures.
+**`/qa story <number>`** runs a QA session against the running application. The agent reads the story and acceptance criteria, writes a test brief, executes against the live app, records results with evidence, and files issues for failures.
 
 These skills don't contain the logic themselves. They call an Elixir application that generates the right prompt based on current project state. The skill is the interface. The application behind it is the intelligence.
 
@@ -196,15 +196,15 @@ This one's interesting because the skill file itself is a living document. The "
 
 Claude Code has five layers of customization. Each solves a different problem:
 
-**CLAUDE.md** -- Ambient context. Project conventions, stack info, key directories. Loaded every session. Keep it short. This is who Claude is in this project.
+**CLAUDE.md**: Ambient context. Project conventions, stack info, key directories. Loaded every session. Keep it short. This is who Claude is in this project.
 
-**Skills** -- On-demand workflows. Loaded when invoked. This is what Claude does when you ask it to do a specific thing.
+**Skills**: On-demand workflows. Loaded when invoked. This is what Claude does when you ask it to do a specific thing.
 
-**Hooks** -- Lifecycle automation. Shell commands that run before or after tool calls. Pre-edit formatting, post-save linting, post-stop validation. This is what happens automatically around Claude's actions.
+**Hooks**: Lifecycle automation. Shell commands that run before or after tool calls. Pre-edit formatting, post-save linting, post-stop validation. This is what happens automatically around Claude's actions.
 
-**MCP Servers** -- External tool integrations. Reddit API, Google Analytics, browser automation, database access. This is how Claude reaches outside the filesystem.
+**MCP Servers**: External tool integrations. Reddit API, Google Analytics, browser automation, database access. This is how Claude reaches outside the filesystem.
 
-**Subagents** -- Isolated parallel workers. Skills with `context: fork` run as subagents. Custom agent types (`Explore`, `Plan`, `general-purpose`) run different models or tool sets. This is how Claude does multiple things at once without context contamination.
+**Subagents**: Isolated parallel workers. Skills with `context: fork` run as subagents. Custom agent types (`Explore`, `Plan`, `general-purpose`) run different models or tool sets. This is how Claude does multiple things at once without context contamination.
 
 The combination is what makes this powerful. A skill can invoke MCP tools (fetch Reddit threads), spawn subagents (research in parallel), and trigger hooks (validate after changes). Each layer does one thing well. Skills orchestrate them.
 
@@ -228,7 +228,7 @@ But the core software design principles still apply:
 
 This is the beginning of a different kind of software development. Not writing code that humans interact with through GUIs. Writing instructions that agents interact with through language. The principles transfer. The medium changes.
 
-If you've used CLAUDE.md to give Claude context about your project, you've already started. Skills are the next step -- packaging specific workflows into reusable, on-demand applications. From there, it's MCP servers for external capabilities, hooks for automation, and subagents for parallelism.
+If you've used CLAUDE.md to give Claude context about your project, you've already started. Skills are the next step, packaging specific workflows into reusable, on-demand applications. From there, it's MCP servers for external capabilities, hooks for automation, and subagents for parallelism.
 
 The end state isn't a single clever prompt. It's a system of skills, tools, and constraints that together make an agent reliably productive at complex, multi-step work. That's what writing apps for agents looks like.
 

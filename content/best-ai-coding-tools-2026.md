@@ -45,6 +45,8 @@ So this isn't just a "which tool writes the best code" roundup, though it is tha
 
 This roundup covers 16 tools across three categories. Where I've written a deeper standalone review, it's linked. Prices and facts were re-verified in July 2026; anything I couldn't verify against a primary source isn't here.
 
+{{nontechnical_founder_cta campaign="best-ai-coding-tools-2026-intro"}}
+
 ## At a glance
 
 | Tool | Type | Pricing | Open source? | Best for |
@@ -210,7 +212,7 @@ That's the same reason this blog keeps arguing for [specs as the durable artifac
 
 All sixteen tools share one gap: they're good at executing instructions and bad at helping you write better ones. Spec quality determines code quality, on Opus 4.8 and on a local model alike.
 
-CodeMySpec sits at the layer above: a set of model harnesses that help one person build, sell, and support real software. The [build harness](/developers) generates specifications any of these agents can consume, through MCP or context files, then holds the agent to them with tests and QA. Whichever agent won your personal bake-off, the harness feeds it better input and checks its output. And because the same platform carries a content engine plus the email, chat, and ads layer, the software you build with these tools is also something you can market and support without hiring a team.
+CodeMySpec sits at the layer above: a set of model harnesses that help one person build, sell, and support real software. The [build harness](/developers) runs locally and drives your coding agent with executable BDD specs, then holds it to them with tests and QA. It plugs into Claude Code today, with Codex and Google Antigravity plugins too, [all on your own keys](/agents). The specs and tests live in your repo, so they stay yours if you switch agents. Other MCP-capable agents (Cursor, Gemini CLI, Copilot and more) connect through the CodeMySpec MCP server with no dedicated plugin. And because the same platform carries a content engine plus the email, chat, and ads layer, the software you build with these tools is also something you can market and support without hiring a team.
 
 ## Related Articles
 

@@ -40,6 +40,8 @@ If you are choosing a spec-driven development framework in 2026, the two names y
 
 I have read deeply into both and run spec-first workflows on real Phoenix apps. Here is the honest breakdown: what each one actually does, where each one breaks down, and how to pick.
 
+{{nontechnical_founder_cta campaign="openspec-vs-spec-kit-intro"}}
+
 ## The core difference in one paragraph
 
 Spec Kit gives you a full pipeline (constitution, specify, clarify, plan, analyze, tasks, implement) that produces a stack of dense Markdown documents per feature. It takes a project from zero to a working system through deliberate up-front planning. OpenSpec gives you a much smaller loop (propose, apply, sync, archive) built around a "delta" model where each change describes only what it adds, modifies, or removes against a source-of-truth spec. Spec Kit optimizes for structure and starting clean. OpenSpec optimizes for low overhead and changing code that already exists.
@@ -112,7 +114,7 @@ Both Spec Kit and OpenSpec stop at the same place. They are spec tools (they hel
 
 [CodeMySpec](/developers) makes a different bet on those two gaps. BDD specs are a mandatory gate: you cannot pass work without them (module specs, reviews, and tests are configurable knobs on top). And verification is built in: a QA agent boots the real app, drives a live browser, screenshots, and files issues by severity. Unit tests pass, the BDD specs pass, and then the QA agent clicks the button and finds the bug anyway. No other tool in this comparison runs the live app to confirm the spec held. It is also Phoenix/Elixir-native, where Spec Kit and OpenSpec are deliberately stack-neutral, a depth trade-off (theirs is breadth across stacks; CodeMySpec's is depth in one).
 
-To be fair to both: repo-resident specs, bring-your-own-agent, and no token markup are not unique to CodeMySpec, since OpenSpec and Spec Kit meet that bar too. The honest difference is the combination of a mandatory behavioral gate plus live verification plus framework-native depth. If you want a lightweight changelog across any stack, OpenSpec fits. If you want structured greenfield planning with the biggest community, Spec Kit fits. If you want the spec to be an enforced contract the running app is checked against, that is the wedge CodeMySpec is built on.
+To be fair to both: repo-resident specs, bring-your-own-key, and no token markup are not unique to CodeMySpec, since OpenSpec and Spec Kit meet that bar too. The honest difference is the combination of a mandatory behavioral gate plus live verification plus framework-native depth. If you want a lightweight changelog across any stack, OpenSpec fits. If you want structured greenfield planning with the biggest community, Spec Kit fits. If you want the spec to be an enforced contract the running app is checked against, that is the wedge CodeMySpec is built on.
 
 ## Related Articles
 

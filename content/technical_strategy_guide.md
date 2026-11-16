@@ -157,6 +157,10 @@ An ADR takes 5 minutes to write. Having the agent research and draft one takes m
 
 Once your technical strategy is in place, the next step is [architecture design](/documentation/architecture-design-guide), where you map stories to components. Technical strategy tells the agent what to build with. Architecture design tells it what to build.
 
+## In CodeMySpec
+
+`/codemyspec:design strategy` does this for you. It writes pre-made ADRs for the standard stack into `.code_my_spec/architecture/decisions/`, has the agent research the project-specific topics, and keeps the index at `.code_my_spec/architecture/decisions.md`. The `check_decisions` tool then compares your ADRs against `mix.exs` and flags a dependency no decision covers, or a decision about a dependency that's gone.
+
 ## Do This Today
 
 1. **Create a `decisions/` directory** in your project.

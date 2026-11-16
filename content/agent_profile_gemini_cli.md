@@ -158,13 +158,13 @@ The rest of the package is solid: Jules for async background work, Conductor for
 
 ## CodeMySpec Integration
 
-The free tier and Conductor make Gemini CLI a strong fit for anyone exploring spec-driven development without opening a wallet.
+Gemini CLI has no dedicated CodeMySpec plugin, but it supports MCP, so it connects to the CodeMySpec MCP server (`https://codemyspec.com/mcp/harness`, streamable HTTP, OAuth sign-in). CodeMySpec does not generate `GEMINI.md`; your specs and rules stay in the repo as ordinary files. Google's newer agent, Antigravity, does have a CodeMySpec plugin that connects to the same local harness, which matters because Gemini CLI is transitioning into it.
 
-- **Context files:** `GEMINI.md` is the native project-context file, same idea as `CLAUDE.md`. CodeMySpec generates `GEMINI.md` from specs, and Gemini CLI picks it up automatically.
-- **MCP support:** Full server support with admin allowlisting. CodeMySpec serves specs via MCP. Google even published a Codelab on building MCP servers; the protocol investment is real.
-- **Hooks support:** No pre/post hook system. Conductor's automated reviews (guidelines, tests, security) are the closest thing and can carry spec-compliance checks.
+- **Context files:** `GEMINI.md` is the native project-context file, same idea as `CLAUDE.md`.
+- **MCP support:** Full server support with admin allowlisting. Google even published a Codelab on building MCP servers; the protocol investment is real.
+- **Hooks support:** No pre/post hook system. Conductor's automated reviews (guidelines, tests, security) are the closest thing.
 - **Subagent support:** Jules handles async autonomous work (clones repo, works in VM, submits PRs). Plan Mode research subagents can analyze a spec before anyone writes code. Thinner than Claude Code's Agent Teams but usable.
-- **Skills/commands:** Experimental skills support in recent versions. Conductor's Markdown plans line up philosophically with CodeMySpec; specs feed directly into Conductor.
+- **Skills/commands:** Experimental skills support in recent versions. Conductor's Markdown plans line up philosophically with spec-driven work.
 - **Memory/persistence:** No persistent memory. `GEMINI.md` + MCP + Conductor's Markdown plans are your persistence layer.
 
 ## Related Articles

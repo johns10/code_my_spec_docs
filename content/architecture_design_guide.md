@@ -170,6 +170,10 @@ flowchart LR
 
 Technical strategy decides WHAT you build with. Architecture design decides WHAT you build. Spec stubs define HOW each piece should work. Implementation is the agent following all three.
 
+## In CodeMySpec
+
+You don't write the document by hand. `/codemyspec:design architecture` has the agent propose it in `.code_my_spec/architecture/proposal.md`, validates that every story maps to a component, and turns it into component records you can read with `get_component` and `show_architecture_overview`. Specs are executable: each story's acceptance criteria become BDD specs you run with `mix spex`, and the agent implements components against them. The markdown stubs described above are the tool-free version of the same idea.
+
 ## Do This Today
 
 1. **List your user stories.** Even bullet points. What does your app need to do?

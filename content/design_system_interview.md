@@ -38,7 +38,7 @@ The agent modifies a provided template rather than generating HTML from scratch,
 
 ## The rule that shapes the whole interview
 
-> Concrete options, not open-ended questions. At each step, show concrete options and examples. Do not ask "what colors do you want?" — show palettes and let the user pick.
+> Concrete options, not open-ended questions. At each step, show concrete options and examples. Do not ask "what colors do you want?", show palettes and let the user pick.
 
 This is the part most people get wrong when they try to do it by prompting. Asked an open question, you describe a vibe, the model interprets the vibe, and you are back to the average. Asked to pick between named options, you decide.
 

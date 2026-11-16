@@ -44,6 +44,8 @@ I build with a spec-driven development tool every day, so I have opinions about 
 
 One disclosure up front: I make one of these tools (CodeMySpec), so I will flag my bias where it shows up and give it the same honest treatment as the rest. No tool here is the right answer for everyone, and I will tell you where each one breaks down.
 
+{{nontechnical_founder_cta campaign="best-spec-driven-development-tools-intro"}}
+
 ## How I evaluated these tools
 
 A spec-driven tool is only as good as the gap between "the spec said this" and "the code does this." I scored each tool on six things that decide whether the spec governs the build or just kicks it off:
@@ -93,7 +95,7 @@ If you are betting on a radical spec-as-source future and want to track who gets
 
 ### Best for Elixir and Phoenix with enforced verification: CodeMySpec
 
-If you build in Phoenix and Elixir and you want specs that gate the code plus a QA agent that verifies the running app, that is the tool I make. CodeMySpec is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin with a local MCP server and a web app. The mental model is a requirement graph: every artifact (spec, test, implementation, BDD scenario, QA result) is a node with prerequisites, and the system computes what to work on next. Two things separate it honestly from the rest. First, BDD scenarios are a mandatory gate, not an optional doc, while module specs, reviews, and tests stay configurable. Second, the QA subagent writes a brief from the BDD specs, boots the real app, drives a real browser through Vibium, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. No other tool here does live-app verification. The honest limitations: it is early access, the tooling is still emerging, and it is deliberately narrow. If you are not on Phoenix, one of the tools above fits you better. [See the product](/developers).
+If you build in Phoenix and Elixir and you want specs that gate the code plus a QA agent that verifies the running app, that is the tool I make. CodeMySpec is a full-lifecycle, specification-driven harness for Phoenix and Elixir, distributed as a Claude Code plugin (with Codex and Antigravity ports), a local MCP server, and a web app. The mental model is a requirement graph: every artifact (spec, test, implementation, BDD scenario, QA result) is a node with prerequisites, and the system computes what to work on next. Two things separate it honestly from the rest. First, BDD scenarios are executable specs you run with `mix spex`, and they are a mandatory gate, not an optional doc, while module specs, reviews, and tests stay configurable. Second, the QA subagent writes a brief from the BDD specs, boots the real app, drives a real browser through Vibium, screenshots the result, and files issues with severity. Unit tests pass, BDD specs pass, then the QA agent clicks the button and finds the bug anyway. No other tool here does live-app verification. The honest limitations: it is a younger tool with a smaller community, and it is deliberately narrow. If you are not on Phoenix, one of the tools above fits you better. [See the product](/developers).
 
 To be fair about what is shared: repo-resident specs, bring-your-own-agent, no token markup, and specs-before-code are not unique to CodeMySpec. OpenSpec, Spec Kit, Agent OS, and BMAD all meet some of those bars, and portability in particular is table stakes, not a moat. The defensible combination is the mandatory BDD gate, built-in live verification, full lifecycle on one requirement graph, and framework-native depth in Phoenix. You can see how that plays out against the closest no-lock-in peer in [CodeMySpec vs OpenSpec](/blog/codemyspec-vs-openspec), and against the closest spec-first IDE in [CodeMySpec vs Kiro Specs](/blog/codemyspec-vs-kiro-specs).
 
@@ -109,7 +111,7 @@ Here are the seven tools on the dimensions that actually separate them.
 | **BMAD-METHOD** | Complex builds, paper trail | Process-gated (handoffs) | None built-in | None (BYO model) | Free, MIT |
 | **Agent OS** | Standards on existing code | Advisory only | None | None (Claude Code-tuned) | Free, MIT |
 | **Tessl** | Watching spec-as-source | n/a (pre-product) | n/a | Platform/registry | Closed beta |
-| **CodeMySpec** | Phoenix/Elixir, enforced QA | **Mandatory BDD gate** | **Live browser QA + tests** | None (any agent, BYO keys) | Free (early access) |
+| **CodeMySpec** | Phoenix/Elixir, enforced QA | **Mandatory BDD gate** | **Live browser QA + tests** | None (BYO keys; Claude Code, Codex, Antigravity plugins, MCP for the rest) | Build free; Operate & Grow $100/mo per user |
 
 Read the two middle columns top to bottom and the category's whole story shows up: almost everything is "none" on enforcement and verification. That is the gap worth understanding before you pick, and it is the thesis behind [what a spec actually is](/blog/what-is-a-spec): a spec that nothing enforces is documentation, and documentation drifts.
 
@@ -121,7 +123,7 @@ No tool wins outright. Match your situation to the list:
 
 - **You want the safe default and you bounce across stacks.** GitHub Spec Kit. Biggest community, broadest agent support, free. Accept the document overhead.
 - **You are deep in AWS.** Kiro, especially if you are leaving Amazon Q Developer. Budget for the credit metering.
-- **You are changing an existing codebase and want the lightest layer possible.** OpenSpec. Just know you will manage spec drift by hand.
+- **You are changing an existing codebase and want the lightest layer possible.** OpenSpec. Know you will manage spec drift by hand.
 - **You are running a complex, high-stakes build and want a full simulated team and a compliance trail.** BMAD-METHOD, if you can absorb the learning curve and token cost.
 - **You want your agent to stop fighting your house conventions.** Agent OS, for standards injection, not for durable specs.
 - **You want to track the spec-as-source bet.** Watch Tessl. Do not ship production on a closed beta.

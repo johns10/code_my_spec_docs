@@ -39,7 +39,7 @@ tags:
 
 # How to design architecture that keeps AI on track
 
-> **Part of the [CodeMySpec Methodology](/methodology)** — Phase 2: Architecture & Design.
+> **Part of the [CodeMySpec Methodology](/methodology)**, Phase 2: Architecture & Design.
 
 Without architecture, AI makes it up. Every conversation. Different structure each time. Within weeks you have a codebase that even the AI can't navigate.
 
@@ -49,7 +49,7 @@ I've been there. The fix is simple: design your architecture deliberately, versi
 
 ## Vertical Slice + Phoenix Contexts
 
-I organize by business capability, not technical layers. Each "slice" is a Phoenix context that owns everything for a domain -- data access, logic, presentation.
+I organize by business capability, not technical layers. Each "slice" is a Phoenix context that owns everything for a domain, data access, logic, presentation.
 
 Why this works with AI:
 
@@ -58,13 +58,13 @@ Why this works with AI:
 - Clear boundaries. No tangled dependencies.
 - Two artifacts. Contexts and components. That's it.
 
-**Contexts** are the modules organizing your business logic. **Components** are the code files inside them -- schemas, repositories, GenServers, LiveViews, whatever.
+**Contexts** are the modules organizing your business logic. **Components** are the code files inside them, schemas, repositories, GenServers, LiveViews, whatever.
 
 No services layer. No abstract factories. No dependency injection containers. Just contexts and components.
 
-### 14 Component Types
+### 11 Component Types
 
-CodeMySpec tracks 14 component types: context, coordination_context, schema, repository, genserver, task, registry, controller, json, liveview, liveview_component, live_context, behaviour, and other. Contexts contain child components in a hierarchy. The dependency graph catches circular dependencies before they become problems.
+CodeMySpec tracks 11 component types: context, coordination_context, live_context, schema, behaviour, json, liveview, liveview_component, controller, module, and infrastructure. Contexts contain child components in a hierarchy. The dependency graph catches circular dependencies before they become problems.
 
 ## The Problem
 
@@ -147,13 +147,13 @@ Version controlled. Concrete. Referenced in every AI conversation.
 
 ## How CodeMySpec Does This
 
-CodeMySpec automates this process with two MCP servers:
+CodeMySpec automates this process with architecture tools your agent calls:
 
-**Components MCP Server** -- 17 tools for component CRUD, dependency management, and design sessions.
+**Component tools** (16 of them, also served at `/mcp/components`) for component CRUD, dependency management, design sessions, and health analysis. See the [Components MCP Server reference](/documentation/components-mcp-server).
 
-**Architecture Server** -- `validate_dependency_graph` and `analyze_stories`. Runs locally, catches problems before they ship.
+**Architecture tools** such as `validate_dependency_graph`, `analyze_stories`, `check_architecture` (planned design against live code), and `check_decisions` (ADRs against `mix.exs`). See the [Architecture tools reference](/documentation/architect-mcp-documentation).
 
-Architecture lives in `.code_my_spec/architecture/overview.md`. ADRs go in `.code_my_spec/architecture/decisions/`. Spec files sync from `.spec.md` files in `.code_my_spec/spec/`.
+Run it with `/codemyspec:design architecture`. The agent writes `.code_my_spec/architecture/proposal.md` and CodeMySpec validates it and turns it into component records, with every story linked to a component. ADRs go in `.code_my_spec/architecture/decisions/`.
 
 At compile time, `use Boundary` enforces dependency rules. If something violates the graph, it won't compile.
 
@@ -180,7 +180,7 @@ Each user story maps to exactly one context. One to many, contexts to stories.
 2.2 User Story Management → Stories
 ```
 
-Not "Stories *supports* 2.1" -- DesignSessions *satisfies* 2.1.
+Not "Stories *supports* 2.1", DesignSessions *satisfies* 2.1.
 
 This makes testing straightforward: test the owning context, verify the requirement. Every requirement has one clear owner.
 
@@ -219,9 +219,9 @@ Your stories define *what*. Your architecture defines *how*. Together, they give
 
 ## Additional Resources
 
-- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](#) - Deep dive on contexts and AI
+- [Why Phoenix Contexts Are Perfect for LLM-Based Code Generation](#), Deep dive on contexts and AI
 - [Phoenix Official Documentation](https://hexdocs.pm/phoenix/contexts.html)
-- [Building Beautiful Systems with Phoenix Contexts and DDD](https://speakerdeck.com/andrewhao/building-beautiful-systems-with-phoenix-contexts-and-ddd) - Andrew Hao's talk on contexts and DDD
+- [Building Beautiful Systems with Phoenix Contexts and DDD](https://speakerdeck.com/andrewhao/building-beautiful-systems-with-phoenix-contexts-and-ddd), Andrew Hao's talk on contexts and DDD
 
 ## Related Articles
 

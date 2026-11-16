@@ -40,6 +40,8 @@ Tessl is the most aggressive spec-driven development vision in the market, and i
 
 The vision deserves serious treatment. This review does that, then separates it from what you can actually run today.
 
+{{nontechnical_founder_cta campaign="tessl-review-intro"}}
+
 ## Who builds Tessl
 
 Tessl was founded by Guy Podjarny ("Guypo"), founder and former president of Snyk, the multi-billion-dollar developer-security company, and before that CTO at Akamai. He also co-hosts the AI Native Dev podcast and runs the AI Native DevCon conference in New York. Tessl is his second major venture, and the pedigree explains both the capital and the thought-leadership share Tessl commands in the spec-driven conversation.
@@ -110,22 +112,22 @@ As a shipped product, the honest assessment is "truest vision, least-proven exec
 
 ## How it compares to CodeMySpec
 
-[CodeMySpec](/developers) takes the opposite bet. Where Tessl wants the spec to *replace* code as the source of truth, CodeMySpec holds that spec quality *determines* code quality, and that the code stays real, human-owned source. Specs are a portable protocol layer that feeds whatever coding agent you already use, not a compiler that regenerates your app from scratch. Nothing depends on a non-deterministic regeneration engine, because nothing gets regenerated from zero.
+[CodeMySpec](/developers) takes the opposite bet. Where Tessl wants the spec to *replace* code as the source of truth, CodeMySpec holds that spec quality *determines* code quality, and that the code stays real, human-owned source. Specs are executable contracts in your repo that gate the coding agent you already use, not a compiler that regenerates your app from scratch. Nothing depends on a non-deterministic regeneration engine, because nothing gets regenerated from zero.
 
 | Dimension | Tessl | CodeMySpec |
 |---|---|---|
 | **Core thesis** | Spec replaces code as source of truth; code is a regenerable artifact | Spec quality determines code quality; code stays real, human-maintainable source |
-| **Spec to code** | Aspirationally regenerate-everything; today closed-beta `tessl build`, ~1:1 spec-to-JS file, non-deterministic | Specs feed any agent via MCP and context files to guide generation; no regenerate-from-scratch dependency |
+| **Spec to code** | Aspirationally regenerate-everything; today closed-beta `tessl build`, ~1:1 spec-to-JS file, non-deterministic | Executable specs gate your agent's output (Claude Code first); no regenerate-from-scratch dependency |
 | **Spec types** | Markdown specs plus tests | Mandatory BDD scenarios plus configurable module specs on a requirement graph |
 | **Verification** | Tests from spec (vision); engine in beta | Generated tests plus live browser QA on the real running app |
 | **Distribution** | Registry-centric, centralized hub plus governance | Repo-native; specs live with the code, no central registry |
-| **Agent and model** | Agent-agnostic layer above Claude Code/Cursor/Copilot/Gemini | BYO agent, BYO model, BYO keys, no token markup |
+| **Agent and model** | Agent-agnostic layer above Claude Code/Cursor/Copilot/Gemini | BYO keys, no token markup; plugins for Claude Code, Codex, Antigravity |
 | **Language focus** | Vision: language-agnostic. Reality: JavaScript/TS | Phoenix and Elixir-native |
-| **Maturity** | $125M-funded; flagship engine closed beta ~9 months; mid-pivot to agent enablement | Focused niche product, shipping in its niche (early access) |
+| **Maturity** | $125M-funded; flagship engine closed beta ~9 months; mid-pivot to agent enablement | Focused niche product, shipping in its niche (Build free, $100 a month per user to operate) |
 
 The verification difference is the one I care about most. Tessl's thesis leans on "tests from the spec" to keep regenerated code correct, but that machinery is still beta. CodeMySpec already runs a QA agent that boots the real app, drives a real browser, takes screenshots, and files issues by severity. Unit tests pass, BDD specs pass, and then the agent clicks the button and finds the bug anyway. Prompting is praying. Verification is a guarantee.
 
-The honest summary: Tessl is the maximalist pole of spec-driven development, with huge funding, the boldest spec-as-source vision, and a flagship engine still in beta while the company retreats toward registry and governance. CodeMySpec is the pragmatic inverse. Rather than make code disposable or build a centralized registry, it makes high-quality, mandatory specs a portable protocol that improves whatever agent the engineer already uses: repo-native, BYO-everything, Phoenix-deep. Where Tessl bets the company on a non-deterministic compiler, CodeMySpec keeps deterministic human-owned code and uses specs to raise its quality.
+The honest summary: Tessl is the maximalist pole of spec-driven development, with huge funding, the boldest spec-as-source vision, and a flagship engine still in beta while the company retreats toward registry and governance. CodeMySpec is the pragmatic inverse. Rather than make code disposable or build a centralized registry, it makes high-quality, mandatory specs an enforced contract that improves the agent the engineer already uses: repo-native, BYO-keys, Phoenix-deep. Where Tessl bets the company on a non-deterministic compiler, CodeMySpec keeps deterministic human-owned code and uses specs to raise its quality.
 
 If the spec-as-source bet pays off, Tessl will have built something genuinely new. Today it is a serious vision with a useful registry attached, and an engine you cannot yet run in production.
 

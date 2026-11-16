@@ -43,7 +43,7 @@ Here's what I learned building CodeMySpec: **the best way to get reliable code f
 
 ## Why does prompt engineering fail for complex code generation?
 
-Cursor, Windsurf, Copilot -- they all work the same way. Give the LLM maximum context, craft a prompt, hope it does the right thing.
+Cursor, Windsurf, Copilot, they all work the same way. Give the LLM maximum context, craft a prompt, hope it does the right thing.
 
 Sound familiar?
 
@@ -57,7 +57,7 @@ This works fine for small tasks. But autonomous decision-making compounds errors
 
 Traditional tools work through suggestion: "Here's my codebase, here's the feature, please write good code."
 
-Then they add guardrails after the fact -- sandboxed execution, human review gates, safety checks. These are defensive measures against an adversarial problem. You're trying to catch the LLM after it goes off the rails.
+Then they add guardrails after the fact, sandboxed execution, human review gates, safety checks. These are defensive measures against an adversarial problem. You're trying to catch the LLM after it goes off the rails.
 
 Control-based systems don't prevent bad decisions. They prevent certain decisions from being made at all.
 
@@ -67,19 +67,19 @@ We built on a different premise: code generation should be a constrained workflo
 
 ### 1. Requirement Dependency DAG
 
-Instead of letting the LLM decide what to do next, we define a directed acyclic graph of 22 requirement checkers. Each checker has explicit dependencies. The hierarchical checker validates parent-child satisfaction. The dependency checker ensures all prerequisites pass before implementation starts.
+Instead of letting the LLM decide what to do next, we define a directed acyclic graph of requirements across the project, each story, and each component. Each requirement has explicit prerequisites and a check that reads real state, such as a file existing, BDD specs covering every criterion, or a QA attempt passing. A container's dependencies gate its children, so nothing is implemented before what it depends on.
 
 The LLM cannot skip steps. The orchestrator enforces the sequence through the graph. If a requirement fails, the only path forward is fixing it.
 
 ### 2. Stop-and-Validate Pattern
 
-The agent writes one artifact. Stops. The validation pipeline runs: compiler, tests, Credo, Sobelow, Spex (BDD specs), spec doc validation, QA. Only after validation passes does the next step begin.
+The agent writes one artifact. Stops. The validation pipeline runs: compiler, ExUnit, Credo, Sobelow, Spex (BDD specs, run with `mix spex`). QA then drives the running app. Only after the gates pass does the next step begin.
 
-This isn't prompt engineering. It's interface enforcement. The LLM doesn't decide how to handle results -- the pipeline does.
+This isn't prompt engineering. It's interface enforcement. The LLM doesn't decide how to handle results, the pipeline does.
 
 ### 3. Structural Validation Between Steps
 
-We don't ask the LLM to "make sure it's valid." We parse its output against required structure. Design documents get validated against type-specific required and optional sections -- specs, context specs, schemas, LiveViews, architecture proposals, ADRs. Each document type has its own rules.
+We don't ask the LLM to "make sure it's valid." We parse its output against required structure. Documents get validated against type-specific required and optional sections: architecture proposals, ADRs, QA plans, journey plans, and results. Each document type has its own rules.
 
 If validation fails, the system forces correction with explicit error details. The LLM doesn't get to explain why the missing section doesn't matter.
 
@@ -89,19 +89,19 @@ Testing is a mandatory workflow step, not an LLM suggestion. The validation pipe
 
 The LLM cannot decide "the tests are flaky." The problems system captures every failure as a unified representation. Fix it or stop.
 
-### 5. Dirty Tracking and Scoped Analysis
+### 5. Scoped Analysis
 
-File changes mark components as dirty. The validation pipeline runs scoped analysis only on dirty components through the problems system. No wasted cycles revalidating clean code. No opportunity for the LLM to claim unrelated failures.
+A stop looks only at the files the agent changed in that turn, and analyzer runs record their findings in the problems system. No wasted cycles revalidating clean code. No opportunity for the LLM to claim unrelated failures.
 
 ### 6. Boundary Enforcement
 
-Every module uses `use Boundary` for compile-time dependency enforcement. 14 component types with specific requirements per type. The LLM can't "helpfully" wander into unrelated parts of your codebase -- the compiler won't let it.
+Every module uses `use Boundary` for compile-time dependency enforcement. Eleven component types with their own requirements per type. The LLM can't "helpfully" wander into unrelated parts of your codebase, the compiler won't let it.
 
 ## What kinds of problems does a control-based approach prevent?
 
 **Hallucinated Workflows**: The requirement DAG defines all possible transitions. The LLM cannot invent process steps.
 
-**Validation Bypass**: 22 requirement checkers, enforced by code, not prompts.
+**Validation Bypass**: The requirement graph is enforced by code, not prompts.
 
 **Context Drift**: State is explicit and scoped, not accumulated in conversation history.
 
@@ -111,7 +111,7 @@ Every module uses `use Boundary` for compile-time dependency enforcement. 14 com
 
 ## What are the tradeoffs of enforcing control over AI code generation?
 
-This approach isn't free. More upfront design. Less flexibility. The LLM can't creatively adapt to unexpected situations -- you need a human for that.
+This approach isn't free. More upfront design. Less flexibility. The LLM can't creatively adapt to unexpected situations, you need a human for that.
 
 But here's what you get: **predictability**. When a controlled workflow completes, every required validation passed. All tests ran. The design conforms to required structure. You have a complete audit trail.
 
@@ -139,7 +139,7 @@ The future of AI-assisted development isn't smarter agents. It's better engineer
 
 **Does control-based generation slow down development?** It adds overhead per step but reduces total time by eliminating rework. When every step is validated before proceeding, you catch errors early instead of discovering them after thousands of lines of generated code. Predictability beats raw speed for production systems.
 
-**What is the stop-and-validate pattern?** The stop-and-validate pattern means the agent writes one artifact, stops, and a validation pipeline runs automatically before the next step begins. The pipeline can include compiler checks, tests, static analysis, and structural validation. The LLM does not decide whether validation passed -- the pipeline does.
+**What is the stop-and-validate pattern?** The stop-and-validate pattern means the agent writes one artifact, stops, and a validation pipeline runs automatically before the next step begins. The pipeline can include compiler checks, tests, static analysis, and structural validation. The LLM does not decide whether validation passed, the pipeline does.
 
 **How does boundary enforcement prevent architectural drift?** Boundary enforcement uses compile-time dependency checking to prevent modules from importing code they should not access. In Elixir, `use Boundary` enforces this at the compiler level. The LLM cannot introduce cross-boundary dependencies because the code will not compile, regardless of what the prompt says.
 

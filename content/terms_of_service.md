@@ -8,7 +8,7 @@ publish_at: 2026-04-04T00:00:00Z
 expires_at: null
 
 meta_title: Terms of Service - CodeMySpec
-meta_description: Terms of service for using CodeMySpec, the AI-assisted Phoenix development platform.
+meta_description: Terms of service for using CodeMySpec, a set of AI harnesses for building, selling, and supporting real software.
 og_title: Terms of Service - CodeMySpec
 og_description: Terms of service for using CodeMySpec.
 og_image: null
@@ -22,7 +22,7 @@ tags:
 
 # Terms of Service
 
-**Last updated:** April 4, 2026
+**Last updated:** November 14, 2026
 
 These terms govern your use of CodeMySpec ("the Service"), operated by CodeMySpec ("we", "us", "our").
 
@@ -32,12 +32,15 @@ By accessing or using CodeMySpec, you agree to these terms. If you don't agree, 
 
 ## The Service
 
-CodeMySpec is a development platform that provides structured workflows for building Phoenix applications with AI assistance. The Service includes:
+CodeMySpec is a set of AI harnesses that help one person build, sell, and support real software. The Service includes:
 
-- A web application for managing user stories, architecture, and components
+- A web application for managing user stories, architecture, executable BDD specifications, and components
+- Hosted Operate and Grow tools, such as email, live chat, and content publishing, on paid plans
 - MCP (Model Context Protocol) servers for AI agent integration
 - A CLI tool for local development workflows
 - Content and documentation
+
+Paid plans are billed through Stripe and are described on our pricing page.
 
 ## Your Account
 

@@ -69,7 +69,7 @@ The model decides how much thinking it needs now. Anthropic took the knob away.
 
 ### 2. Sampling Parameters Are Gone
 
-`temperature`, `top_p`, `top_k` -- all return 400 if set to non-default values. If you tuned these, that's over. Remove them entirely.
+`temperature`, `top_p`, `top_k`, all return 400 if set to non-default values. If you tuned these, that's over. Remove them entirely.
 
 ```json
 {
@@ -110,7 +110,7 @@ If you're going to charge me 35% more for the same work, just say that. Don't hi
 
 ### Fewer Tool Calls
 
-4.7 reasons more, calls tools less. Generally better -- fewer roundtrips, lower cost. But if your harness expects a certain tool-call cadence, you'll see different behavior. Raise the effort level if you need more tool usage.
+4.7 reasons more, calls tools less. Generally better, fewer roundtrips, lower cost. But if your harness expects a certain tool-call cadence, you'll see different behavior. Raise the effort level if you need more tool usage.
 
 ### Fewer Subagents
 
@@ -129,27 +129,27 @@ New protections trigger false positive refusals on legitimate security work. If 
 | Benchmark | Opus 4.6 | GPT-5.4 | Opus 4.7 |
 |-----------|----------|---------|----------|
 | SWE-bench Pro | 53.4% | 57.7% | **64.3%** |
-| SWE-bench Verified | 80.8% | -- | **87.6%** |
-| CursorBench | 58% | -- | **70%** |
+| SWE-bench Verified | 80.8% | n/a | **87.6%** |
+| CursorBench | 58% | n/a | **70%** |
 
 10-point jump on SWE-bench Pro. That's not noise.
 
-**xhigh effort level** -- new default recommendation for coding. Sits between `high` and `max`. Start there.
+**xhigh effort level**, new default recommendation for coding. Sits between `high` and `max`. Start there.
 
-**Task budgets (beta)** -- advisory token budget across an entire agentic loop. Not a hard cap, but the model is aware of it and prioritizes accordingly. Useful for managing runaway agent costs.
+**Task budgets (beta)**, advisory token budget across an entire agentic loop. Not a hard cap, but the model is aware of it and prioritizes accordingly. Useful for managing runaway agent costs.
 
-**/ultrareview** -- dedicated deep code review in Claude Code. Haven't tested it yet.
+**/ultrareview**, dedicated deep code review in Claude Code. Haven't tested it yet.
 
-**3x image resolution** -- up to 2,576px. Matters for screenshots and diagrams.
+**3x image resolution**, up to 2,576px. Matters for screenshots and diagrams.
 
-**Auto Mode for Max plan** -- model picks Opus vs Sonnet per-request based on complexity.
+**Auto Mode for Max plan**, model picks Opus vs Sonnet per-request based on complexity.
 
 ## Migration Checklist
 
-- [ ] Search for `budget_tokens` -- remove, switch to `"type": "adaptive"`
-- [ ] Search for `temperature`, `top_p`, `top_k` -- remove from API calls
+- [ ] Search for `budget_tokens`, remove, switch to `"type": "adaptive"`
+- [ ] Search for `temperature`, `top_p`, `top_k`, remove from API calls
 - [ ] Add `"display": "summarized"` if you stream thinking content
-- [ ] Run `count_tokens` on both models -- measure the tokenizer impact
+- [ ] Run `count_tokens` on both models, measure the tokenizer impact
 - [ ] Update cost alerts (expect up to 35% token count increase)
 - [ ] Update hardcoded token budget caps
 - [ ] Review system prompts for ambiguous instructions

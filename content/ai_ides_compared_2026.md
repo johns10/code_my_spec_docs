@@ -38,6 +38,8 @@ tags:
 
 # AI IDEs Compared in 2026: Cursor vs Windsurf vs Zed vs Kiro
 
+{{nontechnical_founder_cta campaign="ai-ides-compared-2026-intro"}}
+
 ## Introduction
 
 If you're willing to throw out your code editor for better AI, you have four serious options in 2026. They don't agree on what "AI coding" means:
@@ -64,7 +66,7 @@ The category is bifurcating. Cursor is repositioning as an agent orchestration d
 | **Open Source** | No | No | Yes (GPL) | No |
 | **Free Tier** | Limited | 25 credits/mo | Yes (editor free) | 50 credits/mo |
 | **Entry Price** | $16/mo annual ($20 monthly) | $20/mo (Devin Desktop) | $10/mo + tokens | $20/mo (GA tiers) |
-| **ARR** | ~$2B | ~$82M | -- | -- |
+| **ARR** | ~$2B | ~$82M | n/a | n/a |
 | **LLM Backends** | Claude (incl. Opus 4.7), GPT, Gemini, own | SWE-1, SWE-1.5, Claude Sonnet 4.6, GPT-5, Gemini 3.1 Pro | BYO (Claude w/ 1M, Gemini, Ollama, Bedrock, Vercel AI Gateway) | Claude only (Sonnet 4.6, Opus 4.6 GA; Opus 4.7 experimental) |
 | **Key Differentiator** | Agents Window + parallel orchestration | Flow awareness + enterprise | 120fps performance + openness | Spec-driven development |
 | **Ownership Risk** | Being acquired by SpaceX ($60B, announced June 16) | Rebranded Devin Desktop under Cognition | Stable (independent, open source) | Amazon-backed |
@@ -166,12 +168,12 @@ Here's how I'd actually pick:
 
 Kiro is the most directly relevant tool here. The EARS-notation spec generation validates the core thesis of spec-driven development, and Amazon is putting real resources behind proving the market exists. The April updates (AWS Transform in Kiro IDE, Opus 4.7 experimental) say they're not slowing down.
 
-But Kiro locks you into Kiro's IDE and Kiro's spec format. That's the opening for CodeMySpec: be the full-lifecycle layer (requirements through code generation and delivery) that works with any editor and any agent.
+But Kiro locks you into Kiro's IDE and Kiro's spec format. That's the opening for CodeMySpec: be the full-lifecycle layer (requirements, executable BDD specs, code, QA) that sits outside the editor. It runs as a local harness driving Claude Code today, with Codex and Google Antigravity plugins too, and the specs live in your repo as files. Editors like Cursor, Windsurf, Zed and Kiro connect through the CodeMySpec MCP server with no dedicated plugin.
 
-- Cursor users get specs that feed the Agents Window. `/best-of-n` gets way more useful when "better" has an explicit definition.
-- Zed users get specs served via ACP-compatible agents, with their choice of model (including 1M context Claude).
+- Cursor users can open a CodeMySpec project and point the Agents Window at its specs. `/best-of-n` gets way more useful when "better" has an explicit definition.
+- Zed users can do the same with their choice of model (including 1M context Claude).
 - Kiro users see that spec-driven works, and start wanting specs that travel outside Kiro too.
-- Windsurf users get specs that feed Cascade's context and Memories.
+- Windsurf (now Devin Desktop) users can feed the same spec files into the agent's context.
 
 The "spec overhead" complaint about Kiro is legitimate. Any spec-driven tool has to handle simple tasks without friction. Specs should scale from a one-liner for a quick fix to a full requirements doc for a complex feature.
 
@@ -190,19 +192,19 @@ Cross-reference: ["BDD Specs for AI-Generated Code"](/blog/bdd-specs-for-ai-gene
 
 ## Sources
 
-- [Cursor $2B ARR -- TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
+- [Cursor $2B ARR, TechCrunch](https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/)
 - [Cursor Changelog](https://cursor.com/changelog)
-- [Windsurf Review -- Taskade](https://www.taskade.com/blog/windsurf-review)
-- [Windsurf Review -- Second Talent](https://www.secondtalent.com/resources/windsurf-review/)
-- [Cognition Acquires Windsurf -- TechCrunch](https://techcrunch.com/2025/07/14/cognition-maker-of-the-ai-coding-agent-devin-acquires-windsurf/)
+- [Windsurf Review, Taskade](https://www.taskade.com/blog/windsurf-review)
+- [Windsurf Review, Second Talent](https://www.secondtalent.com/resources/windsurf-review/)
+- [Cognition Acquires Windsurf, TechCrunch](https://techcrunch.com/2025/07/14/cognition-maker-of-the-ai-coding-agent-devin-acquires-windsurf/)
 - [Windsurf Changelog](https://windsurf.com/changelog)
-- [Zed AI 2026 -- Builder.io](https://www.builder.io/blog/zed-ai-2026)
+- [Zed AI 2026, Builder.io](https://www.builder.io/blog/zed-ai-2026)
 - [Zed Agentic Editing](https://zed.dev/agentic)
 - [Zed Pricing](https://zed.dev/pricing)
-- [Gram Fork -- The Register](https://www.theregister.com/2026/03/04/gram_cut_down_zed/)
+- [Gram Fork, The Register](https://www.theregister.com/2026/03/04/gram_cut_down_zed/)
 - [Kiro Feature Specs](https://kiro.dev/docs/specs/feature-specs/)
 - [Kiro Introducing](https://kiro.dev/blog/introducing-kiro/)
-- [Kiro vs Cursor -- Morph](https://www.morphllm.com/comparisons/kiro-vs-cursor)
+- [Kiro vs Cursor, Morph](https://www.morphllm.com/comparisons/kiro-vs-cursor)
 - [Kiro Changelog](https://kiro.dev/changelog/ide/)
-- [Kiro Review -- PeteScript](https://petermcaree.com/posts/kiro-agentic-ide-hype-hope-and-hard-truths/)
+- [Kiro Review, PeteScript](https://petermcaree.com/posts/kiro-agentic-ide-hype-hope-and-hard-truths/)
 - Reddit threads: [r/ChatGPTCoding](https://reddit.com/r/ChatGPTCoding/), [r/vibecoding](https://reddit.com/r/vibecoding/), [r/cursor](https://reddit.com/r/cursor/)

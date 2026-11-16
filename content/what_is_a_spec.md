@@ -61,7 +61,7 @@ Machines already read these. AI agents love them. OpenAPI specs power LLM functi
 
 Requirements specs (PRDs, user stories, EARS requirements), design docs (ADRs, technical design documents), and agent context files (CLAUDE.md, AGENTS.md, .cursorrules). This is what most people mean by "specs" in SDD right now.
 
-The Andrew Ng course teaches writing markdown specs -- mission.md, tech-stack.md, roadmap.md -- as the primary agent input. Kiro uses EARS notation: "WHEN the API returns a 429 status code, the system SHALL retry with exponential backoff." GitHub's spec-kit has constitutions and feature specs.
+The Andrew Ng course teaches writing markdown specs, mission.md, tech-stack.md, roadmap.md, as the primary agent input. Kiro uses EARS notation: "WHEN the API returns a 429 status code, the system SHALL retry with exponential backoff." GitHub's spec-kit has constitutions and feature specs.
 
 These are instructions. They tell the agent what to do. I'll come back to why that's a problem.
 
@@ -79,11 +79,11 @@ AI agent specs are a category that didn't exist before 2024. SDD markdown specs 
 
 ## The Problem with Guidance Specs
 
-The SDD movement is overwhelmingly focused on guidance specs. Write a markdown document. Feed it to the agent. Get code back. The Ng course, Kiro, spec-kit, BMAD -- they're all variations on this pattern.
+The SDD movement is overwhelmingly focused on guidance specs. Write a markdown document. Feed it to the agent. Get code back. The Ng course, Kiro, spec-kit, BMAD, they're all variations on this pattern.
 
 Guidance specs tell the agent what to build. They don't verify it built it correctly.
 
-When the model follows your instructions perfectly, this works great. When the model ignores your instructions -- and it will -- guidance specs fail silently. There's no alarm. No red test. No contract violation. Just code that doesn't match what you asked for, and you won't know until a user finds the bug.
+When the model follows your instructions perfectly, this works great. When the model ignores your instructions, and it will, guidance specs fail silently. There's no alarm. No red test. No contract violation. Just code that doesn't match what you asked for, and you won't know until a user finds the bug.
 
 I learned this the hard way. I didn't have any requirements about the account creation flow after signup. So the AI built a signup system where users literally could not create an account after registering. The app was broken for the exact reason I told the agent to build it broken. A markdown spec wouldn't have caught that. An executable spec would have.
 
@@ -107,7 +107,7 @@ For AI agents specifically, this matters because:
 
 2. BDD specs survive model upgrades. When you switch from one model to another and it interprets your markdown differently, your guidance specs produce different code. Your BDD specs still either pass or fail. The verification is independent of the model.
 
-3. BDD scenarios function as few-shot prompts. Thoughtworks documented this -- Given/When/Then scenarios give the agent concrete behavioral examples to pattern-match against. They're more effective than prose instructions because they're structured and unambiguous.
+3. BDD scenarios function as few-shot prompts. Thoughtworks documented this, Given/When/Then scenarios give the agent concrete behavioral examples to pattern-match against. They're more effective than prose instructions because they're structured and unambiguous.
 
 4. They close the feedback loop. An agent that generates code against a BDD spec can run the spec immediately and know if it succeeded. No human review required for the first pass. The spec is the acceptance gate. This is the difference between "generate and hope" and "generate and verify."
 
@@ -132,7 +132,7 @@ BDD specs are the only type that checks all four boxes. Human-readable (product 
 
 Unit tests are close, but they fail on human readability. `test "returns {:error, :invalid_credentials} when password hash doesn't match"` is developer-facing, not stakeholder-facing. BDD scenarios describe business behavior. Unit tests describe implementation behavior. When you're telling an AI agent *what to build*, you want business behavior.
 
-Contract specs also come close. The VibeContract research showed that preconditions and postconditions dramatically improve AI code generation -- an LLM-generated ATM system without contracts lacked basic input validation; with contracts, it handled edge cases correctly. But contracts require a developer to write them. BDD scenarios can be co-authored with non-technical stakeholders. The accessibility gap matters when the whole point of SDD is letting non-developers drive the process.
+Contract specs also come close. The VibeContract research showed that preconditions and postconditions dramatically improve AI code generation, an LLM-generated ATM system without contracts lacked basic input validation; with contracts, it handled edge cases correctly. But contracts require a developer to write them. BDD scenarios can be co-authored with non-technical stakeholders. The accessibility gap matters when the whole point of SDD is letting non-developers drive the process.
 
 {{enforced_spec_cta shape="aside" headline="A guidance spec tells the agent what to build." sub="It never checks that it did." body="A BDD spec is the requirement and the test, so it cannot quietly go stale." label="Run executable specs on your project" campaign="what-is-a-spec"}}
 
@@ -140,11 +140,11 @@ Contract specs also come close. The VibeContract research showed that preconditi
 
 If I'd understood this taxonomy a year ago, I would have skipped months of trying to make markdown specs work and gone straight to BDD. I wrote requirements docs. I wrote CLAUDE.md files. I wrote detailed design specs. The agent still built things wrong, and I didn't catch it until manual testing.
 
-The industry is going through that same journey right now. The SDD wave is teaching people to write guidance specs. That's step one. Step two is realizing guidance specs don't verify anything. Step three is landing on BDD -- the spec format that tells the agent what to build AND proves it did it.
+The industry is going through that same journey right now. The SDD wave is teaching people to write guidance specs. That's step one. Step two is realizing guidance specs don't verify anything. Step three is landing on BDD, the spec format that tells the agent what to build AND proves it did it.
 
 Every other spec type in the taxonomy has its place. Standards specs define protocols. API specs enable function calling. Schemas constrain data. Type specs catch errors at compile time. Agent context files set behavioral boundaries. None of them are wrong.
 
-But if you're doing spec-driven development and you want to know which spec to write first, write the BDD spec. It's the only one that simultaneously tells the agent what to build, verifies it built it correctly, and documents what it built for the next developer -- or the next agent -- who comes along.
+But if you're doing spec-driven development and you want to know which spec to write first, write the BDD spec. It's the only one that simultaneously tells the agent what to build, verifies it built it correctly, and documents what it built for the next developer, or the next agent, who comes along.
 
 The spec you want is the one that fails when the code is wrong. Everything else is just asking nicely.
 

@@ -16,7 +16,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 meta_title: Design-Driven Generation, The Layer Between Specs and Code
 meta_description: Design-driven development adds explicit, reviewable designs that define component architecture before implementation begins.
 og_title: Design-Driven Code Generation, The Missing Layer
-og_description: Why positioning humans at architectural decision points—not code review—creates better AI-generated systems
+og_description: Why positioning humans at architectural decision points, not code review, creates better AI-generated systems
 og_image: null  # URL to Open Graph image
 
 # Additional metadata (custom key-value pairs)
@@ -57,14 +57,14 @@ I've found that the fix is a layer most tools skip entirely: **explicit, reviewa
 The flow:
 
 ```
-Stories → Architecture (component graph) → Specs (per-component) → Design Review → Implementation → Tests → BDD Specs → QA
+Stories → Architecture (component graph) → Three Amigos → BDD Specs → Implementation → QA → Promotion
 ```
 
-Each step has requirements that must pass before proceeding. Notice where humans intervene: at architectural decision points, not at code review.
+Each step has requirements that must pass before proceeding. Notice where humans intervene: at architectural decision points, not at code review. The executable layer is the BDD specs, which run with `mix spex`. Per-component design documents are an input you can use, and a project decides how much of that layer it wants.
 
 ## What is the 1:1:1 principle for design documents, code, and tests?
 
-One design document per code file per test file:
+When a component has a design document, the layout is one document per code file per test file:
 
 ```
 .code_my_spec/spec/sessions/
@@ -89,48 +89,48 @@ AI proposes how to decompose stories into bounded contexts and components. Human
 
 Why? This determines where functionality lives. Get it wrong and every line of code that follows is in the wrong place.
 
-### Gate 2: Architecture to Specs
+### Gate 2: Architecture to Specs and Scenarios
 
-AI generates spec documents following strict templates based on component type -- context, schema, LiveView, GenServer, repository, and 12+ other types. Each document type has required and optional sections. Humans review and approve specs before implementation.
+The behavior gets pinned down before code does. A Three Amigos session per story produces rules, scenarios, and questions, and the story isn't ready until every question is answered. Those scenarios become executable BDD specs. Where you keep component design documents, they follow strict templates by component type, and humans review them before implementation.
 
-Why? Specs define public APIs, data structures, dependencies, interaction patterns. This is your last chance to catch design issues before they become code.
+Why? Scenarios and designs define public behavior, data structures, dependencies, and interaction patterns. This is your last chance to catch design issues before they become code.
 
 ### Gate 3: Specs to Implementation
 
-AI implements components based on approved specs, generating both code and tests. The validation pipeline runs automatically: compiler, tests, Credo, Sobelow, Spex (BDD), spec doc validation. If validation fails persistently, the system escalates for human review.
+AI implements components against the approved specs. The validation pipeline runs automatically: compiler, ExUnit, Credo, Sobelow, and Spex (BDD). A story isn't certified ready for QA until every analyzer is clean and its own specs are green, and promotion checks again.
 
-Why? With approved specs in place, implementation becomes mechanical. When tests fail, you have a clear reference: does the code match the spec, or does the spec need revision?
+Why? With approved specs in place, implementation becomes mechanical. When a spec fails, you have a clear reference: does the code match the spec, or does the spec need revision?
 
-## How do you constrain 41+ specialized agent tasks in a code generation system?
+## How do you constrain dozens of specialized agent tasks in a code generation system?
 
-We don't have one generic "code generation" agent. We have 41+ specialized agent tasks, each with a narrow scope:
+We don't have one generic "code generation" agent. We have dozens of specialized agent tasks, each with a narrow scope:
 
-- **Spec tasks**: ComponentSpec, ContextSpec, LiveViewSpec
-- **Design**: ArchitectureDesign, ContextDesignReview
-- **Implementation**: StartImplementation, DevelopComponent
-- **Testing**: WriteBddSpecs, FixBddSpecs, FixAllBddSpecs
-- **QA**: QaStory, QaJourneyPlan, QaJourneyExecute, QaJourneyWallaby
-- **Research**: ResearchTopic, TechnicalStrategy
+- **Product**: PersonaResearch, StoryInterview, ThreeAmigos
+- **Design**: TechnicalStrategy, ArchitectureDesign
+- **Implementation**: DevelopContext, DevelopLiveView, ComponentCode
+- **Testing**: WriteBddSpecs, FixBddSpecs, FixAllBddSpecs, ReadyForQa
+- **QA**: QaSetup, QaStory, QaJourney, TriageIssues, FixIssues
+- **Shipping**: PromoteWork, Deploy
 
-Each task has clear start/end conditions, success criteria, and specific validation requirements. The orchestrator enforces the sequence. The LLM doesn't decide whether to skip validation -- the requirement dependency DAG makes those steps mandatory.
+Each task has clear start/end conditions, success criteria, and specific validation requirements. The orchestrator enforces the sequence. The LLM doesn't decide whether to skip validation, because the requirement dependency graph makes those steps mandatory.
 
 ## Why should design documents be treated as first-class artifacts?
 
 In most spec-driven approaches, specifications are transient. They guide initial implementation, then rot.
 
-In our system, **spec documents live alongside code** as permanent artifacts. They're version-controlled. Required for every component. The reference for future modifications. Context for code reviewers.
+In our system, **design documents live alongside code** as permanent artifacts. They're version-controlled, the reference for future modifications, and context for code reviewers.
 
-When someone asks "why does this component exist?" the spec document answers -- not archaeology through Git history.
+When someone asks "why does this component exist?" the document answers, not archaeology through Git history.
 
 ## What problems does design-driven code generation prevent?
 
 **Architectural drift**: Humans approve structure before implementation begins.
 
-**Context accumulation**: Each agent task operates with explicit, scoped inputs -- not accumulated conversation history.
+**Context accumulation**: Each agent task operates with explicit, scoped inputs, not accumulated conversation history.
 
-**Test bypass**: Testing is a mandatory pipeline step, validated by 22 requirement checkers.
+**Test bypass**: Testing is a mandatory pipeline step, enforced by the requirement graph.
 
-**Traceability loss**: Every component traces back through spec to architectural decision to user story.
+**Traceability loss**: Every component traces back through its scenarios to an architectural decision to a user story.
 
 ## What is the tradeoff between speed and architectural integrity?
 
@@ -158,13 +158,13 @@ Slower initial velocity. Higher architectural integrity. In production, that's t
 
 **What is design-driven code generation?** Design-driven code generation is an approach where explicit, reviewable design documents are created and approved before any code is written. Instead of going directly from spec to code, the pipeline includes architecture proposals, per-component specifications, and human approval gates at each decision point. This catches errors before they become embedded in implementation.
 
-**How is design-driven development different from traditional spec-driven development?** In traditional spec-driven approaches, specifications guide initial implementation and then are forgotten. In design-driven development, spec documents are permanent, version-controlled artifacts that live alongside the code. They serve as the reference for future modifications, code reviews, and understanding why a component exists.
+**How is design-driven development different from traditional spec-driven development?** In traditional spec-driven approaches, specifications guide initial implementation and then are forgotten. In design-driven development, design documents are permanent, version-controlled artifacts that live alongside the code. They serve as the reference for future modifications, code reviews, and understanding why a component exists.
 
 **Does this approach work for small projects or solo developers?** It depends on the project's lifespan. For throwaway prototypes and quick experiments, the overhead is not justified. For production systems that need to be maintained over months or years, even a solo developer benefits from having explicit design documents. The time spent on design reviews is consistently less than the time spent fixing architectural mistakes downstream.
 
 **What are human approval gates in an AI code generation pipeline?** Human approval gates are specific points in the pipeline where a human reviews and approves AI-generated decisions before the next phase begins. The three key gates are story-to-architecture, architecture-to-specs, and specs-to-implementation. Humans intervene at architectural decision points rather than at code review, which is where the highest leverage exists.
 
-**How do 41+ specialized agent tasks differ from a single general-purpose code generation agent?** Each specialized task has a narrow scope, clear start and end conditions, specific validation requirements, and explicit success criteria. A general-purpose agent must decide what to do, when to validate, and when it is done. Specialized tasks remove those decisions entirely, making the output predictable and the failure modes diagnosable.
+**How do specialized agent tasks differ from a single general-purpose code generation agent?** Each specialized task has a narrow scope, clear start and end conditions, specific validation requirements, and explicit success criteria. A general-purpose agent must decide what to do, when to validate, and when it is done. Specialized tasks remove those decisions entirely, making the output predictable and the failure modes diagnosable.
 
 ## Related Articles
 

@@ -68,17 +68,17 @@ None of this is exotic. It is just what a senior Elixir engineer already does by
 
 ## How CodeMySpec does Elixir-native SDD
 
-[CodeMySpec](/developers) is the full-lifecycle, spec-driven AI development harness I built Phoenix-first. It ships as a Claude Code plugin with a local MCP server and a web app, and Elixir and Phoenix are not a supported target bolted on after the fact. They are the design center.
+[CodeMySpec](/developers) is the full-lifecycle, spec-driven AI development harness I built Phoenix-first. It ships as a Claude Code plugin (with Codex and Antigravity ports), a local MCP server, and a web app, and Elixir and Phoenix are not a supported target bolted on after the fact. They are the design center.
 
 The pieces map directly onto the four requirements above:
 
 - **The requirement graph.** Every artifact (spec, BDD scenario, test, implementation, QA result) is a node with prerequisites on a single graph. The harness computes what to work on next (`get_next_requirement` then `start_task`) rather than leaving you to thread the workflow by hand. Contexts and their dependencies live on that same graph, so the architecture is a first-class, navigable structure, not a comment in a README.
-- **BDD specs via the Spex DSL.** Acceptance criteria become behavior scenarios written in the Spex DSL. These BDD specs are a mandatory gate, and work has to pass them. Module specs, reviews, and generated tests are configurable knobs on top, but the behavioral contract is not optional. Spec quality becomes the explicit lever on code quality.
+- **BDD specs via the Spex DSL.** Acceptance criteria become behavior scenarios written in the Spex DSL. These BDD specs are executable: you run them with `mix spex`, not `mix test`. They are a mandatory gate, and work has to pass them. Module specs, reviews, and generated tests are configurable knobs on top, but the behavioral contract is not optional. Spec quality becomes the explicit lever on code quality.
 - **Context architecture design.** The design step produces the context dependency graph (which contexts exist, what each one's public API is, how they may depend on each other) before code generation. The boundary Phoenix contexts exist to enforce gets designed, not discovered.
 - **Generated ExUnit tests.** Specs produce acceptance criteria and generated ExUnit tests in the real toolchain, so verification lives where your existing suite lives.
 - **Live QA against a running Phoenix app.** This is the part no stack-neutral tool does. The `qa` subagent writes a brief from the BDD specs, boots the real Phoenix app, drives a real browser through Vibium MCP, takes screenshots, and files issues with severity. Unit tests pass. BDD specs pass. Then the QA agent clicks the button and finds the bug anyway. Prompting is praying; verification is a guarantee.
 
-And it is bring-your-own throughout: specs are markdown, tests are ExUnit, and MCP serves the artifacts to any agent (Claude Code, Codex, Gemini CLI, Goose, Cline) or generated context files. Bring your own agent, your own model, your own keys. The harness adds no token markup.
+And it is bring-your-own throughout: the specs and tests are files in your repo, the tests are ExUnit, and the plugins for Claude Code, Codex, and Google Antigravity (plus MCP for other compatible agents) serve the artifacts to your agent. Bring your own agent, your own model, your own keys. The harness adds no token markup.
 
 The honest framing: portability and repo-resident specs are table stakes in this space, and OpenSpec, Spec Kit, and others meet them too. The combination CodeMySpec rests on is the wedge: a mandatory BDD gate, built-in live verification, full lifecycle on one graph, and Phoenix-native depth that stack-generic tools structurally cannot match.
 
@@ -100,7 +100,7 @@ This page is for two groups.
 
 **Phoenix agencies and consultancies** delivering client Elixir work, who need the architecture (the context graph), the behavioral contract (BDD specs), and the proof (generated ExUnit tests plus live-app QA) to be consistent and enforced across projects and engineers, not dependent on whoever happened to write the prompt.
 
-If that is you, the bet is simple: an enforced, verified, Phoenix-native harness closes exactly the gaps a stack-neutral SDD tool leaves open on Elixir. CodeMySpec is free during early access, and I'd rather you run it on a real feature and tell me where it falls short than take my word for it.
+If that is you, the bet is simple: an enforced, verified, Phoenix-native harness closes exactly the gaps a stack-neutral SDD tool leaves open on Elixir. The Build harness is free, including the content engine (Operate & Grow is $100/mo per user, if you want the hosted layer for email, chat, and content). I'd rather you run it on a real feature and tell me where it falls short than take my word for it.
 
 ## Related Articles
 
