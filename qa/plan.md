@@ -4,6 +4,8 @@ QA infrastructure for the running CodeMySpec backend. CodeMySpec is unusual in t
 ships *two* Phoenix apps in one OTP release — both are user-facing surfaces and both
 need QA coverage. The plan below covers both, plus the MCP servers each app exposes.
 
+For Story 205 chat scenarios, use the [seed and reset guide](../../priv/repo/qa_205_fixture.md).
+
 ## App Overview
 
 CodeMySpec runs **two Phoenix endpoints** from one BEAM node, each with its own
@@ -264,8 +266,13 @@ An in-app QA agent cannot make or remove working copies: `create_working_copy`,
 3. Never mint or offboard copies yourself. If a pass leaves a copy behind, tell
    main with `message_agent` and name it.
 
-(A terminal QA session with main's tools may still mint a scratch copy with
-`create_working_copy` + `start_agent` and remove it with `offboard_working_copy`.)
+A terminal QA session's own QA-role connection cannot call these main-role
+fleet tools. To exercise that path, use `qa_as_agent.sh` with a disposable
+main-role fixture identity and wrap each tool in `run_script`. For example,
+`qa_as_agent.sh <main-fixture-id> run_script '{"script":"return start_agent({...})"}'`
+uses the fixture's main role. Supply the actual tool arguments in place of
+`{...}`. Use the same route for `create_working_copy`, `stop_agent` and
+`offboard_working_copy`; never borrow an active main agent's identity.
 
 The coding role is the point: `MainAgent.holder_for/2` treats `:main` as
 "user", so a main-role fixture routes exactly like no fixture at all. That is
@@ -291,17 +298,18 @@ is evidence about anything.
 Build a fresh one only if you need two askers at once, or if that one has been
 offboarded — then leave this note pointing at whatever you leave behind.
 
-**Most tools are code mode, but the ones this story needs are not.** A tool that
-moved answers a direct `tools/call` by telling you to use
-`run_script({script = "return tool({…})"})` — `list_tasks` is one, and that
-refusal still proves the identity hop reached the tool layer, though it is not a
-result. Wrap it and send it again.
+**Most tools use code mode.** A direct `tools/call` to one of them responds
+with instructions to use `run_script`. For example, `list_tasks`,
+`create_working_copy`, `start_agent`, `stop_agent` and
+`offboard_working_copy` must be called as `run_script` Lua expressions.
+A refusal to a direct call proves the identity hop reached the tool layer,
+but it is not a successful result; wrap the call and send it again.
 
-The exceptions are deliberate and are exactly the asker's surface:
-`ask_user_question`, `check_answer`, `list_user_questions`, `send_message`,
-`start_agent` and `stop_agent` stay directly callable, because a script sandbox
-cannot wait on a person or spawn a process (`local_server.ex:63`). Call those
-straight through `qa_as_agent.sh`, with no `run_script` wrapper.
+The asker's direct-call surface remains `ask_user_question`, `check_answer`,
+`list_user_questions` and `send_message`. Call those through
+`qa_as_agent.sh` without a `run_script` wrapper. The fleet-management calls
+also require a main-role fixture identity; the QA role's own connection
+cannot access them.
 
 Goes through the harness proxy on :4004, which forwards the header and
 supplies the harness identity — so it drives the real MCP surface rather than a
@@ -327,17 +335,13 @@ What it gives you, on a project of its own with its own checkout at `/Users/john
 
 No qa-role agent, deliberately: "QA work waiting does not wake the coding agent" needs that work left *outstanding*, and an agent of that role would claim it and take the premise away.
 
-**The agents are rows, not processes — nothing runs and nothing spends tokens** until you drive it. That is what makes this safe to use freely, and it is why "provisioning is out of scope" was the wrong read: the scope rule is about not touching *live* agents on the real project, not about this.
+**Run this only for the disposable QA project, between scenarios.** The seed refreshes non-retired agents on the selected onboarded copy through the Agent changeset, clears their off record and stale turn marker, cancels abandoned tasks, and tops up the role counts. Retired agents remain retired; agents on other copies are not refreshed.
 
-> **The rows are reaped, and this will ruin a wake test if you let it.** `record_running_on_copy/3` (`0c912986`) reaps any row on a harnessed copy that claims to be running with no process behind it, so these agents go `:running` → `:stopped` within about a minute of each harness report. `project_wakeable?/2` requires `:running`, so after that they are invisible to `wake_project_roles/2` and **no wake is sent — correctly**.
->
-> That failure is silent and looks exactly like the defect you are testing. Attempt `38331c19` on story 1004 drove a real requirement transition, verified the graph recomputed, saw no message, and filed the story's central criterion as failing. The evidence was sound and the conclusion was wrong. See `726766b0`.
->
-> So before trusting **any** wake result, check the rows are still running — not that they were seeded running:
->
->     psql -d code_my_spec_dev -c "select role, status from agents where project_id = 'd7f466a1-591e-4f36-8319-42633f59411e';"
->
-> All `running`, or your result means nothing. Re-run the seed immediately before the transition you are testing and keep the window short. `726766b0` tracks the fact that this is a race rather than a fix.
+The seed itself does not start processes. A connected harness may restore on-duty agents and consume tokens. Do not treat seeded rows as proof that an agent is running: current lifecycle derives running from live `Agents.Presence`, while `off_at` and `retired_at` determine whether an agent is on duty. Check the agent's live lifecycle before a wake or delivery scenario.
+
+`Agent.work_request_id` and `work_requested_at` no longer exist. Turn requests are durable `CodeMySpec.Agents.Offer` records managed by `Agents.Offers`; `Offers.in_flight?/1` participates in admission alongside live presence and `turn_started_at`. The seed does not erase offers. Finish or withdraw outstanding scenario work through its supported lifecycle before repeating a probe. Do not repair lifecycle state with direct SQL.
+
+If the harness is disconnected or the fixture agent is not present, record conversation delivery and agent-answer attribution as **not run**. Verify those live scenarios on main after promotion; a passing seed regression is not evidence of live delivery.
 
 **Check the harness before trusting a conversation-reading result:**
 
@@ -419,21 +423,26 @@ An empty `pending_migrations` is the state a QA pass should start from. If it is
 non-empty, the instance is running code against a schema it was not built for,
 and any failure you go on to see may be that rather than the story.
 
-**A plain `mix ecto.migrate` targets the default dev database, not necessarily
-the instance's own.** Each worktree-managed app instance gets its own isolated
-Postgres database, named in that instance's `state.json`
-(`~/.codemyspec/app-instances/<id>/state.json`, the `database` field) — e.g.
-`code_my_spec_dev_wc_ad7d67d6`, not `code_my_spec_dev`. Running `mix
-ecto.migrate` without `DATABASE_NAME` set will happily report "Migrations
-already up" against the wrong database while the instance you're actually
-testing keeps raising `Phoenix.Ecto.PendingMigrationError` on every request.
-Check `state.json` first (terminal QA only: an in-app QA agent's read tool is
-scoped to its own copy and cannot read `~/.codemyspec`; it should rely on the
-instance's `/health` `pending_migrations` and leave migrating to `restart_app`),
-then:
+**Read the copy's assigned database from `.code_my_spec/status/database_name`
+in that checkout.** Each worktree-managed app instance records its isolated
+Postgres database there as plain text — e.g. `code_my_spec_dev_wc_ad7d67d6`.
+This file is inside the agent's readable workspace. Run commands from the
+copy's project root so they use the correct file.
+
+`config/dev.exs` reads this file automatically when `DATABASE_NAME` is unset
+or empty; an explicit `DATABASE_NAME` overrides it. If the file is absent,
+the config falls back to the default dev database. For a managed working
+copy, use `ensure_app_running` to establish the assignment before migrating
+if the file is missing; do not guess the database name. Main does not write
+this file and uses its own `config/dev.exs` database configuration.
+
+To inspect the assignment and explicitly select it for migration:
 
 ```bash
-DATABASE_NAME=<state.json's database> MIX_ENV=dev mix ecto.migrate
+cat .code_my_spec/status/database_name
+qa_database=$(cat .code_my_spec/status/database_name) &&
+  test -n "$qa_database" &&
+  DATABASE_NAME="$qa_database" MIX_ENV=dev mix ecto.migrate
 ```
 
 followed by `restart_app` to pick it up (hit 2026-10-11, story 1091's QA pass).
@@ -1063,9 +1072,11 @@ close the gap (hit 2026-10-11).
 
 ### The QA Fixture Project's inbox collects leftover questions
 
-Questions cannot be withdrawn or expired by design (story 896), so every QA pass that
-raises one on the fixture project (`11111111-1111-4111-8111-111111111111`) leaves it in
-`list_notifications` under "Waiting on the user" for good. Measured 2026-09-20: about 16,
+Questions do not expire, and users cannot dismiss them (story 896). The asking agent
+can withdraw its own pending question with `withdraw_question` and a reason (story 1017);
+this also releases the task it blocked. A QA pass that raises a fixture question should
+withdraw it at the end of the pass. Older questions whose asking agent is gone remain
+in `list_notifications` under "Waiting on the user". Measured 2026-09-20: about 16
 from the 1004, 1009, 1017 and 896 passes, which makes a fresh pass's listing hard to read.
 It is sandbox debris, not a story defect (issue eeeeeb3d).
 
@@ -1073,11 +1084,15 @@ Convention:
 
 - **Tell your pass's questions apart by id**, not by eyeballing the list: note each id you
   raise in the brief and match on it. Do not read the unfiltered listing as your evidence.
-- **QA owns the sweep.** Before a pass on the fixture project, answer the questions that
-  predate it with `answer_notification` (as the project owner, `qa@codemyspec.local`).
-  Nothing real is waiting on the fixture project, so any answer clears them; say "stale
-  QA fixture question" so nobody mistakes it for a decision. Never clear them in the
-  database: an answer is the one path that also settles the asking agent's task.
+- **Withdraw your own fixture questions.** At the end of a pass, call
+  `withdraw_question` with each still-pending question's id and the reason it is moot.
+  This releases any task the question blocked.
+- **QA owns the sweep for questions whose asker is gone.** Before a pass on the
+  fixture project, answer those older questions with `answer_notification` (as the
+  project owner, `qa@codemyspec.local`). Nothing real is waiting on the fixture
+  project, so any answer clears them; say "stale QA fixture question" so nobody
+  mistakes it for a decision. Never clear them in the database: an answer is the
+  path that also settles the asking agent's task.
 - **Do not answer another pass's open question** if its brief is still in flight; check
   `qa/<story>/brief.md` for the id first.
 

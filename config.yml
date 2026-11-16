@@ -1,4 +1,4 @@
-account_id: 0f27281c-240b-4d6d-8e52-9c5972329522
+account_id: e07e223f-9d3e-4334-b76d-0ea6c2624b7c
 client_api_url: "https://www.codemyspec.com/api"
 code_repo: "https://github.com/Code-My-Spec/code_my_spec"
 description: "# CodeMySpec - AI-Driven Development Automation Platform
@@ -65,7 +65,7 @@ A local webserver (port 4002) packaged as a native binary via Burrito, acting as
 docs_repo: "https://github.com/johns10/code_my_spec_docs"
 module_name: CodeMySpec
 name: Code My Spec
-project_id: 708492f9-454e-482f-a2eb-be64f0356b87
+project_id: 197c68df-2cd1-4d13-b629-710a9b206e25
 infrastructure_paths:
   # Standard Phoenix-generated infrastructure
   - lib/code_my_spec.ex

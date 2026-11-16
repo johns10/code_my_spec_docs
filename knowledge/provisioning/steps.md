@@ -302,7 +302,7 @@ kamal, object storage) to the two calls the sequence makes per step:
 - The render proof fetches `/<content_type>/<slug>` from `client_api_url` and
   expects the title (a 200 alone passes on a styled 404). No content yet is
   the normal state of a new app.
-- Widget: installed and openable with no message yet pauses — only a visitor's
+- Widget: present and openable with no message yet pauses — only a visitor's
   browser can send the proving message. Messages are tagged by origin host;
   no origin is never trusted.
 

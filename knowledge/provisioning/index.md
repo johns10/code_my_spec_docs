@@ -27,7 +27,7 @@ Code comments point here by section name.
 | `Provisioning.BurstBox` | Find-or-create the account's burst box; FLAME runner processes; busy check. |
 | `Provisioning.Deploy` | migrate → health → swap through `bin/deploy`, run from the builder. |
 | `Provisioning.Backups` | Dump, restore-proof, schedule, health. |
-| `Provisioning.Widget` | Install the support widget and prove a message arrives. |
+| `Provisioning.Widget` | Check the deployed support widget and prove a message arrives. |
 | `Provisioning.Teardown` | Remove only what steps recorded, verified. |
 
 ## Running the sequence
@@ -694,14 +694,11 @@ Code comments point here by section name.
 
 ## Widget
 
-- The step must run the generator new projects actually get:
-  `cms_gen.support_widget` (socket transport via `WidgetSocket` /
-  `ConversationChannel`, deploy-key auth). It has twice named a deprecated
-  generator (`client_utils.gen.chat_widget`, then `cms_gen.feedback_widget`,
-  which uses OAuth/REST), and then it verified something no project had.
-- The generator prompts before overwriting its own files, so it runs only
-  when no `lib/*_web/live/support_widget_live.ex` exists in the checkout; a
-  re-run would otherwise hang forever on the prompt.
+- The support widget ships with `client_utils` v0.5.0 and is wired into
+  the host app during code generation. The provisioning step does not run
+  a widget generator.
+- The deployed app must expose the widget's published markers and relay
+  messages with its deploy key.
 - Presence is a published marker contract (`markers/0`); never guess at
   DaisyUI classes. Openable = present + toggle marker.
 - `probe_degraded/2` can only see the negative over HTTP: the page renders
