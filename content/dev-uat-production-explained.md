@@ -58,8 +58,6 @@ Test copies are for when you have stakes: customers, money, data you can't lose.
 
 Think of a restaurant. Nobody invents a hit dish during Friday night dinner service. You make it at home for family and friends, then in a test kitchen, then at a tasting night with staff and test customers, and only then does it go on the menu. Home, test kitchen, tasting night, dinner service.
 
-![The restaurant analogy: your home kitchen is local, the test kitchen is dev, tasting night for staff is UAT, and dinner service is production](https://images.codemyspec.com/env-02-restaurant.webp)
-
 In software, the same four rooms are:
 
 - **Local.** Your computer, or, if you use an AI tool, the folder the AI works in. Only you see it, the data is made up, and a mistake costs nothing. You undo it.
@@ -107,23 +105,17 @@ These are public, and each one is the same shape: a normal-looking action on the
 
 **CrowdStrike, July 2024.** One content update, pushed to customers all at once, crashed an estimated 8.5 million Windows machines, which is under 1% of all Windows machines but enough to ground flights. The fix CrowdStrike committed to is the one every team should use: release to a few test computers first, then the whole fleet. (CrowdStrike, Microsoft.)
 
-![CrowdStrike, July 2024: one update reached 8.5 million devices in 78 minutes, compared with a fix that releases to a little first, then more](https://images.codemyspec.com/env-07-crowdstrike.webp)
-
 **GitLab, January 2017.** An engineer rebuilding a database wiped the wrong one, about 300 GB. None of the backup methods protected it as intended. GitLab recovered from a snapshot that was six hours old, taken for a different purpose, and lost about six hours of data. In their own words: "the process of both finding and using backups failed completely." (GitLab postmortem.)
 
 ## What the numbers say
 
 The long-running DORA study of software teams (Google's DevOps Research and Assessment) groups teams by how well they deliver. In the 2024 report, as summarized by Octopus Deploy, the best group's releases cause a problem about 5% of the time and recover in under an hour. The worst group's releases cause a problem about 40% of the time and take a week to a month to recover. Note that the middle groups don't line up neatly, so I won't claim the metrics move in lockstep.
 
-![Out of 20 releases, the best teams break something about 5% of the time and the weakest teams about 40% of the time (DORA 2024)](https://images.codemyspec.com/env-08-dora-failure-rate.webp)
-
 ![How long it takes to fix a broken release: the best teams under an hour, the weakest a week to a month (DORA 2024 via Octopus Deploy)](https://images.codemyspec.com/env-09-dora-recovery.webp)
 
 The best teams don't have genius engineers. They have a separate database, separate passwords, and a way to roll back to a known safe version.
 
 Downtime costs are big company numbers, and I'll say so. A 2024 survey by ITIC of more than 1,000 firms found that for over 90% of mid-size and large enterprises, one hour of downtime costs more than $300,000. Your number is smaller. If you sell software, or run your business on it, it still costs you.
-
-![One hour of downtime costs more than $300,000 for over 90% of mid-size and large companies (ITIC 2024, self-reported)](https://images.codemyspec.com/env-11-downtime-cost.webp)
 
 AI makes this more urgent. The 2025 DORA report found that AI use is now tied to higher throughput but also to higher delivery instability. About 90% of respondents use AI. DORA describes AI as an amplifier of whatever practices you already have.
 
@@ -140,8 +132,6 @@ You don't need to become an engineer. AI is making custom software cheaper, so y
 
 If you don't have good answers, you will probably find out the hard way why the best teams do.
 
-![Six questions to ask whoever builds your app, human or AI, as a checklist](https://images.codemyspec.com/env-12-six-questions.webp)
-
 ## What to do this week
 
 The cheapest, easiest and fastest thing you can do right now: tell the model to apply semantic versioning (version numbers like 1.4.2), and to write release notes for each version. Then you always know which version you are looking at, and what changed in it.
@@ -150,11 +140,7 @@ The cheapest, easiest and fastest thing you can do right now: tell the model to 
 
 CodeMySpec works the same way, with one difference: many working copies instead of one local copy, so several changes can move at once. Each change is checked by an agent, then at every stage the build runs, the tests run and the specs from your requirements run. Red sends it back to the agent. Green at every step means that exact version moves up. Before anything reaches production, the agent stops, writes release notes and asks your permission. The agents run every check except yours.
 
-![The same four rooms in CodeMySpec: a working copy for local, main for dev, a UAT address with its own database and key, and production with its own database and your yes](https://images.codemyspec.com/env-13-codemyspec-rooms.webp)
-
 ![Agents run every gate but one: story and specs, build on a bench, checks and QA, promote to main, deploy to UAT, journey QA, your yes, then production](https://images.codemyspec.com/env-14-agent-gates.webp)
-
-![UAT and production side by side, each with its own address, database and key. UAT's key cannot open production's](https://images.codemyspec.com/env-16-separate-keys.webp)
 
 The line I keep coming back to is the same one: production is a promise you make to your customers, so you're the one who makes it.
 
