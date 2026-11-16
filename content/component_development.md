@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "Component Development - Spec, Code, Test"
-meta_description: How CodeMySpec builds one component at a time with guardrails: design, executable BDD specs, generated code, and tests. Each step is validated.
+meta_description: "How CodeMySpec builds one component at a time with guardrails: design, executable BDD specs, generated code, and tests. Each step is validated."
 og_title: "Component Development: One File at a Time"
 og_description: The 1:1:1 principle in practice. One spec, one code file, one test file. Each with schema validation, artifact checking, and BDD alignment.
 og_image: null

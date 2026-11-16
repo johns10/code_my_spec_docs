@@ -14,7 +14,7 @@ expires_at: null  # ISO 8601 datetime or null for never expires
 
 # SEO Metadata
 meta_title: "Agentic QA - AI-Powered Application Testing - CodeMySpec"
-meta_description: Unit tests and BDD specs verify pieces. QA verifies the running application: story QA, journey QA, and automated issue filing by AI agents.
+meta_description: "Unit tests and BDD specs verify pieces. QA verifies the running application: story QA, journey QA, and automated issue filing by AI agents."
 og_title: "Agentic QA"
 og_description: "An AI agent tests every story against the running app, finds bugs unit tests miss, and files issues automatically. Over 100 issues caught on Fuellytics."
 og_image: null  # URL to Open Graph image
