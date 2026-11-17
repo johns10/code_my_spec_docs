@@ -13,13 +13,20 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "How We Run Design Passes With AI Agents (2026)"
-meta_description: "The playbook we use to redesign one page at a time with AI agents: prove the browser works, rank problems from real data, fix the top three, and build from components."
+meta_description: "How we redesign one page at a time with AI agents: prove the browser works, rank problems from real data, fix the top three, and build from components."
 og_title: "How We Run Design Passes With AI Agents"
-og_description: "One page per pass, real data in the screenshots, and a rule that a theme swap is a CSS swap. The playbook, and what it found that a styling pass would have missed."
+og_description: "One page per pass, real data in the screenshots, and a rule that a theme swap is a CSS swap. The playbook we run."
 og_image: null
 
 metadata:
   template: article
+  author: John Davenport
+  category: Design
+
+tags:
+  - design-system
+  - ai-agents
+  - build-in-public
 ---
 
 The CodeMySpec app looked bad. The model's biggest sin was putting the whole UI in one file, so you'd click New and a giant form would appear on the page. No modal, nothing. There were overflow issues everywhere and a lot of ugly components. The whole thing felt half-asked.
