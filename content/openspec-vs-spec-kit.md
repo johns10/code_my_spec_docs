@@ -13,7 +13,7 @@ expires_at: null
 
 # SEO Metadata
 meta_title: "OpenSpec vs Spec Kit (2026): Brownfield vs Greenfield"
-meta_description: "OpenSpec vs Spec Kit (2026): lightweight brownfield change-tracker vs the full greenfield toolkit. Table, strengths, and which Spec Kit alternative to pick."
+meta_description: "OpenSpec vs Spec Kit (2026): OpenSpec for changing existing code, Spec Kit for starting from scratch. Side-by-side table and how to pick."
 og_title: "OpenSpec vs Spec Kit (2026)"
 og_description: "Spec Kit is the full, greenfield toolkit with the biggest community. OpenSpec is the lightweight, brownfield change-tracker. Here's how to pick, plus a fair third option."
 og_image: null

@@ -12,8 +12,8 @@ publish_at: 2026-06-03T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "The BMAD Method Explained: Multi-Agent AI Agile"
-meta_description: "What is the BMAD method? How BMAD-METHOD's two-phase, multi-agent agile framework works for AI coding, its strengths and weaknesses, and where it fits in SDD."
+meta_title: "BMAD Method Explained: What It Is and How It Works"
+meta_description: "BMAD (Breakthrough Method for Agile AI-Driven Development) is an open-source multi-agent framework. How it works, the honest downsides, and where it fits."
 og_title: "The BMAD Method Explained"
 og_description: "BMAD is the biggest name in spec-driven AI coding, and the one that least resembles the others. A look at its multi-agent agile approach, its costs, and where it fits."
 og_image: null
