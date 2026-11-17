@@ -35,6 +35,8 @@ I wasn't going to fix it myself, because I'm not a designer. I wasn't going to h
 
 None of this is a shipped product. It's how I run design passes today. A design agent inside CodeMySpec is a direction I'd like to take it, not a feature you can use.
 
+{{nontechnical_founder_cta campaign="how-we-run-design-passes-with-agents-intro"}}
+
 ## Why not just give feedback
 
 The agent didn't catch anything I would have missed. What I didn't want was the labor. Going through every page and giving feedback on all of it would have taken forever.
@@ -114,5 +116,3 @@ If a default is wrong, the agent changes it and lists it under "for John to deci
 ## The playbook keeps the lessons
 
 Most of the playbook is lessons from runs that went wrong. Browser tools vanished from some sessions. One run died on its own login and left half-finished edits. Two agents sharing one browser took each other's screenshots. Each one became a line in the playbook, so the next pass starts with what the last one learned.
-
-{{enforced_spec_cta shape="aside" headline="Decide the look once, then hold every page to it." sub="CodeMySpec interviews you for the design system and keeps the result in your repo, so an agent has something to compare each page against." label="See the design system step" path="/design-system" campaign="how-we-run-design-passes-with-agents"}}

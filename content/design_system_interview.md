@@ -30,6 +30,8 @@ This is the actual procedure CodeMySpec follows when it runs [the design system 
 
 Publishing it is deliberate. The people who need this have usually been sold something vague once already, and a paraphrase would be one more thing to take on faith. It is also useful on its own: even if you never install anything, these are the five decisions worth making before you let a model build your pages.
 
+{{nontechnical_founder_cta campaign="design-system-interview-intro"}}
+
 ## What it produces
 
 A self-contained HTML file at `.code_my_spec/design/design_system.html`, built on the daisyUI CDN with a theme switcher. It is documentation and live preview in the same artifact, which is why it cannot drift from itself. See [three real examples](/documentation/design-system-examples).
@@ -90,5 +92,3 @@ A design system with a blank colors section is the same vacuum you started with.
 Nothing above is proprietary. Take the five sections, answer them in a document, and paste that document into whatever tool you are using before you ask for a page. You will lose the live preview and the validation gate, and you will have to remember to reference it every time. But the decisions are the part that matters, and the decisions are right here.
 
 If you would rather it be enforced than remembered, that is [what the harness does](/design-system).
-
-{{enforced_spec_cta shape="aside" headline="CodeMySpec runs this interview for you." sub="You answer five sections of concrete options, and it writes the design system to one file in your repo." label="See the design system step" path="/design-system" campaign="design-system-interview"}}

@@ -30,6 +30,8 @@ Three projects ran the same five-question [design system interview](/design-syst
 
 Each design system is a single self-contained HTML file living in the project's own repository at `.code_my_spec/design/design_system.html`. It documents the choices and renders them live at the same time, so the swatches below are the real thing rather than a picture of a specification.
 
+{{nontechnical_founder_cta campaign="design-system-examples-intro"}}
+
 ## MetricFlow: dark, alive, analytical
 
 ![The MetricFlow design system, a dark theme with an aurora gradient and an indigo and cyan palette](https://images.codemyspec.com/design-system-metric-flow.webp)
@@ -63,5 +65,3 @@ The subtler thing they prove is what did not happen: none of them look like Code
 That is the whole difference between a site that looks decided and [a site that looks like every other vibe coded website](/blog/vibe-coded-websites-look-the-same). The tool was never going to pick for you. It was always going to reach for the average until somebody chose.
 
 Ready to make the five decisions for your own project? That is [the design system step](/design-system).
-
-{{enforced_spec_cta shape="aside" headline="Make the five decisions for your own project." sub="The interview turns your answers into one design system file that every page has to follow." label="See the design system step" path="/design-system" campaign="design-system-examples"}}
