@@ -114,3 +114,5 @@ If a default is wrong, the agent changes it and lists it under "for John to deci
 ## The playbook keeps the lessons
 
 Most of the playbook is lessons from runs that went wrong. Browser tools vanished from some sessions. One run died on its own login and left half-finished edits. Two agents sharing one browser took each other's screenshots. Each one became a line in the playbook, so the next pass starts with what the last one learned.
+
+{{enforced_spec_cta shape="aside" headline="Decide the look once, then hold every page to it." sub="CodeMySpec interviews you for the design system and keeps the result in your repo, so an agent has something to compare each page against." label="See the design system step" path="/design-system" campaign="how-we-run-design-passes-with-agents"}}

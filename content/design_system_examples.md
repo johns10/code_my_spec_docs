@@ -63,3 +63,5 @@ The subtler thing they prove is what did not happen: none of them look like Code
 That is the whole difference between a site that looks decided and [a site that looks like every other vibe coded website](/blog/vibe-coded-websites-look-the-same). The tool was never going to pick for you. It was always going to reach for the average until somebody chose.
 
 Ready to make the five decisions for your own project? That is [the design system step](/design-system).
+
+{{enforced_spec_cta shape="aside" headline="Make the five decisions for your own project." sub="The interview turns your answers into one design system file that every page has to follow." label="See the design system step" path="/design-system" campaign="design-system-examples"}}

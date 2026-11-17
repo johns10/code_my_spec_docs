@@ -90,3 +90,5 @@ A design system with a blank colors section is the same vacuum you started with.
 Nothing above is proprietary. Take the five sections, answer them in a document, and paste that document into whatever tool you are using before you ask for a page. You will lose the live preview and the validation gate, and you will have to remember to reference it every time. But the decisions are the part that matters, and the decisions are right here.
 
 If you would rather it be enforced than remembered, that is [what the harness does](/design-system).
+
+{{enforced_spec_cta shape="aside" headline="CodeMySpec runs this interview for you." sub="You answer five sections of concrete options, and it writes the design system to one file in your repo." label="See the design system step" path="/design-system" campaign="design-system-interview"}}
