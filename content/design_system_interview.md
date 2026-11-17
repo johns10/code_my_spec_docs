@@ -1,6 +1,6 @@
 ---
 slug: design-system-interview
-type: documentation
+type: blog
 title: The Design System Interview, In Full
 
 protected: false
@@ -14,6 +14,7 @@ og_description: The real prompt, not a paraphrase. Five sections, concrete optio
 og_image: null
 
 metadata:
+  hero_disabled: true
   author: John Davenport
   category: Design
 

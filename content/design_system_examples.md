@@ -1,6 +1,6 @@
 ---
 slug: design-system-examples
-type: documentation
+type: blog
 title: Design System Examples From Three Real Projects
 
 protected: false
@@ -14,6 +14,7 @@ og_description: Same five questions, radically different results, each justified
 og_image: null
 
 metadata:
+  hero_disabled: true
   author: John Davenport
   category: Design
 
