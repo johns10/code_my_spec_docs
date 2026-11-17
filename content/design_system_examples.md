@@ -30,7 +30,7 @@ Three projects ran the same five-question [design system interview](/design-syst
 
 Each design system is a single self-contained HTML file living in the project's own repository at `.code_my_spec/design/design_system.html`. It documents the choices and renders them live at the same time, so the swatches below are the real thing rather than a picture of a specification.
 
-{{nontechnical_founder_cta campaign="design-system-examples-intro"}}
+{{nontechnical_founder_cta headline="What would your five answers look like?" sub="Same interview, different project. CodeMySpec writes your decisions into one design file." campaign="design-system-examples-intro"}}
 
 ## MetricFlow: dark, alive, analytical
 

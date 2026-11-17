@@ -35,7 +35,7 @@ I wasn't going to fix it myself, because I'm not a designer. I wasn't going to h
 
 None of this is a shipped product. It's how I run design passes today. A design agent inside CodeMySpec is a direction I'd like to take it, not a feature you can use.
 
-{{nontechnical_founder_cta campaign="how-we-run-design-passes-with-agents-intro"}}
+{{nontechnical_founder_cta headline="Can you tell if your page has good design?" sub="Claude can, but only if you use it correctly. CodeMySpec has you decide the look first and keeps it in your repo." campaign="how-we-run-design-passes-with-agents-intro"}}
 
 ## Why not just give feedback
 

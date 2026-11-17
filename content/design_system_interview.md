@@ -30,7 +30,7 @@ This is the actual procedure CodeMySpec follows when it runs [the design system 
 
 Publishing it is deliberate. The people who need this have usually been sold something vague once already, and a paraphrase would be one more thing to take on faith. It is also useful on its own: even if you never install anything, these are the five decisions worth making before you let a model build your pages.
 
-{{nontechnical_founder_cta campaign="design-system-interview-intro"}}
+{{nontechnical_founder_cta headline="Do you know what you want your app to look like?" sub="CodeMySpec interviews you with concrete options and writes your answers into one design file." campaign="design-system-interview-intro"}}
 
 ## What it produces
 
