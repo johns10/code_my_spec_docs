@@ -14,7 +14,6 @@ og_description: The real prompt, not a paraphrase. Five sections, concrete optio
 og_image: null
 
 metadata:
-  hero_disabled: true
   author: John Davenport
   category: Design
 

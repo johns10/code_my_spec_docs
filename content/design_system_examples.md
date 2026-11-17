@@ -14,7 +14,6 @@ og_description: Same five questions, radically different results, each justified
 og_image: null
 
 metadata:
-  hero_disabled: true
   author: John Davenport
   category: Design
 
