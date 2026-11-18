@@ -12,8 +12,8 @@ publish_at: 2026-06-03T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "GitHub Spec Kit: How It Works (2026 Guide)"
-meta_description: "What is GitHub Spec Kit? A 2026 guide to the /specify -> /plan -> /tasks -> implement workflow, its strengths, the sea-of-markdown critique, and where it stops."
+meta_title: "GitHub Spec Kit Guide: Commands, Workflow, Limits"
+meta_description: "How GitHub Spec Kit works: the /specify, /plan and /tasks commands, a real workflow, what it does well, and where it stops. Updated for 2026."
 og_title: "GitHub Spec Kit: How It Works and When to Use It"
 og_description: "A hands-on guide to GitHub's spec-driven toolkit, the workflow, strengths, the reinvented-waterfall critiques, and how it stacks up against an enforced harness."
 og_image: null

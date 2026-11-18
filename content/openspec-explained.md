@@ -12,8 +12,8 @@ publish_at: 2026-06-03T00:00:00Z
 expires_at: null
 
 # SEO Metadata
-meta_title: "OpenSpec Explained (2026): Delta Tracking + Brownfield"
-meta_description: "What is OpenSpec? Fission AI's free, brownfield-first spec framework: delta tracking, the propose-apply-archive workflow, and how it compares to CodeMySpec."
+meta_title: "OpenSpec Explained: Workflow, Delta Specs, Setup"
+meta_description: "OpenSpec is a free, brownfield-first spec framework. Learn the propose, apply and archive workflow, how delta specs work, and when to pick it."
 og_title: "OpenSpec Explained"
 og_description: "How OpenSpec does repo-native spec-driven development: delta tracking, optional scenarios, and where it fits versus CodeMySpec."
 og_image: null
