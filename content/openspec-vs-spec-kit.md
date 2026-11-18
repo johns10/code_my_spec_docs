@@ -40,7 +40,7 @@ If you are choosing a spec-driven development framework in 2026, the two names y
 
 I have read deeply into both and run spec-first workflows on real Phoenix apps. Here is the honest breakdown: what each one actually does, where each one breaks down, and how to pick.
 
-{{nontechnical_founder_cta campaign="openspec-vs-spec-kit-intro"}}
+{{nontechnical_founder_cta headline="Give your coding agent your specs." sub="For Phoenix projects. Install the plugin for Claude Code or Codex, or add the MCP URL to your client." label="Connect your agent" path="/connect" campaign="builder-lander"}}
 
 ## The core difference in one paragraph
 

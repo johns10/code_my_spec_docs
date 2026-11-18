@@ -44,7 +44,7 @@ I build with a spec-driven development tool every day, so I have opinions about 
 
 One disclosure up front: I make one of these tools (CodeMySpec), so I will flag my bias where it shows up and give it the same honest treatment as the rest. No tool here is the right answer for everyone, and I will tell you where each one breaks down.
 
-{{nontechnical_founder_cta campaign="best-spec-driven-development-tools-intro"}}
+{{nontechnical_founder_cta headline="Give your coding agent your specs." sub="For Phoenix projects. Install the plugin for Claude Code or Codex, or add the MCP URL to your client." label="Connect your agent" path="/connect" campaign="builder-lander"}}
 
 ## How I evaluated these tools
 

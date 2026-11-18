@@ -40,7 +40,7 @@ If you have spent any time reading about spec-driven development, you have run i
 
 This is the explainer I wish I had read before I tried to figure out where BMAD fits in the [spec-driven development landscape](/blog/spec-driven-development). Here is what it is, how it actually works, the honest knocks against it, and how it lines up against a spec-first harness like CodeMySpec.
 
-{{nontechnical_founder_cta campaign="bmad-method-explained-intro"}}
+{{nontechnical_founder_cta headline="Give your coding agent your specs." sub="For Phoenix projects. Install the plugin for Claude Code or Codex, or add the MCP URL to your client." label="Connect your agent" path="/connect" campaign="builder-lander"}}
 
 ## What BMAD Is
 
